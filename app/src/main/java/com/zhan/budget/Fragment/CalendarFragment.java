@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +63,10 @@ public class CalendarFragment extends Fragment {
 
     private ArrayList<MetaMission> listMetaMission;
 
+    //If true, allows user to pull down to add transaction
+    private Boolean allowScroll;
+
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -101,14 +107,15 @@ public class CalendarFragment extends Fragment {
     private void init(){
         root = (ViewGroup) view.findViewById(R.id.root);
 
-        plusIcon = (ImageView) view.findViewById(R.id.centerPanel);
+        //plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
 
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
-        calendarView.bringToFront();
 
-        entryCountView = (TextView) view.findViewById(R.id.entryCount);
+       // entryCountView = (TextView) view.findViewById(R.id.entryCount);
 
-        infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
+       // infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
+
+        allowScroll = true;
 
         listMetaMission = new ArrayList<MetaMission>();
         missionListView = (SwipeMenuListView) view.findViewById(R.id.missionListView);
@@ -117,12 +124,27 @@ public class CalendarFragment extends Fragment {
 
         createPanel();
         createCalendar();
+        createFakeList();
         createSwipeMenu();
+
+        updateTransactionStatus();
+    }
+
+    private void createFakeList(){
+        for(int i = 0; i < 17; i++) {
+            MetaMission mt = new MetaMission();
+            mt.setName("name " + i);
+            mt.setDescription("description");
+
+            listMetaMission.add(mt);
+        }
+        missionAdapter.notifyDataSetChanged();
     }
 
     private void createPanel(){
         //Used to get the height of the centerPanel to calculate dragging after it is drawn.
         //The height is different in pixels based on the DPI of devices.
+        /*
         ViewTreeObserver vto = plusIcon.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -134,47 +156,56 @@ public class CalendarFragment extends Fragment {
                 Toast.makeText(getContext(), "height is " + centerPanelHeight, Toast.LENGTH_SHORT).show();
             }
         });
+        */
 
+
+/*
         root.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                final int Y = (int) event.getRawY();
+                if(allowScroll) {
 
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN: //CLICK DOWN
-                        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+                    final int Y = (int) event.getRawY();
 
-                        _yDelta = Y - lParams.topMargin;
-                        break;
-                    case MotionEvent.ACTION_UP: //CLICK UP
-                        break;
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                        break;
-                    case MotionEvent.ACTION_POINTER_UP:
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_DOWN: //CLICK DOWN
+                            RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
 
-                        int dY = Y - _yDelta;
+                            _yDelta = Y - lParams.topMargin;
+                            break;
+                        case MotionEvent.ACTION_UP: //CLICK UP
+                            break;
+                        case MotionEvent.ACTION_POINTER_DOWN:
+                            break;
+                        case MotionEvent.ACTION_POINTER_UP:
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
 
-                        if (dY > -centerPanelHeight / 2) { //Prevents viewgroup from going too far down
-                            pushPanelDown();
-                        } else if (dY < -centerPanelHeight / 2) { //Prevents viewgroup from going too far up
-                            pushPanelUp();
-                        } else {
-                            layoutParams.topMargin = dY;
-                        }
+                            int dY = Y - _yDelta;
 
-                        layoutParams.bottomMargin = -250;
+                            if (dY > -centerPanelHeight / 2) { //Prevents viewgroup from going too far down
+                                pushPanelDown();
+                            } else if (dY < -centerPanelHeight / 2) { //Prevents viewgroup from going too far up
+                                pushPanelUp();
+                            } else {
+                                layoutParams.topMargin = dY;
+                            }
 
-                        v.setLayoutParams(layoutParams);
+                            layoutParams.bottomMargin = -250;
 
-                        break;
+                            v.setLayoutParams(layoutParams);
+
+                            break;
+                    }
+                    root.invalidate();
+                    return true;
+                }else{
+                    return false;
                 }
-                root.invalidate();
-                return true;
             }
         });
+        */
     }
 
     private void createCalendar(){
@@ -336,62 +367,48 @@ public class CalendarFragment extends Fragment {
                 // swipe end
             }
         });
+/*
+        missionListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    // check if we reached the top or bottom of the list
+                    View v = missionListView.getChildAt(0);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the top:
+                        entryCountView.setText("top");
+                        return;
+                    }
+                } else if (totalItemCount - visibleItemCount == firstVisibleItem){
+                    View v =  missionListView.getChildAt(totalItemCount-1);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (offset == 0) {
+                        // reached the bottom:
+                        entryCountView.setText("bottom");
+                        return;
+                    }
+                }
+            }
+        });
+        */
     }
 
     private void updateTransactionStatus(){
-        Util.setListViewHeightBasedOnItems(missionListView);
-
+        //Util.setListViewHeightBasedOnItems(missionListView);
+/*
         if(listMetaMission.size() > 0){
             infoPanel.setVisibility(View.GONE);
         }else{
             infoPanel.setVisibility(View.VISIBLE);
-        }
+        }*/
 
-        entryCountView.setText(listMetaMission.size() + "");
-    }
-
-    private void updateDecorators(){
-
-
-        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
-            @Override
-            public List<CalendarEvent> getEventsForTheDay(int year, int month, int day) {
-                if (year == 2015 && month == 11 && day == 12) {
-                    List<CalendarEvent> eventColors = new ArrayList<>(2);
-                    eventColors.add(new CalendarEvent(android.R.color.holo_blue_light));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_purple));
-                    return eventColors;
-                }
-                if (year == 2015 && month == 11 && day == 7 ||
-                        year == 2015 && month == 11 && day == 29 ||
-                        year == 2015 && month == 11 && day == 5 ||
-                        year == 2015 && month == 11 && day == 9) {
-                    List<CalendarEvent> eventColors = new ArrayList<>(1);
-                    eventColors.add(new CalendarEvent(android.R.color.holo_blue_light));
-                    return eventColors;
-                }
-
-                if (year == 2016 && month == 00 && day == 31 ||
-                        year == 2015 && month == 11 && day == 22 ||
-                        year == 2015 && month == 11 && day == 18 ||
-                        year == 2015 && month == 11 && day == 11) {
-                    List<CalendarEvent> eventColors = new ArrayList<>(3);
-                    eventColors.add(new CalendarEvent(android.R.color.holo_red_dark));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_orange_light));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_purple));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_blue_bright));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_green_light));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_red_dark));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_orange_light));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_purple));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_blue_bright));
-                    eventColors.add(new CalendarEvent(android.R.color.holo_green_light));
-                    return eventColors;
-                }
-
-                return null;
-            }
-        });
+       // entryCountView.setText(listMetaMission.size() + "");
     }
 
     private void pushPanelDown(){
@@ -408,13 +425,10 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                /*Toast.makeText(getApplicationContext(), "FINISH ANIM", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
-                startActivity(intent);
-                */
+
                 Toast.makeText(getContext(),"Create a transaction", Toast.LENGTH_SHORT).show();
 
-                MetaMission mt = new MetaMission();
+                /*MetaMission mt = new MetaMission();
                 mt.setName("transaction "+listMetaMission.size());
                 mt.setDescription("description");
                 listMetaMission.add(mt);
@@ -424,6 +438,7 @@ public class CalendarFragment extends Fragment {
 
 
                 pushPanelUp();
+                */
             }
 
             @Override
@@ -433,7 +448,7 @@ public class CalendarFragment extends Fragment {
         });
 
         //play rotate animation of the plus icon
-        plusIcon.startAnimation(anim);
+        //plusIcon.startAnimation(anim);
 
     }
 
