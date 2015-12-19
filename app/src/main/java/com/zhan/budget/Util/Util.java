@@ -1,0 +1,240 @@
+package com.zhan.budget.Util;
+
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Environment;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+/**
+ * Created by zhanyap on 15-08-24.
+ * Util class that handles Serialization and deserialization of models, file IOs, SharedPreferences,
+ * and etc.
+ */
+public final class Util {
+
+    private Util() {
+    }//private constructor
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Saving / reading file persistent data
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void SaveToFile(String fileName, String content) {
+        try {
+            //Create directory
+            File directory = new File(Environment.getExternalStorageDirectory().toString() + "/Surveyor");
+            directory.mkdirs();
+
+            //Save the path as a string value
+            String externalStorageDirectory = directory.toString();
+
+            //Create new file if it doesn't exist
+            File file = new File(externalStorageDirectory, fileName);
+            if (!file.exists()) {
+                if (!file.createNewFile()) {
+                    throw new IOException();
+                }
+            }
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(content);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String ReadFromFile(String fileName) {
+        BufferedReader br;
+        String response = "";
+
+        try {
+            StringBuffer output = new StringBuffer();
+            String path = Environment.getExternalStorageDirectory().toString() + "/Surveyor/" + fileName;
+
+            br = new BufferedReader(new FileReader(path));
+            String line;
+            while ((line = br.readLine()) != null) {
+                output.append(line);
+            }
+            response = output.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public static boolean DoesFileExist(String fileName) {
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/Surveyor", fileName);
+        return (file.exists());
+    }
+
+    public static String getDataPath() {
+        return Environment.getExternalStorageDirectory().toString() + "/Surveyor/";
+    }
+
+    public static boolean removeDirectory(File directory) {
+        if (directory == null)
+            return false;
+        if (!directory.exists())
+            return true;
+        if (!directory.isDirectory())
+            return false;
+
+        String[] list = directory.list();
+
+        // Some JVMs return null for File.list() when the
+        // directory is empty.
+        if (list != null) {
+            for (int i = 0; i < list.length; i++) {
+                File entry = new File(directory, list[i]);
+
+                if (entry.isDirectory()) {
+                    if (!removeDirectory(entry))
+                        return false;
+                } else {
+                    if (!entry.delete())
+                        return false;
+                }
+            }
+        }
+
+        return directory.delete();
+    }
+
+
+    public static void Write(String content) {
+        Log.d("ZHAN", content);
+    }
+
+    /**
+     * Sets ListView height dynamically based on the height of the items.
+     *
+     * @param listView to be resized
+     * @return true if the listView is successfully resized, false otherwise
+     */
+    public static boolean setListViewHeightBasedOnItems(ListView listView) {
+
+        if (listView.getAdapter() != null) {
+            // Set list height.
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = getListViewHeight(listView);
+            listView.setLayoutParams(params);
+            listView.requestLayout();
+            Write("set) HEIGHT OF LIST VIEW IS " + params.height);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets ListView height dynamically based on the height of all items.
+     *
+     * @param listView to be resized
+     * @return int the total height of the list view
+     */
+    public static int getListViewHeight(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter != null) {
+
+            int numberOfItems = listAdapter.getCount();
+
+            // Get total height of all items.
+            int totalItemsHeight = 0;
+            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
+                View item = listAdapter.getView(itemPos, null, listView);
+                //Individual items such as image_item.xml, marker_item.xml, and mission_item.xml needs to be relative layout
+                if (item instanceof ViewGroup) {
+                    item.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                }
+                item.measure(0, 0);
+                totalItemsHeight += item.getMeasuredHeight();
+            }
+
+            // Get total height of all item dividers.
+            int totalDividersHeight = listView.getDividerHeight() * (numberOfItems - 1);
+
+            int totalHeight = totalItemsHeight + totalDividersHeight;
+
+            Write("get) HEIGHT OF LIST VIEW IS " + totalHeight);
+            return totalHeight;
+        }
+        return 0;
+    }
+
+    /**
+     * Converting DP to PX
+     *
+     * @param context Context
+     * @param dp      dp to be converted to px
+     * @return px
+     */
+    public static int dp2px(Context context, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                context.getResources().getDisplayMetrics());
+    }
+
+    /**
+     * Demonstrate checking for String that is not null, not empty, and not white
+     * space only using standard Java classes.
+     *
+     * @param string String to be checked for not null, not empty, and not white
+     *               space only.
+     * @return {@code true} if provided String is not null, is not empty, and
+     * has at least one character that is not considered white space.
+     */
+    public static boolean isNotNullNotEmptyNotWhiteSpaceOnlyByJava(final String string) {
+        return string != null && !string.isEmpty() && !string.trim().isEmpty();
+    }
+
+    /**
+     * Hides the soft keyboard
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+        if (activity.getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            Write("Hiding KEYBOARD");
+        } else {
+            Write("fail at Hiding KEYBOARD");
+        }
+    }
+
+    public static boolean checkInternetConnection(Activity activity) {
+        final ConnectivityManager conMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            // notify user you are online
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+
+}
