@@ -3,7 +3,9 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,7 +53,7 @@ public class CalendarFragment extends Fragment {
 
     private int _yDelta;
     private ViewGroup root;
-    private TextView  entryCountView;
+    private TextView  entryCountView, dateTextView;
     private ImageView plusIcon;
     private ViewGroup infoPanel;
 
@@ -66,6 +68,8 @@ public class CalendarFragment extends Fragment {
     //If true, allows user to pull down to add transaction
     private Boolean allowScroll;
 
+    private Boolean isScrollAtTop;
+    private Boolean isTouchOffScroll;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -106,19 +110,19 @@ public class CalendarFragment extends Fragment {
 
     private void init(){
         root = (ViewGroup) view.findViewById(R.id.root);
-
-        //plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
-
+        plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
-
-       // entryCountView = (TextView) view.findViewById(R.id.entryCount);
+        entryCountView = (TextView) view.findViewById(R.id.entryCount);
+        dateTextView = (TextView) view.findViewById(R.id.dateTextView);
+        missionListView = (SwipeMenuListView) view.findViewById(R.id.missionListView);
 
        // infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
 
         allowScroll = true;
+        isScrollAtTop = true;
+        isTouchOffScroll = true;
 
         listMetaMission = new ArrayList<MetaMission>();
-        missionListView = (SwipeMenuListView) view.findViewById(R.id.missionListView);
         missionAdapter = new MissionListAdapter(getActivity(), listMetaMission);
         missionListView.setAdapter(missionAdapter);
 
@@ -144,7 +148,7 @@ public class CalendarFragment extends Fragment {
     private void createPanel(){
         //Used to get the height of the centerPanel to calculate dragging after it is drawn.
         //The height is different in pixels based on the DPI of devices.
-        /*
+
         ViewTreeObserver vto = plusIcon.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -156,14 +160,14 @@ public class CalendarFragment extends Fragment {
                 Toast.makeText(getContext(), "height is " + centerPanelHeight, Toast.LENGTH_SHORT).show();
             }
         });
-        */
 
 
-/*
+
+
         root.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(allowScroll) {
+                if (isScrollAtTop && isTouchOffScroll) {
 
                     final int Y = (int) event.getRawY();
 
@@ -200,12 +204,11 @@ public class CalendarFragment extends Fragment {
                     }
                     root.invalidate();
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
         });
-        */
     }
 
     private void createCalendar(){
@@ -367,40 +370,56 @@ public class CalendarFragment extends Fragment {
                 // swipe end
             }
         });
-/*
+
         missionListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+                if(scrollState == 0){
+                    Log.i("ZHAN", "scrollStateChanged: stop (idle)" );
+                    isTouchOffScroll = true;
+                }else if(scrollState == 1){
+                    Log.i("ZHAN", "scrollStateChanged: still moving (touch)" );
+                    isTouchOffScroll = false;
+                }else if(scrollState == 2){
+                    Log.i("ZHAN", "scrollStateChanged: preparing to stop (fling)" );
+                    isTouchOffScroll = false;
+                }
+                dateTextView.setText("a:"+isScrollAtTop+", b:"+isTouchOffScroll);
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0) {
-                    // check if we reached the top or bottom of the list
+                if(firstVisibleItem == 0){
                     View v = missionListView.getChildAt(0);
+
                     int offset = (v == null) ? 0 : v.getTop();
                     if (offset == 0) {
                         // reached the top:
-                        entryCountView.setText("top");
-                        return;
+                        isScrollAtTop = true;
+                        entryCountView.setText("top reached");
+                    }else{
+                        isScrollAtTop = false;
+                        entryCountView.setText("top not reached");
                     }
-                } else if (totalItemCount - visibleItemCount == firstVisibleItem){
-                    View v =  missionListView.getChildAt(totalItemCount-1);
-                    int offset = (v == null) ? 0 : v.getTop();
-                    if (offset == 0) {
-                        // reached the bottom:
-                        entryCountView.setText("bottom");
-                        return;
+                }else if(totalItemCount - visibleItemCount == firstVisibleItem){
+                    isScrollAtTop = false;
+                    if (missionListView.getLastVisiblePosition() == missionListView.getAdapter().getCount() - 1
+                            && missionListView.getChildAt(missionListView.getChildCount() - 1).getBottom() <= missionListView.getHeight()) {
+
+                        entryCountView.setText("bottom reached");
+                    }else{
+                        entryCountView.setText("bottom not reached");
                     }
+                }else{
+                    isScrollAtTop = false;
+                    entryCountView.setText("middle");
                 }
             }
         });
-        */
+
     }
 
     private void updateTransactionStatus(){
-        //Util.setListViewHeightBasedOnItems(missionListView);
 /*
         if(listMetaMission.size() > 0){
             infoPanel.setVisibility(View.GONE);
