@@ -1,14 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Theme.Budget" parent="Theme.AppCompat.NoActionBar">
+        <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/colorPrimary</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+         which is used to tint widgets -->
         <item name="colorAccent">@color/colorAccent</item>
 
-
         <!-- textColorPrimary is used as the default value for all texts -->
+        <!-- Handles all text color -->
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
 
@@ -16,44 +22,43 @@
         <item name="android:windowBackground">@color/white</item>
 
         <!-- You can also set colorControlNormal, colorControlActivated
-         colorControlHighlight, and colorSwitchThumbNormal. -->
+         colorControlHighlight. -->
 
         <!-- All button -->
-        <item name="colorButtonNormal">@color/colorAccent</item>
+        <item name="android:colorButtonNormal">@color/colorAccent</item>
 
         <!-- Ripple effect -->
-        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+        <item name="android:colorControlHighlight">@color/colorPrimaryDark</item>
 
         <!-- Not focused edit text -->
-        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">@color/colorPrimary</item>
 
         <!-- Focused edit text -->
-        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
 
         <!-- The text color in editText field -->
-        <item name="editTextColor">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+
 
         <!-- The text color in menu item in the action bar -->
-        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+
 
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
 
         <!-- For the actionMode color -->
         <item name="android:colorBackground">@color/colorPrimary</item>
 
         <!-- THis allows actionMode to appear on toolbar instead of above it -->
         <item name="windowActionModeOverlay">true</item>
+
+
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

@@ -20,7 +20,7 @@ import com.zhan.budget.Util.Util;
 
 public class TransactionInfoActivity extends AppCompatActivity {
 
-    private boolean editMode = false;
+    private boolean isEditMode = false;
     private Activity instance;
     private Toolbar toolbar;
     private ActionMode actionMode;
@@ -34,7 +34,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
         instance = TransactionInfoActivity.this;
 
         //Get intents from caller activity
-        editMode = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
+        isEditMode = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
 
         init();
     }
@@ -43,7 +43,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
      * Perform all initializations here.
      */
     private void init(){
-        editText = (EditText) findViewById(R.id.editTextName);
+        editText = (EditText) findViewById(R.id.editText);
 
         createToolbar();
         addListeners();
@@ -59,23 +59,23 @@ public class TransactionInfoActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_clear_white);
 
         if(getSupportActionBar() != null){
-            if(editMode){
-                getSupportActionBar().setTitle("edit transaction");
+            if(isEditMode){
+                getSupportActionBar().setTitle("Edit Transaction");
             }else{
-                getSupportActionBar().setTitle("new transaction");
+                getSupportActionBar().setTitle("Add Transaction");
             }
         }
     }
 
     private void addListeners(){
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (actionMode == null) {
                     actionMode = toolbar.startActionMode(callback);
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -88,18 +88,18 @@ public class TransactionInfoActivity extends AppCompatActivity {
      */
     private void confirmLeave(){
         String message = "message";
-        String negative = "negative";
+        String negative = "Discard changes";
 
-        if(!editMode){
-            message = "tyou sure you want to discard transaction";
-            negative = "negative 2";
+        if(!isEditMode){
+            message = "You sure you want to discard transaction";
+            negative = "Discard";
         }
 
         new AlertDialog.Builder(instance)
                 .setTitle("Cancel")
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("Keep editting", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Keep Editing", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         // if this button is clicked, just close the dialog box and do nothing
                         dialog.cancel();
@@ -209,4 +209,5 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
