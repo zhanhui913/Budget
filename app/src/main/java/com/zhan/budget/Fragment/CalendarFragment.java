@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -166,7 +167,7 @@ public class CalendarFragment extends Fragment {
 
 
 
-
+/*
         root.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -211,7 +212,7 @@ public class CalendarFragment extends Fragment {
                     return false;
                 }
             }
-        });
+        });*/
     }
 
     private void createCalendar(){
@@ -426,14 +427,14 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int action = MotionEventCompat.getActionMasked(event);
+                /*int action = MotionEventCompat.getActionMasked(event);
 
                 switch (action) {
                     case (MotionEvent.ACTION_DOWN):
                         if(!isScrollAtTop) {
                             initialY = event.getY();
                             Log.i("ZHAN2", "pulling down");
-                        }else{
+                        }else if(isScrollAtTop){
                             Log.i("ZHAN2", "cant pull down. y : "+initialY);
 
 
@@ -460,6 +461,50 @@ public class CalendarFragment extends Fragment {
                 }
 
                 return false; // has to be false, or it will freeze the listView
+                */
+                if (isScrollAtTop) {
+
+                    final int Y = (int) event.getRawY();
+
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_DOWN: //CLICK DOWN
+                            RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
+
+                            _yDelta = Y - lParams.topMargin;
+                            break;
+                        case MotionEvent.ACTION_UP: //CLICK UP
+                            break;
+                        case MotionEvent.ACTION_POINTER_DOWN:
+                            break;
+                        case MotionEvent.ACTION_POINTER_UP:
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
+
+                            int dY = Y - _yDelta;
+
+                            Log.i("ZHAN", "---------:"+dY);
+
+                                if (dY > -centerPanelHeight / 2) { //Prevents viewgroup from going too far down
+                                    pushPanelDown();
+                                } else {
+                                    layoutParams.topMargin = dY;
+                                }
+
+                                
+
+
+                                root.setLayoutParams(layoutParams);
+
+
+
+
+                            break;
+                    }
+                    root.invalidate();
+
+                }
+                return false;
             }
         });
 
@@ -502,17 +547,14 @@ public class CalendarFragment extends Fragment {
                 updateTransactionStatus();
 */
 
+                /*
                 pushPanelUp();
-
-
                 Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
 
                 //This is not edit mode
                 newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-
-
                 startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
-
+                  */
             }
 
             @Override
