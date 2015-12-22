@@ -6,45 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-
-        <!-- textColorPrimary is used as the default value for all texts -->
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
-
-        <!-- windowBackground is used as the default value for the background -->
-        <item name="android:windowBackground">@color/white</item>
-
-        <!-- You can also set colorControlNormal, colorControlActivated
-         colorControlHighlight, and colorSwitchThumbNormal. -->
-
-        <!-- All button -->
-        <item name="colorButtonNormal">@color/colorAccent</item>
-
-        <!-- Ripple effect -->
-        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
-
-        <!-- Not focused edit text -->
-        <item name="colorControlNormal">@color/colorPrimary</item>
-
-        <!-- Focused edit text -->
-        <item name="colorControlActivated">@color/colorPrimary</item>
-
-        <!-- The text color in editText field -->
-        <item name="editTextColor">@color/white</item>
-
-        <!-- The text color in menu item in the action bar -->
-        <item name="actionMenuTextColor">@color/white</item>
-
-
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-
-        <!-- For the actionMode color -->
-        <item name="android:colorBackground">@color/colorPrimary</item>
-
-        <!-- THis allows actionMode to appear on toolbar instead of above it -->
-        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
