@@ -1,9 +1,10 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +27,9 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.CalendarEvent;
 import com.p_v.flexiblecalendar.view.BaseCellView;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.MissionListAdapter;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.MetaMission;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -53,7 +55,7 @@ public class CalendarFragment extends Fragment {
 
     private int _yDelta;
     private ViewGroup root;
-    private TextView  entryCountView, dateTextView;
+    private TextView  entryCountView, dateTextView, balanceText;
     private ImageView plusIcon;
     private ViewGroup infoPanel;
 
@@ -114,6 +116,7 @@ public class CalendarFragment extends Fragment {
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
         entryCountView = (TextView) view.findViewById(R.id.entryCount);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
+        balanceText = (TextView) view.findViewById(R.id.balanceText);
         missionListView = (SwipeMenuListView) view.findViewById(R.id.missionListView);
 
        // infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
@@ -374,22 +377,22 @@ public class CalendarFragment extends Fragment {
         missionListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == 0){
-                    Log.i("ZHAN", "scrollStateChanged: stop (idle)" );
+                if (scrollState == 0) {
+                    Log.i("ZHAN", "scrollStateChanged: stop (idle)");
                     isTouchOffScroll = true;
-                }else if(scrollState == 1){
-                    Log.i("ZHAN", "scrollStateChanged: still moving (touch)" );
+                } else if (scrollState == 1) {
+                    Log.i("ZHAN", "scrollStateChanged: still moving (touch)");
                     isTouchOffScroll = false;
-                }else if(scrollState == 2){
-                    Log.i("ZHAN", "scrollStateChanged: preparing to stop (fling)" );
+                } else if (scrollState == 2) {
+                    Log.i("ZHAN", "scrollStateChanged: preparing to stop (fling)");
                     isTouchOffScroll = false;
                 }
-                dateTextView.setText("a:"+isScrollAtTop+", b:"+isTouchOffScroll);
+                dateTextView.setText("a:" + isScrollAtTop + ", b:" + isTouchOffScroll);
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem == 0){
+                if (firstVisibleItem == 0) {
                     View v = missionListView.getChildAt(0);
 
                     int offset = (v == null) ? 0 : v.getTop();
@@ -397,23 +400,66 @@ public class CalendarFragment extends Fragment {
                         // reached the top:
                         isScrollAtTop = true;
                         entryCountView.setText("top reached");
-                    }else{
+                    } else {
                         isScrollAtTop = false;
                         entryCountView.setText("top not reached");
                     }
-                }else if(totalItemCount - visibleItemCount == firstVisibleItem){
+                } else if (totalItemCount - visibleItemCount == firstVisibleItem) {
                     isScrollAtTop = false;
                     if (missionListView.getLastVisiblePosition() == missionListView.getAdapter().getCount() - 1
                             && missionListView.getChildAt(missionListView.getChildCount() - 1).getBottom() <= missionListView.getHeight()) {
 
                         entryCountView.setText("bottom reached");
-                    }else{
+                    } else {
                         entryCountView.setText("bottom not reached");
                     }
-                }else{
+                } else {
                     isScrollAtTop = false;
                     entryCountView.setText("middle");
                 }
+            }
+        });
+
+        missionListView.setOnTouchListener(new View.OnTouchListener() {
+            float initialY, finalY;
+            boolean isScrollingUp;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = MotionEventCompat.getActionMasked(event);
+
+                switch (action) {
+                    case (MotionEvent.ACTION_DOWN):
+                        if(!isScrollAtTop) {
+                            initialY = event.getY();
+                            Log.i("ZHAN2", "pulling down");
+                        }else{
+                            Log.i("ZHAN2", "cant pull down. y : "+initialY);
+
+
+                            pushPanelDown();
+
+                        }
+                    case (MotionEvent.ACTION_UP):
+                        finalY = event.getY();
+
+                        if (initialY < finalY) {
+                            Log.d("ZHAN2", "Scrolling up");
+                            isScrollingUp = true;
+                        } else if (initialY > finalY) {
+                            Log.d("ZHAN2", "Scrolling down");
+                            isScrollingUp = false;
+                        }
+                    default:
+                }
+
+                if (isScrollingUp) {
+                    // do animation for scrolling up
+                } else {
+                    // do animation for scrolling down
+                }
+
+                return false; // has to be false, or it will freeze the listView
             }
         });
 
@@ -454,10 +500,19 @@ public class CalendarFragment extends Fragment {
                 missionAdapter.notifyDataSetChanged();
 
                 updateTransactionStatus();
-
+*/
 
                 pushPanelUp();
-                */
+
+
+                Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
+
+                //This is not edit mode
+                newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+
+
+                startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
+
             }
 
             @Override
@@ -467,7 +522,7 @@ public class CalendarFragment extends Fragment {
         });
 
         //play rotate animation of the plus icon
-        //plusIcon.startAnimation(anim);
+        plusIcon.startAnimation(anim);
 
     }
 
@@ -487,6 +542,16 @@ public class CalendarFragment extends Fragment {
         if(((AppCompatActivity)getActivity()).getSupportActionBar() != null){
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(cal.getDisplayName(Calendar.MONTH, Calendar.LONG,
                     this.getResources().getConfiguration().locale) + " " + year);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data != null) {
+            if(requestCode == Constants.RETURN_NEW_TRANSACTION){
+                Log.i("ZGAN", "finished creating new transaction");
+            }
         }
     }
 
