@@ -3,10 +3,10 @@
     android:interpolator="@android:anim/linear_interpolator">
     
     <translate 
-        android:fromXDelta="0"
-        android:toXDelta="100%p"
+        android:fromYDelta="0"
+        android:toYDelta="100%p"
         android:duration="500"
-        android:repeatCount="1"
-        android:repeatMode="reverse" />
+        android:repeatCount="0"
+        android:repeatMode="restart" />
 
 </set>

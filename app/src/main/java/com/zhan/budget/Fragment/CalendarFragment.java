@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,11 +66,13 @@ public class CalendarFragment extends Fragment {
 
     private ArrayList<MetaMission> listMetaMission;
 
-    //If true, allows user to pull down to add transaction
-    private Boolean allowScroll;
+
 
     private Boolean isScrollAtTop;
     private Boolean isTouchOffScroll;
+    private Boolean isCenterPanelPulledDown;
+    private Boolean isPanelCloseToTop;
+
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -122,9 +122,10 @@ public class CalendarFragment extends Fragment {
 
        // infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
 
-        allowScroll = true;
         isScrollAtTop = true;
         isTouchOffScroll = true;
+        isCenterPanelPulledDown = false;
+        isPanelCloseToTop = true;
 
         listMetaMission = new ArrayList<MetaMission>();
         missionAdapter = new MissionListAdapter(getActivity(), listMetaMission);
@@ -160,13 +161,10 @@ public class CalendarFragment extends Fragment {
                 plusIcon.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                 centerPanelHeight = plusIcon.getHeight();
-                pushPanelUp();
+                snapPanelUp();
                 Toast.makeText(getContext(), "height is " + centerPanelHeight, Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
 /*
         root.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -255,7 +253,7 @@ public class CalendarFragment extends Fragment {
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, 1);
                 updateTitle(year, month);
-                pushPanelUp();
+                snapPanelUp();
 
                 listMetaMission.clear();
                 missionAdapter.notifyDataSetChanged();
@@ -267,7 +265,7 @@ public class CalendarFragment extends Fragment {
             public void onDateClick(int year, int month, int day) {
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, day);
-                pushPanelUp();
+                snapPanelUp();
                 Toast.makeText(getActivity(), "clicked :" + day + " " + (month + 1) + " " + year, Toast.LENGTH_SHORT).show();
 
                 listMetaMission.clear();
@@ -379,13 +377,18 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == 0) {
-                    Log.i("ZHAN", "scrollStateChanged: stop (idle)");
+                    Log.i("ZHAN2", "scrollStateChanged: stop (idle)");
                     isTouchOffScroll = true;
+
+                    if (isCenterPanelPulledDown) {
+                        snapPanelDown();
+                    }
+
                 } else if (scrollState == 1) {
-                    Log.i("ZHAN", "scrollStateChanged: still moving (touch)");
+                    Log.i("ZHAN2", "scrollStateChanged: still moving (touch)");
                     isTouchOffScroll = false;
                 } else if (scrollState == 2) {
-                    Log.i("ZHAN", "scrollStateChanged: preparing to stop (fling)");
+                    Log.i("ZHAN2", "scrollStateChanged: preparing to stop (fling)");
                     isTouchOffScroll = false;
                 }
                 dateTextView.setText("a:" + isScrollAtTop + ", b:" + isTouchOffScroll);
@@ -422,92 +425,61 @@ public class CalendarFragment extends Fragment {
         });
 
         missionListView.setOnTouchListener(new View.OnTouchListener() {
-            float initialY, finalY;
-            boolean isScrollingUp;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                /*int action = MotionEventCompat.getActionMasked(event);
+                final int Y = (int) event.getRawY();
 
-                switch (action) {
-                    case (MotionEvent.ACTION_DOWN):
-                        if(!isScrollAtTop) {
-                            initialY = event.getY();
-                            Log.i("ZHAN2", "pulling down");
-                        }else if(isScrollAtTop){
-                            Log.i("ZHAN2", "cant pull down. y : "+initialY);
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN: //CLICK DOWN
+                        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
+                        _yDelta = Y - lParams.topMargin;
 
-
-                            pushPanelDown();
-
+                        break;
+                    case MotionEvent.ACTION_UP: //CLICK UP
+                        Log.i("ZHAN2", "action up");
+                        if (isPanelCloseToTop) {
+                            Log.i("ZHAN2", "panel is close to top");
+                            snapPanelUp();
                         }
-                    case (MotionEvent.ACTION_UP):
-                        finalY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
 
-                        if (initialY < finalY) {
-                            Log.d("ZHAN2", "Scrolling up");
-                            isScrollingUp = true;
-                        } else if (initialY > finalY) {
-                            Log.d("ZHAN2", "Scrolling down");
-                            isScrollingUp = false;
+                        int dY = Y - _yDelta;
+
+                        balanceText.setText("" + dY);
+
+                        if (isScrollAtTop) {
+                            if (dY >= 0) { //Prevents root from going too far down
+                                layoutParams.topMargin = 0;
+                                //Log.i("ZHAN2", "down at max");
+                                isCenterPanelPulledDown = true;
+                                isPanelCloseToTop = false;
+                            } else if (dY < -centerPanelHeight) { //Prevents root from going too far up
+                                layoutParams.topMargin = -centerPanelHeight;
+                                //Log.i("ZHAN2", "up at max");
+                                isCenterPanelPulledDown = false;
+                                isPanelCloseToTop = true;
+                            } else {
+                                //Log.i("ZHAN2", "still going");
+                                layoutParams.topMargin = dY;
+                                isCenterPanelPulledDown = false;
+                                isPanelCloseToTop = true;
+                                v.setClickable(false);
+                            }
                         }
-                    default:
-                }
 
-                if (isScrollingUp) {
-                    // do animation for scrolling up
-                } else {
-                    // do animation for scrolling down
-                }
-
-                return false; // has to be false, or it will freeze the listView
-                */
-                if (isScrollAtTop) {
-
-                    final int Y = (int) event.getRawY();
-
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_DOWN: //CLICK DOWN
-                            RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
-
-                            _yDelta = Y - lParams.topMargin;
-                            break;
-                        case MotionEvent.ACTION_UP: //CLICK UP
-                            break;
-                        case MotionEvent.ACTION_POINTER_DOWN:
-                            break;
-                        case MotionEvent.ACTION_POINTER_UP:
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
-
-                            int dY = Y - _yDelta;
-
-                            Log.i("ZHAN", "---------:"+dY);
-
-                                if (dY > -centerPanelHeight / 2) { //Prevents viewgroup from going too far down
-                                    pushPanelDown();
-                                } else {
-                                    layoutParams.topMargin = dY;
-                                }
-
-                                
-
-
-                                root.setLayoutParams(layoutParams);
-
-
-
-
-                            break;
-                    }
-                    root.invalidate();
-
+                        root.setLayoutParams(layoutParams);
+                        break;
                 }
                 return false;
             }
         });
-
     }
 
     private void updateTransactionStatus(){
@@ -521,11 +493,22 @@ public class CalendarFragment extends Fragment {
        // entryCountView.setText(listMetaMission.size() + "");
     }
 
-    private void pushPanelDown(){
+    private void snapPanelUp(){ Log.i("ZHAN2","snapping panel up");
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
+        layoutParams.topMargin = -centerPanelHeight;
+        root.setLayoutParams(layoutParams);
+
+    }
+
+    private void snapPanelDown(){ Log.i("ZHAN2","snapping panel down");
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
         layoutParams.topMargin = 0;
         root.setLayoutParams(layoutParams);
 
+        playRotateAnimation();
+    }
+
+    private void playRotateAnimation(){
         Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_rotate);
         anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -535,7 +518,6 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
                 Toast.makeText(getContext(),"Create a transaction", Toast.LENGTH_SHORT).show();
 
                 /*MetaMission mt = new MetaMission();
@@ -547,14 +529,12 @@ public class CalendarFragment extends Fragment {
                 updateTransactionStatus();
 */
 
-                /*
-                pushPanelUp();
                 Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
 
                 //This is not edit mode
                 newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
                 startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
-                  */
+                snapPanelUp();
             }
 
             @Override
@@ -565,13 +545,6 @@ public class CalendarFragment extends Fragment {
 
         //play rotate animation of the plus icon
         plusIcon.startAnimation(anim);
-
-    }
-
-    private void pushPanelUp(){
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
-        layoutParams.topMargin = -centerPanelHeight;
-        root.setLayoutParams(layoutParams);
     }
 
     private void addListener(){
