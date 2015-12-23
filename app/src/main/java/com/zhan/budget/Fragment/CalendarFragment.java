@@ -3,7 +3,9 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -500,7 +502,7 @@ public class CalendarFragment extends Fragment {
 
     }
 
-    private void snapPanelDown(){ Log.i("ZHAN2","snapping panel down");
+    private void snapPanelDown(){ Log.i("ZHAN2", "snapping panel down");
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
         layoutParams.topMargin = 0;
         root.setLayoutParams(layoutParams);
@@ -518,23 +520,17 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                Toast.makeText(getContext(),"Create a transaction", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
 
-                /*MetaMission mt = new MetaMission();
-                mt.setName("transaction "+listMetaMission.size());
-                mt.setDescription("description");
-                listMetaMission.add(mt);
-                missionAdapter.notifyDataSetChanged();
-
-                updateTransactionStatus();
-*/
-
-                Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
-
-                //This is not edit mode
-                newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-                startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
-                snapPanelUp();
+                        //This is not edit mode
+                        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+                        startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
+                        snapPanelUp();
+                    }
+                }, 500);
             }
 
             @Override

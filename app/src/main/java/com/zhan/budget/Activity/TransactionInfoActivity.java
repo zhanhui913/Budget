@@ -23,7 +23,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private boolean isEditMode = false;
     private Activity instance;
     private Toolbar toolbar;
-    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
      * Perform all initializations here.
      */
     private void init(){
-        editText = (EditText) findViewById(R.id.editText);
+
 
         createToolbar();
         addListeners();
@@ -74,12 +73,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
             }
         });
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-            }
-        });
     }
 
     @Override
