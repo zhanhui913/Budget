@@ -8,11 +8,42 @@
     tools:context="com.zhan.budget.Activity.TransactionInfoActivity"
     tools:showIn="@layout/activity_transaction_info">
 
+    <TextView
+        android:id="@+id/transactionCostText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="$0.00"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:padding="15dp"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:gravity="end" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/darkgray"
+        android:layout_below="@+id/transactionCostText"/>
+
+    <include layout="@layout/category_panel"
+        android:layout_above="@+id/layoutPad"
+        android:layout_below="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"/>
+
     <include layout="@layout/number_pad"
+        android:id="@+id/layoutPad"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

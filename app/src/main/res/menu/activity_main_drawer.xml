@@ -16,6 +16,7 @@
             android:title="Overview" />
     </group>
 
+    <group android:checkableBehavior="single">
     <item android:title="Communicate">
         <menu>
             <item
@@ -28,5 +29,6 @@
                 android:title="Send" />
         </menu>
     </item>
+    </group>
 
 </menu>

@@ -21,6 +21,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_add_white"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:scaleType="center"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
