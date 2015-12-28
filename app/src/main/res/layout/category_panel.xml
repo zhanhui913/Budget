@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:grid="http://schemas.android.com/apk/res-auto"
     android:id="@+id/choice_grid"
     android:layout_width="fill_parent"
@@ -11,7 +10,7 @@
     grid:columnCount="5"
     grid:rowOrderPreserved="false"
     grid:useDefaultMargins="true">
-
+<!--
     <com.github.ivbaranov.mli.MaterialLetterIcon
         android:layout_width="0dp"
         android:layout_height="@dimen/letter_icon_size"
@@ -35,4 +34,42 @@
         app:mli_shape_type="circle"
         app:mli_letter="Z"
         app:mli_letter_color="@color/white"/>
+    -->
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_category"
+        grid:layout_columnWeight="0.2"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_category"
+        grid:layout_columnWeight="0.2"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_category"
+        grid:layout_columnWeight="0.2"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_category"
+        grid:layout_columnWeight="0.2"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_category"
+        grid:layout_columnWeight="0.2"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_category"
+        grid:layout_columnWeight="0.2"/>
+
 </android.support.v7.widget.GridLayout>
