@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,7 +82,7 @@ public class CategoryFragment extends Fragment {
         init();
         addListener();
         createSwipeMenu();
-        populateCategory();
+
     }
 
     private void init(){
@@ -95,7 +95,7 @@ public class CategoryFragment extends Fragment {
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
-       // addFakeCategory();
+        populateCategory();
     }
 
     private void addListener(){
@@ -119,7 +119,6 @@ public class CategoryFragment extends Fragment {
 
         final EditText input = (EditText) promptView.findViewById(R.id.editTextCategory);
 
-
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
                 .setCancelable(true)
@@ -130,10 +129,11 @@ public class CategoryFragment extends Fragment {
                         c.setBudget(100.0f);
                         c.setCost(2.0f);
 
+
                         db.createCategory(c);
 
                         categoryList.add(c);
-                        categoryAdapter.notifyDataSetChanged();
+                        categoryAdapter.refreshList(categoryList);
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -147,29 +147,22 @@ public class CategoryFragment extends Fragment {
     }
 
 
-    private void addFakeCategory(){
-        float max, min;
-
-        for(int i = 0; i < 20; i++){
-            Category category = new Category();
-            category.setName("Cat " + i);
-
-            Random random = new Random();
-            max = random.nextFloat() * 100;
-            min = (float)random.nextInt((int)max);
-
-            category.setBudget(max);
-            category.setCost(min);
-
-            categoryList.add(category);
-        }
-
-        categoryAdapter.notifyDataSetChanged();
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d("ZHAN","on resume");
     }
 
     private void populateCategory(){
+
         categoryList = db.getAllCategory();
-        categoryAdapter.notifyDataSetChanged();
+
+        for(int i = 0; i < categoryList.size(); i++){
+            Log.d("ZHAN", i+"->"+categoryList.get(i).getName());
+        }
+
+
+        categoryAdapter.refreshList(categoryList);
     }
 
     /**
@@ -212,8 +205,9 @@ public class CategoryFragment extends Fragment {
 
                     case 1:
                         //delete
+                        db.deleteCategory(categoryList.get(position));
                         categoryList.remove(position);
-                        categoryAdapter.notifyDataSetChanged();
+                        categoryAdapter.refreshList(categoryList);
 
                         break;
                 }

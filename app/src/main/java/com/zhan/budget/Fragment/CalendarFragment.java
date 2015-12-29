@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +28,10 @@ import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.CalendarEvent;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Activity.TransactionInfoActivity;
-import com.zhan.budget.Adapter.MissionListAdapter;
+import com.zhan.budget.Adapter.TransactionListAdapter;
+import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Model.MetaMission;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.RectangleCellView;
@@ -62,19 +62,16 @@ public class CalendarFragment extends Fragment {
 
     private int centerPanelHeight;
 
-
-    private SwipeMenuListView missionListView;
-    private MissionListAdapter missionAdapter;
-
-    private ArrayList<MetaMission> listMetaMission;
-
-
+    private SwipeMenuListView transactionListView;
+    private TransactionListAdapter transactionAdapter;
+    private ArrayList<Transaction> transactionList;
 
     private Boolean isScrollAtTop;
     private Boolean isTouchOffScroll;
     private Boolean isCenterPanelPulledDown;
     private Boolean isPanelCloseToTop;
 
+    private Database db;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -114,13 +111,15 @@ public class CalendarFragment extends Fragment {
 
 
     private void init(){
+        openDatabase();
+
         root = (ViewGroup) view.findViewById(R.id.root);
         plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
         entryCountView = (TextView) view.findViewById(R.id.entryCount);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
         balanceText = (TextView) view.findViewById(R.id.balanceText);
-        missionListView = (SwipeMenuListView) view.findViewById(R.id.missionListView);
+        transactionListView = (SwipeMenuListView) view.findViewById(R.id.transactionListView);
 
        // infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
 
@@ -129,13 +128,13 @@ public class CalendarFragment extends Fragment {
         isCenterPanelPulledDown = false;
         isPanelCloseToTop = true;
 
-        listMetaMission = new ArrayList<MetaMission>();
-        missionAdapter = new MissionListAdapter(getActivity(), listMetaMission);
-        missionListView.setAdapter(missionAdapter);
+        transactionList = new ArrayList<Transaction>();
+        transactionAdapter = new TransactionListAdapter(getActivity(), transactionList);
+        transactionListView.setAdapter(transactionAdapter);
 
         createPanel();
         createCalendar();
-        createFakeList();
+        //createFakeList();
         createSwipeMenu();
 
         updateTransactionStatus();
@@ -143,13 +142,14 @@ public class CalendarFragment extends Fragment {
 
     private void createFakeList(){
         for(int i = 0; i < 17; i++) {
-            MetaMission mt = new MetaMission();
-            mt.setName("name " + i);
-            mt.setDescription("description");
+            Transaction transaction = new Transaction();
+            transaction.setNote("Transaction " + i);
+            transaction.setPrice(55.5f);
 
-            listMetaMission.add(mt);
+            transactionList.add(transaction);
         }
-        missionAdapter.notifyDataSetChanged();
+
+        transactionAdapter.refreshList(transactionList);
     }
 
     private void createPanel(){
@@ -167,7 +167,7 @@ public class CalendarFragment extends Fragment {
                 Toast.makeText(getContext(), "height is " + centerPanelHeight, Toast.LENGTH_SHORT).show();
             }
         });
-/*
+
         root.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -182,6 +182,14 @@ public class CalendarFragment extends Fragment {
                             _yDelta = Y - lParams.topMargin;
                             break;
                         case MotionEvent.ACTION_UP: //CLICK UP
+                            if (isPanelCloseToTop) {
+                                Log.i("ZHAN2", "panel is close to top");
+                                snapPanelUp();
+                            }
+
+                            if (isCenterPanelPulledDown) {
+                                snapPanelDown();
+                            }
                             break;
                         case MotionEvent.ACTION_POINTER_DOWN:
                             break;
@@ -192,12 +200,18 @@ public class CalendarFragment extends Fragment {
 
                             int dY = Y - _yDelta;
 
-                            if (dY > -centerPanelHeight / 2) { //Prevents viewgroup from going too far down
-                                pushPanelDown();
-                            } else if (dY < -centerPanelHeight / 2) { //Prevents viewgroup from going too far up
-                                pushPanelUp();
+                            if (dY >= 0) { //Prevents root from going too far down
+                                layoutParams.topMargin = 0;
+                                isCenterPanelPulledDown = true;
+                                isPanelCloseToTop = false;
+                            } else if (dY < -centerPanelHeight) { //Prevents root from going too far up
+                                layoutParams.topMargin = -centerPanelHeight;
+                                isCenterPanelPulledDown = false;
+                                isPanelCloseToTop = true;
                             } else {
                                 layoutParams.topMargin = dY;
+                                isCenterPanelPulledDown = false;
+                                isPanelCloseToTop = true;
                             }
 
                             layoutParams.bottomMargin = -250;
@@ -212,7 +226,7 @@ public class CalendarFragment extends Fragment {
                     return false;
                 }
             }
-        });*/
+        });
     }
 
     private void createCalendar(){
@@ -257,8 +271,8 @@ public class CalendarFragment extends Fragment {
                 updateTitle(year, month);
                 snapPanelUp();
 
-                listMetaMission.clear();
-                missionAdapter.notifyDataSetChanged();
+                transactionList.clear();
+                transactionAdapter.notifyDataSetChanged();
             }
         });
 
@@ -270,8 +284,8 @@ public class CalendarFragment extends Fragment {
                 snapPanelUp();
                 Toast.makeText(getActivity(), "clicked :" + day + " " + (month + 1) + " " + year, Toast.LENGTH_SHORT).show();
 
-                listMetaMission.clear();
-                missionAdapter.notifyDataSetChanged();
+                transactionList.clear();
+                transactionAdapter.notifyDataSetChanged();
             }
         });
 
@@ -335,10 +349,10 @@ public class CalendarFragment extends Fragment {
             }
         };
         //set creator
-        missionListView.setMenuCreator(creator);
+        transactionListView.setMenuCreator(creator);
 
         // step 2. listener item click event
-        missionListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+        transactionListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
@@ -346,8 +360,8 @@ public class CalendarFragment extends Fragment {
                         //Delete the specific .json and all images it has
                         Toast.makeText(getContext(), "deleting ", Toast.LENGTH_SHORT).show();
 
-                        listMetaMission.remove(position);
-                        missionAdapter.notifyDataSetChanged();
+                        transactionList.remove(position);
+                        transactionAdapter.notifyDataSetChanged();
 
 
                         updateTransactionStatus();
@@ -362,7 +376,7 @@ public class CalendarFragment extends Fragment {
         });
 
         // set SwipeListener
-        missionListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+        transactionListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
 
             @Override
             public void onSwipeStart(int position) {
@@ -375,7 +389,7 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        missionListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        transactionListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == 0) {
@@ -399,7 +413,7 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem == 0) {
-                    View v = missionListView.getChildAt(0);
+                    View v = transactionListView.getChildAt(0);
 
                     int offset = (v == null) ? 0 : v.getTop();
                     if (offset == 0) {
@@ -412,8 +426,8 @@ public class CalendarFragment extends Fragment {
                     }
                 } else if (totalItemCount - visibleItemCount == firstVisibleItem) {
                     isScrollAtTop = false;
-                    if (missionListView.getLastVisiblePosition() == missionListView.getAdapter().getCount() - 1
-                            && missionListView.getChildAt(missionListView.getChildCount() - 1).getBottom() <= missionListView.getHeight()) {
+                    if (transactionListView.getLastVisiblePosition() == transactionListView.getAdapter().getCount() - 1
+                            && transactionListView.getChildAt(transactionListView.getChildCount() - 1).getBottom() <= transactionListView.getHeight()) {
 
                         entryCountView.setText("bottom reached");
                     } else {
@@ -426,7 +440,7 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        missionListView.setOnTouchListener(new View.OnTouchListener() {
+        transactionListView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -486,16 +500,16 @@ public class CalendarFragment extends Fragment {
 
     private void updateTransactionStatus(){
 /*
-        if(listMetaMission.size() > 0){
+        if(transactionList.size() > 0){
             infoPanel.setVisibility(View.GONE);
         }else{
             infoPanel.setVisibility(View.VISIBLE);
         }*/
 
-       // entryCountView.setText(listMetaMission.size() + "");
+       // entryCountView.setText(transactionList.size() + "");
     }
 
-    private void snapPanelUp(){ Log.i("ZHAN2","snapping panel up");
+    private void snapPanelUp(){ Log.i("ZHAN2", "snapping panel up");
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
         layoutParams.topMargin = -centerPanelHeight;
         root.setLayoutParams(layoutParams);
@@ -561,9 +575,28 @@ public class CalendarFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
-                Log.i("ZGAN", "finished creating new transaction");
+
+                Log.i("ZHAN", "finished creating new transaction");
+
+                Transaction transaction = data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION);
+
+                Log.d("ZHAN", "transaction name is "+transaction.getNote()+" cost is "+transaction.getPrice());
+                Log.d("ZHAN", "category is "+transaction.getCategory().getName()+", "+transaction.getCategory().getId());
+
+                db.createTransaction(transaction);
+
+                transactionList.add(transaction);
+                transactionAdapter.refreshList(transactionList);
             }
         }
+    }
+
+    public void openDatabase(){
+        db = new Database(getActivity().getApplicationContext());
+    }
+
+    public void closeDatabase(){
+        db.close();
     }
 
     @Override
@@ -581,6 +614,12 @@ public class CalendarFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        closeDatabase();
     }
 
     /**

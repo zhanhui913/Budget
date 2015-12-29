@@ -50,7 +50,7 @@ public class CategoryListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.category_item, null);
+            convertView = inflater.inflate(R.layout.item_category, null);
 
 
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
@@ -75,5 +75,10 @@ public class CategoryListAdapter extends BaseAdapter {
         progressBar.setProgress(category.getCost());
 
         return convertView;
+    }
+
+    public void refreshList(List<Category> categoryList){
+        this.categoryList = categoryList;
+        notifyDataSetChanged();
     }
 }

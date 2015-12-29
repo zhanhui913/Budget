@@ -9,5 +9,6 @@ public class Constants {
 
     //Return result
     public static final int RETURN_NEW_TRANSACTION = 1;
+    public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
 
 }

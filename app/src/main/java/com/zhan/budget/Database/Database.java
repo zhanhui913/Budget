@@ -10,15 +10,13 @@ import android.util.Log;
 
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
+import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 /**
@@ -65,6 +63,8 @@ public class Database extends SQLiteOpenHelper{
             TRANSACTION_PRICE + " REAL,"+
             "FOREIGN KEY (" + TRANSACTION_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + CATEGORY_ID + "));";
 
+    private SQLiteDatabase sqLiteDatabase;
+
     public Database(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -74,6 +74,7 @@ public class Database extends SQLiteOpenHelper{
         //Create required tables
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_TRANSACTION);
+        sqLiteDatabase = db;
     }
 
     @Override
@@ -89,6 +90,10 @@ public class Database extends SQLiteOpenHelper{
         //Create new tables
         onCreate(db);
     }
+/*
+    public boolean isOpen(){
+        return sqLiteDatabase.isOpen();
+    }*/
 
     //----------------------------------------------------------------------------------------------
     //
@@ -275,7 +280,7 @@ public class Database extends SQLiteOpenHelper{
      * Insert a Transaction into the database
      * @param transaction The new Transaction to be inserted
      */
-    public void createItem(Transaction transaction){
+    public void createTransaction(Transaction transaction){
         //Get references to writable db
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -322,7 +327,7 @@ public class Database extends SQLiteOpenHelper{
             transaction.setId(cursor.getInt(0));
             transaction.setCategory(getCategoryById(cursor.getInt(1)));
             transaction.setNote(cursor.getString(2));
-            transaction.setDate(parseDate(cursor.getString(3)));
+            transaction.setDate(Util.parseDate(cursor.getString(3)));
             transaction.setPrice(cursor.getFloat(4));
         }
 
@@ -351,7 +356,7 @@ public class Database extends SQLiteOpenHelper{
                 transaction.setId(cursor.getInt(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
                 transaction.setNote(cursor.getString(2));
-                transaction.setDate(parseDate(cursor.getString(3)));
+                transaction.setDate(Util.parseDate(cursor.getString(3)));
                 transaction.setPrice(cursor.getFloat(4));
 
                 //Add Transaction to arraylist
@@ -434,15 +439,6 @@ public class Database extends SQLiteOpenHelper{
         return stringDate;
     }
 */
-    private Date parseDate(String dateInString){
-        DateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-        try{
-            return format.parse(dateInString);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     private void importDB() {
         try {

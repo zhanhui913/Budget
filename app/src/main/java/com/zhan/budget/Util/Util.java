@@ -20,6 +20,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by zhanyap on 15-08-24.
@@ -166,7 +169,7 @@ public final class Util {
             int totalItemsHeight = 0;
             for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
                 View item = listAdapter.getView(itemPos, null, listView);
-                //Individual items such as image_item.xml, marker_item.xml, and mission_item.xml needs to be relative layout
+                //Individual items such as image_item.xml, marker_item.xml, and item_transactiontion.xml needs to be relative layout
                 if (item instanceof ViewGroup) {
                     item.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 }
@@ -234,7 +237,13 @@ public final class Util {
     }
 
 
-
-
-
+    public static Date parseDate(String dateInString){
+        DateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        try{
+            return format.parse(dateInString);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

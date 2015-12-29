@@ -14,11 +14,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
+
+import java.util.Date;
 
 public class TransactionInfoActivity extends AppCompatActivity {
 
@@ -27,8 +33,11 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,buttonDot,button0,buttonX;
     private TextView transactionCostView;
+    private EditText editTextName;
+
     private String priceString;
 
+    private Database db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,8 @@ public class TransactionInfoActivity extends AppCompatActivity {
      * Perform all initializations here.
      */
     private void init(){
+        openDatabase();
+
         button1 = (Button)findViewById(R.id.number1);
         button2 = (Button)findViewById(R.id.number2);
         button3 = (Button)findViewById(R.id.number3);
@@ -61,6 +72,8 @@ public class TransactionInfoActivity extends AppCompatActivity {
         buttonX = (Button)findViewById(R.id.numberX);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
+
+        editTextName = (EditText)findViewById(R.id.editTextTransactionName);
 
         priceString = "";
 
@@ -239,7 +252,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
         }
 
         cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-        transactionCostView.setText("$"+cashAmountBuilder.toString());
+        transactionCostView.setText("$" + cashAmountBuilder.toString());
 
     }
 
@@ -313,11 +326,34 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
     private void save(){
         Intent intent = new Intent();
+
+        Category category = db.getCategoryById(1);
+
+        Transaction transaction = new Transaction();
+        transaction.setNote(editTextName.getText().toString());
+        transaction.setPrice(Float.valueOf(priceString));
+        transaction.setDate(new Date());
+        transaction.setCategory(category);
+
+        intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);
         setResult(RESULT_OK, intent);
+
         finish();
     }
 
+    public void openDatabase(){
+        db = new Database(getApplicationContext());
+    }
 
+    public void closeDatabase(){
+        db.close();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        closeDatabase();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
