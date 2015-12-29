@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <View
+        android:id="@+id/categoryIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_category"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="false" />
+
+    <TextView
+        android:id="@+id/categoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lunch"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/categoryIcon"
+        android:layout_marginLeft="15dp" />
+
+    <TextView
+        android:id="@+id/categoryBudgetTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Budget : "
+        android:textSize="15sp"
+        android:layout_below="@+id/categoryName"
+        android:layout_toRightOf="@+id/categoryIcon"
+        android:layout_marginLeft="15dp" />
+
+    <TextView
+        android:id="@+id/categoryBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$25.00"
+        android:textSize="15sp"
+        android:layout_below="@+id/categoryName"
+        android:layout_toRightOf="@+id/categoryBudgetTitle"/>
+
+    <TextView
+        android:id="@+id/categoryCurrentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current"
+        android:textSize="15sp"
+        android:layout_below="@+id/categoryName"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:id="@+id/categoryCurrent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$25.00"
+        android:textSize="20sp"
+        android:layout_above="@+id/categoryCurrentTitle"
+        android:layout_alignParentRight="true" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/categoryProgress"
+        android:layout_width="fill_parent"
+        android:layout_height="7dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/categoryIcon"
+        android:layout_marginLeft="15dp"
+        app:rcBackgroundPadding="1dp"
+        app:rcRadius="0dp"
+        app:rcBackgroundColor="@color/gray"
+        app:rcProgressColor="@color/colorPrimary"
+        app:rcProgress="5"
+        app:rcMax="10"
+        android:layout_below="@+id/categoryBudgetTitle" />
+
+</RelativeLayout>

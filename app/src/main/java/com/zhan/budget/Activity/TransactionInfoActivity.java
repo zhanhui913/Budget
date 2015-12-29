@@ -66,6 +66,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
         createToolbar();
         addListeners();
+        createCategory();
     }
 
     /**
@@ -181,6 +182,12 @@ public class TransactionInfoActivity extends AppCompatActivity {
         //transactionCostView.addTextChangedListener(tw);
 
 
+    }
+
+    private void createCategory(){
+        for(int i = 0; i < 15; i++){
+
+        }
     }
 
     TextWatcher tw = new TextWatcher() {

@@ -2,7 +2,7 @@
 <android.support.v7.widget.GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:grid="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/choice_grid"
+    android:id="@+id/category_grid"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
@@ -10,31 +10,6 @@
     grid:columnCount="5"
     grid:rowOrderPreserved="false"
     grid:useDefaultMargins="true">
-<!--
-    <com.github.ivbaranov.mli.MaterialLetterIcon
-        android:layout_width="0dp"
-        android:layout_height="@dimen/letter_icon_size"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        grid:layout_columnWeight="0.2"
-
-        app:mli_shape_color="@color/lightBlue"
-        app:mli_shape_type="circle"
-        app:mli_letter="Z"
-        app:mli_letter_color="@color/white"/>
-
-    <com.github.ivbaranov.mli.MaterialLetterIcon
-        android:layout_width="0dp"
-        android:layout_height="@dimen/letter_icon_size"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        grid:layout_columnWeight="0.2"
-        grid:layout_gravity="fill_horizontal"
-        app:mli_shape_color="@color/lightBlue"
-        app:mli_shape_type="circle"
-        app:mli_letter="Z"
-        app:mli_letter_color="@color/white"/>
-    -->
 
     <View
         android:layout_width="0dp"
@@ -73,3 +48,54 @@
         grid:layout_columnWeight="0.2"/>
 
 </android.support.v7.widget.GridLayout>
+<!--
+
+    <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context="com.zhan.budget.Activity.MainActivity">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.2"
+        android:layout_margin="5dp"
+        android:background="@drawable/circular_category" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.2"
+        android:layout_margin="5dp"
+        android:background="@drawable/circular_category" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.2"
+        android:layout_margin="5dp"
+        android:background="@drawable/circular_category" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.2"
+        android:layout_margin="5dp"
+        android:background="@drawable/circular_category" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.2"
+        android:layout_margin="5dp"
+        android:background="@drawable/circular_category" />
+</LinearLayout>
+
+</LinearLayout>
+-->
