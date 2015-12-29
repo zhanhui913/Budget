@@ -1,14 +1,11 @@
 package com.zhan.budget.Model;
 
-import android.support.annotation.Nullable;
-
-
 import java.util.Date;
 
 /**
  * Created by Zhan on 15-12-14.
  */
-public class Entry {
+public class Transaction {
 
     //@PrimaryKey
     private int id;
@@ -26,8 +23,16 @@ public class Entry {
     //@Column
     private Category category;
 
-    public Entry(){
+    public Transaction(){
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Date getDate() {

@@ -44,7 +44,7 @@
         android:layout_toRightOf="@+id/categoryBudgetTitle"/>
 
     <TextView
-        android:id="@+id/categoryCurrentTitle"
+        android:id="@+id/categoryCostTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Current"
@@ -53,12 +53,12 @@
         android:layout_alignParentRight="true" />
 
     <TextView
-        android:id="@+id/categoryCurrent"
+        android:id="@+id/categoryCost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="$25.00"
         android:textSize="20sp"
-        android:layout_above="@+id/categoryCurrentTitle"
+        android:layout_above="@+id/categoryCostTitle"
         android:layout_alignParentRight="true" />
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar

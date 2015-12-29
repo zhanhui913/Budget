@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 
@@ -53,12 +54,25 @@ public class CategoryListAdapter extends BaseAdapter {
 
 
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
+        TextView budget = (TextView) convertView.findViewById(R.id.categoryBudget);
+        TextView cost = (TextView) convertView.findViewById(R.id.categoryCost);
+        RoundCornerProgressBar progressBar = (RoundCornerProgressBar) convertView.findViewById(R.id.categoryProgress);
 
         // getting category data for the row
         Category category = categoryList.get(position);
 
         // Name
         name.setText(category.getName());
+
+        //Budget
+        budget.setText(""+category.getBudget());
+
+        //Cost
+        cost.setText(""+category.getCost());
+
+        //ProgressBar
+        progressBar.setMax(category.getBudget());
+        progressBar.setProgress(category.getCost());
 
         return convertView;
     }

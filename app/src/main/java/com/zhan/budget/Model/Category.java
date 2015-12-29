@@ -17,8 +17,36 @@ public class Category {
     //@Column
     private BudgetType type;
 
+    private float budget;
+
+    private float cost;
+
     public Category(){
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public float getBudget() {
+        return budget;
+    }
+
+    public void setBudget(float budget) {
+        this.budget = budget;
+    }
+
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
     }
 
     public String getName() {
