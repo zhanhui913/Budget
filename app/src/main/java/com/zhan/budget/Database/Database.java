@@ -16,7 +16,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -63,6 +66,9 @@ public class Database extends SQLiteOpenHelper{
             TRANSACTION_PRICE + " REAL,"+
             "FOREIGN KEY (" + TRANSACTION_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + CATEGORY_ID + "));";
 
+    //Index on the date of the TRANSACTION Table
+    private static final String INDEX_TABLE_TRANSACTION = "CREATE INDEX dateIndex ON "+ TABLE_TRANSACTION + "(" + TRANSACTION_DATE + ");";
+
     private SQLiteDatabase sqLiteDatabase;
 
     public Database(Context context){
@@ -74,6 +80,7 @@ public class Database extends SQLiteOpenHelper{
         //Create required tables
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_TRANSACTION);
+        db.execSQL(INDEX_TABLE_TRANSACTION);
         sqLiteDatabase = db;
     }
 
@@ -288,13 +295,13 @@ public class Database extends SQLiteOpenHelper{
         //values.put(TRANSACTION_ID, item.getId()); //Testing if auto increment works
         values.put(TRANSACTION_CATEGORY_ID, transaction.getCategory().getId());
         values.put(TRANSACTION_NOTE, transaction.getNote());
-        values.put(TRANSACTION_DATE, transaction.getDate().toString());
+        values.put(TRANSACTION_DATE, Util.convertDateToString(transaction.getDate()));
         values.put(TRANSACTION_PRICE, transaction.getPrice());
 
         db.insert(TABLE_TRANSACTION, null, values);
 
         db.close();
-        Log.d(TABLE_TRANSACTION, "create Item " + transaction.toString());
+        Log.d(TABLE_TRANSACTION, "create Transaction " + transaction.toString());
 
         exportDB();
     }
@@ -311,7 +318,7 @@ public class Database extends SQLiteOpenHelper{
 
         Cursor cursor = db.query(TABLE_TRANSACTION,  //Table
                 TOUR_COLUMNS,                        //Column names
-                " id = ?",                           // Selections
+                " " + TRANSACTION_ID + " = ?",       // Selections
                 new String[]{String.valueOf(id)},    // selections argument
                 null,                                // group by
                 null,                                // having
@@ -320,20 +327,19 @@ public class Database extends SQLiteOpenHelper{
 
         Transaction transaction = new Transaction();
         if(!(cursor.moveToFirst()) || (cursor.getCount()==0)){
-            Log.d(TABLE_TRANSACTION,"GetItem returns empty for id = "+id);
+            Log.d(TABLE_TRANSACTION,"GetTransaction returns empty for id = "+id);
         }else{
-            Log.d(TABLE_TRANSACTION, "GetItem returns something for id = " + id);
+            Log.d(TABLE_TRANSACTION, "GetTransaction returns something for id = " + id);
 
             transaction.setId(cursor.getInt(0));
             transaction.setCategory(getCategoryById(cursor.getInt(1)));
             transaction.setNote(cursor.getString(2));
-            transaction.setDate(Util.parseDate(cursor.getString(3)));
+            transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
             transaction.setPrice(cursor.getFloat(4));
         }
 
         cursor.close();
         db.close();
-        Log.d(TABLE_TRANSACTION,"got Transaction "+transaction.toString());
         return transaction;
     }
 
@@ -347,7 +353,7 @@ public class Database extends SQLiteOpenHelper{
         String query = "SELECT * FROM " + TABLE_TRANSACTION;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(query, null);
 
         Transaction transaction = null;
         if(cursor.moveToFirst()){
@@ -356,7 +362,7 @@ public class Database extends SQLiteOpenHelper{
                 transaction.setId(cursor.getInt(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
                 transaction.setNote(cursor.getString(2));
-                transaction.setDate(Util.parseDate(cursor.getString(3)));
+                transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
                 transaction.setPrice(cursor.getFloat(4));
 
                 //Add Transaction to arraylist
@@ -367,7 +373,50 @@ public class Database extends SQLiteOpenHelper{
 
         cursor.close();
         db.close();
-        Log.d(TABLE_TRANSACTION,"get all transaction "+transactions.toString());
+        Log.d(TABLE_TRANSACTION,"GetAllTransactions : count = "+transactions.size());
+        return transactions;
+    }
+
+    /**
+     * Get all Transactions that have the date
+     * @param date The current date
+     * @return ArrayList<Transaction>
+     */
+    public ArrayList<Transaction> getAllTransaction(Date date){
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+
+        String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_TRANSACTION,           //Table
+                TOUR_COLUMNS,                                 //Column names
+                " " + TRANSACTION_DATE + " = ?",              // Selections
+                new String[]{Util.convertDateToString(date)}, // selections argument
+                null,                                // group by
+                null,                                // having
+                null,                                // order by
+                null);                               // limit
+
+        Transaction transaction = null;
+        if(cursor.moveToFirst()){
+            do {
+                Log.d(TABLE_TRANSACTION, "GetAllTransactions returns something transactions for date = " + Util.convertDateToString(date));
+                Log.d(TABLE_TRANSACTION, "GetAllTransactions returns something for transaction note = " + cursor.getString(2));
+                transaction = new Transaction();
+                transaction.setId(cursor.getInt(0));
+                transaction.setCategory(getCategoryById(cursor.getInt(1)));
+                transaction.setNote(cursor.getString(2));
+                transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
+                transaction.setPrice(cursor.getFloat(4));
+
+                //Add Transaction to arraylist
+                transactions.add(transaction);
+                Log.d(TABLE_TRANSACTION, "adding 1 transaction");
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
         return transactions;
     }
 
@@ -382,7 +431,7 @@ public class Database extends SQLiteOpenHelper{
         values.put(TRANSACTION_ID,transaction.getId());
         values.put(TRANSACTION_CATEGORY_ID, transaction.getCategory().getId());
         values.put(TRANSACTION_NOTE, transaction.getNote());
-        values.put(TRANSACTION_DATE, transaction.getDate().toString());
+        values.put(TRANSACTION_DATE, Util.convertDateToString(transaction.getDate()));
         values.put(TRANSACTION_PRICE, transaction.getPrice());
 
         int i = db.update(TABLE_TRANSACTION,   // Table
@@ -418,27 +467,6 @@ public class Database extends SQLiteOpenHelper{
     // ETC functions
     //
     //----------------------------------------------------------------------------------------------
-
-/* NOT SURE IF STILL NEEDED
-    public Date convertStringToDate(String stringDate){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyy");
-        Date date = null;
-
-        try{
-            date = formatter.parse(stringDate);
-        }catch(ParseException e){
-            e.printStackTrace();
-        }
-        return date;
-    }
-
-    public String convertDateToString(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-        String stringDate = formatter.format(date);
-
-        return stringDate;
-    }
-*/
 
     private void importDB() {
         try {

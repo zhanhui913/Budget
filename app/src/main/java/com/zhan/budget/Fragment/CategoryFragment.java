@@ -82,7 +82,6 @@ public class CategoryFragment extends Fragment {
         init();
         addListener();
         createSwipeMenu();
-
     }
 
     private void init(){
@@ -156,6 +155,8 @@ public class CategoryFragment extends Fragment {
     private void populateCategory(){
 
         categoryList = db.getAllCategory();
+
+        Log.d("ZHAN", "There are "+categoryList.size()+" categories");
 
         for(int i = 0; i < categoryList.size(); i++){
             Log.d("ZHAN", i+"->"+categoryList.get(i).getName());

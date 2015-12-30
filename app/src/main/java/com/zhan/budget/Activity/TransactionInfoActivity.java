@@ -38,6 +38,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private String priceString;
 
     private Database db;
+    private Date selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
         //Get intents from caller activity
         isEditMode = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
+        selectedDate = Util.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
 
         init();
     }
@@ -332,7 +334,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
         Transaction transaction = new Transaction();
         transaction.setNote(editTextName.getText().toString());
         transaction.setPrice(Float.valueOf(priceString));
-        transaction.setDate(new Date());
+        transaction.setDate(Util.formatDate(selectedDate));
         transaction.setCategory(category);
 
         intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);

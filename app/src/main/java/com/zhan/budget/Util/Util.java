@@ -21,8 +21,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by zhanyap on 15-08-24.
@@ -229,21 +231,39 @@ public final class Util {
     public static boolean checkInternetConnection(Activity activity) {
         final ConnectivityManager conMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
-        if (activeNetwork != null && activeNetwork.isConnected()) {
-            // notify user you are online
-            return true;
-        }
-        return false;
+        return (activeNetwork != null && activeNetwork.isConnected());
     }
 
-
-    public static Date parseDate(String dateInString){
-        DateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+    public static Date convertStringToDate(String stringDate){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.CANADA);
+        Date date = null;
+Log.d("ZHAN", "convert string to date : "+stringDate);
         try{
-            return format.parse(dateInString);
-        }catch(Exception e){
+            date = formatter.parse(stringDate);
+        }catch(ParseException e){
             e.printStackTrace();
         }
-        return null;
+        return date;
+    }
+
+    public static String convertDateToString(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.CANADA);
+        Log.d("ZHAN", "convert date to string : "+formatter.format(date));
+        return formatter.format(date);
+    }
+
+    public static Date formatDate(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.CANADA);
+
+        String dateString = convertDateToString(date);
+        Date newDate = null;
+
+        try{
+            newDate = formatter.parse(dateString);
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+        Log.d("ZHAN", "convert date to date : "+dateString);
+        return newDate;
     }
 }

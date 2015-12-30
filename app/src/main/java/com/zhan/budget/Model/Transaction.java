@@ -87,7 +87,7 @@ public class Transaction implements Parcelable{
     public void writeToParcel(Parcel dest, int flags){
         dest.writeInt(id);
         dest.writeString(note);
-        dest.writeString(date.toString());
+        dest.writeString(Util.convertDateToString(date));
         dest.writeFloat(price);
 
         //Add inner class
@@ -113,7 +113,7 @@ public class Transaction implements Parcelable{
     private Transaction(Parcel in){
         id = in.readInt();
         note = in.readString();
-        date = Util.parseDate(in.readString());
+        date = Util.convertStringToDate(in.readString());
         price = in.readFloat();
 
         category = Category.CREATOR.createFromParcel(in);

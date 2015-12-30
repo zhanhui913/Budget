@@ -38,6 +38,8 @@ import com.zhan.budget.View.RectangleCellView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -72,6 +74,7 @@ public class CalendarFragment extends Fragment {
     private Boolean isPanelCloseToTop;
 
     private Database db;
+    private Date selectedDate;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -107,11 +110,17 @@ public class CalendarFragment extends Fragment {
 
         init();
         addListener();
+        createPanel();
+        createCalendar();
+        createSwipeMenu();
+        updateTransactionStatus();
     }
-
 
     private void init(){
         openDatabase();
+
+        //By default it will be the current date;
+        selectedDate = new Date();
 
         root = (ViewGroup) view.findViewById(R.id.root);
         plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
@@ -132,24 +141,19 @@ public class CalendarFragment extends Fragment {
         transactionAdapter = new TransactionListAdapter(getActivity(), transactionList);
         transactionListView.setAdapter(transactionAdapter);
 
-        createPanel();
-        createCalendar();
-        //createFakeList();
-        createSwipeMenu();
-
-        updateTransactionStatus();
+        populateTransactionsForDate(selectedDate);
     }
 
-    private void createFakeList(){
-        for(int i = 0; i < 17; i++) {
-            Transaction transaction = new Transaction();
-            transaction.setNote("Transaction " + i);
-            transaction.setPrice(55.5f);
+    private void populateTransactionsForDate(Date date){
 
-            transactionList.add(transaction);
-        }
+        Log.d("ZHAN", "populate "+Util.convertDateToString(date)+" transaction list");
 
+        //Populate the date's transaction list (if any)
+        transactionList = db.getAllTransaction(date);
         transactionAdapter.refreshList(transactionList);
+
+
+        Log.d("ZHAN", "there are "+transactionList.size()+" transaction for "+Util.convertDateToString(date));
     }
 
     private void createPanel(){
@@ -271,8 +275,11 @@ public class CalendarFragment extends Fragment {
                 updateTitle(year, month);
                 snapPanelUp();
 
-                transactionList.clear();
-                transactionAdapter.notifyDataSetChanged();
+                selectedDate = (new GregorianCalendar(year, month, 1)).getTime();
+
+                Toast.makeText(getActivity(), "moved :" +Util.convertDateToString(selectedDate) , Toast.LENGTH_SHORT).show();
+
+                populateTransactionsForDate(selectedDate);
             }
         });
 
@@ -282,10 +289,12 @@ public class CalendarFragment extends Fragment {
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, day);
                 snapPanelUp();
-                Toast.makeText(getActivity(), "clicked :" + day + " " + (month + 1) + " " + year, Toast.LENGTH_SHORT).show();
 
-                transactionList.clear();
-                transactionAdapter.notifyDataSetChanged();
+                selectedDate = (new GregorianCalendar(year, month, day)).getTime();
+
+                Toast.makeText(getActivity(), "clicked :" +Util.convertDateToString(selectedDate) , Toast.LENGTH_SHORT).show();
+
+                populateTransactionsForDate(selectedDate);
             }
         });
 
@@ -541,6 +550,7 @@ public class CalendarFragment extends Fragment {
 
                         //This is not edit mode
                         newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+                        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, Util.convertDateToString(selectedDate));
                         startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
                         snapPanelUp();
                     }
@@ -576,13 +586,13 @@ public class CalendarFragment extends Fragment {
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
 
-                Log.i("ZHAN", "finished creating new transaction");
+                Log.i("ZHAN", "finished creating new transaction ----------");
 
                 Transaction transaction = data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION);
 
                 Log.d("ZHAN", "transaction name is "+transaction.getNote()+" cost is "+transaction.getPrice());
                 Log.d("ZHAN", "category is "+transaction.getCategory().getName()+", "+transaction.getCategory().getId());
-
+                Log.i("ZHAN", "finished creating new transaction ----------");
                 db.createTransaction(transaction);
 
                 transactionList.add(transaction);
