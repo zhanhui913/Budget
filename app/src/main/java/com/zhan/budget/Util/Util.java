@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -235,9 +234,8 @@ public final class Util {
     }
 
     public static Date convertStringToDate(String stringDate){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
         Date date = null;
-Log.d("ZHAN", "convert string to date : "+stringDate);
         try{
             date = formatter.parse(stringDate);
         }catch(ParseException e){
@@ -247,13 +245,12 @@ Log.d("ZHAN", "convert string to date : "+stringDate);
     }
 
     public static String convertDateToString(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.CANADA);
-        Log.d("ZHAN", "convert date to string : "+formatter.format(date));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
         return formatter.format(date);
     }
 
     public static Date formatDate(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
 
         String dateString = convertDateToString(date);
         Date newDate = null;
@@ -263,7 +260,6 @@ Log.d("ZHAN", "convert string to date : "+stringDate);
         }catch(ParseException e){
             e.printStackTrace();
         }
-        Log.d("ZHAN", "convert date to date : "+dateString);
         return newDate;
     }
 }

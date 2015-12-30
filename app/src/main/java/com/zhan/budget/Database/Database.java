@@ -16,10 +16,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -51,14 +50,14 @@ public class Database extends SQLiteOpenHelper{
     private static final String TRANSACTION_PRICE = "price";
 
     //Database creation sql statement for CATEGORY Table
-    private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE " + TABLE_CATEGORY + " (" +
+    private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORY + " (" +
             CATEGORY_ID + " INTEGER PRIMARY KEY," +
             CATEGORY_TITLE + " TEXT," +
             CATEGORY_BUDGET + " REAL," +
             CATEGORY_COST + " REAL);";
 
     //Database creation sql statement for TRANSACTION Table
-    private static final String CREATE_TABLE_TRANSACTION = "CREATE TABLE " + TABLE_TRANSACTION + " (" +
+    private static final String CREATE_TABLE_TRANSACTION = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTION + " (" +
             TRANSACTION_ID + " INTEGER PRIMARY KEY," +
             TRANSACTION_CATEGORY_ID + " INTEGER," +
             TRANSACTION_NOTE + " TEXT," +
@@ -82,6 +81,14 @@ public class Database extends SQLiteOpenHelper{
         db.execSQL(CREATE_TABLE_TRANSACTION);
         db.execSQL(INDEX_TABLE_TRANSACTION);
         sqLiteDatabase = db;
+    }
+
+    public SQLiteDatabase getSqLiteDatabase() {
+        return sqLiteDatabase;
+    }
+
+    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase) {
+        this.sqLiteDatabase = sqLiteDatabase;
     }
 
     @Override
@@ -298,13 +305,45 @@ public class Database extends SQLiteOpenHelper{
         values.put(TRANSACTION_DATE, Util.convertDateToString(transaction.getDate()));
         values.put(TRANSACTION_PRICE, transaction.getPrice());
 
+        db.beginTransaction();
         db.insert(TABLE_TRANSACTION, null, values);
+        db.endTransaction();
 
         db.close();
         Log.d(TABLE_TRANSACTION, "create Transaction " + transaction.toString());
 
         exportDB();
     }
+
+    /**
+     * Insert a Transaction into the database
+     * @param transactionList The new Transaction List to be inserted
+     */
+    public void createBulkTransaction(ArrayList<Transaction> transactionList){
+        //Get references to writable db
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.beginTransaction();
+        for(int i = 0; i < transactionList.size(); i++){
+            ContentValues values = new ContentValues();
+            //values.put(TRANSACTION_ID, item.getId()); //Testing if auto increment works
+            values.put(TRANSACTION_CATEGORY_ID, transactionList.get(i).getCategory().getId());
+            values.put(TRANSACTION_NOTE, transactionList.get(i).getNote());
+            values.put(TRANSACTION_DATE, Util.convertDateToString(transactionList.get(i).getDate()));
+            values.put(TRANSACTION_PRICE, transactionList.get(i).getPrice());
+
+            db.insert(TABLE_TRANSACTION, null, values);
+        }
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+        db.close();
+        Log.d(TABLE_TRANSACTION, "create Transaction list ");
+
+        exportDB();
+    }
+
 
     /**
      * Get the Transaction with the corresponding id from the database
@@ -348,7 +387,16 @@ public class Database extends SQLiteOpenHelper{
      * @return ArrayList<Transaction>
      */
     public ArrayList<Transaction> getAllTransaction(){
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        return getAllTransaction(false);
+    }
+
+    /**
+     * Get all Transactions from the database
+     * @param unique Unique dates in list of Transactions (default false)
+     * @return ArrayList<Transaction>
+     */
+    public ArrayList<Transaction> getAllTransaction(boolean unique){
+     /*   ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
         String query = "SELECT * FROM " + TABLE_TRANSACTION;
 
@@ -373,7 +421,43 @@ public class Database extends SQLiteOpenHelper{
 
         cursor.close();
         db.close();
-        Log.d(TABLE_TRANSACTION,"GetAllTransactions : count = "+transactions.size());
+        Log.d(TABLE_TRANSACTION, "GetAllTransactions : count = " + transactions.size());
+        return transactions;
+*/
+        /////
+
+
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+
+        String[] TOUR_COLUMNS = {"*"};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_TRANSACTION, //Table
+                TOUR_COLUMNS,                       //Column names
+                null,                              // Selections
+                null,                               // selections argument
+                (unique)?TRANSACTION_DATE:null,     // group by
+                null,                               // having
+                null,                               // order by
+                null);                              // limit
+
+        Transaction transaction = null;
+        if(cursor.moveToFirst()){
+            do {
+                transaction = new Transaction();
+                transaction.setId(cursor.getInt(0));
+                transaction.setCategory(getCategoryById(cursor.getInt(1)));
+                transaction.setNote(cursor.getString(2));
+                transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
+                transaction.setPrice(cursor.getFloat(4));
+
+                //Add Transaction to arraylist
+                transactions.add(transaction);
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
         return transactions;
     }
 
@@ -382,7 +466,7 @@ public class Database extends SQLiteOpenHelper{
      * @param date The current date
      * @return ArrayList<Transaction>
      */
-    public ArrayList<Transaction> getAllTransaction(Date date){
+    public ArrayList<Transaction> getAllTransactionInDate(Date date){
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
         String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
@@ -400,8 +484,7 @@ public class Database extends SQLiteOpenHelper{
         Transaction transaction = null;
         if(cursor.moveToFirst()){
             do {
-                Log.d(TABLE_TRANSACTION, "GetAllTransactions returns something transactions for date = " + Util.convertDateToString(date));
-                Log.d(TABLE_TRANSACTION, "GetAllTransactions returns something for transaction note = " + cursor.getString(2));
+                Log.d(TABLE_TRANSACTION, "GetAllTransactionsInDate  date = " + Util.convertDateToString(date)+" -> "+cursor.getString(2));
                 transaction = new Transaction();
                 transaction.setId(cursor.getInt(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
@@ -411,7 +494,114 @@ public class Database extends SQLiteOpenHelper{
 
                 //Add Transaction to arraylist
                 transactions.add(transaction);
-                Log.d(TABLE_TRANSACTION, "adding 1 transaction");
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return transactions;
+    }
+
+
+    /**
+     * Get all Transactions in the month of the year
+     * @param month The current month (0 = January, 11 = December)
+     * @param year The current year
+     * @return ArrayList<Transaction>
+     */
+    public ArrayList<Transaction> getAllTransactionInMonth(int year, int month){
+        return getAllTransactionInMonth(month, year, false);
+    }
+
+    /**
+     * Get all Transactions in the month of the year
+     * @param month The current month (0 = January, 11 = December)
+     * @param year The current year
+     * @param unique Unique dates in list of Transactions (default false)
+     * @return ArrayList<Transaction>
+     */
+    public ArrayList<Transaction> getAllTransactionInMonth(int year, int month, boolean unique){
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+
+        String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
+
+        String beginMonth = Util.convertDateToString((new GregorianCalendar(year, month, 1)).getTime());
+
+        //If this is December, the next month needs to be the following year's January
+        if(month == 11){
+            month = 0;
+            year++;
+        }
+
+        String endMonth = Util.convertDateToString((new GregorianCalendar(year, month, 1)).getTime());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_TRANSACTION,           //Table
+                TOUR_COLUMNS,                                 //Column names
+                " " + TRANSACTION_DATE + " BETWEEN ? AND ?",  // Selections
+                new String[]{beginMonth, endMonth}, // selections argument
+                (unique)?TRANSACTION_DATE:null,     // group by
+                null,                               // having
+                null,                               // order by
+                null);                              // limit
+
+        Transaction transaction = null;
+        if(cursor.moveToFirst()){
+            do {
+                Log.d(TABLE_TRANSACTION, "GetAllTransactionsForMonth  month = " + beginMonth+" -> "+cursor.getString(2));
+                transaction = new Transaction();
+                transaction.setId(cursor.getInt(0));
+                transaction.setCategory(getCategoryById(cursor.getInt(1)));
+                transaction.setNote(cursor.getString(2));
+                transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
+                transaction.setPrice(cursor.getFloat(4));
+
+                //Add Transaction to arraylist
+                transactions.add(transaction);
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return transactions;
+    }
+
+    /**
+     * Get all Transactions in the year
+     * @param year The current year
+     * @return ArrayList<Transaction>
+     */
+    public ArrayList<Transaction> getAllTransactionInYear(int year){
+        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+
+        String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
+
+        String beginYear = Util.convertDateToString((new GregorianCalendar(year, 0, 1)).getTime());
+        String endYear = Util.convertDateToString((new GregorianCalendar(year + 1, 0, 1)).getTime());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_TRANSACTION,           //Table
+                TOUR_COLUMNS,                                 //Column names
+                " " + TRANSACTION_DATE + " BETWEEN ? AND ?",  // Selections
+                new String[]{beginYear, endYear}, // selections argument
+                null,                                // group by
+                null,                                // having
+                null,                                // order by
+                null);                               // limit
+
+        Transaction transaction = null;
+        if(cursor.moveToFirst()){
+            do {
+                Log.d(TABLE_TRANSACTION, "GetAllTransactionsInYear  year = " + beginYear+" -> "+cursor.getString(2));
+                transaction = new Transaction();
+                transaction.setId(cursor.getInt(0));
+                transaction.setCategory(getCategoryById(cursor.getInt(1)));
+                transaction.setNote(cursor.getString(2));
+                transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
+                transaction.setPrice(cursor.getFloat(4));
+
+                //Add Transaction to arraylist
+                transactions.add(transaction);
             }while(cursor.moveToNext());
         }
 
@@ -496,7 +686,7 @@ public class Database extends SQLiteOpenHelper{
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
 
-            if (sd.canWrite()) { Log.d(LOG, "can write");
+            if (sd.canWrite()) {
                 createDirectory();
 
                 String currentDBPath = "//data//" + "com.zhan.budget" + "//databases//" + DATABASE_NAME;
