@@ -2,6 +2,7 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -25,12 +26,12 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
-import com.p_v.flexiblecalendar.entity.CalendarEvent;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Calendar.CustomEvent;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -42,8 +43,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,6 +83,9 @@ public class CalendarFragment extends Fragment {
 
     private Database db;
     private Date selectedDate;
+
+
+    private Map<String, List<CustomEvent>> eventMap;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -117,80 +125,142 @@ public class CalendarFragment extends Fragment {
         createCalendar();
         createSwipeMenu();
         updateTransactionStatus();
+
+        //createFakeBulkData();
+        createCustomEvents();
+    }
+
+    private void createCustomEvents(){
+        /*
+        eventMap = new HashMap<>();
+        List<CustomEvent> colorLst = new ArrayList<>();
+        colorLst.add(new CustomEvent(android.R.color.holo_red_dark));
+        eventMap.put(25,colorLst);
+
+        List<CustomEvent> colorLst1 = new ArrayList<>();
+        colorLst1.add(new CustomEvent(android.R.color.holo_red_dark));
+        colorLst1.add(new CustomEvent(android.R.color.holo_blue_light));
+        colorLst1.add(new CustomEvent(android.R.color.holo_purple));
+        eventMap.put(22,colorLst1);
+
+        List<CustomEvent> colorLst2= new ArrayList<>();
+        colorLst2.add(new CustomEvent(android.R.color.holo_red_dark));
+        colorLst2.add(new CustomEvent(android.R.color.holo_blue_light));
+        colorLst2.add(new CustomEvent(android.R.color.holo_purple));
+        eventMap.put(28, colorLst1);
+
+        List<CustomEvent> colorLst3 = new ArrayList<>();
+        colorLst3.add(new CustomEvent(android.R.color.holo_red_dark));
+        colorLst3.add(new CustomEvent(android.R.color.holo_blue_light));
+        eventMap.put(29, colorLst1);*/
     }
 
     private void createFakeBulkData(){
-        long startTime = System.nanoTime();
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
-        String[] tempCategoryList = new String[]{"Breakfast","Lunch","Lunch","Dinner", "Snacks","Drink","Rent","Travel", "Shopping","Necessity","Bill","Groceries"};
+            long startTime, endTime, duration;
 
-        ArrayList<Category> tempCategoryArrayList = new ArrayList<>();
-
-        //create category first
-        for(int i = 0; i < tempCategoryList.length; i++){
-            Category c = new Category();
-            c.setName(tempCategoryList[i]);
-
-            Random random = new Random();
-
-            float budget = random.nextFloat() * 100.0f;
-            float cost = random.nextInt((int)budget);
-
-            c.setBudget(budget);
-            c.setCost(cost);
-
-            tempCategoryArrayList.add(c);
-
-            db.createCategory(c);
-        }
-
-        //create transactions
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date startDate = formatter.parse("2015-01-01");
-            Date endDate = formatter.parse("2015-12-31");
-
-            Calendar start = Calendar.getInstance();
-            start.setTime(startDate);
-            Calendar end = Calendar.getInstance();
-            end.setTime(endDate);
-
-            ArrayList<Transaction> transactionArrayList = new ArrayList<>();
-
-
-            for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                // Do your job here with `date`.
-                Log.d("ZHAP",date.toString());
-
-                //Create 25 transactions per day
-                for(int i = 0; i < 25; i++){
-                    Random random = new Random();
-                    int f = random.nextInt(tempCategoryArrayList.size() - 1);
-
-                    Transaction transaction = new Transaction();
-                    transaction.setDate(date);
-                    transaction.setCategory(tempCategoryArrayList.get(f));
-                    transaction.setPrice(10.0f);
-                    transaction.setNote("Note " + i + " for " + Util.convertDateToString(date));
-
-                    transactionArrayList.add(transaction);
-                }
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("ASYNC", "preparing transaction");
+                startTime = System.nanoTime();
             }
 
-            db.createBulkTransaction(transactionArrayList);
-        }catch (Exception e ){
-            e.printStackTrace();
-        }
+            @Override
+            protected Void doInBackground(Void... voids) {
+                String[] tempCategoryList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel", "Shopping","Necessity","Bill","Groceries"};
 
-        long endTime = System.nanoTime();
+                final ArrayList<Category> tempCategoryArrayList = new ArrayList<>();
 
-        long duration = (endTime - startTime);
+                //create category first
+                for(int i = 0; i < tempCategoryList.length; i++){
+                    Category c = new Category();
+                    c.setName(tempCategoryList[i]);
 
-        long milli = (duration/1000000);
-        long second = (milli/1000);
-        float minutes = (second/ 60.0f);
+                    Random random = new Random();
 
-        Log.d("TIMER", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+                    float budget = random.nextFloat() * 100.0f;
+                    float cost = random.nextInt((int)budget);
+
+                    c.setBudget(budget);
+                    c.setCost(cost);
+
+                    tempCategoryArrayList.add(c);
+
+                    long categoryID = db.createCategory(c);
+
+                    if(categoryID == -1){
+                        Log.e("ZHAN", "db.createCategory returned -1");
+                        continue;
+                    }
+                    c.setId((int)categoryID);
+                }
+
+                //create transactions
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date startDate = formatter.parse("2015-01-01");
+                    Date endDate = formatter.parse("2015-12-31");
+
+                    Calendar start = Calendar.getInstance();
+                    start.setTime(startDate);
+                    Calendar end = Calendar.getInstance();
+                    end.setTime(endDate);
+
+                    final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
+
+
+                    for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+                        // Do your job here with `date`.
+                        Log.d("ASYNC",date.toString());
+
+                        //Create 25 transactions per day
+                        for(int i = 0; i < 25; i++){
+                            Random random = new Random();
+
+                            Log.d("TEST", "there are "+tempCategoryArrayList.size()+" categories");
+
+                            int f = random.nextInt(tempCategoryArrayList.size() - 1);
+                            Log.d("TEST", "f :"+f+" ->"+tempCategoryArrayList.get(f).getName());
+                            Transaction transaction = new Transaction();
+                            transaction.setDate(date);
+                            transaction.setCategory(tempCategoryArrayList.get(f));
+                            transaction.setPrice(random.nextFloat() * 120.0f);
+                            transaction.setNote("Note " + i + " for " + Util.convertDateToString(date));
+
+                            transactionArrayList.add(transaction);
+                        }
+                    }
+
+                    db.createBulkTransaction(transactionArrayList);
+
+                }catch (Exception e ){
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("ASYNC", "done transaction");
+
+                db.exportDB();
+
+                endTime = System.nanoTime();
+
+                duration = (endTime - startTime);
+
+                long milli = (duration/1000000);
+                long second = (milli/1000);
+                float minutes = (second/ 60.0f);
+
+                Log.d("ASYNC", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+            }
+        };
+
+        loader.execute();
     }
 
     private void init(){
@@ -198,6 +268,8 @@ public class CalendarFragment extends Fragment {
 
         //By default it will be the current date;
         selectedDate = new Date();
+
+        eventMap = new HashMap<>();
 
         root = (ViewGroup) view.findViewById(R.id.root);
         plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
@@ -347,7 +419,7 @@ public class CalendarFragment extends Fragment {
                 selectedDate = (new GregorianCalendar(year, month, 1)).getTime();
                 populateTransactionsForDate(selectedDate);
 
-                updateCalendarDecoratorsForMonth(year, month);
+                // updateCalendarDecoratorsForMonth(year, month);
 
                 //Toast.makeText(getActivity(), "moved :" + Util.convertDateToString(selectedDate), Toast.LENGTH_SHORT).show();
             }
@@ -367,14 +439,47 @@ public class CalendarFragment extends Fragment {
                 //Toast.makeText(getActivity(), "clicked :" + Util.convertDateToString(selectedDate), Toast.LENGTH_SHORT).show();
             }
         });
+/*
+        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
+            @Override
+            public List<CustomEvent> getEventsForTheDay(int year, int month, int day) {
+                return getCustomEvents(year, month, day);
+            }
+        });*/
     }
 
-    private void populateTransactionsForDate(Date date){
+    public List<CustomEvent> getCustomEvents(int year, int month, int day){ Log.d("VIEW", "getcustomEvents");
+        String dateString = Util.convertDateToString((new GregorianCalendar(year, month, day)).getTime());
+        return eventMap.get(dateString);
+    }
+
+    private void populateTransactionsForDate(final Date date){
         Log.d("ZHAN", "-------- populate transaction list for date " + Util.convertDateToString(date));
 
         //Populate the date's transaction list (if any)
-        transactionList = db.getAllTransactionInDate(date);
-        transactionAdapter.refreshList(transactionList);
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("ASYNC", "preparing transaction");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                transactionList = db.getAllTransactionInDate(date);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("ASYNC", "done transaction");
+                transactionAdapter.refreshList(transactionList);
+            }
+        };
+
+        loader.execute();
 
         Log.d("ZHAN", "-------- there are " + transactionList.size() + " transactions for " + Util.convertDateToString(date));
     }
@@ -386,24 +491,50 @@ public class CalendarFragment extends Fragment {
         updateCalendarDecoratorsForMonth(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
     }
 
-    private void updateCalendarDecoratorsForMonth(int year, int month){
+    private void updateCalendarDecoratorsForMonth(final int year, final int month){ Log.d("VIEW", "updating decorators");
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            ArrayList<Transaction> thisMonthTransactionList = new ArrayList<>();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("VIEW", "preparing transaction");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                //thisMonthTransactionList = db.getAllTransactionInMonth(year, month);
+                thisMonthTransactionList = db.getAllTransactionInMonth(selectedDate, true);
+                Log.d("VIEW", "TOTAL = there are " + thisMonthTransactionList.size() + " days with transactions in " + (month + 1) + ", " + year);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("VIEW", "done transaction");
+
+                refreshView(thisMonthTransactionList);
+            }
+        };
+
+        loader.execute();
+    }
+
+    private void refreshView(final ArrayList<Transaction> thisMonthTransactionList){ Log.d("VIEW","refreshView"); Log.d("VIEW","current month is "+selectedDate.toString());
         /*
-        final ArrayList<Transaction> thisMonthTransactionList = db.getAllTransactionInMonth(year, month);
-        Log.d("updateMonthsEvent", "TOTAL = there are " + thisMonthTransactionList.size() + "days with transactions in " + (month + 1) + ", " + year);
-        */
-
-        final ArrayList<Transaction> thisMonthTransactionList = db.getAllTransaction(true);
-        Log.d("updateMonthsEvent", "TOTAL = there are " + thisMonthTransactionList.size() + "days with transactions");
-
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
             @Override
-            public List<CalendarEvent> getEventsForTheDay(int year, int month, int day) {
+            public List<CalendarEvent> getEventsForTheDay(int year, int month, int day) { Log.d("VIEW", "try update year:"+year+", month:"+(month+1)+", day:"+day);
+
                 for (int i = 0; i < thisMonthTransactionList.size(); i++) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(thisMonthTransactionList.get(i).getDate());
 
                     if (year == cal.get(Calendar.YEAR) && month == cal.get(Calendar.MONTH) && day == cal.get(Calendar.DAY_OF_MONTH)) {
-                        Log.d("updateMonthsEvent", "UPDATE DECORATOR FOR "+year+", "+(month+1)+", "+day);
+                        Log.d("VIEW", "success UPDATE DECORATOR FOR " + year + ", " + (month + 1) + ", " + day);
                         List<CalendarEvent> eventColors = new ArrayList<>();
                         eventColors.add(new CalendarEvent(android.R.color.holo_red_light));
                         return eventColors;
@@ -411,6 +542,45 @@ public class CalendarFragment extends Fragment {
                 }
 
                 return null;
+            }
+        });*/
+
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("VIEW", "preparing transaction");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                for(int i = 0; i < thisMonthTransactionList.size(); i++){
+                    List<CustomEvent> colorList = new ArrayList<>();
+                    colorList.add(new CustomEvent(android.R.color.holo_red_dark));
+                    eventMap.put(Util.convertDateToString(thisMonthTransactionList.get(i).getDate()),colorList);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("VIEW", "done putting to hashMAP");
+                doneHashMap();
+            }
+        };
+
+        loader.execute();
+    }
+
+    private void doneHashMap(){ Log.d("VIEW", "doneHashMAP");
+        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
+            @Override
+            public List<CustomEvent> getEventsForTheDay(int year, int month, int day) {
+                return getCustomEvents(year, month, day);
             }
         });
     }
@@ -439,17 +609,48 @@ public class CalendarFragment extends Fragment {
         // step 2. listener item click event
         transactionListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
                         //Delete the specific .json and all images it has
                         Toast.makeText(getContext(), "deleting ", Toast.LENGTH_SHORT).show();
 
-                        transactionList.remove(position);
-                        transactionAdapter.notifyDataSetChanged();
 
 
-                        updateTransactionStatus();
+
+
+                        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                Log.d("VIEW", "preparing transaction");
+                            }
+
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                db.deleteTransaction(transactionList.get(position));
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void voids) {
+                                super.onPostExecute(voids);
+                                Log.d("VIEW", "done transaction");
+
+                                transactionList.remove(position);
+                                transactionAdapter.refreshList(transactionList);
+
+                                updateTransactionStatus();
+                            }
+                        };
+
+                        loader.execute();
+
+
+
+
+
 
 
                         break;

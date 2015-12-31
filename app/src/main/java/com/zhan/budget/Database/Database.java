@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -68,8 +69,6 @@ public class Database extends SQLiteOpenHelper{
     //Index on the date of the TRANSACTION Table
     private static final String INDEX_TABLE_TRANSACTION = "CREATE INDEX dateIndex ON "+ TABLE_TRANSACTION + "(" + TRANSACTION_DATE + ");";
 
-    private SQLiteDatabase sqLiteDatabase;
-
     public Database(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -80,15 +79,6 @@ public class Database extends SQLiteOpenHelper{
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_TRANSACTION);
         db.execSQL(INDEX_TABLE_TRANSACTION);
-        sqLiteDatabase = db;
-    }
-
-    public SQLiteDatabase getSqLiteDatabase() {
-        return sqLiteDatabase;
-    }
-
-    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase) {
-        this.sqLiteDatabase = sqLiteDatabase;
     }
 
     @Override
@@ -119,7 +109,7 @@ public class Database extends SQLiteOpenHelper{
      * Insert a Category into the database
      * @param category The new Category to be inserted
      */
-    public void createCategory(Category category){
+    public long createCategory(Category category){
         //Get references to writable db
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -129,11 +119,12 @@ public class Database extends SQLiteOpenHelper{
         values.put(CATEGORY_BUDGET, category.getBudget());
         values.put(CATEGORY_COST, category.getCost());
 
-        db.insert(TABLE_CATEGORY, null, values);
+        long id = db.insert(TABLE_CATEGORY, null, values);
 
         db.close();
-        Log.d(TABLE_CATEGORY, "create Category " + category.toString());
-        exportDB();
+        Log.d(TABLE_CATEGORY, "create Category " + category.getName());
+
+        return id;
     }
 
     /**
@@ -169,7 +160,6 @@ public class Database extends SQLiteOpenHelper{
 
         cursor.close();
         db.close();
-        Log.d(TABLE_CATEGORY,"get Category "+category.toString());
         return category;
     }
 
@@ -206,7 +196,6 @@ public class Database extends SQLiteOpenHelper{
 
         cursor.close();
         db.close();
-        Log.d(TABLE_CATEGORY,"get Category "+category.toString());
         return category;
     }
 
@@ -239,7 +228,6 @@ public class Database extends SQLiteOpenHelper{
 
         cursor.close();
         db.close();
-        Log.d(TABLE_CATEGORY,"get all categories ");
         return categories;
     }
 
@@ -263,7 +251,6 @@ public class Database extends SQLiteOpenHelper{
 
         db.close();
         Log.d(TABLE_CATEGORY, "updating category " + category.toString());
-        exportDB();
         return i;
     }
 
@@ -281,7 +268,6 @@ public class Database extends SQLiteOpenHelper{
         db.close();
 
         Log.d(TABLE_CATEGORY, "deleting category " + category.toString());
-        exportDB();
     }
 
     //----------------------------------------------------------------------------------------------
@@ -294,7 +280,7 @@ public class Database extends SQLiteOpenHelper{
      * Insert a Transaction into the database
      * @param transaction The new Transaction to be inserted
      */
-    public void createTransaction(Transaction transaction){
+    public long createTransaction(Transaction transaction){
         //Get references to writable db
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -306,13 +292,12 @@ public class Database extends SQLiteOpenHelper{
         values.put(TRANSACTION_PRICE, transaction.getPrice());
 
         db.beginTransaction();
-        db.insert(TABLE_TRANSACTION, null, values);
+        long transactionId = db.insert(TABLE_TRANSACTION, null, values);
         db.endTransaction();
 
         db.close();
         Log.d(TABLE_TRANSACTION, "create Transaction " + transaction.toString());
-
-        exportDB();
+        return transactionId;
     }
 
     /**
@@ -340,8 +325,6 @@ public class Database extends SQLiteOpenHelper{
 
         db.close();
         Log.d(TABLE_TRANSACTION, "create Transaction list ");
-
-        exportDB();
     }
 
 
@@ -396,37 +379,6 @@ public class Database extends SQLiteOpenHelper{
      * @return ArrayList<Transaction>
      */
     public ArrayList<Transaction> getAllTransaction(boolean unique){
-     /*   ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-
-        String query = "SELECT * FROM " + TABLE_TRANSACTION;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-
-        Transaction transaction = null;
-        if(cursor.moveToFirst()){
-            do {
-                transaction = new Transaction();
-                transaction.setId(cursor.getInt(0));
-                transaction.setCategory(getCategoryById(cursor.getInt(1)));
-                transaction.setNote(cursor.getString(2));
-                transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
-                transaction.setPrice(cursor.getFloat(4));
-
-                //Add Transaction to arraylist
-                transactions.add(transaction);
-                Log.d(TABLE_TRANSACTION, "adding 1 transaction");
-            }while(cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        Log.d(TABLE_TRANSACTION, "GetAllTransactions : count = " + transactions.size());
-        return transactions;
-*/
-        /////
-
-
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
         String[] TOUR_COLUMNS = {"*"};
@@ -502,6 +454,30 @@ public class Database extends SQLiteOpenHelper{
         return transactions;
     }
 
+    /**
+     * Get all Transactions in the month of the year
+     * @param date The current date
+     * @return ArrayList<Transaction>
+     */
+    public ArrayList<Transaction> getAllTransactionInMonth(Date date){
+        return getAllTransactionInMonth(date, false);
+    }
+
+    /**
+     * Get all Transactions in the month of the year
+     * @param date The current date
+     * @param unique Unique dates in list of Transactions (default false)
+     * @return ArrayList<Transaction>
+     */
+    public ArrayList<Transaction> getAllTransactionInMonth(Date date, boolean unique){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+
+        return getAllTransactionInMonth(year, month, unique);
+    }
 
     /**
      * Get all Transactions in the month of the year
@@ -631,7 +607,6 @@ public class Database extends SQLiteOpenHelper{
 
         db.close();
         Log.d(TABLE_TRANSACTION, "updating transaction " + transaction.toString());
-        exportDB();
         return i;
     }
 
@@ -642,14 +617,13 @@ public class Database extends SQLiteOpenHelper{
     public void deleteTransaction(Transaction transaction){
         SQLiteDatabase db = this.getWritableDatabase();
 
+        Log.d(TABLE_TRANSACTION, "deleting transaction " + transaction.getNote());
+
         db.delete(TABLE_TRANSACTION,
                 TRANSACTION_ID + " = ?",
                 new String[]{String.valueOf(transaction.getId())});
 
         db.close();
-
-        Log.d(TABLE_TRANSACTION, "deleting transaction " + transaction.toString());
-        exportDB();
     }
 
     //----------------------------------------------------------------------------------------------
@@ -658,7 +632,7 @@ public class Database extends SQLiteOpenHelper{
     //
     //----------------------------------------------------------------------------------------------
 
-    private void importDB() {
+    public void importDB() {
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
@@ -681,32 +655,34 @@ public class Database extends SQLiteOpenHelper{
         }
     }
 
-    private void exportDB() {
+    public void exportDB() {
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
 
             if (sd.canWrite()) {
-                createDirectory();
+                if(createDirectory()){ Log.d("FILE","can write file");
+                    String currentDBPath = "//data//" + "com.zhan.budget" + "//databases//" + DATABASE_NAME;
+                    String backupDBPath = "Budget/BudgetDatabase.sqlite";
+                    File currentDB = new File(data, currentDBPath);
+                    File backupDB = new File(sd, backupDBPath);
 
-                String currentDBPath = "//data//" + "com.zhan.budget" + "//databases//" + DATABASE_NAME;
-                String backupDBPath = "Budget/BudgetDatabase.sqlite";
-                File currentDB = new File(data, currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
-
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }else{
+                    Log.d("FILE","cannot write file");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void createDirectory(){
+    private boolean createDirectory(){
         File directory = new File(Environment.getExternalStorageDirectory().toString() + "/Budget");
-        directory.mkdirs();
+        return directory.mkdirs();
     }
 }
