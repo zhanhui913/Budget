@@ -15,4 +15,23 @@
         android:text="categoryName"
         android:textSize="20sp"/>
 
+    <TextView
+        android:id="@+id/categoryBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="categoryBudget"
+        android:textSize="20sp"
+        android:layout_below="@+id/categoryName"
+        android:paddingTop="20dp" />
+
+    <TextView
+        android:id="@+id/categoryCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="categoryCost"
+        android:textSize="20sp"
+        android:layout_below="@+id/categoryName"
+        android:layout_toRightOf="@+id/categoryBudget"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp" />
 </RelativeLayout>

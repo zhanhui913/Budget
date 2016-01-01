@@ -3,6 +3,7 @@ package com.zhan.budget.Fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -19,9 +20,13 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.zhan.budget.Activity.CategoryInfo;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Database.Database;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
@@ -46,6 +51,8 @@ public class CategoryFragment extends Fragment {
 
     private ArrayList<Category> categoryList;
     private Database db;
+
+    private int categoryIndexEditted;//The index of the category that the user just finished editted.
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -149,14 +156,14 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        Log.d("ZHAN","on resume");
+        Log.d("ZHAN", "on resume");
     }
 
     private void populateCategory(){
 
         categoryList = db.getAllCategory();
 
-        Log.d("ZHAN", "There are "+categoryList.size()+" categories");
+        Log.d("ZHAN", "There are " + categoryList.size() + " categories");
 
         for(int i = 0; i < categoryList.size(); i++){
             Log.d("ZHAN", i+"->"+categoryList.get(i).getName());
@@ -201,6 +208,13 @@ public class CategoryFragment extends Fragment {
                 switch (index) {
                     case 0:
                         //edit
+                        categoryIndexEditted = position;
+
+                        Intent editCategory = new Intent(getContext(), CategoryInfo.class);
+
+                        //This is edit mode
+                        editCategory.putExtra(Constants.REQUEST_EDIT_CATEGORY, categoryList.get(position));
+                        startActivityForResult(editCategory, Constants.RETURN_EDIT_CATEGORY);
 
                         break;
 
@@ -235,9 +249,30 @@ public class CategoryFragment extends Fragment {
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Item clicked : "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Item clicked : " + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data != null) {
+            if(requestCode == Constants.RETURN_EDIT_CATEGORY){
+
+                Log.i("ZHAN", "----------- onActivityResult ----------");
+
+                Category category = data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY);
+
+                Log.d("ZHAN", "category name is "+category.getName());
+                Log.i("ZHAN", "----------- onActivityResult ----------");
+
+                db.updateCategory(category);
+
+                categoryList.set(categoryIndexEditted, category);
+                categoryAdapter.refreshList(categoryList);
+            }
+        }
     }
 
     public void openDatabase(){

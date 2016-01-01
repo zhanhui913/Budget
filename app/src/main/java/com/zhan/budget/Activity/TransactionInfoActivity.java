@@ -37,7 +37,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
     private String priceString;
 
-    private Database db;
+    private Database db; //shouldnt have db access here, category and transactions should be dealt with in the caller activity
     private Date selectedDate;
 
     @Override
@@ -81,7 +81,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
         createToolbar();
         addListeners();
-        createCategory();
     }
 
     /**
@@ -195,14 +194,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
         });
 
         //transactionCostView.addTextChangedListener(tw);
-
-
-    }
-
-    private void createCategory(){
-        for(int i = 0; i < 15; i++){
-
-        }
     }
 
     TextWatcher tw = new TextWatcher() {
@@ -366,7 +357,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_new_transaction, menu);
+        getMenuInflater().inflate(R.menu.save, menu);
         return true;
     }
 

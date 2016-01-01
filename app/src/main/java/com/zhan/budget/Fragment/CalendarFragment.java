@@ -201,7 +201,7 @@ public class CalendarFragment extends Fragment {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 try {
                     Date startDate = formatter.parse("2015-01-01");
-                    Date endDate = formatter.parse("2015-12-31");
+                    Date endDate = formatter.parse("2016-01-01");
 
                     Calendar start = Calendar.getInstance();
                     start.setTime(startDate);
