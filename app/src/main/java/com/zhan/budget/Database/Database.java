@@ -122,7 +122,7 @@ public class Database extends SQLiteOpenHelper{
         long id = db.insert(TABLE_CATEGORY, null, values);
 
         db.close();
-        Log.d(TABLE_CATEGORY, "create Category " + category.getName());
+        //Log.d(TABLE_CATEGORY, "create Category " + category.getName());
 
         return id;
     }
@@ -148,45 +148,9 @@ public class Database extends SQLiteOpenHelper{
 
         Category category = new Category();
         if(!(cursor.moveToFirst()) || (cursor.getCount()==0)){
-            Log.d(TABLE_CATEGORY,"GetCategory returns empty for id = "+id);
+            //Log.d(TABLE_CATEGORY,"GetCategory returns empty for id = "+id);
         }else{
-            Log.d(TABLE_CATEGORY, "GetCategory returns something for id = " + id);
-
-            category.setId(cursor.getInt(0));
-            category.setName(cursor.getString(1));
-            category.setBudget(cursor.getFloat(2));
-            category.setCost(cursor.getFloat(3));
-        }
-
-        cursor.close();
-        db.close();
-        return category;
-    }
-
-    /**
-     * Get the Category with the corresponding title from the database
-     * @param title The title of the Category
-     * @return Category
-     */
-    public Category getCategoryByTitle(String title){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE};
-
-        Cursor cursor = db.query(TABLE_CATEGORY,     //Table
-                TOUR_COLUMNS,                        //Column names
-                " title = ?",                        // Selections
-                new String[]{title},    // selections argument
-                null,                                // group by
-                null,                                // having
-                null,                                // order by
-                null);                               // limit
-
-        Category category = new Category();
-        if(!(cursor.moveToFirst()) || (cursor.getCount()==0)){
-            Log.d(TABLE_CATEGORY,"GetCategory returns empty for title = "+title);
-        }else{
-            Log.d(TABLE_CATEGORY,"GetCategory returns something for title = "+title);
+            //Log.d(TABLE_CATEGORY, "GetCategory returns something for id = " + id);
 
             category.setId(cursor.getInt(0));
             category.setName(cursor.getString(1));
@@ -204,14 +168,14 @@ public class Database extends SQLiteOpenHelper{
      * @return ArrayList<Category>
      */
     public ArrayList<Category> getAllCategory(){
-        ArrayList<Category> categories = new ArrayList<Category>();
+        ArrayList<Category> categories = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_CATEGORY;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query,null);
 
-        Category category = null;
+        Category category;
         if(cursor.moveToFirst()){
             do {
                 category = new Category();
@@ -222,7 +186,7 @@ public class Database extends SQLiteOpenHelper{
 
                 //Add category to arraylist
                 categories.add(category);
-                Log.d(TABLE_CATEGORY, "adding 1 category");
+                //Log.d(TABLE_CATEGORY, "adding 1 category");
             }while(cursor.moveToNext());
         }
 
@@ -250,7 +214,7 @@ public class Database extends SQLiteOpenHelper{
                 new String[] {String.valueOf(category.getId())}); //Select i
 
         db.close();
-        Log.d(TABLE_CATEGORY, "updating category " + category.toString());
+        //Log.d(TABLE_CATEGORY, "updating category " + category.toString());
         return i;
     }
 
@@ -267,7 +231,7 @@ public class Database extends SQLiteOpenHelper{
 
         db.close();
 
-        Log.d(TABLE_CATEGORY, "deleting category " + category.toString());
+        //Log.d(TABLE_CATEGORY, "deleting category " + category.toString());
     }
 
     //----------------------------------------------------------------------------------------------
@@ -296,7 +260,7 @@ public class Database extends SQLiteOpenHelper{
         db.endTransaction();
 
         db.close();
-        Log.d(TABLE_TRANSACTION, "create Transaction " + transaction.toString());
+        //Log.d(TABLE_TRANSACTION, "create Transaction " + transaction.toString());
         return transactionId;
     }
 
@@ -324,7 +288,7 @@ public class Database extends SQLiteOpenHelper{
         db.endTransaction();
 
         db.close();
-        Log.d(TABLE_TRANSACTION, "create Transaction list ");
+        //Log.d(TABLE_TRANSACTION, "create Transaction list ");
     }
 
 
@@ -349,9 +313,9 @@ public class Database extends SQLiteOpenHelper{
 
         Transaction transaction = new Transaction();
         if(!(cursor.moveToFirst()) || (cursor.getCount()==0)){
-            Log.d(TABLE_TRANSACTION,"GetTransaction returns empty for id = "+id);
+            //Log.d(TABLE_TRANSACTION,"GetTransaction returns empty for id = "+id);
         }else{
-            Log.d(TABLE_TRANSACTION, "GetTransaction returns something for id = " + id);
+            //Log.d(TABLE_TRANSACTION, "GetTransaction returns something for id = " + id);
 
             transaction.setId(cursor.getInt(0));
             transaction.setCategory(getCategoryById(cursor.getInt(1)));
@@ -379,7 +343,7 @@ public class Database extends SQLiteOpenHelper{
      * @return ArrayList<Transaction>
      */
     public ArrayList<Transaction> getAllTransaction(boolean unique){
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
         String[] TOUR_COLUMNS = {"*"};
 
@@ -393,7 +357,7 @@ public class Database extends SQLiteOpenHelper{
                 null,                               // order by
                 null);                              // limit
 
-        Transaction transaction = null;
+        Transaction transaction;
         if(cursor.moveToFirst()){
             do {
                 transaction = new Transaction();
@@ -419,7 +383,7 @@ public class Database extends SQLiteOpenHelper{
      * @return ArrayList<Transaction>
      */
     public ArrayList<Transaction> getAllTransactionInDate(Date date){
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
         String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
 
@@ -433,10 +397,10 @@ public class Database extends SQLiteOpenHelper{
                 null,                                // order by
                 null);                               // limit
 
-        Transaction transaction = null;
+        Transaction transaction;
         if(cursor.moveToFirst()){
             do {
-                Log.d(TABLE_TRANSACTION, "GetAllTransactionsInDate  date = " + Util.convertDateToString(date)+" -> "+cursor.getString(2));
+                //Log.d(TABLE_TRANSACTION, "GetAllTransactionsInDate  date = " + Util.convertDateToString(date)+" -> "+cursor.getString(2));
                 transaction = new Transaction();
                 transaction.setId(cursor.getInt(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
@@ -497,7 +461,7 @@ public class Database extends SQLiteOpenHelper{
      * @return ArrayList<Transaction>
      */
     public ArrayList<Transaction> getAllTransactionInMonth(int year, int month, boolean unique){
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
         String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
 
@@ -521,10 +485,10 @@ public class Database extends SQLiteOpenHelper{
                 null,                               // order by
                 null);                              // limit
 
-        Transaction transaction = null;
+        Transaction transaction;
         if(cursor.moveToFirst()){
             do {
-                Log.d(TABLE_TRANSACTION, "GetAllTransactionsForMonth  month = " + beginMonth+" -> "+cursor.getString(2));
+                //Log.d(TABLE_TRANSACTION, "GetAllTransactionsForMonth  month = " + beginMonth+" -> "+cursor.getString(2));
                 transaction = new Transaction();
                 transaction.setId(cursor.getInt(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
@@ -548,7 +512,7 @@ public class Database extends SQLiteOpenHelper{
      * @return ArrayList<Transaction>
      */
     public ArrayList<Transaction> getAllTransactionInYear(int year){
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
         String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
 
@@ -565,10 +529,10 @@ public class Database extends SQLiteOpenHelper{
                 null,                                // order by
                 null);                               // limit
 
-        Transaction transaction = null;
+        Transaction transaction;
         if(cursor.moveToFirst()){
             do {
-                Log.d(TABLE_TRANSACTION, "GetAllTransactionsInYear  year = " + beginYear+" -> "+cursor.getString(2));
+                //Log.d(TABLE_TRANSACTION, "GetAllTransactionsInYear  year = " + beginYear+" -> "+cursor.getString(2));
                 transaction = new Transaction();
                 transaction.setId(cursor.getInt(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
@@ -606,7 +570,7 @@ public class Database extends SQLiteOpenHelper{
                 new String[] {String.valueOf(transaction.getId())}); //Select i
 
         db.close();
-        Log.d(TABLE_TRANSACTION, "updating transaction " + transaction.toString());
+        //Log.d(TABLE_TRANSACTION, "updating transaction " + transaction.toString());
         return i;
     }
 
@@ -617,7 +581,7 @@ public class Database extends SQLiteOpenHelper{
     public void deleteTransaction(Transaction transaction){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Log.d(TABLE_TRANSACTION, "deleting transaction " + transaction.getNote());
+        //Log.d(TABLE_TRANSACTION, "deleting transaction " + transaction.getNote());
 
         db.delete(TABLE_TRANSACTION,
                 TRANSACTION_ID + " = ?",
@@ -661,7 +625,7 @@ public class Database extends SQLiteOpenHelper{
             File data = Environment.getDataDirectory();
 
             if (sd.canWrite()) {
-                if(createDirectory()){ Log.d("FILE","can write file");
+                if(createDirectory()){ //Log.d("FILE","can write file");
                     String currentDBPath = "//data//" + "com.zhan.budget" + "//databases//" + DATABASE_NAME;
                     String backupDBPath = "Budget/BudgetDatabase.sqlite";
                     File currentDB = new File(data, currentDBPath);
