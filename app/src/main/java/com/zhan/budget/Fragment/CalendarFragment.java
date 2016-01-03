@@ -126,7 +126,9 @@ public class CalendarFragment extends Fragment {
         createSwipeMenu();
         updateTransactionStatus();
 
+
         //createFakeBulkData();
+        db.exportDB();
         createCustomEvents();
     }
 
@@ -186,6 +188,19 @@ public class CalendarFragment extends Fragment {
                     c.setBudget(budget);
                     c.setCost(cost);
 
+                    int f = (int)cost;
+                    if(f % 3 == 0){
+                        c.setColor("#FF0022");
+                        c.setIcon("ICON1");
+                    }else if(f % 3 == 1){
+                        c.setColor("#552255");
+                        c.setIcon("ICON2");
+                    }else{
+                        c.setColor("#110099");
+                        c.setIcon("ICON3");
+                    }
+
+
                     tempCategoryArrayList.add(c);
 
                     long categoryID = db.createCategory(c);
@@ -219,10 +234,7 @@ public class CalendarFragment extends Fragment {
                         for(int i = 0; i < 25; i++){
                             Random random = new Random();
 
-                            Log.d("TEST", "there are "+tempCategoryArrayList.size()+" categories");
-
                             int f = random.nextInt(tempCategoryArrayList.size() - 1);
-                            Log.d("TEST", "f :"+f+" ->"+tempCategoryArrayList.get(f).getName());
                             Transaction transaction = new Transaction();
                             transaction.setDate(date);
                             transaction.setCategory(tempCategoryArrayList.get(f));
@@ -246,7 +258,7 @@ public class CalendarFragment extends Fragment {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done transaction");
 
-                db.exportDB();
+                db. exportDB();
 
                 endTime = System.nanoTime();
 
@@ -453,7 +465,7 @@ public class CalendarFragment extends Fragment {
         return eventMap.get(dateString);
     }
 
-    private void populateTransactionsForDate(final Date date){
+    private void populateTransactionsForDate(final Date date) {
         Log.d("ZHAN", "-------- populate transaction list for date " + Util.convertDateToString(date));
 
         //Populate the date's transaction list (if any)
@@ -491,7 +503,8 @@ public class CalendarFragment extends Fragment {
         updateCalendarDecoratorsForMonth(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
     }
 
-    private void updateCalendarDecoratorsForMonth(final int year, final int month){ Log.d("VIEW", "updating decorators");
+    private void updateCalendarDecoratorsForMonth(final int year, final int month) {
+        Log.d("VIEW", "updating decorators");
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             ArrayList<Transaction> thisMonthTransactionList = new ArrayList<>();
@@ -576,7 +589,8 @@ public class CalendarFragment extends Fragment {
         loader.execute();
     }
 
-    private void doneHashMap(){ Log.d("VIEW", "doneHashMAP");
+    private void doneHashMap() {
+        Log.d("VIEW", "doneHashMAP");
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
             @Override
             public List<CustomEvent> getEventsForTheDay(int year, int month, int day) {

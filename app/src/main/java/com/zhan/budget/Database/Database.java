@@ -30,7 +30,7 @@ public class Database extends SQLiteOpenHelper{
     private static final String LOG = "DATABASE";
 
     //Database name
-    private static final String DATABASE_NAME = "BudgetDatabase";
+    private static final String DATABASE_NAME = "BudgetDatabase.db";
 
     //Database version
     private static final int DATABASE_VERSION = 1;
@@ -41,6 +41,8 @@ public class Database extends SQLiteOpenHelper{
     private static final String CATEGORY_TITLE = "title";
     private static final String CATEGORY_BUDGET = "budget";
     private static final String CATEGORY_COST = "cost";
+    private static final String CATEGORY_COLOR = "color";
+    private static final String CATEGORY_ICON = "icon";
 
     //Column names for TRANSACTION Table
     private static final String TABLE_TRANSACTION = "budget_transaction";
@@ -51,15 +53,17 @@ public class Database extends SQLiteOpenHelper{
     private static final String TRANSACTION_PRICE = "price";
 
     //Database creation sql statement for CATEGORY Table
-    private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORY + " (" +
-            CATEGORY_ID + " INTEGER PRIMARY KEY," +
+    private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE " + TABLE_CATEGORY + " (" +
+            CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             CATEGORY_TITLE + " TEXT," +
             CATEGORY_BUDGET + " REAL," +
-            CATEGORY_COST + " REAL);";
+            CATEGORY_COST + " REAL," +
+            CATEGORY_COLOR + " TEXT," +
+            CATEGORY_ICON + " TEXT);";
 
     //Database creation sql statement for TRANSACTION Table
-    private static final String CREATE_TABLE_TRANSACTION = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTION + " (" +
-            TRANSACTION_ID + " INTEGER PRIMARY KEY," +
+    private static final String CREATE_TABLE_TRANSACTION = "CREATE TABLE  " + TABLE_TRANSACTION + " (" +
+            TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             TRANSACTION_CATEGORY_ID + " INTEGER," +
             TRANSACTION_NOTE + " TEXT," +
             TRANSACTION_DATE + " TEXT," +
@@ -75,10 +79,18 @@ public class Database extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db){
+        Log.d("LOGG", "oncreate");
+
         //Create required tables
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_TRANSACTION);
         db.execSQL(INDEX_TABLE_TRANSACTION);
+
+        Log.d("LOGG", "DROP TABLE IF EXISTS " + TABLE_TRANSACTION);
+        Log.d("LOGG", "DROP TABLE IF EXISTS " + TABLE_CATEGORY);
+        Log.d("LOGG", CREATE_TABLE_CATEGORY);
+        Log.d("LOGG", CREATE_TABLE_TRANSACTION);
+        Log.d("LOGG", INDEX_TABLE_TRANSACTION);
     }
 
     @Override
@@ -114,10 +126,11 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        //values.put(CATEGORY_ID, category.getId()); //Testing if auto increment works
         values.put(CATEGORY_TITLE, category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
         values.put(CATEGORY_COST, category.getCost());
+        values.put(CATEGORY_COLOR, category.getColor());
+        values.put(CATEGORY_ICON, category.getIcon());
 
         long id = db.insert(TABLE_CATEGORY, null, values);
 
@@ -135,7 +148,7 @@ public class Database extends SQLiteOpenHelper{
     public Category getCategoryById(int id){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_COST};
+        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_COST, CATEGORY_COLOR, CATEGORY_ICON};
 
         Cursor cursor = db.query(TABLE_CATEGORY,     //Table
                 TOUR_COLUMNS,                        //Column names
@@ -156,6 +169,8 @@ public class Database extends SQLiteOpenHelper{
             category.setName(cursor.getString(1));
             category.setBudget(cursor.getFloat(2));
             category.setCost(cursor.getFloat(3));
+            category.setColor(cursor.getString(4));
+            category.setIcon(cursor.getString(5));
         }
 
         cursor.close();
@@ -183,6 +198,8 @@ public class Database extends SQLiteOpenHelper{
                 category.setName(cursor.getString(1));
                 category.setBudget(cursor.getFloat(2));
                 category.setCost(cursor.getFloat(3));
+                category.setColor(cursor.getString(4));
+                category.setIcon(cursor.getString(5));
 
                 //Add category to arraylist
                 categories.add(category);
@@ -207,6 +224,8 @@ public class Database extends SQLiteOpenHelper{
         values.put(CATEGORY_TITLE,category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
         values.put(CATEGORY_COST, category.getCost());
+        values.put(CATEGORY_COLOR, category.getColor());
+        values.put(CATEGORY_ICON, category.getIcon());
 
         int i = db.update(TABLE_CATEGORY,   // Table
                 values,                 // Column/value
@@ -249,7 +268,6 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        //values.put(TRANSACTION_ID, item.getId()); //Testing if auto increment works
         values.put(TRANSACTION_CATEGORY_ID, transaction.getCategory().getId());
         values.put(TRANSACTION_NOTE, transaction.getNote());
         values.put(TRANSACTION_DATE, Util.convertDateToString(transaction.getDate()));
@@ -275,7 +293,6 @@ public class Database extends SQLiteOpenHelper{
         db.beginTransaction();
         for(int i = 0; i < transactionList.size(); i++){
             ContentValues values = new ContentValues();
-            //values.put(TRANSACTION_ID, item.getId()); //Testing if auto increment works
             values.put(TRANSACTION_CATEGORY_ID, transactionList.get(i).getCategory().getId());
             values.put(TRANSACTION_NOTE, transactionList.get(i).getNote());
             values.put(TRANSACTION_DATE, Util.convertDateToString(transactionList.get(i).getDate()));
@@ -627,7 +644,7 @@ public class Database extends SQLiteOpenHelper{
             if (sd.canWrite()) {
                 if(createDirectory()){ //Log.d("FILE","can write file");
                     String currentDBPath = "//data//" + "com.zhan.budget" + "//databases//" + DATABASE_NAME;
-                    String backupDBPath = "Budget/BudgetDatabase.sqlite";
+                    String backupDBPath = "Budget/" + DATABASE_NAME;
                     File currentDB = new File(data, currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
 

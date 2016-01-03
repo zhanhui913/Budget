@@ -12,20 +12,14 @@ import java.util.Date;
  */
 public class Transaction implements Parcelable{
 
-    //@PrimaryKey
     private int id;
 
-    //@Column
-    //@Nullable
     private String note;
 
-    //@Column
     private Date date;
 
-    //@Column
     private float price;
 
-    //@Column
     private Category category;
 
     public Transaction(){

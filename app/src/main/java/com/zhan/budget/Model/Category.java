@@ -7,22 +7,15 @@ import android.os.Parcelable;
 /**
  * Created by Zhan on 15-12-14.
  */
-
-//@Table
 public class Category implements Parcelable{
 
-    //@PrimaryKey
     private int id;
-
-    //@Column(indexed = true)
     private String name;
-
-    //@Column
     private BudgetType type;
-
     private float budget;
-
     private float cost;
+    private String color;
+    private String icon;
 
     public Category(){
 
@@ -68,6 +61,22 @@ public class Category implements Parcelable{
         this.type = type;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Parcelable
@@ -85,6 +94,8 @@ public class Category implements Parcelable{
         dest.writeString(name);
         dest.writeFloat(budget);
         dest.writeFloat(cost);
+        dest.writeString(color);
+        dest.writeString(icon);
     }
 
     /**
@@ -108,5 +119,7 @@ public class Category implements Parcelable{
         name = in.readString();
         budget = in.readFloat();
         cost = in.readFloat();
+        color = in.readString();
+        icon = in.readString();
     }
 }

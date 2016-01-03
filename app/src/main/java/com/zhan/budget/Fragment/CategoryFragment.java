@@ -97,7 +97,7 @@ public class CategoryFragment extends Fragment {
         fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
 
-        categoryList = new ArrayList<Category>();
+        categoryList = new ArrayList<>();
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
