@@ -27,7 +27,7 @@ public final class CategoryUtil {
         }else if(iconId == 3){
             return ContextCompat.getDrawable(context, R.drawable.food);
         }else if(iconId == 4){
-            return ContextCompat.getDrawable(context, R.drawable.coffee);
+            return ContextCompat.getDrawable(context, R.drawable.cafe);
         }else if(iconId == 5){
             return ContextCompat.getDrawable(context, R.drawable.house);
         }else if(iconId == 6){
@@ -41,7 +41,7 @@ public final class CategoryUtil {
         }else if(iconId == 10){
             return ContextCompat.getDrawable(context, R.drawable.bill);
         }else{
-            return ContextCompat.getDrawable(context, R.drawable.bread);
+            return ContextCompat.getDrawable(context, R.drawable.groceries);
             //return ContextCompat.getDrawable(context, R.color.cyan);
         }
     }

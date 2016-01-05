@@ -2,6 +2,7 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -127,9 +128,24 @@ public class CalendarFragment extends Fragment {
         updateTransactionStatus();
 
 
-        //createFakeBulkData();
+        isFirstTime();
         //db.exportDB();
         createCustomEvents();
+    }
+
+    private void isFirstTime(){
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        boolean defaultIsFirstTime = true;
+        boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME+"_TRANSACTION", defaultIsFirstTime);
+
+        if(isFirstTIme){
+            createFakeBulkData();
+
+            //set Constants.FIRST_TIME shared preferences to false
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.FIRST_TIME+"_TRANSACTION", false);
+            editor.apply();
+        }
     }
 
     private void createCustomEvents(){
@@ -171,49 +187,14 @@ public class CalendarFragment extends Fragment {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                String[] tempCategoryList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel", "Shopping","Necessity","Bill","Groceries"};
 
-                final ArrayList<Category> tempCategoryArrayList = new ArrayList<>();
-
-                //create category first
-                for(int i = 0; i < tempCategoryList.length; i++){
-                    Category c = new Category();
-                    c.setName(tempCategoryList[i]);
-
-                    Random random = new Random();
-
-                    float budget = random.nextFloat() * 100.0f;
-                    float cost = random.nextInt((int)budget);
-
-                    c.setBudget(budget);
-                    c.setCost(cost);
-
-                    int f = (int)cost;
-                    if(f % 3 == 0){
-                        c.setColor("#FF0022");
-                        c.setIcon(0);
-                    }else if(f % 3 == 1){
-                        c.setColor("#552255");
-                        c.setIcon(1);
-                    }else{
-                        c.setColor("#110099");
-                        c.setIcon(2);
-                    }
-
-
-                    tempCategoryArrayList.add(c);
-
-                    long categoryID = db.createCategory(c);
-
-                    if(categoryID == -1){
-                        Log.e("ZHAN", "db.createCategory returned -1");
-                        continue;
-                    }
-                    c.setId((int)categoryID);
-                }
 
                 //create transactions
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+
+                Category category = db.getCategoryById(0);
+
                 try {
                     Date startDate = formatter.parse("2015-01-01");
                     Date endDate = formatter.parse("2016-01-01");
@@ -234,10 +215,9 @@ public class CalendarFragment extends Fragment {
                         for(int i = 0; i < 25; i++){
                             Random random = new Random();
 
-                            int f = random.nextInt(tempCategoryArrayList.size() - 1);
                             Transaction transaction = new Transaction();
                             transaction.setDate(date);
-                            transaction.setCategory(tempCategoryArrayList.get(f));
+                            transaction.setCategory(category);
                             transaction.setPrice(random.nextFloat() * 120.0f);
                             transaction.setNote("Note " + i + " for " + Util.convertDateToString(date));
 
@@ -291,6 +271,8 @@ public class CalendarFragment extends Fragment {
         balanceText = (TextView) view.findViewById(R.id.balanceText);
         transactionListView = (SwipeMenuListView) view.findViewById(R.id.transactionListView);
 
+        dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
+
        // infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
 
         isScrollAtTop = true;
@@ -298,7 +280,7 @@ public class CalendarFragment extends Fragment {
         isCenterPanelPulledDown = false;
         isPanelCloseToTop = true;
 
-        transactionList = new ArrayList<Transaction>();
+        transactionList = new ArrayList<>();
         transactionAdapter = new TransactionListAdapter(getActivity(), transactionList);
         transactionListView.setAdapter(transactionAdapter);
 
@@ -431,6 +413,8 @@ public class CalendarFragment extends Fragment {
                 selectedDate = (new GregorianCalendar(year, month, 1)).getTime();
                 populateTransactionsForDate(selectedDate);
 
+                dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
+
                 // updateCalendarDecoratorsForMonth(year, month);
 
                 //Toast.makeText(getActivity(), "moved :" + Util.convertDateToString(selectedDate), Toast.LENGTH_SHORT).show();
@@ -445,6 +429,8 @@ public class CalendarFragment extends Fragment {
                 snapPanelUp();
 
                 selectedDate = (new GregorianCalendar(year, month, day)).getTime();
+
+                dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
                 populateTransactionsForDate(selectedDate);
 

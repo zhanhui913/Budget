@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected Void doInBackground(Void... voids) {
                 String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel", "Shopping","Necessity","Utilities","Bill","Groceries"};
-                String[] tempCategoryColorList = new String[]{"EB9532","F89406","E87E04", "F2784B","FDE3A7","6C7A89","19B5FE", "BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
+                String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE", "BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
                 int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11};
 
                 final ArrayList<Category> tempCategoryArrayList = new ArrayList<>();

@@ -71,6 +71,9 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Get Drawable from @drawable/circular_category
         LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.circular_category);
+
+        // If we don't mutate the drawable, then all drawable's with this id will have a color
+        // filter applied to it.
         drawable.mutate();
 
         //Color
@@ -80,7 +83,7 @@ public class CategoryListAdapter extends BaseAdapter {
         //Icon
         Drawable iconDrawable = CategoryUtil.getIconDrawable(activity, category.getIcon());
         drawable.setDrawableByLayerId(R.id.layerIconId, iconDrawable);
-        iconDrawable.setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
+        //iconDrawable.setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
 
         icon.setBackground(drawable);
 

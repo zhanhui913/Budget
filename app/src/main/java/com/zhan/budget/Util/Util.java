@@ -262,4 +262,9 @@ public final class Util {
         }
         return newDate;
     }
+
+    public static String convertDateToStringFormat1(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", Locale.CANADA);
+        return formatter.format(date);
+    }
 }
