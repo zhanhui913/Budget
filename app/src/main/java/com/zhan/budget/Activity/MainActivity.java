@@ -1,24 +1,35 @@
 package com.zhan.budget.Activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.zhan.budget.Database.Database;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.OverviewFragment;
 import com.zhan.budget.Fragment.SendFragment;
 import com.zhan.budget.Fragment.ShareFragment;
+import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -29,10 +40,12 @@ public class MainActivity extends AppCompatActivity
         ShareFragment.OnShareInteractionListener{
 
 
+    MainActivity activity;
     Toolbar toolbar;
     DrawerLayout drawer;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
+    Database db;
 
     private CalendarFragment calendarFragment;
     private CategoryFragment categoryFragment;
@@ -47,10 +60,14 @@ public class MainActivity extends AppCompatActivity
 
         createFragments();
         init();
-        createDatabase();
     }
 
     private void init(){
+        activity = MainActivity.this;
+
+        isFirstTime();
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,6 +85,23 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().getItem(0).setChecked(true);
     }
 
+    private void isFirstTime(){
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        boolean defaultIsFirstTime = true;
+        boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, defaultIsFirstTime);
+
+        if(isFirstTIme){
+            createDefaultCategory();
+
+            //set Constants.FIRST_TIME shared preferences to false
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.FIRST_TIME, false);
+            editor.apply();
+        }
+
+        Toast.makeText(activity, "IsFirstTime: "+isFirstTIme, Toast.LENGTH_SHORT).show();
+    }
+
     private void createFragments(){
         calendarFragment = new CalendarFragment();
         categoryFragment = new CategoryFragment();
@@ -76,17 +110,89 @@ public class MainActivity extends AppCompatActivity
         sendFragment = new SendFragment();
     }
 
-    private void createDatabase(){
-        /*OrmaDatabase orma = OrmaDatabase.builder(getApplicationContext())
-                .name(getApplicationContext().getPackageName() + ".orma.db") // optional
-                .migrationEngine(new SchemaDiffMigration(context, BuildConfig.DEBUG)) // optional
-                .typeAdapters(TypeAdapterRegistry.defaultTypeAdapters()) // optional
-                .writeAheadLogging(true) // optional
-                .trace(BuildConfig.DEBUG) // optional
-                .readOnMainThread(AccessThreadConstraint.WARNING) // optional
-                .writeOnMainThread(AccessThreadConstraint.FATAL) // optional
-                .build();
-        */
+    private void createDefaultCategory(){
+        openDatabase();
+
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("ASYNC", "preparing transaction to create default categoroes");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel", "Shopping","Necessity","Utilities","Bill","Groceries"};
+                String[] tempCategoryColorList = new String[]{"EB9532","F89406","E87E04", "F2784B","FDE3A7","6C7A89","19B5FE", "BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
+                int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11};
+
+                final ArrayList<Category> tempCategoryArrayList = new ArrayList<>();
+
+                //create category first
+                for(int i = 0; i < tempCategoryNameList.length; i++){
+                    Category c = new Category();
+                    c.setName(tempCategoryNameList[i]);
+                    c.setColor("#"+tempCategoryColorList[i]);
+                    c.setIcon(tempCategoryIconList[i]);
+
+                    Random random = new Random();
+
+                    float budget = random.nextFloat() * 100.0f;
+                    float cost = random.nextInt((int)budget);
+
+                    c.setBudget(budget);
+                    c.setCost(cost);
+
+                    tempCategoryArrayList.add(c);
+
+                    long categoryID = db.createCategory(c);
+
+                    if(categoryID == -1){
+                        Log.e("ZHAN", "db.createCategory returned -1");
+                        continue;
+                    }
+                    c.setId((int)categoryID);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("ASYNC", "done creating default categories");
+
+                db.exportDB();
+            }
+        };
+
+        loader.execute();
+    }
+
+
+    public void openDatabase(){
+        if(db == null) {
+            db = new Database(activity);
+        }
+    }
+
+    public void closeDatabase(){
+        if(db != null){
+            db.close();
+        }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        closeDatabase();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        openDatabase();
     }
 
     @Override

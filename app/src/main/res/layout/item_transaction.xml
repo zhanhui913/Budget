@@ -22,7 +22,8 @@
         android:textStyle="bold"
         android:layout_toRightOf="@+id/categoryIcon"
         android:layout_marginLeft="15dp"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/transactionCost" />
 
     <TextView
         android:id="@+id/transactionCost"

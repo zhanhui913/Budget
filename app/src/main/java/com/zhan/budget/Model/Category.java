@@ -15,7 +15,7 @@ public class Category implements Parcelable{
     private float budget;
     private float cost;
     private String color;
-    private String icon;
+    private int icon;
 
     public Category(){
 
@@ -69,11 +69,11 @@ public class Category implements Parcelable{
         this.color = color;
     }
 
-    public String getIcon() {
+    public int getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(int icon) {
         this.icon = icon;
     }
 
@@ -95,7 +95,7 @@ public class Category implements Parcelable{
         dest.writeFloat(budget);
         dest.writeFloat(cost);
         dest.writeString(color);
-        dest.writeString(icon);
+        dest.writeInt(icon);
     }
 
     /**
@@ -120,6 +120,6 @@ public class Category implements Parcelable{
         budget = in.readFloat();
         cost = in.readFloat();
         color = in.readString();
-        icon = in.readString();
+        icon = in.readInt();
     }
 }

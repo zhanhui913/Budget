@@ -1,11 +1,12 @@
 package com.zhan.budget.Etc;
 
-import java.util.Date;
-
 /**
  * Created by zhanyap on 15-12-21.
  */
 public class Constants {
+    //First time
+    public static final String FIRST_TIME = "First Time";
+
     //Activity result
     public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
     public static final String REQUEST_NEW_TRANSACTION_DATE = "New Transaction Date";

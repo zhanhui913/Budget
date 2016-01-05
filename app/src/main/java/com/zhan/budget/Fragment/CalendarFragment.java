@@ -128,7 +128,7 @@ public class CalendarFragment extends Fragment {
 
 
         //createFakeBulkData();
-        db.exportDB();
+        //db.exportDB();
         createCustomEvents();
     }
 
@@ -191,13 +191,13 @@ public class CalendarFragment extends Fragment {
                     int f = (int)cost;
                     if(f % 3 == 0){
                         c.setColor("#FF0022");
-                        c.setIcon("ICON1");
+                        c.setIcon(0);
                     }else if(f % 3 == 1){
                         c.setColor("#552255");
-                        c.setIcon("ICON2");
+                        c.setIcon(1);
                     }else{
                         c.setColor("#110099");
-                        c.setIcon("ICON3");
+                        c.setIcon(2);
                     }
 
 

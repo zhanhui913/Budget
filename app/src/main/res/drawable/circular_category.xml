@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
+    <item
+        android:id="@+id/layerColorId" >
         <shape android:shape="oval">
             <solid android:color="@color/colorAccent"/>
         </shape>
     </item>
     <item
+        android:id="@+id/layerIconId"
         android:drawable="@drawable/ic_date"
         android:bottom="10dp"
         android:left="10dp"

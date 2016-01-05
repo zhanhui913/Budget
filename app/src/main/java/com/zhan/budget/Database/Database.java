@@ -59,7 +59,7 @@ public class Database extends SQLiteOpenHelper{
             CATEGORY_BUDGET + " REAL," +
             CATEGORY_COST + " REAL," +
             CATEGORY_COLOR + " TEXT," +
-            CATEGORY_ICON + " TEXT);";
+            CATEGORY_ICON + " INTEGER);";
 
     //Database creation sql statement for TRANSACTION Table
     private static final String CREATE_TABLE_TRANSACTION = "CREATE TABLE  " + TABLE_TRANSACTION + " (" +
@@ -79,18 +79,10 @@ public class Database extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        Log.d("LOGG", "oncreate");
-
         //Create required tables
         db.execSQL(CREATE_TABLE_CATEGORY);
         db.execSQL(CREATE_TABLE_TRANSACTION);
         db.execSQL(INDEX_TABLE_TRANSACTION);
-
-        Log.d("LOGG", "DROP TABLE IF EXISTS " + TABLE_TRANSACTION);
-        Log.d("LOGG", "DROP TABLE IF EXISTS " + TABLE_CATEGORY);
-        Log.d("LOGG", CREATE_TABLE_CATEGORY);
-        Log.d("LOGG", CREATE_TABLE_TRANSACTION);
-        Log.d("LOGG", INDEX_TABLE_TRANSACTION);
     }
 
     @Override
@@ -170,7 +162,7 @@ public class Database extends SQLiteOpenHelper{
             category.setBudget(cursor.getFloat(2));
             category.setCost(cursor.getFloat(3));
             category.setColor(cursor.getString(4));
-            category.setIcon(cursor.getString(5));
+            category.setIcon(cursor.getInt(5));
         }
 
         cursor.close();
@@ -199,7 +191,7 @@ public class Database extends SQLiteOpenHelper{
                 category.setBudget(cursor.getFloat(2));
                 category.setCost(cursor.getFloat(3));
                 category.setColor(cursor.getString(4));
-                category.setIcon(cursor.getString(5));
+                category.setIcon(cursor.getInt(5));
 
                 //Add category to arraylist
                 categories.add(category);
