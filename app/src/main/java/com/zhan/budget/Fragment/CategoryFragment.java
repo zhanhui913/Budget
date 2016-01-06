@@ -65,6 +65,9 @@ public class CategoryFragment extends Fragment {
 
     private Date currentDate;
 
+    private List<Transaction> transactionMonthList ;
+
+
     public CategoryFragment() {
         // Required empty public constructor
     }
@@ -174,14 +177,9 @@ public class CategoryFragment extends Fragment {
         Log.d("ZHAN", "on resume");
     }
 
-    List<Transaction> transactionMonthList ;
-    private void populateCategory(){
-        transactionMonthList = new ArrayList<>();
 
-
-
+    private void getAllCategory(){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -198,12 +196,16 @@ public class CategoryFragment extends Fragment {
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done getting categories");
+                categoryAdapter.refreshList(categoryList);
+
+                getAllTransactions();
             }
         };
         loader.execute();
+    }
 
-        final AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
-
+    private void getAllTransactions(){
+        AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -225,22 +227,35 @@ public class CategoryFragment extends Fragment {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done getting transaction");
 
-
-
-                //Go through each transaction and put them into the correct category
-                for(int t = 0; t < transactionMonthList.size(); t++){
-                    for(int c = 0; c < categoryList.size(); c++){
-                        if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){
-                            categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
-                        }
-                    }
-                }
-
-                categoryAdapter.refreshList(categoryList);
-                Log.d("ASYNC", "Done sorting transactions");
+                populateCategoryWithInfo();
             }
         };
         loader1.execute();
+    }
+
+
+    private void populateCategoryWithInfo(){
+
+        Log.d("ASYNC", "There are "+categoryList.size()+" categories");
+        Log.d("ASYNC", "There are "+transactionMonthList.size()+" transactions this month");
+
+        for(int i = 0; i < categoryList.size(); i++){
+            Log.d("ZHAN", "category "+categoryList.get(i).getId());
+        }
+
+        //Go through each transaction and put them into the correct category
+        for(int t = 0; t < transactionMonthList.size(); t++){
+            Log.d("ZHAN", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
+            for(int c = 0; c < categoryList.size(); c++){
+                if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
+                    categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
+                }
+            }
+        }
+
+        categoryAdapter.refreshList(categoryList);
+        Log.d("ASYNC", "Done sorting transactions");
+
 
 
     }
@@ -383,7 +398,7 @@ public class CategoryFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentDate));
         }
 
-        populateCategory();
+        getAllCategory();
     }
 
     @Override

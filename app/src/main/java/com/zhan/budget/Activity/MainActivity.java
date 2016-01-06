@@ -26,9 +26,14 @@ import com.zhan.budget.Fragment.OverviewFragment;
 import com.zhan.budget.Fragment.SendFragment;
 import com.zhan.budget.Fragment.ShareFragment;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private ShareFragment shareFragment;
     private SendFragment sendFragment;
 
+    private ArrayList<Category> categoryList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +106,7 @@ public class MainActivity extends AppCompatActivity
             editor.apply();
         }
 
-        Toast.makeText(activity, "IsFirstTime: "+isFirstTIme, Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "IsFirstTime: " + isFirstTIme, Toast.LENGTH_SHORT).show();
     }
 
     private void createFragments(){
@@ -128,8 +134,6 @@ public class MainActivity extends AppCompatActivity
                 String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE", "BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
                 int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11};
 
-                final ArrayList<Category> tempCategoryArrayList = new ArrayList<>();
-
                 //create category first
                 for(int i = 0; i < tempCategoryNameList.length; i++){
                     Category c = new Category();
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                     c.setBudget(budget);
                     c.setCost(0);
 
-                    tempCategoryArrayList.add(c);
+                    categoryList.add(c);
 
                     long categoryID = db.createCategory(c);
 
@@ -163,7 +167,89 @@ public class MainActivity extends AppCompatActivity
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done creating default categories");
 
+                createFakeBulkData();
+            }
+        };
+
+        loader.execute();
+    }
+
+    private void createFakeBulkData(){
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("ASYNC", "preparing transaction");
+                startTime = System.nanoTime();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                //create transactions
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                try {
+                    Date startDate = formatter.parse("2015-01-01");
+                    Date endDate = formatter.parse("2016-01-01");
+
+                    Calendar start = Calendar.getInstance();
+                    start.setTime(startDate);
+                    Calendar end = Calendar.getInstance();
+                    end.setTime(endDate);
+
+                    final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
+
+
+                    for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+                        // Do your job here with `date`.
+                        Log.d("ASYNC",date.toString());
+
+                        //Create 25 transactions per day
+                        for(int i = 0; i < 25; i++){
+                            Random random = new Random();
+
+                            Transaction transaction = new Transaction();
+                            transaction.setDate(date);
+
+
+                            int cc = random.nextInt(categoryList.size());
+                            Category category  = categoryList.get(cc);
+
+                            transaction.setCategory(category);
+                            transaction.setPrice(random.nextFloat() * 120.0f);
+                            transaction.setNote("Note " + i + " for " + Util.convertDateToString(date));
+
+                            transactionArrayList.add(transaction);
+                        }
+                    }
+
+                    db.createBulkTransaction(transactionArrayList);
+
+                }catch (Exception e ){
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("ASYNC", "done transaction");
+
                 db.exportDB();
+
+                endTime = System.nanoTime();
+
+                duration = (endTime - startTime);
+
+                long milli = (duration/1000000);
+                long second = (milli/1000);
+                float minutes = (second/ 60.0f);
+
+                Log.d("ASYNC", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
         };
 

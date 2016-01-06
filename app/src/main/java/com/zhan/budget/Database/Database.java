@@ -96,10 +96,6 @@ public class Database extends SQLiteOpenHelper{
         //Create new tables
         onCreate(db);
     }
-/*
-    public boolean isOpen(){
-        return sqLiteDatabase.isOpen();
-    }*/
 
     //----------------------------------------------------------------------------------------------
     //
@@ -208,6 +204,7 @@ public class Database extends SQLiteOpenHelper{
      */
     public int updateCategory(Category category){
         SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(CATEGORY_ID,category.getId());
         values.put(CATEGORY_TITLE,category.getName());
@@ -468,6 +465,8 @@ public class Database extends SQLiteOpenHelper{
     public ArrayList<Transaction> getAllTransactionInMonth(int year, int month, boolean unique){
         ArrayList<Transaction> transactions = new ArrayList<>();
 
+        Log.d("DEBUG", "month : "+month+", year:"+year+", unique:"+unique);
+
         String[] TOUR_COLUMNS = {TRANSACTION_ID,TRANSACTION_CATEGORY_ID,TRANSACTION_NOTE,TRANSACTION_DATE,TRANSACTION_PRICE};
 
         String beginMonth = Util.convertDateToString((new GregorianCalendar(year, month, 1)).getTime());
@@ -476,13 +475,13 @@ public class Database extends SQLiteOpenHelper{
         if(month == 11){
             month = 0;
             year++;
+        }else{
+            month++;
         }
 
         String endMonth = Util.convertDateToString((new GregorianCalendar(year, month, 1)).getTime());
-
+Log.d("DEBUG","end month :"+endMonth+", beginMonth:"+beginMonth);
         SQLiteDatabase db = this.getWritableDatabase();
-
-        db.beginTransaction();
 
         Cursor cursor = db.query(TABLE_TRANSACTION,           //Table
                 TOUR_COLUMNS,                                 //Column names
@@ -510,8 +509,7 @@ public class Database extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.setTransactionSuccessful();
-        db.endTransaction();
+
         db.close();
         return transactions;
     }
@@ -635,7 +633,7 @@ public class Database extends SQLiteOpenHelper{
             File data = Environment.getDataDirectory();
 
             if (sd.canWrite()) {
-                if(createDirectory()){ //Log.d("FILE","can write file");
+                if(createDirectory()){ Log.d("FILE","can write file");
                     String currentDBPath = "//data//" + "com.zhan.budget" + "//databases//" + DATABASE_NAME;
                     String backupDBPath = "Budget/" + DATABASE_NAME;
                     File currentDB = new File(data, currentDBPath);

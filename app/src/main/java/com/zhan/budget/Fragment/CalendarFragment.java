@@ -2,7 +2,6 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,13 +32,11 @@ import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Calendar.CustomEvent;
-import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.RectangleCellView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,7 +44,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 ;
 
@@ -127,25 +123,7 @@ public class CalendarFragment extends Fragment {
         createSwipeMenu();
         updateTransactionStatus();
 
-
-        isFirstTime();
-        //db.exportDB();
         createCustomEvents();
-    }
-
-    private void isFirstTime(){
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        boolean defaultIsFirstTime = true;
-        boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME+"_TRANSACTION", defaultIsFirstTime);
-
-        if(isFirstTIme){
-            createFakeBulkData();
-
-            //set Constants.FIRST_TIME shared preferences to false
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(Constants.FIRST_TIME+"_TRANSACTION", false);
-            editor.apply();
-        }
     }
 
     private void createCustomEvents(){
@@ -173,87 +151,7 @@ public class CalendarFragment extends Fragment {
         eventMap.put(29, colorLst1);*/
     }
 
-    private void createFakeBulkData(){
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
-            long startTime, endTime, duration;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing transaction");
-                startTime = System.nanoTime();
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-
-                //create transactions
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-
-                Category category = db.getCategoryById(0);
-
-                try {
-                    Date startDate = formatter.parse("2015-01-01");
-                    Date endDate = formatter.parse("2016-01-01");
-
-                    Calendar start = Calendar.getInstance();
-                    start.setTime(startDate);
-                    Calendar end = Calendar.getInstance();
-                    end.setTime(endDate);
-
-                    final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
-
-
-                    for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                        // Do your job here with `date`.
-                        Log.d("ASYNC",date.toString());
-
-                        //Create 25 transactions per day
-                        for(int i = 0; i < 25; i++){
-                            Random random = new Random();
-
-                            Transaction transaction = new Transaction();
-                            transaction.setDate(date);
-                            transaction.setCategory(category);
-                            transaction.setPrice(random.nextFloat() * 120.0f);
-                            transaction.setNote("Note " + i + " for " + Util.convertDateToString(date));
-
-                            transactionArrayList.add(transaction);
-                        }
-                    }
-
-                    db.createBulkTransaction(transactionArrayList);
-
-                }catch (Exception e ){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done transaction");
-
-                db. exportDB();
-
-                endTime = System.nanoTime();
-
-                duration = (endTime - startTime);
-
-                long milli = (duration/1000000);
-                long second = (milli/1000);
-                float minutes = (second/ 60.0f);
-
-                Log.d("ASYNC", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-            }
-        };
-
-        loader.execute();
-    }
 
     private void init(){
         openDatabase();
