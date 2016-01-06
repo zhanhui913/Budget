@@ -393,8 +393,6 @@ public class CategoryFragment extends Fragment {
         currentDate = cal.getTime();
 
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-
-
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentDate));
         }
 
@@ -417,7 +415,7 @@ public class CategoryFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_category_menu, menu);
+        inflater.inflate(R.menu.change_month, menu);
     }
 
     @Override

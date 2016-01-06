@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -81,7 +82,6 @@ public class CalendarFragment extends Fragment {
     private Database db;
     private Date selectedDate;
 
-
     private Map<String, List<CustomEvent>> eventMap;
 
     public CalendarFragment() {
@@ -102,6 +102,7 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -117,7 +118,6 @@ public class CalendarFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
-        addListener();
         createPanel();
         createCalendar();
         createSwipeMenu();
@@ -150,8 +150,6 @@ public class CalendarFragment extends Fragment {
         colorLst3.add(new CustomEvent(android.R.color.holo_blue_light));
         eventMap.put(29, colorLst1);*/
     }
-
-
 
     private void init(){
         openDatabase();
@@ -266,8 +264,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void createCalendar(){
-        Calendar cal = Calendar.getInstance();
-        updateTitle(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
+        updateMonthInToolbar(0);
 
         calendarView.setCalendarView(new FlexibleCalendarView.CalendarView() {
             @Override
@@ -302,9 +299,6 @@ public class CalendarFragment extends Fragment {
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(year, month, 1);
-                updateTitle(year, month);
                 snapPanelUp();
 
                 //This is temporary for now because when we move to a new month, the 1st of that month is selected by default
@@ -315,15 +309,15 @@ public class CalendarFragment extends Fragment {
 
                 // updateCalendarDecoratorsForMonth(year, month);
 
-                //Toast.makeText(getActivity(), "moved :" + Util.convertDateToString(selectedDate), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "direction :" + direction, Toast.LENGTH_SHORT).show();
+
+                updateMonthInToolbar(0);
             }
         });
 
         calendarView.setOnDateClickListener(new FlexibleCalendarView.OnDateClickListener() {
             @Override
             public void onDateClick(int year, int month, int day) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(year, month, day);
                 snapPanelUp();
 
                 selectedDate = (new GregorianCalendar(year, month, day)).getTime();
@@ -420,28 +414,7 @@ public class CalendarFragment extends Fragment {
         loader.execute();
     }
 
-    private void refreshView(final ArrayList<Transaction> thisMonthTransactionList){ Log.d("VIEW","refreshView"); Log.d("VIEW","current month is "+selectedDate.toString());
-        /*
-        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
-            @Override
-            public List<CalendarEvent> getEventsForTheDay(int year, int month, int day) { Log.d("VIEW", "try update year:"+year+", month:"+(month+1)+", day:"+day);
-
-                for (int i = 0; i < thisMonthTransactionList.size(); i++) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(thisMonthTransactionList.get(i).getDate());
-
-                    if (year == cal.get(Calendar.YEAR) && month == cal.get(Calendar.MONTH) && day == cal.get(Calendar.DAY_OF_MONTH)) {
-                        Log.d("VIEW", "success UPDATE DECORATOR FOR " + year + ", " + (month + 1) + ", " + day);
-                        List<CalendarEvent> eventColors = new ArrayList<>();
-                        eventColors.add(new CalendarEvent(android.R.color.holo_red_light));
-                        return eventColors;
-                    }
-                }
-
-                return null;
-            }
-        });*/
-
+    private void refreshView(final ArrayList<Transaction> thisMonthTransactionList){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -473,6 +446,7 @@ public class CalendarFragment extends Fragment {
         loader.execute();
     }
 
+    //not being used at all (doesnt work)
     private void doneHashMap() {
         Log.d("VIEW", "doneHashMAP");
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
@@ -734,16 +708,29 @@ public class CalendarFragment extends Fragment {
         plusIcon.startAnimation(anim);
     }
 
-    private void addListener(){
+    private void updateMonthInToolbar(int direction){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(selectedDate);
+        cal.add(Calendar.MONTH, direction);
+
+        selectedDate = cal.getTime();
+
+        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(selectedDate));
+        }
+
+        //getAllCategory();
     }
 
-    private void updateTitle(int year, int month){
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month, 1);
+    public void openDatabase(){
+        if(db == null) {
+            db = new Database(getActivity().getApplicationContext());
+        }
+    }
 
-        if(((AppCompatActivity)getActivity()).getSupportActionBar() != null){
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(cal.getDisplayName(Calendar.MONTH, Calendar.LONG,
-                    this.getResources().getConfiguration().locale) + " " + year);
+    public void closeDatabase(){
+        if(db != null){
+            db.close();
         }
     }
 
@@ -770,15 +757,29 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    public void openDatabase(){
-        if(db == null) {
-            db = new Database(getActivity().getApplicationContext());
-        }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Auto-generated method stub
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.change_month, menu);
     }
 
-    public void closeDatabase(){
-        if(db != null){
-            db.close();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.leftChevron:
+
+                updateMonthInToolbar(-1);
+                calendarView.moveToPreviousMonth();
+                return true;
+            case R.id.rightChevron:
+
+                updateMonthInToolbar(1);
+                calendarView.moveToNextMonth();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

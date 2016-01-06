@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -34,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity
 
         isFirstTime();
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -94,8 +93,7 @@ public class MainActivity extends AppCompatActivity
 
     private void isFirstTime(){
         SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        boolean defaultIsFirstTime = true;
-        boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, defaultIsFirstTime);
+        boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, true);
 
         if(isFirstTIme){
             createDefaultCategory();
@@ -140,12 +138,7 @@ public class MainActivity extends AppCompatActivity
                     c.setName(tempCategoryNameList[i]);
                     c.setColor("#"+tempCategoryColorList[i]);
                     c.setIcon(tempCategoryIconList[i]);
-
-                    Random random = new Random();
-
-                    float budget = random.nextFloat() * 100.0f;
-
-                    c.setBudget(budget);
+                    c.setBudget(100.0f);
                     c.setCost(0);
 
                     categoryList.add(c);
@@ -167,14 +160,14 @@ public class MainActivity extends AppCompatActivity
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done creating default categories");
 
-                createFakeBulkData();
+                createFakeTransactions();
             }
         };
 
         loader.execute();
     }
 
-    private void createFakeBulkData(){
+    private void createFakeTransactions(){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             long startTime, endTime, duration;
@@ -189,11 +182,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected Void doInBackground(Void... voids) {
                 //create transactions
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
                 try {
-                    Date startDate = formatter.parse("2015-01-01");
-                    Date endDate = formatter.parse("2016-01-01");
+                    Date startDate = Util.convertStringToDate("2015-01-01");
+                    Date endDate = Util.convertStringToDate("2016-01-01");
 
                     Calendar start = Calendar.getInstance();
                     start.setTime(startDate);
@@ -201,7 +192,6 @@ public class MainActivity extends AppCompatActivity
                     end.setTime(endDate);
 
                     final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
-
 
                     for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
                         // Do your job here with `date`.
@@ -213,7 +203,6 @@ public class MainActivity extends AppCompatActivity
 
                             Transaction transaction = new Transaction();
                             transaction.setDate(date);
-
 
                             int cc = random.nextInt(categoryList.size());
                             Category category  = categoryList.get(cc);
@@ -227,7 +216,6 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     db.createBulkTransaction(transactionArrayList);
-
                 }catch (Exception e ){
                     e.printStackTrace();
                 }
@@ -242,7 +230,6 @@ public class MainActivity extends AppCompatActivity
                 db.exportDB();
 
                 endTime = System.nanoTime();
-
                 duration = (endTime - startTime);
 
                 long milli = (duration/1000000);
@@ -288,28 +275,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
