@@ -7,9 +7,9 @@
     <item android:id="@+id/leftChevron"
         android:title="left"
         android:icon="@drawable/ic_left_arrow"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item android:id="@+id/rightChevron"
         android:title="right"
         android:icon="@drawable/ic_right_arrow"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 </menu>
