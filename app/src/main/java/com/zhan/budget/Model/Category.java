@@ -45,6 +45,10 @@ public class Category implements Parcelable{
         this.cost = cost;
     }
 
+    public void addCost(float cost){
+        this.cost += cost;
+    }
+
     public String getName() {
         return name;
     }

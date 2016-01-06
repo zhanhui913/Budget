@@ -40,7 +40,6 @@ public class Database extends SQLiteOpenHelper{
     private static final String CATEGORY_ID = "id";
     private static final String CATEGORY_TITLE = "title";
     private static final String CATEGORY_BUDGET = "budget";
-    private static final String CATEGORY_COST = "cost";
     private static final String CATEGORY_COLOR = "color";
     private static final String CATEGORY_ICON = "icon";
 
@@ -57,7 +56,6 @@ public class Database extends SQLiteOpenHelper{
             CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             CATEGORY_TITLE + " TEXT," +
             CATEGORY_BUDGET + " REAL," +
-            CATEGORY_COST + " REAL," +
             CATEGORY_COLOR + " TEXT," +
             CATEGORY_ICON + " INTEGER);";
 
@@ -120,7 +118,6 @@ public class Database extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(CATEGORY_TITLE, category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
-        values.put(CATEGORY_COST, category.getCost());
         values.put(CATEGORY_COLOR, category.getColor());
         values.put(CATEGORY_ICON, category.getIcon());
 
@@ -140,7 +137,7 @@ public class Database extends SQLiteOpenHelper{
     public Category getCategoryById(int id){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_COST, CATEGORY_COLOR, CATEGORY_ICON};
+        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_COLOR, CATEGORY_ICON};
 
         Cursor cursor = db.query(TABLE_CATEGORY,     //Table
                 TOUR_COLUMNS,                        //Column names
@@ -160,9 +157,9 @@ public class Database extends SQLiteOpenHelper{
             category.setId(cursor.getInt(0));
             category.setName(cursor.getString(1));
             category.setBudget(cursor.getFloat(2));
-            category.setCost(cursor.getFloat(3));
-            category.setColor(cursor.getString(4));
-            category.setIcon(cursor.getInt(5));
+            category.setCost(0);
+            category.setColor(cursor.getString(3));
+            category.setIcon(cursor.getInt(4));
         }
 
         cursor.close();
@@ -189,9 +186,9 @@ public class Database extends SQLiteOpenHelper{
                 category.setId(cursor.getInt(0));
                 category.setName(cursor.getString(1));
                 category.setBudget(cursor.getFloat(2));
-                category.setCost(cursor.getFloat(3));
-                category.setColor(cursor.getString(4));
-                category.setIcon(cursor.getInt(5));
+                category.setCost(0);
+                category.setColor(cursor.getString(3));
+                category.setIcon(cursor.getInt(4));
 
                 //Add category to arraylist
                 categories.add(category);
@@ -215,7 +212,6 @@ public class Database extends SQLiteOpenHelper{
         values.put(CATEGORY_ID,category.getId());
         values.put(CATEGORY_TITLE,category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
-        values.put(CATEGORY_COST, category.getCost());
         values.put(CATEGORY_COLOR, category.getColor());
         values.put(CATEGORY_ICON, category.getIcon());
 
@@ -485,6 +481,9 @@ public class Database extends SQLiteOpenHelper{
         String endMonth = Util.convertDateToString((new GregorianCalendar(year, month, 1)).getTime());
 
         SQLiteDatabase db = this.getWritableDatabase();
+
+        db.beginTransaction();
+
         Cursor cursor = db.query(TABLE_TRANSACTION,           //Table
                 TOUR_COLUMNS,                                 //Column names
                 " " + TRANSACTION_DATE + " BETWEEN ? AND ?",  // Selections
@@ -511,6 +510,8 @@ public class Database extends SQLiteOpenHelper{
         }
 
         cursor.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
         db.close();
         return transactions;
     }

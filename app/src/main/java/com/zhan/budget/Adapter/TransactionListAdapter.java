@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Util;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class TransactionListAdapter extends BaseAdapter {
         note.setText(transaction.getNote());
 
         // Cost
-        cost.setText("$"+transaction.getPrice());
+        cost.setText("$"+ Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
 
         return convertView;
     }

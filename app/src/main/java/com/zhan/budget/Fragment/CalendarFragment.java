@@ -616,9 +616,6 @@ public class CalendarFragment extends Fragment {
                         Toast.makeText(getContext(), "deleting ", Toast.LENGTH_SHORT).show();
 
 
-
-
-
                         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
                             @Override
@@ -646,11 +643,6 @@ public class CalendarFragment extends Fragment {
                         };
 
                         loader.execute();
-
-
-
-
-
 
 
                         break;
@@ -881,11 +873,15 @@ public class CalendarFragment extends Fragment {
     }
 
     public void openDatabase(){
-        db = new Database(getActivity().getApplicationContext());
+        if(db == null) {
+            db = new Database(getActivity().getApplicationContext());
+        }
     }
 
     public void closeDatabase(){
-        db.close();
+        if(db != null){
+            db.close();
+        }
     }
 
     @Override

@@ -267,4 +267,13 @@ public final class Util {
         SimpleDateFormat formatter = new SimpleDateFormat("MMM d", Locale.CANADA);
         return formatter.format(date);
     }
+
+    public static String convertDateToStringFormat2(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy", Locale.CANADA);
+        return formatter.format(date);
+    }
+
+    public static String setPriceToCorrectDecimalInString(float price){
+        return String.format("%.2f", price);
+    }
 }

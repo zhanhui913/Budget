@@ -4,16 +4,22 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -21,7 +27,6 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Activity.CategoryInfo;
-import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
@@ -31,6 +36,9 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,11 +56,14 @@ public class CategoryFragment extends Fragment {
 
     private SwipeMenuListView categoryListView;
     private CategoryListAdapter categoryAdapter;
+    private TextView balanceText;
 
     private ArrayList<Category> categoryList;
     private Database db;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
+
+    private Date currentDate;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -72,6 +83,7 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -94,14 +106,17 @@ public class CategoryFragment extends Fragment {
     private void init(){
         openDatabase();
 
+        currentDate = new Date();
+
         fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
+        balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
 
         categoryList = new ArrayList<>();
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
-        populateCategory();
+        updateMonthInToolbar(0);
     }
 
     private void addListener(){
@@ -159,18 +174,75 @@ public class CategoryFragment extends Fragment {
         Log.d("ZHAN", "on resume");
     }
 
+    List<Transaction> transactionMonthList ;
     private void populateCategory(){
-
-        categoryList = db.getAllCategory();
-
-        Log.d("ZHAN", "There are " + categoryList.size() + " categories");
-
-        for(int i = 0; i < categoryList.size(); i++){
-            Log.d("ZHAN", i+"->"+categoryList.get(i).getName());
-        }
+        transactionMonthList = new ArrayList<>();
 
 
-        categoryAdapter.refreshList(categoryList);
+
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("ASYNC", "preparing to get categoroes");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                categoryList = db.getAllCategory();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("ASYNC", "done getting categories");
+            }
+        };
+        loader.execute();
+
+        final AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("ASYNC", "preparing to get transaction");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                transactionMonthList = db.getAllTransactionInMonth(currentDate);
+
+                Log.d("ASYNC", "There are "+transactionMonthList.size()+" transactions");
+
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("ASYNC", "done getting transaction");
+
+
+
+                //Go through each transaction and put them into the correct category
+                for(int t = 0; t < transactionMonthList.size(); t++){
+                    for(int c = 0; c < categoryList.size(); c++){
+                        if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){
+                            categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
+                        }
+                    }
+                }
+
+                categoryAdapter.refreshList(categoryList);
+                Log.d("ASYNC", "Done sorting transactions");
+            }
+        };
+        loader1.execute();
+
+
     }
 
     /**
@@ -276,11 +348,15 @@ public class CategoryFragment extends Fragment {
     }
 
     public void openDatabase(){
-        db = new Database(getActivity().getApplicationContext());
+        if(db == null) {
+            db = new Database(getActivity().getApplicationContext());
+        }
     }
 
     public void closeDatabase(){
-        db.close();
+        if(db != null){
+            db.close();
+        }
     }
 
     @Override
@@ -292,6 +368,22 @@ public class CategoryFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    private void updateMonthInToolbar(int direction){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(currentDate);
+        cal.add(Calendar.MONTH, direction);
+
+        currentDate = cal.getTime();
+
+        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+
+
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentDate));
+        }
+
+        populateCategory();
     }
 
     @Override
@@ -306,6 +398,27 @@ public class CategoryFragment extends Fragment {
         closeDatabase();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Auto-generated method stub
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_category_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.leftChevron:
+                updateMonthInToolbar(-1);
+                return true;
+            case R.id.rightChevron:
+                updateMonthInToolbar(1);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -318,6 +431,8 @@ public class CategoryFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCategoryInteractionListener {
-        void onCategoryInteraction(String value);
+        void nextMonth();
+
+        void previousMonth();
     }
 }

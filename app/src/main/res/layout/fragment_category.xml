@@ -4,20 +4,58 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.CategoryFragment">
 
-    <com.baoyz.swipemenulistview.SwipeMenuListView
-        android:id="@+id/categoryListView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/gray"
-        android:dividerHeight="1dp"
-        android:visibility="visible"/>
+        android:layout_height="match_parent">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addCategoryFAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_mode_edit" />
+        <LinearLayout
+            android:id="@+id/categoryMonthLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/gray"
+            android:padding="5dp">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_date"
+                android:tint="@color/secondary_text_default_material_light"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monthly Balance "
+                android:textSize="20sp"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/categoryMonthBalance"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="55.50"
+                android:textSize="20sp"
+                android:layout_marginRight="5dp"
+                android:gravity="right" />
+        </LinearLayout>
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/categoryListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/categoryMonthLayout"
+            android:divider="@color/gray"
+            android:dividerHeight="1dp"
+            android:visibility="visible"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addCategoryFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_mode_edit"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
 </FrameLayout>

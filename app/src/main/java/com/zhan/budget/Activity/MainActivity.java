@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private ShareFragment shareFragment;
     private SendFragment sendFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,10 +140,9 @@ public class MainActivity extends AppCompatActivity
                     Random random = new Random();
 
                     float budget = random.nextFloat() * 100.0f;
-                    float cost = random.nextInt((int)budget);
 
                     c.setBudget(budget);
-                    c.setCost(cost);
+                    c.setCost(0);
 
                     tempCategoryArrayList.add(c);
 
@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity
 
         loader.execute();
     }
-
 
     public void openDatabase(){
         if(db == null) {
@@ -295,7 +294,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCategoryInteraction(String value){
+    public void nextMonth(){
+        Log.d("MAIN ACTIVITY", "next value : ");
+
+    }
+
+    @Override
+    public void previousMonth(){
+        Log.d("MAIN ACTIVITY", "previous value : ");
 
     }
 
