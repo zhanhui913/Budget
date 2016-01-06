@@ -95,8 +95,7 @@ public class CalendarFragment extends Fragment {
      * @return A new instance of fragment CalendarFragment.
      */
     public static CalendarFragment newInstance() {
-        CalendarFragment fragment = new CalendarFragment();
-        return fragment;
+        return new CalendarFragment();
     }
 
     @Override
@@ -169,7 +168,7 @@ public class CalendarFragment extends Fragment {
 
         dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
-       // infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
+        infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
 
         isScrollAtTop = true;
         isTouchOffScroll = true;
@@ -366,6 +365,7 @@ public class CalendarFragment extends Fragment {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done transaction");
                 transactionAdapter.refreshList(transactionList);
+                updateTransactionStatus();
             }
         };
 
@@ -513,10 +513,7 @@ public class CalendarFragment extends Fragment {
                                 updateTransactionStatus();
                             }
                         };
-
                         loader.execute();
-
-
                         break;
                 }
                 //False: Close the menu
@@ -649,14 +646,11 @@ public class CalendarFragment extends Fragment {
     }
 
     private void updateTransactionStatus(){
-/*
         if(transactionList.size() > 0){
             infoPanel.setVisibility(View.GONE);
         }else{
             infoPanel.setVisibility(View.VISIBLE);
-        }*/
-
-       // entryCountView.setText(transactionList.size() + "");
+        }
     }
 
     private void snapPanelUp(){ Log.i("ZHAN2", "snapping panel up");
@@ -747,10 +741,14 @@ public class CalendarFragment extends Fragment {
                 Log.d("ZHAN", "transaction name is "+transaction.getNote()+" cost is "+transaction.getPrice());
                 Log.d("ZHAN", "category is "+transaction.getCategory().getName()+", "+transaction.getCategory().getId());
                 Log.i("ZHAN", "----------- onActivityResult ----------");
-                db.createTransaction(transaction);
+                long id = db.createTransaction(transaction);
+                transaction.setId((int)id);
 
                 transactionList.add(transaction);
                 transactionAdapter.refreshList(transactionList);
+                updateTransactionStatus();
+
+                db.exportDB();
 
                 updateCalendarDecoratorsForMonth(selectedDate);
             }

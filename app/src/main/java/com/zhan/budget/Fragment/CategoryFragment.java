@@ -63,7 +63,7 @@ public class CategoryFragment extends Fragment {
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
 
-    private Date currentDate;
+    private Date currentMonth;
 
     private List<Transaction> transactionMonthList ;
 
@@ -79,8 +79,7 @@ public class CategoryFragment extends Fragment {
      * @return A new instance of fragment CategoryFragment.
      */
     public static CategoryFragment newInstance() {
-        CategoryFragment fragment = new CategoryFragment();
-        return fragment;
+        return new CategoryFragment();
     }
 
     @Override
@@ -109,7 +108,7 @@ public class CategoryFragment extends Fragment {
     private void init(){
         openDatabase();
 
-        currentDate = new Date();
+        currentMonth = new Date();
 
         fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
@@ -177,13 +176,12 @@ public class CategoryFragment extends Fragment {
         Log.d("ZHAN", "on resume");
     }
 
-
     private void getAllCategory(){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Log.d("ASYNC", "preparing to get categoroes");
+                Log.d("ASYNC", "preparing to get categories");
             }
 
             @Override
@@ -214,10 +212,9 @@ public class CategoryFragment extends Fragment {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                transactionMonthList = db.getAllTransactionInMonth(currentDate);
+                transactionMonthList = db.getAllTransactionInMonth(currentMonth);
 
                 Log.d("ASYNC", "There are "+transactionMonthList.size()+" transactions");
-
 
                 return null;
             }
@@ -233,9 +230,7 @@ public class CategoryFragment extends Fragment {
         loader1.execute();
     }
 
-
     private void populateCategoryWithInfo(){
-
         Log.d("ASYNC", "There are "+categoryList.size()+" categories");
         Log.d("ASYNC", "There are "+transactionMonthList.size()+" transactions this month");
 
@@ -255,9 +250,6 @@ public class CategoryFragment extends Fragment {
 
         categoryAdapter.refreshList(categoryList);
         Log.d("ASYNC", "Done sorting transactions");
-
-
-
     }
 
     /**
@@ -387,13 +379,13 @@ public class CategoryFragment extends Fragment {
 
     private void updateMonthInToolbar(int direction){
         Calendar cal = Calendar.getInstance();
-        cal.setTime(currentDate);
+        cal.setTime(currentMonth);
         cal.add(Calendar.MONTH, direction);
 
-        currentDate = cal.getTime();
+        currentMonth = cal.getTime();
 
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentDate));
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentMonth));
         }
 
         getAllCategory();

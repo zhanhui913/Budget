@@ -18,6 +18,7 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Util;
 
 import java.util.List;
 
@@ -68,7 +69,6 @@ public class CategoryListAdapter extends BaseAdapter {
         // getting category data for the row
         Category category = categoryList.get(position);
 
-
         //Get Drawable from @drawable/circular_category
         LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.circular_category);
 
@@ -92,10 +92,10 @@ public class CategoryListAdapter extends BaseAdapter {
         name.setText(category.getName());
 
         //Budget
-        budget.setText(""+category.getBudget());
+        budget.setText("$"+ Util.setPriceToCorrectDecimalInString(category.getBudget()));
 
         //Cost
-        cost.setText(""+category.getCost());
+        cost.setText("$"+Util.setPriceToCorrectDecimalInString(category.getCost()));
 
         //ProgressBar
         progressBar.setMax(category.getBudget());
