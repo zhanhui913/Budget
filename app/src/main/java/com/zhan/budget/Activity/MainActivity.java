@@ -29,11 +29,9 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
@@ -183,8 +181,8 @@ public class MainActivity extends AppCompatActivity
             protected Void doInBackground(Void... voids) {
                 //create transactions
                 try {
-                    Date startDate = Util.convertStringToDate("2015-01-01");
-                    Date endDate = Util.convertStringToDate("2016-01-01");
+                    Date startDate = Util.convertStringToDate("2014-12-01");
+                    Date endDate = Util.convertStringToDate("2016-02-01");
 
                     Calendar start = Calendar.getInstance();
                     start.setTime(startDate);
