@@ -16,12 +16,12 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@color/purple"
-        custom:bg_color="@color/green"
-        custom:stroke_width="20"
-        custom:stroke_color="@color/black"
-        custom:cv_icon="@drawable/ic_date"
-        custom:icon_size="XSMALL"
-        custom:icon_color="@color/purple"/>
+        custom:cv_bgColor="@color/green"
+        custom:cv_strokeWidth="20"
+        custom:cv_strokeColor="@color/black"
+        custom:cv_iconDrawable="@drawable/ic_date"
+        custom:cv_iconSize="XSMALL"
+        custom:cv_iconColor="@color/purple"/>
 -->
 
 </FrameLayout>

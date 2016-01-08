@@ -196,7 +196,7 @@ public class CategoryFragment extends Fragment {
                 Log.d("ASYNC", "done getting categories");
                 categoryAdapter.refreshList(categoryList);
 
-                getAllTransactions();
+                //getAllTransactions();
             }
         };
         loader.execute();

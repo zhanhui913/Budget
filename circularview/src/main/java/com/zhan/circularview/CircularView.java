@@ -19,20 +19,20 @@ public class CircularView extends View {
 
     //Default values
     private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
-    private final static int DEFAULT_STROKE_WIDTH = 5;
+    private final static int DEFAULT_STROKE_WIDTH = 0;
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
     private final static int DEFAULT_ICON_SIZE  = 5;//LARGE
     private final static int DEFAULT_ICON_COLOR = R.color.white;
 
 
     private Context context;
-    private int bg_color;
-    private int stroke_width;
-    private int stroke_color;
+    private int bgColor;
+    private int strokeWidth;
+    private int strokeColor;
     private IconSize eiconSize;
-    private int icon_size;
-    private int icon_color;
-    private Drawable icon;
+    private int iconSize;
+    private int iconColor;
+    private Drawable iconDrawable;
     private Paint paint;
 
     public CircularView(Context context) {
@@ -58,14 +58,14 @@ public class CircularView extends View {
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){
         this.context = context;
 
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularCellView, 0, 0);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
-            bg_color = a.getColor(R.styleable.CircularCellView_bg_color, getResources().getColor(DEFAULT_BG_COLOR));
-            stroke_width = a.getInteger(R.styleable.CircularCellView_stroke_width, DEFAULT_STROKE_WIDTH);
-            stroke_color = a.getColor(R.styleable.CircularCellView_stroke_color, getResources().getColor(DEFAULT_STROKE_COLOR));
-            icon = a.getDrawable(R.styleable.CircularCellView_cv_icon);
-            icon_size = a.getInteger(R.styleable.CircularCellView_icon_size, DEFAULT_ICON_SIZE);
-            icon_color = a.getColor(R.styleable.CircularCellView_icon_color, getResources().getColor(DEFAULT_ICON_COLOR));
+            bgColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
+            strokeWidth = a.getInteger(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
+            strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, getResources().getColor(DEFAULT_STROKE_COLOR));
+            iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
+            iconSize = a.getInteger(R.styleable.CircularView_cv_iconSize, DEFAULT_ICON_SIZE);
+            iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
         }finally {
             a.recycle();
         }
@@ -113,67 +113,67 @@ public class CircularView extends View {
 
     private void drawCircle(Canvas canvas, int radius, int width, int height){
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(bg_color);
+        paint.setColor(bgColor);
         canvas.drawCircle(width, height, radius, paint);
 
-        if(stroke_width > 0) {
+        if(strokeWidth > 0) {
             paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(stroke_color);
+            paint.setColor(strokeColor);
             float saveStrokeWidth = paint.getStrokeWidth();
-            paint.setStrokeWidth(stroke_width);
-            canvas.drawCircle(width, height, radius - (stroke_width / 2), paint);
+            paint.setStrokeWidth(strokeWidth);
+            canvas.drawCircle(width, height, radius - (strokeWidth / 2), paint);
             paint.setStrokeWidth(saveStrokeWidth);
         }
     }
 
     private void drawIcon(Canvas canvas){
-        if(icon != null){
+        if(iconDrawable != null){
             Rect bounds = canvas.getClipBounds();
 
             int multiplier = 5;
 
-            bounds.left += (icon_size * multiplier);
-            bounds.right -= (icon_size * multiplier);
-            bounds.top += (icon_size * multiplier);
-            bounds.bottom -= (icon_size * multiplier);
+            bounds.left += (iconSize * multiplier);
+            bounds.right -= (iconSize * multiplier);
+            bounds.top += (iconSize * multiplier);
+            bounds.bottom -= (iconSize * multiplier);
 
-            icon.setBounds(bounds);
-            icon.mutate().setColorFilter(icon_color, PorterDuff.Mode.SRC_IN);
-            icon.draw(canvas);
+            iconDrawable.setBounds(bounds);
+            iconDrawable.mutate().setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            iconDrawable.draw(canvas);
         }
     }
 
-    public int getBg_color() {
-        return bg_color;
+    public int getBgColor() {
+        return bgColor;
     }
 
-    public void setBg_color(int bg_color) {
-        this.bg_color = bg_color;
+    public void setBgColor(int bgColor) {
+        this.bgColor = bgColor;
     }
 
-    public int getStroke_width() {
-        return stroke_width;
+    public int getStrokeWidth() {
+        return strokeWidth;
     }
 
-    public void setStroke_width(int stroke_width) {
-        this.stroke_width = stroke_width;
+    public void setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
     }
 
-    public int getStroke_color() {
-        return stroke_color;
+    public int getStrokeColor() {
+        return strokeColor;
     }
 
-    public void setStroke_color(int stroke_color) {
-        this.stroke_color = stroke_color;
+    public void setStrokeColor(int strokeColor) {
+        this.strokeColor = strokeColor;
     }
 
-    public IconSize getIcon_size() {
+    public IconSize getIconSize() {
         return eiconSize;
     }
 
-    public void setIcon_size(IconSize size) {
+    public void setIconSize(IconSize size) {
         this.eiconSize = size;
-        this.icon_size = convertEnumToSize(this.eiconSize);
+        this.iconSize = convertEnumToSize(this.eiconSize);
     }
 
     private int convertEnumToSize(IconSize size){
@@ -190,24 +190,24 @@ public class CircularView extends View {
         }
     }
 
-    public int getIcon_color() {
-        return icon_color;
+    public int getIconColor() {
+        return iconColor;
     }
 
-    public void setIcon_color(int icon_color) {
-        this.icon_color = icon_color;
+    public void setIconColor(int iconColor) {
+        this.iconColor = iconColor;
     }
 
-    public Drawable getIcon() {
-        return icon;
+    public Drawable getIconDrawable() {
+        return iconDrawable;
     }
 
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
+    public void setIconDrawable(Drawable iconDrawable) {
+        this.iconDrawable = iconDrawable;
     }
 /*
     public void setIcon(int drawableId){
-        this.icon = ResourcesCompat.getDrawable(getResources(), drawableId, this.context.getTheme());
+        this.iconDrawable = ResourcesCompat.getDrawable(getResources(), drawableId, this.context.getTheme());
     }*/
 
 

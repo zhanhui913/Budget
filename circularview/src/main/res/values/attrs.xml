@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CircularCellView">
-        <attr name="bg_color" format="color"/>
-        <attr name="state_selected" format="boolean"/>
-        <attr name="stroke_width" format="integer"/>
-        <attr name="stroke_color" format="color"/>
-        <attr name="cv_icon" format="integer"/>
-        <attr name="icon_color" format="integer"/>
-        <attr name="icon_size" format="enum">
+    <declare-styleable name="CircularView">
+        <attr name="cv_bgColor" format="color"/>
+        <attr name="cv_strokeWidth" format="integer"/>
+        <attr name="cv_strokeColor" format="color"/>
+        <attr name="cv_iconDrawable" format="integer"/>
+        <attr name="cv_iconColor" format="integer"/>
+        <attr name="cv_iconSize" format="enum">
             <enum name="XSMALL" value="17"/>
             <enum name="SMALL" value="13"/>
             <enum name="MEDIUM" value="9"/>

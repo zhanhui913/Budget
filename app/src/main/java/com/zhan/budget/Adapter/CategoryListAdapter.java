@@ -58,9 +58,6 @@ public class CategoryListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.item_category, null);
 
-        //View icon = convertView.findViewById(R.id.categoryIcon);
-
-        CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
 
 
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
@@ -72,8 +69,9 @@ public class CategoryListAdapter extends BaseAdapter {
         Category category = categoryList.get(position);
 
 
-
         /*
+        View icon = convertView.findViewById(R.id.categoryIcon);
+
         //Get Drawable from @drawable/circular_category
         LayerDrawable drawable = (LayerDrawable) ContextCompat.getIcon(activity.getApplicationContext(), R.drawable.circular_category);
 
@@ -92,9 +90,9 @@ public class CategoryListAdapter extends BaseAdapter {
         icon.setBackground(drawable);
 */
 
-
-        circularView.setBg_color(Color.parseColor(category.getColor()));
-        circularView.setIcon(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
+        CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
+        circularView.setBgColor(Color.parseColor(category.getColor()));
+        circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
 
 
 
@@ -116,7 +114,7 @@ public class CategoryListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void refreshList(List<Category> categoryList){
+    public void refreshList(List<Category> categoryList) {
         this.categoryList = categoryList;
         Log.d("CANVAS","----------------------- "+this.categoryList.size());
         notifyDataSetChanged();

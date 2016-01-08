@@ -42,7 +42,6 @@ public final class CategoryUtil {
             return ContextCompat.getDrawable(context, R.drawable.bill);
         }else{
             return ContextCompat.getDrawable(context, R.drawable.groceries);
-            //return ContextCompat.getDrawable(context, R.color.cyan);
         }
     }
 
