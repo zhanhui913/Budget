@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.OverviewFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
     <com.zhan.circularview.CircularView
+        android:id="@+id/circularViewId"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+<!--
+    <com.zhan.circularview.CircularView
+        android:id="@+id/circularViewI"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@color/purple"
@@ -18,6 +20,8 @@
         custom:stroke_width="20"
         custom:stroke_color="@color/black"
         custom:cv_icon="@drawable/ic_date"
-        custom:icon_size="LARGE"
+        custom:icon_size="XSMALL"
         custom:icon_color="@color/purple"/>
+-->
+
 </FrameLayout>

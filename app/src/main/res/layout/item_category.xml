@@ -24,10 +24,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false"
-        custom:bg_color="@color/green"
-        custom:cv_icon="@drawable/ic_date"
-        custom:icon_size="LARGE"
-        custom:icon_color="@color/purple"
         />
 
     <TextView

@@ -3,6 +3,8 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +60,7 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //View icon = convertView.findViewById(R.id.categoryIcon);
 
-        CircularView circularView = (CircularView)convertView.findViewById(R.id.categoryIcon);
+        CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
 
 
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
@@ -90,9 +92,13 @@ public class CategoryListAdapter extends BaseAdapter {
         icon.setBackground(drawable);
 */
 
+
         circularView.setBg_color(Color.parseColor(category.getColor()));
-        circularView.setIcon(CategoryUtil.getIconDrawable(this.activity, category.getIcon()));
-        circularView.setIcon_size(15);
+        circularView.setIcon(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
+
+
+
+        Log.d("CANVAS", "Category name:"+category.getName()+", color:"+category.getColor()+", icon:"+category.getIcon());
 
         // Name
         name.setText(category.getName());
@@ -112,6 +118,7 @@ public class CategoryListAdapter extends BaseAdapter {
 
     public void refreshList(List<Category> categoryList){
         this.categoryList = categoryList;
+        Log.d("CANVAS","----------------------- "+this.categoryList.size());
         notifyDataSetChanged();
     }
 }

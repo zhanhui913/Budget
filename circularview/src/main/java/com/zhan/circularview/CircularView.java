@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -16,10 +15,21 @@ import android.view.View;
  */
 public class CircularView extends View {
 
+    public enum IconSize {XSMALL, SMALL, MEDIUM, LARGE, XLARGE}
+
+    //Default values
+    private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
+    private final static int DEFAULT_STROKE_WIDTH = 5;
+    private final static int DEFAULT_STROKE_COLOR = R.color.black;
+    private final static int DEFAULT_ICON_SIZE  = 5;//LARGE
+    private final static int DEFAULT_ICON_COLOR = R.color.white;
+
+
     private Context context;
     private int bg_color;
     private int stroke_width;
     private int stroke_color;
+    private IconSize eiconSize;
     private int icon_size;
     private int icon_color;
     private Drawable icon;
@@ -50,12 +60,12 @@ public class CircularView extends View {
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularCellView, 0, 0);
         try{
-            bg_color = a.getColor(R.styleable.CircularCellView_bg_color, getResources().getColor(android.R.color.holo_blue_light)); //default is holo_blue_light
-            stroke_width = a.getInteger(R.styleable.CircularCellView_stroke_width, 0);//default is 0
-            stroke_color = a.getColor(R.styleable.CircularCellView_stroke_color, getResources().getColor(android.R.color.holo_blue_light)); //default is holo_blue_light
+            bg_color = a.getColor(R.styleable.CircularCellView_bg_color, getResources().getColor(DEFAULT_BG_COLOR));
+            stroke_width = a.getInteger(R.styleable.CircularCellView_stroke_width, DEFAULT_STROKE_WIDTH);
+            stroke_color = a.getColor(R.styleable.CircularCellView_stroke_color, getResources().getColor(DEFAULT_STROKE_COLOR));
             icon = a.getDrawable(R.styleable.CircularCellView_cv_icon);
-            icon_size = a.getInteger(R.styleable.CircularCellView_icon_size, 3);
-            icon_color = a.getColor(R.styleable.CircularCellView_icon_color, getResources().getColor(android.R.color.white)); //default is white
+            icon_size = a.getInteger(R.styleable.CircularCellView_icon_size, DEFAULT_ICON_SIZE);
+            icon_color = a.getColor(R.styleable.CircularCellView_icon_color, getResources().getColor(DEFAULT_ICON_COLOR));
         }finally {
             a.recycle();
         }
@@ -66,6 +76,7 @@ public class CircularView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //Get the width measurement
         int widthSize = View.resolveSize(getDesiredWidth(), widthMeasureSpec);
 
@@ -77,6 +88,7 @@ public class CircularView extends View {
     }
 
     @Override protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         int viewWidthHalf = this.getMeasuredWidth() / 2;
         int viewHeightHalf = this.getMeasuredHeight() / 2;
 
@@ -131,15 +143,6 @@ public class CircularView extends View {
         }
     }
 
-
-    public Paint getPaint() {
-        return paint;
-    }
-
-    public void setPaint(Paint paint) {
-        this.paint = paint;
-    }
-
     public int getBg_color() {
         return bg_color;
     }
@@ -164,12 +167,27 @@ public class CircularView extends View {
         this.stroke_color = stroke_color;
     }
 
-    public int getIcon_size() {
-        return icon_size;
+    public IconSize getIcon_size() {
+        return eiconSize;
     }
 
-    public void setIcon_size(int icon_size) {
-        this.icon_size = icon_size;
+    public void setIcon_size(IconSize size) {
+        this.eiconSize = size;
+        this.icon_size = convertEnumToSize(this.eiconSize);
+    }
+
+    private int convertEnumToSize(IconSize size){
+        if(size == IconSize.XSMALL){
+            return 17;
+        }else if(size == IconSize.SMALL){
+            return 13;
+        }else if(size == IconSize.MEDIUM){
+            return 9;
+        }else if(size == IconSize.LARGE){
+            return 5;
+        }else{
+            return 1;
+        }
     }
 
     public int getIcon_color() {
@@ -187,8 +205,10 @@ public class CircularView extends View {
     public void setIcon(Drawable icon) {
         this.icon = icon;
     }
-
+/*
     public void setIcon(int drawableId){
         this.icon = ResourcesCompat.getDrawable(getResources(), drawableId, this.context.getTheme());
-    }
+    }*/
+
+
 }

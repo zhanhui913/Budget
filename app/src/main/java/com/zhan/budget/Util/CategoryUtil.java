@@ -46,6 +46,34 @@ public final class CategoryUtil {
         }
     }
 
+    public static int getIconResourceId(int iconId){
+        if(iconId == 0){
+            return R.drawable.food;
+        }else if(iconId == 1){
+            return R.drawable.food;
+        }else if(iconId == 2){
+            return R.drawable.food;
+        }else if(iconId == 3){
+            return R.drawable.food;
+        }else if(iconId == 4){
+            return R.drawable.cafe;
+        }else if(iconId == 5){
+            return R.drawable.house;
+        }else if(iconId == 6){
+            return R.drawable.airplane;
+        }else if(iconId == 7){
+            return R.drawable.shirt;
+        }else if(iconId == 8){
+            return R.drawable.etc;
+        }else if(iconId == 9){
+            return R.drawable.utilities;
+        }else if(iconId == 10){
+            return R.drawable.bill;
+        }else{
+            return R.drawable.groceries;
+        }
+    }
+
     public static Drawable getColorDrawable(Context context, String colorId){
         int colorInt = Color.parseColor(colorId);
 /*
