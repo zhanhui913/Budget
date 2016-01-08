@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.OverviewFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,9 +13,11 @@
     <com.zhan.circularview.CircularView
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:background="@color/purple"
         custom:bg_color="@color/green"
-        custom:stroke_width="5"
-        custom:stroke_color="@color/black" />
-
-
+        custom:stroke_width="20"
+        custom:stroke_color="@color/black"
+        custom:cv_icon="@drawable/ic_date"
+        custom:icon_size="LARGE"
+        custom:icon_color="@color/purple"/>
 </FrameLayout>
