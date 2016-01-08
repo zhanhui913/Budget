@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:zhan="http://schemas.android.com/apk/res-auto">
-    <item zhan:state_regular="true"
-        android:drawable="@drawable/regular_day"/>
-    <item zhan:state_selected="true"
-        android:drawable="@drawable/selected_day"/>
-</selector>

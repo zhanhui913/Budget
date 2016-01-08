@@ -1,37 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CircularEventCellView">
-        <attr name="event_radius" format="dimension"/>
-        <attr name="event_circle_padding" format="dimension"/>
-    </declare-styleable>
-    <declare-styleable name="EventCountCellView">
-        <attr name="event_count_radius" format="dimension"/>
-        <attr name="event_background" format="color"/>
-        <attr name="event_count_text_color" format="color"/>
-        <attr name="event_text_size" format="dimension"/>
-    </declare-styleable>
-    <declare-styleable name="FlexibleCalendarView">
-        <attr name="startDisplayYear" format="integer"/>
-        <attr name="startDisplayMonth" format="integer"/>
-        <attr name="weekDayHorizontalSpacing" format="dimension"/>
-        <attr name="weekDayVerticalSpacing" format="dimension"/>
-        <attr name="monthDayHorizontalSpacing" format="dimension"/>
-        <attr name="monthDayVerticalSpacing" format="dimension"/>
-        <attr name="weekViewBackground" format="reference"/>
-        <attr name="monthViewBackground" format="reference"/>
-        <attr name="showDatesOutsideMonth" format="boolean"/>
-        <attr name="decorateDatesOutsideMonth" format="boolean"/>
-        <attr name="startDayOfTheWeek" format="enum">
-            <enum name="SUNDAY" value="1"/>
-            <enum name="MONDAY" value="2"/>
-            <enum name="TUESDAY" value="3"/>
-            <enum name="WEDNESDAY" value="4"/>
-            <enum name="THURSDAY" value="5"/>
-            <enum name="FRIDAY" value="6"/>
-            <enum name="SATURDAY" value="7"/>
-        </attr>
-    </declare-styleable>
-    <declare-styleable name="CircleState">
-        <attr name="state_regular" format="boolean"/>
+    <declare-styleable name="CircularCellView">
+        <attr name="bg_color" format="color"/>
         <attr name="state_selected" format="boolean"/>
+        <attr name="stroke_width" format="integer"/>
+        <attr name="stroke_color" format="color"/>
+        <attr name="cv_icon" format="integer"/>
+        <attr name="icon_color" format="integer"/>
     </declare-styleable>
 </resources>
