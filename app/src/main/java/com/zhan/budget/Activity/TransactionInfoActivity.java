@@ -4,19 +4,22 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
@@ -24,6 +27,7 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class TransactionInfoActivity extends AppCompatActivity {
@@ -39,6 +43,10 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
     private Database db; //shouldnt have db access here, category and transactions should be dealt with in the caller activity
     private Date selectedDate;
+
+    private ArrayList<Category> categoryList;
+    private GridView categoryGridView;
+    private CategoryGridAdapter categoryGridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +85,56 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
         editTextName = (EditText)findViewById(R.id.editTextTransactionName);
 
+        categoryList = new ArrayList<>();
+        categoryGridView = (GridView) findViewById(R.id.categoryGrid);
+        categoryGridAdapter = new CategoryGridAdapter(this, categoryList);
+        categoryGridView.setAdapter(categoryGridAdapter);
+
         priceString = "";
+
 
         createToolbar();
         addListeners();
+        populateCategory();
     }
+
+    private void populateCategory(){
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("ASYNC", "preparing to get categories");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                categoryList = db.getAllCategory();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("ASYNC", "done getting categories");
+                categoryGridAdapter.refreshGrid(categoryList);
+            }
+        };
+        loader.execute();
+    }
+/*
+    private void putFakeCategory(){
+        Log.d("CATEGORY", "putting fake category");
+        for(int i = 0; i < 30; i++){
+            Category category = new Category();
+            category.setName("category "+i);
+            category.setIcon(i);
+            category.setColor("FF00FF");
+            Log.d("CATEGORY", "adding category");
+            categoryList.add(category);
+        }
+
+        categoryGridAdapter.refreshGrid(categoryList);
+    }*/
 
     /**
      * Create toolbar
@@ -194,8 +247,15 @@ public class TransactionInfoActivity extends AppCompatActivity {
         });
 
         //transactionCostView.addTextChangedListener(tw);
-    }
 
+        categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(instance, "Clicked on category "+categoryList.get(position).getName(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+/*
     TextWatcher tw = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -230,7 +290,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
                 transactionCostView.addTextChangedListener(this);
             }
         }
-    };
+    };*/
 
     private void addDigitToTextView(int digit){
         //transactionCostView.setText(transactionCostView.getText() + "" +digit);

@@ -1,101 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:grid="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/category_grid"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    grid:alignmentMode="alignBounds"
-    grid:columnCount="5"
-    grid:rowOrderPreserved="false"
-    grid:useDefaultMargins="true">
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@drawable/circular_category"
-        grid:layout_columnWeight="0.2"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@drawable/circular_category"
-        grid:layout_columnWeight="0.2"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@drawable/circular_category"
-        grid:layout_columnWeight="0.2"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@drawable/circular_category"
-        grid:layout_columnWeight="0.2"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@drawable/circular_category"
-        grid:layout_columnWeight="0.2"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@drawable/circular_category"
-        grid:layout_columnWeight="0.2"/>
-
-</android.support.v7.widget.GridLayout>
-<!--
-
-    <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-tools:context="com.zhan.budget.Activity.MainActivity">
-
-<LinearLayout
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/categoryGrid"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:weightSum="1">
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="0.2"
-        android:layout_margin="5dp"
-        android:background="@drawable/circular_category" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="0.2"
-        android:layout_margin="5dp"
-        android:background="@drawable/circular_category" />
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="0.2"
-        android:layout_margin="5dp"
-        android:background="@drawable/circular_category" />
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="0.2"
-        android:layout_margin="5dp"
-        android:background="@drawable/circular_category" />
-    <View
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="0.2"
-        android:layout_margin="5dp"
-        android:background="@drawable/circular_category" />
-</LinearLayout>
-
-</LinearLayout>
--->
+    android:adjustViewBounds="true"
+    android:gravity="center_horizontal"
+    android:horizontalSpacing="1dp"
+    android:numColumns="5"
+    android:padding="1dp"
+    android:stretchMode="columnWidth"
+    android:listSelector="#00000000"
+    android:verticalSpacing="1dp"/>

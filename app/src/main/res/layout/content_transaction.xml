@@ -30,17 +30,18 @@
         android:background="@color/darkgray"
         android:layout_below="@+id/transactionCostText"/>
 
-    <include layout="@layout/category_panel"
-        android:layout_above="@+id/layoutPad"
-        android:layout_below="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"/>
-
     <EditText
         android:id="@+id/editTextTransactionName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider" />
+        android:layout_below="@+id/divider"
+        android:inputType="textNoSuggestions"/>
+
+    <include layout="@layout/category_panel"
+        android:layout_above="@+id/layoutPad"
+        android:layout_below="@+id/editTextTransactionName"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" />
 
     <include layout="@layout/number_pad"
         android:id="@+id/layoutPad"

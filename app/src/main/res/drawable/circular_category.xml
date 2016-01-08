@@ -3,6 +3,7 @@
     <item android:id="@+id/layerColorId" >
         <shape android:shape="oval">
             <solid android:color="@color/colorAccent"/>
+            <stroke android:color="@color/colorPrimaryDark" android:width="2dp"/>
         </shape>
     </item>
     <item

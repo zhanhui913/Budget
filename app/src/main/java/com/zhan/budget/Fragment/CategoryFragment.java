@@ -176,7 +176,7 @@ public class CategoryFragment extends Fragment {
         Log.d("ZHAN", "on resume");
     }
 
-    private void getAllCategory(){
+    private void populateCategory(){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -388,7 +388,7 @@ public class CategoryFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentMonth));
         }
 
-        getAllCategory();
+        populateCategory();
     }
 
     @Override
