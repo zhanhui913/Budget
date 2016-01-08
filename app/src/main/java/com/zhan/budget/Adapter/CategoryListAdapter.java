@@ -3,10 +3,6 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +14,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
+import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -59,7 +56,11 @@ public class CategoryListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.item_category, null);
 
-        View icon = convertView.findViewById(R.id.categoryIcon);
+        //View icon = convertView.findViewById(R.id.categoryIcon);
+
+        CircularView circularView = (CircularView)convertView.findViewById(R.id.categoryIcon);
+
+
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
         TextView budget = (TextView) convertView.findViewById(R.id.categoryBudget);
         TextView cost = (TextView) convertView.findViewById(R.id.categoryCost);
@@ -68,8 +69,11 @@ public class CategoryListAdapter extends BaseAdapter {
         // getting category data for the row
         Category category = categoryList.get(position);
 
+
+
+        /*
         //Get Drawable from @drawable/circular_category
-        LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.circular_category);
+        LayerDrawable drawable = (LayerDrawable) ContextCompat.getIcon(activity.getApplicationContext(), R.drawable.circular_category);
 
         // If we don't mutate the drawable, then all drawable's with this id will have a color
         // filter applied to it.
@@ -84,7 +88,11 @@ public class CategoryListAdapter extends BaseAdapter {
         drawable.setDrawableByLayerId(R.id.layerIconId, iconDrawable);
 
         icon.setBackground(drawable);
+*/
 
+        circularView.setBg_color(Color.parseColor(category.getColor()));
+        circularView.setIcon(CategoryUtil.getIconDrawable(this.activity, category.getIcon()));
+        circularView.setIcon_size(15);
 
         // Name
         name.setText(category.getName());

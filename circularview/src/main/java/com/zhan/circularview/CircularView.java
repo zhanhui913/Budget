@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -21,7 +22,7 @@ public class CircularView extends View {
     private int stroke_color;
     private int icon_size;
     private int icon_color;
-    private Drawable drawable;
+    private Drawable icon;
     private Paint paint;
 
     public CircularView(Context context) {
@@ -52,7 +53,7 @@ public class CircularView extends View {
             bg_color = a.getColor(R.styleable.CircularCellView_bg_color, getResources().getColor(android.R.color.holo_blue_light)); //default is holo_blue_light
             stroke_width = a.getInteger(R.styleable.CircularCellView_stroke_width, 0);//default is 0
             stroke_color = a.getColor(R.styleable.CircularCellView_stroke_color, getResources().getColor(android.R.color.holo_blue_light)); //default is holo_blue_light
-            drawable = a.getDrawable(R.styleable.CircularCellView_cv_icon);
+            icon = a.getDrawable(R.styleable.CircularCellView_cv_icon);
             icon_size = a.getInteger(R.styleable.CircularCellView_icon_size, 3);
             icon_color = a.getColor(R.styleable.CircularCellView_icon_color, getResources().getColor(android.R.color.white)); //default is white
         }finally {
@@ -114,7 +115,7 @@ public class CircularView extends View {
     }
 
     private void drawIcon(Canvas canvas){
-        if(drawable != null){
+        if(icon != null){
             Rect bounds = canvas.getClipBounds();
 
             int multiplier = 5;
@@ -124,15 +125,19 @@ public class CircularView extends View {
             bounds.top += (icon_size * multiplier);
             bounds.bottom -= (icon_size * multiplier);
 
-            drawable.setBounds(bounds);
-            drawable.mutate().setColorFilter(icon_color, PorterDuff.Mode.SRC_IN);
-            drawable.draw(canvas);
+            icon.setBounds(bounds);
+            icon.mutate().setColorFilter(icon_color, PorterDuff.Mode.SRC_IN);
+            icon.draw(canvas);
         }
     }
 
 
     public Paint getPaint() {
         return paint;
+    }
+
+    public void setPaint(Paint paint) {
+        this.paint = paint;
     }
 
     public int getBg_color() {
@@ -175,15 +180,15 @@ public class CircularView extends View {
         this.icon_color = icon_color;
     }
 
-    public Drawable getDrawable() {
-        return drawable;
+    public Drawable getIcon() {
+        return icon;
     }
 
-    public void setDrawable(Drawable drawable) {
-        this.drawable = drawable;
+    public void setIcon(Drawable icon) {
+        this.icon = icon;
     }
 
-    public void setPaint(Paint paint) {
-        this.paint = paint;
+    public void setIcon(int drawableId){
+        this.icon = ResourcesCompat.getDrawable(getResources(), drawableId, this.context.getTheme());
     }
 }

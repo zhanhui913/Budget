@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp">
 
+    <!--
     <View
         android:id="@+id/categoryIcon"
         android:layout_width="50dp"
@@ -13,6 +15,20 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false" />
+    -->
+
+    <com.zhan.circularview.CircularView
+        android:id="@+id/categoryIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="false"
+        custom:bg_color="@color/green"
+        custom:cv_icon="@drawable/ic_date"
+        custom:icon_size="LARGE"
+        custom:icon_color="@color/purple"
+        />
 
     <TextView
         android:id="@+id/categoryName"
