@@ -27,7 +27,7 @@ public class CategoryListAdapterViewHolder extends ArrayAdapter<Category> {
     private Activity activity;
     private List<Category> categoryList;
 
-    private static class ViewHolder {
+    static class ViewHolder {
         public CircularView circularView;
         public TextView name;
         public TextView budget;
@@ -38,7 +38,7 @@ public class CategoryListAdapterViewHolder extends ArrayAdapter<Category> {
     public CategoryListAdapterViewHolder(Activity activity,  List<Category> categoryList) {
         super(activity, R.layout.item_category, categoryList);
         this.activity = activity;
-        this.categoryList = categoryList; Log.d("CANVAS","creating array adapters");
+        this.categoryList = categoryList;
     }
 
     @Override
@@ -47,12 +47,11 @@ public class CategoryListAdapterViewHolder extends ArrayAdapter<Category> {
 
         // reuse views
         if (convertView == null) {
-            Log.d("CANVAS","first");
             // configure view holder
             viewHolder = new ViewHolder();
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_category, null);
+            convertView = inflater.inflate(R.layout.item_category, parent, false);
 
             viewHolder.circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.categoryName);
@@ -63,10 +62,6 @@ public class CategoryListAdapterViewHolder extends ArrayAdapter<Category> {
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
-
-        Log.d("CANVAS","second");
-        // fill data
 
         // getting category data for the row
         Category category = categoryList.get(position);
@@ -84,11 +79,5 @@ public class CategoryListAdapterViewHolder extends ArrayAdapter<Category> {
         viewHolder.progressBar.setProgress(category.getCost());
 
         return convertView;
-    }
-
-    public void refreshList(List<Category> categoryList) {
-        this.categoryList = categoryList;
-        Log.d("CANVAS", "----------------------- " + this.categoryList.size());
-        notifyDataSetChanged();
     }
 }

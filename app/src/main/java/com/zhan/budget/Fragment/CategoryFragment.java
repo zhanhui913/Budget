@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class CategoryFragment extends Fragment {
     private OnCategoryInteractionListener mListener;
     private View view;
     private FloatingActionButton fab;
+
 
     private SwipeMenuListView categoryListView;
     private CategoryListAdapterViewHolder categoryAdapter;
@@ -118,7 +120,13 @@ public class CategoryFragment extends Fragment {
         categoryAdapter = new CategoryListAdapterViewHolder(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
-        updateMonthInToolbar(0);
+        populateCategoryWithNoInfo();
+
+        //0 represents no change in month relative to currentMonth variable
+        //false because we dont need to get all transactions yet.
+        //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
+        //categories
+        updateMonthInToolbar(0, false);
     }
 
     private void addListener(){
@@ -149,14 +157,16 @@ public class CategoryFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                         Category c = new Category();
                         c.setName(input.getText().toString());
+                        c.setColor("#000000");
+                        c.setIcon(6);
                         c.setBudget(100.0f);
-                        c.setCost(2.0f);
+                        c.setCost(0);
 
 
                         db.createCategory(c);
 
                         categoryList.add(c);
-                        categoryAdapter.refreshList(categoryList);
+                        categoryAdapter.add(c);
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -169,19 +179,19 @@ public class CategoryFragment extends Fragment {
                 .show();
     }
 
-
     @Override
     public void onResume(){
         super.onResume();
         Log.d("ZHAN", "on resume");
     }
 
-    private void populateCategory(){
+    //SHould be called only the first time when the fragment is created
+    private void populateCategoryWithNoInfo(){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Log.d("ASYNC", "preparing to get categories");
+                Log.d("ASYNC", "preparing to get categories with no info");
             }
 
             @Override
@@ -193,16 +203,37 @@ public class CategoryFragment extends Fragment {
             @Override
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting categories");
-                categoryAdapter.refreshList(categoryList);
+                Log.d("ASYNC", "done getting categories with no info");
+                categoryAdapter.addAll(categoryList);
 
-                //getAllTransactions();
+                populateCategoryWithInfo();
             }
         };
         loader.execute();
     }
 
-    private void getAllTransactions(){
+    private void aggregateCategoryInfo(){
+        Log.d("POP", "There are "+categoryList.size()+" categories");
+        Log.d("POP", "There are "+transactionMonthList.size()+" transactions this month");
+
+        for(int i = 0; i < categoryList.size(); i++){
+            Log.d("POP", "category "+categoryList.get(i).getId());
+        }
+
+        //Go through each transaction and put them into the correct category
+        for(int t = 0; t < transactionMonthList.size(); t++){
+            Log.d("POP", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
+            for(int c = 0; c < categoryList.size(); c++){
+                if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
+                    categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
+                }
+            }
+        }
+
+        categoryAdapter.notifyDataSetChanged();
+    }
+
+    private void populateCategoryWithInfo(){
         AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -224,32 +255,10 @@ public class CategoryFragment extends Fragment {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done getting transaction");
 
-                populateCategoryWithInfo();
+                aggregateCategoryInfo();
             }
         };
         loader1.execute();
-    }
-
-    private void populateCategoryWithInfo(){
-        Log.d("ASYNC", "There are "+categoryList.size()+" categories");
-        Log.d("ASYNC", "There are "+transactionMonthList.size()+" transactions this month");
-
-        for(int i = 0; i < categoryList.size(); i++){
-            Log.d("ZHAN", "category "+categoryList.get(i).getId());
-        }
-
-        //Go through each transaction and put them into the correct category
-        for(int t = 0; t < transactionMonthList.size(); t++){
-            Log.d("ZHAN", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
-            for(int c = 0; c < categoryList.size(); c++){
-                if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
-                    categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
-                }
-            }
-        }
-
-        categoryAdapter.refreshList(categoryList);
-        Log.d("ASYNC", "Done sorting transactions");
     }
 
     /**
@@ -296,12 +305,11 @@ public class CategoryFragment extends Fragment {
                         startActivityForResult(editCategory, Constants.RETURN_EDIT_CATEGORY);
 
                         break;
-
                     case 1:
                         //delete
                         db.deleteCategory(categoryList.get(position));
+                        categoryAdapter.remove(categoryList.get(position));
                         categoryList.remove(position);
-                        categoryAdapter.refreshList(categoryList);
 
                         break;
                 }
@@ -347,9 +355,8 @@ public class CategoryFragment extends Fragment {
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
                 db.updateCategory(category);
-
                 categoryList.set(categoryIndexEditted, category);
-                categoryAdapter.refreshList(categoryList);
+                categoryAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -377,7 +384,7 @@ public class CategoryFragment extends Fragment {
         }
     }
 
-    private void updateMonthInToolbar(int direction){
+    private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
         Calendar cal = Calendar.getInstance();
         cal.setTime(currentMonth);
         cal.add(Calendar.MONTH, direction);
@@ -388,7 +395,17 @@ public class CategoryFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentMonth));
         }
 
-        populateCategory();
+        if(updateCategoryInfo) {
+            resetCategoryInfo();
+            populateCategoryWithInfo();
+        }
+    }
+
+    private void resetCategoryInfo(){
+        for(int i = 0; i < categoryList.size(); i++){
+            categoryList.get(i).setCost(0);
+        }
+        categoryAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -415,10 +432,10 @@ public class CategoryFragment extends Fragment {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.leftChevron:
-                updateMonthInToolbar(-1);
+                updateMonthInToolbar(-1, true);
                 return true;
             case R.id.rightChevron:
-                updateMonthInToolbar(1);
+                updateMonthInToolbar(1, true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

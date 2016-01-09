@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -56,11 +58,15 @@ public class CategoryGridAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.item_category_grid, null);
 
-        View icon = convertView.findViewById(R.id.categoryIcon);
+
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
+        CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
 
         // getting category data for the row
         Category category = categoryList.get(position);
+
+        /*
+        View icon = convertView.findViewById(R.id.categoryIcon);
 
         //Get Drawable from @drawable/circular_category
         LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(this.context, R.drawable.circular_category);
@@ -78,6 +84,12 @@ public class CategoryGridAdapter extends BaseAdapter {
         drawable.setDrawableByLayerId(R.id.layerIconId, iconDrawable);
 
         icon.setBackground(drawable);
+        */
+
+
+        circularView.setBgColor(Color.parseColor(category.getColor()));
+        circularView.setIconDrawable(ResourcesCompat.getDrawable(this.context.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), this.context.getTheme()));
+
 
 
         // Name
