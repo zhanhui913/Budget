@@ -212,27 +212,6 @@ public class CategoryFragment extends Fragment {
         loader.execute();
     }
 
-    private void aggregateCategoryInfo(){
-        Log.d("POP", "There are "+categoryList.size()+" categories");
-        Log.d("POP", "There are "+transactionMonthList.size()+" transactions this month");
-
-        for(int i = 0; i < categoryList.size(); i++){
-            Log.d("POP", "category "+categoryList.get(i).getId());
-        }
-
-        //Go through each transaction and put them into the correct category
-        for(int t = 0; t < transactionMonthList.size(); t++){
-            Log.d("POP", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
-            for(int c = 0; c < categoryList.size(); c++){
-                if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
-                    categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
-                }
-            }
-        }
-
-        categoryAdapter.notifyDataSetChanged();
-    }
-
     private void populateCategoryWithInfo(){
         AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -259,6 +238,27 @@ public class CategoryFragment extends Fragment {
             }
         };
         loader1.execute();
+    }
+
+    private void aggregateCategoryInfo(){
+        Log.d("POP", "There are "+categoryList.size()+" categories");
+        Log.d("POP", "There are "+transactionMonthList.size()+" transactions this month");
+
+        for(int i = 0; i < categoryList.size(); i++){
+            Log.d("POP", "category "+categoryList.get(i).getId());
+        }
+
+        //Go through each transaction and put them into the correct category
+        for(int t = 0; t < transactionMonthList.size(); t++){
+            Log.d("POP", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
+            for(int c = 0; c < categoryList.size(); c++){
+                if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
+                    categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
+                }
+            }
+        }
+
+        categoryAdapter.notifyDataSetChanged();
     }
 
     /**
