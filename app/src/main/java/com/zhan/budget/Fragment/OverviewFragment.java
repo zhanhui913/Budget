@@ -1,6 +1,7 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -62,10 +63,11 @@ public class OverviewFragment extends Fragment {
 
     private void init(){
         circularView = (CircularView) view.findViewById(R.id.circularViewId);
-
+        circularView.setCircleColor(Color.parseColor("#ff0012"));
+        circularView.setIconColor(Color.parseColor("#509912"));
         circularView.setIconDrawable(CategoryUtil.getIconDrawable(getContext(), 9));
-        circularView.setBgColor(R.color.green);
-        circularView.setIconColor(R.color.red);
+        circularView.setStrokeColor(getResources().getColor(R.color.purple));
+        circularView.setStrokeWidth(10);
     }
 
     @Override

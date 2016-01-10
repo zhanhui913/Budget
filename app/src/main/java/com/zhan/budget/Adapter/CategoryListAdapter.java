@@ -81,7 +81,7 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Color
         GradientDrawable shape = (GradientDrawable)drawable.findDrawableByLayerId(R.id.layerColorId);
-        shape.setColor(Color.parseColor(category.getColor()));
+        shape.setCircleColor(Color.parseColor(category.getColor()));
 
         //Icon
         Drawable iconDrawable = CategoryUtil.getIconDrawable(activity, category.getIcon());
@@ -91,7 +91,7 @@ public class CategoryListAdapter extends BaseAdapter {
 */
 
         CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
-        circularView.setBgColor(Color.parseColor(category.getColor()));
+        circularView.setCircleColor(Color.parseColor(category.getColor()));
         circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
 
 

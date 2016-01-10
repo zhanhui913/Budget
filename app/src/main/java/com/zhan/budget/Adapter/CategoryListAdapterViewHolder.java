@@ -69,7 +69,7 @@ public class CategoryListAdapterViewHolder extends ArrayAdapter<Category> {
         Log.d("DEUBG","index:"+position+"- Category "+category.toString());
 
         //Icon
-        viewHolder.circularView.setBgColor(Color.parseColor(category.getColor()));
+        viewHolder.circularView.setCircleColor(Color.parseColor(category.getColor()));
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
 
         viewHolder.name.setText(category.getName());

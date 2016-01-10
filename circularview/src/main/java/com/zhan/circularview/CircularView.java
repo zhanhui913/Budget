@@ -26,7 +26,7 @@ public class CircularView extends View {
 
 
     private Context context;
-    private int bgColor;
+    private int backgroundColor;
     private int strokeWidth;
     private int strokeColor;
     private IconSize eiconSize;
@@ -60,7 +60,7 @@ public class CircularView extends View {
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
-            bgColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
+            backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
             strokeWidth = a.getInteger(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
             strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, getResources().getColor(DEFAULT_STROKE_COLOR));
             iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
@@ -114,7 +114,7 @@ public class CircularView extends View {
 
     private void drawCircle(Canvas canvas, int radius, int width, int height){
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(bgColor);
+        paint.setColor(backgroundColor);
         canvas.drawCircle(width, height, radius, paint);
 
         if(strokeWidth > 0) {
@@ -144,12 +144,13 @@ public class CircularView extends View {
         }
     }
 
-    public int getBgColor() {
-        return bgColor;
+    public int getCircleColor() {
+        return backgroundColor;
     }
 
-    public void setBgColor(int bgColor) {
-        this.bgColor = bgColor;
+    public void setCircleColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        invalidate();
     }
 
     public int getStrokeWidth() {
@@ -158,6 +159,7 @@ public class CircularView extends View {
 
     public void setStrokeWidth(int strokeWidth) {
         this.strokeWidth = strokeWidth;
+        invalidate();
     }
 
     public int getStrokeColor() {
@@ -166,6 +168,7 @@ public class CircularView extends View {
 
     public void setStrokeColor(int strokeColor) {
         this.strokeColor = strokeColor;
+        invalidate();
     }
 
     public IconSize getIconSize() {
@@ -175,6 +178,7 @@ public class CircularView extends View {
     public void setIconSize(IconSize size) {
         this.eiconSize = size;
         this.iconSize = convertEnumToSize(this.eiconSize);
+        invalidate();
     }
 
     private int convertEnumToSize(IconSize size){
@@ -197,6 +201,7 @@ public class CircularView extends View {
 
     public void setIconColor(int iconColor) {
         this.iconColor = iconColor;
+        invalidate();
     }
 
     public Drawable getIconDrawable() {
@@ -205,6 +210,7 @@ public class CircularView extends View {
 
     public void setIconDrawable(Drawable iconDrawable) {
         this.iconDrawable = iconDrawable;
+        invalidate();
     }
 /*
     public void setIcon(int drawableId){

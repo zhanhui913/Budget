@@ -19,7 +19,6 @@
             android:id="@+id/circularViewI"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="@color/purple"
             custom:cv_bgColor="@color/green"
             custom:cv_strokeWidth="20"
             custom:cv_strokeColor="@color/black"

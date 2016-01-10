@@ -42,21 +42,29 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // Avoid un-necessary calls to findViewById() on each row, which is expensive!
         ViewHolder viewHolder;
 
-        // reuse views
+        /*
+         * If convertView is not null, we can reuse it directly, no inflation required!
+         * We only inflate a new View when the convertView is null.
+         */
         if (convertView == null) {
-            // configure view holder
+
+            // Create a ViewHolder and store references to the two children views
             viewHolder = new ViewHolder();
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_category, parent, false);
+            convertView = inflater.inflate(R.layout.item_transaction, parent, false);
 
             viewHolder.circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.categoryName);
-            viewHolder.cost = (TextView) convertView.findViewById(R.id.categoryCost);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.transactionNote);
+            viewHolder.cost = (TextView) convertView.findViewById(R.id.transactionCost);
+
+            // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(viewHolder);
         }else {
+            // Get the ViewHolder back to get fast access to the Views
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
@@ -66,7 +74,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         Log.d("DEUBG", "index:" + position + "- Transaction " + transaction.toString());
 
         //Icon
-        viewHolder.circularView.setBgColor(Color.parseColor(transaction.getCategory().getColor()));
+        viewHolder.circularView.setCircleColor(Color.parseColor(transaction.getCategory().getColor()));
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
                 CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
 

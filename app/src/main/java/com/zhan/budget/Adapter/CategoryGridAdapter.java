@@ -3,10 +3,6 @@ package com.zhan.budget.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -77,7 +73,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 
         //Color
         GradientDrawable shape = (GradientDrawable)drawable.findDrawableByLayerId(R.id.layerColorId);
-        shape.setColor(Color.parseColor(category.getColor()));
+        shape.setCircleColor(Color.parseColor(category.getColor()));
 
         //Icon
         Drawable iconDrawable = CategoryUtil.getIconDrawable(this.context, category.getIcon());
@@ -87,7 +83,7 @@ public class CategoryGridAdapter extends BaseAdapter {
         */
 
 
-        circularView.setBgColor(Color.parseColor(category.getColor()));
+        circularView.setCircleColor(Color.parseColor(category.getColor()));
         circularView.setIconDrawable(ResourcesCompat.getDrawable(this.context.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), this.context.getTheme()));
 
 
