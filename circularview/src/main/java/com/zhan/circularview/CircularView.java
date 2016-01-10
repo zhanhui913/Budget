@@ -101,6 +101,7 @@ public class CircularView extends View {
 
         drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);
         drawIcon(canvas);
+        invalidate();
     }
 
     private int getDesiredWidth() {

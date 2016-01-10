@@ -63,8 +63,8 @@ public class OverviewFragment extends Fragment {
     private void init(){
         circularView = (CircularView) view.findViewById(R.id.circularViewId);
 
-        circularView.setIconDrawable(CategoryUtil.getIconDrawable(getContext(), 6));
-        circularView.setBgColor(R.color.lightBlue);
+        circularView.setIconDrawable(CategoryUtil.getIconDrawable(getContext(), 9));
+        circularView.setBgColor(R.color.green);
         circularView.setIconColor(R.color.red);
     }
 

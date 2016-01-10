@@ -70,6 +70,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
                 CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
 
+
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
             viewHolder.name.setText(transaction.getNote());
         }else{

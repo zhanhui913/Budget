@@ -5,23 +5,30 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.OverviewFragment">
 
-    <com.zhan.circularview.CircularView
-        android:id="@+id/circularViewId"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-<!--
-    <com.zhan.circularview.CircularView
-        android:id="@+id/circularViewI"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@color/purple"
-        custom:cv_bgColor="@color/green"
-        custom:cv_strokeWidth="20"
-        custom:cv_strokeColor="@color/black"
-        custom:cv_iconDrawable="@drawable/ic_date"
-        custom:cv_iconSize="XSMALL"
-        custom:cv_iconColor="@color/purple"/>
--->
+            <com.zhan.circularview.CircularView
+                android:id="@+id/circularViewId"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+        <com.zhan.circularview.CircularView
+            android:id="@+id/circularViewI"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@color/purple"
+            custom:cv_bgColor="@color/green"
+            custom:cv_strokeWidth="20"
+            custom:cv_strokeColor="@color/black"
+            custom:cv_iconDrawable="@drawable/ic_date"
+            custom:cv_iconSize="XSMALL"
+            custom:cv_iconColor="@color/red"/>
+
+
+    </LinearLayout>
+
 
 </FrameLayout>

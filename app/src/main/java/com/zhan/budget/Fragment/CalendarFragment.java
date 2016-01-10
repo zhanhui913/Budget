@@ -197,7 +197,6 @@ public class CalendarFragment extends Fragment {
 
                 centerPanelHeight = plusIcon.getHeight();
                 snapPanelUp();
-                Toast.makeText(getContext(), "height is " + centerPanelHeight, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -216,7 +215,6 @@ public class CalendarFragment extends Fragment {
                             break;
                         case MotionEvent.ACTION_UP: //CLICK UP
                             if (isPanelCloseToTop) {
-                                Log.i("ZHAN2", "panel is close to top");
                                 snapPanelUp();
                             }
 
