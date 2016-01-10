@@ -469,9 +469,9 @@ public class CalendarFragment extends Fragment {
             public void create(SwipeMenu menu) {
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-                deleteItem.setBackground(R.color.lightBlue);// set item background
+                deleteItem.setBackground(R.color.red);// set item background
                 deleteItem.setWidth(Util.dp2px(getContext(), 90));// set item width
-                deleteItem.setIcon(R.drawable.ic_down_arrow);// set a icon
+                deleteItem.setIcon(R.drawable.ic_delete);// set a icon
                 menu.addMenuItem(deleteItem);// add to menu
             }
         };
@@ -486,7 +486,6 @@ public class CalendarFragment extends Fragment {
                     case 0:
                         //Delete the specific .json and all images it has
                         Toast.makeText(getContext(), "deleting ", Toast.LENGTH_SHORT).show();
-
 
                         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 

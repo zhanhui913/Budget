@@ -56,7 +56,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 
 
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
-        CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
+        final CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
 
         // getting category data for the row
         Category category = categoryList.get(position);
@@ -85,9 +85,6 @@ public class CategoryGridAdapter extends BaseAdapter {
 
         circularView.setCircleColor(Color.parseColor(category.getColor()));
         circularView.setIconDrawable(ResourcesCompat.getDrawable(this.context.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), this.context.getTheme()));
-
-
-
 
         // Name
         name.setText(category.getName());

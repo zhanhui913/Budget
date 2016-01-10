@@ -71,13 +71,10 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         // getting transaction data for the row
         Transaction transaction = transactionList.get(position);
 
-        Log.d("DEUBG", "index:" + position + "- Transaction " + transaction.toString());
-
         //Icon
         viewHolder.circularView.setCircleColor(Color.parseColor(transaction.getCategory().getColor()));
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
                 CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
-
 
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
             viewHolder.name.setText(transaction.getNote());

@@ -29,6 +29,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
+import com.zhan.circularview.CircularView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +43,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private ImageButton addNoteBtn;
     private TextView transactionCostView;
 
-    private String priceString;
+    private String priceString, priceStringWithDot;
     private String noteString;
 
     private Database db; //shouldnt have db access here, category and transactions should be dealt with in the caller activity
@@ -51,6 +52,8 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private ArrayList<Category> categoryList;
     private GridView categoryGridView;
     private CategoryGridAdapter categoryGridAdapter;
+
+    private Category selectedCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +96,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
         categoryGridAdapter = new CategoryGridAdapter(this, categoryList);
         categoryGridView.setAdapter(categoryGridAdapter);
 
-        priceString = "";
-
+        priceString = priceStringWithDot = "";
 
         createToolbar();
         addListeners();
@@ -249,6 +251,18 @@ public class TransactionInfoActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(instance, "Clicked on category "+categoryList.get(position).getName(),Toast.LENGTH_SHORT).show();
 
+                for(int i = 0; i < parent.getChildCount(); i++){
+                    View childView = parent.getChildAt(i);
+                    CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
+                    ccv.setStrokeWidth(0);
+                }
+
+                View childView = parent.getChildAt(position);
+                CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
+                ccv.setStrokeWidth(10);
+                ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
+
+                selectedCategory = categoryList.get(position);
             }
         });
     }
@@ -262,8 +276,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
         View promptView = layoutInflater.inflate(R.layout.alertdialog_note_transaction, null);
 
         final EditText input = (EditText) promptView.findViewById(R.id.editTextNote);
-
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
@@ -339,8 +351,8 @@ public class TransactionInfoActivity extends AppCompatActivity {
         }
 
         cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
+        priceStringWithDot = cashAmountBuilder.toString();
         transactionCostView.setText("$" + cashAmountBuilder.toString());
-
     }
 
     private void addDot(){
@@ -414,13 +426,11 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private void save(){
         Intent intent = new Intent();
 
-        Category category = db.getCategoryById(1);
-
         Transaction transaction = new Transaction();
         transaction.setNote(this.noteString);
-        transaction.setPrice(Float.valueOf(priceString));
+        transaction.setPrice(Float.parseFloat(priceStringWithDot));
         transaction.setDate(Util.formatDate(selectedDate));
-        transaction.setCategory(category);
+        transaction.setCategory(selectedCategory);
 
         intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);
         setResult(RESULT_OK, intent);
