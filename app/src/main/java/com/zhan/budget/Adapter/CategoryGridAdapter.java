@@ -88,6 +88,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 
 
 
+
         // Name
         name.setText(category.getName());
 

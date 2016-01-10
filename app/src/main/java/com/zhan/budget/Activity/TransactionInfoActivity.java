@@ -248,6 +248,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(instance, "Clicked on category "+categoryList.get(position).getName(),Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -280,6 +281,8 @@ public class TransactionInfoActivity extends AppCompatActivity {
         AlertDialog noteDialog = builder.create();
         noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         noteDialog.show();
+
+        input.requestFocus();
     }
 
     private void addNote(String note){
