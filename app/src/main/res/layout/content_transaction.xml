@@ -30,21 +30,29 @@
         android:background="@color/darkgray"
         android:layout_below="@+id/transactionCostText"/>
 
-    <EditText
-        android:id="@+id/editTextTransactionName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
-        android:inputType="textNoSuggestions"/>
-
     <include layout="@layout/category_panel"
-        android:layout_above="@+id/layoutPad"
-        android:layout_below="@+id/editTextTransactionName"
+        android:layout_above="@+id/numberPad"
+        android:layout_below="@+id/divider"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/gray"
+        android:layout_above="@+id/numberPad">
+
+        <ImageButton
+            android:id="@+id/addNoteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_plus"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
     <include layout="@layout/number_pad"
-        android:id="@+id/layoutPad"
+        android:id="@+id/numberPad"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

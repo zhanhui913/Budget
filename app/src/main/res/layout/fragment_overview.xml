@@ -5,19 +5,29 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.OverviewFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-    <com.zhan.circularview.CircularView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@color/purple"
-        custom:bg_color="@color/green"
-        custom:stroke_width="20"
-        custom:stroke_color="@color/black"
-        custom:cv_icon="@drawable/ic_date"
-        custom:icon_size="LARGE"
-        custom:icon_color="@color/purple"/>
+            <com.zhan.circularview.CircularView
+                android:id="@+id/circularViewId"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+        <com.zhan.circularview.CircularView
+            android:id="@+id/circularViewI"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            custom:cv_bgColor="@color/green"
+            custom:cv_strokeWidth="20"
+            custom:cv_strokeColor="@color/black"
+            custom:cv_iconDrawable="@drawable/ic_date"
+            custom:cv_iconSize="XSMALL"
+            custom:cv_iconColor="@color/red"/>
+
+
+    </LinearLayout>
+
+
 </FrameLayout>

@@ -81,6 +81,10 @@ public class Category implements Parcelable{
         this.icon = icon;
     }
 
+    public String toString(){
+        return "{Id:"+id+", name:"+name+", budget:"+budget+", cost"+cost+", color:"+color+", icon:"+icon+"}";
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Parcelable

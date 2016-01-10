@@ -3,10 +3,8 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +16,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
+import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -59,7 +58,8 @@ public class CategoryListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.item_category, null);
 
-        View icon = convertView.findViewById(R.id.categoryIcon);
+
+
         TextView name = (TextView) convertView.findViewById(R.id.categoryName);
         TextView budget = (TextView) convertView.findViewById(R.id.categoryBudget);
         TextView cost = (TextView) convertView.findViewById(R.id.categoryCost);
@@ -68,8 +68,12 @@ public class CategoryListAdapter extends BaseAdapter {
         // getting category data for the row
         Category category = categoryList.get(position);
 
+
+        /*
+        View icon = convertView.findViewById(R.id.categoryIcon);
+
         //Get Drawable from @drawable/circular_category
-        LayerDrawable drawable = (LayerDrawable) ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.circular_category);
+        LayerDrawable drawable = (LayerDrawable) ContextCompat.getIcon(activity.getApplicationContext(), R.drawable.circular_category);
 
         // If we don't mutate the drawable, then all drawable's with this id will have a color
         // filter applied to it.
@@ -77,14 +81,22 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Color
         GradientDrawable shape = (GradientDrawable)drawable.findDrawableByLayerId(R.id.layerColorId);
-        shape.setColor(Color.parseColor(category.getColor()));
+        shape.setCircleColor(Color.parseColor(category.getColor()));
 
         //Icon
         Drawable iconDrawable = CategoryUtil.getIconDrawable(activity, category.getIcon());
         drawable.setDrawableByLayerId(R.id.layerIconId, iconDrawable);
 
         icon.setBackground(drawable);
+*/
 
+        CircularView circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
+        circularView.setCircleColor(Color.parseColor(category.getColor()));
+        circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
+
+
+
+        Log.d("CANVAS", "Category name:"+category.getName()+", color:"+category.getColor()+", icon:"+category.getIcon());
 
         // Name
         name.setText(category.getName());
@@ -102,8 +114,9 @@ public class CategoryListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void refreshList(List<Category> categoryList){
+    public void refreshList(List<Category> categoryList) {
         this.categoryList = categoryList;
+        Log.d("CANVAS","----------------------- "+this.categoryList.size());
         notifyDataSetChanged();
     }
 }

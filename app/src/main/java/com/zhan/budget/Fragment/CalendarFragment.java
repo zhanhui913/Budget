@@ -197,7 +197,6 @@ public class CalendarFragment extends Fragment {
 
                 centerPanelHeight = plusIcon.getHeight();
                 snapPanelUp();
-                Toast.makeText(getContext(), "height is " + centerPanelHeight, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -216,7 +215,6 @@ public class CalendarFragment extends Fragment {
                             break;
                         case MotionEvent.ACTION_UP: //CLICK UP
                             if (isPanelCloseToTop) {
-                                Log.i("ZHAN2", "panel is close to top");
                                 snapPanelUp();
                             }
 
@@ -345,6 +343,8 @@ public class CalendarFragment extends Fragment {
     private void populateTransactionsForDate(final Date date) {
         Log.d("ZHAN", "-------- populate transaction list for date " + Util.convertDateToString(date));
 
+        transactionAdapter.clear();
+
         //Populate the date's transaction list (if any)
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
@@ -364,7 +364,7 @@ public class CalendarFragment extends Fragment {
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done transaction");
-                transactionAdapter.refreshList(transactionList);
+                transactionAdapter.addAll(transactionList);
                 updateTransactionStatus();
             }
         };
@@ -507,8 +507,8 @@ public class CalendarFragment extends Fragment {
                                 super.onPostExecute(voids);
                                 Log.d("VIEW", "done transaction");
 
+                                transactionAdapter.remove(transactionList.get(position));
                                 transactionList.remove(position);
-                                transactionAdapter.refreshList(transactionList);
 
                                 updateTransactionStatus();
                             }
@@ -745,7 +745,7 @@ public class CalendarFragment extends Fragment {
                 transaction.setId((int)id);
 
                 transactionList.add(transaction);
-                transactionAdapter.refreshList(transactionList);
+                transactionAdapter.add(transaction);
                 updateTransactionStatus();
 
                 db.exportDB();

@@ -15,13 +15,24 @@ import android.view.View;
  */
 public class CircularView extends View {
 
+    public enum IconSize {XSMALL, SMALL, MEDIUM, LARGE, XLARGE}
+
+    //Default values
+    private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
+    private final static int DEFAULT_STROKE_WIDTH = 0;
+    private final static int DEFAULT_STROKE_COLOR = R.color.black;
+    private final static int DEFAULT_ICON_SIZE  = 5;//LARGE
+    private final static int DEFAULT_ICON_COLOR = R.color.white;
+
+
     private Context context;
-    private int bg_color;
-    private int stroke_width;
-    private int stroke_color;
-    private int icon_size;
-    private int icon_color;
-    private Drawable drawable;
+    private int backgroundColor;
+    private int strokeWidth;
+    private int strokeColor;
+    private IconSize eiconSize;
+    private int iconSize;
+    private int iconColor;
+    private Drawable iconDrawable;
     private Paint paint;
 
     public CircularView(Context context) {
@@ -47,14 +58,14 @@ public class CircularView extends View {
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){
         this.context = context;
 
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularCellView, 0, 0);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
-            bg_color = a.getColor(R.styleable.CircularCellView_bg_color, getResources().getColor(android.R.color.holo_blue_light)); //default is holo_blue_light
-            stroke_width = a.getInteger(R.styleable.CircularCellView_stroke_width, 0);//default is 0
-            stroke_color = a.getColor(R.styleable.CircularCellView_stroke_color, getResources().getColor(android.R.color.holo_blue_light)); //default is holo_blue_light
-            drawable = a.getDrawable(R.styleable.CircularCellView_cv_icon);
-            icon_size = a.getInteger(R.styleable.CircularCellView_icon_size, 3);
-            icon_color = a.getColor(R.styleable.CircularCellView_icon_color, getResources().getColor(android.R.color.white)); //default is white
+            backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
+            strokeWidth = a.getInteger(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
+            strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, getResources().getColor(DEFAULT_STROKE_COLOR));
+            iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
+            iconSize = a.getInteger(R.styleable.CircularView_cv_iconSize, DEFAULT_ICON_SIZE);
+            iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
         }finally {
             a.recycle();
         }
@@ -65,6 +76,7 @@ public class CircularView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //Get the width measurement
         int widthSize = View.resolveSize(getDesiredWidth(), widthMeasureSpec);
 
@@ -76,6 +88,7 @@ public class CircularView extends View {
     }
 
     @Override protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         int viewWidthHalf = this.getMeasuredWidth() / 2;
         int viewHeightHalf = this.getMeasuredHeight() / 2;
 
@@ -88,6 +101,7 @@ public class CircularView extends View {
 
         drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);
         drawIcon(canvas);
+        invalidate();
     }
 
     private int getDesiredWidth() {
@@ -100,90 +114,108 @@ public class CircularView extends View {
 
     private void drawCircle(Canvas canvas, int radius, int width, int height){
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(bg_color);
+        paint.setColor(backgroundColor);
         canvas.drawCircle(width, height, radius, paint);
 
-        if(stroke_width > 0) {
+        if(strokeWidth > 0) {
             paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(stroke_color);
+            paint.setColor(strokeColor);
             float saveStrokeWidth = paint.getStrokeWidth();
-            paint.setStrokeWidth(stroke_width);
-            canvas.drawCircle(width, height, radius - (stroke_width / 2), paint);
+            paint.setStrokeWidth(strokeWidth);
+            canvas.drawCircle(width, height, radius - (strokeWidth / 2), paint);
             paint.setStrokeWidth(saveStrokeWidth);
         }
     }
 
     private void drawIcon(Canvas canvas){
-        if(drawable != null){
+        if(iconDrawable != null){
             Rect bounds = canvas.getClipBounds();
 
             int multiplier = 5;
 
-            bounds.left += (icon_size * multiplier);
-            bounds.right -= (icon_size * multiplier);
-            bounds.top += (icon_size * multiplier);
-            bounds.bottom -= (icon_size * multiplier);
+            bounds.left += (iconSize * multiplier);
+            bounds.right -= (iconSize * multiplier);
+            bounds.top += (iconSize * multiplier);
+            bounds.bottom -= (iconSize * multiplier);
 
-            drawable.setBounds(bounds);
-            drawable.mutate().setColorFilter(icon_color, PorterDuff.Mode.SRC_IN);
-            drawable.draw(canvas);
+            iconDrawable.setBounds(bounds);
+            iconDrawable.mutate().setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            iconDrawable.draw(canvas);
         }
     }
 
-
-    public Paint getPaint() {
-        return paint;
+    public int getCircleColor() {
+        return backgroundColor;
     }
 
-    public int getBg_color() {
-        return bg_color;
+    public void setCircleColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        invalidate();
     }
 
-    public void setBg_color(int bg_color) {
-        this.bg_color = bg_color;
+    public int getStrokeWidth() {
+        return strokeWidth;
     }
 
-    public int getStroke_width() {
-        return stroke_width;
+    public void setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
+        invalidate();
     }
 
-    public void setStroke_width(int stroke_width) {
-        this.stroke_width = stroke_width;
+    public int getStrokeColor() {
+        return strokeColor;
     }
 
-    public int getStroke_color() {
-        return stroke_color;
+    public void setStrokeColor(int strokeColor) {
+        this.strokeColor = strokeColor;
+        invalidate();
     }
 
-    public void setStroke_color(int stroke_color) {
-        this.stroke_color = stroke_color;
+    public IconSize getIconSize() {
+        return eiconSize;
     }
 
-    public int getIcon_size() {
-        return icon_size;
+    public void setIconSize(IconSize size) {
+        this.eiconSize = size;
+        this.iconSize = convertEnumToSize(this.eiconSize);
+        invalidate();
     }
 
-    public void setIcon_size(int icon_size) {
-        this.icon_size = icon_size;
+    private int convertEnumToSize(IconSize size){
+        if(size == IconSize.XSMALL){
+            return 17;
+        }else if(size == IconSize.SMALL){
+            return 13;
+        }else if(size == IconSize.MEDIUM){
+            return 9;
+        }else if(size == IconSize.LARGE){
+            return 5;
+        }else{
+            return 1;
+        }
     }
 
-    public int getIcon_color() {
-        return icon_color;
+    public int getIconColor() {
+        return iconColor;
     }
 
-    public void setIcon_color(int icon_color) {
-        this.icon_color = icon_color;
+    public void setIconColor(int iconColor) {
+        this.iconColor = iconColor;
+        invalidate();
     }
 
-    public Drawable getDrawable() {
-        return drawable;
+    public Drawable getIconDrawable() {
+        return iconDrawable;
     }
 
-    public void setDrawable(Drawable drawable) {
-        this.drawable = drawable;
+    public void setIconDrawable(Drawable iconDrawable) {
+        this.iconDrawable = iconDrawable;
+        invalidate();
     }
+/*
+    public void setIcon(int drawableId){
+        this.iconDrawable = ResourcesCompat.getDrawable(getResources(), drawableId, this.context.getTheme());
+    }*/
 
-    public void setPaint(Paint paint) {
-        this.paint = paint;
-    }
+
 }
