@@ -39,7 +39,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private boolean isEditMode = false;
     private Activity instance;
     private Toolbar toolbar;
-    private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,buttonDot,button0,buttonX;
+    private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0,buttonX;
     private ImageButton addNoteBtn;
     private TextView transactionCostView;
 
@@ -84,7 +84,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
         button7 = (Button)findViewById(R.id.number7);
         button8 = (Button)findViewById(R.id.number8);
         button9 = (Button)findViewById(R.id.number9);
-        buttonDot = (Button)findViewById(R.id.numberDot);
         button0 = (Button)findViewById(R.id.number0);
         buttonX = (Button)findViewById(R.id.numberX);
         addNoteBtn = (ImageButton)findViewById(R.id.addNoteBtn);
@@ -213,13 +212,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addDigitToTextView(9);
-            }
-        });
-
-        buttonDot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
