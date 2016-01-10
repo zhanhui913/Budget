@@ -1,16 +1,20 @@
 package com.zhan.budget.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
+import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -18,58 +22,68 @@ import java.util.List;
 /**
  * Created by zhanyap on 15-08-19.
  */
-public class TransactionListAdapter extends BaseAdapter {
+public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
     private Activity activity;
-    private LayoutInflater inflater;
     private List<Transaction> transactionList;
 
-    public TransactionListAdapter(Activity activity, List<Transaction> transactionList) {
+
+    static class ViewHolder {
+        public CircularView circularView;
+        public TextView name;
+        public TextView cost;
+    }
+
+    public TransactionListAdapter(Activity activity,  List<Transaction> transactionList) {
+        super(activity, R.layout.item_category, transactionList);
         this.activity = activity;
         this.transactionList = transactionList;
     }
 
     @Override
-    public int getCount() {
-        return this.transactionList.size();
-    }
-
-    @Override
-    public Object getItem(int location) {
-        return transactionList.get(location);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // Avoid un-necessary calls to findViewById() on each row, which is expensive!
+        ViewHolder viewHolder;
 
-        if (inflater == null)
-            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        /*
+         * If convertView is not null, we can reuse it directly, no inflation required!
+         * We only inflate a new View when the convertView is null.
+         */
+        if (convertView == null) {
 
-        if (convertView == null)
-            convertView = inflater.inflate(R.layout.item_transaction, null);
+            // Create a ViewHolder and store references to the two children views
+            viewHolder = new ViewHolder();
 
-        TextView note = (TextView) convertView.findViewById(R.id.transactionNote);
-        TextView cost = (TextView) convertView.findViewById(R.id.transactionCost);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.item_transaction, parent, false);
+
+            viewHolder.circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.transactionNote);
+            viewHolder.cost = (TextView) convertView.findViewById(R.id.transactionCost);
+
+            // The tag can be any Object, this just happens to be the ViewHolder
+            convertView.setTag(viewHolder);
+        }else {
+            // Get the ViewHolder back to get fast access to the Views
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
         // getting transaction data for the row
         Transaction transaction = transactionList.get(position);
 
-        // Note
-        note.setText(transaction.getNote());
+        //Icon
+        viewHolder.circularView.setCircleColor(Color.parseColor(transaction.getCategory().getColor()));
+        viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
+                CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
 
-        // Cost
-        cost.setText("$"+ Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
+            viewHolder.name.setText(transaction.getNote());
+        }else{
+            viewHolder.name.setText(transaction.getCategory().getName());
+        }
+
+        viewHolder.cost.setText("$"+Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
 
         return convertView;
-    }
-
-    public void refreshList(List<Transaction> transactionList){
-        this.transactionList = transactionList;
-        notifyDataSetChanged();
     }
 }

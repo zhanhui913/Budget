@@ -6,12 +6,20 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
+    <!--
     <View
         android:id="@+id/categoryIcon"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:background="@drawable/circular_category" />
+    -->
+
+    <com.zhan.circularview.CircularView
+        android:id="@+id/categoryIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/categoryName"

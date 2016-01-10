@@ -9,13 +9,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
+import com.zhan.circularview.CircularView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,11 +39,12 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private boolean isEditMode = false;
     private Activity instance;
     private Toolbar toolbar;
-    private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,buttonDot,button0,buttonX;
+    private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0,buttonX;
+    private ImageButton addNoteBtn;
     private TextView transactionCostView;
-    private EditText editTextName;
 
-    private String priceString;
+    private String priceString, priceStringWithDot;
+    private String noteString;
 
     private Database db; //shouldnt have db access here, category and transactions should be dealt with in the caller activity
     private Date selectedDate;
@@ -47,6 +52,8 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private ArrayList<Category> categoryList;
     private GridView categoryGridView;
     private CategoryGridAdapter categoryGridAdapter;
+
+    private Category selectedCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,21 +84,18 @@ public class TransactionInfoActivity extends AppCompatActivity {
         button7 = (Button)findViewById(R.id.number7);
         button8 = (Button)findViewById(R.id.number8);
         button9 = (Button)findViewById(R.id.number9);
-        buttonDot = (Button)findViewById(R.id.numberDot);
         button0 = (Button)findViewById(R.id.number0);
         buttonX = (Button)findViewById(R.id.numberX);
+        addNoteBtn = (ImageButton)findViewById(R.id.addNoteBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
-
-        editTextName = (EditText)findViewById(R.id.editTextTransactionName);
 
         categoryList = new ArrayList<>();
         categoryGridView = (GridView) findViewById(R.id.categoryGrid);
         categoryGridAdapter = new CategoryGridAdapter(this, categoryList);
         categoryGridView.setAdapter(categoryGridAdapter);
 
-        priceString = "";
-
+        priceString = priceStringWithDot = "";
 
         createToolbar();
         addListeners();
@@ -121,20 +125,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
         };
         loader.execute();
     }
-/*
-    private void putFakeCategory(){
-        Log.d("CATEGORY", "putting fake category");
-        for(int i = 0; i < 30; i++){
-            Category category = new Category();
-            category.setName("category "+i);
-            category.setIcon(i);
-            category.setColor("FF00FF");
-            Log.d("CATEGORY", "adding category");
-            categoryList.add(category);
-        }
-
-        categoryGridAdapter.refreshGrid(categoryList);
-    }*/
 
     /**
      * Create toolbar
@@ -225,13 +215,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
             }
         });
 
-        buttonDot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         button0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,15 +229,70 @@ public class TransactionInfoActivity extends AppCompatActivity {
             }
         });
 
+        addNoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNoteDialog();
+            }
+        });
+
         //transactionCostView.addTextChangedListener(tw);
 
         categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(instance, "Clicked on category "+categoryList.get(position).getName(),Toast.LENGTH_SHORT).show();
+
+                for(int i = 0; i < parent.getChildCount(); i++){
+                    View childView = parent.getChildAt(i);
+                    CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
+                    ccv.setStrokeWidth(0);
+                }
+
+                View childView = parent.getChildAt(position);
+                CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
+                ccv.setStrokeWidth(10);
+                ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
+
+                selectedCategory = categoryList.get(position);
             }
         });
     }
+
+    private void createNoteDialog(){
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(instance);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_note_transaction, null);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.editTextNote);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        addNote(input.getText().toString());
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog noteDialog = builder.create();
+        noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        noteDialog.show();
+
+        input.requestFocus();
+    }
+
+    private void addNote(String note){
+        this.noteString = note;
+    }
+
 /*
     TextWatcher tw = new TextWatcher() {
         @Override
@@ -305,8 +343,8 @@ public class TransactionInfoActivity extends AppCompatActivity {
         }
 
         cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
+        priceStringWithDot = cashAmountBuilder.toString();
         transactionCostView.setText("$" + cashAmountBuilder.toString());
-
     }
 
     private void addDot(){
@@ -380,13 +418,11 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private void save(){
         Intent intent = new Intent();
 
-        Category category = db.getCategoryById(1);
-
         Transaction transaction = new Transaction();
-        transaction.setNote(editTextName.getText().toString());
-        transaction.setPrice(Float.valueOf(priceString));
+        transaction.setNote(this.noteString);
+        transaction.setPrice(Float.parseFloat(priceStringWithDot));
         transaction.setDate(Util.formatDate(selectedDate));
-        transaction.setCategory(category);
+        transaction.setCategory(selectedCategory);
 
         intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);
         setResult(RESULT_OK, intent);

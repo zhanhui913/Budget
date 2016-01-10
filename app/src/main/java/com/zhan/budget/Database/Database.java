@@ -260,10 +260,11 @@ public class Database extends SQLiteOpenHelper{
 
         db.beginTransaction();
         long transactionId = db.insert(TABLE_TRANSACTION, null, values);
+        db.setTransactionSuccessful();
         db.endTransaction();
 
         db.close();
-        //Log.d(TABLE_TRANSACTION, "create Transaction " + transaction.toString());
+        Log.d(TABLE_TRANSACTION, "create Transaction " + transaction.toString());
         return transactionId;
     }
 
@@ -655,6 +656,12 @@ Log.d("DEBUG","end month :"+endMonth+", beginMonth:"+beginMonth);
 
     private boolean createDirectory(){
         File directory = new File(Environment.getExternalStorageDirectory().toString() + "/Budget");
-        return directory.mkdirs();
+
+        //If file doesnt exist
+        if(!directory.exists()){
+            return directory.mkdirs();
+        }else{
+            return true;
+        }
     }
 }

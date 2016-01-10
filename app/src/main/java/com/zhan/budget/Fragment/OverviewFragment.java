@@ -1,7 +1,7 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.circularview.CircularView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +23,8 @@ import com.zhan.budget.R;
 public class OverviewFragment extends Fragment {
 
     private OnOverviewInteractionListener mListener;
+    private View view;
+    private CircularView circularView;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -46,7 +50,24 @@ public class OverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_overview, container, false);
+        view = inflater.inflate(R.layout.fragment_overview, container, false);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        init();
+    }
+
+    private void init(){
+        circularView = (CircularView) view.findViewById(R.id.circularViewId);
+        circularView.setCircleColor(Color.parseColor("#ff0012"));
+        circularView.setIconColor(Color.parseColor("#509912"));
+        circularView.setIconDrawable(CategoryUtil.getIconDrawable(getContext(), 9));
+        circularView.setStrokeColor(getResources().getColor(R.color.purple));
+        circularView.setStrokeWidth(10);
     }
 
     @Override

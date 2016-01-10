@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:padding="7dp">
 
-    <View
+    <com.zhan.circularview.CircularView
         android:id="@+id/categoryIcon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/circular_category"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false" />

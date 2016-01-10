@@ -66,6 +66,10 @@ public class Transaction implements Parcelable{
         this.category = category;
     }
 
+    public String toString(){
+        return "{id:"+id+", note:"+note+", date:"+date.toString()+", price:"+price+", category:"+category.getName()+"}";
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Parcelable

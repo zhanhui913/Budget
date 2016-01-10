@@ -28,7 +28,7 @@
             android:label="@string/title_activity_transaction_info"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustNothing"></activity>
         <activity
             android:name=".Activity.CategoryInfo"
             android:label="@string/title_activity_category_info"
