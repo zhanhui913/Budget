@@ -25,9 +25,9 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             custom:cv_bgColor="@color/green"
-            custom:cv_strokeWidth="10"
+            custom:cv_strokeWidth="5dp"
             custom:cv_strokeColor="@color/black"
-            custom:cv_strokePadding="15"
+            custom:cv_strokePadding="5dp"
             custom:cv_iconDrawable="@drawable/ic_date"
             custom:cv_iconSize="XSMALL"
             custom:cv_iconColor="@color/red" />

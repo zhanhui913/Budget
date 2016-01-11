@@ -8,7 +8,9 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
+
 
 /**
  * Created by Zhan on 16-01-07.
@@ -63,9 +65,9 @@ public class CircularView extends View {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
             backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
-            strokeWidth = a.getInteger(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
+            strokeWidth = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
             strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, getResources().getColor(DEFAULT_STROKE_COLOR));
-            strokePadding = a.getInteger(R.styleable.CircularView_cv_strokePadding, DEFAULT_STROKE_PADDING);
+            strokePadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokePadding, DEFAULT_STROKE_PADDING);
             iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
             iconSize = a.getInteger(R.styleable.CircularView_cv_iconSize, DEFAULT_ICON_SIZE);
             iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
@@ -75,6 +77,11 @@ public class CircularView extends View {
 
         paint = new Paint();
         paint.setAntiAlias(true);
+    }
+
+    public int dp2px(Context context, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                context.getResources().getDisplayMetrics());
     }
 
     @Override

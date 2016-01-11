@@ -2,8 +2,8 @@
 <resources>
     <declare-styleable name="CircularView">
         <attr name="cv_bgColor" format="color"/>
-        <attr name="cv_strokeWidth" format="integer"/>
-        <attr name="cv_strokePadding" format="integer"/>
+        <attr name="cv_strokeWidth" format="dimension"/>
+        <attr name="cv_strokePadding" format="dimension"/>
         <attr name="cv_strokeColor" format="color"/>
         <attr name="cv_iconDrawable" format="integer"/>
         <attr name="cv_iconColor" format="integer"/>

@@ -12,8 +12,8 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         custom:cv_iconSize="MEDIUM"
-        custom:cv_strokePadding="5"
-        custom:cv_strokeWidth="5"
+        custom:cv_strokePadding="3dp"
+        custom:cv_strokeWidth="3dp"
         custom:cv_strokeColor="@android:color/transparent" />
 
     <TextView
