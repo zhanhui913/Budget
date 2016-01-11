@@ -487,6 +487,11 @@ public class CalendarFragment extends Fragment {
                         //Delete the specific .json and all images it has
                         Toast.makeText(getContext(), "deleting ", Toast.LENGTH_SHORT).show();
 
+                        final Transaction transactionToBeDeleted = transactionList.get(position);
+                        transactionAdapter.remove(transactionList.get(position));
+                        transactionList.remove(position);
+                        updateTransactionStatus();
+
                         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
                             @Override
@@ -497,7 +502,7 @@ public class CalendarFragment extends Fragment {
 
                             @Override
                             protected Void doInBackground(Void... voids) {
-                                db.deleteTransaction(transactionList.get(position));
+                                db.deleteTransaction(transactionToBeDeleted);
                                 return null;
                             }
 
@@ -505,11 +510,6 @@ public class CalendarFragment extends Fragment {
                             protected void onPostExecute(Void voids) {
                                 super.onPostExecute(voids);
                                 Log.d("VIEW", "done transaction");
-
-                                transactionAdapter.remove(transactionList.get(position));
-                                transactionList.remove(position);
-
-                                updateTransactionStatus();
                             }
                         };
                         loader.execute();
