@@ -8,23 +8,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
-
-            <com.zhan.circularview.CircularView
-                android:id="@+id/circularViewId"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal|top">
 
         <com.zhan.circularview.CircularView
-            android:id="@+id/circularViewI"
+            android:id="@+id/circularView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             custom:cv_bgColor="@color/green"
-            custom:cv_strokeWidth="20"
-            custom:cv_strokeColor="@color/black"
             custom:cv_iconDrawable="@drawable/ic_date"
             custom:cv_iconSize="XSMALL"
-            custom:cv_iconColor="@color/red"/>
+            custom:cv_iconColor="@color/red" />
+
+        <com.zhan.circularview.CircularView
+            android:id="@+id/circularView1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            custom:cv_bgColor="@color/green"
+            custom:cv_strokeWidth="10"
+            custom:cv_strokeColor="@color/black"
+            custom:cv_strokePadding="15"
+            custom:cv_iconDrawable="@drawable/ic_date"
+            custom:cv_iconSize="XSMALL"
+            custom:cv_iconColor="@color/red" />
 
 
     </LinearLayout>

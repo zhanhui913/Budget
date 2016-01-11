@@ -59,6 +59,11 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
 
         viewHolder.circularView.setCircleColor(Color.parseColor(category.getColor()));
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(this.context.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), this.context.getTheme()));
+        viewHolder.circularView.setStrokeWidth(5);
+        viewHolder.circularView.setStrokeColor(context.getResources().getColor(android.R.color.transparent));
+        viewHolder.circularView.setStrokePadding(5);
+        viewHolder.circularView.setIconSize(CircularView.IconSize.MEDIUM);
+
 
         // Name
         viewHolder.name.setText(category.getName());

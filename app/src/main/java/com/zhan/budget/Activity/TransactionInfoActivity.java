@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Database.Database;
@@ -121,6 +120,9 @@ public class TransactionInfoActivity extends AppCompatActivity {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done getting categories");
                 categoryGridAdapter.addAll(categoryList);
+
+                //categoryGridAdapter.getView(0);
+
             }
         };
         loader.execute();
@@ -241,17 +243,14 @@ public class TransactionInfoActivity extends AppCompatActivity {
         categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(instance, "Clicked on category "+categoryList.get(position).getName(),Toast.LENGTH_SHORT).show();
-
                 for(int i = 0; i < parent.getChildCount(); i++){
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeWidth(0);
+                    ccv.setStrokeColor(getResources().getColor(android.R.color.transparent));
                 }
 
                 View childView = parent.getChildAt(position);
                 CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
-                ccv.setStrokeWidth(10);
                 ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
 
                 selectedCategory = categoryList.get(position);

@@ -21,6 +21,7 @@ public class CircularView extends View {
     private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
     private final static int DEFAULT_STROKE_WIDTH = 0;
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
+    private final static int DEFAULT_STROKE_PADDING = 0;
     private final static int DEFAULT_ICON_SIZE  = 5;//LARGE
     private final static int DEFAULT_ICON_COLOR = R.color.white;
 
@@ -29,6 +30,7 @@ public class CircularView extends View {
     private int backgroundColor;
     private int strokeWidth;
     private int strokeColor;
+    private int strokePadding;
     private IconSize eiconSize;
     private int iconSize;
     private int iconColor;
@@ -63,6 +65,7 @@ public class CircularView extends View {
             backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
             strokeWidth = a.getInteger(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
             strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, getResources().getColor(DEFAULT_STROKE_COLOR));
+            strokePadding = a.getInteger(R.styleable.CircularView_cv_strokePadding, DEFAULT_STROKE_PADDING);
             iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
             iconSize = a.getInteger(R.styleable.CircularView_cv_iconSize, DEFAULT_ICON_SIZE);
             iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
@@ -87,10 +90,11 @@ public class CircularView extends View {
         setMeasuredDimension(widthSize, heightSize);
     }
 
-    @Override protected void onDraw(Canvas canvas) {
+    @Override
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int viewWidthHalf = this.getMeasuredWidth() / 2;
-        int viewHeightHalf = this.getMeasuredHeight() / 2;
+        int viewWidthHalf = this.getWidth() / 2;
+        int viewHeightHalf = this.getHeight() / 2;
 
         int radius;
         if (viewWidthHalf > viewHeightHalf) {
@@ -113,17 +117,20 @@ public class CircularView extends View {
     }
 
     private void drawCircle(Canvas canvas, int radius, int width, int height){
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(backgroundColor);
-        canvas.drawCircle(width, height, radius, paint);
-
         if(strokeWidth > 0) {
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(strokeColor);
-            float saveStrokeWidth = paint.getStrokeWidth();
             paint.setStrokeWidth(strokeWidth);
-            canvas.drawCircle(width, height, radius - (strokeWidth / 2), paint);
-            paint.setStrokeWidth(saveStrokeWidth);
+            canvas.drawCircle(width, height, radius - (strokeWidth/2), paint);
+
+
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(backgroundColor);
+            canvas.drawCircle(width, height, radius - (strokeWidth) - strokePadding, paint);
+        }else{
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(backgroundColor);
+            canvas.drawCircle(width, height, radius, paint);
         }
     }
 
@@ -169,6 +176,14 @@ public class CircularView extends View {
     public void setStrokeColor(int strokeColor) {
         this.strokeColor = strokeColor;
         invalidate();
+    }
+
+    public int getStrokePadding() {
+        return strokePadding;
+    }
+
+    public void setStrokePadding(int strokePadding) {
+        this.strokePadding = strokePadding;
     }
 
     public IconSize getIconSize() {
