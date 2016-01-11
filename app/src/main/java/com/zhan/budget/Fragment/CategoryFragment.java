@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +27,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Activity.CategoryInfo;
-import com.zhan.budget.Adapter.CategoryListAdapterViewHolder;
+import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
@@ -57,7 +56,7 @@ public class CategoryFragment extends Fragment {
 
 
     private SwipeMenuListView categoryListView;
-    private CategoryListAdapterViewHolder categoryAdapter;
+    private CategoryListAdapter categoryAdapter;
     private TextView balanceText;
 
     private ArrayList<Category> categoryList;
@@ -117,7 +116,7 @@ public class CategoryFragment extends Fragment {
         balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
 
         categoryList = new ArrayList<>();
-        categoryAdapter = new CategoryListAdapterViewHolder(getActivity(), categoryList);
+        categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
         populateCategoryWithNoInfo();

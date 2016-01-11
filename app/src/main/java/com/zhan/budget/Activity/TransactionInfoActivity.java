@@ -120,7 +120,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
                 Log.d("ASYNC", "done getting categories");
-                categoryGridAdapter.refreshGrid(categoryList);
+                categoryGridAdapter.addAll(categoryList);
             }
         };
         loader.execute();
