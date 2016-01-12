@@ -145,10 +145,10 @@ public class Database extends SQLiteOpenHelper{
     public Category getCategoryById(int id){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_TYPE, CATEGORY_COLOR, CATEGORY_ICON};
+        String[] CATEGORY_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_TYPE, CATEGORY_COLOR, CATEGORY_ICON};
 
         Cursor cursor = db.query(TABLE_CATEGORY,     //Table
-                TOUR_COLUMNS,                        //Column names
+                CATEGORY_COLUMNS,                        //Column names
                 " id = ?",                           // Selections
                 new String[]{String.valueOf(id)},    // selections argument
                 null,                                // group by
@@ -186,7 +186,7 @@ public class Database extends SQLiteOpenHelper{
         String query = "SELECT * FROM " + TABLE_CATEGORY;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(query, null);
 
         Category category;
         if(cursor.moveToFirst()){
@@ -209,6 +209,47 @@ public class Database extends SQLiteOpenHelper{
         cursor.close();
         db.close();
         return categories;
+    }
+
+    /**
+     * Get all Categories from the database based on Type
+     * @return ArrayList<Category>
+     */
+    public ArrayList<Category> getAllCategoryByType(BudgetType type){
+
+        ArrayList<Category> categoryList = new ArrayList<>();
+
+        String[] CATEGORY_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_TYPE, CATEGORY_COLOR, CATEGORY_ICON};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_CATEGORY,           //Table
+                CATEGORY_COLUMNS,                                 //Column names
+                " " + CATEGORY_TYPE + " = ?",              // Selections
+                new String[]{"" + convertBudgetTypeToInt(type)}, // selections argument
+                null,                                // group by
+                null,                                // having
+                null,                                // order by
+                null);                               // limit
+
+        Category category;
+        if(cursor.moveToFirst()){
+            do {
+                category = new Category();
+                category.setId(cursor.getInt(0));
+                category.setName(cursor.getString(1));
+                category.setBudget(cursor.getInt(2));
+                category.setType(convertIntToBudgetType(cursor.getInt(3)));
+                category.setCost(0);
+                category.setColor(cursor.getString(4));
+                category.setIcon(cursor.getInt(5));
+
+                categoryList.add(category);
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return categoryList;
     }
 
     /**

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -98,10 +99,10 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
         createToolbar();
         addListeners();
-        populateCategory();
+        populateCategoryExpense();
     }
 
-    private void populateCategory(){
+    private void populateCategoryExpense(){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -111,7 +112,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                categoryList = db.getAllCategory();
+                categoryList = db.getAllCategoryByType(BudgetType.EXPENSE);
                 return null;
             }
 
