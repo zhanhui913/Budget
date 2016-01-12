@@ -415,6 +415,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void refreshView(final ArrayList<Transaction> thisMonthTransactionList){
+        /*
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -444,6 +445,7 @@ public class CalendarFragment extends Fragment {
         };
 
         loader.execute();
+        */
     }
 
     //not being used at all (doesnt work)

@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             protected Void doInBackground(Void... voids) {
-                String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel", "Shopping","Necessity","Utilities","Bill","Groceries"};
-                String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE", "BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
-                int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11};
+                String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel","Car","Shopping","Necessity","Utilities","Bill","Groceries"};
+                String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE","16A085","BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
+                int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
 
                 //create expense category
                 for(int i = 0; i < tempCategoryNameList.length; i++){
@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity
                 }
 
 
-                String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other Income"};
-                String[] tempCategoryIncomeColorList  = new String[]{"FF0012","19B5FE"};
-                int[] tempCategoryIncomeIconList = new int[]{5,6};
+                String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
+                String[] tempCategoryIncomeColorList  = new String[]{"8E44AD","34495E"};
+                int[] tempCategoryIncomeIconList = new int[]{11,9};
                 //create income category
                 for(int i = 0; i < tempCategoryIncomeNameList.length; i++){
                     Category c = new Category();

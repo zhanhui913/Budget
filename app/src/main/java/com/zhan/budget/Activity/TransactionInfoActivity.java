@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TransactionViewPager;
-import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
@@ -47,7 +46,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private String priceString, priceStringWithDot;
     private String noteString;
 
-    private Database db; //shouldnt have db access here, category and transactions should be dealt with in the caller activity
     private Date selectedDate;
 
     private TransactionViewPager adapterViewPager;
@@ -77,8 +75,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
      * Perform all initializations here.
      */
     private void init(){
-        openDatabase();
-
         button1 = (Button)findViewById(R.id.number1);
         button2 = (Button)findViewById(R.id.number2);
         button3 = (Button)findViewById(R.id.number3);
@@ -375,20 +371,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         setResult(RESULT_OK, intent);
 
         finish();
-    }
-
-    public void openDatabase(){
-        db = new Database(getApplicationContext());
-    }
-
-    public void closeDatabase(){
-        db.close();
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        closeDatabase();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

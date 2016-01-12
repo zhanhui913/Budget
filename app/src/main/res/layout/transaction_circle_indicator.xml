@@ -9,7 +9,7 @@
     <View
         android:id="@+id/leftDivider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="3dp"
         android:layout_weight="0.45"
         android:background="@color/gray"
         android:layout_gravity="center_vertical" />
@@ -30,7 +30,7 @@
     <View
         android:id="@+id/rightDivider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="3dp"
         android:layout_weight="0.45"
         android:background="@color/gray"
         android:layout_gravity="center_vertical" />
