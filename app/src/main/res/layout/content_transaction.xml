@@ -46,12 +46,13 @@
         android:background="@color/gray"
         android:layout_above="@+id/numberPad">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/addNoteBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_plus"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:padding="15dp"/>
 
     </RelativeLayout>
 

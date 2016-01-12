@@ -18,7 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhan.budget.Adapter.CategoryGridAdapter;
@@ -39,7 +39,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private Activity instance;
     private Toolbar toolbar;
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0,buttonX;
-    private ImageButton addNoteBtn;
+    private ImageView addNoteBtn;
     private TextView transactionCostView;
 
     private String priceString, priceStringWithDot;
@@ -85,7 +85,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
         button9 = (Button)findViewById(R.id.number9);
         button0 = (Button)findViewById(R.id.number0);
         buttonX = (Button)findViewById(R.id.numberX);
-        addNoteBtn = (ImageButton)findViewById(R.id.addNoteBtn);
+        addNoteBtn = (ImageView)findViewById(R.id.addNoteBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
 

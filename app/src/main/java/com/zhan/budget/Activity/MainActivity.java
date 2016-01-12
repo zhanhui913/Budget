@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
@@ -24,6 +23,7 @@ import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.OverviewFragment;
 import com.zhan.budget.Fragment.SendFragment;
 import com.zhan.budget.Fragment.ShareFragment;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity
             editor.putBoolean(Constants.FIRST_TIME, false);
             editor.apply();
         }
-
-        Toast.makeText(activity, "IsFirstTime: " + isFirstTIme, Toast.LENGTH_SHORT).show();
     }
 
     private void createFragments(){
@@ -130,13 +128,14 @@ public class MainActivity extends AppCompatActivity
                 String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE", "BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
                 int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11};
 
-                //create category first
+                //create expense category
                 for(int i = 0; i < tempCategoryNameList.length; i++){
                     Category c = new Category();
                     c.setName(tempCategoryNameList[i]);
-                    c.setColor("#"+tempCategoryColorList[i]);
+                    c.setColor("#" + tempCategoryColorList[i]);
                     c.setIcon(tempCategoryIconList[i]);
                     c.setBudget(100.0f);
+                    c.setType(BudgetType.EXPENSE);
                     c.setCost(0);
 
                     categoryList.add(c);
@@ -148,6 +147,31 @@ public class MainActivity extends AppCompatActivity
                         continue;
                     }
                     c.setId((int)categoryID);
+                }
+
+
+                String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other Income"};
+                String[] tempCategoryIncomeColorList  = new String[]{"FF0012","19B5FE"};
+                int[] tempCategoryIncomeIconList = new int[]{5,6};
+                //create income category
+                for(int i = 0; i < tempCategoryIncomeNameList.length; i++){
+                    Category c = new Category();
+                    c.setName(tempCategoryIncomeNameList[i]);
+                    c.setColor("#" + tempCategoryIncomeColorList[i]);
+                    c.setIcon(tempCategoryIncomeIconList[i]);
+                    c.setBudget(0);
+                    c.setType(BudgetType.INCOME);
+                    c.setCost(0);
+
+                    categoryList.add(c);
+
+                    long categoryID = db.createCategory(c);
+
+                    if(categoryID == -1){
+                        Log.e("ZHAN", "db.createCategory returned -1");
+                        continue;
+                    }
+                    c.setId((int) categoryID);
                 }
 
                 return null;

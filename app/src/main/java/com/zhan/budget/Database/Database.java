@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.Util.Util;
@@ -39,6 +40,7 @@ public class Database extends SQLiteOpenHelper{
     private static final String TABLE_CATEGORY = "budget_category";
     private static final String CATEGORY_ID = "id";
     private static final String CATEGORY_TITLE = "title";
+    private static final String CATEGORY_TYPE = "type";
     private static final String CATEGORY_BUDGET = "budget";
     private static final String CATEGORY_COLOR = "color";
     private static final String CATEGORY_ICON = "icon";
@@ -55,6 +57,7 @@ public class Database extends SQLiteOpenHelper{
     private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE " + TABLE_CATEGORY + " (" +
             CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             CATEGORY_TITLE + " TEXT," +
+            CATEGORY_TYPE + " TEXT," +
             CATEGORY_BUDGET + " REAL," +
             CATEGORY_COLOR + " TEXT," +
             CATEGORY_ICON + " INTEGER);";
@@ -103,6 +106,14 @@ public class Database extends SQLiteOpenHelper{
     //
     //----------------------------------------------------------------------------------------------
 
+    public int convertBudgetTypeToInt(BudgetType type){
+        return (type == BudgetType.EXPENSE)? -1 : 1;
+    }
+
+    public BudgetType convertIntToBudgetType(int value){
+        return (value == -1)? BudgetType.EXPENSE : BudgetType.INCOME;
+    }
+
     /**
      * Insert a Category into the database
      * @param category The new Category to be inserted
@@ -114,6 +125,7 @@ public class Database extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(CATEGORY_TITLE, category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
+        values.put(CATEGORY_TYPE, convertBudgetTypeToInt(category.getType()));
         values.put(CATEGORY_COLOR, category.getColor());
         values.put(CATEGORY_ICON, category.getIcon());
 
@@ -133,7 +145,7 @@ public class Database extends SQLiteOpenHelper{
     public Category getCategoryById(int id){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_COLOR, CATEGORY_ICON};
+        String[] TOUR_COLUMNS = {CATEGORY_ID,CATEGORY_TITLE, CATEGORY_BUDGET, CATEGORY_TYPE, CATEGORY_COLOR, CATEGORY_ICON};
 
         Cursor cursor = db.query(TABLE_CATEGORY,     //Table
                 TOUR_COLUMNS,                        //Column names
@@ -153,9 +165,10 @@ public class Database extends SQLiteOpenHelper{
             category.setId(cursor.getInt(0));
             category.setName(cursor.getString(1));
             category.setBudget(cursor.getFloat(2));
+            category.setType(convertIntToBudgetType(cursor.getInt(3)));
             category.setCost(0);
-            category.setColor(cursor.getString(3));
-            category.setIcon(cursor.getInt(4));
+            category.setColor(cursor.getString(4));
+            category.setIcon(cursor.getInt(5));
         }
 
         cursor.close();
@@ -182,9 +195,10 @@ public class Database extends SQLiteOpenHelper{
                 category.setId(cursor.getInt(0));
                 category.setName(cursor.getString(1));
                 category.setBudget(cursor.getFloat(2));
+                category.setType(convertIntToBudgetType(cursor.getInt(3)));
                 category.setCost(0);
-                category.setColor(cursor.getString(3));
-                category.setIcon(cursor.getInt(4));
+                category.setColor(cursor.getString(4));
+                category.setIcon(cursor.getInt(5));
 
                 //Add category to arraylist
                 categories.add(category);
@@ -209,6 +223,7 @@ public class Database extends SQLiteOpenHelper{
         values.put(CATEGORY_ID,category.getId());
         values.put(CATEGORY_TITLE,category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
+        values.put(CATEGORY_TYPE, convertBudgetTypeToInt(category.getType()));
         values.put(CATEGORY_COLOR, category.getColor());
         values.put(CATEGORY_ICON, category.getIcon());
 
