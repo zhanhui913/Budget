@@ -1,12 +1,12 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.zhan.budget.R;
 
@@ -21,6 +21,8 @@ import com.zhan.budget.R;
 public class SendFragment extends Fragment {
 
     private OnSendInteractionListener mListener;
+    private View view;
+    private Button exportDbBtn;
 
     public SendFragment() {
         // Required empty public constructor
@@ -46,7 +48,30 @@ public class SendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_send, container, false);
+        view = inflater.inflate(R.layout.fragment_send, container, false);
+        return view;
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        init();
+        addListener();
+    }
+
+    private void init(){
+        exportDbBtn = (Button) view.findViewById(R.id.exportDbBtn);
+    }
+
+    private void addListener(){
+        exportDbBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

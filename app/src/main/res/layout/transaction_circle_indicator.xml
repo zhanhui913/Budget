@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:CircleIndicator="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/leftDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="0.45"
+        android:background="@color/darkgray"
+        android:layout_gravity="center_vertical" />
+
+    <com.zhan.circleindicator.CircleIndicator
+        android:id="@+id/indicator"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.1"
+        CircleIndicator:ci_background="@color/white"
+        CircleIndicator:ci_selected_background="@color/colorPrimaryDark"
+        CircleIndicator:ci_mode="outside"
+        CircleIndicator:ci_gravity="center"
+        CircleIndicator:ci_radius="3dp"
+        CircleIndicator:ci_margin="5dp"
+        android:layout_gravity="center_vertical" />
+
+    <View
+        android:id="@+id/rightDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="0.45"
+        android:background="@color/darkgray"
+        android:layout_gravity="center_vertical" />
+
+</LinearLayout>

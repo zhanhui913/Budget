@@ -4,17 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -22,19 +20,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhan.budget.Adapter.CategoryGridAdapter;
+import com.zhan.budget.Adapter.TransactionViewPager;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Fragment.TransactionExpenseFragment;
+import com.zhan.budget.Fragment.TransactionIncomeFragment;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
-import com.zhan.circularview.CircularView;
+import com.zhan.circleindicator.CircleIndicator;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class TransactionInfoActivity extends AppCompatActivity {
+public class TransactionInfoActivity extends AppCompatActivity implements
+        TransactionExpenseFragment.OnTransactionExpenseFragmentInteractionListener,
+        TransactionIncomeFragment.OnTransactionIncomeFragmentInteractionListener{
 
     private boolean isEditMode = false;
     private Activity instance;
@@ -53,7 +55,12 @@ public class TransactionInfoActivity extends AppCompatActivity {
     private GridView categoryGridView;
     private CategoryGridAdapter categoryGridAdapter;
 
+    private TransactionViewPager adapterViewPager;
+    private ViewPager viewPager;
+
     private Category selectedCategory;
+
+    private CircleIndicator circleIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +96,21 @@ public class TransactionInfoActivity extends AppCompatActivity {
         addNoteBtn = (ImageView)findViewById(R.id.addNoteBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
-
+/*
         categoryList = new ArrayList<>();
         categoryGridView = (GridView) findViewById(R.id.categoryGrid);
         categoryGridAdapter = new CategoryGridAdapter(this, categoryList);
         categoryGridView.setAdapter(categoryGridAdapter);
+*/
+
+
+
+        viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
+        adapterViewPager = new TransactionViewPager(getSupportFragmentManager());
+        viewPager.setAdapter(adapterViewPager);
+
+        circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
+        circleIndicator.setViewPager(viewPager);
 
         priceString = priceStringWithDot = "";
 
@@ -103,6 +120,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
     }
 
     private void populateCategoryExpense(){
+        /*
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -127,6 +145,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
             }
         };
         loader.execute();
+        */
     }
 
     /**
@@ -238,25 +257,24 @@ public class TransactionInfoActivity extends AppCompatActivity {
                 createNoteDialog();
             }
         });
-
-        //transactionCostView.addTextChangedListener(tw);
-
+        /*
         categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for(int i = 0; i < parent.getChildCount(); i++){
+                for (int i = 0; i < parent.getChildCount(); i++) {
                     View childView = parent.getChildAt(i);
-                    CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
+                    CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
                     ccv.setStrokeColor(getResources().getColor(android.R.color.transparent));
                 }
 
                 View childView = parent.getChildAt(position);
-                CircularView ccv = (CircularView)(childView.findViewById(R.id.categoryIcon));
+                CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
                 ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
 
                 selectedCategory = categoryList.get(position);
             }
         });
+        */
     }
 
     private void createNoteDialog(){
@@ -293,43 +311,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
         this.noteString = note;
     }
 
-/*
-    TextWatcher tw = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (!s.toString().matches("^\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{2})?$")) {
-                String userInput = "" + s.toString().replaceAll("[^\\d]", "");
-                StringBuilder cashAmountBuilder = new StringBuilder(userInput);
-
-                while (cashAmountBuilder.length() > 3 && cashAmountBuilder.charAt(0) == '0') {
-                    cashAmountBuilder.deleteCharAt(0);
-                }
-                while (cashAmountBuilder.length() < 3) {
-                    cashAmountBuilder.insert(0, '0');
-                }
-                cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-
-                transactionCostView.removeTextChangedListener(this);
-                transactionCostView.setText(cashAmountBuilder.toString());
-
-                transactionCostView.setTextKeepState("$" + cashAmountBuilder.toString());
-                Selection.setSelection(transactionCostView.getEditableText(), cashAmountBuilder.toString().length() + 1);
-
-                transactionCostView.addTextChangedListener(this);
-            }
-        }
-    };*/
-
     private void addDigitToTextView(int digit){
         //transactionCostView.setText(transactionCostView.getText() + "" +digit);
         priceString += digit;
@@ -347,10 +328,6 @@ public class TransactionInfoActivity extends AppCompatActivity {
         transactionCostView.setText("$" + cashAmountBuilder.toString());
     }
 
-    private void addDot(){
-
-    }
-
     private void removeDigit(){
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
@@ -363,7 +340,7 @@ public class TransactionInfoActivity extends AppCompatActivity {
         }
 
         cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-        transactionCostView.setText("$"+cashAmountBuilder.toString());
+        transactionCostView.setText("$" + cashAmountBuilder.toString());
 
     }
 
@@ -472,5 +449,13 @@ public class TransactionInfoActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Fragment Listener
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 }
