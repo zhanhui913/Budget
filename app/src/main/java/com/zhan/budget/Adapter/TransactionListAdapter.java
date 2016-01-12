@@ -3,13 +3,13 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -82,7 +82,14 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.name.setText(transaction.getCategory().getName());
         }
 
-        viewHolder.cost.setText("$"+Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
+        String append;
+        if(transaction.getCategory().getType() == BudgetType.EXPENSE){
+            append = "-$";
+        }else{
+            append = "+$";
+        }
+
+        viewHolder.cost.setText(append + Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
 
         return convertView;
     }
