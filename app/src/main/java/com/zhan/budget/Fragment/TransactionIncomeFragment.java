@@ -139,6 +139,7 @@ public class TransactionIncomeFragment extends Fragment {
                 ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
 
                 selectedIncomeCategory = categoryIncomeList.get(position);
+                mListener.onCategoryIncomeClick(selectedIncomeCategory);
             }
         });
     }
@@ -189,6 +190,6 @@ public class TransactionIncomeFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnTransactionIncomeFragmentInteractionListener {
-        //void onOverviewInteraction(String value);
+        void onCategoryIncomeClick(Category category);
     }
 }

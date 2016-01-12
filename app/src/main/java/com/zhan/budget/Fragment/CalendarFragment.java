@@ -484,9 +484,7 @@ public class CalendarFragment extends Fragment {
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
-                        //Delete the specific .json and all images it has
-                        Toast.makeText(getContext(), "deleting ", Toast.LENGTH_SHORT).show();
-
+                        //deleting a transaction
                         final Transaction transactionToBeDeleted = transactionList.get(position);
                         transactionAdapter.remove(transactionList.get(position));
                         transactionList.remove(position);

@@ -85,6 +85,14 @@ public class Category implements Parcelable{
         return "{Id:"+id+", name:"+name+", budget:"+budget+", cost"+cost+", color:"+color+", icon:"+icon+"}";
     }
 
+    public int convertBudgetTypeToInt(BudgetType type){
+        return (type == BudgetType.EXPENSE)? -1 : 1;
+    }
+
+    public BudgetType convertIntToBudgetType(int value){
+        return (value == -1)? BudgetType.EXPENSE : BudgetType.INCOME;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Parcelable
@@ -101,6 +109,7 @@ public class Category implements Parcelable{
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeFloat(budget);
+        dest.writeInt(convertBudgetTypeToInt(type));
         dest.writeFloat(cost);
         dest.writeString(color);
         dest.writeInt(icon);
@@ -126,6 +135,7 @@ public class Category implements Parcelable{
         id = in.readInt();
         name = in.readString();
         budget = in.readFloat();
+        type = convertIntToBudgetType(in.readInt());
         cost = in.readFloat();
         color = in.readString();
         icon = in.readInt();

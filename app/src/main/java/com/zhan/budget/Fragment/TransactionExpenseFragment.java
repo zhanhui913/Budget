@@ -138,6 +138,7 @@ public class TransactionExpenseFragment extends Fragment {
                 ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
 
                 selectedExpenseCategory = categoryExpenseList.get(position);
+                mListener.onCategoryExpenseClick(selectedExpenseCategory);
             }
         });
     }
@@ -188,6 +189,6 @@ public class TransactionExpenseFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnTransactionExpenseFragmentInteractionListener {
-        //void onOverviewInteraction(String value);
+        void onCategoryExpenseClick(Category category);
     }
 }

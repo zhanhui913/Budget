@@ -15,23 +15,22 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Adapter.TransactionViewPager;
 import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class TransactionInfoActivity extends AppCompatActivity implements
@@ -51,16 +50,14 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private Database db; //shouldnt have db access here, category and transactions should be dealt with in the caller activity
     private Date selectedDate;
 
-    private ArrayList<Category> categoryList;
-    private GridView categoryGridView;
-    private CategoryGridAdapter categoryGridAdapter;
-
     private TransactionViewPager adapterViewPager;
     private ViewPager viewPager;
 
-    private Category selectedCategory;
+    private Category selectedExpenseCategory;
+    private Category selectedIncomeCategory;
 
     private CircleIndicator circleIndicator;
+    private BudgetType currentPage; //Determines if the current page is in expense or income page
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,14 +93,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         addNoteBtn = (ImageView)findViewById(R.id.addNoteBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
-/*
-        categoryList = new ArrayList<>();
-        categoryGridView = (GridView) findViewById(R.id.categoryGrid);
-        categoryGridAdapter = new CategoryGridAdapter(this, categoryList);
-        categoryGridView.setAdapter(categoryGridAdapter);
-*/
 
-
+        //default first page
+        currentPage = BudgetType.EXPENSE;
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
         adapterViewPager = new TransactionViewPager(getSupportFragmentManager());
@@ -114,38 +106,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         priceString = priceStringWithDot = "";
 
+        //Call one time to give priceStringWithDot the correct string format of 0.00
+        removeDigit();
+
         createToolbar();
         addListeners();
-        populateCategoryExpense();
-    }
-
-    private void populateCategoryExpense(){
-        /*
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing to get categories");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                categoryList = db.getAllCategoryByType(BudgetType.EXPENSE);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting categories");
-                categoryGridAdapter.addAll(categoryList);
-
-                //categoryGridAdapter.getView(0);
-
-            }
-        };
-        loader.execute();
-        */
     }
 
     /**
@@ -257,24 +222,32 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 createNoteDialog();
             }
         });
-        /*
-        categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for (int i = 0; i < parent.getChildCount(); i++) {
-                    View childView = parent.getChildAt(i);
-                    CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(getResources().getColor(android.R.color.transparent));
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        currentPage = BudgetType.EXPENSE;
+                        transactionCostView.setText("-$" + priceStringWithDot);
+                        break;
+                    case 1:
+                        currentPage = BudgetType.INCOME;
+                        transactionCostView.setText("+$" + priceStringWithDot);
+                        break;
                 }
+            }
 
-                View childView = parent.getChildAt(position);
-                CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-                selectedCategory = categoryList.get(position);
             }
         });
-        */
     }
 
     private void createNoteDialog(){
@@ -312,7 +285,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     }
 
     private void addDigitToTextView(int digit){
-        //transactionCostView.setText(transactionCostView.getText() + "" +digit);
         priceString += digit;
         StringBuilder cashAmountBuilder = new StringBuilder(priceString);
 
@@ -325,7 +297,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
         priceStringWithDot = cashAmountBuilder.toString();
-        transactionCostView.setText("$" + cashAmountBuilder.toString());
+
+        String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
+        transactionCostView.setText(appendString + priceStringWithDot);
     }
 
     private void removeDigit(){
@@ -340,8 +314,10 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }
 
         cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-        transactionCostView.setText("$" + cashAmountBuilder.toString());
+        priceStringWithDot = cashAmountBuilder.toString();
 
+        String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
+        transactionCostView.setText(appendString + priceStringWithDot);
     }
 
     @Override
@@ -381,17 +357,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 .show();
     }
 
-    /**
-     * Clears focus from all edit text and hides soft keyboard
-     */
-    private void clearAllFocus(){
-        //name.clearFocus();
-        //question.clearFocus();
-        //answer.clearFocus();
-       // description.clearFocus();
-        Util.hideSoftKeyboard(instance);
-    }
-
     private void save(){
         Intent intent = new Intent();
 
@@ -399,7 +364,12 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         transaction.setNote(this.noteString);
         transaction.setPrice(Float.parseFloat(priceStringWithDot));
         transaction.setDate(Util.formatDate(selectedDate));
-        transaction.setCategory(selectedCategory);
+
+        if(currentPage == BudgetType.EXPENSE) {
+            transaction.setCategory(selectedExpenseCategory);
+        }else{
+            transaction.setCategory(selectedIncomeCategory);
+        }
 
         intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);
         setResult(RESULT_OK, intent);
@@ -456,6 +426,16 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public void onCategoryExpenseClick(Category category){
+        Toast.makeText(getApplicationContext(), "clicked on expense category : "+category.getName(), Toast.LENGTH_SHORT).show();
+        selectedExpenseCategory = category;
+    }
 
+    @Override
+    public void onCategoryIncomeClick(Category category){
+        Toast.makeText(getApplicationContext(), "clicked on income category : "+category.getName(), Toast.LENGTH_SHORT).show();
+        selectedIncomeCategory = category;
+    }
 
 }
