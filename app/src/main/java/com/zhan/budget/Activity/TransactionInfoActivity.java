@@ -4,18 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -28,12 +25,11 @@ import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
-import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
-import com.zhan.circularview.CircularView;
+import com.zhan.circleindicator.CircleIndicator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,6 +59,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private ViewPager viewPager;
 
     private Category selectedCategory;
+
+    private CircleIndicator circleIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +102,15 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         categoryGridAdapter = new CategoryGridAdapter(this, categoryList);
         categoryGridView.setAdapter(categoryGridAdapter);
 */
+
+
+
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
         adapterViewPager = new TransactionViewPager(getSupportFragmentManager());
         viewPager.setAdapter(adapterViewPager);
+
+        circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
+        circleIndicator.setViewPager(viewPager);
 
         priceString = priceStringWithDot = "";
 
