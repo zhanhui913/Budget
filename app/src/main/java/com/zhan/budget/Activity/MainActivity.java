@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import io.realm.Realm;
 
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
-    Database db;
 
     private CalendarFragment calendarFragment;
     private CategoryFragment categoryFragment;
@@ -139,8 +139,6 @@ public class MainActivity extends AppCompatActivity
             c.setCost(0);
 
             categoryList.add(c);
-
-           // myRealm.commitTransaction();
         }
 
 
@@ -159,100 +157,14 @@ public class MainActivity extends AppCompatActivity
             c.setCost(0);
 
             categoryList.add(c);
-
-            //myRealm.commitTransaction();
         }
 
         myRealm.commitTransaction();
-
-
-        /*openDatabase();
-
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing transaction to create default categoroes");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel","Car","Shopping","Necessity","Utilities","Bill","Groceries"};
-                String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE","16A085","BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
-                int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
-
-                //create expense category
-                for(int i = 0; i < tempCategoryNameList.length; i++){
-                    Category c = new Category();
-                    c.setName(tempCategoryNameList[i]);
-                    c.setColor("#" + tempCategoryColorList[i]);
-                    c.setIcon(tempCategoryIconList[i]);
-                    c.setBudget(100.0f);
-                    c.setType(BudgetType.EXPENSE.toString());
-                    c.setCost(0);
-
-                    categoryList.add(c);
-
-                    long categoryID = db.createCategory(c);
-
-                    if(categoryID == -1){
-                        Log.e("ZHAN", "db.createCategory returned -1");
-                        continue;
-                    }
-                    c.setId((int)categoryID);
-                }
-
-
-                String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
-                String[] tempCategoryIncomeColorList  = new String[]{"8E44AD","34495E"};
-                int[] tempCategoryIncomeIconList = new int[]{11,9};
-                //create income category
-                for(int i = 0; i < tempCategoryIncomeNameList.length; i++){
-                    Category c = new Category();
-                    c.setName(tempCategoryIncomeNameList[i]);
-                    c.setColor("#" + tempCategoryIncomeColorList[i]);
-                    c.setIcon(tempCategoryIncomeIconList[i]);
-                    c.setBudget(0);
-                    c.setType(BudgetType.INCOME.toString());
-                    c.setCost(0);
-
-                    categoryList.add(c);
-
-                    long categoryID = db.createCategory(c);
-
-                    if(categoryID == -1){
-                        Log.e("ZHAN", "db.createCategory returned -1");
-                        continue;
-                    }
-                    c.setId((int) categoryID);
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done creating default categories");
-
-                createFakeTransactions();
-            }
-        };
-
-        loader.execute();*/
     }
 
     private void createFakeTransactions(){
-
-
         long startTime, endTime, duration;
         startTime = System.nanoTime();
-
-
-
-
-
 
         Date startDate = Util.convertStringToDate("2014-12-01");
         Date endDate = Util.convertStringToDate("2016-02-01");
@@ -265,34 +177,25 @@ public class MainActivity extends AppCompatActivity
         final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
 
         myRealm.beginTransaction();
+        Random random = new Random();
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-
-            // Do your job here with `date`.
-            //Log.d("REALM", i+"");
-
             //Create 25 transactions per day
             for(int j = 0; j < 25; j++){
-                //Random random = new Random();
-
                 Transaction transaction = myRealm.createObject(Transaction.class);
                 transaction.setId(Util.generateUUID());
-                transaction.setDate(startDate);
+                transaction.setDate(date);
 
-                //int cc = random.nextInt(categoryList.size());
-                Category category  = categoryList.get(0);
+                Category category  = categoryList.get(random.nextInt(categoryList.size()));
 
                 transaction.setCategory(category);
                 transaction.setPrice(120.0f);
-                transaction.setNote("Note " + j + " for ");
+                transaction.setNote("Note " + j);
 
                 transactionArrayList.add(transaction);
             }
         }
         myRealm.commitTransaction();
-
-
-        //myRealm.commitTransaction();
 
         endTime = System.nanoTime();
         duration = (endTime - startTime);
@@ -303,84 +206,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
 
-
         exportDatabase();
-
-
-
-        /*AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-            long startTime, endTime, duration;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing transaction");
-                startTime = System.nanoTime();
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                //create transactions
-                try {
-                    Date startDate = Util.convertStringToDate("2014-12-01");
-                    Date endDate = Util.convertStringToDate("2016-02-01");
-
-                    Calendar start = Calendar.getInstance();
-                    start.setTime(startDate);
-                    Calendar end = Calendar.getInstance();
-                    end.setTime(endDate);
-
-                    final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
-
-                    for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                        // Do your job here with `date`.
-                        Log.d("ASYNC",date.toString());
-
-                        //Create 25 transactions per day
-                        for(int i = 0; i < 25; i++){
-                            Random random = new Random();
-
-                            Transaction transaction = new Transaction();
-                            transaction.setDate(date);
-
-                            int cc = random.nextInt(categoryList.size());
-                            Category category  = categoryList.get(cc);
-
-                            transaction.setCategory(category);
-                            transaction.setPrice(random.nextFloat() * 120.0f);
-                            transaction.setNote("Note " + i + " for " + Util.convertDateToString(date));
-
-                            transactionArrayList.add(transaction);
-                        }
-                    }
-
-                    db.createBulkTransaction(transactionArrayList);
-                }catch (Exception e ){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done transaction");
-
-                db.exportDB();
-
-                endTime = System.nanoTime();
-                duration = (endTime - startTime);
-
-                long milli = (duration/1000000);
-                long second = (milli/1000);
-                float minutes = (second/ 60.0f);
-
-                Log.d("ASYNC", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-            }
-        };
-
-        loader.execute();*/
     }
 
     public void exportDatabase() {
@@ -412,30 +238,6 @@ public class MainActivity extends AppCompatActivity
 
         // start email intent
         startActivity(Intent.createChooser(intent, "YOUR CHOOSER TITLE"));
-    }
-
-    public void openDatabase(){
-        if(db == null) {
-            db = new Database(activity);
-        }
-    }
-
-    public void closeDatabase(){
-        if(db != null){
-            db.close();
-        }
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        closeDatabase();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        openDatabase();
     }
 
     @Override

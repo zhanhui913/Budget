@@ -38,7 +38,12 @@ import com.zhan.budget.Util.Util;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +65,6 @@ public class CategoryFragment extends Fragment {
     private TextView balanceText;
 
     private ArrayList<Category> categoryList;
-    private Database db;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
 
@@ -68,6 +72,9 @@ public class CategoryFragment extends Fragment {
 
     private List<Transaction> transactionMonthList ;
 
+    private Realm myRealm;
+    private RealmResults<Category> categoryRealmResults;
+    private RealmResults<Transaction> transactionRealmResults;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -107,7 +114,7 @@ public class CategoryFragment extends Fragment {
     }
 
     private void init(){
-        openDatabase();
+        myRealm = Realm.getInstance(getContext());
 
         currentMonth = new Date();
 
@@ -154,15 +161,17 @@ public class CategoryFragment extends Fragment {
                 .setCancelable(true)
                 .setPositiveButton("add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Category c = new Category();
+                        myRealm.beginTransaction();
+
+                        Category c = myRealm.createObject(Category.class);
+                        c.setId(Util.generateUUID());
                         c.setName(input.getText().toString());
                         c.setColor("#000000");
                         c.setIcon(6);
                         c.setBudget(100.0f);
                         c.setCost(0);
 
-
-                        db.createCategory(c);
+                        myRealm.commitTransaction();
 
                         categoryList.add(c);
                         categoryAdapter.add(c);
@@ -186,7 +195,7 @@ public class CategoryFragment extends Fragment {
 
     //SHould be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        /*AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -209,10 +218,28 @@ public class CategoryFragment extends Fragment {
             }
         };
         loader.execute();
+        */
+
+        final RealmResults<Category> resultsCategory = myRealm.where(Category.class).findAllAsync();
+        resultsCategory.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                Log.d("REALM", "completed initial category");
+
+                for (int i = 0; i < resultsCategory.size(); i++) {
+                    categoryList.add(resultsCategory.get(i));
+                }
+
+                categoryAdapter.addAll(categoryList);
+                populateCategoryWithInfo();
+
+            }
+        });
+
     }
 
     private void populateCategoryWithInfo(){
-        AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
+        /*AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -237,10 +264,45 @@ public class CategoryFragment extends Fragment {
             }
         };
         loader1.execute();
+        */
+
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(currentMonth);
+
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+
+        Date startMonth = new GregorianCalendar(year, month, 1).getTime();
+
+        //If this is December, the next month needs to be the following year's January
+        if(month == 11){
+            month = 0;
+            year++;
+        }else{
+            month++;
+        }
+
+        Date endMonth = new GregorianCalendar(year, month, 1).getTime();
+
+        Log.d("REALM","This month is "+startMonth.toString()+", next month is "+endMonth.toString());
+
+        final RealmResults<Transaction> resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
+        resultsTransaction.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                Log.d("REALM", "got this month transaction, "+resultsTransaction.size());
+                for (int i = 0; i < resultsTransaction.size(); i++) {
+                    transactionMonthList.add(resultsTransaction.get(i));
+                }
+                aggregateCategoryInfo();
+            }
+        });
+
     }
 
     private void aggregateCategoryInfo(){
-        Log.d("POP", "There are "+categoryList.size()+" categories");
+        Log.d("POP", "There are " + categoryList.size() + " categories");
         Log.d("POP", "There are "+transactionMonthList.size()+" transactions this month");
 
         for(int i = 0; i < categoryList.size(); i++){
@@ -306,7 +368,9 @@ public class CategoryFragment extends Fragment {
                         break;
                     case 1:
                         //delete
-                        db.deleteCategory(categoryList.get(position));
+
+                        categoryList.get(position).removeFromRealm();
+
                         categoryAdapter.remove(categoryList.get(position));
                         categoryList.remove(position);
 
@@ -353,22 +417,12 @@ public class CategoryFragment extends Fragment {
                 Log.d("ZHAN", "category name is "+category.getName());
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                db.updateCategory(category);
+                //db.updateCategory(category);
+
+
                 categoryList.set(categoryIndexEditted, category);
                 categoryAdapter.notifyDataSetChanged();
             }
-        }
-    }
-
-    public void openDatabase(){
-        if(db == null) {
-            db = new Database(getActivity().getApplicationContext());
-        }
-    }
-
-    public void closeDatabase(){
-        if(db != null){
-            db.close();
         }
     }
 
@@ -416,7 +470,8 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        closeDatabase();
+        //closeDatabase();
+
     }
 
     @Override
