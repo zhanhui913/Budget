@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
@@ -164,7 +163,7 @@ public class MainActivity extends AppCompatActivity
 
     private void createFakeTransactions(){
         long startTime, endTime, duration;
-        startTime = System.nanoTime();
+
 
         Date startDate = Util.convertStringToDate("2014-12-01");
         Date endDate = Util.convertStringToDate("2016-02-01");
@@ -178,6 +177,8 @@ public class MainActivity extends AppCompatActivity
 
         myRealm.beginTransaction();
         Random random = new Random();
+
+        startTime = System.nanoTime();
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
             //Create 25 transactions per day
@@ -195,9 +196,9 @@ public class MainActivity extends AppCompatActivity
                 transactionArrayList.add(transaction);
             }
         }
+        endTime = System.nanoTime();
         myRealm.commitTransaction();
 
-        endTime = System.nanoTime();
         duration = (endTime - startTime);
 
         long milli = (duration/1000000);
