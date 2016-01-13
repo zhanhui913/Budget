@@ -252,7 +252,7 @@ public class CategoryFragment extends Fragment {
             Log.d("POP", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
             for(int c = 0; c < categoryList.size(); c++){
                 if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
-                    categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
+                    //categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
                 }
             }
         }
@@ -300,7 +300,7 @@ public class CategoryFragment extends Fragment {
                         Intent editCategory = new Intent(getContext(), CategoryInfo.class);
 
                         //This is edit mode
-                        editCategory.putExtra(Constants.REQUEST_EDIT_CATEGORY, categoryList.get(position));
+                        //editCategory.putExtra(Constants.REQUEST_EDIT_CATEGORY, categoryList.get(position));
                         startActivityForResult(editCategory, Constants.RETURN_EDIT_CATEGORY);
 
                         break;

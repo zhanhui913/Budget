@@ -12,9 +12,7 @@ import android.widget.TextView;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
-import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
 
 public class CategoryInfo extends AppCompatActivity {
 
@@ -67,7 +65,7 @@ public class CategoryInfo extends AppCompatActivity {
         Category newCategory = category;
         newCategory.setCost(category.getCost()+ 1 );
 
-        intent.putExtra(Constants.RESULT_EDIT_CATEGORY, newCategory);
+        //intent.putExtra(Constants.RESULT_EDIT_CATEGORY, newCategory);
         setResult(RESULT_OK, intent);
 
         finish();

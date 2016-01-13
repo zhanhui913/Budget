@@ -322,17 +322,9 @@ public class CalendarFragment extends Fragment {
                 dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
                 populateTransactionsForDate(selectedDate);
-
-                //Toast.makeText(getActivity(), "clicked :" + Util.convertDateToString(selectedDate), Toast.LENGTH_SHORT).show();
             }
         });
-/*
-        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
-            @Override
-            public List<CustomEvent> getEventsForTheDay(int year, int month, int day) {
-                return getCustomEvents(year, month, day);
-            }
-        });*/
+
     }
 
     public List<CustomEvent> getCustomEvents(int year, int month, int day){ Log.d("VIEW", "getcustomEvents");
@@ -341,7 +333,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void populateTransactionsForDate(final Date date) {
-        Log.d("ZHAN", "-------- populate transaction list for date " + Util.convertDateToString(date));
+        /*Log.d("ZHAN", "-------- populate transaction list for date " + Util.convertDateToString(date));
 
         transactionAdapter.clear();
 
@@ -369,7 +361,10 @@ public class CalendarFragment extends Fragment {
             }
         };
 
-        loader.execute();
+        loader.execute();*/
+
+
+
 
         Log.d("ZHAN", "-------- there are " + transactionList.size() + " transactions for " + Util.convertDateToString(date));
     }
@@ -378,7 +373,7 @@ public class CalendarFragment extends Fragment {
         //Update decorators for the given month
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        updateCalendarDecoratorsForMonth(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
+       // updateCalendarDecoratorsForMonth(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
     }
 
     private void updateCalendarDecoratorsForMonth(final int year, final int month) {
@@ -741,7 +736,7 @@ public class CalendarFragment extends Fragment {
                 Log.d("ZHAN", "category is "+transaction.getCategory().getName()+", "+transaction.getCategory().getId());
                 Log.i("ZHAN", "----------- onActivityResult ----------");
                 long id = db.createTransaction(transaction);
-                transaction.setId((int)id);
+                transaction.setId(Util.generateUUID());
 
                 transactionList.add(transaction);
                 transactionAdapter.add(transaction);

@@ -82,7 +82,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.name.setText(transaction.getCategory().getName());
         }
 
-        if(transaction.getCategory().getType() == BudgetType.EXPENSE){
+        if(transaction.getCategory().getType() == BudgetType.EXPENSE.toString()){
             viewHolder.cost.setText("-$" + Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
         }else{
             viewHolder.cost.setText("+$" + Util.setPriceToCorrectDecimalInString(transaction.getPrice()));

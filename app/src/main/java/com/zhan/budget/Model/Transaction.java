@@ -1,21 +1,22 @@
 package com.zhan.budget.Model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.zhan.budget.Util.Util;
-
 import java.util.Date;
+
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Zhan on 15-12-14.
  */
-public class Transaction implements Parcelable{
+public class Transaction extends RealmObject {
 
-    private int id;
+    @PrimaryKey
+    private String id;
 
     private String note;
 
+    @Index
     private Date date;
 
     private float price;
@@ -26,11 +27,11 @@ public class Transaction implements Parcelable{
 
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -66,10 +67,7 @@ public class Transaction implements Parcelable{
         this.category = category;
     }
 
-    public String toString(){
-        return "{id:"+id+", note:"+note+", date:"+date.toString()+", price:"+price+", category:"+category.getName()+"}";
-    }
-
+    /*
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Parcelable
@@ -92,9 +90,7 @@ public class Transaction implements Parcelable{
         category.writeToParcel(dest, flags);
     }
 
-    /**
-     * Creator required for class implementing the parcelable interface.
-     */
+
     public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
 
         @Override
@@ -116,4 +112,5 @@ public class Transaction implements Parcelable{
 
         category = Category.CREATOR.createFromParcel(in);
     }
+    */
 }

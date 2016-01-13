@@ -10,7 +10,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -25,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Created by zhanyap on 15-08-24.
@@ -36,6 +36,9 @@ public final class Util {
     private Util() {
     }//private constructor
 
+    public static String generateUUID(){
+        return UUID.randomUUID().toString();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

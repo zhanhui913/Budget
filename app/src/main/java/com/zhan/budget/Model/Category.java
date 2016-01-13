@@ -1,18 +1,22 @@
 package com.zhan.budget.Model;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Zhan on 15-12-14.
  */
-public class Category implements Parcelable{
+public class Category extends RealmObject{
 
-    private int id;
+    @PrimaryKey
+    private String id;
     private String name;
-    private BudgetType type;
+    private String type;
     private float budget;
+
+    @Ignore
     private float cost;
     private String color;
     private int icon;
@@ -21,11 +25,11 @@ public class Category implements Parcelable{
 
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -45,10 +49,6 @@ public class Category implements Parcelable{
         this.cost = cost;
     }
 
-    public void addCost(float cost){
-        this.cost += cost;
-    }
-
     public String getName() {
         return name;
     }
@@ -57,11 +57,11 @@ public class Category implements Parcelable{
         this.name = name;
     }
 
-    public BudgetType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(BudgetType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -81,17 +81,7 @@ public class Category implements Parcelable{
         this.icon = icon;
     }
 
-    public String toString(){
-        return "{Id:"+id+", name:"+name+", budget:"+budget+", cost"+cost+", color:"+color+", icon:"+icon+"}";
-    }
-
-    public int convertBudgetTypeToInt(BudgetType type){
-        return (type == BudgetType.EXPENSE)? -1 : 1;
-    }
-
-    public BudgetType convertIntToBudgetType(int value){
-        return (value == -1)? BudgetType.EXPENSE : BudgetType.INCOME;
-    }
+    /*
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -109,15 +99,12 @@ public class Category implements Parcelable{
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeFloat(budget);
-        dest.writeInt(convertBudgetTypeToInt(type));
+        dest.writeString(type);
         dest.writeFloat(cost);
         dest.writeString(color);
         dest.writeInt(icon);
     }
 
-    /**
-     * Creator required for class implementing the parcelable interface.
-     */
     public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
 
         @Override
@@ -135,9 +122,9 @@ public class Category implements Parcelable{
         id = in.readInt();
         name = in.readString();
         budget = in.readFloat();
-        type = convertIntToBudgetType(in.readInt());
+        type = in.readString();
         cost = in.readFloat();
         color = in.readString();
         icon = in.readInt();
-    }
+    }*/
 }

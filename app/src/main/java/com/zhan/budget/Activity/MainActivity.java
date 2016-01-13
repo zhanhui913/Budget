@@ -1,8 +1,9 @@
 package com.zhan.budget.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -29,10 +30,13 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Category> categoryList = new ArrayList<>();
 
+    private Realm myRealm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +73,18 @@ public class MainActivity extends AppCompatActivity
         init();
     }
 
+    private void createFragments(){
+        calendarFragment = new CalendarFragment();
+        categoryFragment = new CategoryFragment();
+        overviewFragment = new OverviewFragment();
+        shareFragment = new ShareFragment();
+        sendFragment = new SendFragment();
+    }
+
     private void init(){
         activity = MainActivity.this;
+
+        myRealm = Realm.getInstance(getApplicationContext());
 
         isFirstTime();
 
@@ -95,6 +111,7 @@ public class MainActivity extends AppCompatActivity
 
         if(isFirstTIme){
             createDefaultCategory();
+            createFakeTransactions();
 
             //set Constants.FIRST_TIME shared preferences to false
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -103,16 +120,53 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void createFragments(){
-        calendarFragment = new CalendarFragment();
-        categoryFragment = new CategoryFragment();
-        overviewFragment = new OverviewFragment();
-        shareFragment = new ShareFragment();
-        sendFragment = new SendFragment();
-    }
-
     private void createDefaultCategory(){
-        openDatabase();
+        myRealm.beginTransaction();
+
+        String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel","Car","Shopping","Necessity","Utilities","Bill","Groceries"};
+        String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE","16A085","BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
+        int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
+
+        //create expense category
+        for(int i = 0; i < tempCategoryNameList.length; i++){
+            Category c = myRealm.createObject(Category.class);
+            c.setId(Util.generateUUID());
+            c.setName(tempCategoryNameList[i]);
+            c.setColor("#" + tempCategoryColorList[i]);
+            c.setIcon(tempCategoryIconList[i]);
+            c.setBudget(100.0f);
+            c.setType(BudgetType.EXPENSE.toString());
+            c.setCost(0);
+
+            categoryList.add(c);
+
+           // myRealm.commitTransaction();
+        }
+
+
+        String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
+        String[] tempCategoryIncomeColorList  = new String[]{"8E44AD","34495E"};
+        int[] tempCategoryIncomeIconList = new int[]{11,9};
+        //create income category
+        for(int i = 0; i < tempCategoryIncomeNameList.length; i++){
+            Category c = myRealm.createObject(Category.class);
+            c.setId(Util.generateUUID());
+            c.setName(tempCategoryIncomeNameList[i]);
+            c.setColor("#" + tempCategoryIncomeColorList[i]);
+            c.setIcon(tempCategoryIncomeIconList[i]);
+            c.setBudget(0);
+            c.setType(BudgetType.INCOME.toString());
+            c.setCost(0);
+
+            categoryList.add(c);
+
+            //myRealm.commitTransaction();
+        }
+
+        myRealm.commitTransaction();
+
+
+        /*openDatabase();
 
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
@@ -135,7 +189,7 @@ public class MainActivity extends AppCompatActivity
                     c.setColor("#" + tempCategoryColorList[i]);
                     c.setIcon(tempCategoryIconList[i]);
                     c.setBudget(100.0f);
-                    c.setType(BudgetType.EXPENSE);
+                    c.setType(BudgetType.EXPENSE.toString());
                     c.setCost(0);
 
                     categoryList.add(c);
@@ -160,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                     c.setColor("#" + tempCategoryIncomeColorList[i]);
                     c.setIcon(tempCategoryIncomeIconList[i]);
                     c.setBudget(0);
-                    c.setType(BudgetType.INCOME);
+                    c.setType(BudgetType.INCOME.toString());
                     c.setCost(0);
 
                     categoryList.add(c);
@@ -186,11 +240,75 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        loader.execute();
+        loader.execute();*/
     }
 
     private void createFakeTransactions(){
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+
+        long startTime, endTime, duration;
+        startTime = System.nanoTime();
+
+
+
+
+
+
+        Date startDate = Util.convertStringToDate("2014-12-01");
+        Date endDate = Util.convertStringToDate("2016-02-01");
+
+        Calendar start = Calendar.getInstance();
+        start.setTime(startDate);
+        Calendar end = Calendar.getInstance();
+        end.setTime(endDate);
+
+        final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
+
+        myRealm.beginTransaction();
+
+        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+
+            // Do your job here with `date`.
+            //Log.d("REALM", i+"");
+
+            //Create 25 transactions per day
+            for(int j = 0; j < 25; j++){
+                //Random random = new Random();
+
+                Transaction transaction = myRealm.createObject(Transaction.class);
+                transaction.setId(Util.generateUUID());
+                transaction.setDate(startDate);
+
+                //int cc = random.nextInt(categoryList.size());
+                Category category  = categoryList.get(0);
+
+                transaction.setCategory(category);
+                transaction.setPrice(120.0f);
+                transaction.setNote("Note " + j + " for ");
+
+                transactionArrayList.add(transaction);
+            }
+        }
+        myRealm.commitTransaction();
+
+
+        //myRealm.commitTransaction();
+
+        endTime = System.nanoTime();
+        duration = (endTime - startTime);
+
+        long milli = (duration/1000000);
+        long second = (milli/1000);
+        float minutes = (second/ 60.0f);
+
+        Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+
+
+        exportDatabase();
+
+
+
+        /*AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             long startTime, endTime, duration;
 
@@ -262,7 +380,38 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        loader.execute();
+        loader.execute();*/
+    }
+
+    public void exportDatabase() {
+
+        File exportRealmFile = null;
+        try {
+            // get or create an "export.realm" file
+            exportRealmFile = new File(this.getExternalCacheDir(), "export.realm");
+
+            // if "export.realm" already exists, delete
+            exportRealmFile.delete();
+
+            // copy current realm to "export.realm"
+            myRealm.writeCopyTo(exportRealmFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myRealm.close();
+
+        // init email intent and add export.realm as attachment
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("plain/text");
+        intent.putExtra(Intent.EXTRA_EMAIL, "YOUR MAIL");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR SUBJECT");
+        intent.putExtra(Intent.EXTRA_TEXT, "YOUR TEXT");
+        Uri u = Uri.fromFile(exportRealmFile);
+        intent.putExtra(Intent.EXTRA_STREAM, u);
+
+        // start email intent
+        startActivity(Intent.createChooser(intent, "YOUR CHOOSER TITLE"));
     }
 
     public void openDatabase(){

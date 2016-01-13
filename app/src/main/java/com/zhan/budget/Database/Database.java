@@ -55,16 +55,16 @@ public class Database extends SQLiteOpenHelper{
 
     //Database creation sql statement for CATEGORY Table
     private static final String CREATE_TABLE_CATEGORY = "CREATE TABLE " + TABLE_CATEGORY + " (" +
-            CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            CATEGORY_ID + " STRING PRIMARY KEY AUTOINCREMENT," +
             CATEGORY_TITLE + " TEXT," +
             CATEGORY_TYPE + " TEXT," +
-            CATEGORY_BUDGET + " REAL," +
+            CATEGORY_BUDGET + " TEXT," +
             CATEGORY_COLOR + " TEXT," +
             CATEGORY_ICON + " INTEGER);";
 
     //Database creation sql statement for TRANSACTION Table
     private static final String CREATE_TABLE_TRANSACTION = "CREATE TABLE  " + TABLE_TRANSACTION + " (" +
-            TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            TRANSACTION_ID + " STRING PRIMARY KEY AUTOINCREMENT," +
             TRANSACTION_CATEGORY_ID + " INTEGER," +
             TRANSACTION_NOTE + " TEXT," +
             TRANSACTION_DATE + " TEXT," +
@@ -125,7 +125,7 @@ public class Database extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(CATEGORY_TITLE, category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
-        values.put(CATEGORY_TYPE, convertBudgetTypeToInt(category.getType()));
+        values.put(CATEGORY_TYPE, category.getType());
         values.put(CATEGORY_COLOR, category.getColor());
         values.put(CATEGORY_ICON, category.getIcon());
 
@@ -162,10 +162,10 @@ public class Database extends SQLiteOpenHelper{
         }else{
             //Log.d(TABLE_CATEGORY, "GetCategory returns something for id = " + id);
 
-            category.setId(cursor.getInt(0));
+            category.setId(cursor.getString(0));
             category.setName(cursor.getString(1));
             category.setBudget(cursor.getFloat(2));
-            category.setType(convertIntToBudgetType(cursor.getInt(3)));
+            category.setType(cursor.getString(3));
             category.setCost(0);
             category.setColor(cursor.getString(4));
             category.setIcon(cursor.getInt(5));
@@ -192,10 +192,10 @@ public class Database extends SQLiteOpenHelper{
         if(cursor.moveToFirst()){
             do {
                 category = new Category();
-                category.setId(cursor.getInt(0));
+                category.setId(cursor.getString(0));
                 category.setName(cursor.getString(1));
                 category.setBudget(cursor.getFloat(2));
-                category.setType(convertIntToBudgetType(cursor.getInt(3)));
+                category.setType(cursor.getString(3));
                 category.setCost(0);
                 category.setColor(cursor.getString(4));
                 category.setIcon(cursor.getInt(5));
@@ -235,10 +235,10 @@ public class Database extends SQLiteOpenHelper{
         if(cursor.moveToFirst()){
             do {
                 category = new Category();
-                category.setId(cursor.getInt(0));
+                category.setId(cursor.getString(0));
                 category.setName(cursor.getString(1));
                 category.setBudget(cursor.getInt(2));
-                category.setType(convertIntToBudgetType(cursor.getInt(3)));
+                category.setType(cursor.getString(3));
                 category.setCost(0);
                 category.setColor(cursor.getString(4));
                 category.setIcon(cursor.getInt(5));
@@ -264,7 +264,7 @@ public class Database extends SQLiteOpenHelper{
         values.put(CATEGORY_ID,category.getId());
         values.put(CATEGORY_TITLE,category.getName());
         values.put(CATEGORY_BUDGET, category.getBudget());
-        values.put(CATEGORY_TYPE, convertBudgetTypeToInt(category.getType()));
+        values.put(CATEGORY_TYPE, category.getType());
         values.put(CATEGORY_COLOR, category.getColor());
         values.put(CATEGORY_ICON, category.getIcon());
 
@@ -376,7 +376,7 @@ public class Database extends SQLiteOpenHelper{
         }else{
             //Log.d(TABLE_TRANSACTION, "GetTransaction returns something for id = " + id);
 
-            transaction.setId(cursor.getInt(0));
+            transaction.setId(cursor.getString(0));
             transaction.setCategory(getCategoryById(cursor.getInt(1)));
             transaction.setNote(cursor.getString(2));
             transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
@@ -420,7 +420,7 @@ public class Database extends SQLiteOpenHelper{
         if(cursor.moveToFirst()){
             do {
                 transaction = new Transaction();
-                transaction.setId(cursor.getInt(0));
+                transaction.setId(cursor.getString(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
                 transaction.setNote(cursor.getString(2));
                 transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
@@ -461,7 +461,7 @@ public class Database extends SQLiteOpenHelper{
             do {
                 //Log.d(TABLE_TRANSACTION, "GetAllTransactionsInDate  date = " + Util.convertDateToString(date)+" -> "+cursor.getString(2));
                 transaction = new Transaction();
-                transaction.setId(cursor.getInt(0));
+                transaction.setId(cursor.getString(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
                 transaction.setNote(cursor.getString(2));
                 transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
@@ -554,7 +554,7 @@ Log.d("DEBUG","end month :"+endMonth+", beginMonth:"+beginMonth);
             do {
                 //Log.d(TABLE_TRANSACTION, "GetAllTransactionsForMonth  month = " + beginMonth+" -> "+cursor.getString(2));
                 transaction = new Transaction();
-                transaction.setId(cursor.getInt(0));
+                transaction.setId(cursor.getString(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
                 transaction.setNote(cursor.getString(2));
                 transaction.setDate(Util.convertStringToDate(cursor.getString(3)));
@@ -599,7 +599,7 @@ Log.d("DEBUG","end month :"+endMonth+", beginMonth:"+beginMonth);
             do {
                 //Log.d(TABLE_TRANSACTION, "GetAllTransactionsInYear  year = " + beginYear+" -> "+cursor.getString(2));
                 transaction = new Transaction();
-                transaction.setId(cursor.getInt(0));
+                transaction.setId(cursor.getString(0));
                 transaction.setCategory(getCategoryById(cursor.getInt(1)));
                 transaction.setNote(cursor.getString(2));
                 transaction.setDate(Util.convertStringToDate(cursor.getString(3)));

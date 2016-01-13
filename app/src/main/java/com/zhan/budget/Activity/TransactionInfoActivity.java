@@ -367,7 +367,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             transaction.setCategory(selectedIncomeCategory);
         }
 
-        intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);
+        //intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);
         setResult(RESULT_OK, intent);
 
         finish();
