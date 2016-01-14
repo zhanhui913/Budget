@@ -18,10 +18,7 @@ import com.zhan.budget.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.channels.FileChannel;
-
-import io.realm.Realm;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -127,7 +124,7 @@ public class SendFragment extends Fragment {
     }
 
     public void email() {
-        File exportRealmFile = new File("Budget/" + Constants.REALM_NAME);
+        File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
 
         // init email intent and add export.realm as attachment
         Intent intent = new Intent(Intent.ACTION_SEND);
