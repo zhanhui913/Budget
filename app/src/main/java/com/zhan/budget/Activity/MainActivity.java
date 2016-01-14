@@ -32,6 +32,8 @@ import com.zhan.budget.Util.Util;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -81,7 +83,12 @@ public class MainActivity extends AppCompatActivity
     private void init(){
         activity = MainActivity.this;
 
-
+        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
+                .name("budget.realm")
+                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(1)
+                .build();
+        Realm.setDefaultConfiguration(config);
 
         isFirstTime();
 
@@ -120,75 +127,69 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void createDefaultCategory(){
-        /*myRealm.beginTransaction();
-
-        String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel","Car","Shopping","Necessity","Utilities","Bill","Groceries"};
-        String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE","16A085","BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
-        int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
-
-        //create expense category
-        for(int i = 0; i < tempCategoryNameList.length; i++){
-            Category c = myRealm.createObject(Category.class);
-            c.setId(Util.generateUUID());
-            c.setName(tempCategoryNameList[i]);
-            c.setColor("#" + tempCategoryColorList[i]);
-            c.setIcon(tempCategoryIconList[i]);
-            c.setBudget(100.0f);
-            c.setType(BudgetType.EXPENSE.toString());
-            c.setCost(0);
-
-            categoryList.add(c);
-        }
-
-
-        String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
-        String[] tempCategoryIncomeColorList  = new String[]{"8E44AD","34495E"};
-        int[] tempCategoryIncomeIconList = new int[]{11,9};
-        //create income category
-        for(int i = 0; i < tempCategoryIncomeNameList.length; i++){
-            Category c = myRealm.createObject(Category.class);
-            c.setId(Util.generateUUID());
-            c.setName(tempCategoryIncomeNameList[i]);
-            c.setColor("#" + tempCategoryIncomeColorList[i]);
-            c.setIcon(tempCategoryIncomeIconList[i]);
-            c.setBudget(0);
-            c.setType(BudgetType.INCOME.toString());
-            c.setCost(0);
-
-            categoryList.add(c);
-        }
-
-        myRealm.commitTransaction();*/
-
-
-        //createDefaultCategoryAsyncTask = new CreateDefaultCategoryAsyncTask();
-        //createDefaultCategoryAsyncTask.execute();
-
-        createZHAN();
-
+/*
+        createDefaultCategoryAsyncTask = new CreateDefaultCategoryAsyncTask();
+        createDefaultCategoryAsyncTask.execute();
+*/
+        createFakeTransactions();
     }
 
+    long startTime,endTime,duration;
     private void createFakeTransactions(){
-/*
-        Date startDate = Util.convertStringToDate("2014-12-01");
-        Date endDate = Util.convertStringToDate("2016-02-01");
-
-        final Calendar start = Calendar.getInstance();
-        start.setTime(startDate);
-        final Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
+        Realm realm = Realm.getDefaultInstance();
 
         final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
 
-        //myRealm.beginTransaction();
-
-        startTime = System.nanoTime();
-
-        myRealm.executeTransaction(new Realm.Transaction() {
+        realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
+                String[] tempCategoryNameList = new String[]{"Breakfast", "Lunch", "Dinner", "Snacks", "Drink", "Rent", "Travel", "Car", "Shopping", "Necessity", "Utilities", "Bill", "Groceries"};
+                String[] tempCategoryColorList = new String[]{"F1C40F", "E67E22", "D35400", "F2784B", "FDE3A7", "6C7A89", "19B5FE", "16A085", "BF55EC", "E26A6A", "81CFE0", "26A65B", "BFBFBF"};
+                int[] tempCategoryIconList = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+                //create expense category
+                for (int i = 0; i < tempCategoryNameList.length; i++) {
+                    Category c = bgRealm.createObject(Category.class);
+                    c.setId(Util.generateUUID());
+                    c.setName(tempCategoryNameList[i]);
+                    c.setColor("#" + tempCategoryColorList[i]);
+                    c.setIcon(tempCategoryIconList[i]);
+                    c.setBudget(100.0f);
+                    c.setType(BudgetType.EXPENSE.toString());
+                    c.setCost(0);
+
+                    categoryList.add(c);
+                }
+
+                String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
+                String[] tempCategoryIncomeColorList = new String[]{"8E44AD", "34495E"};
+                int[] tempCategoryIncomeIconList = new int[]{11, 9};
+                //create income category
+                for (int i = 0; i < tempCategoryIncomeNameList.length; i++) {
+                    Category c = bgRealm.createObject(Category.class);
+                    c.setId(Util.generateUUID());
+                    c.setName(tempCategoryIncomeNameList[i]);
+                    c.setColor("#" + tempCategoryIncomeColorList[i]);
+                    c.setIcon(tempCategoryIncomeIconList[i]);
+                    c.setBudget(0);
+                    c.setType(BudgetType.INCOME.toString());
+                    c.setCost(0);
+
+                    categoryList.add(c);
+                }
+
+                Date startDate = Util.convertStringToDate("2014-12-01");
+                Date endDate = Util.convertStringToDate("2016-02-01");
+
+                Calendar start = Calendar.getInstance();
+                start.setTime(startDate);
+                Calendar end = Calendar.getInstance();
+                end.setTime(endDate);
+
+                startTime = System.nanoTime();
+
                 for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                    Log.d("REALM","date:"+start.toString());
+                    //Log.d("REALM", "date:" + start.toString());
                     //Create 25 transactions per day
                     for (int j = 0; j < 25; j++) {
                         Transaction transaction = bgRealm.createObject(Transaction.class);
@@ -210,7 +211,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onSuccess() {
                 endTime = System.nanoTime();
-                //myRealm.commitTransaction();
 
                 duration = (endTime - startTime);
 
@@ -219,50 +219,15 @@ public class MainActivity extends AppCompatActivity
                 float minutes = (second / 60.0f);
 
                 Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-
-                exportDatabase();
             }
 
             @Override
             public void onError(Exception e) {
                 // transaction is automatically rolled-back, do any cleanup here
+                e.printStackTrace();
             }
         });
-
-*/
     }
-
-    /*
-    public void exportDatabase() {
-
-        File exportRealmFile = null;
-        try {
-            // get or create an "export.realm" file
-            exportRealmFile = new File(this.getExternalCacheDir(), "export.realm");
-
-            // if "export.realm" already exists, delete
-            exportRealmFile.delete();
-
-            // copy current realm to "export.realm"
-            myRealm.writeCopyTo(exportRealmFile);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        myRealm.close();
-
-        // init email intent and add export.realm as attachment
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("plain/text");
-        intent.putExtra(Intent.EXTRA_EMAIL, "YOUR MAIL");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR SUBJECT");
-        intent.putExtra(Intent.EXTRA_TEXT, "YOUR TEXT");
-        Uri u = Uri.fromFile(exportRealmFile);
-        intent.putExtra(Intent.EXTRA_STREAM, u);
-
-        // start email intent
-        startActivity(Intent.createChooser(intent, "YOUR CHOOSER TITLE"));
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -387,43 +352,51 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids) {
             Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
 
-            String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel","Car","Shopping","Necessity","Utilities","Bill","Groceries"};
-            String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE","16A085","BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
-            int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
+            try {
+                realm.beginTransaction();
 
-            //create expense category
-            for(int i = 0; i < tempCategoryNameList.length; i++){
-                Category c = realm.createObject(Category.class);
-                c.setId(Util.generateUUID());
-                c.setName(tempCategoryNameList[i]);
-                c.setColor("#" + tempCategoryColorList[i]);
-                c.setIcon(tempCategoryIconList[i]);
-                c.setBudget(100.0f);
-                c.setType(BudgetType.EXPENSE.toString());
-                c.setCost(0);
+                String[] tempCategoryNameList = new String[]{"Breakfast", "Lunch", "Dinner", "Snacks", "Drink", "Rent", "Travel", "Car", "Shopping", "Necessity", "Utilities", "Bill", "Groceries"};
+                String[] tempCategoryColorList = new String[]{"F1C40F", "E67E22", "D35400", "F2784B", "FDE3A7", "6C7A89", "19B5FE", "16A085", "BF55EC", "E26A6A", "81CFE0", "26A65B", "BFBFBF"};
+                int[] tempCategoryIconList = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 
-                categoryList.add(c);
+                //create expense category
+                for (int i = 0; i < tempCategoryNameList.length; i++) {
+                    Category c = realm.createObject(Category.class);
+                    c.setId(Util.generateUUID());
+                    c.setName(tempCategoryNameList[i]);
+                    c.setColor("#" + tempCategoryColorList[i]);
+                    c.setIcon(tempCategoryIconList[i]);
+                    c.setBudget(100.0f);
+                    c.setType(BudgetType.EXPENSE.toString());
+                    c.setCost(0);
+
+                    categoryList.add(c);
+                }
+
+                String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
+                String[] tempCategoryIncomeColorList = new String[]{"8E44AD", "34495E"};
+                int[] tempCategoryIncomeIconList = new int[]{11, 9};
+                //create income category
+                for (int i = 0; i < tempCategoryIncomeNameList.length; i++) {
+                    Category c = realm.createObject(Category.class);
+                    c.setId(Util.generateUUID());
+                    c.setName(tempCategoryIncomeNameList[i]);
+                    c.setColor("#" + tempCategoryIncomeColorList[i]);
+                    c.setIcon(tempCategoryIncomeIconList[i]);
+                    c.setBudget(0);
+                    c.setType(BudgetType.INCOME.toString());
+                    c.setCost(0);
+
+                    categoryList.add(c);
+                }
+
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }finally {
+                realm.commitTransaction();
             }
-
-            String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
-            String[] tempCategoryIncomeColorList  = new String[]{"8E44AD","34495E"};
-            int[] tempCategoryIncomeIconList = new int[]{11,9};
-            //create income category
-            for(int i = 0; i < tempCategoryIncomeNameList.length; i++){
-                Category c = realm.createObject(Category.class);
-                c.setId(Util.generateUUID());
-                c.setName(tempCategoryIncomeNameList[i]);
-                c.setColor("#" + tempCategoryIncomeColorList[i]);
-                c.setIcon(tempCategoryIncomeIconList[i]);
-                c.setBudget(0);
-                c.setType(BudgetType.INCOME.toString());
-                c.setCost(0);
-
-                categoryList.add(c);
-            }
-            realm.commitTransaction();
 
             ///////////
 
@@ -437,26 +410,32 @@ public class MainActivity extends AppCompatActivity
 
             final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
             startTime = System.nanoTime();
-            realm.beginTransaction();
-            for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                //Log.d("REALM", "date:" + date.toString());
-                //Create 25 transactions per day
-                for (int j = 0; j < 25; j++) {
-                    Transaction transaction = realm.createObject(Transaction.class);
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(date);
 
-                    Category category = categoryList.get(j % categoryList.size());
+            try {
+                realm.beginTransaction();
+                for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+                    //Log.d("REALM", "date:" + date.toString());
+                    //Create 25 transactions per day
+                    for (int j = 0; j < 25; j++) {
+                        Transaction transaction = realm.createObject(Transaction.class);
+                        transaction.setId(Util.generateUUID());
+                        transaction.setDate(date);
 
-                    transaction.setCategory(category);
-                    transaction.setPrice(120.0f);
-                    transaction.setNote("Note " + j);
+                        Category category = categoryList.get(j % categoryList.size());
 
-                    transactionArrayList.add(transaction);
+                        transaction.setCategory(category);
+                        transaction.setPrice(120.0f);
+                        transaction.setNote("Note " + j);
+
+                        transactionArrayList.add(transaction);
+                    }
                 }
+            }catch (Exception e ){
+                e.printStackTrace();
+            }finally {
+                realm.commitTransaction();
+                realm.close();
             }
-            realm.commitTransaction();
-            realm.close();
 
             endTime = System.nanoTime();
             duration = (endTime - startTime);
@@ -476,126 +455,4 @@ public class MainActivity extends AppCompatActivity
             Log.d("REALM", "done creating default categories");
         }
     }
-
-
-    long startTime, endTime, duration;
-    private void createZHAN(){ Log.d("REALM", "create zhan");
-        //create cat
-
-        RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .name("budget.realm")
-                .deleteRealmIfMigrationNeeded()
-                .schemaVersion(1)
-                .build();
-        Realm.setDefaultConfiguration(config);
-        Realm realm = Realm.getDefaultInstance();
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Log.d("REALM", "execute");
-                String[] tempCategoryNameList = new String[]{"Breakfast","Lunch","Dinner", "Snacks","Drink","Rent","Travel","Car","Shopping","Necessity","Utilities","Bill","Groceries"};
-                String[] tempCategoryColorList = new String[]{"F1C40F","E67E22","D35400", "F2784B","FDE3A7","6C7A89","19B5FE","16A085","BF55EC","E26A6A","81CFE0","26A65B","BFBFBF"};
-                int[] tempCategoryIconList = new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12};
-
-                //create expense category
-                for(int i = 0; i < tempCategoryNameList.length; i++){
-                    Category c = new Category();
-                    c.setId(Util.generateUUID());
-                    c.setName(tempCategoryNameList[i]);
-                    c.setColor("#" + tempCategoryColorList[i]);
-                    c.setIcon(tempCategoryIconList[i]);
-                    c.setBudget(100.0f);
-                    c.setType(BudgetType.EXPENSE.toString());
-                    c.setCost(0);
-
-                    categoryList.add(c);
-                }
-
-                String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
-                String[] tempCategoryIncomeColorList  = new String[]{"8E44AD","34495E"};
-                int[] tempCategoryIncomeIconList = new int[]{11,9};
-                //create income category
-                for(int i = 0; i < tempCategoryIncomeNameList.length; i++){
-                    Category c = new Category();
-                    c.setId(Util.generateUUID());
-                    c.setName(tempCategoryIncomeNameList[i]);
-                    c.setColor("#" + tempCategoryIncomeColorList[i]);
-                    c.setIcon(tempCategoryIncomeIconList[i]);
-                    c.setBudget(0);
-                    c.setType(BudgetType.INCOME.toString());
-                    c.setCost(0);
-
-                    categoryList.add(c);
-                }
-
-                realm.beginTransaction();
-                realm.copyToRealm(categoryList);
-                realm.commitTransaction();
-
-
-
-                //create bulk transaction
-                Date startDate = Util.convertStringToDate("2014-12-01");
-                Date endDate = Util.convertStringToDate("2016-02-01");
-
-                Calendar start = Calendar.getInstance();
-                start.setTime(startDate);
-                Calendar end = Calendar.getInstance();
-                end.setTime(endDate);
-
-                final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
-                startTime = System.nanoTime();
-                realm.beginTransaction();
-                for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                    //Log.d("REALM", "date:" + date.toString());
-                    //Create 25 transactions per day
-                    for (int j = 0; j < 25; j++) {
-                        Transaction transaction = new Transaction();
-                        transaction.setId(Util.generateUUID());
-                        transaction.setDate(date);
-
-                        Category category = categoryList.get(j % categoryList.size());
-
-                        transaction.setCategory(category);
-                        transaction.setPrice(120.0f);
-                        transaction.setNote("Note " + j);
-
-                        transactionArrayList.add(transaction);
-                    }
-                }
-
-                realm.beginTransaction();
-                realm.copyToRealm(transactionArrayList);
-                realm.commitTransaction();
-                realm.close();
-            }
-        }, new Realm.Transaction.Callback() {
-            @Override
-            public void onSuccess() {
-                endTime = System.nanoTime();
-                duration = (endTime - startTime);
-
-                long milli = (duration/1000000);
-                long second = (milli/1000);
-                float minutes = (second/ 60.0f);
-
-                Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-            }
-
-            @Override
-            public void onError(Exception e) {
-                // transaction is automatically rolled-back, do any cleanup here
-                e.printStackTrace();
-            }
-        });
-
-
-
-
-
-
-
-    }
-
 }
