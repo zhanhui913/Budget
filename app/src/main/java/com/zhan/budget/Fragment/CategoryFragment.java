@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,6 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Activity.CategoryInfo;
 import com.zhan.budget.Adapter.CategoryListAdapter;
-import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
@@ -70,7 +68,7 @@ public class CategoryFragment extends Fragment {
 
     private Date currentMonth;
 
-    private List<Transaction> transactionMonthList ;
+    private List<Transaction> transactionMonthList = new ArrayList<>();
 
     private Realm myRealm;
     private RealmResults<Category> categoryRealmResults;
@@ -187,12 +185,6 @@ public class CategoryFragment extends Fragment {
                 .show();
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d("ZHAN", "on resume");
-    }
-
     //SHould be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
         /*AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
@@ -220,23 +212,23 @@ public class CategoryFragment extends Fragment {
         loader.execute();
         */
 
-        final RealmResults<Category> resultsCategory = myRealm.where(Category.class).findAllAsync();
+        resultsCategory = myRealm.where(Category.class).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                Log.d("REALM", "completed initial category");
+                Log.d("REALM", "completed initial category, " + resultsCategory.size());
 
-                for (int i = 0; i < resultsCategory.size(); i++) {
+                /*for (int i = 0; i < resultsCategory.size(); i++) {
                     categoryList.add(resultsCategory.get(i));
-                }
+                }*/
 
-                categoryAdapter.addAll(categoryList);
+                categoryAdapter.addAll(resultsCategory);
                 populateCategoryWithInfo();
-
             }
         });
-
     }
+
+    RealmResults<Category> resultsCategory;
 
     private void populateCategoryWithInfo(){
         /*AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
@@ -266,14 +258,13 @@ public class CategoryFragment extends Fragment {
         loader1.execute();
         */
 
-
         Calendar cal = Calendar.getInstance();
         cal.setTime(currentMonth);
 
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR);
 
-        Date startMonth = new GregorianCalendar(year, month, 1).getTime();
+        final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
 
         //If this is December, the next month needs to be the following year's January
         if(month == 11){
@@ -283,26 +274,32 @@ public class CategoryFragment extends Fragment {
             month++;
         }
 
-        Date endMonth = new GregorianCalendar(year, month, 1).getTime();
+        final Date endMonth = new GregorianCalendar(year, month, 1).getTime();
 
         Log.d("REALM","This month is "+startMonth.toString()+", next month is "+endMonth.toString());
 
-        final RealmResults<Transaction> resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
+
+        resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
         resultsTransaction.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                Log.d("REALM", "got this month transaction, "+resultsTransaction.size());
+                Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
+
+                Log.d("REALM", "first = " + resultsTransaction.get(0).getDate());
+                Log.d("REALM", "last = " + resultsTransaction.get(resultsTransaction.size() - 1).getDate());
+
                 for (int i = 0; i < resultsTransaction.size(); i++) {
                     transactionMonthList.add(resultsTransaction.get(i));
                 }
                 aggregateCategoryInfo();
             }
         });
-
     }
 
+    RealmResults<Transaction> resultsTransaction;
+
     private void aggregateCategoryInfo(){
-        Log.d("POP", "There are " + categoryList.size() + " categories");
+        /*Log.d("POP", "There are " + categoryList.size() + " categories");
         Log.d("POP", "There are "+transactionMonthList.size()+" transactions this month");
 
         for(int i = 0; i < categoryList.size(); i++){
@@ -320,6 +317,17 @@ public class CategoryFragment extends Fragment {
         }
 
         categoryAdapter.notifyDataSetChanged();
+        */
+
+        //Go through each transaction and put them into the correct category
+        for(int t = 0; t < resultsTransaction.size(); t++){
+            Log.d("POP", "transaction with category id : " +resultsTransaction.get(t).getCategory().getId());
+            for(int c = 0; c < resultsCategory.size(); c++){
+                if(resultsTransaction.get(t).getCategory().getId() == resultsCategory.get(c).getId()){ Log.d("POP", "found");
+                    //categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
+                }
+            }
+        }
     }
 
     /**
