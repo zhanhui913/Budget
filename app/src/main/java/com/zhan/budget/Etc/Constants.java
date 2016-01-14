@@ -4,6 +4,8 @@ package com.zhan.budget.Etc;
  * Created by zhanyap on 15-12-21.
  */
 public class Constants {
+    public static final String REALM_NAME = "budget.realm";
+
     //First time
     public static final String FIRST_TIME = "First Time";
 

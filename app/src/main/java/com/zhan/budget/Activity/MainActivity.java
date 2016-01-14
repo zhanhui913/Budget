@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         activity = MainActivity.this;
 
         RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
-                .name("budget.realm")
+                .name(Constants.REALM_NAME)
                 .deleteRealmIfMigrationNeeded()
                 .schemaVersion(1)
                 .build();

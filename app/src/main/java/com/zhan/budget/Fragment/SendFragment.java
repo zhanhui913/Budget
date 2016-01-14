@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.R;
 
 import java.io.File;
@@ -19,6 +20,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+
+import io.realm.Realm;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,7 +82,7 @@ public class SendFragment extends Fragment {
         exportDbBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exportDatabase();
+                exportDB();
             }
         });
     }
@@ -91,8 +94,8 @@ public class SendFragment extends Fragment {
 
             if (sd.canWrite()) {
                 if(createDirectory()){ Log.d("FILE", "can write file");
-                    String currentDBPath = "//data//" + "com.zhan.budget" + "//databases//" + "budget.realm";
-                    String backupDBPath = "Budget/" + "budget.realm";
+                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
+                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
                     File currentDB = new File(data, currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
 
@@ -101,6 +104,8 @@ public class SendFragment extends Fragment {
                     dst.transferFrom(src, 0, src.size());
                     src.close();
                     dst.close();
+
+                    email();
                 }else{
                     Log.d("FILE","cannot write file");
                 }
@@ -109,7 +114,6 @@ public class SendFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
 
     private boolean createDirectory(){
         File directory = new File(Environment.getExternalStorageDirectory().toString() + "/Budget");
@@ -122,11 +126,8 @@ public class SendFragment extends Fragment {
         }
     }
 
-    public void exportDatabase() {
-
-        File exportRealmFile = new File(getActivity().getExternalCacheDir(), "export.realm");
-
-
+    public void email() {
+        File exportRealmFile = new File("Budget/" + Constants.REALM_NAME);
 
         // init email intent and add export.realm as attachment
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -135,6 +136,7 @@ public class SendFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR SUBJECT");
         intent.putExtra(Intent.EXTRA_TEXT, "YOUR TEXT");
         Uri u = Uri.fromFile(exportRealmFile);
+        Log.d("REALM", " u : "+u.getPath());
         intent.putExtra(Intent.EXTRA_STREAM, u);
 
         // start email intent
