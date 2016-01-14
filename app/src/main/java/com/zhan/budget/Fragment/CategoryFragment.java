@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -62,17 +63,18 @@ public class CategoryFragment extends Fragment {
     private CategoryListAdapter categoryAdapter;
     private TextView balanceText;
 
-    private ArrayList<Category> categoryList;
+    private List<Category> categoryList;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
 
     private Date currentMonth;
 
-    private List<Transaction> transactionMonthList = new ArrayList<>();
+    private List<Transaction> transactionMonthList;
 
     private Realm myRealm;
-    private RealmResults<Category> categoryRealmResults;
-    private RealmResults<Transaction> transactionRealmResults;
+
+    private RealmResults<Category> resultsCategory;
+    private RealmResults<Transaction> resultsTransaction;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -112,13 +114,15 @@ public class CategoryFragment extends Fragment {
     }
 
     private void init(){
-        myRealm = Realm.getInstance(getContext());
+        myRealm = Realm.getDefaultInstance();
 
         currentMonth = new Date();
 
         fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
         balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
+
+        transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
@@ -173,6 +177,7 @@ public class CategoryFragment extends Fragment {
 
                         categoryList.add(c);
                         categoryAdapter.add(c);
+                        //should we maybe just do categoryAdapter.notifysetadapter();
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -216,19 +221,16 @@ public class CategoryFragment extends Fragment {
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                Log.d("REALM", "completed initial category, " + resultsCategory.size());
+                Log.d("REALM", "completed initial category, size is " + resultsCategory.size());
 
-                /*for (int i = 0; i < resultsCategory.size(); i++) {
-                    categoryList.add(resultsCategory.get(i));
-                }*/
+                categoryList = myRealm.copyFromRealm(resultsCategory);
 
-                categoryAdapter.addAll(resultsCategory);
+                categoryAdapter.addAll(categoryList);
                 populateCategoryWithInfo();
             }
         });
     }
 
-    RealmResults<Category> resultsCategory;
 
     private void populateCategoryWithInfo(){
         /*AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
@@ -288,15 +290,13 @@ public class CategoryFragment extends Fragment {
                 Log.d("REALM", "first = " + resultsTransaction.get(0).getDate());
                 Log.d("REALM", "last = " + resultsTransaction.get(resultsTransaction.size() - 1).getDate());
 
-                for (int i = 0; i < resultsTransaction.size(); i++) {
-                    transactionMonthList.add(resultsTransaction.get(i));
-                }
+                transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
+
                 aggregateCategoryInfo();
             }
         });
     }
 
-    RealmResults<Transaction> resultsTransaction;
 
     private void aggregateCategoryInfo(){
         /*Log.d("POP", "There are " + categoryList.size() + " categories");
@@ -319,15 +319,67 @@ public class CategoryFragment extends Fragment {
         categoryAdapter.notifyDataSetChanged();
         */
 
-        //Go through each transaction and put them into the correct category
-        for(int t = 0; t < resultsTransaction.size(); t++){
-            Log.d("POP", "transaction with category id : " +resultsTransaction.get(t).getCategory().getId());
-            for(int c = 0; c < resultsCategory.size(); c++){
-                if(resultsTransaction.get(t).getCategory().getId() == resultsCategory.get(c).getId()){ Log.d("POP", "found");
-                    //categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
-                }
+        Log.d("DEBUG","1) There are "+categoryList.size()+" categories");
+        Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
+
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("DEBUG", "preparing to aggregate results");
             }
-        }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                startTime = System.nanoTime();
+
+                //Go through each transaction and put them into the correct category
+                for(int t = 0; t < transactionMonthList.size(); t++){
+                    //Log.d("POP", "transaction with category id : " +resultsTransaction.get(t).getCategory().getId());
+                    for(int c = 0; c < categoryList.size(); c++){
+                        if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
+                            float transactionPrice = transactionMonthList.get(t).getPrice();
+                            float currentCategoryPrice = categoryList.get(c).getCost();
+                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
+                            Log.d("DEBUG", "-------" + (transactionPrice + currentCategoryPrice));
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+
+                Log.d("DEBUG", "after aggregating");
+                /*for(int i = 0 ; i < categoryList.size(); i++){
+                    Log.d("DEBUG",i+") "+categoryList.get(i).getName()+", id = "+categoryList.get(i).getId()+", -> cost: "+ categoryList.get(i).getCost());
+                }*/
+                for(int i = 0 ; i < transactionMonthList.size(); i++){
+                    Log.d("DEBUG",i+") "+transactionMonthList.get(i).getId()+", -> cost: "+ transactionMonthList.get(i).getPrice());
+                }
+
+                categoryAdapter.notifyDataSetChanged();
+
+
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+
+                long milli = (duration/1000000);
+                long second = (milli/1000);
+                float minutes = (second / 60.0f);
+                Log.d("DEBUG", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+
+
+            }
+        };
+        loader.execute();
     }
 
     /**

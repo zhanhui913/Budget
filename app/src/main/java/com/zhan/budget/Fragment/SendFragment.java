@@ -126,7 +126,7 @@ public class SendFragment extends Fragment {
     public void email() {
         File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
 
-        // init email intent and add export.realm as attachment
+        // init email intent and add budget.realm as attachment
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
         intent.putExtra(Intent.EXTRA_EMAIL, "YOUR MAIL");

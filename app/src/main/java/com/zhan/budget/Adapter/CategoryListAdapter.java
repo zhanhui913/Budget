@@ -3,7 +3,6 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,8 +64,6 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
         // getting category data for the row
         Category category = categoryList.get(position);
-
-        Log.d("DEUBG","index:"+position+"- Category "+category.toString());
 
         //Icon
         viewHolder.circularView.setCircleColor(Color.parseColor(category.getColor()));
