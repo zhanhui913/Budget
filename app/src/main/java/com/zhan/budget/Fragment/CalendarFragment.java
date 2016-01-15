@@ -184,7 +184,7 @@ public class CalendarFragment extends Fragment {
         transactionAdapter = new TransactionListAdapter(getActivity(), transactionList);
         transactionListView.setAdapter(transactionAdapter);
 
-        updateCalendarDecoratorsForMonth(selectedDate);
+        //updateCalendarDecoratorsForMonth(selectedDate);
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
@@ -330,23 +330,25 @@ public class CalendarFragment extends Fragment {
             }
         });
     }
-
+/*
     public List<CustomEvent> getCustomEvents(int year, int month, int day){ Log.d("CALENDAR_FRAGMENT", "getcustomEvents");
         String dateString = Util.convertDateToString((new GregorianCalendar(year, month, day)).getTime());
         return eventMap.get(dateString);
-    }
+    }*/
 
-    private void populateTransactionsForDate(final Date date) {
-        Date newDate = getNextDate(date);
-        Log.d("CALENDAR_FRAGMENT", " populate transaction list for date between " + Util.convertDateToString(date) + " and " + Util.convertDateToString(newDate));
+    private void populateTransactionsForDate(Date date) {
+        Date beginDate = refreshDate(date);
+        Date endDate = getNextDate(date);
+
+        Log.d("CALENDAR_FRAGMENT", " populate transaction list for date between " + beginDate.toString() + " and " + endDate.toString());
 
         transactionAdapter.clear();
 
-        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", date).lessThan("date", newDate).findAllAsync();
+        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions for " + Util.convertDateToString(date));
+                Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
 
                 transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
                 updateTransactionStatus();
@@ -355,8 +357,6 @@ public class CalendarFragment extends Fragment {
                 transactionAdapter.addAll(transactionList);
             }
         });
-
-
 
 /*
         transactionAdapter.clear();
@@ -387,16 +387,35 @@ public class CalendarFragment extends Fragment {
         loader.execute();*/
     }
 
-    private Date getNextDate(Date date){
+    /**
+     * Refreshes the date to set the time component of date to 00:00:00
+     * @param date
+     * @return date with 00:00:00 time component
+     */
+    private Date refreshDate(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
-        cal.add(Calendar.DATE, 1);
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int day = cal.get(Calendar.DATE);
 
-        Date newDate = cal.getTime();
-        return newDate;
+        return new GregorianCalendar(year, month, day).getTime();
     }
 
+    /**
+     * Gives the following date.
+     * @param date
+     * @return date + 1
+     */
+    private Date getNextDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
+
+        return refreshDate(cal.getTime());
+    }
+/*
     private void updateCalendarDecoratorsForMonth(Date date){
         //Update decorators for the given month
 
@@ -417,10 +436,7 @@ public class CalendarFragment extends Fragment {
         }
 
         final Date endMonth = new GregorianCalendar(year, month, 1).getTime();
-/*
-        if(resultsTransactionForMonth != null && resultsTransactionForMonth.size() > 0) {
-            resultsTransactionForMonth.clear();
-        }*/
+
         resultsTransactionForMonth = myRealm.where(Transaction.class).between("date",startMonth, endMonth).findAllAsync();
         resultsTransactionForMonth.addChangeListener(new RealmChangeListener() {
             @Override
@@ -432,6 +448,7 @@ public class CalendarFragment extends Fragment {
 
         //updateCalendarDecoratorsForMonth(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
     }
+    */
 
     private void updateCalendarDecoratorsForMonth(final int year, final int month) {
         Log.d("CALENDAR_FRAGMENT", "updating decorators");
@@ -500,7 +517,7 @@ public class CalendarFragment extends Fragment {
     }
 
     //not being used at all (doesnt work)
-    private void doneHashMap() {
+    /*private void doneHashMap() {
         Log.d("CALENDAR_FRAGMENT", "doneHashMAP");
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
             @Override
@@ -508,7 +525,7 @@ public class CalendarFragment extends Fragment {
                 return getCustomEvents(year, month, day);
             }
         });
-    }
+    }*/
 
     /**
      * Add swipe capability on list view to delete that item.
@@ -715,7 +732,6 @@ public class CalendarFragment extends Fragment {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
         layoutParams.topMargin = -centerPanelHeight;
         root.setLayoutParams(layoutParams);
-
     }
 
     private void snapPanelDown(){
@@ -770,8 +786,6 @@ public class CalendarFragment extends Fragment {
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(selectedDate));
         }
-
-        //getAllCategory();
     }
 
     @Override
@@ -802,7 +816,7 @@ public class CalendarFragment extends Fragment {
                 db.exportDB();
                 */
 
-                updateCalendarDecoratorsForMonth(selectedDate);
+                //updateCalendarDecoratorsForMonth(selectedDate);
             }
         }
     }
