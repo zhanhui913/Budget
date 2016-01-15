@@ -32,7 +32,6 @@ import com.zhan.budget.Util.Util;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 import io.realm.Realm;
@@ -425,7 +424,7 @@ public class MainActivity extends AppCompatActivity
 
                         transaction.setCategory(category);
                         transaction.setPrice(120.0f);
-                        transaction.setNote("Note " + j);
+                        transaction.setNote("Note " + j+ " for "+Util.convertDateToString(date));
 
                         transactionArrayList.add(transaction);
                     }

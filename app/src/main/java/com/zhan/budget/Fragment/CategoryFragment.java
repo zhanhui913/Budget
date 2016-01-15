@@ -58,7 +58,6 @@ public class CategoryFragment extends Fragment {
     private View view;
     private FloatingActionButton fab;
 
-
     private SwipeMenuListView categoryListView;
     private CategoryListAdapter categoryAdapter;
     private TextView balanceText;
@@ -345,7 +344,6 @@ public class CategoryFragment extends Fragment {
                             float transactionPrice = transactionMonthList.get(t).getPrice();
                             float currentCategoryPrice = categoryList.get(c).getCost();
                             categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                            Log.d("DEBUG", "-------" + (transactionPrice + currentCategoryPrice));
                         }
                     }
                 }
@@ -357,16 +355,16 @@ public class CategoryFragment extends Fragment {
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
 
+                /*
                 Log.d("DEBUG", "after aggregating");
-                /*for(int i = 0 ; i < categoryList.size(); i++){
+                for(int i = 0 ; i < categoryList.size(); i++){
                     Log.d("DEBUG",i+") "+categoryList.get(i).getName()+", id = "+categoryList.get(i).getId()+", -> cost: "+ categoryList.get(i).getCost());
-                }*/
+                }
                 for(int i = 0 ; i < transactionMonthList.size(); i++){
                     Log.d("DEBUG",i+") "+transactionMonthList.get(i).getId()+", -> cost: "+ transactionMonthList.get(i).getPrice());
-                }
+                }*/
 
                 categoryAdapter.notifyDataSetChanged();
-
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -375,8 +373,6 @@ public class CategoryFragment extends Fragment {
                 long second = (milli/1000);
                 float minutes = (second / 60.0f);
                 Log.d("DEBUG", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-
-
             }
         };
         loader.execute();
