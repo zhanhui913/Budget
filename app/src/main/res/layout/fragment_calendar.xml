@@ -19,9 +19,8 @@
                 android:id="@+id/plusIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_add_white"
-                android:scaleX="2"
-                android:scaleY="2"
+                android:src="@drawable/ic_add"
+                android:padding="5dp"
                 android:scaleType="center"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
