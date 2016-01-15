@@ -2,7 +2,6 @@ package com.zhan.budget.Activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Category> categoryList = new ArrayList<>();
 
-    private CreateDefaultCategoryAsyncTask createDefaultCategoryAsyncTask;
+    //private CreateDefaultCategoryAsyncTask createDefaultCategoryAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity
 
                         transaction.setCategory(category);
                         transaction.setPrice(120.0f);
-                        transaction.setNote("Note " + j);
+                        transaction.setNote("Note " + j + " for "+Util.convertDateToString(date));
 
                         transactionArrayList.add(transaction);
                     }
@@ -338,6 +337,7 @@ public class MainActivity extends AppCompatActivity
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*
     private class CreateDefaultCategoryAsyncTask extends AsyncTask<Void, Void, Void> {
 
         long startTime, endTime, duration;
@@ -453,5 +453,5 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(voids);
             Log.d("REALM", "done creating default categories");
         }
-    }
+    }*/
 }

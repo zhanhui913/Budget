@@ -127,7 +127,6 @@ public class CalendarFragment extends Fragment {
         createCalendar();
         createSwipeMenu();
         updateTransactionStatus();
-
         createCustomEvents();
     }
 
@@ -338,19 +337,12 @@ public class CalendarFragment extends Fragment {
     }
 
     private void populateTransactionsForDate(final Date date) {
-
         Date newDate = getNextDate(date);
         Log.d("CALENDAR_FRAGMENT", " populate transaction list for date between " + Util.convertDateToString(date) + " and " + Util.convertDateToString(newDate));
 
-
-/*
-        if(resultsTransactionForDay != null && resultsTransactionForDay.size() > 0) {
-            resultsTransactionForDay.clear();
-        }*/
-
         transactionAdapter.clear();
 
-        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", date).lessThanOrEqualTo("date", newDate).findAllAsync();
+        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", date).lessThan("date", newDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
@@ -360,18 +352,6 @@ public class CalendarFragment extends Fragment {
                 updateTransactionStatus();
 
                 transactionAdapter.addAll(transactionList);
-            }
-        });
-
-
-
-
-        //testing with new realmResults
-        final RealmResults<Transaction> rrs = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", date).lessThanOrEqualTo("date", newDate).findAllAsync();
-        rrs.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                Log.d("CALENDAR_FRAGMENT", "testing ----  received " + rrs.size() + " transactions for " + Util.convertDateToString(date));
             }
         });
 
