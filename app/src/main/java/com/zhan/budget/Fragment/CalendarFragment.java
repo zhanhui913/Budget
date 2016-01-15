@@ -351,6 +351,7 @@ public class CalendarFragment extends Fragment {
                 transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
                 updateTransactionStatus();
 
+                transactionAdapter.clear();
                 transactionAdapter.addAll(transactionList);
             }
         });
@@ -540,8 +541,10 @@ public class CalendarFragment extends Fragment {
                         Transaction transactionToBeDeleted = transactionList.get(position);
 
                         myRealm.beginTransaction();
-                        transactionToBeDeleted.removeFromRealm();
+                        resultsTransactionForDay.get(position).removeFromRealm();
                         myRealm.commitTransaction();
+
+
 
                         /*transactionAdapter.remove(transactionList.get(position));
                         transactionList.remove(position);
@@ -708,14 +711,14 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    private void snapPanelUp(){ Log.i("ZHAN2", "snapping panel up");
+    private void snapPanelUp(){
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
         layoutParams.topMargin = -centerPanelHeight;
         root.setLayoutParams(layoutParams);
 
     }
 
-    private void snapPanelDown(){ Log.i("ZHAN2", "snapping panel down");
+    private void snapPanelDown(){
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
         layoutParams.topMargin = 0;
         root.setLayoutParams(layoutParams);
