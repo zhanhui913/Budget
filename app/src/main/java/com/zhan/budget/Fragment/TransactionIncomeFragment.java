@@ -5,7 +5,6 @@ package com.zhan.budget.Fragment;
  */
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,13 +15,17 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.CategoryGridAdapter;
-import com.zhan.budget.Database.Database;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.circularview.CircularView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,16 +38,16 @@ import java.util.ArrayList;
 public class TransactionIncomeFragment extends Fragment {
 
     private OnTransactionIncomeFragmentInteractionListener mListener;
+
+    private Realm myRealm;
     private View view;
 
-    private Database db;
-
-    private ArrayList<Category> categoryIncomeList;
+    private RealmResults<Category> resultsIncomeCategory;
+    private List<Category> categoryIncomeList;
     private GridView categoryGridView;
     private CategoryGridAdapter categoryGridAdapter;
 
     private Category selectedIncomeCategory;
-
 
     public TransactionIncomeFragment() {
         // Required empty public constructor
@@ -82,7 +85,7 @@ public class TransactionIncomeFragment extends Fragment {
     }
 
     private void init(){
-        openDatabase();
+        myRealm = Realm.getDefaultInstance();
 
         categoryIncomeList = new ArrayList<>();
         categoryGridView = (GridView) view.findViewById(R.id.categoryIncomeGrid);
@@ -94,7 +97,28 @@ public class TransactionIncomeFragment extends Fragment {
     }
 
     private void populateCategoryExpense(){
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        resultsIncomeCategory = myRealm.where(Category.class).equalTo("type", BudgetType.INCOME.toString()).findAllAsync();
+        resultsIncomeCategory.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                categoryIncomeList = myRealm.copyFromRealm(resultsIncomeCategory);
+                categoryGridAdapter.clear();
+                categoryGridAdapter.addAll(categoryIncomeList);
+
+                Log.d("GRID", "size : "+categoryGridView.getChildCount());
+
+                /*
+                //Set first category as selected by default
+                ViewGroup gridChild = (ViewGroup)categoryGridView.getChildAt(0);
+                View view = gridChild.findViewById(R.id.categoryIcon);
+                CircularView cv = (CircularView)view;
+                cv.setStrokeColor(getResources().getColor(R.color.darkgray));
+
+                selectedIncomeCategory = categoryIncomeList.get(0);*/
+            }
+        });
+
+       /* AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -114,14 +138,15 @@ public class TransactionIncomeFragment extends Fragment {
                 categoryGridAdapter.addAll(categoryIncomeList);
 
                 //Set first category as selected by default
-                /*CircularView cv = (CircularView)((View) categoryGridView.getChildAt(0)).findViewById(R.id.categoryIcon);
-                cv.setStrokeColor(getResources().getColor(R.color.darkgray));
+                //CircularView cv = (CircularView)((View) categoryGridView.getChildAt(0)).findViewById(R.id.categoryIcon);
+                //cv.setStrokeColor(getResources().getColor(R.color.darkgray));
 
-                selectedIncomeCategory = categoryIncomeList.get(0);
-                */
+                //selectedIncomeCategory = categoryIncomeList.get(0);
+
             }
         };
         loader.execute();
+        */
     }
 
     private void addListeners(){
@@ -144,22 +169,10 @@ public class TransactionIncomeFragment extends Fragment {
         });
     }
 
-    public void openDatabase(){
-        if(db == null) {
-            db = new Database(getActivity().getApplicationContext());
-        }
-    }
-
-    public void closeDatabase(){
-        if(db != null){
-            db.close();
-        }
-    }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        closeDatabase();
     }
 
     @Override

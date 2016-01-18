@@ -124,7 +124,7 @@ public class CircleIndicator extends View {
     private void trigger(int position,float positionOffset){
         CircleIndicator.this.mCurItemPosition = position;
         CircleIndicator.this.mCurItemPositionOffset = positionOffset;
-        Log.e("CircleIndicator", "onPageScrolled()" + position + ":" + positionOffset);
+        Log.d("CircleIndicator", "onPageScrolled()" + position + ":" + positionOffset);
         requestLayout();
         invalidate();
     }
@@ -166,8 +166,8 @@ public class CircleIndicator extends View {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        Log.e("CircleIndicator","onLayout()");
         super.onLayout(changed, left, top, right, bottom);
+        Log.d("CircleIndicator", "onLayout()");
         final int width = getWidth();
         final int height = getHeight();
         layoutTabItems(width, height);
@@ -215,8 +215,8 @@ public class CircleIndicator extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.e("CircleIndicator", "onDraw()");
         super.onDraw(canvas);
+        Log.d("CircleIndicator", "onDraw()");
         int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null,
                 Canvas.MATRIX_SAVE_FLAG |
                         Canvas.CLIP_SAVE_FLAG |

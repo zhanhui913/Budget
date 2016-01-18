@@ -55,6 +55,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private Category selectedIncomeCategory;
 
     private CircleIndicator circleIndicator;
+
+
     private BudgetType currentPage; //Determines if the current page is in expense or income page
 
     @Override
