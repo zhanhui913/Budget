@@ -41,16 +41,12 @@ public class TransactionsForCategory extends AppCompatActivity {
     private ParcelableCategory selectedParcelableCategory;
     private Category selectedCategory;
 
-
     private ImageView transactionCategoryIcon;
     private TextView transactionCategoryName, transactionCategoryBalance;
-
-
 
     private SwipeMenuListView transactionCategoryListView;
     private TransactionListAdapter transactionCategoryAdapter;
     private List<Transaction> transactionCategoryList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
