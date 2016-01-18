@@ -337,8 +337,8 @@ public class CalendarFragment extends Fragment {
     }*/
 
     private void populateTransactionsForDate(Date date) {
-        Date beginDate = refreshDate(date);
-        Date endDate = getNextDate(date);
+        Date beginDate = Util.refreshDate(date);
+        Date endDate = Util.getNextDate(date);
 
         Log.d("CALENDAR_FRAGMENT", " populate transaction list for date between " + beginDate.toString() + " and " + endDate.toString());
 
@@ -359,34 +359,6 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    /**
-     * Refreshes the date to set the time component of date to 00:00:00
-     * @param date
-     * @return date with 00:00:00 time component
-     */
-    private Date refreshDate(Date date){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
-        int day = cal.get(Calendar.DATE);
-
-        return new GregorianCalendar(year, month, day).getTime();
-    }
-
-    /**
-     * Gives the following date.
-     * @param date
-     * @return date + 1
-     */
-    private Date getNextDate(Date date){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DATE, 1);
-
-        return refreshDate(cal.getTime());
-    }
 /*
     private void updateCalendarDecoratorsForMonth(Date date){
         //Update decorators for the given month

@@ -24,7 +24,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -239,6 +241,19 @@ public final class Util {
         return (activeNetwork != null && activeNetwork.isConnected());
     }
 
+    public static String setPriceToCorrectDecimalInString(float price){
+        BigDecimal d = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
+        return d.toPlainString();
+
+        //return String.format("%.2f", price);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Date functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static Date convertStringToDate(String stringDate){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
         Date date = null;
@@ -279,10 +294,64 @@ public final class Util {
         return formatter.format(date);
     }
 
-    public static String setPriceToCorrectDecimalInString(float price){
-        BigDecimal d = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
-        return d.toPlainString();
+    /**
+     * Refreshes the date to set the time component of date to 00:00:00
+     * @param date
+     * @return date with 00:00:00 time component
+     */
+    public static Date refreshDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
 
-        //return String.format("%.2f", price);
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int day = cal.get(Calendar.DATE);
+
+        return new GregorianCalendar(year, month, day).getTime();
+    }
+
+    /**
+     * Gives the following date.
+     * @param date
+     * @return date + 1
+     */
+    public static Date getNextDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
+
+        return refreshDate(cal.getTime());
+    }
+
+    /**
+     * Refreshes the month to set the time component of date to 00:00:00
+     * @param date
+     * @return month with 00:00:00 time component and date = 1
+     */
+    public static Date refreshMonth(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+
+        return new GregorianCalendar(year, month, 1).getTime();
+    }
+
+    /**
+     * Gives the following month.
+     * @param date
+     * @return date + 1
+     */
+    public static Date nextMonth(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.add(Calendar.MONTH, 1);
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+
+        return new GregorianCalendar(year, month, 1).getTime();
     }
 }

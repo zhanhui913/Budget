@@ -38,7 +38,6 @@ import com.zhan.budget.Util.Util;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.realm.Realm;
@@ -219,23 +218,9 @@ public class CategoryFragment extends Fragment {
 
 
     private void populateCategoryWithInfo(){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(currentMonth);
-
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
-
-        final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
-
-        //If this is December, the next month needs to be the following year's January
-        if(month == 11){
-            month = 0;
-            year++;
-        }else{
-            month++;
-        }
-
-        final Date endMonth = new GregorianCalendar(year, month, 1).getTime();
+        //final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
+        final Date startMonth = Util.refreshDate(currentMonth);
+        final Date endMonth = Util.getNextDate(currentMonth);
 
         Log.d("REALM","This month is "+startMonth.toString()+", next month is "+endMonth.toString());
 

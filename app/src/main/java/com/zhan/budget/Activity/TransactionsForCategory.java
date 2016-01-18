@@ -22,9 +22,7 @@ import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.realm.Realm;
@@ -81,8 +79,8 @@ public class TransactionsForCategory extends AppCompatActivity {
         transactionCategoryAdapter = new TransactionListAdapter(this, transactionCategoryList);
         transactionCategoryListView.setAdapter(transactionCategoryAdapter);
 
-        beginMonth = refreshMonth(currentMonth);
-        endMonth = nextMonth(currentMonth);
+        beginMonth = Util.refreshMonth(currentMonth);
+        endMonth = Util.nextMonth(currentMonth);
 
         transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
                 CategoryUtil.getIconResourceId(selectedParcelableCategory.getIcon()), getTheme()));
@@ -190,28 +188,6 @@ public class TransactionsForCategory extends AppCompatActivity {
                 // swipe end
             }
         });
-    }
-
-    private Date refreshMonth(Date date){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-
-        return new GregorianCalendar(year, month, 1).getTime();
-    }
-
-    private Date nextMonth(Date date){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        cal.add(Calendar.MONTH, 1);
-
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-
-        return new GregorianCalendar(year, month, 1).getTime();
     }
 
     @Override
