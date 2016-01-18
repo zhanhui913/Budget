@@ -71,11 +71,11 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
         viewHolder.name.setText(category.getName());
         viewHolder.budget.setText("$"+ Util.setPriceToCorrectDecimalInString(category.getBudget()));
-        viewHolder.cost.setText("$"+Util.setPriceToCorrectDecimalInString(category.getCost()));
+        viewHolder.cost.setText(Util.setPriceToCorrectDecimalInString(category.getCost()));
 
         //ProgressBar
         viewHolder.progressBar.setMax(category.getBudget());
-        viewHolder.progressBar.setProgress(category.getCost());
+        viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
 
         return convertView;
     }

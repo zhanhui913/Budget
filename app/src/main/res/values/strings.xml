@@ -11,4 +11,5 @@
     <string name="title_activity_transaction_info">Transaction</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_category_info">CategoryInfo</string>
+    <string name="title_activity_transactions_for_category">TransactionsForCategory</string>
 </resources>

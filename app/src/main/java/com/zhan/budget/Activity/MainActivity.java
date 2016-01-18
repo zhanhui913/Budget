@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
                     c.setName(tempCategoryNameList[i]);
                     c.setColor("#" + tempCategoryColorList[i]);
                     c.setIcon(tempCategoryIconList[i]);
-                    c.setBudget(100.0f);
+                    c.setBudget(100.0f + (i/5));
                     c.setType(BudgetType.EXPENSE.toString());
                     c.setCost(0);
 
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity
                         Category category = categoryList.get(random.nextInt(categoryList.size()));
 
                         transaction.setCategory(category);
-                        transaction.setPrice(120.0f);
+                        transaction.setPrice(-120.0f + (j + 0.5f));
                         transaction.setNote("Note " + j + " for "+Util.convertDateToString(date));
 
                         transactionArrayList.add(transaction);

@@ -3,6 +3,8 @@ package com.zhan.budget.Model.Parcelable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.zhan.budget.Model.Category;
+
 /**
  * Created by zhanyap on 2016-01-13.
  */
@@ -81,7 +83,15 @@ public class ParcelableCategory implements Parcelable {
         this.icon = icon;
     }
 
-
+    public void convertCategoryToParcelable(Category category){
+        this.id = category.getId();
+        this.name = category.getName();
+        this.type = category.getType();
+        this.budget = category.getBudget();
+        this.cost = category.getCost();
+        this.color = category.getColor();
+        this.icon = category.getIcon();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

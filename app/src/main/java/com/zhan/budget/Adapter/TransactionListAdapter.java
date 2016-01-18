@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -82,11 +81,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.name.setText(transaction.getCategory().getName());
         }
 
-        if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-            viewHolder.cost.setText("-$" + Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
-        }else{
-            viewHolder.cost.setText("+$" + Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
-        }
+        viewHolder.cost.setText(Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
 
         return convertView;
     }

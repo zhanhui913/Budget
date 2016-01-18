@@ -28,13 +28,22 @@
             android:label="@string/title_activity_transaction_info"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateUnspecified|adjustNothing"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustNothing" />
         <activity
             android:name=".Activity.CategoryInfo"
             android:label="@string/title_activity_category_info"
             android:parentActivityName=".Activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.zhan.budget.Activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Activity.TransactionsForCategory"
+            android:label="@string/title_activity_transactions_for_category"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.zhan.budget.Activity.MainActivity" />

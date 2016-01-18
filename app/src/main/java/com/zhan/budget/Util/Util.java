@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -278,6 +280,9 @@ public final class Util {
     }
 
     public static String setPriceToCorrectDecimalInString(float price){
-        return String.format("%.2f", price);
+        BigDecimal d = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
+        return d.toPlainString();
+
+        //return String.format("%.2f", price);
     }
 }

@@ -357,34 +357,6 @@ public class CalendarFragment extends Fragment {
                 transactionAdapter.addAll(transactionList);
             }
         });
-
-/*
-        transactionAdapter.clear();
-
-        //Populate the date's transaction list (if any)
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing transaction");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                transactionList = db.getAllTransactionInDate(date);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done transaction");
-                transactionAdapter.addAll(transactionList);
-                updateTransactionStatus();
-            }
-        };
-        loader.execute();*/
     }
 
     /**

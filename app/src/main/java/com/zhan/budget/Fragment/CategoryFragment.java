@@ -20,16 +20,17 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Activity.CategoryInfo;
+import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -142,6 +143,19 @@ public class CategoryFragment extends Fragment {
                 displayPrompt();
             }
         });
+
+        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ParcelableCategory parcelableCategory = new ParcelableCategory();
+                parcelableCategory.convertCategoryToParcelable(categoryList.get(position));
+
+                Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
+                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, Util.convertDateToString(currentMonth));
+                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, parcelableCategory);
+                startActivity(viewAllTransactionsForCategory);
+            }
+        });
     }
 
     /**
@@ -189,39 +203,12 @@ public class CategoryFragment extends Fragment {
                 .show();
     }
 
-    //SHould be called only the first time when the fragment is created
+    //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        /*AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing to get categories with no info");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                categoryList = db.getAllCategory();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting categories with no info");
-                categoryAdapter.addAll(categoryList);
-
-                populateCategoryWithInfo();
-            }
-        };
-        loader.execute();
-        */
-
         resultsCategory = myRealm.where(Category.class).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                Log.d("REALM", "completed initial category, size is " + resultsCategory.size());
-
                 categoryList = myRealm.copyFromRealm(resultsCategory);
 
                 categoryAdapter.addAll(categoryList);
@@ -232,33 +219,6 @@ public class CategoryFragment extends Fragment {
 
 
     private void populateCategoryWithInfo(){
-        /*AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing to get transaction");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                transactionMonthList = db.getAllTransactionInMonth(currentMonth);
-
-                Log.d("ASYNC", "There are "+transactionMonthList.size()+" transactions");
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting transaction");
-
-                aggregateCategoryInfo();
-            }
-        };
-        loader1.execute();
-        */
-
         Calendar cal = Calendar.getInstance();
         cal.setTime(currentMonth);
 
@@ -279,15 +239,11 @@ public class CategoryFragment extends Fragment {
 
         Log.d("REALM","This month is "+startMonth.toString()+", next month is "+endMonth.toString());
 
-
         resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
         resultsTransaction.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
                 Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
-
-                Log.d("REALM", "first = " + resultsTransaction.get(0).getDate());
-                Log.d("REALM", "last = " + resultsTransaction.get(resultsTransaction.size() - 1).getDate());
 
                 transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
 
@@ -298,26 +254,6 @@ public class CategoryFragment extends Fragment {
 
 
     private void aggregateCategoryInfo(){
-        /*Log.d("POP", "There are " + categoryList.size() + " categories");
-        Log.d("POP", "There are "+transactionMonthList.size()+" transactions this month");
-
-        for(int i = 0; i < categoryList.size(); i++){
-            Log.d("POP", "category "+categoryList.get(i).getId());
-        }
-
-        //Go through each transaction and put them into the correct category
-        for(int t = 0; t < transactionMonthList.size(); t++){
-            Log.d("POP", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
-            for(int c = 0; c < categoryList.size(); c++){
-                if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
-                    //categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
-                }
-            }
-        }
-
-        categoryAdapter.notifyDataSetChanged();
-        */
-
         Log.d("DEBUG","1) There are "+categoryList.size()+" categories");
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
@@ -354,15 +290,6 @@ public class CategoryFragment extends Fragment {
             @Override
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
-
-                /*
-                Log.d("DEBUG", "after aggregating");
-                for(int i = 0 ; i < categoryList.size(); i++){
-                    Log.d("DEBUG",i+") "+categoryList.get(i).getName()+", id = "+categoryList.get(i).getId()+", -> cost: "+ categoryList.get(i).getCost());
-                }
-                for(int i = 0 ; i < transactionMonthList.size(); i++){
-                    Log.d("DEBUG",i+") "+transactionMonthList.get(i).getId()+", -> cost: "+ transactionMonthList.get(i).getPrice());
-                }*/
 
                 categoryAdapter.notifyDataSetChanged();
 
@@ -449,13 +376,6 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onSwipeEnd(int position) {
                 // swipe end
-            }
-        });
-
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Item clicked : " + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
     }
