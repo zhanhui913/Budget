@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -361,16 +362,20 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         ParcelableTransaction parcelableTransaction = new ParcelableTransaction();
         parcelableTransaction.setNote(this.noteString);
-        parcelableTransaction.setPrice(Float.parseFloat(priceStringWithDot));
+
         parcelableTransaction.setDate(Util.formatDate(selectedDate));
 
 
         ParcelableCategory parcelableCategory = new ParcelableCategory();
 
         if(currentPage == BudgetType.EXPENSE) {
+            Log.d("ZHAN","current page is expense");
+            parcelableTransaction.setPrice(-Float.parseFloat(priceStringWithDot));
             parcelableCategory.convertCategoryToParcelable(selectedExpenseCategory);
             parcelableTransaction.setCategory(parcelableCategory);
         }else{
+            Log.d("ZHAN","current page is income");
+            parcelableTransaction.setPrice(Float.parseFloat(priceStringWithDot));
             parcelableCategory.convertCategoryToParcelable(selectedIncomeCategory);
             parcelableTransaction.setCategory(parcelableCategory);
         }

@@ -7,10 +7,11 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -60,8 +61,7 @@ public class TransactionIncomeFragment extends Fragment {
      * @return A new instance of fragment OverviewFragment.
      */
     public static TransactionIncomeFragment newInstance() {
-        TransactionIncomeFragment fragment = new TransactionIncomeFragment();
-        return fragment;
+        return new TransactionIncomeFragment();
     }
 
     @Override
@@ -105,48 +105,31 @@ public class TransactionIncomeFragment extends Fragment {
                 categoryGridAdapter.clear();
                 categoryGridAdapter.addAll(categoryIncomeList);
 
-                Log.d("GRID", "size : "+categoryGridView.getChildCount());
-
-                /*
-                //Set first category as selected by default
-                ViewGroup gridChild = (ViewGroup)categoryGridView.getChildAt(0);
-                View view = gridChild.findViewById(R.id.categoryIcon);
-                CircularView cv = (CircularView)view;
-                cv.setStrokeColor(getResources().getColor(R.color.darkgray));
-
-                selectedIncomeCategory = categoryIncomeList.get(0);*/
+                listenToGridView();
             }
         });
+    }
 
-       /* AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing to get categories");
-            }
+    private void listenToGridView(){
+        categoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                categoryIncomeList = db.getAllCategoryByType(BudgetType.INCOME);
-                return null;
-            }
+                    @Override
+                    public void onGlobalLayout() {
 
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting categories");
-                categoryGridAdapter.addAll(categoryIncomeList);
+                        //default selected expense category
+                        selectedIncomeCategory = categoryIncomeList.get(0);
+                        mListener.onCategoryIncomeClick(selectedIncomeCategory);
 
-                //Set first category as selected by default
-                //CircularView cv = (CircularView)((View) categoryGridView.getChildAt(0)).findViewById(R.id.categoryIcon);
-                //cv.setStrokeColor(getResources().getColor(R.color.darkgray));
+                        //Set first category as selected by default
+                        ViewGroup gridChild = (ViewGroup)categoryGridView.getChildAt(0);
+                        CircularView cv = (CircularView)gridChild.findViewById(R.id.categoryIcon);
+                        cv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
 
-                //selectedIncomeCategory = categoryIncomeList.get(0);
-
-            }
-        };
-        loader.execute();
-        */
+                        // unregister listener (this is important)
+                        categoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
     }
 
     private void addListeners(){
@@ -156,12 +139,14 @@ public class TransactionIncomeFragment extends Fragment {
                 for (int i = 0; i < parent.getChildCount(); i++) {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(getResources().getColor(android.R.color.transparent));
+                    ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
                 }
 
                 View childView = parent.getChildAt(position);
                 CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
+                ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+
+
 
                 selectedIncomeCategory = categoryIncomeList.get(position);
                 mListener.onCategoryIncomeClick(selectedIncomeCategory);

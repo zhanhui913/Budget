@@ -731,7 +731,7 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-
+    Transaction transactionReturnedFromTransaction1;
     Category categoryReturnedFromTransaction;
 
 
@@ -750,14 +750,13 @@ public class CalendarFragment extends Fragment {
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
 
-
-
+                //1st option (not async)
                 final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", parcelableTransaction.getCategory().getId()).findAllAsync();
                 cateList.addChangeListener(new RealmChangeListener() {
                     @Override
                     public void onChange() {
 
-                        if(cateList.size() != 0) {
+                        if (cateList.size() != 0) {
                             Category cat = myRealm.copyToRealm(cateList.get(0));
 
                             myRealm.beginTransaction();
@@ -776,27 +775,49 @@ public class CalendarFragment extends Fragment {
                             transactionAdapter.notifyDataSetChanged();
                             updateTransactionStatus();
                         }
-
-                        /*
-                        myRealm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(final Realm bgRealm) {
-
-                            }
-                        }, new Realm.Transaction.Callback() {
-                            @Override
-                            public void onSuccess() {
-
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                // transaction is automatically rolled-back, do any cleanup here
-                                e.printStackTrace();
-                            }
-                        });*/
                     }
                 });
+
+
+                //2nd option async (doesnt really work)
+                /*final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", parcelableTransaction.getCategory().getId()).findAllAsync();
+                cateList.addChangeListener(new RealmChangeListener() {
+                    @Override
+                    public void onChange() {
+
+                        if(cateList.size() != 0) {
+
+                            myRealm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm bgRealm) {
+                                    Category cat = myRealm.copyToRealm(cateList.get(0));
+                                    transactionReturnedFromTransaction1 = bgRealm.createObject(Transaction.class);
+                                    transactionReturnedFromTransaction1.setId(Util.generateUUID());
+                                    transactionReturnedFromTransaction1.setPrice(parcelableTransaction.getPrice());
+                                    transactionReturnedFromTransaction1.setDate(parcelableTransaction.getDate());
+                                    transactionReturnedFromTransaction1.setNote(parcelableTransaction.getNote());
+                                    transactionReturnedFromTransaction1.setCategory(cat);
+                                }
+                            }, new Realm.Transaction.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("ZHAN", "successfully added transaction : " + transactionReturnedFromTransaction1.getNote() + " for cat : " + transactionReturnedFromTransaction1.getCategory().getName());
+                                    transactionList.add(transactionReturnedFromTransaction1);
+
+                                    transactionAdapter.notifyDataSetChanged();
+                                    updateTransactionStatus();
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    // transaction is automatically rolled-back, do any cleanup here
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
+                    }
+                });
+                */
 
 
                 //updateCalendarDecoratorsForMonth(selectedDate);
