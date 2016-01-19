@@ -174,15 +174,18 @@ public class MainActivity extends AppCompatActivity
                 startTime = System.nanoTime();
 
                 for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                    //Log.d("REALM", "date:" + start.toString());
-                    //Create 25 transactions per day
-                    for (int j = 0; j < 25; j++) {
+                    Random random = new Random();
+                    int rd = random.nextInt(categoryList.size());
+
+                    //Create 5 transactions per day
+                    for (int j = 0; j < 5; j++) {
                         Transaction transaction = bgRealm.createObject(Transaction.class);
                         transaction.setId(Util.generateUUID());
                         transaction.setDate(date);
 
-                        Random random = new Random();
-                        Category category = categoryList.get(random.nextInt(categoryList.size()));
+                        //Random random = new Random();
+                        //Category category = categoryList.get(random.nextInt(categoryList.size()));
+                        Category category = categoryList.get(rd);
 
                         transaction.setCategory(category);
                         transaction.setPrice(-120.0f + (j + 0.5f));

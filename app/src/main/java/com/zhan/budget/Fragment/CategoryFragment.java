@@ -188,8 +188,7 @@ public class CategoryFragment extends Fragment {
                         myRealm.commitTransaction();
 
                         categoryList.add(c);
-                        categoryAdapter.add(c);
-                        //should we maybe just do categoryAdapter.notifysetadapter();
+                        categoryAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -219,8 +218,8 @@ public class CategoryFragment extends Fragment {
 
     private void populateCategoryWithInfo(){
         //final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
-        final Date startMonth = Util.refreshDate(currentMonth);
-        final Date endMonth = Util.getNextDate(currentMonth);
+        final Date startMonth = Util.refreshMonth(currentMonth);
+        final Date endMonth = Util.getNextMonth(currentMonth);
 
         Log.d("REALM","This month is "+startMonth.toString()+", next month is "+endMonth.toString());
 
@@ -275,6 +274,12 @@ public class CategoryFragment extends Fragment {
             @Override
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
+
+                for(int i = 0; i < categoryList.size(); i++){
+                    Log.d("ZHAN1", "category : "+categoryList.get(i).getName()+" -> "+categoryList.get(i).getCost());
+                }
+
+
 
                 categoryAdapter.notifyDataSetChanged();
 

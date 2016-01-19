@@ -343,7 +343,7 @@ public final class Util {
      * @param date
      * @return date + 1
      */
-    public static Date nextMonth(Date date){
+    public static Date getNextMonth(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 

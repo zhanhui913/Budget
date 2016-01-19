@@ -80,7 +80,7 @@ public class TransactionsForCategory extends AppCompatActivity {
         transactionCategoryListView.setAdapter(transactionCategoryAdapter);
 
         beginMonth = Util.refreshMonth(currentMonth);
-        endMonth = Util.nextMonth(currentMonth);
+        endMonth = Util.getNextMonth(currentMonth);
 
         transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
                 CategoryUtil.getIconResourceId(selectedParcelableCategory.getIcon()), getTheme()));
