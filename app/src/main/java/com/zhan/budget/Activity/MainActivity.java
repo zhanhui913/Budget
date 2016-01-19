@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Category> categoryList = new ArrayList<>();
 
-    //private CreateDefaultCategoryAsyncTask createDefaultCategoryAsyncTask;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,23 +110,13 @@ public class MainActivity extends AppCompatActivity
 
         if(isFirstTIme){
             Toast.makeText(getApplicationContext(), "first time", Toast.LENGTH_SHORT).show();
-            createDefaultCategory();
+            createFakeTransactions();
 
             //set Constants.FIRST_TIME shared preferences to false
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(Constants.FIRST_TIME, false);
             editor.apply();
-        }else{
-            Toast.makeText(getApplicationContext(), "not first time", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void createDefaultCategory(){
-/*
-        createDefaultCategoryAsyncTask = new CreateDefaultCategoryAsyncTask();
-        createDefaultCategoryAsyncTask.execute();
-*/
-        createFakeTransactions();
     }
 
     long startTime,endTime,duration;

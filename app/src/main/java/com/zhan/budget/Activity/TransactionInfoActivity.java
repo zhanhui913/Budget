@@ -25,7 +25,8 @@ import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
-import com.zhan.budget.Model.Transaction;
+import com.zhan.budget.Model.Parcelable.ParcelableCategory;
+import com.zhan.budget.Model.Parcelable.ParcelableTransaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
@@ -358,18 +359,23 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private void save(){
         Intent intent = new Intent();
 
-        Transaction transaction = new Transaction();
-        transaction.setNote(this.noteString);
-        transaction.setPrice(Float.parseFloat(priceStringWithDot));
-        transaction.setDate(Util.formatDate(selectedDate));
+        ParcelableTransaction parcelableTransaction = new ParcelableTransaction();
+        parcelableTransaction.setNote(this.noteString);
+        parcelableTransaction.setPrice(Float.parseFloat(priceStringWithDot));
+        parcelableTransaction.setDate(Util.formatDate(selectedDate));
+
+
+        ParcelableCategory parcelableCategory = new ParcelableCategory();
 
         if(currentPage == BudgetType.EXPENSE) {
-            transaction.setCategory(selectedExpenseCategory);
+            parcelableCategory.convertCategoryToParcelable(selectedExpenseCategory);
+            parcelableTransaction.setCategory(parcelableCategory);
         }else{
-            transaction.setCategory(selectedIncomeCategory);
+            parcelableCategory.convertCategoryToParcelable(selectedIncomeCategory);
+            parcelableTransaction.setCategory(parcelableCategory);
         }
 
-        //intent.putExtra(Constants.RESULT_NEW_TRANSACTION, transaction);
+        intent.putExtra(Constants.RESULT_NEW_TRANSACTION, parcelableTransaction);
         setResult(RESULT_OK, intent);
 
         finish();

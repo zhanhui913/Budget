@@ -93,6 +93,16 @@ public class ParcelableCategory implements Parcelable {
         this.icon = category.getIcon();
     }
 
+    public Category convertParcelableToCategory(){
+        Category category = new Category();
+        category.setId(this.id);
+        category.setName(this.name);
+        category.setBudget(this.budget);
+        category.setColor(this.color);
+        category.setIcon(this.icon);
+        return category;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Parcelable

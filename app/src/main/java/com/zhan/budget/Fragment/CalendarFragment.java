@@ -21,7 +21,6 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -33,6 +32,8 @@ import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Calendar.CustomEvent;
+import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Parcelable.ParcelableTransaction;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -310,8 +311,6 @@ public class CalendarFragment extends Fragment {
                 dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
                 // updateCalendarDecoratorsForMonth(year, month);
-
-                Toast.makeText(getActivity(), "direction :" + direction, Toast.LENGTH_SHORT).show();
 
                 updateMonthInToolbar(0);
             }
@@ -732,33 +731,73 @@ public class CalendarFragment extends Fragment {
         }
     }
 
+
+    Category categoryReturnedFromTransaction;
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
-/*
+
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                Transaction transaction = data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION);
+                final ParcelableTransaction parcelableTransaction = data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION);
 
-                Log.d("ZHAN", "transaction name is "+transaction.getNote()+" cost is "+transaction.getPrice());
-                Log.d("ZHAN", "category is "+transaction.getCategory().getName()+", "+transaction.getCategory().getId());
+                Log.d("ZHAN", "transaction name is " + parcelableTransaction.getNote() + " cost is " + parcelableTransaction.getPrice());
+                Log.d("ZHAN", "category is " + parcelableTransaction.getCategory().getName() + ", " + parcelableTransaction.getCategory().getId());
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
 
-                long id = db.createTransaction(transaction);
-                transaction.setId(Util.generateUUID());
-
-                transactionList.add(transaction);
 
 
+                final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", parcelableTransaction.getCategory().getId()).findAllAsync();
+                cateList.addChangeListener(new RealmChangeListener() {
+                    @Override
+                    public void onChange() {
 
-                transactionAdapter.add(transaction);
-                updateTransactionStatus();
+                        if(cateList.size() != 0) {
+                            Category cat = myRealm.copyToRealm(cateList.get(0));
 
-                db.exportDB();
-                */
+                            myRealm.beginTransaction();
+                            Transaction transactionReturnedFromTransaction = myRealm.createObject(Transaction.class);
+                            transactionReturnedFromTransaction.setId(Util.generateUUID());
+                            transactionReturnedFromTransaction.setPrice(parcelableTransaction.getPrice());
+                            transactionReturnedFromTransaction.setDate(parcelableTransaction.getDate());
+                            transactionReturnedFromTransaction.setNote(parcelableTransaction.getNote());
+                            transactionReturnedFromTransaction.setCategory(cat);
+                            myRealm.commitTransaction();
+
+
+                            Log.d("ZHAN", "successfully added transaction : " + transactionReturnedFromTransaction.getNote() + " for cat : " + transactionReturnedFromTransaction.getCategory().getName());
+                            transactionList.add(transactionReturnedFromTransaction);
+
+                            transactionAdapter.notifyDataSetChanged();
+                            updateTransactionStatus();
+                        }
+
+                        /*
+                        myRealm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(final Realm bgRealm) {
+
+                            }
+                        }, new Realm.Transaction.Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                // transaction is automatically rolled-back, do any cleanup here
+                                e.printStackTrace();
+                            }
+                        });*/
+                    }
+                });
+
 
                 //updateCalendarDecoratorsForMonth(selectedDate);
             }
