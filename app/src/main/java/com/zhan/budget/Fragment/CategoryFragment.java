@@ -4,14 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,11 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -41,7 +35,6 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,6 +47,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.header.StoreHouseHeader;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -90,6 +84,7 @@ public class CategoryFragment extends Fragment {
     private RealmResults<Transaction> resultsTransaction;
 
     private PtrClassicFrameLayout mPtrFrame;
+    private StoreHouseHeader header;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -156,7 +151,8 @@ public class CategoryFragment extends Fragment {
 
     //Pull to refresh component
     private void createPullToRefresh(){
-        final StoreHouseHeader header = new StoreHouseHeader(getContext());
+        //final StoreHouseHeader header = new StoreHouseHeader(getContext());
+        header = new StoreHouseHeader(getContext());
         header.setPadding(0, 0, 0, 0);
 
         // using string array from resource xml file
@@ -168,6 +164,7 @@ public class CategoryFragment extends Fragment {
         mPtrFrame.setHeaderView(header);
         mPtrFrame.addPtrUIHandler(header);
 
+
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
@@ -177,7 +174,7 @@ public class CategoryFragment extends Fragment {
                     public void run() {
                         mPtrFrame.refreshComplete();
                     }
-                }, 1800);
+                }, 500);
             }
 
             @Override
@@ -215,6 +212,7 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
                 Log.d("CATEGORY_FRAGMENT", "onUIRefreshComplete");
+                displayPrompt();
             }
 
             @Override
@@ -222,23 +220,6 @@ public class CategoryFragment extends Fragment {
 
             }
         });
-
-        /*
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-        mPtrFrame.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPtrFrame.autoRefresh();
-            }
-        }, 100);*/
     }
 
     private void addListener(){
