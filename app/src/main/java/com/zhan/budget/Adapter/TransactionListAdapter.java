@@ -3,7 +3,6 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +81,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.name.setText(transaction.getCategory().getName());
         }
 
-        viewHolder.cost.setText("$"+Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
+        viewHolder.cost.setText(Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
 
         return convertView;
     }

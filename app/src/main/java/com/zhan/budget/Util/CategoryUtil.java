@@ -33,12 +33,14 @@ public final class CategoryUtil {
         }else if(iconId == 6){
             return ContextCompat.getDrawable(context, R.drawable.airplane);
         }else if(iconId == 7){
-            return ContextCompat.getDrawable(context, R.drawable.shirt);
+            return ContextCompat.getDrawable(context, R.drawable.car);
         }else if(iconId == 8){
-            return ContextCompat.getDrawable(context, R.drawable.etc);
+            return ContextCompat.getDrawable(context, R.drawable.shirt);
         }else if(iconId == 9){
-            return ContextCompat.getDrawable(context, R.drawable.utilities);
+            return ContextCompat.getDrawable(context, R.drawable.etc);
         }else if(iconId == 10){
+            return ContextCompat.getDrawable(context, R.drawable.utilities);
+        }else if(iconId == 11){
             return ContextCompat.getDrawable(context, R.drawable.bill);
         }else{
             return ContextCompat.getDrawable(context, R.drawable.groceries);
@@ -61,12 +63,14 @@ public final class CategoryUtil {
         }else if(iconId == 6){
             return R.drawable.airplane;
         }else if(iconId == 7){
-            return R.drawable.shirt;
+            return R.drawable.car;
         }else if(iconId == 8){
-            return R.drawable.etc;
+            return R.drawable.shirt;
         }else if(iconId == 9){
-            return R.drawable.utilities;
+            return R.drawable.etc;
         }else if(iconId == 10){
+            return R.drawable.utilities;
+        }else if(iconId == 11){
             return R.drawable.bill;
         }else{
             return R.drawable.groceries;

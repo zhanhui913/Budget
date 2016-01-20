@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.zhan.budget.Activity.TransactionsForCategory"
+    tools:showIn="@layout/activity_transactions_for_category">
+
+    <LinearLayout
+        android:id="@+id/transactionCategoryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/gray"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/transactionCategoryIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:src="@drawable/food"
+            android:tint="@color/secondary_text_default_material_light"/>
+
+        <TextView
+            android:id="@+id/transactionCategoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breakfast"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/transactionCategoryBalance"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="55.50"
+            android:textSize="20sp"
+            android:layout_marginRight="5dp"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/transactionCategoryListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/transactionCategoryLayout"/>
+
+
+</RelativeLayout>

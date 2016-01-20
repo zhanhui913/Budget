@@ -20,17 +20,17 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Activity.CategoryInfo;
+import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryListAdapter;
-import com.zhan.budget.Database.Database;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -39,6 +39,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,20 +58,22 @@ public class CategoryFragment extends Fragment {
     private View view;
     private FloatingActionButton fab;
 
-
     private SwipeMenuListView categoryListView;
     private CategoryListAdapter categoryAdapter;
     private TextView balanceText;
 
-    private ArrayList<Category> categoryList;
-    private Database db;
+    private List<Category> categoryList;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
 
     private Date currentMonth;
 
-    private List<Transaction> transactionMonthList ;
+    private List<Transaction> transactionMonthList;
 
+    private Realm myRealm;
+
+    private RealmResults<Category> resultsCategory;
+    private RealmResults<Transaction> resultsTransaction;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -107,13 +113,15 @@ public class CategoryFragment extends Fragment {
     }
 
     private void init(){
-        openDatabase();
+        myRealm = Realm.getDefaultInstance();
 
         currentMonth = new Date();
 
         fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
         balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
+
+        transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
@@ -132,6 +140,19 @@ public class CategoryFragment extends Fragment {
         fab.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View view) {
                 displayPrompt();
+            }
+        });
+
+        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ParcelableCategory parcelableCategory = new ParcelableCategory();
+                parcelableCategory.convertCategoryToParcelable(categoryList.get(position));
+
+                Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
+                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, Util.convertDateToString(currentMonth));
+                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, parcelableCategory);
+                startActivity(viewAllTransactionsForCategory);
             }
         });
     }
@@ -154,18 +175,20 @@ public class CategoryFragment extends Fragment {
                 .setCancelable(true)
                 .setPositiveButton("add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Category c = new Category();
+                        myRealm.beginTransaction();
+
+                        Category c = myRealm.createObject(Category.class);
+                        c.setId(Util.generateUUID());
                         c.setName(input.getText().toString());
                         c.setColor("#000000");
                         c.setIcon(6);
                         c.setBudget(100.0f);
                         c.setCost(0);
 
-
-                        db.createCategory(c);
+                        myRealm.commitTransaction();
 
                         categoryList.add(c);
-                        categoryAdapter.add(c);
+                        categoryAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -178,86 +201,98 @@ public class CategoryFragment extends Fragment {
                 .show();
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d("ZHAN", "on resume");
-    }
-
-    //SHould be called only the first time when the fragment is created
+    //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        resultsCategory = myRealm.where(Category.class).findAllAsync();
+        resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing to get categories with no info");
-            }
+            public void onChange() {
+                categoryList = myRealm.copyFromRealm(resultsCategory);
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                categoryList = db.getAllCategory();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting categories with no info");
                 categoryAdapter.addAll(categoryList);
-
                 populateCategoryWithInfo();
             }
-        };
-        loader.execute();
+        });
     }
 
+
     private void populateCategoryWithInfo(){
-        AsyncTask<Void, Void, Void> loader1 = new AsyncTask<Void, Void, Void>() {
+        //final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
+        final Date startMonth = Util.refreshMonth(currentMonth);
+        final Date endMonth = Util.getNextMonth(currentMonth);
+
+        Log.d("REALM","This month is "+startMonth.toString()+", next month is "+endMonth.toString());
+
+        resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
+        resultsTransaction.addChangeListener(new RealmChangeListener() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing to get transaction");
-            }
+            public void onChange() {
+                Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
 
-            @Override
-            protected Void doInBackground(Void... voids) {
-                transactionMonthList = db.getAllTransactionInMonth(currentMonth);
-
-                Log.d("ASYNC", "There are "+transactionMonthList.size()+" transactions");
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting transaction");
+                transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
 
                 aggregateCategoryInfo();
             }
-        };
-        loader1.execute();
+        });
     }
 
+
     private void aggregateCategoryInfo(){
-        Log.d("POP", "There are "+categoryList.size()+" categories");
-        Log.d("POP", "There are "+transactionMonthList.size()+" transactions this month");
+        Log.d("DEBUG","1) There are "+categoryList.size()+" categories");
+        Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
-        for(int i = 0; i < categoryList.size(); i++){
-            Log.d("POP", "category "+categoryList.get(i).getId());
-        }
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
-        //Go through each transaction and put them into the correct category
-        for(int t = 0; t < transactionMonthList.size(); t++){
-            Log.d("POP", "transaction with category id : " +transactionMonthList.get(t).getCategory().getId());
-            for(int c = 0; c < categoryList.size(); c++){
-                if(transactionMonthList.get(t).getCategory().getId() == categoryList.get(c).getId()){ Log.d("ASYNC", "found");
-                    categoryList.get(c).addCost(transactionMonthList.get(t).getPrice());
-                }
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("DEBUG", "preparing to aggregate results");
             }
-        }
 
-        categoryAdapter.notifyDataSetChanged();
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                startTime = System.nanoTime();
+
+                //Go through each transaction and put them into the correct category
+                for(int t = 0; t < transactionMonthList.size(); t++){
+                    //Log.d("POP", "transaction with category id : " +resultsTransaction.get(t).getCategory().getId());
+                    for(int c = 0; c < categoryList.size(); c++){
+                        if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
+                            float transactionPrice = transactionMonthList.get(t).getPrice();
+                            float currentCategoryPrice = categoryList.get(c).getCost();
+                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+
+                for(int i = 0; i < categoryList.size(); i++){
+                    Log.d("ZHAN1", "category : "+categoryList.get(i).getName()+" -> "+categoryList.get(i).getCost());
+                }
+
+
+
+                categoryAdapter.notifyDataSetChanged();
+
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+
+                long milli = (duration/1000000);
+                long second = (milli/1000);
+                float minutes = (second / 60.0f);
+                Log.d("DEBUG", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+            }
+        };
+        loader.execute();
     }
 
     /**
@@ -300,13 +335,15 @@ public class CategoryFragment extends Fragment {
                         Intent editCategory = new Intent(getContext(), CategoryInfo.class);
 
                         //This is edit mode
-                        editCategory.putExtra(Constants.REQUEST_EDIT_CATEGORY, categoryList.get(position));
+                        //editCategory.putExtra(Constants.REQUEST_EDIT_CATEGORY, categoryList.get(position));
                         startActivityForResult(editCategory, Constants.RETURN_EDIT_CATEGORY);
 
                         break;
                     case 1:
                         //delete
-                        db.deleteCategory(categoryList.get(position));
+
+                        categoryList.get(position).removeFromRealm();
+
                         categoryAdapter.remove(categoryList.get(position));
                         categoryList.remove(position);
 
@@ -331,13 +368,6 @@ public class CategoryFragment extends Fragment {
                 // swipe end
             }
         });
-
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Item clicked : " + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -353,22 +383,12 @@ public class CategoryFragment extends Fragment {
                 Log.d("ZHAN", "category name is "+category.getName());
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                db.updateCategory(category);
+                //db.updateCategory(category);
+
+
                 categoryList.set(categoryIndexEditted, category);
                 categoryAdapter.notifyDataSetChanged();
             }
-        }
-    }
-
-    public void openDatabase(){
-        if(db == null) {
-            db = new Database(getActivity().getApplicationContext());
-        }
-    }
-
-    public void closeDatabase(){
-        if(db != null){
-            db.close();
         }
     }
 
@@ -416,7 +436,8 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        closeDatabase();
+        //closeDatabase();
+
     }
 
     @Override

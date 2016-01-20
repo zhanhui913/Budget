@@ -32,5 +32,6 @@ dependencies {
     compile project(':circularview')
     compile project(':circleindicator')
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
+    compile 'io.realm:realm-android:0.87.2'
 }
 

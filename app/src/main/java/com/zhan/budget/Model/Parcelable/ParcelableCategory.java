@@ -1,27 +1,25 @@
-package com.zhan.budget.Model;
+package com.zhan.budget.Model.Parcelable;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
-import io.realm.annotations.PrimaryKey;
+import com.zhan.budget.Model.Category;
 
 /**
- * Created by Zhan on 15-12-14.
+ * Created by zhanyap on 2016-01-13.
  */
-public class Category extends RealmObject{
+public class ParcelableCategory implements Parcelable {
 
-    @PrimaryKey
     private String id;
     private String name;
     private String type;
     private float budget;
 
-    @Ignore
     private float cost;
     private String color;
     private int icon;
 
-    public Category(){
+    public ParcelableCategory(){
 
     }
 
@@ -47,6 +45,10 @@ public class Category extends RealmObject{
 
     public void setCost(float cost) {
         this.cost = cost;
+    }
+
+    public void addCost(float cost){
+        this.cost += cost;
     }
 
     public String getName() {
@@ -81,7 +83,25 @@ public class Category extends RealmObject{
         this.icon = icon;
     }
 
-    /*
+    public void convertCategoryToParcelable(Category category){
+        this.id = category.getId();
+        this.name = category.getName();
+        this.type = category.getType();
+        this.budget = category.getBudget();
+        this.cost = category.getCost();
+        this.color = category.getColor();
+        this.icon = category.getIcon();
+    }
+
+    public Category convertParcelableToCategory(){
+        Category category = new Category();
+        category.setId(this.id);
+        category.setName(this.name);
+        category.setBudget(this.budget);
+        category.setColor(this.color);
+        category.setIcon(this.icon);
+        return category;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -96,7 +116,7 @@ public class Category extends RealmObject{
 
     @Override
     public void writeToParcel(Parcel dest, int flags){
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeFloat(budget);
         dest.writeString(type);
@@ -105,26 +125,26 @@ public class Category extends RealmObject{
         dest.writeInt(icon);
     }
 
-    public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
+    public static final Parcelable.Creator<ParcelableCategory> CREATOR = new Parcelable.Creator<ParcelableCategory>() {
 
         @Override
-        public Category createFromParcel(Parcel source) {
-            return new Category(source);
+        public ParcelableCategory createFromParcel(Parcel source) {
+            return new ParcelableCategory(source);
         }
 
         @Override
-        public Category[] newArray(int size) {
-            return new Category[size];
+        public ParcelableCategory[] newArray(int size) {
+            return new ParcelableCategory[size];
         }
     };
 
-    private Category(Parcel in){
-        id = in.readInt();
+    private ParcelableCategory(Parcel in){
+        id = in.readString();
         name = in.readString();
         budget = in.readFloat();
         type = in.readString();
         cost = in.readFloat();
         color = in.readString();
         icon = in.readInt();
-    }*/
+    }
 }

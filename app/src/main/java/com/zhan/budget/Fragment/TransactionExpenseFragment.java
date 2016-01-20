@@ -5,24 +5,28 @@ package com.zhan.budget.Fragment;
  */
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.CategoryGridAdapter;
-import com.zhan.budget.Database.Database;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.circularview.CircularView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,11 +39,12 @@ import java.util.ArrayList;
 public class TransactionExpenseFragment extends Fragment {
 
     private OnTransactionExpenseFragmentInteractionListener mListener;
+
+    private Realm myRealm;
     private View view;
 
-    private Database db;
-
-    private ArrayList<Category> categoryExpenseList;
+    private RealmResults<Category> resultsExpenseCategory;
+    private List<Category> categoryExpenseList;
     private GridView categoryGridView;
     private CategoryGridAdapter categoryGridAdapter;
 
@@ -56,8 +61,7 @@ public class TransactionExpenseFragment extends Fragment {
      * @return A new instance of fragment OverviewFragment.
      */
     public static TransactionExpenseFragment newInstance() {
-        TransactionExpenseFragment fragment = new TransactionExpenseFragment();
-        return fragment;
+        return new TransactionExpenseFragment();
     }
 
     @Override
@@ -81,7 +85,7 @@ public class TransactionExpenseFragment extends Fragment {
     }
 
     private void init(){
-        openDatabase();
+        myRealm = Realm.getDefaultInstance();
 
         categoryExpenseList = new ArrayList<>();
         categoryGridView = (GridView) view.findViewById(R.id.categoryExpenseGrid);
@@ -93,34 +97,39 @@ public class TransactionExpenseFragment extends Fragment {
     }
 
     private void populateCategoryExpense(){
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        resultsExpenseCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
+        resultsExpenseCategory.addChangeListener(new RealmChangeListener() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("ASYNC", "preparing to get categories");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                categoryExpenseList = db.getAllCategoryByType(BudgetType.EXPENSE);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("ASYNC", "done getting categories");
+            public void onChange() {
+                categoryExpenseList = myRealm.copyFromRealm(resultsExpenseCategory);
+                categoryGridAdapter.clear();
                 categoryGridAdapter.addAll(categoryExpenseList);
 
-                //Set first category as selected by default
-                /*CircularView cv = (CircularView)((View) categoryGridView.getChildAt(0)).findViewById(R.id.categoryIcon);
-                cv.setStrokeColor(getResources().getColor(R.color.darkgray));
-
-                selectedExpenseCategory = categoryExpenseList.get(0);
-                */
+                listenToGridView();
             }
-        };
-        loader.execute();
+        });
+    }
+
+    private void listenToGridView(){
+        categoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+
+                    @Override
+                    public void onGlobalLayout() {
+
+                        //default selected expense category
+                        selectedExpenseCategory = categoryExpenseList.get(0);
+                        mListener.onCategoryExpenseClick(selectedExpenseCategory);
+
+                        //Set first category as selected by default
+                        ViewGroup gridChild = (ViewGroup)categoryGridView.getChildAt(0);
+                        CircularView cv = (CircularView)gridChild.findViewById(R.id.categoryIcon);
+                        cv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+
+                        // unregister listener (this is important)
+                        categoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
     }
 
     private void addListeners(){
@@ -130,34 +139,22 @@ public class TransactionExpenseFragment extends Fragment {
                 for (int i = 0; i < parent.getChildCount(); i++) {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(getResources().getColor(android.R.color.transparent));
+                    ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
                 }
 
                 View childView = parent.getChildAt(position);
                 CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                ccv.setStrokeColor(getResources().getColor(R.color.darkgray));
+                ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
 
                 selectedExpenseCategory = categoryExpenseList.get(position);
+                mListener.onCategoryExpenseClick(selectedExpenseCategory);
             }
         });
-    }
-
-    public void openDatabase(){
-        if(db == null) {
-            db = new Database(getActivity().getApplicationContext());
-        }
-    }
-
-    public void closeDatabase(){
-        if(db != null){
-            db.close();
-        }
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        closeDatabase();
     }
 
     @Override
@@ -188,6 +185,6 @@ public class TransactionExpenseFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnTransactionExpenseFragmentInteractionListener {
-        //void onOverviewInteraction(String value);
+        void onCategoryExpenseClick(Category category);
     }
 }

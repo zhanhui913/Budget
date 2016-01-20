@@ -1,29 +1,24 @@
-package com.zhan.budget.Model;
+package com.zhan.budget.Model.Parcelable;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.zhan.budget.Util.Util;
 
 import java.util.Date;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Index;
-import io.realm.annotations.PrimaryKey;
-
 /**
- * Created by Zhan on 15-12-14.
+ * Created by zhanyap on 2016-01-13.
  */
-public class Transaction extends RealmObject {
+public class ParcelableTransaction implements Parcelable {
 
-    @PrimaryKey
     private String id;
-
     private String note;
-
-    @Index
     private Date date;
-
     private float price;
+    private ParcelableCategory category;
 
-    private Category category;
-
-    public Transaction(){
+    public ParcelableTransaction(){
 
     }
 
@@ -59,15 +54,15 @@ public class Transaction extends RealmObject {
         this.note = note;
     }
 
-    public Category getCategory() {
+    public ParcelableCategory getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(ParcelableCategory category) {
         this.category = category;
     }
 
-    /*
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Parcelable
@@ -81,7 +76,7 @@ public class Transaction extends RealmObject {
 
     @Override
     public void writeToParcel(Parcel dest, int flags){
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(note);
         dest.writeString(Util.convertDateToString(date));
         dest.writeFloat(price);
@@ -91,26 +86,25 @@ public class Transaction extends RealmObject {
     }
 
 
-    public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
+    public static final Creator<ParcelableTransaction> CREATOR = new Creator<ParcelableTransaction>() {
 
         @Override
-        public Transaction createFromParcel(Parcel source) {
-            return new Transaction(source);
+        public ParcelableTransaction createFromParcel(Parcel source) {
+            return new ParcelableTransaction(source);
         }
 
         @Override
-        public Transaction[] newArray(int size) {
-            return new Transaction[size];
+        public ParcelableTransaction[] newArray(int size) {
+            return new ParcelableTransaction[size];
         }
     };
 
-    private Transaction(Parcel in){
-        id = in.readInt();
+    private ParcelableTransaction(Parcel in){
+        id = in.readString();
         note = in.readString();
         date = Util.convertStringToDate(in.readString());
         price = in.readFloat();
 
-        category = Category.CREATOR.createFromParcel(in);
+        category = ParcelableCategory.CREATOR.createFromParcel(in);
     }
-    */
 }

@@ -2,8 +2,8 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,19 +66,26 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         // getting category data for the row
         Category category = categoryList.get(position);
 
-        Log.d("DEUBG","index:"+position+"- Category "+category.toString());
-
         //Icon
         viewHolder.circularView.setCircleColor(Color.parseColor(category.getColor()));
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
 
         viewHolder.name.setText(category.getName());
-        viewHolder.budget.setText("$"+ Util.setPriceToCorrectDecimalInString(category.getBudget()));
-        viewHolder.cost.setText("$"+Util.setPriceToCorrectDecimalInString(category.getCost()));
+        viewHolder.budget.setText("$" + Util.setPriceToCorrectDecimalInString(category.getBudget()));
+        viewHolder.cost.setText(Util.setPriceToCorrectDecimalInString(category.getCost()));
 
         //ProgressBar
         viewHolder.progressBar.setMax(category.getBudget());
-        viewHolder.progressBar.setProgress(category.getCost());
+        viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
+
+
+        if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+        }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.green));
+        }else{ //If exceeded budget
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.red));
+        }
 
         return convertView;
     }

@@ -9,9 +9,9 @@
     <View
         android:id="@+id/leftDivider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_weight="0.45"
-        android:background="@color/darkgray"
+        android:background="@color/gray"
         android:layout_gravity="center_vertical" />
 
     <com.zhan.circleindicator.CircleIndicator
@@ -19,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="0.1"
-        CircleIndicator:ci_background="@color/white"
+        CircleIndicator:ci_background="@color/gray"
         CircleIndicator:ci_selected_background="@color/colorPrimaryDark"
         CircleIndicator:ci_mode="outside"
         CircleIndicator:ci_gravity="center"
@@ -30,9 +30,9 @@
     <View
         android:id="@+id/rightDivider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_weight="0.45"
-        android:background="@color/darkgray"
+        android:background="@color/gray"
         android:layout_gravity="center_vertical" />
 
 </LinearLayout>
