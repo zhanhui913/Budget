@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -46,6 +47,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.PtrUIHandler;
+import in.srain.cube.views.ptr.header.StoreHouseHeader;
+import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -81,7 +89,7 @@ public class CategoryFragment extends Fragment {
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
-    private SwipeRefreshLayout swipeContainer;
+    private PtrClassicFrameLayout mPtrFrame;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -125,7 +133,7 @@ public class CategoryFragment extends Fragment {
 
         currentMonth = new Date();
 
-        fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
+        //fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
         balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
 
@@ -135,18 +143,7 @@ public class CategoryFragment extends Fragment {
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        try {
-            Field f = swipeContainer.getClass().getDeclaredField("mCircleView");
-            f.setAccessible(true);
-            ImageView img = (ImageView)f.get(swipeContainer);
-            img.setImageResource(R.drawable.ic_add);
-            img.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        createPullToRefresh();
 
         populateCategoryWithNoInfo();
 
@@ -157,12 +154,99 @@ public class CategoryFragment extends Fragment {
         updateMonthInToolbar(0, false);
     }
 
+    //Pull to refresh component
+    private void createPullToRefresh(){
+        final StoreHouseHeader header = new StoreHouseHeader(getContext());
+        header.setPadding(0, 0, 0, 0);
+
+        // using string array from resource xml file
+        //header.initWithStringArray(R.array.storehouse);
+        header.initWithString("Add Transaction");
+        header.setTextColor(ContextCompat.getColor(getContext(), R.color.darkgray));
+
+        mPtrFrame = (PtrClassicFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT","on refresh begin");
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPtrFrame.refreshComplete();
+                    }
+                }, 1800);
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+        });
+
+        mPtrFrame.addPtrUIHandler(new PtrUIHandler() {
+            private int mLoadTime = 0;
+
+            @Override
+            public void onUIReset(PtrFrameLayout frame) {
+                mLoadTime++;
+                if (mLoadTime % 2 == 0) {
+                    header.setScale(1);
+                    header.initWithStringArray(R.array.storehouse);
+                } else {
+                    header.setScale(0.5f);
+                    header.initWithStringArray(R.array.akta);
+                }
+                Log.d("CATEGORY_FRAGMENT", "onUIReset");
+            }
+
+            @Override
+            public void onUIRefreshPrepare(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "onUIRefreshPrepare");
+            }
+
+            @Override
+            public void onUIRefreshBegin(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "onUIRefreshBegin");
+            }
+
+            @Override
+            public void onUIRefreshComplete(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "onUIRefreshComplete");
+            }
+
+            @Override
+            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+
+            }
+        });
+
+        /*
+        // the following are default settings
+        mPtrFrame.setResistance(1.7f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setDurationToClose(200);
+        mPtrFrame.setDurationToCloseHeader(1000);
+        // default is false
+        mPtrFrame.setPullToRefresh(false);
+        // default is true
+        mPtrFrame.setKeepHeaderWhenRefresh(true);
+        mPtrFrame.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPtrFrame.autoRefresh();
+            }
+        }, 100);*/
+    }
+
     private void addListener(){
-        fab.setOnClickListener(new Button.OnClickListener() {
+        /*fab.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View view) {
                 displayPrompt();
             }
-        });
+        });*/
 
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -177,6 +261,7 @@ public class CategoryFragment extends Fragment {
             }
         });
 
+        /*
         categoryListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -190,7 +275,7 @@ public class CategoryFragment extends Fragment {
                                 0 : categoryListView.getChildAt(0).getTop();
                 swipeContainer.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
             }
-        });
+        });*/
     }
 
     /**
