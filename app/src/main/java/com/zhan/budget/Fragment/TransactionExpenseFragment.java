@@ -140,11 +140,11 @@ public class TransactionExpenseFragment extends Fragment {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
                     ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.transparent));
-                }
 
-                View childView = parent.getChildAt(position);
-                CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                    if(i == position){
+                        ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                    }
+                }
 
                 selectedExpenseCategory = categoryExpenseList.get(position);
                 mListener.onCategoryExpenseClick(selectedExpenseCategory);

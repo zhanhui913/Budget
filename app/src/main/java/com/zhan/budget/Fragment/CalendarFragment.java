@@ -497,41 +497,9 @@ public class CalendarFragment extends Fragment {
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
-                        //deleting a transaction
-                        Transaction transactionToBeDeleted = transactionList.get(position);
-
                         myRealm.beginTransaction();
                         resultsTransactionForDay.get(position).removeFromRealm();
                         myRealm.commitTransaction();
-
-
-
-                        /*transactionAdapter.remove(transactionList.get(position));
-                        transactionList.remove(position);
-                        updateTransactionStatus();
-
-                        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-                            @Override
-                            protected void onPreExecute() {
-                                super.onPreExecute();
-                                Log.d("VIEW", "preparing transaction");
-                            }
-
-                            @Override
-                            protected Void doInBackground(Void... voids) {
-                                db.deleteTransaction(transactionToBeDeleted);
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void voids) {
-                                super.onPostExecute(voids);
-                                Log.d("VIEW", "done transaction");
-                            }
-                        };
-                        loader.execute();
-                        */
                         break;
                 }
                 //False: Close the menu
@@ -733,7 +701,6 @@ public class CalendarFragment extends Fragment {
 
     Transaction transactionReturnedFromTransaction1;
     Category categoryReturnedFromTransaction;
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

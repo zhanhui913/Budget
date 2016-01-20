@@ -140,13 +140,11 @@ public class TransactionIncomeFragment extends Fragment {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
                     ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+
+                    if(i == position){
+                        ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                    }
                 }
-
-                View childView = parent.getChildAt(position);
-                CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
-
-
 
                 selectedIncomeCategory = categoryIncomeList.get(position);
                 mListener.onCategoryIncomeClick(selectedIncomeCategory);

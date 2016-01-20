@@ -66,25 +66,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TransactionIncomeFragment.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionIncomeFragment.java">
+      <file leaf-file-name="CalendarFragment.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="141" column="96" selection-start-line="141" selection-start-column="85" selection-end-line="141" selection-end-column="96" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TransactionExpenseFragment.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.55899197">
-              <caret line="142" column="17" selection-start-line="142" selection-start-column="17" selection-end-line="142" selection-end-column="17" />
+            <state vertical-scroll-proportion="-0.19503546">
+              <caret line="500" column="48" selection-start-line="500" selection-start-column="24" selection-end-line="500" selection-end-column="48" />
               <folding>
-                <element signature="method#listenToGridView#0;class#TransactionExpenseFragment#0" expanded="false" />
-                <element signature="e#3618#4533#0" expanded="true" />
-                <element signature="e#4532#4533#0" expanded="true" />
+                <element signature="docComment;method#newInstance#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onCreate#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onCreateView#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onActivityCreated#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#createCustomEvents#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#init#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#createCalendar#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#updateCalendarDecoratorsForMonth#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#refreshView#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="class#19315:19600" expanded="false" />
+                <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#snapPanelUp#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#snapPanelDown#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#playRotateAnimation#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onCreateOptionsMenu#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onOptionsItemSelected#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onAttach#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#onDetach#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -3943,7 +3951,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/transaction_circle_indicator.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/Parcelable/ParcelableCategory.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/Transaction.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Util/Util.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/MainActivity.java" />
@@ -3951,8 +3958,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/CircleView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionInfoActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionIncomeFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionIncomeFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java" />
       </list>
     </option>
   </component>
@@ -4016,28 +4024,6 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -4051,28 +4037,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="View" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -4113,38 +4077,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="Fragment" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Activity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -4691,30 +4623,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.4100802">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="docComment;method#newInstance#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#onCreate#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#onCreateView#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#createCustomEvents#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#updateCalendarDecoratorsForMonth#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#refreshView#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#createSwipeMenu#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#playRotateAnimation#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#onCreateOptionsMenu#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#onAttach#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#onDetach#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_category.xml">
       <provider selected="true" editor-type-id="android-designer">
         <state />
@@ -4832,20 +4740,59 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionIncomeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="141" column="96" selection-start-line="141" selection-start-column="85" selection-end-line="141" selection-end-column="96" />
-          <folding />
+        <state vertical-scroll-proportion="0.60137457">
+          <caret line="147" column="0" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
+          <folding>
+            <element signature="e#4602#5437#0" expanded="true" />
+            <element signature="e#5436#5437#0" expanded="true" />
+            <element signature="e#5489#5490#0" expanded="true" />
+            <element signature="e#5522#5523#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55899197">
-          <caret line="142" column="17" selection-start-line="142" selection-start-column="17" selection-end-line="142" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.64490265">
+          <caret line="147" column="0" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
           <folding>
-            <element signature="method#listenToGridView#0;class#TransactionExpenseFragment#0" expanded="false" />
+            <element signature="method#populateCategoryExpense#0;class#TransactionExpenseFragment#0" expanded="false" />
             <element signature="e#3618#4533#0" expanded="true" />
             <element signature="e#4532#4533#0" expanded="true" />
+            <element signature="e#4624#5463#0" expanded="true" />
+            <element signature="e#5462#5463#0" expanded="true" />
+            <element signature="e#5514#5515#0" expanded="true" />
+            <element signature="e#5547#5548#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.19503546">
+          <caret line="500" column="48" selection-start-line="500" selection-start-column="24" selection-end-line="500" selection-end-column="48" />
+          <folding>
+            <element signature="docComment;method#newInstance#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onCreate#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onCreateView#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onActivityCreated#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#createCustomEvents#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#init#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#createCalendar#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#updateCalendarDecoratorsForMonth#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#refreshView#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="class#19315:19600" expanded="false" />
+            <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#snapPanelUp#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#snapPanelDown#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#playRotateAnimation#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onCreateOptionsMenu#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onAttach#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onDetach#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
           </folding>
         </state>
       </provider>
