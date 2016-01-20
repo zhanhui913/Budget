@@ -526,7 +526,7 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == 0) {
-                    Log.i("ZHAN2", "scrollStateChanged: stop (idle)");
+                    Log.i("CALENDAR_FRAGMENT", "scrollStateChanged: stop (idle)");
                     isTouchOffScroll = true;
 
                     if (isCenterPanelPulledDown) {
@@ -534,10 +534,10 @@ public class CalendarFragment extends Fragment {
                     }
 
                 } else if (scrollState == 1) {
-                    Log.i("ZHAN2", "scrollStateChanged: still moving (touch)");
+                    Log.i("CALENDAR_FRAGMENT", "scrollStateChanged: still moving (touch)");
                     isTouchOffScroll = false;
                 } else if (scrollState == 2) {
-                    Log.i("ZHAN2", "scrollStateChanged: preparing to stop (fling)");
+                    Log.i("CALENDAR_FRAGMENT", "scrollStateChanged: preparing to stop (fling)");
                     isTouchOffScroll = false;
                 }
                 dateTextView.setText("a:" + isScrollAtTop + ", b:" + isTouchOffScroll);
@@ -586,9 +586,9 @@ public class CalendarFragment extends Fragment {
 
                         break;
                     case MotionEvent.ACTION_UP: //CLICK UP
-                        Log.i("ZHAN2", "action up");
+                        Log.i("CALENDAR_FRAGMENT", "action up");
                         if (isPanelCloseToTop) {
-                            Log.i("ZHAN2", "panel is close to top");
+                            Log.i("CALENDAR_FRAGMENT", "panel is close to top");
                             snapPanelUp();
                         }
                         break;
@@ -606,16 +606,16 @@ public class CalendarFragment extends Fragment {
                         if (isScrollAtTop) {
                             if (dY >= 0) { //Prevents root from going too far down
                                 layoutParams.topMargin = 0;
-                                //Log.i("ZHAN2", "down at max");
+                                //Log.i("CALENDAR_FRAGMENT", "down at max");
                                 isCenterPanelPulledDown = true;
                                 isPanelCloseToTop = false;
                             } else if (dY < -centerPanelHeight) { //Prevents root from going too far up
                                 layoutParams.topMargin = -centerPanelHeight;
-                                //Log.i("ZHAN2", "up at max");
+                                //Log.i("CALENDAR_FRAGMENT", "up at max");
                                 isCenterPanelPulledDown = false;
                                 isPanelCloseToTop = true;
                             } else {
-                                //Log.i("ZHAN2", "still going");
+                                //Log.i("CALENDAR_FRAGMENT", "still going");
                                 layoutParams.topMargin = dY;
                                 isCenterPanelPulledDown = false;
                                 isPanelCloseToTop = true;

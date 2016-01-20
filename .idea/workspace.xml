@@ -66,33 +66,68 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CalendarFragment.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
+      <file leaf-file-name="TransactionExpenseFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.19503546">
-              <caret line="500" column="48" selection-start-line="500" selection-start-column="24" selection-end-line="500" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="126" column="97" selection-start-line="126" selection-start-column="42" selection-end-line="126" selection-end-column="97" />
               <folding>
-                <element signature="docComment;method#newInstance#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onCreate#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onCreateView#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onActivityCreated#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#createCustomEvents#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#init#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#createCalendar#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#updateCalendarDecoratorsForMonth#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#refreshView#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="class#19315:19600" expanded="false" />
-                <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#snapPanelUp#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#snapPanelDown#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#playRotateAnimation#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onCreateOptionsMenu#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onOptionsItemSelected#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onAttach#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="method#onDetach#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
+                <element signature="method#populateCategoryExpense#0;class#TransactionExpenseFragment#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CircularView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/circularview/src/main/java/com/zhan/circularview/CircularView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="155" column="59" selection-start-line="155" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CategoryFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="143" column="89" selection-start-line="143" selection-start-column="89" selection-end-line="143" selection-end-column="89" />
+              <folding>
+                <element signature="method#onActivityCreated#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="e#5409#5541#0" expanded="true" />
+                <element signature="e#5540#5541#0" expanded="true" />
+                <element signature="method#displayPrompt#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#populateCategoryWithNoInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#populateCategoryWithInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="e#9932#10259#0" expanded="true" />
+                <element signature="e#10258#10259#0" expanded="true" />
+                <element signature="method#aggregateCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onActivityResult#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#updateMonthInToolbar#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onCreateOptionsMenu#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fragment_category.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_category.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.1421801">
+              <caret line="8" column="39" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="39" />
+              <folding>
+                <element signature="e#2440#2459#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -610,6 +645,11 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="prepareDebugUnitTestDependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare in.srain.cube:ultra-ptr:1.0.11" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareInSrainCubeUltraPtr1011Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -1274,6 +1314,11 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
                 <option name="name" value="prepareDebugUnitTestDependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare in.srain.cube:ultra-ptr:1.0.11" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="prepareInSrainCubeUltraPtr1011Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
@@ -3224,7 +3269,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="8716375856000" />
+        <entry key="$PROJECT_DIR$" value="8716378981000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -3451,6 +3496,7 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.baoyz.swipemenulistview/library/1.3.0/5757dcec8dfe0f1fef4c77336e76ed06c190fd20/library-1.3.0.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.akexorcist/RoundCornerProgressBar/2.0.3/66f250a83b49c9c14757f2129d3a2454f9a252c8/RoundCornerProgressBar-2.0.3.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android/0.87.2/b2ab753fd2c316f3fb5f4cfbf56641449935c316/realm-android-0.87.2.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/in.srain.cube/ultra-ptr/1.0.11/f56dc2ef8d0a7f6fb90e620ae1f155bbe96ed61/ultra-ptr-1.0.11.aar" />
                             <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.1.1/recyclerview-v7-23.1.1.aar" />
                             <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
                           </list>
@@ -3945,13 +3991,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/TransactionListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_category.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionsForCategory.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/transaction_circle_indicator.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/Parcelable/ParcelableCategory.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/Transaction.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Util/Util.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/CategoryListAdapter.java" />
@@ -3961,6 +4005,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionIncomeFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_category.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
       </list>
     </option>
   </component>
@@ -3975,9 +4022,9 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="379" />
+    <option name="x" value="1" />
     <option name="y" value="23" />
-    <option name="width" value="2155" />
+    <option name="width" value="1273" />
     <option name="height" value="1413" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -4014,29 +4061,15 @@
               <option name="myItemId" value="Budget" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+              <option name="myItemId" value="Gradle Scripts" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidBuildScriptsGroupNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="Budget" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -4047,36 +4080,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Fragment" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -4103,7 +4106,7 @@
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="FA346W905030" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_21_x86" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="308" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/Budget_home" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../android-Ultra-Pull-To-Refresh" />
     <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager" selected="Android Application.app">
@@ -4268,7 +4271,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="379" y="23" width="2155" height="1413" extended-state="0" />
+    <frame x="1" y="23" width="1273" height="1413" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -4288,7 +4291,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13440606" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23070674" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Mirror" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -4345,17 +4348,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.42775667">
           <caret line="43" column="69" selection-start-line="43" selection-start-column="65" selection-end-line="43" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_category.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.172414">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="39" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4513,13 +4505,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39007092">
-          <caret line="33" column="57" selection-start-line="33" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionsForCategory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.013745705">
@@ -4591,14 +4576,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/circularview/src/main/java/com/zhan/circularview/CircularView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48109967">
-          <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="181" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/OverviewFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20618556">
@@ -4647,25 +4624,6 @@
         <state vertical-scroll-proportion="0.7079038">
           <caret line="345" column="27" selection-start-line="345" selection-start-column="27" selection-end-line="345" selection-end-column="27" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5460993">
-          <caret line="235" column="11" selection-start-line="235" selection-start-column="11" selection-end-line="235" selection-end-column="11" />
-          <folding>
-            <element signature="method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onActivityResult#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#updateMonthInToolbar#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onCreateOptionsMenu#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -4751,26 +4709,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.64490265">
-          <caret line="147" column="0" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
-          <folding>
-            <element signature="method#populateCategoryExpense#0;class#TransactionExpenseFragment#0" expanded="false" />
-            <element signature="e#3618#4533#0" expanded="true" />
-            <element signature="e#4532#4533#0" expanded="true" />
-            <element signature="e#4624#5463#0" expanded="true" />
-            <element signature="e#5462#5463#0" expanded="true" />
-            <element signature="e#5514#5515#0" expanded="true" />
-            <element signature="e#5547#5548#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.19503546">
-          <caret line="500" column="48" selection-start-line="500" selection-start-column="24" selection-end-line="500" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.45974234">
+          <caret line="589" column="45" selection-start-line="589" selection-start-column="28" selection-end-line="589" selection-end-column="45" />
           <folding>
             <element signature="docComment;method#newInstance#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#onCreate#0;class#CalendarFragment#0" expanded="false" />
@@ -4782,6 +4724,7 @@
             <element signature="method#updateCalendarDecoratorsForMonth#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#refreshView#0;class#CalendarFragment#0" expanded="false" />
             <element signature="class#19315:19600" expanded="false" />
+            <element signature="method#onScroll#0;class#19656:21993" expanded="false" />
             <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#snapPanelUp#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#snapPanelDown#0;class#CalendarFragment#0" expanded="false" />
@@ -4793,6 +4736,73 @@
             <element signature="method#onAttach#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#onDetach#0;class#CalendarFragment#0" expanded="false" />
             <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/circularview/src/main/java/com/zhan/circularview/CircularView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="155" column="59" selection-start-line="155" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="126" column="97" selection-start-line="126" selection-start-column="42" selection-end-line="126" selection-end-column="97" />
+          <folding>
+            <element signature="method#populateCategoryExpense#0;class#TransactionExpenseFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.60137457">
+          <caret line="35" column="44" selection-start-line="35" selection-start-column="44" selection-end-line="35" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="143" column="89" selection-start-line="143" selection-start-column="89" selection-end-line="143" selection-end-column="89" />
+          <folding>
+            <element signature="method#onActivityCreated#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="e#5409#5541#0" expanded="true" />
+            <element signature="e#5540#5541#0" expanded="true" />
+            <element signature="method#displayPrompt#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#populateCategoryWithNoInfo#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#populateCategoryWithInfo#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="e#9932#10259#0" expanded="true" />
+            <element signature="e#10258#10259#0" expanded="true" />
+            <element signature="method#aggregateCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onActivityResult#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#updateMonthInToolbar#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onCreateOptionsMenu#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_category.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.1421801">
+          <caret line="8" column="39" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="39" />
+          <folding>
+            <element signature="e#2440#2459#0" expanded="true" />
           </folding>
         </state>
       </provider>

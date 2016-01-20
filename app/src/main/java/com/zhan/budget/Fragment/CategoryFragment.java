@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +19,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -35,6 +40,7 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -74,6 +80,8 @@ public class CategoryFragment extends Fragment {
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
+
+    private SwipeRefreshLayout swipeContainer;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -127,6 +135,19 @@ public class CategoryFragment extends Fragment {
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        try {
+            Field f = swipeContainer.getClass().getDeclaredField("mCircleView");
+            f.setAccessible(true);
+            ImageView img = (ImageView)f.get(swipeContainer);
+            img.setImageResource(R.drawable.ic_add);
+            img.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
         populateCategoryWithNoInfo();
 
         //0 represents no change in month relative to currentMonth variable
@@ -153,6 +174,21 @@ public class CategoryFragment extends Fragment {
                 viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, Util.convertDateToString(currentMonth));
                 viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, parcelableCategory);
                 startActivity(viewAllTransactionsForCategory);
+            }
+        });
+
+        categoryListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (categoryListView == null || categoryListView.getChildCount() == 0) ?
+                                0 : categoryListView.getChildAt(0).getTop();
+                swipeContainer.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
             }
         });
     }
