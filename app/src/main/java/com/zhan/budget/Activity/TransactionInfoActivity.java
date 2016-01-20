@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TransactionViewPager;
 import com.zhan.budget.Etc.Constants;
@@ -423,13 +422,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onCategoryExpenseClick(Category category){
-        Toast.makeText(getApplicationContext(), "clicked on expense category : "+category.getName(), Toast.LENGTH_SHORT).show();
         selectedExpenseCategory = category;
     }
 
     @Override
     public void onCategoryIncomeClick(Category category){
-        Toast.makeText(getApplicationContext(), "clicked on income category : "+category.getName(), Toast.LENGTH_SHORT).show();
         selectedIncomeCategory = category;
     }
 

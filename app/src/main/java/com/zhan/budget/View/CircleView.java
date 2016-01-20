@@ -5,12 +5,10 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.zhan.budget.R;
 
@@ -50,7 +48,6 @@ public class CircleView extends View {
         } finally {
             a.recycle();
         }
-
     }
 
     @Override

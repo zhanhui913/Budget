@@ -15,4 +15,6 @@
     <color name="lightBlue">#6BB9F0</color>
     <color name="lightPurple">#BE90D4</color>
     <color name="cyan">#1ABC9C</color>
+
+    <color name="transparent">#00FFFFFF</color>
 </resources>

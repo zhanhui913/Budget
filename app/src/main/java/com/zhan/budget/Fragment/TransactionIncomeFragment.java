@@ -139,7 +139,7 @@ public class TransactionIncomeFragment extends Fragment {
                 for (int i = 0; i < parent.getChildCount(); i++) {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                    ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.transparent));
                 }
 
                 View childView = parent.getChildAt(position);
