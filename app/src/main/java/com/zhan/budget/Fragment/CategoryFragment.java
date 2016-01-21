@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -34,6 +34,8 @@ import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
+import com.zhan.budget.View.CenterPanelView;
+import com.zhan.circularview.PlusView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +49,6 @@ import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.header.StoreHouseHeader;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
-
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -85,6 +86,7 @@ public class CategoryFragment extends Fragment {
 
     private PtrClassicFrameLayout mPtrFrame;
     private StoreHouseHeader header;
+    private CenterPanelView header1;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -152,23 +154,43 @@ public class CategoryFragment extends Fragment {
     //Pull to refresh component
     private void createPullToRefresh(){
         //final StoreHouseHeader header = new StoreHouseHeader(getContext());
-        header = new StoreHouseHeader(getContext());
-        header.setPadding(0, 0, 0, 0);
+        //header = new StoreHouseHeader(getContext());
+        //header.setPadding(0, 0, 0, 0);
 
         // using string array from resource xml file
         //header.initWithStringArray(R.array.storehouse);
-        header.initWithString("Add Transaction");
-        header.setTextColor(ContextCompat.getColor(getContext(), R.color.darkgray));
+        //header.initWithString("Add Transaction");
+        //header.setTextColor(ContextCompat.getColor(getContext(), R.color.darkgray));
+
+
 
         mPtrFrame = (PtrClassicFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
+        //mPtrFrame.setHeaderView(header);
+        //mPtrFrame.addPtrUIHandler(header);
 
+        header1 = new CenterPanelView(getContext());
+
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        header1.setLayoutParams(params);
+
+/*
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        int leftPadding = metrics.widthPixels/2;
+        header1.setPadding(leftPadding, 0, 0, 0);
+Toast.makeText(getContext(), "left padding is "+leftPadding, Toast.LENGTH_SHORT).show();
+*/
+
+        //mPtrFrame.setHeaderView(header1);
+        mPtrFrame.setHeaderView(new PlusView(getContext()));
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                Log.d("CATEGORY_FRAGMENT","on refresh begin");
+                Log.d("CATEGORY_FRAGMENT", "-- on refresh begin");
                 frame.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -190,11 +212,11 @@ public class CategoryFragment extends Fragment {
             public void onUIReset(PtrFrameLayout frame) {
                 mLoadTime++;
                 if (mLoadTime % 2 == 0) {
-                    header.setScale(1);
-                    header.initWithStringArray(R.array.storehouse);
+                    //header.setScale(1);
+                    //header.initWithStringArray(R.array.storehouse);
                 } else {
-                    header.setScale(0.5f);
-                    header.initWithStringArray(R.array.akta);
+                    //header.setScale(0.5f);
+                    //header.initWithStringArray(R.array.akta);
                 }
                 Log.d("CATEGORY_FRAGMENT", "onUIReset");
             }
@@ -207,6 +229,7 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onUIRefreshBegin(PtrFrameLayout frame) {
                 Log.d("CATEGORY_FRAGMENT", "onUIRefreshBegin");
+                header1.playRotateAnimation();
             }
 
             @Override
@@ -220,6 +243,7 @@ public class CategoryFragment extends Fragment {
 
             }
         });
+
     }
 
     private void addListener(){
