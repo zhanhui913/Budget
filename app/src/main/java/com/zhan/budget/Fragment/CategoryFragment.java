@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -34,8 +34,7 @@ import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
-import com.zhan.budget.View.CenterPanelView;
-import com.zhan.circularview.PlusView;
+import com.zhan.budget.View.PlusView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +46,6 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
-import in.srain.cube.views.ptr.header.StoreHouseHeader;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -85,8 +83,7 @@ public class CategoryFragment extends Fragment {
     private RealmResults<Transaction> resultsTransaction;
 
     private PtrClassicFrameLayout mPtrFrame;
-    private StoreHouseHeader header;
-    private CenterPanelView header1;
+    private PlusView header;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -113,6 +110,10 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_category, container, false);
+
+        //Momentarily set background as white just before any categories are loaded
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+
         return view;
     }
 
@@ -153,39 +154,11 @@ public class CategoryFragment extends Fragment {
 
     //Pull to refresh component
     private void createPullToRefresh(){
-        //final StoreHouseHeader header = new StoreHouseHeader(getContext());
-        //header = new StoreHouseHeader(getContext());
-        //header.setPadding(0, 0, 0, 0);
-
-        // using string array from resource xml file
-        //header.initWithStringArray(R.array.storehouse);
-        //header.initWithString("Add Transaction");
-        //header.setTextColor(ContextCompat.getColor(getContext(), R.color.darkgray));
-
-
-
         mPtrFrame = (PtrClassicFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
-        //mPtrFrame.setHeaderView(header);
-        //mPtrFrame.addPtrUIHandler(header);
 
-        header1 = new CenterPanelView(getContext());
+        header = new PlusView(getContext());
 
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        header1.setLayoutParams(params);
-
-/*
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        int leftPadding = metrics.widthPixels/2;
-        header1.setPadding(leftPadding, 0, 0, 0);
-Toast.makeText(getContext(), "left padding is "+leftPadding, Toast.LENGTH_SHORT).show();
-*/
-
-        //mPtrFrame.setHeaderView(header1);
-        mPtrFrame.setHeaderView(new PlusView(getContext()));
+        mPtrFrame.setHeaderView(header);
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
@@ -229,7 +202,7 @@ Toast.makeText(getContext(), "left padding is "+leftPadding, Toast.LENGTH_SHORT)
             @Override
             public void onUIRefreshBegin(PtrFrameLayout frame) {
                 Log.d("CATEGORY_FRAGMENT", "onUIRefreshBegin");
-                header1.playRotateAnimation();
+                header.playRotateAnimation();
             }
 
             @Override
@@ -334,6 +307,8 @@ Toast.makeText(getContext(), "left padding is "+leftPadding, Toast.LENGTH_SHORT)
             @Override
             public void onChange() {
                 categoryList = myRealm.copyFromRealm(resultsCategory);
+
+                view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
 
                 categoryAdapter.addAll(categoryList);
                 populateCategoryWithInfo();

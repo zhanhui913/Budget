@@ -15,17 +15,4 @@
             <enum name="XLARGE" value="1"/>
         </attr>
     </declare-styleable>
-    <declare-styleable name="PlusView">
-        <attr name="pv_bgColor" format="color"/>
-        <attr name="pv_iconDrawable" format="integer"/>
-        <attr name="pv_iconColor" format="integer"/>
-        <attr name="pv_iconSize" format="enum">
-            <enum name="XSMALL" value="17"/>
-            <enum name="SMALL" value="13"/>
-            <enum name="MEDIUM" value="9"/>
-            <enum name="LARGE" value="5"/>
-            <enum name="XLARGE" value="1"/>
-            <enum name="NONE" value="0"/>
-        </attr>
-    </declare-styleable>
 </resources>

@@ -1,4 +1,4 @@
-package com.zhan.circularview;
+package com.zhan.budget.View;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,23 +8,25 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 /**
  * Created by zhanyap on 2016-01-20.
  */
-public class PlusView extends View {
-
+public class PlusView extends View /*implements PtrUIHandler*/ {
 
     //Default values
-    private final static int DEFAULT_BG_COLOR = R.color.green;
+    private final static int DEFAULT_BG_COLOR = com.zhan.budget.R.color.transparent;
     private final static int DEFAULT_ICON_SIZE  = 0;//NONE
-    private final static int DEFAULT_ICON_COLOR = R.color.black;
-
+    private final static int DEFAULT_ICON_COLOR = com.zhan.budget.R.color.white;
 
     private Context context;
     private int backgroundColor;
@@ -56,13 +58,13 @@ public class PlusView extends View {
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){
         this.context = context;
 
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, com.zhan.budget.R.styleable.CircularView, 0, 0);
         try{
-            backgroundColor = a.getColor(R.styleable.PlusView_pv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
+            backgroundColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
             //iconDrawable = a.getDrawable(R.styleable.PlusView_pv_iconDrawable);
-            iconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_add);
-            iconSize = a.getInteger(R.styleable.PlusView_pv_iconSize, DEFAULT_ICON_SIZE);
-            iconColor = a.getColor(R.styleable.PlusView_pv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
+            iconDrawable = ContextCompat.getDrawable(context, com.zhan.budget.R.drawable.ic_add);
+            iconSize = a.getInteger(com.zhan.budget.R.styleable.PlusView_pv_iconSize, DEFAULT_ICON_SIZE);
+            iconColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
         }finally {
             a.recycle();
         }
@@ -140,6 +142,34 @@ public class PlusView extends View {
         }
     }
 
+    public void playRotateAnimation(){
+        Animation anim = AnimationUtils.loadAnimation(context, com.zhan.budget.R.anim.anim_rotate);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("PLUS_VIEW", "animation done");
+                    }
+                }, 500);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        //play rotate animation of the plus icon
+        this.startAnimation(anim);
+    }
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         final int size = iconDrawable.getIntrinsicHeight();
@@ -178,4 +208,35 @@ public class PlusView extends View {
     }*/
 
 
+
+
+
+ /*
+    @Override
+    public void onUIReset(PtrFrameLayout frame) {
+        Log.d("CENTER_PANEL_VIEW","onUIReset");
+    }
+
+
+    @Override
+    public void onUIRefreshPrepare(PtrFrameLayout frame) {
+        //Log.d("CENTER_PANEL_VIEW","onUIRefreshPrepare");
+    }
+
+    @Override
+    public void onUIRefreshBegin(PtrFrameLayout frame) {
+        //Log.d("CENTER_PANEL_VIEW","onUIRefreshBegin");
+        //playRotateAnimation();
+    }
+
+
+    @Override
+    public void onUIRefreshComplete(PtrFrameLayout frame) {
+        //Log.d("CENTER_PANEL_VIEW","onUIRefreshComplete");
+    }
+
+    @Override
+    public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+    }
+*/
 }
