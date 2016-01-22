@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
+import com.zhan.circularview.CircularView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,7 +72,7 @@ public class CalendarFragment extends Fragment {
 
     private int _yDelta;
     private ViewGroup root;
-    private TextView  entryCountView, dateTextView, balanceText;
+    private TextView  entryCountView, dateTextView;
     private ImageView plusIcon;
     private ViewGroup infoPanel;
 
@@ -148,7 +151,6 @@ public class CalendarFragment extends Fragment {
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
         entryCountView = (TextView) view.findViewById(R.id.entryCount);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
-        balanceText = (TextView) view.findViewById(R.id.balanceText);
 
         transactionListView = (SwipeMenuListView) view.findViewById(R.id.transactionListView);
         transactionList = new ArrayList<>();
@@ -354,37 +356,81 @@ public class CalendarFragment extends Fragment {
     }
 
     private void createEmptyListPanel(){
-        View vv = (LayoutInflater.from(getContext())).inflate(R.layout.empty_transaction_indicator, null, false);
-        emptyLayout = vv.findViewById(R.id.infoPanel);
+       emptyLayout = (LayoutInflater.from(getContext())).inflate(R.layout.empty_transaction_indicator, mPtrFrame, false);
+
     }
 
     private void updateTransactionStatus(){
         if(transactionList.size() > 0){
-            mPtrFrame.removeView(emptyLayout);
+  /*          mPtrFrame.removeView(emptyLayout);
+
             if(transactionListView.getParent() == null){
                 mPtrFrame.addView(transactionListView);
             }
-        }else{
+*/
 
-            mPtrFrame.removeView(transactionListView);
+            replaceView(emptyLayout, transactionListView);
+        }else{
+            replaceView(transactionListView, emptyLayout);
+
+/*
+            Log.d("ZHAN", "1 child count : " + mPtrFrame.getChildCount());
+
+            //mPtrFrame.removeView(transactionListView);
+
+            Log.d("ZHAN", "2 child count : " + mPtrFrame.getChildCount());
 
             if(emptyLayout.getParent() == null) {
 
-
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPtrFrame.getLayoutParams();
-                //params.width = PtrClassicFrameLayout.LayoutParams.MATCH_PARENT;
-                //params.height = PtrClassicFrameLayout.LayoutParams.FILL_PARENT;
+                params.width = PtrClassicFrameLayout.LayoutParams.MATCH_PARENT;
+                params.height = PtrClassicFrameLayout.LayoutParams.WRAP_CONTENT;
 
-                //emptyLayout.setLayoutParams(params);
-                mPtrFrame.addView(emptyLayout);
-
+                emptyLayout.setLayoutParams(params);
 
 
-                Toast.makeText(getContext(), "Add empty view. w:"+mPtrFrame.getLayoutParams().width+", h:"+mPtrFrame.getLayoutParams().height, Toast.LENGTH_SHORT).show();
+                //mPtrFrame.setHeaderView(header);
+                //mPtrFrame.addView(emptyLayout);
 
-            }
+                replaceView(transactionListView, emptyLayout);
+
+
+                Log.d("ZHAN", "3 child count : " + mPtrFrame.getChildCount());
+            }*/
+        }
+
+
+
+    }
+
+
+
+
+
+    public void replaceView(View currentView, View newView) {
+        ViewGroup parent = getParent(currentView);
+        if(parent == null) {
+            return;
+        }
+        final int index = parent.indexOfChild(currentView);
+        removeView(currentView);
+        removeView(newView);
+        parent.addView(newView, index);
+    }
+
+    public ViewGroup getParent(View view) {
+        return (ViewGroup)view.getParent();
+    }
+
+    public void removeView(View view) {
+        ViewGroup parent = getParent(view);
+        if(parent != null) {
+            parent.removeView(view);
         }
     }
+
+
+
 
     private void addNewTransaction(){
         Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
