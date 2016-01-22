@@ -33,7 +33,7 @@
                 android:layout_marginLeft="5dp"/>
 
             <TextView
-                android:id="@+id/entryCount"
+                android:id="@+id/totalCostForDay"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="55.50"
@@ -42,11 +42,13 @@
                 android:gravity="right" />
         </LinearLayout>
 
+        <!--
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical" >
+            -->
 
             <in.srain.cube.views.ptr.PtrClassicFrameLayout
                 android:id="@+id/rotate_header_list_view_frame"
@@ -57,15 +59,17 @@
                     <com.baoyz.swipemenulistview.SwipeMenuListView
                         android:id="@+id/transactionListView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:divider="@color/gray"
                         android:dividerHeight="1dp"
                         android:visibility="visible"
-                        android:background="@color/white"/>
+                        android:background="@color/white">
+
+                    </com.baoyz.swipemenulistview.SwipeMenuListView>
 
             </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
-        </LinearLayout>
+        <!-- </LinearLayout> -->
     </LinearLayout>
 
     <com.p_v.flexiblecalendar.FlexibleCalendarView

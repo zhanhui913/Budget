@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -36,7 +32,6 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
-import com.zhan.circularview.CircularView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,7 +67,7 @@ public class CalendarFragment extends Fragment {
 
     private int _yDelta;
     private ViewGroup root;
-    private TextView  entryCountView, dateTextView;
+    private TextView  totalCostForDay, dateTextView;
     private ImageView plusIcon;
     private ViewGroup infoPanel;
 
@@ -149,7 +144,7 @@ public class CalendarFragment extends Fragment {
         root = (ViewGroup) view.findViewById(R.id.root);
         //plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
-        entryCountView = (TextView) view.findViewById(R.id.entryCount);
+        totalCostForDay = (TextView) view.findViewById(R.id.totalCostForDay);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
         transactionListView = (SwipeMenuListView) view.findViewById(R.id.transactionListView);
@@ -289,6 +284,8 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onChange() {
                 Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
+
+                totalCostForDay.setText(Util.setPriceToCorrectDecimalInString(resultsTransactionForDay.sum("price")));
 
                 transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
                 updateTransactionStatus();

@@ -177,8 +177,8 @@ public class MainActivity extends AppCompatActivity
                     Random random = new Random();
                     int rd = random.nextInt(categoryList.size());
 
-                    //Create 5 transactions per day
-                    for (int j = 0; j < 10; j++) {
+                    //Create random transactions per day
+                    for (int j = 0; j < rd; j++) {
                         Transaction transaction = bgRealm.createObject(Transaction.class);
                         transaction.setId(Util.generateUUID());
                         transaction.setDate(date);
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity
                         Category category = categoryList.get(rd);
 
                         transaction.setCategory(category);
-                        transaction.setPrice(-120.0f + (j + 0.5f));
+                        transaction.setPrice(-120.0f + (rd * 0.5f));
                         transaction.setNote("Note " + j + " for "+Util.convertDateToString(date));
 
                         transactionArrayList.add(transaction);
