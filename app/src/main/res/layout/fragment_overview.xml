@@ -1,39 +1,12 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/monthReportGridView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.zhan.budget.Fragment.OverviewFragment">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal|top">
-
-        <com.zhan.circularview.CircularView
-            android:id="@+id/circularView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            custom:cv_bgColor="@color/green"
-            custom:cv_iconDrawable="@drawable/ic_date"
-            custom:cv_iconSize="XSMALL"
-            custom:cv_iconColor="@color/red" />
-
-        <com.zhan.circularview.CircularView
-            android:id="@+id/circularView1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            custom:cv_bgColor="@color/green"
-            custom:cv_strokeWidth="5dp"
-            custom:cv_strokeColor="@color/black"
-            custom:cv_strokePadding="5dp"
-            custom:cv_iconDrawable="@drawable/ic_date"
-            custom:cv_iconSize="XSMALL"
-            custom:cv_iconColor="@color/red" />
-
-
-    </LinearLayout>
-
-
-</FrameLayout>
+    android:layout_height="wrap_content"
+    android:adjustViewBounds="true"
+    android:gravity="center_horizontal"
+    android:horizontalSpacing="1dp"
+    android:numColumns="2"
+    android:padding="1dp"
+    android:stretchMode="columnWidth"
+    android:listSelector="#00000000"
+    android:verticalSpacing="1dp"/>

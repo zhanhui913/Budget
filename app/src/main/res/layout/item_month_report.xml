@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/monthCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/monthName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="January"
+                android:layout_alignParentTop="true"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/monthTotalCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="55.5"
+                android:layout_below="@+id/monthName"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/monthChangeCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-20.5"
+                android:layout_below="@+id/monthName"
+                android:layout_alignParentLeft="true" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,16 +1,21 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
+import com.zhan.budget.Adapter.MonthReportGridAdapter;
+import com.zhan.budget.Model.Parcelable.ParcelableMonthReport;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.circularview.CircularView;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +29,10 @@ public class OverviewFragment extends Fragment {
 
     private OnOverviewInteractionListener mListener;
     private View view;
-    private CircularView circularView;
+
+    private List<ParcelableMonthReport> monthReportList;
+    private GridView monthReportGridView;
+    private MonthReportGridAdapter monthReportGridAdapter;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -62,12 +70,28 @@ public class OverviewFragment extends Fragment {
     }
 
     private void init(){
-        circularView = (CircularView) view.findViewById(R.id.circularView1);
-        circularView.setCircleColor(Color.parseColor("#ff0012"));
-        circularView.setIconColor(Color.parseColor("#509912"));
-        circularView.setIconDrawable(CategoryUtil.getIconDrawable(getContext(), 9));
-        circularView.setStrokeColor(getResources().getColor(R.color.purple));
-        circularView.setStrokeWidth(10);
+        monthReportList = new ArrayList<>();
+        monthReportGridView = (GridView) view.findViewById(R.id.monthReportGridView);
+        monthReportGridAdapter = new MonthReportGridAdapter(getActivity(), monthReportList);
+        monthReportGridView.setAdapter(monthReportGridAdapter);
+
+        putFakeData();
+    }
+
+    private void putFakeData(){
+        Log.d("OVERVIEW_FRAGMENT"," put fake data");
+        for(int i = 0; i < 12; i++){
+
+            ParcelableMonthReport pm = new ParcelableMonthReport();
+            pm.setMonth(new Date());
+            pm.setChangeCost(-50f);
+            pm.setCostThisMonth(100);
+
+            monthReportList.add(pm);
+            Log.d("OVERVIEW_FRAGMENT", "adding "+i);
+        }
+        Log.d("OVERVIEW_FRAGMENT", "NotifyData change");
+        monthReportGridAdapter.notifyDataSetChanged();
     }
 
     @Override

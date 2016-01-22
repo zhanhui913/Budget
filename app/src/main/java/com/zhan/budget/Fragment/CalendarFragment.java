@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -65,10 +64,7 @@ public class CalendarFragment extends Fragment {
     private View view;
     private FlexibleCalendarView calendarView;
 
-    private int _yDelta;
-    private ViewGroup root;
     private TextView  totalCostForDay, dateTextView;
-    private ImageView plusIcon;
     private ViewGroup infoPanel;
 
 
@@ -141,8 +137,6 @@ public class CalendarFragment extends Fragment {
 
         eventMap = new HashMap<>();
 
-        root = (ViewGroup) view.findViewById(R.id.root);
-        //plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
         totalCostForDay = (TextView) view.findViewById(R.id.totalCostForDay);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
