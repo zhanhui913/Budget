@@ -18,15 +18,17 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.zhan.budget.R;
+
 /**
  * Created by zhanyap on 2016-01-20.
  */
 public class PlusView extends View /*implements PtrUIHandler*/ {
 
     //Default values
-    private final static int DEFAULT_BG_COLOR = com.zhan.budget.R.color.transparent;
+    private final static int DEFAULT_BG_COLOR = R.color.transparent;
     private final static int DEFAULT_ICON_SIZE  = 0;//NONE
-    private final static int DEFAULT_ICON_COLOR = com.zhan.budget.R.color.white;
+    private final static int DEFAULT_ICON_COLOR = R.color.green;
 
     private Context context;
     private int backgroundColor;

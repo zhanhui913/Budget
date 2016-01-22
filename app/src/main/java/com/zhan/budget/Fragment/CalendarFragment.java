@@ -354,7 +354,6 @@ public class CalendarFragment extends Fragment {
 
     private void createEmptyListPanel(){
        emptyLayout = (LayoutInflater.from(getContext())).inflate(R.layout.empty_transaction_indicator, mPtrFrame, false);
-
     }
 
     private void updateTransactionStatus(){
@@ -395,14 +394,7 @@ public class CalendarFragment extends Fragment {
                 Log.d("ZHAN", "3 child count : " + mPtrFrame.getChildCount());
             }*/
         }
-
-
-
     }
-
-
-
-
 
     public void replaceView(View currentView, View newView) {
         ViewGroup parent = getParent(currentView);
@@ -425,9 +417,6 @@ public class CalendarFragment extends Fragment {
             parent.removeView(view);
         }
     }
-
-
-
 
     private void addNewTransaction(){
         Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
