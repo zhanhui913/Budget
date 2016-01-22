@@ -179,18 +179,9 @@ public class CategoryFragment extends Fragment {
         });
 
         mPtrFrame.addPtrUIHandler(new PtrUIHandler() {
-            private int mLoadTime = 0;
 
             @Override
             public void onUIReset(PtrFrameLayout frame) {
-                mLoadTime++;
-                if (mLoadTime % 2 == 0) {
-                    //header.setScale(1);
-                    //header.initWithStringArray(R.array.storehouse);
-                } else {
-                    //header.setScale(0.5f);
-                    //header.initWithStringArray(R.array.akta);
-                }
                 Log.d("CATEGORY_FRAGMENT", "onUIReset");
             }
 
@@ -216,7 +207,6 @@ public class CategoryFragment extends Fragment {
 
             }
         });
-
     }
 
     private void addListener(){

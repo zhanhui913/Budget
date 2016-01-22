@@ -3,7 +3,6 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,16 +10,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -37,6 +32,7 @@ import com.zhan.budget.Model.Parcelable.ParcelableTransaction;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
+import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
 import java.util.ArrayList;
@@ -47,6 +43,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.PtrUIHandler;
+import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -71,16 +73,10 @@ public class CalendarFragment extends Fragment {
     private ImageView plusIcon;
     private ViewGroup infoPanel;
 
-    private int centerPanelHeight;
 
     private SwipeMenuListView transactionListView;
     private TransactionListAdapter transactionAdapter;
     private List<Transaction> transactionList;
-
-    private Boolean isScrollAtTop;
-    private Boolean isTouchOffScroll;
-    private Boolean isCenterPanelPulledDown;
-    private Boolean isPanelCloseToTop;
 
     private Date selectedDate;
 
@@ -90,6 +86,11 @@ public class CalendarFragment extends Fragment {
 
     private RealmResults<Transaction> resultsTransactionForDay;
     private RealmResults<Transaction> resultsTransactionForMonth;
+
+    private PtrClassicFrameLayout mPtrFrame;
+    private PlusView header;
+
+    private View emptyLayout;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -124,36 +125,14 @@ public class CalendarFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
-        createPanel();
+        createPullToAddTransaction();
         createCalendar();
         createSwipeMenu();
-        updateTransactionStatus();
-        createCustomEvents();
-    }
 
-    private void createCustomEvents(){
-        /*
-        eventMap = new HashMap<>();
-        List<CustomEvent> colorLst = new ArrayList<>();
-        colorLst.add(new CustomEvent(android.R.color.holo_red_dark));
-        eventMap.put(25,colorLst);
+        createEmptyListPanel();
 
-        List<CustomEvent> colorLst1 = new ArrayList<>();
-        colorLst1.add(new CustomEvent(android.R.color.holo_red_dark));
-        colorLst1.add(new CustomEvent(android.R.color.holo_blue_light));
-        colorLst1.add(new CustomEvent(android.R.color.holo_purple));
-        eventMap.put(22,colorLst1);
-
-        List<CustomEvent> colorLst2= new ArrayList<>();
-        colorLst2.add(new CustomEvent(android.R.color.holo_red_dark));
-        colorLst2.add(new CustomEvent(android.R.color.holo_blue_light));
-        colorLst2.add(new CustomEvent(android.R.color.holo_purple));
-        eventMap.put(28, colorLst1);
-
-        List<CustomEvent> colorLst3 = new ArrayList<>();
-        colorLst3.add(new CustomEvent(android.R.color.holo_red_dark));
-        colorLst3.add(new CustomEvent(android.R.color.holo_blue_light));
-        eventMap.put(29, colorLst1);*/
+        //List all transactions for today
+        populateTransactionsForDate(selectedDate);
     }
 
     private void init(){
@@ -165,103 +144,74 @@ public class CalendarFragment extends Fragment {
         eventMap = new HashMap<>();
 
         root = (ViewGroup) view.findViewById(R.id.root);
-        plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
+        //plusIcon = (ImageView) view.findViewById(R.id.plusIcon);
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
         entryCountView = (TextView) view.findViewById(R.id.entryCount);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
         balanceText = (TextView) view.findViewById(R.id.balanceText);
+
         transactionListView = (SwipeMenuListView) view.findViewById(R.id.transactionListView);
-
-        dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
-
-        infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
-
-        isScrollAtTop = true;
-        isTouchOffScroll = true;
-        isCenterPanelPulledDown = false;
-        isPanelCloseToTop = true;
-
         transactionList = new ArrayList<>();
         transactionAdapter = new TransactionListAdapter(getActivity(), transactionList);
         transactionListView.setAdapter(transactionAdapter);
 
-        //updateCalendarDecoratorsForMonth(selectedDate);
+        dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
-        //List all transactions for today
-        populateTransactionsForDate(selectedDate);
+        //infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
     }
 
-    private void createPanel(){
-        //Used to get the height of the centerPanel to calculate dragging after it is drawn.
-        //The height is different in pixels based on the DPI of devices.
+    private void createPullToAddTransaction(){
+        mPtrFrame = (PtrClassicFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
 
-        ViewTreeObserver vto = plusIcon.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        header = new PlusView(getContext());
+
+        mPtrFrame.setHeaderView(header);
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
-            public void onGlobalLayout() {
-                plusIcon.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPtrFrame.refreshComplete();
+                    }
+                }, 500);
+            }
 
-                centerPanelHeight = plusIcon.getHeight();
-                snapPanelUp();
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
             }
         });
 
-        root.setOnTouchListener(new View.OnTouchListener() {
+        mPtrFrame.addPtrUIHandler(new PtrUIHandler() {
+
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (isScrollAtTop && isTouchOffScroll) {
+            public void onUIReset(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIReset");
+            }
 
-                    final int Y = (int) event.getRawY();
+            @Override
+            public void onUIRefreshPrepare(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIRefreshPrepare");
+            }
 
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_DOWN: //CLICK DOWN
-                            RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+            @Override
+            public void onUIRefreshBegin(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIRefreshBegin");
+                header.playRotateAnimation();
+            }
 
-                            _yDelta = Y - lParams.topMargin;
-                            break;
-                        case MotionEvent.ACTION_UP: //CLICK UP
-                            if (isPanelCloseToTop) {
-                                snapPanelUp();
-                            }
+            @Override
+            public void onUIRefreshComplete(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
+                addNewTransaction();
+            }
 
-                            if (isCenterPanelPulledDown) {
-                                snapPanelDown();
-                            }
-                            break;
-                        case MotionEvent.ACTION_POINTER_DOWN:
-                            break;
-                        case MotionEvent.ACTION_POINTER_UP:
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+            @Override
+            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
 
-                            int dY = Y - _yDelta;
-
-                            if (dY >= 0) { //Prevents root from going too far down
-                                layoutParams.topMargin = 0;
-                                isCenterPanelPulledDown = true;
-                                isPanelCloseToTop = false;
-                            } else if (dY < -centerPanelHeight) { //Prevents root from going too far up
-                                layoutParams.topMargin = -centerPanelHeight;
-                                isCenterPanelPulledDown = false;
-                                isPanelCloseToTop = true;
-                            } else {
-                                layoutParams.topMargin = dY;
-                                isCenterPanelPulledDown = false;
-                                isPanelCloseToTop = true;
-                            }
-
-                            layoutParams.bottomMargin = -250;
-
-                            v.setLayoutParams(layoutParams);
-
-                            break;
-                    }
-                    root.invalidate();
-                    return true;
-                } else {
-                    return false;
-                }
             }
         });
     }
@@ -302,15 +252,11 @@ public class CalendarFragment extends Fragment {
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                snapPanelUp();
-
                 //This is temporary for now because when we move to a new month, the 1st of that month is selected by default
                 selectedDate = (new GregorianCalendar(year, month, 1)).getTime();
                 populateTransactionsForDate(selectedDate);
 
                 dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
-
-                // updateCalendarDecoratorsForMonth(year, month);
 
                 updateMonthInToolbar(0);
             }
@@ -319,8 +265,6 @@ public class CalendarFragment extends Fragment {
         calendarView.setOnDateClickListener(new FlexibleCalendarView.OnDateClickListener() {
             @Override
             public void onDateClick(int year, int month, int day) {
-                snapPanelUp();
-
                 selectedDate = (new GregorianCalendar(year, month, day)).getTime();
 
                 dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
@@ -329,11 +273,6 @@ public class CalendarFragment extends Fragment {
             }
         });
     }
-/*
-    public List<CustomEvent> getCustomEvents(int year, int month, int day){ Log.d("CALENDAR_FRAGMENT", "getcustomEvents");
-        String dateString = Util.convertDateToString((new GregorianCalendar(year, month, day)).getTime());
-        return eventMap.get(dateString);
-    }*/
 
     private void populateTransactionsForDate(Date date) {
         Date beginDate = Util.refreshDate(date);
@@ -358,123 +297,14 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-/*
-    private void updateCalendarDecoratorsForMonth(Date date){
-        //Update decorators for the given month
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
-
-        final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
-
-        //If this is December, the next month needs to be the following year's January
-        if(month == 11){
-            month = 0;
-            year++;
-        }else{
-            month++;
-        }
-
-        final Date endMonth = new GregorianCalendar(year, month, 1).getTime();
-
-        resultsTransactionForMonth = myRealm.where(Transaction.class).between("date",startMonth, endMonth).findAllAsync();
-        resultsTransactionForMonth.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                //refreshView(thisMonthTransactionList);
-                Log.d("CALENDAR_FRAGMENT", "done getting all transactions for this month, results " + resultsTransactionForMonth.size());
-            }
-        });
-
-        //updateCalendarDecoratorsForMonth(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
-    }
-    */
-
-    private void updateCalendarDecoratorsForMonth(final int year, final int month) {
-        Log.d("CALENDAR_FRAGMENT", "updating decorators");
-        /*
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-            ArrayList<Transaction> thisMonthTransactionList = new ArrayList<>();
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("VIEW", "preparing transaction");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                thisMonthTransactionList = db.getAllTransactionInMonth(selectedDate, true);
-                Log.d("VIEW", "TOTAL = there are " + thisMonthTransactionList.size() + " days with transactions in " + (month + 1) + ", " + year);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("VIEW", "done transaction");
-
-                refreshView(thisMonthTransactionList);
-            }
-        };
-
-        loader.execute();*/
-    }
-
-    private void refreshView(final ArrayList<Transaction> thisMonthTransactionList){
-        /*
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("VIEW", "preparing transaction");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                for(int i = 0; i < thisMonthTransactionList.size(); i++){
-                    List<CustomEvent> colorList = new ArrayList<>();
-                    colorList.add(new CustomEvent(android.R.color.holo_red_dark));
-                    eventMap.put(Util.convertDateToString(thisMonthTransactionList.get(i).getDate()),colorList);
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-                Log.d("VIEW", "done putting to hashMAP");
-                doneHashMap();
-            }
-        };
-
-        loader.execute();
-        */
-    }
-
-    //not being used at all (doesnt work)
-    /*private void doneHashMap() {
-        Log.d("CALENDAR_FRAGMENT", "doneHashMAP");
-        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
-            @Override
-            public List<CustomEvent> getEventsForTheDay(int year, int month, int day) {
-                return getCustomEvents(year, month, day);
-            }
-        });
-    }*/
-
     /**
      * Add swipe capability on list view to delete that item.
      * From 3rd party library.
      */
     private void createSwipeMenu(){
+        //transactionListView = new SwipeMenuListView(getContext());
+        //transactionListView.setDividerHeight(Util.dp2px(getContext(), 1));
+
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -521,170 +351,48 @@ public class CalendarFragment extends Fragment {
                 // swipe end
             }
         });
+    }
 
-        transactionListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == 0) {
-                    Log.i("CALENDAR_FRAGMENT", "scrollStateChanged: stop (idle)");
-                    isTouchOffScroll = true;
-
-                    if (isCenterPanelPulledDown) {
-                        snapPanelDown();
-                    }
-
-                } else if (scrollState == 1) {
-                    Log.i("CALENDAR_FRAGMENT", "scrollStateChanged: still moving (touch)");
-                    isTouchOffScroll = false;
-                } else if (scrollState == 2) {
-                    Log.i("CALENDAR_FRAGMENT", "scrollStateChanged: preparing to stop (fling)");
-                    isTouchOffScroll = false;
-                }
-                dateTextView.setText("a:" + isScrollAtTop + ", b:" + isTouchOffScroll);
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0) {
-                    View v = transactionListView.getChildAt(0);
-
-                    int offset = (v == null) ? 0 : v.getTop();
-                    if (offset == 0) {
-                        // reached the top:
-                        isScrollAtTop = true;
-                        entryCountView.setText("top reached");
-                    } else {
-                        isScrollAtTop = false;
-                        entryCountView.setText("top not reached");
-                    }
-                } else if (totalItemCount - visibleItemCount == firstVisibleItem) {
-                    isScrollAtTop = false;
-                    if (transactionListView.getLastVisiblePosition() == transactionListView.getAdapter().getCount() - 1
-                            && transactionListView.getChildAt(transactionListView.getChildCount() - 1).getBottom() <= transactionListView.getHeight()) {
-
-                        entryCountView.setText("bottom reached");
-                    } else {
-                        entryCountView.setText("bottom not reached");
-                    }
-                } else {
-                    isScrollAtTop = false;
-                    entryCountView.setText("middle");
-                }
-            }
-        });
-
-        transactionListView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int Y = (int) event.getRawY();
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN: //CLICK DOWN
-                        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
-                        _yDelta = Y - lParams.topMargin;
-
-                        break;
-                    case MotionEvent.ACTION_UP: //CLICK UP
-                        Log.i("CALENDAR_FRAGMENT", "action up");
-                        if (isPanelCloseToTop) {
-                            Log.i("CALENDAR_FRAGMENT", "panel is close to top");
-                            snapPanelUp();
-                        }
-                        break;
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                        break;
-                    case MotionEvent.ACTION_POINTER_UP:
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
-
-                        int dY = Y - _yDelta;
-
-                        balanceText.setText("" + dY);
-
-                        if (isScrollAtTop) {
-                            if (dY >= 0) { //Prevents root from going too far down
-                                layoutParams.topMargin = 0;
-                                //Log.i("CALENDAR_FRAGMENT", "down at max");
-                                isCenterPanelPulledDown = true;
-                                isPanelCloseToTop = false;
-                            } else if (dY < -centerPanelHeight) { //Prevents root from going too far up
-                                layoutParams.topMargin = -centerPanelHeight;
-                                //Log.i("CALENDAR_FRAGMENT", "up at max");
-                                isCenterPanelPulledDown = false;
-                                isPanelCloseToTop = true;
-                            } else {
-                                //Log.i("CALENDAR_FRAGMENT", "still going");
-                                layoutParams.topMargin = dY;
-                                isCenterPanelPulledDown = false;
-                                isPanelCloseToTop = true;
-                                v.setClickable(false);
-                            }
-                        }
-
-                        root.setLayoutParams(layoutParams);
-                        break;
-                }
-                return false;
-            }
-        });
+    private void createEmptyListPanel(){
+        View vv = (LayoutInflater.from(getContext())).inflate(R.layout.empty_transaction_indicator, null, false);
+        emptyLayout = vv.findViewById(R.id.infoPanel);
     }
 
     private void updateTransactionStatus(){
         if(transactionList.size() > 0){
-            infoPanel.setVisibility(View.GONE);
+            mPtrFrame.removeView(emptyLayout);
+            if(transactionListView.getParent() == null){
+                mPtrFrame.addView(transactionListView);
+            }
         }else{
-            infoPanel.setVisibility(View.VISIBLE);
+
+            mPtrFrame.removeView(transactionListView);
+
+            if(emptyLayout.getParent() == null) {
+
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPtrFrame.getLayoutParams();
+                //params.width = PtrClassicFrameLayout.LayoutParams.MATCH_PARENT;
+                //params.height = PtrClassicFrameLayout.LayoutParams.FILL_PARENT;
+
+                //emptyLayout.setLayoutParams(params);
+                mPtrFrame.addView(emptyLayout);
+
+
+
+                Toast.makeText(getContext(), "Add empty view. w:"+mPtrFrame.getLayoutParams().width+", h:"+mPtrFrame.getLayoutParams().height, Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 
-    private void snapPanelUp(){
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
-        layoutParams.topMargin = -centerPanelHeight;
-        root.setLayoutParams(layoutParams);
-    }
+    private void addNewTransaction(){
+        Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
 
-    private void snapPanelDown(){
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) root.getLayoutParams();
-        layoutParams.topMargin = 0;
-        root.setLayoutParams(layoutParams);
-
-        playRotateAnimation();
-    }
-
-    private void playRotateAnimation(){
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_rotate);
-        anim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
-
-                        //This is not edit mode
-                        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-                        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, Util.convertDateToString(selectedDate));
-                        startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
-                        snapPanelUp();
-                    }
-                }, 500);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        //play rotate animation of the plus icon
-        plusIcon.startAnimation(anim);
+        //This is not edit mode
+        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, Util.convertDateToString(selectedDate));
+        startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
     }
 
     private void updateMonthInToolbar(int direction){
@@ -698,9 +406,6 @@ public class CalendarFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(selectedDate));
         }
     }
-
-    Transaction transactionReturnedFromTransaction1;
-    Category categoryReturnedFromTransaction;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -744,50 +449,6 @@ public class CalendarFragment extends Fragment {
                         }
                     }
                 });
-
-
-                //2nd option async (doesnt really work)
-                /*final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", parcelableTransaction.getCategory().getId()).findAllAsync();
-                cateList.addChangeListener(new RealmChangeListener() {
-                    @Override
-                    public void onChange() {
-
-                        if(cateList.size() != 0) {
-
-                            myRealm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm bgRealm) {
-                                    Category cat = myRealm.copyToRealm(cateList.get(0));
-                                    transactionReturnedFromTransaction1 = bgRealm.createObject(Transaction.class);
-                                    transactionReturnedFromTransaction1.setId(Util.generateUUID());
-                                    transactionReturnedFromTransaction1.setPrice(parcelableTransaction.getPrice());
-                                    transactionReturnedFromTransaction1.setDate(parcelableTransaction.getDate());
-                                    transactionReturnedFromTransaction1.setNote(parcelableTransaction.getNote());
-                                    transactionReturnedFromTransaction1.setCategory(cat);
-                                }
-                            }, new Realm.Transaction.Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    Log.d("ZHAN", "successfully added transaction : " + transactionReturnedFromTransaction1.getNote() + " for cat : " + transactionReturnedFromTransaction1.getCategory().getName());
-                                    transactionList.add(transactionReturnedFromTransaction1);
-
-                                    transactionAdapter.notifyDataSetChanged();
-                                    updateTransactionStatus();
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    // transaction is automatically rolled-back, do any cleanup here
-                                    e.printStackTrace();
-                                }
-                            });
-                        }
-                    }
-                });
-                */
-
-
-                //updateCalendarDecoratorsForMonth(selectedDate);
             }
         }
     }
