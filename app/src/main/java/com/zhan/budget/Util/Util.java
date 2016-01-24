@@ -248,6 +248,13 @@ public final class Util {
         //return String.format("%.2f", price);
     }
 
+    public static String setPriceToCorrectDecimalInString(Number price){
+        BigDecimal d = new BigDecimal((double)price).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
+        return d.toPlainString();
+
+        //return String.format("%.2f", price);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Date functions

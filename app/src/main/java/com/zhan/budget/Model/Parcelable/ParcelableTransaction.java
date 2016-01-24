@@ -3,6 +3,8 @@ package com.zhan.budget.Model.Parcelable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.zhan.budget.Model.Account;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.Util.Util;
 
 import java.util.Date;
@@ -17,6 +19,7 @@ public class ParcelableTransaction implements Parcelable {
     private Date date;
     private float price;
     private ParcelableCategory category;
+    private ParcelableAccount account;
 
     public ParcelableTransaction(){
 
@@ -62,6 +65,31 @@ public class ParcelableTransaction implements Parcelable {
         this.category = category;
     }
 
+    public void convertTransactionToParcelable(Transaction transaction){
+        this.id = transaction.getId();
+        this.date = transaction.getDate();
+        this.note = transaction.getNote();
+        this.price = transaction.getPrice();
+
+        ParcelableAccount pa = new ParcelableAccount();
+        pa.convertAccountToParcelable(transaction.getAccount());
+        this.account = pa;
+
+        ParcelableCategory pc = new ParcelableCategory();
+        pc.convertCategoryToParcelable(transaction.getCategory());
+        this.category = pc;
+    }
+
+    public Transaction convertParcelableToTransaction(){
+        Transaction transaction = new Transaction();
+        transaction.setId(this.id);
+        transaction.setNote(this.note);
+        transaction.setPrice(this.price);
+        transaction.setDate(this.date);
+        transaction.setAccount(this.account.convertParcelableToAccount());
+        transaction.setCategory(this.category.convertParcelableToCategory());
+        return transaction;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

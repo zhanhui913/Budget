@@ -8,22 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/divider">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimary">
-
-            <ImageView
-                android:id="@+id/plusIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_add"
-                android:padding="5dp"
-                android:scaleType="center"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
+        android:layout_below="@+id/calendarView">
 
         <LinearLayout
             android:id="@+id/expenseLayout"
@@ -40,14 +25,6 @@
                 android:tint="@color/secondary_text_default_material_light"/>
 
             <TextView
-                android:id="@+id/balanceText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DB"
-                android:textSize="20sp"
-                android:layout_marginLeft="5dp"/>
-
-            <TextView
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,7 +33,7 @@
                 android:layout_marginLeft="5dp"/>
 
             <TextView
-                android:id="@+id/entryCount"
+                android:id="@+id/totalCostForDay"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="55.50"
@@ -65,48 +42,38 @@
                 android:gravity="right" />
         </LinearLayout>
 
+        <!--
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical" >
+            -->
 
-            <RelativeLayout
-                android:id="@+id/infoPanel"
+            <in.srain.cube.views.ptr.PtrClassicFrameLayout
+                android:id="@+id/rotate_header_list_view_frame"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:background="@color/white">
 
-                <TextView
-                    android:id="@+id/pullDownText"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
-                    android:textSize="20sp"
-                    android:text="Pull down to add a transaction"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_horizontal" />
+                    <com.baoyz.swipemenulistview.SwipeMenuListView
+                        android:id="@+id/transactionListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@color/gray"
+                        android:dividerHeight="1dp"
+                        android:visibility="visible"
+                        android:background="@color/white">
 
-                <ImageView
-                    android:id="@+id/downChevronIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/pullDownText"
-                    android:src="@drawable/ic_down_arrow"
-                    android:layout_centerHorizontal="true"
-                    android:tint="@color/black"/>
-            </RelativeLayout>
+                    </com.baoyz.swipemenulistview.SwipeMenuListView>
 
-            <com.baoyz.swipemenulistview.SwipeMenuListView
-                android:id="@+id/transactionListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@color/gray"
-                android:dividerHeight="1dp"
-                android:visibility="visible"/>
-        </LinearLayout>
-        </LinearLayout>
+
+
+
+            </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+        <!-- </LinearLayout> -->
+    </LinearLayout>
 
     <com.p_v.flexiblecalendar.FlexibleCalendarView
         android:id="@+id/calendarView"
@@ -119,10 +86,4 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/calendarView"
-        android:background="@color/colorPrimary"/>
  </RelativeLayout>

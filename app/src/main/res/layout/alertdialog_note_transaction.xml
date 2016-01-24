@@ -7,7 +7,7 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/alertTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Note"
@@ -22,7 +22,7 @@
         android:focusableInTouchMode="true">
 
         <EditText
-            android:id="@+id/editTextNote"
+            android:id="@+id/alertEditText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Note"/>

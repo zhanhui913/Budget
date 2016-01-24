@@ -23,6 +23,8 @@ public class Transaction extends RealmObject {
 
     private Category category;
 
+    private Account account;
+
     public Transaction(){
 
     }
@@ -67,50 +69,11 @@ public class Transaction extends RealmObject {
         this.category = category;
     }
 
-    /*
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Parcelable
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public int describeContents(){
-        return 0;
+    public Account getAccount() {
+        return account;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags){
-        dest.writeInt(id);
-        dest.writeString(note);
-        dest.writeString(Util.convertDateToString(date));
-        dest.writeFloat(price);
-
-        //Add inner class
-        category.writeToParcel(dest, flags);
+    public void setAccount(Account account) {
+        this.account = account;
     }
-
-
-    public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
-
-        @Override
-        public Transaction createFromParcel(Parcel source) {
-            return new Transaction(source);
-        }
-
-        @Override
-        public Transaction[] newArray(int size) {
-            return new Transaction[size];
-        }
-    };
-
-    private Transaction(Parcel in){
-        id = in.readInt();
-        note = in.readString();
-        date = Util.convertStringToDate(in.readString());
-        price = in.readFloat();
-
-        category = Category.CREATOR.createFromParcel(in);
-    }
-    */
 }

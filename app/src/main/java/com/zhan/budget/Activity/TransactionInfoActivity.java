@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.zhan.budget.Adapter.TransactionViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
+import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Parcelable.ParcelableCategory;
@@ -42,6 +44,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0,buttonX;
     private ImageView addNoteBtn;
+    private ImageButton addAccountBtn;
     private TextView transactionCostView;
 
     private String priceString, priceStringWithDot;
@@ -89,7 +92,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         button9 = (Button)findViewById(R.id.number9);
         button0 = (Button)findViewById(R.id.number0);
         buttonX = (Button)findViewById(R.id.numberX);
+
         addNoteBtn = (ImageView)findViewById(R.id.addNoteBtn);
+        addAccountBtn = (ImageButton)findViewById(R.id.addAccountBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
 
@@ -222,6 +227,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }
         });
 
+        addAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAccountDialog();
+            }
+        });
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -249,6 +261,39 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         });
     }
 
+    private void createAccountDialog(){
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(instance);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_note_transaction, null);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.alertEditText);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertTitle);
+        title.setText("Add account");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        addAccount(input.getText().toString());
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog noteDialog = builder.create();
+        noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        noteDialog.show();
+
+        input.requestFocus();
+    }
+
     private void createNoteDialog(){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
@@ -257,7 +302,10 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         //AlertDialog, where it not necessary to know what the parent is.
         View promptView = layoutInflater.inflate(R.layout.alertdialog_note_transaction, null);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.editTextNote);
+        final EditText input = (EditText) promptView.findViewById(R.id.alertEditText);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertTitle);
+        title.setText("Add Note");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
@@ -281,6 +329,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     private void addNote(String note){
         this.noteString = note;
+    }
+
+    String account;
+    private void addAccount(String account){
+        this.account = account;
     }
 
     private void addDigitToTextView(int digit){
@@ -322,38 +375,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         finish();
-    }
-
-    /**
-     * Bring dialog up when user wants to leave prematurely without saving.
-     */
-    private void confirmLeave(){
-        String message = "message";
-        String negative = "Discard changes";
-
-        if(!isEditMode){
-            message = "You sure you want to discard transaction";
-            negative = "Discard";
-        }
-
-        new AlertDialog.Builder(instance)
-                .setTitle("Cancel")
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("Keep Editing", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, just close the dialog box and do nothing
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton(negative, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, close current activity
-                        finish();
-                    }
-                })
-                .create()
-                .show();
     }
 
     private void save(){

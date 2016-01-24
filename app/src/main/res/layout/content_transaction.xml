@@ -47,6 +47,15 @@
         android:background="@color/gray"
         android:layout_above="@+id/numberPad">
 
+        <ImageButton
+            android:id="@+id/addAccountBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_plus"
+            android:layout_alignParentRight="false"
+            android:padding="15dp"
+            android:layout_toLeftOf="@+id/addNoteBtn" />
+
         <ImageView
             android:id="@+id/addNoteBtn"
             android:layout_width="wrap_content"

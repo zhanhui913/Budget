@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,12 +34,19 @@ import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
+import com.zhan.budget.View.PlusView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.PtrUIHandler;
+import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -75,6 +82,9 @@ public class CategoryFragment extends Fragment {
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
+    private PtrClassicFrameLayout mPtrFrame;
+    private PlusView header;
+
     public CategoryFragment() {
         // Required empty public constructor
     }
@@ -100,6 +110,10 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_category, container, false);
+
+        //Momentarily set background as white just before any categories are loaded
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
+
         return view;
     }
 
@@ -117,7 +131,7 @@ public class CategoryFragment extends Fragment {
 
         currentMonth = new Date();
 
-        fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
+        //fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
         balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
 
@@ -126,6 +140,8 @@ public class CategoryFragment extends Fragment {
         categoryList = new ArrayList<>();
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
+
+        createPullToRefresh();
 
         populateCategoryWithNoInfo();
 
@@ -136,12 +152,69 @@ public class CategoryFragment extends Fragment {
         updateMonthInToolbar(0, false);
     }
 
+    //Pull to refresh component
+    private void createPullToRefresh(){
+        mPtrFrame = (PtrClassicFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
+
+        header = new PlusView(getContext());
+
+        mPtrFrame.setHeaderView(header);
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "-- on refresh begin");
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPtrFrame.refreshComplete();
+                    }
+                }, 500);
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+        });
+
+        mPtrFrame.addPtrUIHandler(new PtrUIHandler() {
+
+            @Override
+            public void onUIReset(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "onUIReset");
+            }
+
+            @Override
+            public void onUIRefreshPrepare(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "onUIRefreshPrepare");
+            }
+
+            @Override
+            public void onUIRefreshBegin(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "onUIRefreshBegin");
+                header.playRotateAnimation();
+            }
+
+            @Override
+            public void onUIRefreshComplete(PtrFrameLayout frame) {
+                Log.d("CATEGORY_FRAGMENT", "onUIRefreshComplete");
+                displayPrompt();
+            }
+
+            @Override
+            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+
+            }
+        });
+    }
+
     private void addListener(){
-        fab.setOnClickListener(new Button.OnClickListener() {
+        /*fab.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View view) {
                 displayPrompt();
             }
-        });
+        });*/
 
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -155,6 +228,22 @@ public class CategoryFragment extends Fragment {
                 startActivity(viewAllTransactionsForCategory);
             }
         });
+
+        /*
+        categoryListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (categoryListView == null || categoryListView.getChildCount() == 0) ?
+                                0 : categoryListView.getChildAt(0).getTop();
+                swipeContainer.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+            }
+        });*/
     }
 
     /**
@@ -208,6 +297,8 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onChange() {
                 categoryList = myRealm.copyFromRealm(resultsCategory);
+
+                view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
 
                 categoryAdapter.addAll(categoryList);
                 populateCategoryWithInfo();

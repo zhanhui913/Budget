@@ -1,6 +1,5 @@
 package com.zhan.budget.Model;
 
-
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -80,51 +79,4 @@ public class Category extends RealmObject{
     public void setIcon(int icon) {
         this.icon = icon;
     }
-
-    /*
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Parcelable
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public int describeContents(){
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags){
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeFloat(budget);
-        dest.writeString(type);
-        dest.writeFloat(cost);
-        dest.writeString(color);
-        dest.writeInt(icon);
-    }
-
-    public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
-
-        @Override
-        public Category createFromParcel(Parcel source) {
-            return new Category(source);
-        }
-
-        @Override
-        public Category[] newArray(int size) {
-            return new Category[size];
-        }
-    };
-
-    private Category(Parcel in){
-        id = in.readInt();
-        name = in.readString();
-        budget = in.readFloat();
-        type = in.readString();
-        cost = in.readFloat();
-        color = in.readString();
-        icon = in.readInt();
-    }*/
 }
