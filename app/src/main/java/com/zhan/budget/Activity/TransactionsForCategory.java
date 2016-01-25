@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +22,7 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
+import com.zhan.circularview.CircularView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +49,8 @@ public class TransactionsForCategory extends AppCompatActivity {
     private TransactionListAdapter transactionCategoryAdapter;
     private List<Transaction> transactionCategoryList;
 
+    private CircularView circularView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +71,7 @@ public class TransactionsForCategory extends AppCompatActivity {
         transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
+        circularView = (CircularView) findViewById(R.id.emptyCategoryView);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -98,6 +104,10 @@ public class TransactionsForCategory extends AppCompatActivity {
 
                 Log.d("ZHAN", "results for selected category : " + results.size());
                 Log.d("ZHAN", "converted category => " + selectedCategory.getName());
+
+                circularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
+                        CategoryUtil.getIconResourceId(selectedCategory.getIcon()), getTheme()));
+                circularView.setCircleColor(Color.parseColor(selectedCategory.getColor()));
 
                 getAllTransactionsWithCategoryForMonth();
             }

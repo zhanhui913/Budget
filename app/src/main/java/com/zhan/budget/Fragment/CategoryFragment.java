@@ -82,9 +82,6 @@ public class CategoryFragment extends Fragment {
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
-    private PtrClassicFrameLayout mPtrFrame;
-    private PlusView header;
-
     public CategoryFragment() {
         // Required empty public constructor
     }
@@ -141,8 +138,6 @@ public class CategoryFragment extends Fragment {
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
-        createPullToRefresh();
-
         populateCategoryWithNoInfo();
 
         //0 represents no change in month relative to currentMonth variable
@@ -150,63 +145,6 @@ public class CategoryFragment extends Fragment {
         //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
         //categories
         updateMonthInToolbar(0, false);
-    }
-
-    //Pull to refresh component
-    private void createPullToRefresh(){
-        mPtrFrame = (PtrClassicFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
-
-        header = new PlusView(getContext());
-
-        mPtrFrame.setHeaderView(header);
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                Log.d("CATEGORY_FRAGMENT", "-- on refresh begin");
-                frame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPtrFrame.refreshComplete();
-                    }
-                }, 500);
-            }
-
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
-            }
-        });
-
-        mPtrFrame.addPtrUIHandler(new PtrUIHandler() {
-
-            @Override
-            public void onUIReset(PtrFrameLayout frame) {
-                Log.d("CATEGORY_FRAGMENT", "onUIReset");
-            }
-
-            @Override
-            public void onUIRefreshPrepare(PtrFrameLayout frame) {
-                Log.d("CATEGORY_FRAGMENT", "onUIRefreshPrepare");
-            }
-
-            @Override
-            public void onUIRefreshBegin(PtrFrameLayout frame) {
-                Log.d("CATEGORY_FRAGMENT", "onUIRefreshBegin");
-                header.playRotateAnimation();
-            }
-
-            @Override
-            public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d("CATEGORY_FRAGMENT", "onUIRefreshComplete");
-                displayPrompt();
-            }
-
-            @Override
-            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
-
-            }
-        });
     }
 
     private void addListener(){
