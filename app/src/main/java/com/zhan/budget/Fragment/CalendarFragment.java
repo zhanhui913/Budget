@@ -445,8 +445,8 @@ public class CalendarFragment extends Fragment {
 
                 Log.d("ZHAN", "transaction name is " + parcelableTransaction.getNote() + " cost is " + parcelableTransaction.getPrice());
                 Log.d("ZHAN", "category is " + parcelableTransaction.getCategory().getName() + ", " + parcelableTransaction.getCategory().getId());
+                Log.d("ZHAN", "account name : " +parcelableTransaction.getAccount().getName());
                 Log.i("ZHAN", "----------- onActivityResult ----------");
-
 
                 //1st option (not async)
                 final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", parcelableTransaction.getCategory().getId()).findAllAsync();

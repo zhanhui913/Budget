@@ -14,11 +14,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TransactionViewPager;
 import com.zhan.budget.Etc.Constants;
@@ -33,7 +37,9 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TransactionInfoActivity extends AppCompatActivity implements
         TransactionExpenseFragment.OnTransactionExpenseFragmentInteractionListener,
@@ -59,6 +65,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private Category selectedIncomeCategory;
 
     private CircleIndicator circleIndicator;
+
+    private Account selectedAccount;
 
 
     private BudgetType currentPage; //Determines if the current page is in expense or income page
@@ -267,18 +275,57 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
         //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_note_transaction, null);
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.alertEditText);
+        //final EditText input = (EditText) promptView.findViewById(R.id.alertEditText);
 
-        TextView title = (TextView) promptView.findViewById(R.id.alertTitle);
-        title.setText("Add account");
+        //TextView title = (TextView) promptView.findViewById(R.id.alertTitle);
+        //title.setText("Add account");
+
+        //input.setText(account);
+
+        final Spinner accountSpinner = (Spinner) promptView.findViewById(R.id.accountSpinner);
+
+        /////
+
+        ArrayAdapter<String> adapter;
+        List<String> list;
+
+        list = new ArrayList<String>();
+        list.add("Item 1");
+        list.add("Item 2");
+        list.add("Item 3");
+        list.add("Item 4");
+        list.add("Item 5");
+        adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_item, list);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accountSpinner.setAdapter(adapter);
+
+        accountSpinner.setPrompt(list.get(0));
+        accountSpinner.setSelected(true);
+
+        accountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(), "clicked on :" + position, Toast.LENGTH_SHORT).show();
+                accountSpinner.setSelection(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        /////
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
+                .setTitle("Add Account")
                 .setView(promptView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        addAccount(input.getText().toString());
+                        //account = input.getText().toString();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -287,11 +334,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                     }
                 });
 
-        AlertDialog noteDialog = builder.create();
-        noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        noteDialog.show();
+        AlertDialog accountDialog = builder.create();
+        accountDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        accountDialog.show();
 
-        input.requestFocus();
+        //input.requestFocus();
     }
 
     private void createNoteDialog(){
@@ -307,11 +354,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.alertTitle);
         title.setText("Add Note");
 
+        input.setText(noteString);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        addNote(input.getText().toString());
+                        noteString = input.getText().toString();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -327,14 +376,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         input.requestFocus();
     }
 
-    private void addNote(String note){
-        this.noteString = note;
-    }
-
-    String account;
-    private void addAccount(String account){
-        this.account = account;
-    }
+    String account; //debug only
 
     private void addDigitToTextView(int digit){
         priceString += digit;

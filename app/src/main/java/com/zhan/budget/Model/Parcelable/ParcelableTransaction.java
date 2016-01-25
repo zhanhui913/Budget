@@ -65,6 +65,14 @@ public class ParcelableTransaction implements Parcelable {
         this.category = category;
     }
 
+    public ParcelableAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(ParcelableAccount account) {
+        this.account = account;
+    }
+
     public void convertTransactionToParcelable(Transaction transaction){
         this.id = transaction.getId();
         this.date = transaction.getDate();
