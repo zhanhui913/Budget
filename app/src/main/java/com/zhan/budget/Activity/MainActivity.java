@@ -22,6 +22,7 @@ import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.OverviewFragment;
 import com.zhan.budget.Fragment.SendFragment;
 import com.zhan.budget.Fragment.ShareFragment;
+import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private SendFragment sendFragment;
 
     private ArrayList<Category> categoryList = new ArrayList<>();
+    private ArrayList<Account> accountList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +165,17 @@ public class MainActivity extends AppCompatActivity
                     categoryList.add(c);
                 }
 
+                //Create default accounts
+                String[] tempAccountList = new String[]{"Credit Card","Debit Card", "Cash"};
+                for(int i = 0; i < tempAccountList.length; i++){
+                    Account account = bgRealm.createObject(Account.class);
+                    account.setId(Util.generateUUID());
+                    account.setName(tempAccountList[i]);
+
+                    accountList.add(account);
+                }
+
+                //Create fake transactions
                 Date startDate = Util.convertStringToDate("2014-12-01");
                 Date endDate = Util.convertStringToDate("2016-02-01");
 
@@ -177,16 +190,19 @@ public class MainActivity extends AppCompatActivity
                     Random random = new Random();
                     int rd = random.nextInt(categoryList.size());
 
+                    int rda = random.nextInt(accountList.size());
+
                     //Create random transactions per day
                     for (int j = 0; j < rd; j++) {
                         Transaction transaction = bgRealm.createObject(Transaction.class);
                         transaction.setId(Util.generateUUID());
                         transaction.setDate(date);
 
-                        //Random random = new Random();
-                        //Category category = categoryList.get(random.nextInt(categoryList.size()));
+                        Account account = accountList.get(rda);
+
                         Category category = categoryList.get(rd);
 
+                        transaction.setAccount(account);
                         transaction.setCategory(category);
                         transaction.setPrice(-120.0f + (rd * 0.5f));
                         transaction.setNote("Note " + j + " for "+Util.convertDateToString(date));

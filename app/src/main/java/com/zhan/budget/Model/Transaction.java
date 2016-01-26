@@ -5,6 +5,7 @@ import java.util.Date;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by Zhan on 15-12-14.
@@ -21,8 +22,10 @@ public class Transaction extends RealmObject {
 
     private float price;
 
+    @Required
     private Category category;
 
+    @Required
     private Account account;
 
     public Transaction(){
