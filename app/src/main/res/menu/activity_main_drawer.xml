@@ -8,7 +8,7 @@
             android:title="Calendar" />
         <item
             android:id="@+id/nav_category"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_category"
             android:title="Category" />
         <item
             android:id="@+id/nav_overview"

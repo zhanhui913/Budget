@@ -23,6 +23,7 @@ import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.Calendar.CustomEvent;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Parcelable.ParcelableTransaction;
@@ -384,15 +385,19 @@ public class CalendarFragment extends Fragment {
 
                 Log.d("ZHAN", "transaction name is " + parcelableTransaction.getNote() + " cost is " + parcelableTransaction.getPrice());
                 Log.d("ZHAN", "category is " + parcelableTransaction.getCategory().getName() + ", " + parcelableTransaction.getCategory().getId());
-                Log.d("ZHAN", "account name : " +parcelableTransaction.getAccount().getName());
+                Log.d("ZHAN", "account name is : " +parcelableTransaction.getAccount().getName());
+
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                //1st option (not async)
+                //Attaching account
+                final RealmResults<Account> accountRealmResults = myRealm.where(Account.class).equalTo("id", parcelableTransaction.getAccount().getId()).findAll();
+                final Account account = myRealm.copyToRealm(accountRealmResults.get(0));
+
+                //Attaching category
                 final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", parcelableTransaction.getCategory().getId()).findAllAsync();
                 cateList.addChangeListener(new RealmChangeListener() {
                     @Override
                     public void onChange() {
-
                         if (cateList.size() != 0) {
                             Category cat = myRealm.copyToRealm(cateList.get(0));
 
@@ -403,6 +408,7 @@ public class CalendarFragment extends Fragment {
                             transactionReturnedFromTransaction.setDate(parcelableTransaction.getDate());
                             transactionReturnedFromTransaction.setNote(parcelableTransaction.getNote());
                             transactionReturnedFromTransaction.setCategory(cat);
+                            transactionReturnedFromTransaction.setAccount(account);
                             myRealm.commitTransaction();
 
 

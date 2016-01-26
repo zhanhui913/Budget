@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
                     getSupportActionBar().setTitle(title);
                 }
             }
-        }, 250);
+        }, 300);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -31,6 +31,7 @@ import com.zhan.budget.Fragment.TransactionIncomeFragment;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Parcelable.ParcelableAccount;
 import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Parcelable.ParcelableTransaction;
 import com.zhan.budget.R;
@@ -40,6 +41,10 @@ import com.zhan.circleindicator.CircleIndicator;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class TransactionInfoActivity extends AppCompatActivity implements
         TransactionExpenseFragment.OnTransactionExpenseFragmentInteractionListener,
@@ -67,6 +72,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private CircleIndicator circleIndicator;
 
     private Account selectedAccount;
+    private int selectedAccountIndexInSpinner;
+
+    private Realm myRealm;
 
 
     private BudgetType currentPage; //Determines if the current page is in expense or income page
@@ -89,6 +97,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
      * Perform all initializations here.
      */
     private void init(){
+        myRealm = Realm.getDefaultInstance();
+
         button1 = (Button)findViewById(R.id.number1);
         button2 = (Button)findViewById(R.id.number2);
         button3 = (Button)findViewById(R.id.number3);
@@ -123,6 +133,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         createToolbar();
         addListeners();
+        createAccountDialog();
     }
 
     /**
@@ -238,7 +249,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         addAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAccountDialog();
+                displayAccountDialog();
             }
         });
 
@@ -269,46 +280,52 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         });
     }
 
+    private ArrayAdapter<String> accountAdapter;
+    private List<String> accountList;
+    private RealmResults<Account> resultsAccount;
+    private View accountDialogView;
+    private AlertDialog.Builder accountAlertDialogBuilder;
+    private AlertDialog accountDialog;
+
     private void createAccountDialog(){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
         //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
+        accountDialogView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
 
-        //final EditText input = (EditText) promptView.findViewById(R.id.alertEditText);
+        final Spinner accountSpinner = (Spinner) accountDialogView.findViewById(R.id.accountSpinner);
 
-        //TextView title = (TextView) promptView.findViewById(R.id.alertTitle);
-        //title.setText("Add account");
+        accountList = new ArrayList<>();
 
-        //input.setText(account);
+        //Get list of accounts
+        resultsAccount = myRealm.where(Account.class).findAllAsync();
+        resultsAccount.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                for (int i = 0; i < resultsAccount.size(); i++) {
+                    accountList.add(resultsAccount.get(i).getName());
+                }
 
-        final Spinner accountSpinner = (Spinner) promptView.findViewById(R.id.accountSpinner);
+                accountAdapter = new ArrayAdapter<String>(instance, android.R.layout.simple_spinner_item, accountList);
+                accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                accountSpinner.setAdapter(accountAdapter);
 
-        /////
+                //Default is first item in list to be selected in the spinner
+                selectedAccountIndexInSpinner = 0;
+                selectedAccount = myRealm.copyFromRealm(resultsAccount.get(0));
 
-        ArrayAdapter<String> adapter;
-        List<String> list;
+                accountSpinner.setPrompt(accountList.get(0));
+                accountSpinner.setSelected(true);
 
-        list = new ArrayList<String>();
-        list.add("Item 1");
-        list.add("Item 2");
-        list.add("Item 3");
-        list.add("Item 4");
-        list.add("Item 5");
-        adapter = new ArrayAdapter<String>(getApplicationContext(),
-                android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        accountSpinner.setAdapter(adapter);
-
-        accountSpinner.setPrompt(list.get(0));
-        accountSpinner.setSelected(true);
+                myRealm.close();
+            }
+        });
 
         accountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), "clicked on :" + position, Toast.LENGTH_SHORT).show();
                 accountSpinner.setSelection(position);
             }
 
@@ -318,27 +335,31 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }
         });
 
-        /////
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
-                .setTitle("Add Account")
-                .setView(promptView)
+        accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+                .setTitle("Select Account")
+                .setView(accountDialogView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //account = input.getText().toString();
+                        selectedAccountIndexInSpinner = accountSpinner.getSelectedItemPosition();
+                        selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
+                        Toast.makeText(getApplicationContext(), "Selected account is "+selectedAccount.getName(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
+                        //Reset the selection back to previous
+                        accountSpinner.setSelection(selectedAccountIndexInSpinner);
+
+                        dialog.dismiss();
                     }
                 });
 
-        AlertDialog accountDialog = builder.create();
+        accountDialog = accountAlertDialogBuilder.create();
         accountDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        accountDialog.show();
+    }
 
-        //input.requestFocus();
+    private void displayAccountDialog(){
+        accountDialog.show();
     }
 
     private void createNoteDialog(){
@@ -375,8 +396,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         input.requestFocus();
     }
-
-    String account; //debug only
 
     private void addDigitToTextView(int digit){
         priceString += digit;
@@ -416,17 +435,24 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
+        myRealm.close();
         finish();
     }
 
     private void save(){
         Intent intent = new Intent();
 
+        ParcelableAccount parcelableAccount = new ParcelableAccount();
+        parcelableAccount.convertAccountToParcelable(selectedAccount);
+
+        Log.d("ZHAN", "saved account name is " + selectedAccount.getName());
+        Log.d("ZHAN", "saved account id is " + selectedAccount.getId());
+        Log.d("ZHAN","saved parcelable account is "+parcelableAccount.getName());
+
         ParcelableTransaction parcelableTransaction = new ParcelableTransaction();
         parcelableTransaction.setNote(this.noteString);
-
         parcelableTransaction.setDate(Util.formatDate(selectedDate));
-
+        parcelableTransaction.setAccount(parcelableAccount);
 
         ParcelableCategory parcelableCategory = new ParcelableCategory();
 
@@ -444,6 +470,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         intent.putExtra(Constants.RESULT_NEW_TRANSACTION, parcelableTransaction);
         setResult(RESULT_OK, intent);
+
 
         finish();
     }

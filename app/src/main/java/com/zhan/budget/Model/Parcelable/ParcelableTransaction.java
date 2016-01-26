@@ -3,7 +3,6 @@ package com.zhan.budget.Model.Parcelable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.Util.Util;
 
@@ -119,8 +118,8 @@ public class ParcelableTransaction implements Parcelable {
 
         //Add inner class
         category.writeToParcel(dest, flags);
+        account.writeToParcel(dest, flags);
     }
-
 
     public static final Creator<ParcelableTransaction> CREATOR = new Creator<ParcelableTransaction>() {
 
@@ -142,5 +141,6 @@ public class ParcelableTransaction implements Parcelable {
         price = in.readFloat();
 
         category = ParcelableCategory.CREATOR.createFromParcel(in);
+        account = ParcelableAccount.CREATOR.createFromParcel(in);
     }
 }
