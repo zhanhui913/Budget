@@ -22,10 +22,8 @@ public class Transaction extends RealmObject {
 
     private float price;
 
-    @Required
     private Category category;
 
-    @Required
     private Account account;
 
     public Transaction(){

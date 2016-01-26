@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Fragment.AccountFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.OverviewFragment;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     private CalendarFragment calendarFragment;
     private CategoryFragment categoryFragment;
     private OverviewFragment overviewFragment;
+    private AccountFragment accountFragment;
     private ShareFragment shareFragment;
     private SendFragment sendFragment;
 
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity
         calendarFragment = new CalendarFragment();
         categoryFragment = new CategoryFragment();
         overviewFragment = new OverviewFragment();
+        accountFragment = new AccountFragment();
         shareFragment = new ShareFragment();
         sendFragment = new SendFragment();
     }
@@ -274,6 +277,10 @@ public class MainActivity extends AppCompatActivity
                     case R.id.nav_overview:
                         fragment = overviewFragment;
                         title = "Overview";
+                        break;
+                    case R.id.nav_account:
+                        fragment = accountFragment;
+                        title = "Account";
                         break;
                     case R.id.nav_share:
                         fragment = shareFragment;

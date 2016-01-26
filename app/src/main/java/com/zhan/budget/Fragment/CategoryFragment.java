@@ -244,7 +244,6 @@ public class CategoryFragment extends Fragment {
         });
     }
 
-
     private void populateCategoryWithInfo(){
         //final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
         final Date startMonth = Util.refreshMonth(currentMonth);
@@ -264,7 +263,6 @@ public class CategoryFragment extends Fragment {
             }
         });
     }
-
 
     private void aggregateCategoryInfo(){
         Log.d("DEBUG","1) There are "+categoryList.size()+" categories");
