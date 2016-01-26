@@ -17,4 +17,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="NumberPadStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.3</item>
+        <item name="android:textSize">@dimen/num_pad_text_size</item>
+        <item name="android:background">@drawable/numeric_button</item>
+    </style>
+
 </resources>

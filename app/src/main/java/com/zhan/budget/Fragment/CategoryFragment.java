@@ -6,9 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +39,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -113,9 +110,6 @@ public class CategoryFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_category, container, false);
 
-        //Momentarily set background as white just before any categories are loaded
-        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
-
         return view;
     }
 
@@ -134,7 +128,6 @@ public class CategoryFragment extends Fragment {
 
         currentMonth = new Date();
 
-        //fab = (FloatingActionButton) view.findViewById(R.id.addCategoryFAB);
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
         balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
 
@@ -143,6 +136,8 @@ public class CategoryFragment extends Fragment {
         categoryList = new ArrayList<>();
         categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
         categoryListView.setAdapter(categoryAdapter);
+
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
 
         populateCategoryWithNoInfo();
 
@@ -307,8 +302,6 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onChange() {
                 categoryList = myRealm.copyFromRealm(resultsCategory);
-
-                view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
 
                 updateCategoryStatus();
 
@@ -475,7 +468,7 @@ public class CategoryFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_CATEGORY){
+            if(requestCode == Constants.RETURN_EDIT_CATEGORY) {
 
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
@@ -486,6 +479,7 @@ public class CategoryFragment extends Fragment {
 
                 //db.updateCategory(category);
 
+                updateCategoryStatus();
 
                 categoryList.set(categoryIndexEditted, category);
                 categoryAdapter.notifyDataSetChanged();

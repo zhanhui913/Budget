@@ -3,7 +3,6 @@ package com.zhan.budget.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.zhan.budget.Model.Account;
 import com.zhan.budget.Adapter.AccountListAdapter;
+import com.zhan.budget.Model.Account;
 import com.zhan.budget.R;
 import com.zhan.budget.View.PlusView;
 
@@ -82,6 +81,8 @@ public class AccountFragment extends Fragment {
         init();
         createPullToAddAccount();
         addListener();
+
+        populateAccount();
     }
 
     private void init(){
@@ -93,14 +94,20 @@ public class AccountFragment extends Fragment {
         accountListAdapter = new AccountListAdapter(getActivity(), accountList);
         accountListView.setAdapter(accountListAdapter);
 
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
+    }
+
+    private void populateAccount(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
         resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
                 accountList = myRealm.copyFromRealm(resultsAccount);
 
+                updateAccountStatus();
+
                 accountListAdapter.addAll(accountList);
-                //accountListAdapter.notifyDataSetChanged();
+                accountListAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -163,6 +170,16 @@ public class AccountFragment extends Fragment {
 
     private void addNewAccount(){
         Toast.makeText(getContext(), "Add new account", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateAccountStatus(){
+        if(accountList.size() > 0){
+            emptyLayout.setVisibility(View.GONE);
+            accountListView.setVisibility(View.VISIBLE);
+        }else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            accountListView.setVisibility(View.GONE);
+        }
     }
 
     private void addListener(){
