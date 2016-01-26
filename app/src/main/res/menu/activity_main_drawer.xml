@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_calendar"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_calendar"
             android:title="Calendar" />
         <item
             android:id="@+id/nav_category"
@@ -12,11 +12,11 @@
             android:title="Category" />
         <item
             android:id="@+id/nav_overview"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_monthly_overview"
             android:title="Overview" />
         <item
             android:id="@+id/nav_account"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_account"
             android:title="Account" />
     </group>
 

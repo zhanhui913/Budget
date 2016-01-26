@@ -107,7 +107,6 @@ public class AccountFragment extends Fragment {
                 updateAccountStatus();
 
                 accountListAdapter.addAll(accountList);
-                accountListAdapter.notifyDataSetChanged();
             }
         });
     }
