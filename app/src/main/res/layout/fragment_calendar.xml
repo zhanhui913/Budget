@@ -1,89 +1,75 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:support="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_below="@+id/calendarView">
+
+     <com.p_v.flexiblecalendar.FlexibleCalendarView
+         android:id="@+id/calendarView"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="@color/white"
+         support:monthDayVerticalSpacing="0dp"
+         support:startDayOfTheWeek="SUNDAY"/>
 
     <LinearLayout
-        android:id="@+id/root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/calendarView">
-
-        <LinearLayout
-            android:id="@+id/expenseLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/gray"
-            android:padding="5dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_date"
-                android:tint="@color/secondary_text_default_material_light"/>
-
-            <TextView
-                android:id="@+id/dateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dec 5"
-                android:textSize="20sp"
-                android:layout_marginLeft="5dp"/>
-
-            <TextView
-                android:id="@+id/totalCostForDay"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="55.50"
-                android:textSize="20sp"
-                android:layout_marginRight="5dp"
-                android:gravity="right" />
-        </LinearLayout>
-
-        <!--
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical" >
-            -->
-
-            <in.srain.cube.views.ptr.PtrClassicFrameLayout
-                android:id="@+id/rotate_header_list_view_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
-
-                    <com.baoyz.swipemenulistview.SwipeMenuListView
-                        android:id="@+id/transactionListView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:divider="@color/gray"
-                        android:dividerHeight="1dp"
-                        android:visibility="visible"
-                        android:background="@color/white">
-
-                    </com.baoyz.swipemenulistview.SwipeMenuListView>
-
-
-
-
-            </in.srain.cube.views.ptr.PtrClassicFrameLayout>
-
-        <!-- </LinearLayout> -->
-    </LinearLayout>
-
-    <com.p_v.flexiblecalendar.FlexibleCalendarView
-        android:id="@+id/calendarView"
+        android:id="@+id/expenseLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        support:monthDayVerticalSpacing="0dp"
-        support:startDayOfTheWeek="SUNDAY"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" />
+        android:orientation="horizontal"
+        android:background="@color/gray"
+        android:padding="5dp">
 
- </RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_date"
+            android:tint="@color/secondary_text_default_material_light"/>
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dec 5"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/totalCostForDay"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="55.50"
+            android:textSize="20sp"
+            android:layout_marginRight="5dp"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/rotate_header_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/green">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.baoyz.swipemenulistview.SwipeMenuListView
+                android:id="@+id/transactionListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/gray"
+                android:dividerHeight="1dp"
+                android:visibility="visible"
+                android:background="@color/white"/>
+
+            <include layout="@layout/empty_transaction_indicator"
+                android:id="@+id/emptyTransactionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+    </in.srain.cube.views.ptr.PtrFrameLayout>
+</LinearLayout>

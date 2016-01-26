@@ -65,8 +65,6 @@ public class CalendarFragment extends Fragment {
     private FlexibleCalendarView calendarView;
 
     private TextView  totalCostForDay, dateTextView;
-    private ViewGroup infoPanel;
-
 
     private SwipeMenuListView transactionListView;
     private TransactionListAdapter transactionAdapter;
@@ -81,10 +79,10 @@ public class CalendarFragment extends Fragment {
     private RealmResults<Transaction> resultsTransactionForDay;
     private RealmResults<Transaction> resultsTransactionForMonth;
 
-    private PtrClassicFrameLayout mPtrFrame;
+    private PtrFrameLayout mPtrFrame;
     private PlusView header;
 
-    private View emptyLayout;
+    private ViewGroup emptyLayout;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -123,8 +121,6 @@ public class CalendarFragment extends Fragment {
         createCalendar();
         createSwipeMenu();
 
-        createEmptyListPanel();
-
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
     }
@@ -148,11 +144,11 @@ public class CalendarFragment extends Fragment {
 
         dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
-        //infoPanel = (ViewGroup) view.findViewById(R.id.infoPanel);
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyTransactionLayout);
     }
 
     private void createPullToAddTransaction(){
-        mPtrFrame = (PtrClassicFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
+        mPtrFrame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
 
         header = new PlusView(getContext());
 
@@ -172,7 +168,7 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
             }
         });
 
@@ -346,69 +342,13 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    private void createEmptyListPanel(){
-       emptyLayout = (LayoutInflater.from(getContext())).inflate(R.layout.empty_transaction_indicator, mPtrFrame, false);
-    }
-
     private void updateTransactionStatus(){
         if(transactionList.size() > 0){
-  /*          mPtrFrame.removeView(emptyLayout);
-
-            if(transactionListView.getParent() == null){
-                mPtrFrame.addView(transactionListView);
-            }
-*/
-
-            replaceView(emptyLayout, transactionListView);
+            emptyLayout.setVisibility(View.GONE);
+            transactionListView.setVisibility(View.VISIBLE);
         }else{
-            replaceView(transactionListView, emptyLayout);
-
-/*
-            Log.d("ZHAN", "1 child count : " + mPtrFrame.getChildCount());
-
-            //mPtrFrame.removeView(transactionListView);
-
-            Log.d("ZHAN", "2 child count : " + mPtrFrame.getChildCount());
-
-            if(emptyLayout.getParent() == null) {
-
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPtrFrame.getLayoutParams();
-                params.width = PtrClassicFrameLayout.LayoutParams.MATCH_PARENT;
-                params.height = PtrClassicFrameLayout.LayoutParams.WRAP_CONTENT;
-
-                emptyLayout.setLayoutParams(params);
-
-
-                //mPtrFrame.setHeaderView(header);
-                //mPtrFrame.addView(emptyLayout);
-
-                replaceView(transactionListView, emptyLayout);
-
-
-                Log.d("ZHAN", "3 child count : " + mPtrFrame.getChildCount());
-            }*/
-        }
-    }
-
-    public void replaceView(View currentView, View newView) {
-        ViewGroup parent = getParent(currentView);
-        if(parent == null) {
-            return;
-        }
-        final int index = parent.indexOfChild(currentView);
-        removeView(currentView);
-        removeView(newView);
-        parent.addView(newView, index);
-    }
-
-    public ViewGroup getParent(View view) {
-        return (ViewGroup)view.getParent();
-    }
-
-    public void removeView(View view) {
-        ViewGroup parent = getParent(view);
-        if(parent != null) {
-            parent.removeView(view);
+            emptyLayout.setVisibility(View.VISIBLE);
+            transactionListView.setVisibility(View.GONE);
         }
     }
 

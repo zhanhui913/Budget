@@ -28,7 +28,7 @@ public class PlusView extends View /*implements PtrUIHandler*/ {
     //Default values
     private final static int DEFAULT_BG_COLOR = R.color.transparent;
     private final static int DEFAULT_ICON_SIZE  = 0;//NONE
-    private final static int DEFAULT_ICON_COLOR = R.color.green;
+    private final static int DEFAULT_ICON_COLOR = R.color.white;
 
     private Context context;
     private int backgroundColor;
