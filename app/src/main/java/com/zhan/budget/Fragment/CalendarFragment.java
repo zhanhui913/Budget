@@ -79,7 +79,7 @@ public class CalendarFragment extends Fragment {
     private RealmResults<Transaction> resultsTransactionForDay;
     private RealmResults<Transaction> resultsTransactionForMonth;
 
-    private PtrFrameLayout mPtrFrame;
+    private PtrFrameLayout frame;
     private PlusView header;
 
     private ViewGroup emptyLayout;
@@ -148,20 +148,20 @@ public class CalendarFragment extends Fragment {
     }
 
     private void createPullToAddTransaction(){
-        mPtrFrame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
+        frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
 
         header = new PlusView(getContext());
 
-        mPtrFrame.setHeaderView(header);
+        frame.setHeaderView(header);
 
-        mPtrFrame.setPtrHandler(new PtrHandler() {
+        frame.setPtrHandler(new PtrHandler() {
             @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
+            public void onRefreshBegin(PtrFrameLayout insideFrame) {
                 Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
-                frame.postDelayed(new Runnable() {
+                insideFrame.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mPtrFrame.refreshComplete();
+                        frame.refreshComplete();
                     }
                 }, 500);
             }
@@ -172,7 +172,7 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        mPtrFrame.addPtrUIHandler(new PtrUIHandler() {
+        frame.addPtrUIHandler(new PtrUIHandler() {
 
             @Override
             public void onUIReset(PtrFrameLayout frame) {

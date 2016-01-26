@@ -5,13 +5,31 @@
     android:background="@color/green"
     tools:context="com.zhan.budget.Fragment.CategoryFragment">
 
-        <com.baoyz.swipemenulistview.SwipeMenuListView
-            android:id="@+id/categoryListView"
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/rotate_header_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/green">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/categoryMonthLayout"
-            android:divider="@color/gray"
-            android:dividerHeight="1dp"
-            android:visibility="visible"/>
+            android:layout_height="match_parent">
+
+            <com.baoyz.swipemenulistview.SwipeMenuListView
+                android:id="@+id/categoryListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/gray"
+                android:dividerHeight="1dp"
+                android:visibility="visible"
+                android:background="@color/white"/>
+
+            <include layout="@layout/empty_transaction_indicator"
+                android:id="@+id/emptyCategoryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+    </in.srain.cube.views.ptr.PtrFrameLayout>
 
 </FrameLayout>

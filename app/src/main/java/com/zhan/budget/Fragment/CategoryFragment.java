@@ -63,7 +63,12 @@ public class CategoryFragment extends Fragment {
 
     private OnCategoryInteractionListener mListener;
     private View view;
-    private FloatingActionButton fab;
+
+
+    private PtrFrameLayout frame;
+    private PlusView header;
+    private ViewGroup emptyLayout;
+
 
     private SwipeMenuListView categoryListView;
     private CategoryListAdapter categoryAdapter;
@@ -119,6 +124,7 @@ public class CategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
+        createPullDownToAddCategory();
         addListener();
         createSwipeMenu();
     }
@@ -145,6 +151,62 @@ public class CategoryFragment extends Fragment {
         //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
         //categories
         updateMonthInToolbar(0, false);
+    }
+
+    private void createPullDownToAddCategory(){
+        frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
+
+        header = new PlusView(getContext());
+
+        frame.setHeaderView(header);
+
+        frame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout insideFrame) {
+                Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
+                insideFrame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        frame.refreshComplete();
+                    }
+                }, 500);
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
+            }
+        });
+
+        frame.addPtrUIHandler(new PtrUIHandler() {
+
+            @Override
+            public void onUIReset(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIReset");
+            }
+
+            @Override
+            public void onUIRefreshPrepare(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIRefreshPrepare");
+            }
+
+            @Override
+            public void onUIRefreshBegin(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIRefreshBegin");
+                header.playRotateAnimation();
+            }
+
+            @Override
+            public void onUIRefreshComplete(PtrFrameLayout frame) {
+                Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
+                addNewCategory();
+            }
+
+            @Override
+            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+
+            }
+        });
     }
 
     private void addListener(){
@@ -184,10 +246,20 @@ public class CategoryFragment extends Fragment {
         });*/
     }
 
+    private void updateCategoryStatus(){
+        if(categoryList.size() > 0){
+            emptyLayout.setVisibility(View.GONE);
+            categoryListView.setVisibility(View.VISIBLE);
+        }else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            categoryListView.setVisibility(View.GONE);
+        }
+    }
+
     /**
-     * Displays prompt for user to type new category.
+     * Displays prompt for user to add new category.
      */
-    private void displayPrompt(){
+    private void addNewCategory(){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
@@ -237,6 +309,8 @@ public class CategoryFragment extends Fragment {
                 categoryList = myRealm.copyFromRealm(resultsCategory);
 
                 view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+
+                updateCategoryStatus();
 
                 categoryAdapter.addAll(categoryList);
                 populateCategoryWithInfo();
