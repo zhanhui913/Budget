@@ -1,11 +1,15 @@
 package com.zhan.budget.Model;
 
+import org.parceler.Parcel;
+
+import io.realm.AccountRealmProxy;
 import io.realm.RealmObject;
+import io.realm.TransactionRealmProxy;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by Zhan on 16-01-23.
- */
+@Parcel(implementations = {AccountRealmProxy.class},
+        value = Parcel.Serialization.BEAN,
+        analyze = {Account.class})
 public class Account extends RealmObject{
 
     @PrimaryKey

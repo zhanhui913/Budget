@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -26,12 +27,13 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.Calendar.CustomEvent;
 import com.zhan.budget.Model.Category;
-import com.zhan.budget.Model.Parcelable.ParcelableTransaction;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -282,6 +284,7 @@ public class CalendarFragment extends Fragment {
 
                 transactionAdapter.clear();
                 transactionAdapter.addAll(transactionList);
+                //transactionAdapter.addAll(resultsTransactionForDay);
             }
         });
     }
@@ -291,9 +294,6 @@ public class CalendarFragment extends Fragment {
      * From 3rd party library.
      */
     private void createSwipeMenu(){
-        //transactionListView = new SwipeMenuListView(getContext());
-        //transactionListView.setDividerHeight(Util.dp2px(getContext(), 1));
-
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -350,6 +350,15 @@ public class CalendarFragment extends Fragment {
             emptyLayout.setVisibility(View.VISIBLE);
             transactionListView.setVisibility(View.GONE);
         }
+        /*if(transactionAdapter.getCount() > 0){
+            Toast.makeText(getContext(), "count > 0",Toast.LENGTH_SHORT).show();
+            emptyLayout.setVisibility(View.GONE);
+            transactionListView.setVisibility(View.VISIBLE);
+        }else{
+            Toast.makeText(getContext(), "count == 0",Toast.LENGTH_SHORT).show();
+            emptyLayout.setVisibility(View.VISIBLE);
+            transactionListView.setVisibility(View.GONE);
+        }*/
     }
 
     private void addNewTransaction(){
@@ -379,22 +388,22 @@ public class CalendarFragment extends Fragment {
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
 
-                Log.i("ZHAN", "----------- onActivityResult ----------");
+                final Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
 
-                final ParcelableTransaction parcelableTransaction = data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION);
+                Log.d("ZHAN", "transaction id "+tt.getId());
+                Log.d("ZHAN", "transaction name is " + tt.getNote() + " cost is " + tt.getPrice());
+                Log.d("ZHAN", "category is " + tt.getCategory().getName() + ", " + tt.getCategory().getId());
+                Log.d("ZHAN", "account id is : " + tt.getAccount().getId());
+                Log.d("ZHAN", "account name is : " + tt.getAccount().getName());
 
-                Log.d("ZHAN", "transaction name is " + parcelableTransaction.getNote() + " cost is " + parcelableTransaction.getPrice());
-                Log.d("ZHAN", "category is " + parcelableTransaction.getCategory().getName() + ", " + parcelableTransaction.getCategory().getId());
-                Log.d("ZHAN", "account name is : " +parcelableTransaction.getAccount().getName());
-
-                Log.i("ZHAN", "----------- onActivityResult ----------");
+                Log.i("ZHAN", "----------- Parceler Result ----------");
 
                 //Attaching account
-                final RealmResults<Account> accountRealmResults = myRealm.where(Account.class).equalTo("id", parcelableTransaction.getAccount().getId()).findAll();
+                final RealmResults<Account> accountRealmResults = myRealm.where(Account.class).equalTo("id", tt.getAccount().getId()).findAll();
                 final Account account = myRealm.copyToRealm(accountRealmResults.get(0));
 
                 //Attaching category
-                final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", parcelableTransaction.getCategory().getId()).findAllAsync();
+                final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", tt.getCategory().getId()).findAllAsync();
                 cateList.addChangeListener(new RealmChangeListener() {
                     @Override
                     public void onChange() {
@@ -403,23 +412,30 @@ public class CalendarFragment extends Fragment {
 
                             myRealm.beginTransaction();
                             Transaction transactionReturnedFromTransaction = myRealm.createObject(Transaction.class);
-                            transactionReturnedFromTransaction.setId(Util.generateUUID());
-                            transactionReturnedFromTransaction.setPrice(parcelableTransaction.getPrice());
-                            transactionReturnedFromTransaction.setDate(parcelableTransaction.getDate());
-                            transactionReturnedFromTransaction.setNote(parcelableTransaction.getNote());
+                            transactionReturnedFromTransaction.setId(tt.getId());
+                            transactionReturnedFromTransaction.setPrice(tt.getPrice());
+                            transactionReturnedFromTransaction.setDate(tt.getDate());
+                            transactionReturnedFromTransaction.setNote(tt.getNote());
                             transactionReturnedFromTransaction.setCategory(cat);
                             transactionReturnedFromTransaction.setAccount(account);
                             myRealm.commitTransaction();
 
-
                             Log.d("ZHAN", "successfully added transaction : " + transactionReturnedFromTransaction.getNote() + " for cat : " + transactionReturnedFromTransaction.getCategory().getName());
-                            transactionList.add(transactionReturnedFromTransaction);
 
-                            transactionAdapter.notifyDataSetChanged();
+                            //option 1
+                            //transactionList.add(transactionReturnedFromTransaction);
+                            //transactionAdapter.notifyDataSetChanged();
+
+                            //option 2
+                            //dont update anything
+
                             updateTransactionStatus();
+
+                            Log.i("ZHAN", "----------- DONE ----------");
                         }
                     }
                 });
+
             }
         }
     }

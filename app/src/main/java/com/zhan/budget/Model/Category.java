@@ -1,12 +1,16 @@
 package com.zhan.budget.Model;
 
+import org.parceler.Parcel;
+
+import io.realm.CategoryRealmProxy;
 import io.realm.RealmObject;
+import io.realm.TransactionRealmProxy;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by Zhan on 15-12-14.
- */
+@Parcel(implementations = {CategoryRealmProxy.class},
+        value = Parcel.Serialization.BEAN,
+        analyze = {Category.class})
 public class Category extends RealmObject{
 
     @PrimaryKey

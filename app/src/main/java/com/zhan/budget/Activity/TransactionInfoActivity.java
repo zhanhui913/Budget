@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,9 +35,12 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Parcelable.ParcelableAccount;
 import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Parcelable.ParcelableTransaction;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -435,42 +439,32 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        myRealm.close();
+        if(!myRealm.isClosed()){
+            myRealm.close();
+        }
         finish();
     }
 
     private void save(){
         Intent intent = new Intent();
 
-        ParcelableAccount parcelableAccount = new ParcelableAccount();
-        parcelableAccount.convertAccountToParcelable(selectedAccount);
+        Transaction transaction = new Transaction();
+        transaction.setId(Util.generateUUID());
+        transaction.setNote(this.noteString);
+        transaction.setDate(Util.formatDate(selectedDate));
+        transaction.setAccount(selectedAccount);
 
-        Log.d("ZHAN", "saved account name is " + selectedAccount.getName());
-        Log.d("ZHAN", "saved account id is " + selectedAccount.getId());
-        Log.d("ZHAN","saved parcelable account is "+parcelableAccount.getName());
-
-        ParcelableTransaction parcelableTransaction = new ParcelableTransaction();
-        parcelableTransaction.setNote(this.noteString);
-        parcelableTransaction.setDate(Util.formatDate(selectedDate));
-        parcelableTransaction.setAccount(parcelableAccount);
-
-        ParcelableCategory parcelableCategory = new ParcelableCategory();
-
-        if(currentPage == BudgetType.EXPENSE) {
-            Log.d("ZHAN","current page is expense");
-            parcelableTransaction.setPrice(-Float.parseFloat(priceStringWithDot));
-            parcelableCategory.convertCategoryToParcelable(selectedExpenseCategory);
-            parcelableTransaction.setCategory(parcelableCategory);
+        if(currentPage == BudgetType.EXPENSE){
+            transaction.setPrice(-Float.parseFloat(priceStringWithDot));
+            transaction.setCategory(selectedExpenseCategory);
         }else{
-            Log.d("ZHAN","current page is income");
-            parcelableTransaction.setPrice(Float.parseFloat(priceStringWithDot));
-            parcelableCategory.convertCategoryToParcelable(selectedIncomeCategory);
-            parcelableTransaction.setCategory(parcelableCategory);
+            transaction.setPrice(Float.parseFloat(priceStringWithDot));
+            transaction.setCategory(selectedIncomeCategory);
         }
 
-        intent.putExtra(Constants.RESULT_NEW_TRANSACTION, parcelableTransaction);
+        Parcelable wrapped = Parcels.wrap(transaction);
+        intent.putExtra(Constants.RESULT_NEW_TRANSACTION, wrapped);
         setResult(RESULT_OK, intent);
-
 
         finish();
     }

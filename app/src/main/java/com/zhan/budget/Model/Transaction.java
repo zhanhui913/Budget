@@ -1,15 +1,17 @@
 package com.zhan.budget.Model;
 
+import org.parceler.Parcel;
+
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.TransactionRealmProxy;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
-/**
- * Created by Zhan on 15-12-14.
- */
+@Parcel(implementations = {TransactionRealmProxy.class},
+    value = Parcel.Serialization.BEAN,
+    analyze = {Transaction.class})
 public class Transaction extends RealmObject {
 
     @PrimaryKey
