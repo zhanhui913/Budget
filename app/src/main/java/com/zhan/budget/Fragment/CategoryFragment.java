@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,11 +29,12 @@ import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
-import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -216,12 +218,17 @@ public class CategoryFragment extends Fragment {
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ParcelableCategory parcelableCategory = new ParcelableCategory();
-                parcelableCategory.convertCategoryToParcelable(categoryList.get(position));
+                //ParcelableCategory parcelableCategory = new ParcelableCategory();
+                //parcelableCategory.convertCategoryToParcelable(categoryList.get(position));
 
                 Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
                 viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, Util.convertDateToString(currentMonth));
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, parcelableCategory);
+                //viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, parcelableCategory);
+
+                Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+
+
+                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
                 startActivity(viewAllTransactionsForCategory);
             }
         });

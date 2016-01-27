@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.MonthReportGridAdapter;
-import com.zhan.budget.Model.Parcelable.ParcelableMonthReport;
+import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class OverviewFragment extends Fragment {
     private OnOverviewInteractionListener mListener;
     private View view;
 
-    private List<ParcelableMonthReport> monthReportList;
+    private List<MonthReport> monthReportList;
     private GridView monthReportGridView;
     private MonthReportGridAdapter monthReportGridAdapter;
 
@@ -82,12 +82,12 @@ public class OverviewFragment extends Fragment {
         Log.d("OVERVIEW_FRAGMENT"," put fake data");
         for(int i = 0; i < 12; i++){
 
-            ParcelableMonthReport pm = new ParcelableMonthReport();
-            pm.setMonth(new Date());
-            pm.setChangeCost(-50f);
-            pm.setCostThisMonth(100);
+            MonthReport monthReport = new MonthReport();
+            monthReport.setMonth(new Date());
+            monthReport.setChangeCost(-50f);
+            monthReport.setCostThisMonth(100);
 
-            monthReportList.add(pm);
+            monthReportList.add(monthReport);
             Log.d("OVERVIEW_FRAGMENT", "adding "+i);
         }
         Log.d("OVERVIEW_FRAGMENT", "NotifyData change");

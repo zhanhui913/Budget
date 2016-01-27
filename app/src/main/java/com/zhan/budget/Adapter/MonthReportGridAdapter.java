@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.zhan.budget.Model.Parcelable.ParcelableMonthReport;
+import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
@@ -16,10 +16,10 @@ import java.util.List;
 /**
  * Created by zhanyap on 2016-01-22.
  */
-public class MonthReportGridAdapter extends ArrayAdapter<ParcelableMonthReport>{
+public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
     private Activity activity;
-    private List<ParcelableMonthReport> monthReportList;
+    private List<MonthReport> monthReportList;
 
     static class ViewHolder {
         public TextView month;
@@ -27,7 +27,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<ParcelableMonthReport>{
         public TextView changeCost;
     }
 
-    public MonthReportGridAdapter(Activity activity, List<ParcelableMonthReport> monthReportList) {
+    public MonthReportGridAdapter(Activity activity, List<MonthReport> monthReportList) {
         super(activity, R.layout.item_month_report, monthReportList);
         this.activity = activity;
         this.monthReportList = monthReportList;
@@ -62,7 +62,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<ParcelableMonthReport>{
         }
 
         // getting monthReport data for the row
-        ParcelableMonthReport monthReport = monthReportList.get(position);
+        MonthReport monthReport = monthReportList.get(position);
 
         viewHolder.month.setText(Util.convertDateToStringFormat2(monthReport.getMonth()));
         viewHolder.costThisMonth.setText(""+monthReport.getCostThisMonth());

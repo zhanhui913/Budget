@@ -1,12 +1,12 @@
 package com.zhan.budget.Activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,12 +17,13 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
-import com.zhan.budget.Model.Parcelable.ParcelableCategory;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.circularview.CircularView;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +40,7 @@ public class TransactionsForCategory extends AppCompatActivity {
     private Date beginMonth;
     private Date endMonth;
     private Realm myRealm;
-    private ParcelableCategory selectedParcelableCategory;
+    //private ParcelableCategory selectedParcelableCategory;
     private Category selectedCategory;
 
     private ImageView transactionCategoryIcon;
@@ -50,6 +51,7 @@ public class TransactionsForCategory extends AppCompatActivity {
     private List<Transaction> transactionCategoryList;
 
     private CircularView circularView;
+    private ViewGroup emptyStateContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,8 @@ public class TransactionsForCategory extends AppCompatActivity {
 
         //Get intents from caller activity
         currentMonth = Util.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH));
-        selectedParcelableCategory = (getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY);
+        //selectedParcelableCategory = (getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY);
+        selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
 
         init();
         createSwipeMenu();
@@ -89,13 +92,17 @@ public class TransactionsForCategory extends AppCompatActivity {
         endMonth = Util.getNextMonth(currentMonth);
 
         transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
-                CategoryUtil.getIconResourceId(selectedParcelableCategory.getIcon()), getTheme()));
+                CategoryUtil.getIconResourceId(selectedCategory.getIcon()), getTheme()));
 
-        transactionCategoryName.setText(selectedParcelableCategory.getName());
+        transactionCategoryName.setText(selectedCategory.getName());
+
+        emptyStateContainer = (ViewGroup) findViewById(R.id.emptyStateContainer);
 
 
-        Log.d("ZHAN", "selected parcelable category => "+selectedParcelableCategory.getName() + " -> " + selectedParcelableCategory.getId());
+        Log.d("ZHAN", "selected parcelable category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
+        getAllTransactionsWithCategoryForMonth();
+/*
         final RealmResults<Category> results = myRealm.where(Category.class).equalTo("id", selectedParcelableCategory.getId()).findAllAsync();
         results.addChangeListener(new RealmChangeListener() {
             @Override
@@ -111,7 +118,7 @@ public class TransactionsForCategory extends AppCompatActivity {
 
                 getAllTransactionsWithCategoryForMonth();
             }
-        });
+        });*/
     }
 
     private void getAllTransactionsWithCategoryForMonth(){
@@ -139,6 +146,8 @@ public class TransactionsForCategory extends AppCompatActivity {
                 transactionCategoryBalance.setText(Util.setPriceToCorrectDecimalInString(total));
 
                 transactionCategoryAdapter.notifyDataSetChanged();
+
+                updateStatus();
             }
         });
     }
@@ -198,6 +207,16 @@ public class TransactionsForCategory extends AppCompatActivity {
                 // swipe end
             }
         });
+    }
+
+    private void updateStatus(){
+        if(transactionCategoryList.size() > 0){
+            transactionCategoryListView.setVisibility(View.VISIBLE);
+            emptyStateContainer.setVisibility(View.GONE);
+        }else{
+            transactionCategoryListView.setVisibility(View.GONE);
+            emptyStateContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
