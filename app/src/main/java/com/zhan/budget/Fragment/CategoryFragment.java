@@ -69,7 +69,7 @@ public class CategoryFragment extends Fragment {
 
     private SwipeMenuListView categoryListView;
     private CategoryListAdapter categoryAdapter;
-    private TextView balanceText;
+    private TextView emptyCategoryText;
 
     private List<Category> categoryList;
 
@@ -129,7 +129,8 @@ public class CategoryFragment extends Fragment {
         currentMonth = new Date();
 
         categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
-        balanceText = (TextView) view.findViewById(R.id.categoryMonthBalance);
+        emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
+        emptyCategoryText.setText("Pull down to add a category");
 
         transactionMonthList = new ArrayList<>();
 
@@ -138,6 +139,7 @@ public class CategoryFragment extends Fragment {
         categoryListView.setAdapter(categoryAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
+
 
         populateCategoryWithNoInfo();
 

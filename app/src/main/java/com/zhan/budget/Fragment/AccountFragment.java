@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenuListView;
@@ -37,6 +38,8 @@ public class AccountFragment extends Fragment {
     private ViewGroup emptyLayout;
     private PtrFrameLayout frame;
     private PlusView header;
+
+    private TextView emptyAccountText;
 
     private SwipeMenuListView accountListView;
     private AccountListAdapter accountListAdapter;
@@ -95,6 +98,8 @@ public class AccountFragment extends Fragment {
         accountListView.setAdapter(accountListAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
+        emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
+        emptyAccountText.setText("Pull down to add an account");
     }
 
     private void populateAccount(){
