@@ -318,9 +318,10 @@ public class CategoryFragment extends Fragment {
     }
 
     private void populateCategoryWithInfo(){
-        //final Date startMonth = new GregorianCalendar(year, month, 1).getTime();
         final Date startMonth = Util.refreshMonth(currentMonth);
-        final Date endMonth = Util.getNextMonth(currentMonth);
+
+        //Need to go a day before as Realm's between date does inclusive on both end
+        final Date endMonth = Util.getPreviousDate(Util.getNextMonth(currentMonth));
 
         Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
 

@@ -89,7 +89,9 @@ public class TransactionsForCategory extends AppCompatActivity {
         transactionCategoryListView.setAdapter(transactionCategoryAdapter);
 
         beginMonth = Util.refreshMonth(currentMonth);
-        endMonth = Util.getNextMonth(currentMonth);
+
+        //Need to go a day before as Realm's between date does inclusive on both end
+        endMonth = Util.getPreviousDate(Util.getNextMonth(currentMonth));
 
         transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
                 CategoryUtil.getIconResourceId(selectedCategory.getIcon()), getTheme()));
