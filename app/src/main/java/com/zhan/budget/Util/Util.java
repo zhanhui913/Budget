@@ -340,6 +340,14 @@ public final class Util {
         return refreshDate(cal.getTime());
     }
 
+    public static Date getPreviousDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -1);
+
+        return refreshDate(cal.getTime());
+    }
+
     /**
      * Refreshes the month to set the time component of date to 00:00:00
      * @param date

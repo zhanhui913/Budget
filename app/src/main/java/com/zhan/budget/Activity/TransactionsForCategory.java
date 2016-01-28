@@ -98,27 +98,9 @@ public class TransactionsForCategory extends AppCompatActivity {
 
         emptyStateContainer = (ViewGroup) findViewById(R.id.emptyStateContainer);
 
-
         Log.d("ZHAN", "selected parcelable category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
         getAllTransactionsWithCategoryForMonth();
-/*
-        final RealmResults<Category> results = myRealm.where(Category.class).equalTo("id", selectedParcelableCategory.getId()).findAllAsync();
-        results.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                selectedCategory = results.get(0);
-
-                Log.d("ZHAN", "results for selected category : " + results.size());
-                Log.d("ZHAN", "converted category => " + selectedCategory.getName());
-
-                circularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
-                        CategoryUtil.getIconResourceId(selectedCategory.getIcon()), getTheme()));
-                circularView.setCircleColor(Color.parseColor(selectedCategory.getColor()));
-
-                getAllTransactionsWithCategoryForMonth();
-            }
-        });*/
     }
 
     private void getAllTransactionsWithCategoryForMonth(){

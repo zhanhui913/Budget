@@ -1,6 +1,7 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,7 @@ public class MonthReportFragment extends Fragment {
 
     private Realm myRealm;
     private RealmResults<Transaction> transactionsResults;
+    private List<Transaction> transactionList;
 
     private Date currentYear;
 
@@ -101,19 +103,17 @@ public class MonthReportFragment extends Fragment {
         updateYearInToolbar(0);
     }
 
-    long startTime,endTime,duration;
-
-
     /**
      * Gets called whenever you update the year
      */
-    private void getMonthReport(){                   startTime = System.nanoTime();
-
+    private void getMonthReport(){
         //Refresh these variables
         beginYear = Util.refreshYear(currentYear);
-        endYear = Util.getNextYear(beginYear);
 
-        Log.d("MONTHLY_FRAGMENT", "get report from " + Util.convertDateToStringFormat2(beginYear) + " to " + Util.convertDateToStringFormat2(endYear));
+        //Need to go a day before as Realm's between date does inclusive on both end
+        endYear = Util.getPreviousDate(Util.getNextYear(beginYear));
+
+        Log.d("MONTHLY_FRAGMENT", "get report from " + beginYear.toString() + " to " + endYear.toString());
 
         monthReportGridAdapter.clear();
 
@@ -125,31 +125,62 @@ public class MonthReportFragment extends Fragment {
             }else{
                 monthReport.setMonth(Util.getNextMonth(monthReportList.get(i - 1).getMonth()));
             }
-            Log.d("MONTHLY_FRAGMENT", i + "-> " + monthReport.getMonth().toString());
             monthReportList.add(monthReport);
         }
-
 
         transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                Log.d("MONTHLY_FRAGMENT", "THere are " + transactionsResults.size() + " transactions between " + beginYear.toString() + " and " + endYear.toString());
+                if(transactionList != null) {
+                    transactionList.clear();
+                }
 
-                //sort by date
-                transactionsResults.sort("date");
+                transactionList = myRealm.copyFromRealm(transactionsResults);
 
-                for (int i = 0; i < transactionsResults.size(); i++) {
-                    //Log.d("MONTHLY_FRAGMENT", i + " : " + Util.convertDateToStringFormat1(transactionsResults.get(i).getDate()));
+                performAsyncCalculation();
+            }
+        });
+    }
 
-                    int month = Util.getMonthFromDate(transactionsResults.get(i).getDate());
+    /**
+     * Perform tedious calculation asynchronously to avoid blocking main thread
+     */
+    private void performAsyncCalculation(){
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("MONTHLY_FRAGMENT", "preparing to aggregate results");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                Log.d("MONTHLY_FRAGMENT", "Transaction size : "+transactionList.size());
+
+                startTime = System.nanoTime();
+
+                for (int i = 0; i < transactionList.size(); i++) {
+
+                    int month = Util.getMonthFromDate(transactionList.get(i).getDate());
 
                     for(int a = 0; a < monthReportList.size(); a++){
                         if(month == Util.getMonthFromDate(monthReportList.get(a).getMonth())){
-                            monthReportList.get(a).addCostThisMonth(transactionsResults.get(i).getPrice());
+                            monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
                         }
                     }
                 }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
 
                 monthReportGridAdapter.notifyDataSetChanged();
 
@@ -160,7 +191,8 @@ public class MonthReportFragment extends Fragment {
                 float minutes = (second / 60.0f);
                 Log.d("MONTHLY_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
-        });
+        };
+        loader.execute();
     }
 
     private void updateYearInToolbar(int direction){

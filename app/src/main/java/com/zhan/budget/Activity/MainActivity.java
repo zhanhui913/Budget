@@ -192,7 +192,6 @@ public class MainActivity extends AppCompatActivity
                 for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
                     Random random = new Random();
                     int rd = random.nextInt(categoryList.size());
-
                     int rda = random.nextInt(accountList.size());
 
                     //Create random transactions per day
