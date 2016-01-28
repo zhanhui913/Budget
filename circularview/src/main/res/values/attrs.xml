@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CircularView">
+        <attr name="cv_bgRadius" format="dimension"/>
         <attr name="cv_bgColor" format="color"/>
         <attr name="cv_strokeWidth" format="dimension"/>
         <attr name="cv_strokePadding" format="dimension"/>

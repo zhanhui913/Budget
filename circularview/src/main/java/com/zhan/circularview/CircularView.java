@@ -3,6 +3,7 @@ package com.zhan.circularview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -20,6 +21,7 @@ public class CircularView extends View {
     public enum IconSize {XSMALL, SMALL, MEDIUM, LARGE, XLARGE}
 
     //Default values
+    private final static int DEFAULT_BG_RADIUS = 100;
     private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
     private final static int DEFAULT_STROKE_WIDTH = 0;
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
@@ -29,6 +31,7 @@ public class CircularView extends View {
 
 
     private Context context;
+    private int backgroundRadius;
     private int backgroundColor;
     private int strokeWidth;
     private int strokeColor;
@@ -64,6 +67,7 @@ public class CircularView extends View {
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
+            backgroundRadius = a.getDimensionPixelSize(R.styleable.CircularView_cv_bgRadius, DEFAULT_BG_RADIUS);
             backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
             strokeWidth = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
             strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, getResources().getColor(DEFAULT_STROKE_COLOR));
@@ -86,15 +90,69 @@ public class CircularView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        /*super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //Get the width measurement
-        int widthSize = View.resolveSize(getDesiredWidth(), widthMeasureSpec);
+        int widthSize = View.resolveSize(width, widthMeasureSpec);
 
         //Get the height measurement
-        int heightSize = View.resolveSize(getDesiredHeight(), heightMeasureSpec);
+        int heightSize = View.resolveSize(height, heightMeasureSpec);
 
         //MUST call this to store the measurements
         setMeasuredDimension(widthSize, heightSize);
+        */
+
+        /*
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int parentWidth = MeasureSpec.getSize(widthMeasureSpec); // receives parents width in pixel
+        int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        //your desired sizes, converted from pixels to setMeasuredDimension's unit
+        final int desiredWSpec = MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY);
+        final int desiredHSpec = MeasureSpec.makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY);
+        this.setMeasuredDimension(desiredWSpec, desiredHSpec);
+        */
+
+        int desiredWidth = 100;
+        int desiredHeight = 100;
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int width;
+        int height;
+
+        //Measure Width
+        if (widthMode == MeasureSpec.EXACTLY) { //specific value
+            //Must be this size
+            width = widthSize;
+            backgroundColor = Color.RED;
+        } else if (widthMode == MeasureSpec.AT_MOST) { //match parent
+            //Can't be bigger than...
+            width = Math.min(desiredWidth, widthSize);
+            backgroundColor = Color.BLUE;
+        } else { //wrap content
+            //Be whatever you want
+            width = desiredWidth;
+        }
+
+        //Measure Height
+        if (heightMode == MeasureSpec.EXACTLY) {
+            //Must be this size
+            height = heightSize;
+            strokeColor = Color.RED;
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            //Can't be bigger than...
+            height = Math.min(desiredHeight, heightSize);
+            strokeColor = Color.BLUE;
+        } else {
+            //Be whatever you want
+            height = desiredHeight;
+        }
+
+        setMeasuredDimension(width, height);
     }
 
     @Override
@@ -111,29 +169,29 @@ public class CircularView extends View {
         }
 
         drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);
+        //drawCircle(canvas, backgroundRadius, this.getWidth(), this.getHeight());
         drawIcon(canvas);
         invalidate();
     }
-
+/*
     private int getDesiredWidth() {
         return 50;
     }
 
-    private int getDesiredHeight(){
+    private int getDesiredHeight() {
         return 50;
-    }
+    }*/
 
     private void drawCircle(Canvas canvas, int radius, int width, int height){
         if(strokeWidth > 0) {
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(strokeColor);
             paint.setStrokeWidth(strokeWidth);
-            canvas.drawCircle(width, height, radius - (strokeWidth/2), paint);
-
+            canvas.drawCircle(width, height, radius - (strokeWidth / 2), paint);
 
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(backgroundColor);
-            canvas.drawCircle(width, height, radius - (strokeWidth) - strokePadding, paint);
+            canvas.drawCircle(width, height, radius - strokeWidth - strokePadding, paint);
         }else{
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(backgroundColor);
