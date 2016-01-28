@@ -77,11 +77,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CalendarFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CalendarFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33681074">
-              <caret line="376" column="37" selection-start-line="376" selection-start-column="37" selection-end-line="376" selection-end-column="37" />
+            <state vertical-scroll-proportion="-8.259259">
+              <caret line="272" column="35" selection-start-line="272" selection-start-column="35" selection-end-line="272" selection-end-column="35" />
               <folding>
                 <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
                 <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
@@ -90,14 +90,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MonthReportFragment.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MonthReportFragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/MonthReportFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="175" column="17" selection-start-line="175" selection-start-column="17" selection-end-line="175" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.3323782">
+              <caret line="130" column="30" selection-start-line="130" selection-start-column="30" selection-end-line="130" selection-end-column="30" />
               <folding>
-                <element signature="e#4135#4477#0" expanded="true" />
-                <element signature="e#4476#4477#0" expanded="true" />
+                <element signature="e#4124#4466#0" expanded="true" />
+                <element signature="e#4465#4466#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -107,8 +107,39 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionsForCategory.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="97" column="0" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+              <caret line="108" column="57" selection-start-line="108" selection-start-column="57" selection-end-line="108" selection-end-column="57" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CategoryFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="324" column="92" selection-start-line="324" selection-start-column="92" selection-end-line="324" selection-end-column="92" />
+              <folding>
+                <element signature="method#onCreate#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onCreateView#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onActivityCreated#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#init#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#createPullDownToAddCategory#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#addListener#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#updateCategoryStatus#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#addNewCategory#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#populateCategoryWithNoInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onActivityResult#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#updateMonthInToolbar#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#resetCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onCreateOptionsMenu#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -4007,7 +4038,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/OverviewFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/activity_main_drawer.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/change_month_year.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/MonthReport.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_month_report.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/MonthReportGridAdapter.java" />
@@ -4016,6 +4046,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Util/Util.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/MonthReportFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionsForCategory.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java" />
       </list>
     </option>
   </component>
@@ -4417,13 +4448,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java</url>
-          <line>346</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="9" />
     </breakpoint-manager>
     <watches-manager />
@@ -4835,36 +4859,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.024709303">
-          <caret line="343" column="0" selection-start-line="343" selection-start-column="0" selection-end-line="394" selection-end-column="25" />
-          <folding>
-            <element signature="method#onCreate#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onCreateView#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onActivityCreated#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#init#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#createPullDownToAddCategory#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#addListener#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#updateCategoryStatus#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#addNewCategory#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#populateCategoryWithNoInfo#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#populateCategoryWithInfo#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onActivityResult#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#updateMonthInToolbar#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#resetCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onCreateOptionsMenu#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Util/Util.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5101744">
@@ -4881,32 +4875,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.259259">
+          <caret line="272" column="35" selection-start-line="272" selection-start-column="35" selection-end-line="272" selection-end-column="35" />
+          <folding>
+            <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionsForCategory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="97" column="0" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+          <caret line="108" column="57" selection-start-line="108" selection-start-column="57" selection-end-line="108" selection-end-column="57" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="324" column="92" selection-start-line="324" selection-start-column="92" selection-end-line="324" selection-end-column="92" />
+          <folding>
+            <element signature="method#onCreate#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onCreateView#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onActivityCreated#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#init#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#createPullDownToAddCategory#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#addListener#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#updateCategoryStatus#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#addNewCategory#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#populateCategoryWithNoInfo#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onActivityResult#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#updateMonthInToolbar#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#resetCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onCreateOptionsMenu#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/MonthReportFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="175" column="17" selection-start-line="175" selection-start-column="17" selection-end-line="175" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.3323782">
+          <caret line="130" column="30" selection-start-line="130" selection-start-column="30" selection-end-line="130" selection-end-column="30" />
           <folding>
-            <element signature="e#4135#4477#0" expanded="true" />
-            <element signature="e#4476#4477#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33681074">
-          <caret line="376" column="37" selection-start-line="376" selection-start-column="37" selection-end-line="376" selection-end-column="37" />
-          <folding>
-            <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="e#4124#4466#0" expanded="true" />
+            <element signature="e#4465#4466#0" expanded="true" />
           </folding>
         </state>
       </provider>

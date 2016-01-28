@@ -104,6 +104,8 @@ public class TransactionsForCategory extends AppCompatActivity {
     }
 
     private void getAllTransactionsWithCategoryForMonth(){
+        Log.d("DEBUG", "getAllTransactionsWithCategoryForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
+
         final RealmResults<Transaction> resultsInMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).findAllAsync();
         resultsInMonth.addChangeListener(new RealmChangeListener() {
             @Override

@@ -113,7 +113,7 @@ public class MonthReportFragment extends Fragment {
         //Need to go a day before as Realm's between date does inclusive on both end
         endYear = Util.getPreviousDate(Util.getNextYear(beginYear));
 
-        Log.d("MONTHLY_FRAGMENT", "get report from " + beginYear.toString() + " to " + endYear.toString());
+        Log.d("DEBUG", "get report from " + beginYear.toString() + " to " + endYear.toString());
 
         monthReportGridAdapter.clear();
 

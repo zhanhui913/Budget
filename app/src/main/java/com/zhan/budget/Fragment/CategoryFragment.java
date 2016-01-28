@@ -322,7 +322,7 @@ public class CategoryFragment extends Fragment {
         final Date startMonth = Util.refreshMonth(currentMonth);
         final Date endMonth = Util.getNextMonth(currentMonth);
 
-        Log.d("REALM","This month is "+startMonth.toString()+", next month is "+endMonth.toString());
+        Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
 
         resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
         resultsTransaction.addChangeListener(new RealmChangeListener() {
