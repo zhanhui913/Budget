@@ -20,7 +20,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.AccountFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
-import com.zhan.budget.Fragment.OverviewFragment;
+import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.SendFragment;
 import com.zhan.budget.Fragment.ShareFragment;
 import com.zhan.budget.Model.Account;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalendarFragment.OnCalendarListener,
         CategoryFragment.OnCategoryInteractionListener,
-        OverviewFragment.OnOverviewInteractionListener,
+        MonthReportFragment.OnOverviewInteractionListener,
         SendFragment.OnSendInteractionListener,
         ShareFragment.OnShareInteractionListener{
 
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
 
     private CalendarFragment calendarFragment;
     private CategoryFragment categoryFragment;
-    private OverviewFragment overviewFragment;
+    private MonthReportFragment monthReportFragment;
     private AccountFragment accountFragment;
     private ShareFragment shareFragment;
     private SendFragment sendFragment;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     private void createFragments(){
         calendarFragment = new CalendarFragment();
         categoryFragment = new CategoryFragment();
-        overviewFragment = new OverviewFragment();
+        monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
         shareFragment = new ShareFragment();
         sendFragment = new SendFragment();
@@ -179,8 +179,8 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 //Create fake transactions
-                Date startDate = Util.convertStringToDate("2014-12-01");
-                Date endDate = Util.convertStringToDate("2016-02-01");
+                Date startDate = Util.convertStringToDate("2016-01-01");
+                Date endDate = Util.convertStringToDate("2017-01-01");
 
                 Calendar start = Calendar.getInstance();
                 start.setTime(startDate);
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity
                         title = "Category";
                         break;
                     case R.id.nav_overview:
-                        fragment = overviewFragment;
+                        fragment = monthReportFragment;
                         title = "Overview";
                         break;
                     case R.id.nav_account:

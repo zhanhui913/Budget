@@ -31,9 +31,9 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OverviewFragment.OnOverviewInteractionListener} interface
+ * {@link MonthReportFragment.OnOverviewInteractionListener} interface
  * to handle interaction events.
- * Use the {@link OverviewFragment#newInstance} factory method to
+ * Use the {@link MonthReportFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class TransactionIncomeFragment extends Fragment {

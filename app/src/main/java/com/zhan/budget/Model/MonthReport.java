@@ -38,4 +38,8 @@ public class MonthReport {
     public void setChangeCost(float changeCost) {
         this.changeCost = changeCost;
     }
+
+    public void addCostThisMonth(float cost){
+        this.costThisMonth += cost;
+    }
 }

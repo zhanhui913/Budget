@@ -301,6 +301,16 @@ public final class Util {
         return formatter.format(date);
     }
 
+    public static String convertDateToStringFormat3(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy", Locale.CANADA);
+        return formatter.format(date);
+    }
+
+    public static String convertDateToStringFormat4(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM", Locale.CANADA);
+        return formatter.format(date);
+    }
+
     /**
      * Refreshes the date to set the time component of date to 00:00:00
      * @param date
@@ -360,5 +370,56 @@ public final class Util {
         int month = cal.get(Calendar.MONTH);
 
         return new GregorianCalendar(year, month, 1).getTime();
+    }
+
+    /**
+     * Refreshes the year to set the time component of date to 00:00:00
+     * @param date
+     * @return year with 00:00:00 time component and date = 1, month = 1
+     */
+    public static Date refreshYear(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int year = cal.get(Calendar.YEAR);
+
+        return new GregorianCalendar(year, 0, 1).getTime();
+    }
+
+    /**
+     * Gives the following year.
+     * @param date
+     * @return date + 1
+     */
+    public static Date getNextYear(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.add(Calendar.YEAR, 1);
+
+        int year = cal.get(Calendar.YEAR);
+
+        return new GregorianCalendar(year, 0, 1).getTime();
+    }
+
+    public static int getYearFromDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.YEAR);
+    }
+
+    public static int getMonthFromDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.MONTH);
+    }
+
+    public static int getDateFromDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.DATE);
     }
 }

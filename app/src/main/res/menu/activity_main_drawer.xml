@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_overview"
             android:icon="@drawable/ic_menu_monthly_overview"
-            android:title="Overview" />
+            android:title="Monthly Report" />
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_menu_account"

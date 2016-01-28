@@ -63,11 +63,9 @@ public class CategoryFragment extends Fragment {
     private OnCategoryInteractionListener mListener;
     private View view;
 
-
     private PtrFrameLayout frame;
     private PlusView header;
     private ViewGroup emptyLayout;
-
 
     private SwipeMenuListView categoryListView;
     private CategoryListAdapter categoryAdapter;
@@ -111,7 +109,6 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_category, container, false);
-
         return view;
     }
 
@@ -540,15 +537,15 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        //closeDatabase();
-
+        if(!myRealm.isClosed()) {
+            myRealm.close();
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.change_month, menu);
+        inflater.inflate(R.menu.change_month_year, menu);
     }
 
     @Override

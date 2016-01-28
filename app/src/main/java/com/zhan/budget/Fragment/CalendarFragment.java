@@ -389,12 +389,12 @@ public class CalendarFragment extends Fragment {
 
                 final Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
 
+                Log.i("ZHAN", "----------- Parceler Result ----------");
                 Log.d("ZHAN", "transaction id "+tt.getId());
                 Log.d("ZHAN", "transaction name is " + tt.getNote() + " cost is " + tt.getPrice());
                 Log.d("ZHAN", "category is " + tt.getCategory().getName() + ", " + tt.getCategory().getId());
                 Log.d("ZHAN", "account id is : " + tt.getAccount().getId());
                 Log.d("ZHAN", "account name is : " + tt.getAccount().getName());
-
                 Log.i("ZHAN", "----------- Parceler Result ----------");
 
                 //Attaching account
@@ -429,8 +429,6 @@ public class CalendarFragment extends Fragment {
                             //dont update anything
 
                             updateTransactionStatus();
-
-                            Log.i("ZHAN", "----------- DONE ----------");
                         }
                     }
                 });
@@ -441,9 +439,8 @@ public class CalendarFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // TODO Auto-generated method stub
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.change_month, menu);
+        inflater.inflate(R.menu.change_month_year, menu);
     }
 
     @Override
@@ -485,6 +482,9 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onDestroy(){
         super.onDestroy();
+        if(!myRealm.isClosed()) {
+            myRealm.close();
+        }
     }
 
     /**

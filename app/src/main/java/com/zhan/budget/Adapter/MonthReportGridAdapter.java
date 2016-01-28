@@ -64,9 +64,9 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         // getting monthReport data for the row
         MonthReport monthReport = monthReportList.get(position);
 
-        viewHolder.month.setText(Util.convertDateToStringFormat2(monthReport.getMonth()));
-        viewHolder.costThisMonth.setText(""+monthReport.getCostThisMonth());
-        viewHolder.changeCost.setText(""+monthReport.getChangeCost());
+        viewHolder.month.setText(Util.convertDateToStringFormat4(monthReport.getMonth()));
+        viewHolder.costThisMonth.setText(Util.setPriceToCorrectDecimalInString(monthReport.getCostThisMonth()));
+        viewHolder.changeCost.setText(Util.setPriceToCorrectDecimalInString(monthReport.getChangeCost()));
 
         return convertView;
     }
