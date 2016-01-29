@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -21,7 +22,7 @@ public class CircularView extends View {
     public enum IconSize {XSMALL, SMALL, MEDIUM, LARGE, XLARGE}
 
     //Default values
-    private final static int DEFAULT_BG_RADIUS = 100;
+    private final static int DEFAULT_BG_RADIUS = 50;
     private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
     private final static int DEFAULT_STROKE_WIDTH = 0;
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
@@ -68,13 +69,13 @@ public class CircularView extends View {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
             backgroundRadius = a.getDimensionPixelSize(R.styleable.CircularView_cv_bgRadius, DEFAULT_BG_RADIUS);
-            backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
+            backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, ContextCompat.getColor(this.context, DEFAULT_BG_COLOR));
             strokeWidth = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
-            strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, getResources().getColor(DEFAULT_STROKE_COLOR));
+            strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, ContextCompat.getColor(this.context, DEFAULT_STROKE_COLOR));
             strokePadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokePadding, DEFAULT_STROKE_PADDING);
             iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
             iconSize = a.getInteger(R.styleable.CircularView_cv_iconSize, DEFAULT_ICON_SIZE);
-            iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
+            iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, ContextCompat.getColor(this.context, DEFAULT_ICON_COLOR));
         }finally {
             a.recycle();
         }
@@ -113,8 +114,10 @@ public class CircularView extends View {
         this.setMeasuredDimension(desiredWSpec, desiredHSpec);
         */
 
-        int desiredWidth = 100;
-        int desiredHeight = 100;
+        int ss = ((strokeWidth + strokePadding) * 2);
+
+        int desiredWidth = 100 + ss;
+        int desiredHeight = 100 + ss;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -142,11 +145,11 @@ public class CircularView extends View {
         if (heightMode == MeasureSpec.EXACTLY) {
             //Must be this size
             height = heightSize;
-            strokeColor = Color.RED;
+            strokeColor = Color.GRAY;
         } else if (heightMode == MeasureSpec.AT_MOST) {
             //Can't be bigger than...
             height = Math.min(desiredHeight, heightSize);
-            strokeColor = Color.BLUE;
+            strokeColor = Color.GREEN;
         } else {
             //Be whatever you want
             height = desiredHeight;
@@ -168,8 +171,8 @@ public class CircularView extends View {
             radius = viewWidthHalf;
         }
 
-        drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);
-        //drawCircle(canvas, backgroundRadius, this.getWidth(), this.getHeight());
+        //drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);
+        drawCircle(canvas, backgroundRadius, viewWidthHalf, viewHeightHalf);
         drawIcon(canvas);
         invalidate();
     }
@@ -183,15 +186,31 @@ public class CircularView extends View {
     }*/
 
     private void drawCircle(Canvas canvas, int radius, int width, int height){
-        if(strokeWidth > 0) {
+        if(strokeWidth > 0) { //If there's stroke defined
+/*
+            //Paint the stroke
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(strokeColor);
             paint.setStrokeWidth(strokeWidth);
             canvas.drawCircle(width, height, radius - (strokeWidth / 2), paint);
 
+            //Paint the inner circle
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(backgroundColor);
             canvas.drawCircle(width, height, radius - strokeWidth - strokePadding, paint);
+            */
+
+            //Paint the stroke
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(strokeColor);
+            paint.setStrokeWidth(strokeWidth);
+            canvas.drawCircle(width, height, radius + (strokePadding + (strokeWidth/2)), paint);
+
+            //Paint the inner circle
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(backgroundColor);
+            canvas.drawCircle(width, height, radius , paint);
+
         }else{
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(backgroundColor);
