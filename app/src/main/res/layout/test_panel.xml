@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/root"
     android:layout_width="match_parent"
@@ -51,6 +50,7 @@
     </LinearLayout>
 
     <com.zhan.circularview.CircularView
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/categoryIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,11 +58,11 @@
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false"
         custom:cv_strokeColor="@color/lightPurple"
-        custom:cv_strokeWidth="18dp"
-        custom:cv_strokePadding="4dp"
+        custom:cv_strokeWidth="0dp"
+        custom:cv_strokePadding="5dp"
         custom:cv_iconColor="@color/red"
-        custom:cv_iconDrawable="@drawable/airplane"
+        custom:cv_iconDrawable="@drawable/food"
         custom:cv_iconSize="LARGE"
-        />
+        custom:cv_bgRadius="100dp" />
 
 </LinearLayout>

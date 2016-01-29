@@ -4,10 +4,19 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.ShareFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+    <com.zhan.circularview.CircularView
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/categoryIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="false"
+        custom:cv_strokeColor="@color/lightPurple"
+        custom:cv_strokeWidth="0dp"
+        custom:cv_strokePadding="5dp"
+        custom:cv_iconColor="@color/red"
+        custom:cv_iconDrawable="@drawable/food"
+        custom:cv_iconSize="LARGE"
+        custom:cv_bgRadius="100dp" />
 </FrameLayout>

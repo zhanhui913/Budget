@@ -1,6 +1,7 @@
 package com.zhan.circularview;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +11,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 
 
@@ -22,21 +22,20 @@ public class CircularView extends View {
     public enum IconSize {XSMALL, SMALL, MEDIUM, LARGE, XLARGE}
 
     //Default values
-    private final static int DEFAULT_BG_RADIUS = 50;
+    private final static int DEFAULT_BG_RADIUS = 50; //pixels
     private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
-    private final static int DEFAULT_STROKE_WIDTH = 0;
+    private final static int DEFAULT_STROKE_WIDTH = 0; //pixels
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
-    private final static int DEFAULT_STROKE_PADDING = 0;
+    private final static int DEFAULT_STROKE_PADDING = 0; //pixels
     private final static int DEFAULT_ICON_SIZE  = 5;//LARGE
     private final static int DEFAULT_ICON_COLOR = R.color.white;
 
-
     private Context context;
-    private int backgroundRadius;
-    private int backgroundColor;
-    private int strokeWidth;
+    private int backgroundRadius; //pixels
+    private int circleColor;
+    private int strokeWidth;  //pixels
     private int strokeColor;
-    private int strokePadding;
+    private int strokePadding; //pixels
     private IconSize eiconSize;
     private int iconSize;
     private int iconColor;
@@ -69,7 +68,7 @@ public class CircularView extends View {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
             backgroundRadius = a.getDimensionPixelSize(R.styleable.CircularView_cv_bgRadius, DEFAULT_BG_RADIUS);
-            backgroundColor = a.getColor(R.styleable.CircularView_cv_bgColor, ContextCompat.getColor(this.context, DEFAULT_BG_COLOR));
+            circleColor = a.getColor(R.styleable.CircularView_cv_bgColor, ContextCompat.getColor(this.context, DEFAULT_BG_COLOR));
             strokeWidth = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
             strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, ContextCompat.getColor(this.context, DEFAULT_STROKE_COLOR));
             strokePadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokePadding, DEFAULT_STROKE_PADDING);
@@ -84,40 +83,12 @@ public class CircularView extends View {
         paint.setAntiAlias(true);
     }
 
-    public int dp2px(Context context, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                context.getResources().getDisplayMetrics());
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        /*super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //Get the width measurement
-        int widthSize = View.resolveSize(width, widthMeasureSpec);
-
-        //Get the height measurement
-        int heightSize = View.resolveSize(height, heightMeasureSpec);
-
-        //MUST call this to store the measurements
-        setMeasuredDimension(widthSize, heightSize);
-        */
-
-        /*
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec); // receives parents width in pixel
-        int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
-
-        //your desired sizes, converted from pixels to setMeasuredDimension's unit
-        final int desiredWSpec = MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY);
-        final int desiredHSpec = MeasureSpec.makeMeasureSpec(parentHeight, MeasureSpec.EXACTLY);
-        this.setMeasuredDimension(desiredWSpec, desiredHSpec);
-        */
-
         int ss = ((strokeWidth + strokePadding) * 2);
 
-        int desiredWidth = 100 + ss;
-        int desiredHeight = 100 + ss;
+        int desiredWidth = (backgroundRadius * 2) + ss;
+        int desiredHeight = (backgroundRadius * 2) + ss;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -131,11 +102,11 @@ public class CircularView extends View {
         if (widthMode == MeasureSpec.EXACTLY) { //specific value
             //Must be this size
             width = widthSize;
-            backgroundColor = Color.RED;
+            circleColor = Color.RED;
         } else if (widthMode == MeasureSpec.AT_MOST) { //match parent
             //Can't be bigger than...
             width = Math.min(desiredWidth, widthSize);
-            backgroundColor = Color.BLUE;
+            circleColor = Color.BLUE;
         } else { //wrap content
             //Be whatever you want
             width = desiredWidth;
@@ -163,7 +134,7 @@ public class CircularView extends View {
         super.onDraw(canvas);
         int viewWidthHalf = this.getWidth() / 2;
         int viewHeightHalf = this.getHeight() / 2;
-
+/*
         int radius;
         if (viewWidthHalf > viewHeightHalf) {
             radius = viewHeightHalf;
@@ -171,7 +142,7 @@ public class CircularView extends View {
             radius = viewWidthHalf;
         }
 
-        //drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);
+        drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);*/
         drawCircle(canvas, backgroundRadius, viewWidthHalf, viewHeightHalf);
         drawIcon(canvas);
         invalidate();
@@ -186,40 +157,23 @@ public class CircularView extends View {
     }*/
 
     private void drawCircle(Canvas canvas, int radius, int width, int height){
-        if(strokeWidth > 0) { //If there's stroke defined
-/*
+        if(Math.round(strokeWidth) > 0) { //If there's stroke defined
             //Paint the stroke
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(strokeColor);
             paint.setStrokeWidth(strokeWidth);
-            canvas.drawCircle(width, height, radius - (strokeWidth / 2), paint);
-
-            //Paint the inner circle
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(backgroundColor);
-            canvas.drawCircle(width, height, radius - strokeWidth - strokePadding, paint);
-            */
-
-            //Paint the stroke
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(strokeColor);
-            paint.setStrokeWidth(strokeWidth);
-            canvas.drawCircle(width, height, radius + (strokePadding + (strokeWidth/2)), paint);
-
-            //Paint the inner circle
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(backgroundColor);
-            canvas.drawCircle(width, height, radius , paint);
-
-        }else{
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(backgroundColor);
-            canvas.drawCircle(width, height, radius, paint);
+            canvas.drawCircle(width, height, radius + strokePadding + (strokeWidth / 2), paint);
         }
+
+        //Paint the inner circle
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(circleColor);
+        canvas.drawCircle(width, height, radius , paint);
     }
 
     private void drawIcon(Canvas canvas){
         if(iconDrawable != null){
+
             Rect bounds = canvas.getClipBounds();
 
             int multiplier = 5;
@@ -235,26 +189,40 @@ public class CircularView extends View {
         }
     }
 
-    public int getCircleColor() {
-        return backgroundColor;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Getters & Setters
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public int getBackgroundRadius() {
+        return backgroundRadius;
     }
 
-    public void setCircleColor(int backgroundColor) {
-        this.backgroundColor = backgroundColor;
+    public void setBackgroundRadius(int backgroundRadius) {
+        this.backgroundRadius = backgroundRadius;
+    }
+
+    public int getCircleColor() {
+        return circleColor;
+    }
+
+    public void setCircleColor(int circleColor) {
+        this.circleColor = circleColor;
         invalidate();
     }
 
     public int getStrokeWidth() {
-        return strokeWidth;
+        return pxToDp(strokeWidth);
     }
 
     public void setStrokeWidth(int strokeWidth) {
-        this.strokeWidth = strokeWidth;
+        this.strokeWidth = dpToPx(strokeWidth);
         invalidate();
     }
 
     public int getStrokeColor() {
-        return strokeColor;
+        return pxToDp(strokeColor);
     }
 
     public void setStrokeColor(int strokeColor) {
@@ -263,11 +231,12 @@ public class CircularView extends View {
     }
 
     public int getStrokePadding() {
-        return strokePadding;
+        return pxToDp(strokePadding);
     }
 
     public void setStrokePadding(int strokePadding) {
-        this.strokePadding = strokePadding;
+        this.strokePadding = dpToPx(strokePadding);
+        invalidate();
     }
 
     public IconSize getIconSize() {
@@ -278,20 +247,6 @@ public class CircularView extends View {
         this.eiconSize = size;
         this.iconSize = convertEnumToSize(this.eiconSize);
         invalidate();
-    }
-
-    private int convertEnumToSize(IconSize size){
-        if(size == IconSize.XSMALL){
-            return 17;
-        }else if(size == IconSize.SMALL){
-            return 13;
-        }else if(size == IconSize.MEDIUM){
-            return 9;
-        }else if(size == IconSize.LARGE){
-            return 5;
-        }else{
-            return 1;
-        }
     }
 
     public int getIconColor() {
@@ -311,10 +266,38 @@ public class CircularView extends View {
         this.iconDrawable = iconDrawable;
         invalidate();
     }
-/*
-    public void setIcon(int drawableId){
-        this.iconDrawable = ResourcesCompat.getDrawable(getResources(), drawableId, this.context.getTheme());
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Etc
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /*
+    public int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                this.context.getResources().getDisplayMetrics());
     }*/
 
+    private int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
 
+    private int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    private int convertEnumToSize(IconSize size){
+        if(size == IconSize.XSMALL){
+            return 17;
+        }else if(size == IconSize.SMALL){
+            return 13;
+        }else if(size == IconSize.MEDIUM){
+            return 9;
+        }else if(size == IconSize.LARGE){
+            return 5;
+        }else{
+            return 1;
+        }
+    }
 }
