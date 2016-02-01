@@ -11,6 +11,8 @@ public class MonthReport {
     private float costThisMonth;
     private float changeCost;
 
+    private boolean doneCalculation;
+
     public MonthReport(){
 
     }
@@ -41,5 +43,13 @@ public class MonthReport {
 
     public void addCostThisMonth(float cost){
         this.costThisMonth += cost;
+    }
+
+    public boolean isDoneCalculation() {
+        return doneCalculation;
+    }
+
+    public void setDoneCalculation(boolean doneCalculation) {
+        this.doneCalculation = doneCalculation;
     }
 }

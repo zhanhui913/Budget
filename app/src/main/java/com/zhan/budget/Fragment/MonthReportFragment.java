@@ -100,7 +100,25 @@ public class MonthReportFragment extends Fragment {
 
         currentYear = new Date();
 
+        createMonthCard();
         updateYearInToolbar(0);
+    }
+
+    /**
+     * Gets called once to initialize the card view for all months
+     */
+    private void createMonthCard(){
+        for(int i = 0; i < 12; i++){
+            MonthReport monthReport = new MonthReport();
+            monthReport.setDoneCalculation(false); //default
+
+            if(i == 0) {
+                monthReport.setMonth(Util.refreshMonth(Util.refreshYear(currentYear)));
+            }else{
+                monthReport.setMonth(Util.getNextMonth(monthReportList.get(i - 1).getMonth()));
+            }
+            monthReportList.add(monthReport);
+        }
     }
 
     /**
@@ -115,24 +133,19 @@ public class MonthReportFragment extends Fragment {
 
         Log.d("DEBUG", "get report from " + beginYear.toString() + " to " + endYear.toString());
 
-        monthReportGridAdapter.clear();
-
-        for(int i = 0; i < 12; i++){
-            MonthReport monthReport = new MonthReport();
-
-            if(i == 0) {
-                monthReport.setMonth(Util.refreshMonth(beginYear));
-            }else{
-                monthReport.setMonth(Util.getNextMonth(monthReportList.get(i - 1).getMonth()));
-            }
-            monthReportList.add(monthReport);
+        //Reset all values in list
+        for(int i = 0 ; i < monthReportList.size(); i++){
+            monthReportList.get(i).setDoneCalculation(false);
+            monthReportList.get(i).setCostThisMonth(0);
+            monthReportList.get(i).setChangeCost(0);
         }
+        monthReportGridAdapter.notifyDataSetChanged();
 
         transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                if(transactionList != null) {
+                if (transactionList != null) {
                     transactionList.clear();
                 }
 
@@ -181,6 +194,11 @@ public class MonthReportFragment extends Fragment {
             @Override
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
+
+                //Change the variable to true
+                for(int i = 0; i < monthReportList.size(); i++){
+                    monthReportList.get(i).setDoneCalculation(true);
+                }
 
                 monthReportGridAdapter.notifyDataSetChanged();
 

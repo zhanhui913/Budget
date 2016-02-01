@@ -13,6 +13,8 @@ import com.zhan.budget.Util.Util;
 
 import java.util.List;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+
 /**
  * Created by zhanyap on 2016-01-22.
  */
@@ -25,6 +27,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         public TextView month;
         public TextView costThisMonth;
         public TextView changeCost;
+        public CircularProgressBar progressBar;
     }
 
     public MonthReportGridAdapter(Activity activity, List<MonthReport> monthReportList) {
@@ -53,6 +56,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder.month = (TextView) convertView.findViewById(R.id.monthName);
             viewHolder.costThisMonth = (TextView) convertView.findViewById(R.id.monthTotalCost);
             viewHolder.changeCost = (TextView) convertView.findViewById(R.id.monthChangeCost);
+            viewHolder.progressBar = (CircularProgressBar) convertView.findViewById(R.id.monthReportProgressBar);
 
             // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(viewHolder);
@@ -67,6 +71,14 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         viewHolder.month.setText(Util.convertDateToStringFormat4(monthReport.getMonth()));
         viewHolder.costThisMonth.setText(Util.setPriceToCorrectDecimalInString(monthReport.getCostThisMonth()));
         viewHolder.changeCost.setText(Util.setPriceToCorrectDecimalInString(monthReport.getChangeCost()));
+
+        if(monthReport.isDoneCalculation()){
+            viewHolder.costThisMonth.setVisibility(View.VISIBLE);
+            viewHolder.progressBar.setVisibility(View.GONE);
+        }else{
+            viewHolder.costThisMonth.setVisibility(View.GONE);
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+        }
 
         return convertView;
     }
