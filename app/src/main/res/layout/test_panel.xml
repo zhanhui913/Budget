@@ -59,7 +59,7 @@
         android:layout_alignParentLeft="false"
         custom:cv_strokeColor="@color/lightPurple"
         custom:cv_strokeWidth="0dp"
-        custom:cv_strokePadding="5dp"
+        custom:cv_strokePadding="0dp"
         custom:cv_iconColor="@color/red"
         custom:cv_iconDrawable="@drawable/food"
         custom:cv_iconSize="LARGE"

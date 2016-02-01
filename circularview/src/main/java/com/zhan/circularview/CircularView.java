@@ -29,6 +29,10 @@ public class CircularView extends View {
     private final static int DEFAULT_STROKE_PADDING = 0; //pixels
     private final static int DEFAULT_ICON_SIZE  = 5;//LARGE
     private final static int DEFAULT_ICON_COLOR = R.color.white;
+    private final static int DEFAULT_ICON_TOP_PADDING = 5;
+    private final static int DEFAULT_ICON_BOTTOM_PADDING = 5;
+    private final static int DEFAULT_ICON_LEFT_PADDING = 5;
+    private final static int DEFAULT_ICON_RIGHT_PADDING = 5;
 
     private Context context;
     private int backgroundRadius; //pixels
@@ -40,6 +44,10 @@ public class CircularView extends View {
     private int iconSize;
     private int iconColor;
     private Drawable iconDrawable;
+    private int iconTopPadding;
+    private int iconBottomPadding;
+    private int iconLeftPadding;
+    private int iconRightPadding;
     private Paint paint;
 
     public CircularView(Context context) {
@@ -264,6 +272,42 @@ public class CircularView extends View {
 
     public void setIconDrawable(Drawable iconDrawable) {
         this.iconDrawable = iconDrawable;
+        invalidate();
+    }
+
+    public int getIconTopPadding() {
+        return iconTopPadding;
+    }
+
+    public void setIconTopPadding(int iconTopPadding) {
+        this.iconTopPadding = iconTopPadding;
+        invalidate();
+    }
+
+    public int getIconBottomPadding() {
+        return iconBottomPadding;
+    }
+
+    public void setIconBottomPadding(int iconBottomPadding) {
+        this.iconBottomPadding = iconBottomPadding;
+        invalidate();
+    }
+
+    public int getIconLeftPadding() {
+        return iconLeftPadding;
+    }
+
+    public void setIconLeftPadding(int iconLeftPadding) {
+        this.iconLeftPadding = iconLeftPadding;
+        invalidate();
+    }
+
+    public int getIconRightPadding() {
+        return iconRightPadding;
+    }
+
+    public void setIconRightPadding(int iconRightPadding) {
+        this.iconRightPadding = iconRightPadding;
         invalidate();
     }
 

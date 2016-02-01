@@ -8,6 +8,10 @@
         <attr name="cv_strokeColor" format="color"/>
         <attr name="cv_iconDrawable" format="integer"/>
         <attr name="cv_iconColor" format="integer"/>
+        <attr name="cv_iconTopPadding" format="dimension"/>
+        <attr name="cv_iconBottomPadding" format="dimension"/>
+        <attr name="cv_iconLeftPadding" format="dimension"/>
+        <attr name="cv_iconRightPadding" format="dimension"/>
         <attr name="cv_iconSize" format="enum">
             <enum name="XSMALL" value="17"/>
             <enum name="SMALL" value="13"/>
