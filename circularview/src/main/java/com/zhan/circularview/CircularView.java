@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -19,20 +18,17 @@ import android.view.View;
  */
 public class CircularView extends View {
 
-    public enum IconSize {XSMALL, SMALL, MEDIUM, LARGE, XLARGE}
-
     //Default values
     private final static int DEFAULT_BG_RADIUS = 50; //pixels
     private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
     private final static int DEFAULT_STROKE_WIDTH = 0; //pixels
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
     private final static int DEFAULT_STROKE_PADDING = 0; //pixels
-    private final static int DEFAULT_ICON_SIZE  = 5;//LARGE
     private final static int DEFAULT_ICON_COLOR = R.color.white;
-    private final static int DEFAULT_ICON_TOP_PADDING = 5;
-    private final static int DEFAULT_ICON_BOTTOM_PADDING = 5;
-    private final static int DEFAULT_ICON_LEFT_PADDING = 5;
-    private final static int DEFAULT_ICON_RIGHT_PADDING = 5;
+    private final static int DEFAULT_ICON_TOP_PADDING = 10; //pixels
+    private final static int DEFAULT_ICON_BOTTOM_PADDING = 10; //pixels
+    private final static int DEFAULT_ICON_LEFT_PADDING = 10; //pixels
+    private final static int DEFAULT_ICON_RIGHT_PADDING = 10; //pixels
 
     private Context context;
     private int backgroundRadius; //pixels
@@ -40,8 +36,6 @@ public class CircularView extends View {
     private int strokeWidth;  //pixels
     private int strokeColor;
     private int strokePadding; //pixels
-    private IconSize eiconSize;
-    private int iconSize;
     private int iconColor;
     private Drawable iconDrawable;
     private int iconTopPadding;
@@ -81,8 +75,11 @@ public class CircularView extends View {
             strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, ContextCompat.getColor(this.context, DEFAULT_STROKE_COLOR));
             strokePadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokePadding, DEFAULT_STROKE_PADDING);
             iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
-            iconSize = a.getInteger(R.styleable.CircularView_cv_iconSize, DEFAULT_ICON_SIZE);
             iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, ContextCompat.getColor(this.context, DEFAULT_ICON_COLOR));
+            iconTopPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconTopPadding, DEFAULT_ICON_TOP_PADDING);
+            iconBottomPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconBottomPadding, DEFAULT_ICON_BOTTOM_PADDING);
+            iconLeftPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconLeftPadding, DEFAULT_ICON_LEFT_PADDING);
+            iconRightPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconRightPadding, DEFAULT_ICON_RIGHT_PADDING);
         }finally {
             a.recycle();
         }
@@ -110,11 +107,11 @@ public class CircularView extends View {
         if (widthMode == MeasureSpec.EXACTLY) { //specific value
             //Must be this size
             width = widthSize;
-            circleColor = Color.RED;
+            //circleColor = Color.RED;
         } else if (widthMode == MeasureSpec.AT_MOST) { //match parent
             //Can't be bigger than...
             width = Math.min(desiredWidth, widthSize);
-            circleColor = Color.BLUE;
+            //circleColor = Color.BLUE;
         } else { //wrap content
             //Be whatever you want
             width = desiredWidth;
@@ -124,11 +121,11 @@ public class CircularView extends View {
         if (heightMode == MeasureSpec.EXACTLY) {
             //Must be this size
             height = heightSize;
-            strokeColor = Color.GRAY;
+            //strokeColor = Color.GRAY;
         } else if (heightMode == MeasureSpec.AT_MOST) {
             //Can't be bigger than...
             height = Math.min(desiredHeight, heightSize);
-            strokeColor = Color.GREEN;
+            //strokeColor = Color.GREEN;
         } else {
             //Be whatever you want
             height = desiredHeight;
@@ -184,12 +181,10 @@ public class CircularView extends View {
 
             Rect bounds = canvas.getClipBounds();
 
-            int multiplier = 5;
-
-            bounds.left += (iconSize * multiplier);
-            bounds.right -= (iconSize * multiplier);
-            bounds.top += (iconSize * multiplier);
-            bounds.bottom -= (iconSize * multiplier);
+            bounds.left += iconLeftPadding;
+            bounds.right -= iconRightPadding;
+            bounds.top += iconTopPadding;
+            bounds.bottom -= iconBottomPadding;
 
             iconDrawable.setBounds(bounds);
             iconDrawable.mutate().setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
@@ -247,16 +242,6 @@ public class CircularView extends View {
         invalidate();
     }
 
-    public IconSize getIconSize() {
-        return eiconSize;
-    }
-
-    public void setIconSize(IconSize size) {
-        this.eiconSize = size;
-        this.iconSize = convertEnumToSize(this.eiconSize);
-        invalidate();
-    }
-
     public int getIconColor() {
         return iconColor;
     }
@@ -276,38 +261,38 @@ public class CircularView extends View {
     }
 
     public int getIconTopPadding() {
-        return iconTopPadding;
+        return pxToDp(iconTopPadding);
     }
 
     public void setIconTopPadding(int iconTopPadding) {
-        this.iconTopPadding = iconTopPadding;
+        this.iconTopPadding = dpToPx(iconTopPadding);
         invalidate();
     }
 
     public int getIconBottomPadding() {
-        return iconBottomPadding;
+        return pxToDp(iconBottomPadding);
     }
 
     public void setIconBottomPadding(int iconBottomPadding) {
-        this.iconBottomPadding = iconBottomPadding;
+        this.iconBottomPadding = dpToPx(iconBottomPadding);
         invalidate();
     }
 
     public int getIconLeftPadding() {
-        return iconLeftPadding;
+        return pxToDp(iconLeftPadding);
     }
 
     public void setIconLeftPadding(int iconLeftPadding) {
-        this.iconLeftPadding = iconLeftPadding;
+        this.iconLeftPadding = dpToPx(iconLeftPadding);
         invalidate();
     }
 
     public int getIconRightPadding() {
-        return iconRightPadding;
+        return pxToDp(iconRightPadding);
     }
 
     public void setIconRightPadding(int iconRightPadding) {
-        this.iconRightPadding = iconRightPadding;
+        this.iconRightPadding = dpToPx(iconRightPadding);
         invalidate();
     }
 
@@ -329,19 +314,5 @@ public class CircularView extends View {
 
     private int pxToDp(int px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    private int convertEnumToSize(IconSize size){
-        if(size == IconSize.XSMALL){
-            return 17;
-        }else if(size == IconSize.SMALL){
-            return 13;
-        }else if(size == IconSize.MEDIUM){
-            return 9;
-        }else if(size == IconSize.LARGE){
-            return 5;
-        }else{
-            return 1;
-        }
     }
 }

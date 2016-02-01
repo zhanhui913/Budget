@@ -17,6 +17,5 @@
         custom:cv_strokePadding="5dp"
         custom:cv_iconColor="@color/red"
         custom:cv_iconDrawable="@drawable/food"
-        custom:cv_iconSize="LARGE"
         custom:cv_bgRadius="100dp" />
 </FrameLayout>
