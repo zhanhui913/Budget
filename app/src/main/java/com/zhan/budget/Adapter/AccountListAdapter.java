@@ -1,19 +1,17 @@
 package com.zhan.budget.Adapter;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.daimajia.swipe.SimpleSwipeListener;
+import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.budget.Util.Util;
-import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -30,6 +28,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
     static class ViewHolder {
         public TextView name;
         public TextView cost;
+        public SwipeLayout swipeLayout;
     }
 
     public AccountListAdapter(Activity activity,  List<Account> accountList) {
@@ -58,6 +57,21 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
             viewHolder.name = (TextView) convertView.findViewById(R.id.accountName);
             viewHolder.cost = (TextView) convertView.findViewById(R.id.accountCost);
+            viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
+            viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
+                @Override
+                public void onOpen(SwipeLayout layout) {
+                    //YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash));
+                    Toast.makeText(getContext(), "onOpen", Toast.LENGTH_SHORT).show();
+                }
+            });
+            viewHolder.swipeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "DELETED", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
             // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(viewHolder);

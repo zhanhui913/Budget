@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -71,9 +72,17 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         Transaction transaction = transactionList.get(position);
 
         //Icon
-        viewHolder.circularView.setCircleColor(Color.parseColor(transaction.getCategory().getColor()));
-        viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
-                CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
+        if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
+            viewHolder.circularView.setCircleColor(Color.parseColor(transaction.getCategory().getColor()));
+            viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
+                    CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
+        }else{
+            viewHolder.circularView.setStrokeWidth(2); //in dp
+            viewHolder.circularView.setStrokeColor(Color.parseColor("#808080"));
+            viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
+                    CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
+            viewHolder.circularView.setIconColor(Color.parseColor("#808080"));
+        }
 
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
             viewHolder.name.setText(transaction.getNote());

@@ -26,6 +26,7 @@ import com.zhan.budget.Fragment.ShareFragment;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -189,16 +190,26 @@ public class MainActivity extends AppCompatActivity
 
                 startTime = System.nanoTime();
 
+                String dayType;
+
                 for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
                     Random random = new Random();
                     int rd = random.nextInt(categoryList.size());
                     int rda = random.nextInt(accountList.size());
+
+
+                    if(Util.getDaysFromDate(date) <= Util.getDaysFromDate(new Date())){
+                        dayType = DayType.COMPLETED.toString();
+                    }else{
+                        dayType = DayType.SCHEDULED.toString();
+                    }
 
                     //Create random transactions per day
                     for (int j = 0; j < rd; j++) {
                         Transaction transaction = bgRealm.createObject(Transaction.class);
                         transaction.setId(Util.generateUUID());
                         transaction.setDate(date);
+                        transaction.setDayType(dayType);
 
                         Account account = accountList.get(rda);
 

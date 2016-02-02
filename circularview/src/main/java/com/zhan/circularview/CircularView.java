@@ -20,7 +20,7 @@ public class CircularView extends View {
 
     //Default values
     private final static int DEFAULT_BG_RADIUS = 50; //pixels
-    private final static int DEFAULT_BG_COLOR = R.color.colorPrimary;
+    private final static int DEFAULT_BG_COLOR = R.color.white;
     private final static int DEFAULT_STROKE_WIDTH = 0; //pixels
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
     private final static int DEFAULT_STROKE_PADDING = 0; //pixels
@@ -31,7 +31,7 @@ public class CircularView extends View {
     private final static int DEFAULT_ICON_RIGHT_PADDING = 10; //pixels
 
     private Context context;
-    private int backgroundRadius; //pixels
+    private int circleRadius; //pixels
     private int circleColor;
     private int strokeWidth;  //pixels
     private int strokeColor;
@@ -69,7 +69,7 @@ public class CircularView extends View {
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularView, 0, 0);
         try{
-            backgroundRadius = a.getDimensionPixelSize(R.styleable.CircularView_cv_bgRadius, DEFAULT_BG_RADIUS);
+            circleRadius = a.getDimensionPixelSize(R.styleable.CircularView_cv_bgRadius, DEFAULT_BG_RADIUS);
             circleColor = a.getColor(R.styleable.CircularView_cv_bgColor, ContextCompat.getColor(this.context, DEFAULT_BG_COLOR));
             strokeWidth = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
             strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, ContextCompat.getColor(this.context, DEFAULT_STROKE_COLOR));
@@ -92,8 +92,8 @@ public class CircularView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int ss = ((strokeWidth + strokePadding) * 2);
 
-        int desiredWidth = (backgroundRadius * 2) + ss;
-        int desiredHeight = (backgroundRadius * 2) + ss;
+        int desiredWidth = (circleRadius * 2) + ss;
+        int desiredHeight = (circleRadius * 2) + ss;
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -148,7 +148,7 @@ public class CircularView extends View {
         }
 
         drawCircle(canvas, radius, viewWidthHalf, viewHeightHalf);*/
-        drawCircle(canvas, backgroundRadius, viewWidthHalf, viewHeightHalf);
+        drawCircle(canvas, circleRadius, viewWidthHalf, viewHeightHalf);
         drawIcon(canvas);
         invalidate();
     }
@@ -198,12 +198,13 @@ public class CircularView extends View {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public int getBackgroundRadius() {
-        return backgroundRadius;
+    public int getCircleRadius() {
+        return circleRadius;
     }
 
-    public void setBackgroundRadius(int backgroundRadius) {
-        this.backgroundRadius = backgroundRadius;
+    public void setCircleRadius(int circleRadius) {
+        this.circleRadius = circleRadius;
+        invalidate();
     }
 
     public int getCircleColor() {
@@ -211,7 +212,7 @@ public class CircularView extends View {
     }
 
     public void setCircleColor(int circleColor) {
-        this.circleColor = circleColor;
+        this.circleColor =circleColor;
         invalidate();
     }
 

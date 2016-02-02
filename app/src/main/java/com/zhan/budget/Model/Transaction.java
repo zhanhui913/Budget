@@ -23,10 +23,9 @@ public class Transaction extends RealmObject {
     private Date date;
 
     private float price;
-
     private Category category;
-
     private Account account;
+    private String dayType;
 
     public Transaction(){
 
@@ -78,5 +77,13 @@ public class Transaction extends RealmObject {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public String getDayType() {
+        return dayType;
+    }
+
+    public void setDayType(String dayType) {
+        this.dayType = dayType;
     }
 }

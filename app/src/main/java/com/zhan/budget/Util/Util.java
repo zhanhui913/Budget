@@ -439,4 +439,15 @@ public final class Util {
 
         return cal.get(Calendar.DATE);
     }
+
+    /**
+     * Get the number of days since the Jan 1
+     * @return
+     */
+    public static int getDaysFromDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        return cal.get(Calendar.DAY_OF_YEAR);
+    }
 }

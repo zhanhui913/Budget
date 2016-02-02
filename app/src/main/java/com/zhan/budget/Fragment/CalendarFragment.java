@@ -298,14 +298,29 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void create(SwipeMenu menu) {
-                // create "delete" item
+                createDeleteItem(menu);
+                createApproveItem(menu);
+            }
+
+            //past and current transactions
+            private void createDeleteItem(SwipeMenu menu){
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
                 deleteItem.setBackground(R.color.red);// set item background
-                deleteItem.setWidth(Util.dp2px(getContext(), 90));// set item width
-                deleteItem.setIcon(R.drawable.ic_delete);// set a icon
+                deleteItem.setWidth(Util.dp2px(getContext(), 100));// set item width
+                deleteItem.setIcon(R.drawable.ic_delete_svg);// set a icon
                 menu.addMenuItem(deleteItem);// add to menu
             }
+
+            //future transactions
+            private void createApproveItem(SwipeMenu menu){
+                SwipeMenuItem approveItem = new SwipeMenuItem(getContext());
+                approveItem.setBackground(R.color.green);// set item background
+                approveItem.setWidth(Util.dp2px(getContext(), 100));// set item width
+                approveItem.setIcon(R.drawable.ic_check);// set a icon
+                menu.addMenuItem(approveItem);// add to menu
+            }
         };
+
         //set creator
         transactionListView.setMenuCreator(creator);
 
@@ -318,6 +333,9 @@ public class CalendarFragment extends Fragment {
                         myRealm.beginTransaction();
                         resultsTransactionForDay.get(position).removeFromRealm();
                         myRealm.commitTransaction();
+                        break;
+                    case 1:
+
                         break;
                 }
                 //False: Close the menu
@@ -332,11 +350,13 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onSwipeStart(int position) {
                 // swipe start
+                transactionListView.smoothOpenMenu(position);
             }
 
             @Override
             public void onSwipeEnd(int position) {
                 // swipe end
+                transactionListView.smoothCloseMenu();
             }
         });
     }
@@ -349,15 +369,6 @@ public class CalendarFragment extends Fragment {
             emptyLayout.setVisibility(View.VISIBLE);
             transactionListView.setVisibility(View.GONE);
         }
-        /*if(transactionAdapter.getCount() > 0){
-            Toast.makeText(getContext(), "count > 0",Toast.LENGTH_SHORT).show();
-            emptyLayout.setVisibility(View.GONE);
-            transactionListView.setVisibility(View.VISIBLE);
-        }else{
-            Toast.makeText(getContext(), "count == 0",Toast.LENGTH_SHORT).show();
-            emptyLayout.setVisibility(View.VISIBLE);
-            transactionListView.setVisibility(View.GONE);
-        }*/
     }
 
     private void addNewTransaction(){
