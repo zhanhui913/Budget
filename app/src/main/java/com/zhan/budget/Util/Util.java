@@ -320,6 +320,11 @@ public final class Util {
         return formatter.format(date);
     }
 
+    public static String convertDateToStringFormat5(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd", Locale.CANADA);
+        return formatter.format(date);
+    }
+
     /**
      * Refreshes the date to set the time component of date to 00:00:00
      * @param date

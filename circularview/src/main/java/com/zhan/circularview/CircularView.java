@@ -211,8 +211,8 @@ public class CircularView extends View {
         return circleColor;
     }
 
-    public void setCircleColor(int circleColor) {
-        this.circleColor =circleColor;
+    public void setCircleColor( int circleColor) {
+        this.circleColor = circleColor;
         invalidate();
     }
 

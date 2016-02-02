@@ -26,6 +26,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.Calendar.CustomEvent;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -316,7 +317,7 @@ public class CalendarFragment extends Fragment {
                 SwipeMenuItem approveItem = new SwipeMenuItem(getContext());
                 approveItem.setBackground(R.color.green);// set item background
                 approveItem.setWidth(Util.dp2px(getContext(), 100));// set item width
-                approveItem.setIcon(R.drawable.ic_check);// set a icon
+                approveItem.setIcon(R.drawable.ic_check_svg);// set a icon
                 menu.addMenuItem(approveItem);// add to menu
             }
         };
@@ -428,6 +429,13 @@ public class CalendarFragment extends Fragment {
                             transactionReturnedFromTransaction.setNote(tt.getNote());
                             transactionReturnedFromTransaction.setCategory(cat);
                             transactionReturnedFromTransaction.setAccount(account);
+
+                            if(Util.getDaysFromDate(tt.getDate()) > Util.getDaysFromDate(new Date())){
+                                transactionReturnedFromTransaction.setDayType(DayType.SCHEDULED.toString());
+                            }else{
+                                transactionReturnedFromTransaction.setDayType(DayType.COMPLETED.toString());
+                            }
+
                             myRealm.commitTransaction();
 
                             Log.d("ZHAN", "successfully added transaction : " + transactionReturnedFromTransaction.getNote() + " for cat : " + transactionReturnedFromTransaction.getCategory().getName());
@@ -470,6 +478,14 @@ public class CalendarFragment extends Fragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(!myRealm.isClosed()){
+            myRealm.close();
         }
     }
 

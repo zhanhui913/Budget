@@ -122,8 +122,8 @@ public class TransactionIncomeFragment extends Fragment {
                         mListener.onCategoryIncomeClick(selectedIncomeCategory);
 
                         //Set first category as selected by default
-                        ViewGroup gridChild = (ViewGroup)categoryGridView.getChildAt(0);
-                        CircularView cv = (CircularView)gridChild.findViewById(R.id.categoryIcon);
+                        ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(0);
+                        CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
                         cv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
 
                         // unregister listener (this is important)
@@ -141,7 +141,7 @@ public class TransactionIncomeFragment extends Fragment {
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
                     ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.transparent));
 
-                    if(i == position){
+                    if (i == position) {
                         ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
                     }
                 }
@@ -152,10 +152,20 @@ public class TransactionIncomeFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onDestroy(){
         super.onDestroy();
+        if(!myRealm.isClosed()) {
+            myRealm.close();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(!myRealm.isClosed()){
+            myRealm.close();
+        }
     }
 
     @Override

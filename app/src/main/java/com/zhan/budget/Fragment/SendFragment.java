@@ -3,6 +3,7 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -13,12 +14,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.nio.channels.FileChannel;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +42,11 @@ public class SendFragment extends Fragment {
 
     private OnSendInteractionListener mListener;
     private View view;
-    private Button exportDbBtn;
+    private Button exportDbBtn, exportCSVBtn;
+
+    private Realm myRealm;
+    private RealmResults<Transaction> transactionResults;
+    private List<Transaction> transactionList;
 
     public SendFragment() {
         // Required empty public constructor
@@ -72,7 +86,10 @@ public class SendFragment extends Fragment {
     }
 
     private void init(){
+        myRealm = Realm.getDefaultInstance();
+
         exportDbBtn = (Button) view.findViewById(R.id.exportDbBtn);
+        exportCSVBtn = (Button) view.findViewById(R.id.exportCSVBtn);
     }
 
     private void addListener(){
@@ -82,9 +99,112 @@ public class SendFragment extends Fragment {
                 exportDB();
             }
         });
+
+        exportCSVBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readFromRealm();
+            }
+        });
     }
 
-    public void exportDB() {
+    private void readFromRealm(){
+        transactionResults = myRealm.where(Transaction.class).findAllAsync();
+        transactionResults.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                transactionResults.sort("date", Sort.ASCENDING);
+
+                transactionList = myRealm.copyFromRealm(transactionResults);
+                exportCSV();
+            }
+        });
+    }
+
+    //Delimiter used in CSV file
+    private static final String COMMA_DELIMITER = ",";
+    private static final String NEW_LINE_SEPARATOR = "\n";
+
+    //CSV file header
+    private static final String FILE_HEADER = "Type, Date, Note, Category, Price, Account";
+
+    private void exportCSV(){
+        File root = Environment.getExternalStorageDirectory();
+        final File csvFile = new File(root, Constants.CSV_NAME);
+
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("SEND_FRAGMENT", "preparing to write "+transactionList.size()+" entries into csv");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                startTime = System.nanoTime();
+
+                FileWriter fileWriter = null;
+
+                try{
+                    fileWriter = new FileWriter(csvFile);
+
+                    //Write the CSV file header
+                    fileWriter.append(FILE_HEADER);
+
+                    //Add a new line separator after the header
+                    fileWriter.append(NEW_LINE_SEPARATOR);
+
+                    //Write a new transaction object to the csv file
+                    for(int i = 0; i < transactionList.size(); i++){
+                        fileWriter.append(transactionList.get(i).getCategory().getType().toString());
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(Util.convertDateToStringFormat5(transactionList.get(i).getDate()));
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(transactionList.get(i).getNote());
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(transactionList.get(i).getCategory().getName());
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(""+transactionList.get(i).getPrice());
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(transactionList.get(i).getAccount().getName());
+                        fileWriter.append(NEW_LINE_SEPARATOR);
+                    }
+                    Log.d("SEND_FRAGMENT", "CSV file was created successfully");
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }finally{
+                    try{
+                        fileWriter.flush();
+                        fileWriter.close();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+
+                email(csvFile);
+
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+                long milli = (duration / 1000000);
+                long second = (milli / 1000);
+                float minutes = (second / 60.0f);
+                Log.d("SEND_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+            }
+        };
+        loader.execute();
+    }
+
+    private void exportDB() {
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
@@ -102,7 +222,8 @@ public class SendFragment extends Fragment {
                     src.close();
                     dst.close();
 
-                    email();
+                    File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
+                    email(exportRealmFile);
                 }else{
                     Log.d("FILE","cannot write file");
                 }
@@ -123,21 +244,35 @@ public class SendFragment extends Fragment {
         }
     }
 
-    public void email() {
-        File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
-
-        // init email intent and add budget.realm as attachment
+    public void email(File file) {
+        // init email intent and add file as attachment
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
         intent.putExtra(Intent.EXTRA_EMAIL, "YOUR MAIL");
         intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR SUBJECT");
         intent.putExtra(Intent.EXTRA_TEXT, "YOUR TEXT");
-        Uri u = Uri.fromFile(exportRealmFile);
+        Uri u = Uri.fromFile(file);
         Log.d("REALM", " u : "+u.getPath());
         intent.putExtra(Intent.EXTRA_STREAM, u);
 
         // start email intent
         startActivity(Intent.createChooser(intent, "YOUR CHOOSER TITLE"));
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(!myRealm.isClosed()) {
+            myRealm.close();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(!myRealm.isClosed()){
+            myRealm.close();
+        }
     }
 
     @Override
