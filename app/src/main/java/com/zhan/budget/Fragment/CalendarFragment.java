@@ -272,16 +272,14 @@ public class CalendarFragment extends Fragment {
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
             @Override
             public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
-                Log.d("DECORATORS", "get events for day (" + year + "-" + (month + 1) + "-" + day + ")");
 
 
                 if (year == 2016) {
                     if (month == 1) {
                         List<CustomEvent> customEventList = new ArrayList<>();
-                        customEventList.add(new CustomEvent(R.color.red));
+                        customEventList.add(new CustomEvent(R.color.colorPrimaryDark));
                         return customEventList;
                     }
-
                 }
 
                 //getEvents(year, month, day);
@@ -292,25 +290,31 @@ public class CalendarFragment extends Fragment {
 
     private List<CustomEvent> getCustomEventList(){
         List<CustomEvent> customEventList = new ArrayList<>();
-        customEventList.add(new CustomEvent(R.color.red));
+        customEventList.add(new CustomEvent(R.color.colorPrimaryDark));
         return customEventList;
     }
 
     private void initEvents(){
         eventMap = new HashMap<>();
-/*
-        List<CustomEvent> colorLst = new ArrayList<>();
-        colorLst.add(new CustomEvent(R.color.green));
-*/
+
         for(int i = 0; i < 15; i++){
             eventMap.put(i, getCustomEventList());
         }
-
     }
 
     private List<CustomEvent> getEvents(int year, int month, int day){
         int daysSinceYear = Util.getDaysFromDate(new GregorianCalendar(year, month, day).getTime()); //Log.d("DECORATOR", "days since year: "+daysSinceYear);
         //return eventMap.get(daysSinceYear);
+
+        String ss;
+        if(eventMap.get(day) == null){
+            ss = "no";
+        }else{
+            int size = (eventMap.get(day)).size();
+            ss = ""+size;
+        }
+        Log.d("DECORATORS",  "there are "+ss+" list events for day (" + year + "-" + (month + 1) + "-" + day + ")");
+
         return eventMap.get(day);
     }
 
@@ -321,7 +325,7 @@ public class CalendarFragment extends Fragment {
         Date after = Util.getMonthWithDirection(current, 2); //Gets 2 month after
         after = Util.getPreviousDate(after); //gets 1 day before
 
-        Log.d("DECORATORS", "before:" + before + ", current:"+current+", after:"+after);
+        Log.d("DECORATORS", "before:" + before + ", current:" + current + ", after:"+after);
 
         resultsTransactionForMonth = myRealm.where(Transaction.class).between("date", before, after).findAllAsync();
         resultsTransactionForMonth.addChangeListener(new RealmChangeListener() {
