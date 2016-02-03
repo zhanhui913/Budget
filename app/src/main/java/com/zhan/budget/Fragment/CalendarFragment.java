@@ -278,7 +278,7 @@ public class CalendarFragment extends Fragment {
                 if (year == 2016) {
                     if (month == 1) {
                         List<CustomEvent> customEventList = new ArrayList<>();
-                        customEventList.add(new CustomEvent(R.color.colorPrimary));
+                        customEventList.add(new CustomEvent(R.color.red));
                         return customEventList;
                     }
 
@@ -292,7 +292,7 @@ public class CalendarFragment extends Fragment {
 
     private List<CustomEvent> getCustomEventList(){
         List<CustomEvent> customEventList = new ArrayList<>();
-        customEventList.add(new CustomEvent(R.color.colorPrimary));
+        customEventList.add(new CustomEvent(R.color.red));
         return customEventList;
     }
 

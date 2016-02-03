@@ -56,37 +56,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CalendarFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CalendarFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36466774">
-              <caret line="219" column="17" selection-start-line="219" selection-start-column="17" selection-end-line="219" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="210" column="32" selection-start-line="210" selection-start-column="32" selection-end-line="210" selection-end-column="32" />
               <folding>
-                <element signature="e#3298#3299#0" expanded="true" />
-                <element signature="e#3343#3344#0" expanded="true" />
                 <element signature="method#init#0;class#CalendarFragment#0" expanded="false" />
                 <element signature="method#createPullToAddTransaction#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="e#5474#5649#0" expanded="true" />
-                <element signature="e#5648#5649#0" expanded="true" />
                 <element signature="class#5957:6893" expanded="false" />
-                <element signature="e#9738#10433#0" expanded="true" />
-                <element signature="e#10432#10433#0" expanded="true" />
-                <element signature="e#11940#12286#0" expanded="true" />
-                <element signature="e#12285#12286#0" expanded="true" />
-                <element signature="e#12514#13435#0" expanded="true" />
-                <element signature="e#13434#13435#0" expanded="true" />
+                <element signature="e#11922#12268#0" expanded="true" />
+                <element signature="e#12267#12268#0" expanded="true" />
                 <element signature="method#populateTransactionsForDate#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="e#15068#15710#0" expanded="true" />
-                <element signature="e#15709#15710#0" expanded="true" />
+                <element signature="e#15050#15692#0" expanded="true" />
+                <element signature="e#15691#15692#0" expanded="true" />
                 <element signature="method#createSwipeMenu#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="e#17299#17960#0" expanded="true" />
-                <element signature="e#17959#17960#0" expanded="true" />
+                <element signature="e#17281#17942#0" expanded="true" />
+                <element signature="e#17941#17942#0" expanded="true" />
                 <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
                 <element signature="method#addNewTransaction#0;class#CalendarFragment#0" expanded="false" />
                 <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
                 <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
-                <element signature="e#21159#23139#0" expanded="true" />
-                <element signature="e#23138#23139#0" expanded="true" />
+                <element signature="e#21141#23121#0" expanded="true" />
+                <element signature="e#23120#23121#0" expanded="true" />
                 <element signature="method#onCreateOptionsMenu#0;class#CalendarFragment#0" expanded="false" />
                 <element signature="method#onOptionsItemSelected#0;class#CalendarFragment#0" expanded="false" />
                 <element signature="method#onStop#0;class#CalendarFragment#0" expanded="false" />
@@ -97,16 +89,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="date_cell_view.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/date_cell_view.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
+      <file leaf-file-name="content_transaction.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_transaction.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.206897">
-              <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.47368422">
+              <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
@@ -138,20 +130,20 @@
                 <option name="path" value="$PROJECT_DIR$/app" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":circleindicator" />
-                <option name="path" value="$PROJECT_DIR$/circleindicator" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":circularview" />
-                <option name="path" value="$PROJECT_DIR$/circularview" />
+                <option name="name" value=":calendar" />
+                <option name="path" value="$PROJECT_DIR$/calendar" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value="Budget" />
                 <option name="path" value="$PROJECT_DIR$" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":calendar" />
-                <option name="path" value="$PROJECT_DIR$/calendar" />
+                <option name="name" value=":circleindicator" />
+                <option name="path" value="$PROJECT_DIR$/circleindicator" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value=":circularview" />
+                <option name="path" value="$PROJECT_DIR$/circularview" />
               </ExternalProjectPojo>
             </list>
           </value>
@@ -3277,7 +3269,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="8718263678000" />
+        <entry key="$PROJECT_DIR$" value="8724469964000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -3497,20 +3489,20 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0.jar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/design/23.1.1/design-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/gridlayout-v7/23.1.1/gridlayout-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/design/23.1.1/design-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/gridlayout-v7/23.1.1/gridlayout-v7-23.1.1.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.baoyz.swipemenulistview/library/1.3.0/5757dcec8dfe0f1fef4c77336e76ed06c190fd20/library-1.3.0.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.daimajia.swipelayout/library/1.2.0/44b3b8b1f9625bf4a697ab2b32a95da20ee7ddea/library-1.2.0.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.akexorcist/RoundCornerProgressBar/2.0.3/66f250a83b49c9c14757f2129d3a2454f9a252c8/RoundCornerProgressBar-2.0.3.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android/0.87.4/97d167507fcf75bc96d2123af0f3b1b5614ca3b7/realm-android-0.87.4.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/in.srain.cube/ultra-ptr/1.0.11/f56dc2ef8d0a7f6fb90e620ae1f155bbe96ed61/ultra-ptr-1.0.11.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/cardview-v7/23.1.1/cardview-v7-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.1.1/recyclerview-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/cardview-v7/23.1.1/cardview-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.1.1/recyclerview-v7-23.1.1.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.parceler/parceler-api/1.0.4/4f7392b86e064f3f6da06977f54c21a48e6b6871/parceler-api-1.0.4.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.castorflex.smoothprogressbar/library-circular/1.0.0/3f23e24a0fb2abc4bb715c6e7d0250345703038d/library-circular-1.0.0.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/app" />
@@ -3619,10 +3611,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0.jar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.1.1/recyclerview-v7-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/23.1.1/recyclerview-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/calendar" />
@@ -3731,9 +3723,9 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0.jar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/circleindicator" />
@@ -3842,9 +3834,9 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/intellij/annotations/12.0/annotations-12.0.jar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
-                            <option value="$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/appcompat-v7/23.1.1/appcompat-v7-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar" />
+                            <option value="$USER_HOME$/Desktop/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/circularview" />
@@ -3987,14 +3979,12 @@
       <list>
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionsForCategory.java" />
         <option value="$PROJECT_DIR$/circleindicator/src/main/java/com/zhan/circleindicator/CircleIndicator.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/test_panel.xml" />
         <option value="$PROJECT_DIR$/circularview/src/main/res/values/attrs.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_transaction_category.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_share.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_category.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_transaction.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_category_grid.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/content_transaction.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/MonthReport.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/MonthReportGridAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/item_month_report.xml" />
@@ -4021,14 +4011,19 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/MonthReportFragment.java" />
         <option value="$PROJECT_DIR$/circularview/src/main/java/com/zhan/circularview/CircularView.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable-v21/current_date_background.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable-nodpi/current_date_background.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable-nodpi/cell_background.xml" />
         <option value="$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/view/EventCountCellView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/ExampleCellView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/RectangleCellView.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/date_cell_view.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/SmallCircleView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/test_panel.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/content_transaction.xml" />
       </list>
     </option>
   </component>
@@ -4038,8 +4033,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="1" />
     <option name="y" value="23" />
-    <option name="width" value="1174" />
-    <option name="height" value="1173" />
+    <option name="width" value="1290" />
+    <option name="height" value="1413" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -4064,6 +4059,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
       <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
@@ -4079,88 +4076,16 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="calendar" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="calendar" />
+              <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="calendar" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flexiblecalendar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="calendar" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flexiblecalendar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="calendar" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -4187,6 +4112,24 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Budget" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
             </PATH_ELEMENT>
@@ -4208,27 +4151,27 @@
               <option name="myItemId" value="budget" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="View" />
+              <option name="myItemId" value="Budget" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="budget" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Fragment" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -4244,8 +4187,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -4265,7 +4206,7 @@
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/android-sdk-macosx" />
     <property name="recentsLimit" value="5" />
-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="FA346W905030" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="001961921bc87e" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_21_x86" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="277" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../FlexibleCalendar" />
@@ -4286,8 +4227,6 @@
       <option name="FORCE_STOP_RUNNING_APP" value="true" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <method />
@@ -4308,8 +4247,6 @@
       <option name="FORCE_STOP_RUNNING_APP" value="true" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -4405,10 +4342,8 @@
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
       <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="true" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <method />
@@ -4438,40 +4373,40 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1" y="23" width="1174" height="1173" extended-state="0" />
+    <frame x="1" y="23" width="1290" height="1413" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3642384" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299923" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299923" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29770318" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29683885" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299923" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27003205" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Mirror" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299923" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Mirror" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299923" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -4497,38 +4432,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/MonthReportGridAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7859691">
-          <caret line="79" column="63" selection-start-line="79" selection-start-column="63" selection-end-line="79" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_month_report.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59359604">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/BudgetType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.059101656">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionInfoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6183115">
-          <caret line="316" column="0" selection-start-line="316" selection-start-column="0" selection-end-line="316" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Model/Category.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.26872772">
@@ -4555,14 +4458,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_transaction.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.073891625">
           <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
@@ -4577,17 +4480,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-21.703703">
           <caret line="204" column="30" selection-start-line="204" selection-start-column="16" selection-end-line="204" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/test_panel.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.77832514">
-          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -4630,14 +4522,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_account.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8052147">
           <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/TransactionExpenseFragment.java">
@@ -4680,14 +4572,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_share.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.16104294">
           <caret line="7" column="54" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/ShareFragment.java">
@@ -4699,14 +4591,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_send.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.115030676">
           <caret line="5" column="57" selection-start-line="5" selection-start-column="57" selection-end-line="5" selection-end-column="57" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Etc/Constants.java">
@@ -4727,14 +4619,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/RectangleCellView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11400651">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/PlusView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.11400651">
@@ -4747,7 +4631,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.13029316">
           <caret line="18" column="28" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4759,14 +4642,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/week_cell_view.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-v21/selected_date_background.xml">
@@ -4830,14 +4713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/FlexibleCalendarView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33229813">
@@ -4870,10 +4745,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-nodpi/cell_background.xml">
+    <entry file="file://$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/view/BaseCellView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.16304348">
+          <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/view/EventCountCellView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48757765">
+          <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.67873305">
+          <caret line="40" column="44" selection-start-line="40" selection-start-column="44" selection-end-line="40" selection-end-column="44" />
           <folding />
         </state>
       </provider>
@@ -4886,89 +4776,125 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/view/BaseCellView.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-nodpi/cell_background.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16304348">
-          <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/view/CircularEventCellView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.6071428">
-          <caret line="92" column="98" selection-start-line="92" selection-start-column="98" selection-end-line="92" selection-end-column="98" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/view/EventCountCellView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48757765">
-          <caret line="94" column="12" selection-start-line="94" selection-start-column="12" selection-end-line="94" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.10638298">
+          <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/ExampleCellView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44254658">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="30" selection-end-column="61" />
+        <state vertical-scroll-proportion="0.11877828">
+          <caret line="10" column="49" selection-start-line="26" selection-start-column="8" selection-end-line="30" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/RectangleCellView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3073286">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding>
+            <element signature="e#309#310#0" expanded="true" />
+            <element signature="e#339#340#0" expanded="true" />
+            <element signature="e#408#409#0" expanded="true" />
+            <element signature="e#445#446#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/calendar/src/main/java/com/p_v/flexiblecalendar/view/CircularEventCellView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.78723407">
+          <caret line="101" column="0" selection-start-line="101" selection-start-column="0" selection-end-line="114" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/SmallCircleView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30279502">
-          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.15752625">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#779#780#0" expanded="true" />
+            <element signature="e#809#810#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/date_cell_view.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.01754386">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/test_panel.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.206897">
-          <caret line="12" column="3" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
+        <state vertical-scroll-proportion="0.20564516">
+          <caret line="17" column="40" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16968326">
+          <caret line="10" column="37" selection-start-line="10" selection-start-column="37" selection-end-line="10" selection-end-column="37" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.666667">
+          <caret line="21" column="45" selection-start-line="21" selection-start-column="45" selection-end-line="21" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/number_pad.xml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36466774">
-          <caret line="219" column="17" selection-start-line="219" selection-start-column="17" selection-end-line="219" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="210" column="32" selection-start-line="210" selection-start-column="32" selection-end-line="210" selection-end-column="32" />
           <folding>
-            <element signature="e#3298#3299#0" expanded="true" />
-            <element signature="e#3343#3344#0" expanded="true" />
             <element signature="method#init#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#createPullToAddTransaction#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="e#5474#5649#0" expanded="true" />
-            <element signature="e#5648#5649#0" expanded="true" />
             <element signature="class#5957:6893" expanded="false" />
-            <element signature="e#9738#10433#0" expanded="true" />
-            <element signature="e#10432#10433#0" expanded="true" />
-            <element signature="e#11940#12286#0" expanded="true" />
-            <element signature="e#12285#12286#0" expanded="true" />
-            <element signature="e#12514#13435#0" expanded="true" />
-            <element signature="e#13434#13435#0" expanded="true" />
+            <element signature="e#11922#12268#0" expanded="true" />
+            <element signature="e#12267#12268#0" expanded="true" />
             <element signature="method#populateTransactionsForDate#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="e#15068#15710#0" expanded="true" />
-            <element signature="e#15709#15710#0" expanded="true" />
+            <element signature="e#15050#15692#0" expanded="true" />
+            <element signature="e#15691#15692#0" expanded="true" />
             <element signature="method#createSwipeMenu#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="e#17299#17960#0" expanded="true" />
-            <element signature="e#17959#17960#0" expanded="true" />
+            <element signature="e#17281#17942#0" expanded="true" />
+            <element signature="e#17941#17942#0" expanded="true" />
             <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#addNewTransaction#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="e#21159#23139#0" expanded="true" />
-            <element signature="e#23138#23139#0" expanded="true" />
+            <element signature="e#21141#23121#0" expanded="true" />
+            <element signature="e#23120#23121#0" expanded="true" />
             <element signature="method#onCreateOptionsMenu#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#onOptionsItemSelected#0;class#CalendarFragment#0" expanded="false" />
             <element signature="method#onStop#0;class#CalendarFragment#0" expanded="false" />
@@ -4976,6 +4902,17 @@
             <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
           </folding>
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_transaction.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.47368422">
+          <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
   </component>

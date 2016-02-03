@@ -23,8 +23,9 @@
         android:gravity="end"
         android:paddingRight="15dp"
         android:paddingEnd="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:singleLine="true"/>
 
     <include layout="@layout/transaction_circle_indicator"
         android:id="@+id/indicatorPanel"
