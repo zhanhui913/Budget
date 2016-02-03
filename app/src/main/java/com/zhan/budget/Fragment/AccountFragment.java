@@ -191,14 +191,6 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if(!myRealm.isClosed()){
-            myRealm.close();
-        }
-    }
-
-    @Override
     public void onDestroy(){
         super.onDestroy();
         if(!myRealm.isClosed()) {

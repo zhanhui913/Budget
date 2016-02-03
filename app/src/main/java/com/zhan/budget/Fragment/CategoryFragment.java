@@ -545,14 +545,6 @@ public class CategoryFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if(!myRealm.isClosed()){
-            myRealm.close();
-        }
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.change_month_year, menu);

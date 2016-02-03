@@ -161,14 +161,6 @@ public class TransactionExpenseFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if(!myRealm.isClosed()){
-            myRealm.close();
-        }
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnTransactionExpenseFragmentInteractionListener) {
