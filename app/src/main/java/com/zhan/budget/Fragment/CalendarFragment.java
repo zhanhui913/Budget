@@ -78,7 +78,7 @@ public class CalendarFragment extends Fragment {
 
     private Realm myRealm;
 
-    private Map<String, List<CustomEvent>> eventMap;
+    private Map<Integer, List<CustomEvent>> eventMap;
 
     private RealmResults<Transaction> resultsTransactionForDay;
     private RealmResults<Transaction> resultsTransactionForMonth;
@@ -122,6 +122,7 @@ public class CalendarFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
+        initEvents();
         createPullToAddTransaction();
         createCalendar();
         createSwipeMenu();
@@ -135,8 +136,6 @@ public class CalendarFragment extends Fragment {
 
         //By default it will be the current date;
         selectedDate = new Date();
-
-        eventMap = new HashMap<>();
 
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
         totalCostForDay = (TextView) view.findViewById(R.id.totalCostForDay);
@@ -255,7 +254,7 @@ public class CalendarFragment extends Fragment {
                 dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
                 updateMonthInToolbar(0);
-                GetTransactionsForThese3Month(year, month);
+                //GetTransactionsForThese3Month(year, month);
             }
         });
 
@@ -270,39 +269,52 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-
-/*
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
             @Override
             public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
                 Log.d("DECORATORS", "get events for day (" + year + "-" + (month + 1) + "-" + day + ")");
-                if (year == 2016 && month == 1 && day == 5) {
+/*
+                if(year == 2016 && month == 1 && day == 25){
                     return colorList;
-                }
+                }*/
 
-                //();
-
-
-
+                getEvents(year, month, day);
                 return null;
             }
-        });*/
+        });
     }
 
-    private Date getMonthWithDirection(Date date, int direction){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.MONTH, direction);
+    final List<CustomEvent> colorList = new ArrayList<CustomEvent>(){{
+        add(new CustomEvent(R.color.green));
+    }};
 
-       return cal.getTime();
+    private void initEvents(){
+        eventMap = new HashMap<>();
+/*
+        final List<CustomEvent> colorList = new ArrayList<CustomEvent>(){{
+            add(new CustomEvent(R.color.green));
+        }};*/
+
+        List<CustomEvent> colorLst = new ArrayList<>();
+        colorLst.add(new CustomEvent(R.color.green));
+
+
+        for(int i = 35; i < 45; i++){
+            eventMap.put(i, colorLst);
+        }
+
     }
 
+    private List<CustomEvent> getEvents(int year, int month, int day){
+        int daysSinceYear = Util.getDaysFromDate(new GregorianCalendar(year, month, day).getTime()); Log.d("DECORATOR", "days since year: "+daysSinceYear);
+        return eventMap.get(daysSinceYear);
+    }
 
     private List<Transaction> dateListWithTransactions;
     private void GetTransactionsForThese3Month(int year, int month){
         Date current = new GregorianCalendar(year, (month), 1).getTime();
-        Date before = getMonthWithDirection(current, -1);
-        Date after = getMonthWithDirection(current, 2); //Gets 2 month after
+        Date before = Util.getMonthWithDirection(current, -1);
+        Date after = Util.getMonthWithDirection(current, 2); //Gets 2 month after
         after = Util.getPreviousDate(after); //gets 1 day before
 
         Log.d("DECORATORS", "before:"+before+", current:"+current+", after:"+after);

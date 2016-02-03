@@ -37,7 +37,6 @@ import com.zhan.budget.View.PlusView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -506,11 +505,13 @@ public class CategoryFragment extends Fragment {
     }
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
-        Calendar cal = Calendar.getInstance();
+  /*      Calendar cal = Calendar.getInstance();
         cal.setTime(currentMonth);
         cal.add(Calendar.MONTH, direction);
 
         currentMonth = cal.getTime();
+*/
+        currentMonth = Util.getMonthWithDirection(currentMonth, direction);
 
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentMonth));

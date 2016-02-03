@@ -447,12 +447,40 @@ public final class Util {
 
     /**
      * Get the number of days since the Jan 1
-     * @return
+     * @return int
      */
     public static int getDaysFromDate(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
         return cal.get(Calendar.DAY_OF_YEAR);
+    }
+
+    /**
+     * Get new month with directions
+     * @param date Starting date point
+     * @param direction -1, 0, 1 => (previous month, this month, next month)
+     * @return date
+     */
+    public static Date getMonthWithDirection(Date date, int direction){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, direction);
+
+        return cal.getTime();
+    }
+
+    /**
+     * Get new year with directions
+     * @param date Starting date point
+     * @param direction -1, 0, 1 => (previous year, this year, next year)
+     * @return date
+     */
+    public static Date getYearWithDirection(Date date, int direction){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.YEAR, direction);
+
+        return cal.getTime();
     }
 }

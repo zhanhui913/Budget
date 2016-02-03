@@ -205,6 +205,7 @@ public class CircularView extends View {
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
         invalidate();
+        requestLayout();
     }
 
     public int getCircleColor() {
@@ -214,6 +215,7 @@ public class CircularView extends View {
     public void setCircleColor( int circleColor) {
         this.circleColor = circleColor;
         invalidate();
+        requestLayout();
     }
 
     public int getStrokeWidth() {
@@ -223,6 +225,7 @@ public class CircularView extends View {
     public void setStrokeWidth(int strokeWidth) {
         this.strokeWidth = dpToPx(strokeWidth);
         invalidate();
+        requestLayout();
     }
 
     public int getStrokeColor() {
@@ -232,6 +235,7 @@ public class CircularView extends View {
     public void setStrokeColor(int strokeColor) {
         this.strokeColor = strokeColor;
         invalidate();
+        requestLayout();
     }
 
     public int getStrokePadding() {
@@ -241,6 +245,7 @@ public class CircularView extends View {
     public void setStrokePadding(int strokePadding) {
         this.strokePadding = dpToPx(strokePadding);
         invalidate();
+        requestLayout();
     }
 
     public int getIconColor() {
@@ -250,6 +255,7 @@ public class CircularView extends View {
     public void setIconColor(int iconColor) {
         this.iconColor = iconColor;
         invalidate();
+        requestLayout();
     }
 
     public Drawable getIconDrawable() {
@@ -259,6 +265,7 @@ public class CircularView extends View {
     public void setIconDrawable(Drawable iconDrawable) {
         this.iconDrawable = iconDrawable;
         invalidate();
+        requestLayout();
     }
 
     public int getIconTopPadding() {
@@ -268,6 +275,7 @@ public class CircularView extends View {
     public void setIconTopPadding(int iconTopPadding) {
         this.iconTopPadding = dpToPx(iconTopPadding);
         invalidate();
+        requestLayout();
     }
 
     public int getIconBottomPadding() {
@@ -277,6 +285,7 @@ public class CircularView extends View {
     public void setIconBottomPadding(int iconBottomPadding) {
         this.iconBottomPadding = dpToPx(iconBottomPadding);
         invalidate();
+        requestLayout();
     }
 
     public int getIconLeftPadding() {
@@ -286,6 +295,7 @@ public class CircularView extends View {
     public void setIconLeftPadding(int iconLeftPadding) {
         this.iconLeftPadding = dpToPx(iconLeftPadding);
         invalidate();
+        requestLayout();
     }
 
     public int getIconRightPadding() {
@@ -295,6 +305,7 @@ public class CircularView extends View {
     public void setIconRightPadding(int iconRightPadding) {
         this.iconRightPadding = dpToPx(iconRightPadding);
         invalidate();
+        requestLayout();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

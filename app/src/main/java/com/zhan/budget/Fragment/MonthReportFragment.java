@@ -21,7 +21,6 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -214,11 +213,14 @@ public class MonthReportFragment extends Fragment {
     }
 
     private void updateYearInToolbar(int direction){
-        Calendar cal = Calendar.getInstance();
+        /*Calendar cal = Calendar.getInstance();
         cal.setTime(currentYear);
         cal.add(Calendar.YEAR, direction);
 
         currentYear = cal.getTime();
+        */
+
+        currentYear = Util.getYearWithDirection(currentYear, direction);
 
         getMonthReport();
 
