@@ -23,7 +23,7 @@ import com.zhan.budget.R;
 /**
  * Created by zhanyap on 2016-01-20.
  */
-public class PlusView extends View /*implements PtrUIHandler*/ {
+public class PlusView extends View {
 
     //Default values
     private final static int DEFAULT_BG_COLOR = R.color.transparent;
@@ -204,41 +204,4 @@ public class PlusView extends View /*implements PtrUIHandler*/ {
         this.iconDrawable = iconDrawable;
         invalidate();
     }
-/*
-    public void setIcon(int drawableId){
-        this.iconDrawable = ResourcesCompat.getDrawable(getResources(), drawableId, this.context.getTheme());
-    }*/
-
-
-
-
-
- /*
-    @Override
-    public void onUIReset(PtrFrameLayout frame) {
-        Log.d("CENTER_PANEL_VIEW","onUIReset");
-    }
-
-
-    @Override
-    public void onUIRefreshPrepare(PtrFrameLayout frame) {
-        //Log.d("CENTER_PANEL_VIEW","onUIRefreshPrepare");
-    }
-
-    @Override
-    public void onUIRefreshBegin(PtrFrameLayout frame) {
-        //Log.d("CENTER_PANEL_VIEW","onUIRefreshBegin");
-        //playRotateAnimation();
-    }
-
-
-    @Override
-    public void onUIRefreshComplete(PtrFrameLayout frame) {
-        //Log.d("CENTER_PANEL_VIEW","onUIRefreshComplete");
-    }
-
-    @Override
-    public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
-    }
-*/
 }

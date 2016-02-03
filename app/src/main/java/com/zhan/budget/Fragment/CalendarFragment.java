@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
+import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionListAdapter;
@@ -80,6 +82,7 @@ public class CalendarFragment extends Fragment {
 
     private RealmResults<Transaction> resultsTransactionForDay;
     private RealmResults<Transaction> resultsTransactionForMonth;
+    private List<Date> dateListDecorators;
 
     private PtrFrameLayout frame;
     private PlusView header;
@@ -216,9 +219,13 @@ public class CalendarFragment extends Fragment {
                     LayoutInflater inflater = LayoutInflater.from(getActivity());
                     cellView = (BaseCellView) inflater.inflate(R.layout.date_cell_view, null);
                 }
-                if (cellType == BaseCellView.OUTSIDE_MONTH) {
-                    cellView.setTextColor(getResources().getColor(R.color.purple));
+
+                if (cellType == BaseCellView.TODAY) {
+                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                } else if(cellType == BaseCellView.SELECTED_TODAY){
+                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 }
+
                 return cellView;
             }
 
@@ -248,6 +255,7 @@ public class CalendarFragment extends Fragment {
                 dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
                 updateMonthInToolbar(0);
+                GetTransactionsForThese3Month(year, month);
             }
         });
 
@@ -261,6 +269,122 @@ public class CalendarFragment extends Fragment {
                 populateTransactionsForDate(selectedDate);
             }
         });
+
+
+/*
+        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
+            @Override
+            public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
+                Log.d("DECORATORS", "get events for day (" + year + "-" + (month + 1) + "-" + day + ")");
+                if (year == 2016 && month == 1 && day == 5) {
+                    return colorList;
+                }
+
+                //();
+
+
+
+                return null;
+            }
+        });*/
+    }
+
+    private Date getMonthWithDirection(Date date, int direction){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, direction);
+
+       return cal.getTime();
+    }
+
+
+    private List<Transaction> dateListWithTransactions;
+    private void GetTransactionsForThese3Month(int year, int month){
+        Date current = new GregorianCalendar(year, (month), 1).getTime();
+        Date before = getMonthWithDirection(current, -1);
+        Date after = getMonthWithDirection(current, 2); //Gets 2 month after
+        after = Util.getPreviousDate(after); //gets 1 day before
+
+        Log.d("DECORATORS", "before:"+before+", current:"+current+", after:"+after);
+
+        resultsTransactionForMonth = myRealm.where(Transaction.class).between("date", before, after).findAllAsync();
+        resultsTransactionForMonth.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                Log.d("DECORATORS", "there are "+resultsTransactionForMonth.size()+" transactions");
+                dateListWithTransactions = myRealm.copyFromRealm(resultsTransactionForMonth);
+                compareDecorators();
+            }
+        });
+    }
+
+    private void compareDecorators(){
+        final List<CustomEvent> colorList = new ArrayList<CustomEvent>(){{
+            add(new CustomEvent(R.color.green));
+        }};
+
+
+        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
+            @Override
+            public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
+                Log.d("DECORATORS", "get events for day (" + year + "-" + (month + 1) + "-" + day + ")");
+                if (year == 2016 && month == 1 && day == 5) {
+                    return colorList;
+                }
+
+
+/*
+                for(int i = 0; i < dateListWithTransactions.size(); i++){
+                    Date dateToCheck = dateListWithTransactions.get(i).getDate();
+
+                    if(year == Util.getYearFromDate(dateToCheck) &&
+                            month == Util.getMonthFromDate(dateToCheck) &&
+                            day == Util.getDateFromDate(dateToCheck)){
+                        return colorList;
+                    }
+                }*/
+                //();
+
+
+
+                return null;
+            }
+        });
+/*
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+
+                startTime = System.nanoTime();
+
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+
+
+
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+                long milli = (duration / 1000000);
+                long second = (milli / 1000);
+                float minutes = (second / 60.0f);
+                Log.d("MONTHLY_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+            }
+        };
+        loader.execute();*/
     }
 
     private void populateTransactionsForDate(Date date) {
@@ -272,6 +396,7 @@ public class CalendarFragment extends Fragment {
         transactionAdapter.clear();
 
         resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
+        //resultsTransactionForDay = myRealm.where(Transaction.class).equalTo("date", beginDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
