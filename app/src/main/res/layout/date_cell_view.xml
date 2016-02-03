@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <com.zhan.budget.View.ExampleCellView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:flexible="http://schemas.android.com/apk/res-auto"
@@ -9,3 +10,13 @@
     android:textColor="@color/black"
     flexible:event_radius="2dp"
     flexible:event_circle_padding="2dp" />
+-->
+<com.zhan.budget.View.SmallCircleView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    app:event_count_radius="5dp"
+    app:event_background="@color/colorPrimaryDark"
+    app:event_text_size="7sp"
+    android:background="@drawable/cell_background"
+    android:layout_height="match_parent" />
