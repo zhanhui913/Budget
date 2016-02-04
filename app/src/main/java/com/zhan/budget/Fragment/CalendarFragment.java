@@ -272,16 +272,6 @@ public class CalendarFragment extends Fragment {
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
             @Override
             public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
-
-/*
-                if (year == 2016) {
-                    if (month == 1) {
-                        List<CustomEvent> customEventList = new ArrayList<>();
-                        customEventList.add(new CustomEvent(R.color.colorPrimaryDark));
-                        return customEventList;
-                    }
-                }*/
-
                 return getEvents(year, month, day);
             }
         });

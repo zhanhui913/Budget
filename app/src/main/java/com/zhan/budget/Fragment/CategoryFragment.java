@@ -432,11 +432,7 @@ public class CategoryFragment extends Fragment {
                         //edit
                         categoryIndexEditted = position;
 
-                        Intent editCategory = new Intent(getContext(), CategoryInfo.class);
-
-                        //This is edit mode
-                        //editCategory.putExtra(Constants.REQUEST_EDIT_CATEGORY, categoryList.get(position));
-                        startActivityForResult(editCategory, Constants.RETURN_EDIT_CATEGORY);
+                        editCategory(position);
 
                         break;
                     case 1:
@@ -468,6 +464,17 @@ public class CategoryFragment extends Fragment {
                 // swipe end
             }
         });
+    }
+
+    private void editCategory(int position){
+        Intent editCategoryActivity = new Intent(getContext(), CategoryInfo.class);
+
+        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+
+        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
+        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
+
+        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
 
     @Override

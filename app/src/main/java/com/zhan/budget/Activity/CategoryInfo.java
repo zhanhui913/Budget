@@ -2,7 +2,6 @@ package com.zhan.budget.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,47 +13,64 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 
+import org.parceler.Parcels;
+
 public class CategoryInfo extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private FloatingActionButton editCategoryFAB;
     private TextView categoryName, categoryBudget, categoryCost;
     private Category category;
+    private boolean isEditMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_info);
 
+        category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
+        isEditMode = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
+
         init();
+        createToolbar();
         addListeners();
     }
 
     private void init(){
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        if(toolbar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        editCategoryFAB = (FloatingActionButton) findViewById(R.id.editCategoryFAB);
         categoryName = (TextView) findViewById(R.id.categoryName);
         categoryBudget = (TextView) findViewById(R.id.categoryBudget);
         categoryCost = (TextView) findViewById(R.id.categoryCost);
 
-        category = (getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY);
 
         categoryName.setText(category.getName());
         categoryBudget.setText("$" + category.getBudget());
         categoryCost.setText("$" + category.getCost());
     }
 
-    private void addListeners(){
-        editCategoryFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    /**
+     * Create toolbar
+     */
+    private void createToolbar(){
+        //Create the toolbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_clear_white);
+        
+        if(getSupportActionBar() != null){
+            if(isEditMode){
+                getSupportActionBar().setTitle("Edit Category");
 
+            }else{
+                getSupportActionBar().setTitle("Add Category");
+            }
+        }
+    }
+
+    private void addListeners(){
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -68,6 +84,11 @@ public class CategoryInfo extends AppCompatActivity {
         //intent.putExtra(Constants.RESULT_EDIT_CATEGORY, newCategory);
         setResult(RESULT_OK, intent);
 
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
         finish();
     }
 
