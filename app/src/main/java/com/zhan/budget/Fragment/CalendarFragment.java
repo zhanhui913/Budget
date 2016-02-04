@@ -224,6 +224,7 @@ public class CalendarFragment extends Fragment {
                 } else if(cellType == BaseCellView.SELECTED_TODAY){
                     cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 }
+                cellView.setTextSize(16);
 
                 return cellView;
             }
