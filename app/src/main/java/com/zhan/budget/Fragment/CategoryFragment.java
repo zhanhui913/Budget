@@ -409,14 +409,14 @@ public class CategoryFragment extends Fragment {
                 SwipeMenuItem editItem = new SwipeMenuItem(getContext());
                 editItem.setBackground(R.color.colorPrimary);// set item background
                 editItem.setWidth(Util.dp2px(getContext(), 90));// set item width
-                editItem.setIcon(R.drawable.ic_mode_edit);// set a icon
+                editItem.setIcon(R.drawable.svg_ic_edit);// set a icon
                 menu.addMenuItem(editItem);// add to menu
 
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
                 deleteItem.setBackground(R.color.red);// set item background
                 deleteItem.setWidth(Util.dp2px(getContext(), 90));// set item width
-                deleteItem.setIcon(R.drawable.ic_delete);// set a icon
+                deleteItem.setIcon(R.drawable.svg_ic_delete);// set a icon
                 menu.addMenuItem(deleteItem);// add to menu
             }
         };

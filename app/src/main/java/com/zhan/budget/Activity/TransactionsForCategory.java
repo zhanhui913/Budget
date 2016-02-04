@@ -152,7 +152,7 @@ public class TransactionsForCategory extends AppCompatActivity {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(R.color.red);// set item background
                 deleteItem.setWidth(Util.dp2px(getApplicationContext(), 90));// set item width
-                deleteItem.setIcon(R.drawable.ic_delete);// set a icon
+                deleteItem.setIcon(R.drawable.svg_ic_delete);// set a icon
                 menu.addMenuItem(deleteItem);// add to menu
             }
         };

@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_date"
+            android:src="@drawable/svg_ic_date"
             android:tint="@color/secondary_text_default_material_light"/>
 
         <TextView

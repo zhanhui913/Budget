@@ -4,10 +4,10 @@
 
     <item android:id="@+id/leftChevron"
         android:title="left"
-        android:icon="@drawable/ic_left_arrow"
+        android:icon="@drawable/svg_ic_left_chevron"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/rightChevron"
         android:title="right"
-        android:icon="@drawable/ic_right_arrow"
+        android:icon="@drawable/svg_ic_right_chevron"
         app:showAsAction="ifRoom"/>
 </menu>

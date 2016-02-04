@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/pullDownText"
-        android:src="@drawable/ic_down_arrow"
+        android:src="@drawable/svg_ic_down_chevron"
         android:layout_centerHorizontal="true"
         android:tint="@color/black"/>
 </RelativeLayout>

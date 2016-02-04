@@ -108,7 +108,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         //Create the toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_clear_white);
+        toolbar.setNavigationIcon(R.drawable.svg_ic_clear);
         
         if(getSupportActionBar() != null){
             if(isEditMode){
