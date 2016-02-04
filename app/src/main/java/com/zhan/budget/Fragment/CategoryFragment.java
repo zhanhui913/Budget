@@ -472,7 +472,7 @@ public class CategoryFragment extends Fragment {
         Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 
         editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
+        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
 
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }

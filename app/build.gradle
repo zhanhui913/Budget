@@ -26,12 +26,13 @@ dependencies {
     compile project(':calendar')
     compile project(':circularview')
     compile project(':circleindicator')
+    apt 'org.parceler:parceler:1.0.4'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:gridlayout-v7:23.1.1'
     compile 'com.baoyz.swipemenulistview:library:1.3.0'
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'io.realm:realm-android:0.87.4'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
@@ -39,6 +40,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'org.parceler:parceler-api:1.0.4'
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.0.0'
-    apt 'org.parceler:parceler:1.0.4'
 }
 

@@ -5,18 +5,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.zhan.budget.Fragment.BaseFragment;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
 
 /**
  * Created by Zhan on 16-01-11.
  */
-public class TransactionViewPager extends FragmentPagerAdapter {
+public class TwoPageViewPager extends FragmentPagerAdapter {
     private static int NUM_ITEMS = 2;
+    private BaseFragment firstPage;
+    private BaseFragment secondPage;
 
-
-    public TransactionViewPager(FragmentManager fm) {
+    public TwoPageViewPager(FragmentManager fm, BaseFragment firstPage, BaseFragment secondPage) {
         super(fm);
+        this.firstPage = firstPage;
+        this.secondPage = secondPage;
     }
 
     @Override
@@ -24,10 +28,10 @@ public class TransactionViewPager extends FragmentPagerAdapter {
         Fragment f = new Fragment();
         switch(position){
             case 0:
-                f = TransactionExpenseFragment.newInstance();
+                f = this.firstPage.newInstance();
                 break;
             case 1:
-                f = TransactionIncomeFragment.newInstance();
+                f = this.secondPage.newInstance();
                 break;
         }
         return f;

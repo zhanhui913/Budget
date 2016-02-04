@@ -24,7 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zhan.budget.Adapter.TransactionViewPager;
+import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
@@ -63,7 +63,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     private Date selectedDate;
 
-    private TransactionViewPager adapterViewPager;
+    private TwoPageViewPager adapterViewPager;
     private ViewPager viewPager;
 
     private Category selectedExpenseCategory;
@@ -120,7 +120,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         currentPage = BudgetType.EXPENSE;
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
-        adapterViewPager = new TransactionViewPager(getSupportFragmentManager());
+        adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), new TransactionExpenseFragment(), new TransactionIncomeFragment());
         viewPager.setAdapter(adapterViewPager);
 
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
