@@ -273,17 +273,16 @@ public class CalendarFragment extends Fragment {
             @Override
             public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
 
-
+/*
                 if (year == 2016) {
                     if (month == 1) {
                         List<CustomEvent> customEventList = new ArrayList<>();
                         customEventList.add(new CustomEvent(R.color.colorPrimaryDark));
                         return customEventList;
                     }
-                }
+                }*/
 
-                //getEvents(year, month, day);
-                return null;
+                return getEvents(year, month, day);
             }
         });
     }
@@ -297,25 +296,14 @@ public class CalendarFragment extends Fragment {
     private void initEvents(){
         eventMap = new HashMap<>();
 
-        for(int i = 0; i < 15; i++){
+        for(int i = 0; i < 365; i++){
             eventMap.put(i, getCustomEventList());
         }
     }
 
     private List<CustomEvent> getEvents(int year, int month, int day){
         int daysSinceYear = Util.getDaysFromDate(new GregorianCalendar(year, month, day).getTime()); //Log.d("DECORATOR", "days since year: "+daysSinceYear);
-        //return eventMap.get(daysSinceYear);
-
-        String ss;
-        if(eventMap.get(day) == null){
-            ss = "no";
-        }else{
-            int size = (eventMap.get(day)).size();
-            ss = ""+size;
-        }
-        Log.d("DECORATORS",  "there are "+ss+" list events for day (" + year + "-" + (month + 1) + "-" + day + ")");
-
-        return eventMap.get(day);
+        return eventMap.get(daysSinceYear);
     }
 
     private List<Transaction> dateListWithTransactions;
@@ -342,7 +330,6 @@ public class CalendarFragment extends Fragment {
         final List<CustomEvent> colorList = new ArrayList<CustomEvent>(){{
             add(new CustomEvent(R.color.green));
         }};
-
 
         calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
             @Override
