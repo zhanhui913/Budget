@@ -1,10 +1,12 @@
 package com.zhan.budget.Util;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.zhan.budget.R;
 
@@ -80,18 +82,16 @@ public final class CategoryUtil {
         }
     }
 
-    public static List<Integer> getListOfUniqueIcon(){
+    public static List<Integer> getListOfUniqueIcon(Context context){
+        TypedArray icons = context.getResources().obtainTypedArray(R.array.category_icons);
+
         List<Integer> iconList = new ArrayList<>();
-        iconList.add(R.drawable.c_food);
-        iconList.add(R.drawable.c_cafe);
-        iconList.add(R.drawable.c_house);
-        iconList.add(R.drawable.c_airplane);
-        iconList.add(R.drawable.c_car);
-        iconList.add(R.drawable.c_shirt);
-        iconList.add(R.drawable.c_etc);
-        iconList.add(R.drawable.c_utilities);
-        iconList.add(R.drawable.c_bill);
-        iconList.add(R.drawable.c_groceries);
+        for(int i = 0; i < icons.length(); i++){
+            // get resource ID by index
+            int s = icons.getResourceId(i, 0);
+            Log.d("ZHAN", i+"->"+s);
+            iconList.add(s);
+        }
 
         return iconList;
     }

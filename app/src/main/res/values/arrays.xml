@@ -23,7 +23,7 @@
         <item>@color/asbestos</item>
     </integer-array>
 
-    <integer-array name="category_icons">
+    <string-array name="category_icons">
         <item>@drawable/c_airplane</item>
         <item>@drawable/c_android</item>
         <item>@drawable/c_baseball</item>
@@ -53,5 +53,5 @@
         <item>@drawable/c_sunglasses</item>
         <item>@drawable/c_train</item>
         <item>@drawable/c_utilities</item>
-    </integer-array>
+    </string-array>
 </resources>

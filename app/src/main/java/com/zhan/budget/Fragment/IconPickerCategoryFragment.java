@@ -53,7 +53,7 @@ public class IconPickerCategoryFragment extends Fragment {
     }
 
     private void init(){
-        iconList = CategoryUtil.getListOfUniqueIcon();
+        iconList = CategoryUtil.getListOfUniqueIcon(getContext());
         iconCategoryGridView = (GridView) view.findViewById(R.id.iconGrid);
         iconCategoryGridAdapter = new IconCategoryGridAdapter(getContext(), iconList, selectedColor);
         iconCategoryGridView.setAdapter(iconCategoryGridAdapter);
