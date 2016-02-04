@@ -1,42 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string-array name="akta">
-        <item>22,0,0,30,</item>
-        <item>22,0,30,0,</item>
-        <item>30,0,52,30,</item>
-        <item>0,30,26,30,</item>
-        <item>60,0,60,15,</item>
-        <item>60,15,60,30,</item>
-        <item>60,15,85,15,</item>
-        <item>85,15,108,0,</item>
-        <item>85,15,108,30,</item>
-        <item>117,0,147,0,</item>
-        <item>147,0,177,0,</item>
-        <item>147,0,147,32,</item>
-        <item>198,0,176,30,</item>
-        <item>198,0,206,0,</item>
-        <item>206,0,228,30,</item>
-        <item>176,30,202,30,</item>
-    </string-array>
-
-    <string-array name="storehouse">
-        <item>0,35,12,42,</item>
-        <item>12,42,24,35,</item>
-        <item>24,35,12,28,</item>
-        <item>0,35,12,28,</item>
-        <item>0,21,12,28,</item>
-        <item>12,28,24,21,</item>
-        <item>24,35,24,21,</item>
-        <item>24,21,12,14,</item>
-        <item>0,21,12,14,</item>
-        <item>0,21,0,7,</item>
-        <item>12,14,0,7,</item>
-        <item>12,14,24,7,</item>
-        <item>24,7,12,0,</item>
-        <item>0,7,12,0,</item>
-    </string-array>
-
     <integer-array name="category_colors">
         <item>@color/turquoise</item>
         <item>@color/emerald</item>
@@ -58,5 +21,37 @@
         <item>@color/pomegranate</item>
         <item>@color/silver</item>
         <item>@color/asbestos</item>
+    </integer-array>
+
+    <integer-array name="category_icons">
+        <item>@drawable/c_airplane</item>
+        <item>@drawable/c_android</item>
+        <item>@drawable/c_baseball</item>
+        <item>@drawable/c_basketball</item>
+        <item>@drawable/c_bill</item>
+        <item>@drawable/c_bowtie</item>
+        <item>@drawable/c_cafe</item>
+        <item>@drawable/c_camera</item>
+        <item>@drawable/c_car</item>
+        <item>@drawable/c_cocktail</item>
+        <item>@drawable/c_education</item>
+        <item>@drawable/c_etc</item>
+        <item>@drawable/c_food</item>
+        <item>@drawable/c_football</item>
+        <item>@drawable/c_gift</item>
+        <item>@drawable/c_groceries</item>
+        <item>@drawable/c_house</item>
+        <item>@drawable/c_iphone</item>
+        <item>@drawable/c_laptop</item>
+        <item>@drawable/c_medical</item>
+        <item>@drawable/c_music</item>
+        <item>@drawable/c_phone</item>
+        <item>@drawable/c_pill</item>
+        <item>@drawable/c_rugby</item>
+        <item>@drawable/c_shirt</item>
+        <item>@drawable/c_socks</item>
+        <item>@drawable/c_sunglasses</item>
+        <item>@drawable/c_train</item>
+        <item>@drawable/c_utilities</item>
     </integer-array>
 </resources>
