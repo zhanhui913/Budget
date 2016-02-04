@@ -64,7 +64,7 @@ public class PlusView extends View {
         try{
             backgroundColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
             //iconDrawable = a.getDrawable(R.styleable.PlusView_pv_iconDrawable);
-            iconDrawable = ContextCompat.getDrawable(context, com.zhan.budget.R.drawable.ic_add);
+            iconDrawable = ContextCompat.getDrawable(context, com.zhan.budget.R.drawable.svg_ic_add);
             iconSize = a.getInteger(com.zhan.budget.R.styleable.PlusView_pv_iconSize, DEFAULT_ICON_SIZE);
             iconColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
         }finally {

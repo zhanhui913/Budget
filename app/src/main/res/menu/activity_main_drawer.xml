@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_calendar"
-            android:icon="@drawable/ic_menu_calendar"
+            android:icon="@drawable/svg_ic_menu_calendar"
             android:title="Calendar" />
         <item
             android:id="@+id/nav_category"
-            android:icon="@drawable/ic_menu_category"
+            android:icon="@drawable/svg_ic_menu_category"
             android:title="Category" />
         <item
             android:id="@+id/nav_overview"
-            android:icon="@drawable/ic_menu_monthly_overview"
+            android:icon="@drawable/svg_ic_menu_monthly_overview"
             android:title="Monthly Report" />
         <item
             android:id="@+id/nav_account"
-            android:icon="@drawable/ic_menu_account"
+            android:icon="@drawable/svg_ic_menu_account"
             android:title="Account" />
     </group>
 

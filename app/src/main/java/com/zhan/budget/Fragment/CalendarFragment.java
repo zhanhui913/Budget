@@ -429,7 +429,7 @@ public class CalendarFragment extends Fragment {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
                 deleteItem.setBackground(R.color.red);// set item background
                 deleteItem.setWidth(Util.dp2px(getContext(), 100));// set item width
-                deleteItem.setIcon(R.drawable.ic_delete_svg);// set a icon
+                deleteItem.setIcon(R.drawable.svg_ic_delete);// set a icon
                 menu.addMenuItem(deleteItem);// add to menu
             }
 
@@ -438,7 +438,7 @@ public class CalendarFragment extends Fragment {
                 SwipeMenuItem approveItem = new SwipeMenuItem(getContext());
                 approveItem.setBackground(R.color.green);// set item background
                 approveItem.setWidth(Util.dp2px(getContext(), 100));// set item width
-                approveItem.setIcon(R.drawable.ic_check_svg);// set a icon
+                approveItem.setIcon(R.drawable.svg_ic_check);// set a icon
                 menu.addMenuItem(approveItem);// add to menu
             }
         };
