@@ -37,10 +37,26 @@
         <item>0,7,12,0,</item>
     </string-array>
 
-    <integer-array name="google_colors">
-        <item>@color/red</item>
-        <item>@color/purple</item>
-        <item>@color/cyan</item>
-        <item>@color/green</item>
+    <integer-array name="category_colors">
+        <item>@color/turquoise</item>
+        <item>@color/emerald</item>
+        <item>@color/peter_river</item>
+        <item>@color/amethyst</item>
+        <item>@color/wet_asphalt</item>
+        <item>@color/green_sea</item>
+        <item>@color/nephritis</item>
+        <item>@color/belize_hole</item>
+        <item>@color/wisteria</item>
+        <item>@color/midnight_blue</item>
+        <item>@color/sunflower</item>
+        <item>@color/carrot</item>
+        <item>@color/alizarin</item>
+        <item>@color/clouds</item>
+        <item>@color/concrete</item>
+        <item>@color/orange</item>
+        <item>@color/pumpkin</item>
+        <item>@color/pomegranate</item>
+        <item>@color/silver</item>
+        <item>@color/asbestos</item>
     </integer-array>
 </resources>

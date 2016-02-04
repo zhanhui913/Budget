@@ -30,7 +30,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateUnspecified|adjustNothing" />
         <activity
-            android:name=".Activity.CategoryInfo"
+            android:name=".Activity.CategoryInfoActivity"
             android:label="@string/title_activity_category_info"
             android:parentActivityName=".Activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"

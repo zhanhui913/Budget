@@ -36,7 +36,7 @@ import io.realm.RealmResults;
  * Use the {@link MonthReportFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TransactionIncomeFragment extends BaseFragment {
+public class TransactionIncomeFragment extends Fragment {
 
     private OnTransactionIncomeFragmentInteractionListener mListener;
 
@@ -52,17 +52,6 @@ public class TransactionIncomeFragment extends BaseFragment {
 
     public TransactionIncomeFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment TransactionIncomeFragment
-     */
-    @Override
-    public BaseFragment newInstance() {
-        return new TransactionIncomeFragment();
     }
 
     @Override

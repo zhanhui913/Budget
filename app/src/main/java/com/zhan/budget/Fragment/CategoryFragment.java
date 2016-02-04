@@ -24,7 +24,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.zhan.budget.Activity.CategoryInfo;
+import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Etc.Constants;
@@ -467,7 +467,7 @@ public class CategoryFragment extends Fragment {
     }
 
     private void editCategory(int position){
-        Intent editCategoryActivity = new Intent(getContext(), CategoryInfo.class);
+        Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
 
         Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 

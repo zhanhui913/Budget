@@ -15,10 +15,8 @@ import android.widget.TextView;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Fragment.ColorCategoryFragment;
-import com.zhan.budget.Fragment.TransactionExpenseFragment;
-import com.zhan.budget.Fragment.TransactionIncomeFragment;
-import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
+import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -27,10 +25,9 @@ import com.zhan.circularview.CircularView;
 
 import org.parceler.Parcels;
 
-public class CategoryInfo extends AppCompatActivity implements
-        ColorCategoryFragment.OnColorCateogyrFragmentInteractionListener,
-        TransactionExpenseFragment.OnTransactionExpenseFragmentInteractionListener,
-        TransactionIncomeFragment.OnTransactionIncomeFragmentInteractionListener{
+public class CategoryInfoActivity extends AppCompatActivity implements
+        ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
+        IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener{
 
     private Toolbar toolbar;
     private TextView categoryName, categoryBudget, categoryCost;
@@ -43,6 +40,16 @@ public class CategoryInfo extends AppCompatActivity implements
     private TwoPageViewPager adapterViewPager;
     private ViewPager viewPager;
     private CircleIndicator circleIndicator;
+
+    //Fragments
+    private ColorPickerCategoryFragment colorPickerCategoryFragment;
+    private IconPickerCategoryFragment iconPickerCategoryFragment;
+
+    //Selected color
+    private String selectedColor;
+
+    //Selected icon
+    private int selectedIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +69,12 @@ public class CategoryInfo extends AppCompatActivity implements
     }
 
     private void init(){
+        colorPickerCategoryFragment = new ColorPickerCategoryFragment();
+        iconPickerCategoryFragment = new IconPickerCategoryFragment();
+        iconPickerCategoryFragment.updateColor(category.getColor()); //set initial color from category
 
         viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
-        adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(),
-                new ColorCategoryFragment(),
-                (category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()))? new TransactionExpenseFragment(): new TransactionIncomeFragment());
+        adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), colorPickerCategoryFragment, iconPickerCategoryFragment);
         viewPager.setAdapter(adapterViewPager);
 
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
@@ -133,6 +141,11 @@ public class CategoryInfo extends AppCompatActivity implements
         finish();
     }
 
+    private void updateCategoryColor(){
+        categoryCircularView.setCircleColor(Color.parseColor(selectedColor));
+        iconPickerCategoryFragment.updateColor(selectedColor);
+    }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -174,18 +187,14 @@ public class CategoryInfo extends AppCompatActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onCategoryExpenseClick(Category category){
-        //selectedExpenseCategory = category;
-    }
-
-    @Override
-    public void onCategoryIncomeClick(Category category){
-        //selectedIncomeCategory = category;
-    }
-
-    @Override
     public void onColorCategoryClick(String color){
         Log.d("CATEGORY_INFO", "click on color : "+color);
+        selectedColor = color;
+        updateCategoryColor();
     }
 
+    @Override
+    public void onIconCategoryClick(String icon){
+        Log.d("CATEGORY_INFO", "click on icon : "+icon);
+    }
 }

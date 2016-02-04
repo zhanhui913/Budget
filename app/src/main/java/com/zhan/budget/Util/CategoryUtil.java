@@ -8,6 +8,9 @@ import android.support.v4.content.ContextCompat;
 
 import com.zhan.budget.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by zhanyap on 2016-01-04.
  */
@@ -75,6 +78,22 @@ public final class CategoryUtil {
         }else{
             return R.drawable.groceries;
         }
+    }
+
+    public static List<Integer> getListOfUniqueIcon(){
+        List<Integer> iconList = new ArrayList<>();
+        iconList.add(R.drawable.food);
+        iconList.add(R.drawable.cafe);
+        iconList.add(R.drawable.house);
+        iconList.add(R.drawable.airplane);
+        iconList.add(R.drawable.car);
+        iconList.add(R.drawable.shirt);
+        iconList.add(R.drawable.etc);
+        iconList.add(R.drawable.utilities);
+        iconList.add(R.drawable.bill);
+        iconList.add(R.drawable.groceries);
+
+        return iconList;
     }
 
     public static Drawable getColorDrawable(Context context, String colorId){
