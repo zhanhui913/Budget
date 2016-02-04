@@ -61,7 +61,7 @@
         custom:cv_strokeWidth="10dp"
         custom:cv_strokePadding="0dp"
         custom:cv_iconColor="@color/red"
-        custom:cv_iconDrawable="@drawable/food"
+        custom:cv_iconDrawable="@drawable/c_food"
         custom:cv_iconTopPadding="20dp"
         custom:cv_iconBottomPadding="20dp"
         custom:cv_iconLeftPadding="20dp"

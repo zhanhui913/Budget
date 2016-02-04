@@ -20,7 +20,7 @@
             android:id="@+id/transactionCategoryIcon"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:src="@drawable/food"
+            android:src="@drawable/c_food"
             android:tint="@color/secondary_text_default_material_light"/>
 
         <TextView
