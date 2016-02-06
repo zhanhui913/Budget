@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.R;
@@ -32,7 +31,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         public TextView cost;
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn;
-        public ImageView approveBtn;
+        public ImageView editBtn;
     }
 
     public AccountListAdapter(Fragment fragment,  List<Account> accountList) {
@@ -53,7 +52,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Avoid un-necessary calls to findViewById() on each row, which is expensive!
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
 
         /*
          * If convertView is not null, we can reuse it directly, no inflation required!
@@ -69,14 +68,41 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
             viewHolder.name = (TextView) convertView.findViewById(R.id.accountName);
             viewHolder.cost = (TextView) convertView.findViewById(R.id.accountCost);
-            viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
+            viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipeAccount);
             viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
-            viewHolder.approveBtn = (ImageView) convertView.findViewById(R.id.approveBtn);
+            viewHolder.editBtn = (ImageView) convertView.findViewById(R.id.editBtn);
 
-            viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
+            viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout layout) {
+                    //Log.d("ACCOUNT_LIST_ADAPTER", "onstartopen");
+                }
+
                 @Override
                 public void onOpen(SwipeLayout layout) {
-                    Toast.makeText(getContext(), "onOpen", Toast.LENGTH_SHORT).show();
+                    //Log.d("ACCOUNT_LIST_ADAPTER", "on open");
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout layout) {
+                    //Log.d("ACCOUNT_LIST_ADAPTER", "onstartclose");
+                }
+
+                @Override
+                public void onClose(SwipeLayout layout) {
+                    //Log.d("ACCOUNT_LIST_ADAPTER", "onclose");
+                }
+
+                @Override
+                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+                    //Log.d("ACCOUNT_LIST_ADAPTER", "onupdate "+leftOffset+","+topOffset);
+                    mListener.onDisablePtrPullDown(true);
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+                    //Log.d("ACCOUNT_LIST_ADAPTER", "onhandrelease :"+xvel+","+yvel);
+                    mListener.onDisablePtrPullDown(false);
                 }
             });
 
@@ -84,18 +110,17 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getContext(), "delete", Toast.LENGTH_SHORT).show();
-
                     mListener.onDeleteAccount(position);
                 }
             });
 
-            viewHolder.approveBtn.setOnClickListener(new View.OnClickListener() {
+            viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "approve", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "edit", Toast.LENGTH_SHORT).show();
+                    mListener.onEditAccount(position);
                 }
             });
-
 
             // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(viewHolder);
@@ -116,5 +141,9 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
     public interface OnAccountAdapterInteractionListener {
         void onDeleteAccount(int position);
+
+        void onEditAccount(int position);
+
+        void onDisablePtrPullDown(boolean value);
     }
 }

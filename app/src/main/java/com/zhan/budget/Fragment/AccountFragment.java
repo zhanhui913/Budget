@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.AccountListAdapter;
@@ -120,23 +121,7 @@ public class AccountFragment extends Fragment implements
 
         frame.setHeaderView(header);
 
-        frame.setPtrHandler(new PtrHandler() {
-            @Override
-            public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
-                insideFrame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        frame.refreshComplete();
-                    }
-                }, 500);
-            }
-
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
-            }
-        });
+        frame.setPtrHandler(enablePullDown);
 
         frame.addPtrUIHandler(new PtrUIHandler() {
 
@@ -168,6 +153,35 @@ public class AccountFragment extends Fragment implements
             }
         });
     }
+
+    PtrHandler enablePullDown = new PtrHandler() {
+        @Override
+        public void onRefreshBegin(PtrFrameLayout insideFrame) {
+            Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
+            insideFrame.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    frame.refreshComplete();
+                }
+            }, 500);
+        }
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+            return PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
+        }
+    };
+
+    PtrHandler disablePullDown = new PtrHandler() {
+        @Override
+        public void onRefreshBegin(PtrFrameLayout insideFrame) {
+        }
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+            return false;
+        }
+    };
 
     /**
      * Displays prompt for user to add new account.
@@ -243,5 +257,19 @@ public class AccountFragment extends Fragment implements
 
         accountListAdapter.clear();
         accountListAdapter.addAll(accountList);
+    }
+
+    @Override
+    public void onEditAccount(int position){
+        Toast.makeText(getContext(), "editting account "+accountList.get(position).getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDisablePtrPullDown(boolean value){
+        if(value){ //disable
+            frame.setPtrHandler(disablePullDown);
+        }else{ //enable
+            frame.setPtrHandler(enablePullDown);
+        }
     }
 }

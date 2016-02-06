@@ -1,44 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="5dp">
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeTransaction"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    swipe:leftEdgeSwipeOffset="0dp"
+    swipe:rightEdgeSwipeOffset="0dp">
 
-    <com.zhan.circularview.CircularView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/categoryIcon"
+    <!-- Bottom view -->
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="false"
-        android:layout_centerVertical="true"
-        custom:cv_iconTopPadding="12dp"
-        custom:cv_iconBottomPadding="12dp"
-        custom:cv_iconLeftPadding="12dp"
-        custom:cv_iconRightPadding="12dp"
-        custom:cv_bgRadius="25dp" />
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/approveBtn"
+            android:src="@drawable/svg_ic_check"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:background="@color/green"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
+        <ImageView
+            android:id="@+id/deleteBtn"
+            android:src="@drawable/svg_ic_delete"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:background="@color/red"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/transactionNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lunch"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_toRightOf="@+id/categoryIcon"
-        android:layout_marginLeft="15dp"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/transactionCost" />
+    <!-- Surface view -->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp">
 
-    <TextView
-        android:id="@+id/transactionCost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="-25.00"
-        android:textSize="20sp"
-        android:layout_marginLeft="15dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+        <com.zhan.circularview.CircularView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/categoryIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentLeft="false"
+            android:layout_centerVertical="true"
+            custom:cv_iconTopPadding="12dp"
+            custom:cv_iconBottomPadding="12dp"
+            custom:cv_iconLeftPadding="12dp"
+            custom:cv_iconRightPadding="12dp"
+            custom:cv_bgRadius="25dp" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/transactionNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lunch"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/categoryIcon"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/transactionCost" />
+
+        <TextView
+            android:id="@+id/transactionCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-25.00"
+            android:textSize="20sp"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>

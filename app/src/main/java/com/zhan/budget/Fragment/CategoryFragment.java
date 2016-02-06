@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -87,16 +88,6 @@ public class CategoryFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CategoryFragment.
-     */
-    public static CategoryFragment newInstance() {
-        return new CategoryFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,23 +146,7 @@ public class CategoryFragment extends Fragment {
 
         frame.setHeaderView(header);
 
-        frame.setPtrHandler(new PtrHandler() {
-            @Override
-            public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
-                insideFrame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        frame.refreshComplete();
-                    }
-                }, 500);
-            }
-
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
-            }
-        });
+        frame.setPtrHandler(enablePullDown); //default
 
         frame.addPtrUIHandler(new PtrUIHandler() {
 
@@ -437,12 +412,12 @@ public class CategoryFragment extends Fragment {
                         break;
                     case 1:
                         //delete
-
+                        /*
                         categoryList.get(position).removeFromRealm();
 
                         categoryAdapter.remove(categoryList.get(position));
-                        categoryList.remove(position);
-
+                        categoryList.remove(position);*/
+                        Toast.makeText(getContext(), "Deleting "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
                         break;
                 }
                 //False: Close the menu
@@ -457,14 +432,47 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onSwipeStart(int position) {
                 // swipe start
+                Log.d("CATEGORY_FRAGMENT", "swiping...");
+                frame.setPtrHandler(disablePullDown);
             }
 
             @Override
             public void onSwipeEnd(int position) {
                 // swipe end
+                Log.d("CATEGORY_FRAGMENT", "swiping... done");
+                frame.setPtrHandler(enablePullDown);
             }
         });
     }
+
+    PtrHandler enablePullDown = new PtrHandler() {
+        @Override
+        public void onRefreshBegin(PtrFrameLayout insideFrame) {
+            Log.d("CATEGORY_FRAGMENT", "-- on refresh begin");
+            insideFrame.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    frame.refreshComplete();
+                }
+            }, 500);
+        }
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+            return PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
+        }
+    };
+
+    PtrHandler disablePullDown = new PtrHandler() {
+        @Override
+        public void onRefreshBegin(PtrFrameLayout insideFrame) {
+        }
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+            return false;
+        }
+    };
 
     private void editCategory(int position){
         Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);

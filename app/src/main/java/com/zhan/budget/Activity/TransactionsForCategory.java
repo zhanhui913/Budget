@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -32,7 +33,8 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionsForCategory extends AppCompatActivity {
+public class TransactionsForCategory extends AppCompatActivity implements
+        TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
     private Toolbar toolbar;
     private Date currentMonth;
@@ -221,5 +223,30 @@ public class TransactionsForCategory extends AppCompatActivity {
         myRealm = Realm.getDefaultInstance();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public void onDeleteTransaction(int position){
+        /*myRealm.beginTransaction();
+        resultsAccount.remove(position);
+        myRealm.commitTransaction();
+
+        accountListAdapter.clear();
+        accountListAdapter.addAll(accountList);*/
+        Toast.makeText(getApplicationContext(), "transactionsforcategory delete transaction :" + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onApproveTransaction(int position){
+        Toast.makeText(getApplicationContext(), "transactionsforcategory approve transaction :"+position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDisablePtrPullDown(boolean value){
+        //no need to implement this as this activity has no pull down to refresh feature
+}
 }

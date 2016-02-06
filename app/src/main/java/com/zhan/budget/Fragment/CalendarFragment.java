@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -62,7 +63,8 @@ import io.realm.RealmResults;
  * Use the {@link CalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment implements
+        TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
     private OnCalendarListener mListener;
     private View view;
@@ -125,7 +127,7 @@ public class CalendarFragment extends Fragment {
         initEvents();
         createPullToAddTransaction();
         createCalendar();
-        createSwipeMenu();
+        //createSwipeMenu();
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
@@ -143,7 +145,7 @@ public class CalendarFragment extends Fragment {
 
         transactionListView = (SwipeMenuListView) view.findViewById(R.id.transactionListView);
         transactionList = new ArrayList<>();
-        transactionAdapter = new TransactionListAdapter(getActivity(), transactionList);
+        transactionAdapter = new TransactionListAdapter(this, transactionList);
         transactionListView.setAdapter(transactionAdapter);
 
         dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
@@ -158,23 +160,7 @@ public class CalendarFragment extends Fragment {
 
         frame.setHeaderView(header);
 
-        frame.setPtrHandler(new PtrHandler() {
-            @Override
-            public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
-                insideFrame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        frame.refreshComplete();
-                    }
-                }, 500);
-            }
-
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
-            }
-        });
+        frame.setPtrHandler(enablePullDown); //default
 
         frame.addPtrUIHandler(new PtrUIHandler() {
 
@@ -515,6 +501,35 @@ public class CalendarFragment extends Fragment {
         }
     }
 
+    PtrHandler enablePullDown = new PtrHandler() {
+        @Override
+        public void onRefreshBegin(PtrFrameLayout insideFrame) {
+            Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
+            insideFrame.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    frame.refreshComplete();
+                }
+            }, 500);
+        }
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+            return PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
+        }
+    };
+
+    PtrHandler disablePullDown = new PtrHandler() {
+        @Override
+        public void onRefreshBegin(PtrFrameLayout insideFrame) {
+        }
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+            return false;
+        }
+    };
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -640,5 +655,36 @@ public class CalendarFragment extends Fragment {
      */
     public interface OnCalendarListener {
         void onCalendarInteraction(String value);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onDeleteTransaction(int position){
+        /*myRealm.beginTransaction();
+        resultsAccount.remove(position);
+        myRealm.commitTransaction();
+
+        accountListAdapter.clear();
+        accountListAdapter.addAll(accountList);*/
+        Toast.makeText(getContext(), "calendar fragment delete transaction :"+position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onApproveTransaction(int position){
+        Toast.makeText(getContext(), "calendar fragment approve transaction :"+position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDisablePtrPullDown(boolean value){
+        if(value){ //disable
+            frame.setPtrHandler(disablePullDown);
+        }else{ //enable
+            frame.setPtrHandler(enablePullDown);
+        }
     }
 }
