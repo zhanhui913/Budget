@@ -1,7 +1,6 @@
 package com.zhan.budget.Activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
@@ -19,7 +18,6 @@ import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.circularview.CircularView;
 
@@ -97,7 +95,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryCircularView.setCircleColor(category.getColor());
 
         categoryCircularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
-                CategoryUtil.getIconResourceId(category.getIcon()), getTheme()));
+                category.getIcon(), getTheme()));
         categoryCircularView.setIconColor(R.color.white);
     }
 

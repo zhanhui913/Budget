@@ -1,7 +1,6 @@
 package com.zhan.budget.Adapter;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.circularview.CircularView;
 
@@ -68,7 +66,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
+        viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), category.getIcon(), activity.getTheme()));
 
         viewHolder.name.setText(category.getName());
         viewHolder.budget.setText("$" + Util.setPriceToCorrectDecimalInString(category.getBudget()));
@@ -77,7 +75,6 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         //ProgressBar
         viewHolder.progressBar.setMax(category.getBudget());
         viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
-
 
         if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.colorPrimary));
