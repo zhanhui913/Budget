@@ -1,19 +1,22 @@
 package com.zhan.budget.Fragment;
 
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
 import java.util.ArrayList;
@@ -31,7 +34,8 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements
+        AccountListAdapter.OnAccountAdapterInteractionListener{
 
     private View view;
 
@@ -41,9 +45,12 @@ public class AccountFragment extends Fragment {
 
     private TextView emptyAccountText;
 
-    private SwipeMenuListView accountListView;
+    //private SwipeMenuListView accountListView;
+    private ListView accountListView;
     private AccountListAdapter accountListAdapter;
     private List<Account> accountList;
+
+    private SwipeLayout ssw;
 
     private RealmResults<Account> resultsAccount;
 
@@ -51,17 +58,6 @@ public class AccountFragment extends Fragment {
 
     public AccountFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AccountFragment.
-     */
-    public static AccountFragment newInstance() {
-        AccountFragment fragment = new AccountFragment();
-        return fragment;
     }
 
     @Override
@@ -93,8 +89,9 @@ public class AccountFragment extends Fragment {
 
         accountList = new ArrayList<>();
 
-        accountListView = (SwipeMenuListView) view.findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(getActivity(), accountList);
+        //accountListView = (SwipeMenuListView) view.findViewById(R.id.accountListView);
+        accountListView = (ListView) view.findViewById(R.id.accountListView);
+        accountListAdapter = new AccountListAdapter(this, accountList);
         accountListView.setAdapter(accountListAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
@@ -172,8 +169,42 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    /**
+     * Displays prompt for user to add new account.
+     */
     private void addNewAccount(){
-        Toast.makeText(getContext(), "Add new account", Toast.LENGTH_SHORT).show();
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_account_add, null);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.editTextAccount);
+
+        new AlertDialog.Builder(getActivity())
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        myRealm.beginTransaction();
+
+                        Account account = myRealm.createObject(Account.class);
+                        account.setId(Util.generateUUID());
+                        account.setName(input.getText().toString());
+
+                        accountListAdapter.clear();
+                        myRealm.commitTransaction();
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
     }
 
     private void updateAccountStatus(){
@@ -196,5 +227,21 @@ public class AccountFragment extends Fragment {
         if(!myRealm.isClosed()) {
             myRealm.close();
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onDeleteAccount(int position){
+        myRealm.beginTransaction();
+        resultsAccount.remove(position);
+        myRealm.commitTransaction();
+
+        accountListAdapter.clear();
+        accountListAdapter.addAll(accountList);
     }
 }

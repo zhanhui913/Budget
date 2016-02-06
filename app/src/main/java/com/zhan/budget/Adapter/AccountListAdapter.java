@@ -1,10 +1,12 @@
 package com.zhan.budget.Adapter;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,22 +25,33 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
     private Activity activity;
     private List<Account> accountList;
-
+    private OnAccountAdapterInteractionListener mListener;
 
     static class ViewHolder {
         public TextView name;
         public TextView cost;
         public SwipeLayout swipeLayout;
+        public ImageView deleteBtn;
+        public ImageView approveBtn;
     }
 
-    public AccountListAdapter(Activity activity,  List<Account> accountList) {
-        super(activity, R.layout.item_category, accountList);
-        this.activity = activity;
+    public AccountListAdapter(Fragment fragment,  List<Account> accountList) {
+        super(fragment.getActivity(), R.layout.item_category, accountList);
+        this.activity = fragment.getActivity();
         this.accountList = accountList;
+
+        //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
+        if (fragment instanceof OnAccountAdapterInteractionListener) {
+            mListener = (OnAccountAdapterInteractionListener) fragment;
+        } else if(activity instanceof  OnAccountAdapterInteractionListener){
+            mListener = (OnAccountAdapterInteractionListener) activity;
+        }else {
+            throw new RuntimeException(activity.toString() + " must implement OnAccountAdapterInteractionListener.");
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // Avoid un-necessary calls to findViewById() on each row, which is expensive!
         ViewHolder viewHolder;
 
@@ -54,21 +67,32 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_account, parent, false);
 
-
             viewHolder.name = (TextView) convertView.findViewById(R.id.accountName);
             viewHolder.cost = (TextView) convertView.findViewById(R.id.accountCost);
             viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
+            viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
+            viewHolder.approveBtn = (ImageView) convertView.findViewById(R.id.approveBtn);
+
             viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
                 @Override
                 public void onOpen(SwipeLayout layout) {
-                    //YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash));
                     Toast.makeText(getContext(), "onOpen", Toast.LENGTH_SHORT).show();
                 }
             });
-            viewHolder.swipeLayout.setOnClickListener(new View.OnClickListener() {
+
+            viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "DELETED", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "delete", Toast.LENGTH_SHORT).show();
+
+                    mListener.onDeleteAccount(position);
+                }
+            });
+
+            viewHolder.approveBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "approve", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -88,5 +112,9 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         viewHolder.cost.setText(account.getName());
 
         return convertView;
+    }
+
+    public interface OnAccountAdapterInteractionListener {
+        void onDeleteAccount(int position);
     }
 }

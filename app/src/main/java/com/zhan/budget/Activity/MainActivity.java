@@ -172,10 +172,19 @@ public class MainActivity extends AppCompatActivity
 
                 //Create default accounts
                 String[] tempAccountList = new String[]{"Credit Card","Debit Card", "Cash"};
-                for(int i = 0; i < tempAccountList.length; i++){
+                /*for(int k = 0; k < 4; k++) {
+                    for (int i = 0; i < tempAccountList.length; i++) {
+                        Account account = bgRealm.createObject(Account.class);
+                        account.setId(Util.generateUUID());
+                        account.setName(k+"-"+tempAccountList[i]);
+
+                        accountList.add(account);
+                    }
+                }*/
+                for(int i = 0 ; i < 12; i++){
                     Account account = bgRealm.createObject(Account.class);
                     account.setId(Util.generateUUID());
-                    account.setName(tempAccountList[i]);
+                    account.setName("Account "+i);
 
                     accountList.add(account);
                 }
