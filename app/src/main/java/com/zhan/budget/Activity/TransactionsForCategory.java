@@ -65,6 +65,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
 
         init();
+        addListeners();
         createSwipeMenu();
     }
 
@@ -104,6 +105,15 @@ public class TransactionsForCategory extends AppCompatActivity implements
         Log.d("ZHAN", "selected parcelable category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
         getAllTransactionsWithCategoryForMonth();
+    }
+
+    private void addListeners(){
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void getAllTransactionsWithCategoryForMonth(){
