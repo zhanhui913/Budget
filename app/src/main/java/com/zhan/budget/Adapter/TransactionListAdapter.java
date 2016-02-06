@@ -1,7 +1,6 @@
 package com.zhan.budget.Adapter;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.circularview.CircularView;
 
@@ -74,18 +72,18 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         //Icon
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidth(0); //in dp
-            viewHolder.circularView.setStrokeColor(Color.parseColor("#FFFFFF"));
-            viewHolder.circularView.setCircleColor(Color.parseColor(transaction.getCategory().getColor()));
+            viewHolder.circularView.setStrokeColor(R.color.white);
+            viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
             viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
-                    CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
-            viewHolder.circularView.setIconColor(Color.parseColor("#FFFFFF"));
+                    transaction.getCategory().getIcon(), activity.getTheme()));
+            viewHolder.circularView.setIconColor(R.color.white);
         }else{
             viewHolder.circularView.setStrokeWidth(2); //in dp
-            viewHolder.circularView.setStrokeColor(Color.parseColor("#808080"));
-            viewHolder.circularView.setCircleColor(Color.parseColor("#FFFFFF"));
+            viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+            viewHolder.circularView.setCircleColor(R.color.white);
             viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
-                    CategoryUtil.getIconResourceId(transaction.getCategory().getIcon()), activity.getTheme()));
-            viewHolder.circularView.setIconColor(Color.parseColor("#808080"));
+                    transaction.getCategory().getIcon(), activity.getTheme()));
+            viewHolder.circularView.setIconColor(R.color.harbor_rat);
         }
 
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){

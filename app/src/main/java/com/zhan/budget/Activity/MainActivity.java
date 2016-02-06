@@ -135,15 +135,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void execute(Realm bgRealm) {
                 String[] tempCategoryNameList = new String[]{"Breakfast", "Lunch", "Dinner", "Snacks", "Drink", "Rent", "Travel", "Car", "Shopping", "Necessity", "Utilities", "Bill", "Groceries"};
-                String[] tempCategoryColorList = new String[]{"F1C40F", "E67E22", "D35400", "F2784B", "FDE3A7", "6C7A89", "19B5FE", "16A085", "BF55EC", "E26A6A", "81CFE0", "26A65B", "BFBFBF"};
-                int[] tempCategoryIconList = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+                int[] tempCategoryColorList = new int[]{R.color.lemon, R.color.orange, R.color.pumpkin, R.color.alizarin, R.color.cream_can, R.color.midnight_blue, R.color.peter_river, R.color.turquoise, R.color.wisteria, R.color.jordy_blue, R.color.concrete, R.color.emerald, R.color.gossip};
+                int[] tempCategoryIconList = new int[]{R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_cafe, R.drawable.c_house, R.drawable.c_airplane, R.drawable.c_car, R.drawable.c_shirt, R.drawable.c_etc, R.drawable.c_utilities, R.drawable.c_bill, R.drawable.c_groceries};
 
                 //create expense category
                 for (int i = 0; i < tempCategoryNameList.length; i++) {
                     Category c = bgRealm.createObject(Category.class);
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryNameList[i]);
-                    c.setColor("#" + tempCategoryColorList[i]);
+                    c.setColor(tempCategoryColorList[i]);
                     c.setIcon(tempCategoryIconList[i]);
                     c.setBudget(100.0f + (i/5));
                     c.setType(BudgetType.EXPENSE.toString());
@@ -153,14 +153,15 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
-                String[] tempCategoryIncomeColorList = new String[]{"8E44AD", "34495E"};
-                int[] tempCategoryIncomeIconList = new int[]{11, 9};
+                int[] tempCategoryIncomeColorList = new int[]{R.color.light_wisteria, R.color.harbor_rat};
+                int[] tempCategoryIncomeIconList = new int[]{R.drawable.c_bill, R.drawable.c_etc};
+
                 //create income category
                 for (int i = 0; i < tempCategoryIncomeNameList.length; i++) {
                     Category c = bgRealm.createObject(Category.class);
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryIncomeNameList[i]);
-                    c.setColor("#" + tempCategoryIncomeColorList[i]);
+                    c.setColor(tempCategoryIncomeColorList[i]);
                     c.setIcon(tempCategoryIncomeIconList[i]);
                     c.setBudget(0);
                     c.setType(BudgetType.INCOME.toString());

@@ -3,7 +3,6 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,9 @@ import android.widget.GridView;
 
 import com.zhan.budget.Adapter.ColorCategoryGridAdapter;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.circularview.CircularView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,12 +52,7 @@ public class ColorPickerCategoryFragment extends Fragment {
     }
 
     private void init(){
-        int[] colorArray = getResources().getIntArray(R.array.category_colors);
-
-        colorList = new ArrayList<>();
-        for(int i = 0; i < colorArray.length; i++){
-            colorList.add(colorArray[i]);
-        }
+        colorList = CategoryUtil.getListOfColors(getContext());
 
         colorCategoryGridView = (GridView) view.findViewById(R.id.colorGrid);
         colorCategoryGridAdapter = new ColorCategoryGridAdapter(getContext(), colorList);
@@ -72,14 +66,14 @@ public class ColorPickerCategoryFragment extends Fragment {
                 for (int i = 0; i < parent.getChildCount(); i++) {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+                    ccv.setStrokeColor(R.color.transparent);
 
                     if (i == position) {
-                        ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                        ccv.setStrokeColor(R.color.darkgray);
                     }
                 }
 
-                mListener.onColorCategoryClick(String.format("#%06X", 0xFFFFFF & colorList.get(position)));
+                mListener.onColorCategoryClick(colorList.get(position));
             }
         });
     }
@@ -112,6 +106,6 @@ public class ColorPickerCategoryFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnColorPickerCategoryFragmentInteractionListener {
-        void onColorCategoryClick(String color);
+        void onColorCategoryClick(int color);
     }
 }

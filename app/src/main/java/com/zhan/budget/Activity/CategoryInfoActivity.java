@@ -1,7 +1,6 @@
 package com.zhan.budget.Activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
@@ -19,7 +18,6 @@ import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.circularview.CircularView;
 
@@ -46,7 +44,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private IconPickerCategoryFragment iconPickerCategoryFragment;
 
     //Selected color
-    private String selectedColor;
+    private int selectedColor;
 
     //Selected icon
     private int selectedIcon;
@@ -94,11 +92,11 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
     private void initCategoryCircularView(){
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
-        categoryCircularView.setCircleColor(Color.parseColor(category.getColor()));
+        categoryCircularView.setCircleColor(category.getColor());
 
         categoryCircularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
-                CategoryUtil.getIconResourceId(category.getIcon()), getTheme()));
-        categoryCircularView.setIconColor(Color.parseColor("#FFFFFF"));
+                category.getIcon(), getTheme()));
+        categoryCircularView.setIconColor(R.color.white);
     }
 
     /**
@@ -142,7 +140,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     private void updateCategoryColor(){
-        categoryCircularView.setCircleColor(Color.parseColor(selectedColor));
+        categoryCircularView.setCircleColor(selectedColor);
         iconPickerCategoryFragment.updateColor(selectedColor);
     }
 
@@ -187,7 +185,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onColorCategoryClick(String color){
+    public void onColorCategoryClick(int color){
         Log.d("CATEGORY_INFO", "click on color : "+color);
         selectedColor = color;
         updateCategoryColor();

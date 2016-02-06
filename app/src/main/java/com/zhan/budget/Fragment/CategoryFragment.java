@@ -279,7 +279,7 @@ public class CategoryFragment extends Fragment {
                         Category c = myRealm.createObject(Category.class);
                         c.setId(Util.generateUUID());
                         c.setName(input.getText().toString());
-                        c.setColor("#000000");
+                        c.setColor(R.color.white);
                         c.setIcon(6);
                         c.setBudget(100.0f);
                         c.setCost(0);

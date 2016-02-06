@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -205,7 +207,7 @@ public class CircularView extends View {
     public void setCircleRadius(int circleRadius) {
         this.circleRadius = circleRadius;
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getCircleColor() {
@@ -213,9 +215,11 @@ public class CircularView extends View {
     }
 
     public void setCircleColor( int circleColor) {
-        this.circleColor = circleColor;
+        //this.circleColor = circleColor;
+        this.circleColor = ContextCompat.getColor(getContext(), circleColor);
+
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getStrokeWidth() {
@@ -225,7 +229,7 @@ public class CircularView extends View {
     public void setStrokeWidth(int strokeWidth) {
         this.strokeWidth = dpToPx(strokeWidth);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getStrokeColor() {
@@ -233,9 +237,10 @@ public class CircularView extends View {
     }
 
     public void setStrokeColor(int strokeColor) {
-        this.strokeColor = strokeColor;
+        //this.strokeColor = strokeColor;
+        this.strokeColor = ContextCompat.getColor(getContext(), strokeColor);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getStrokePadding() {
@@ -245,7 +250,7 @@ public class CircularView extends View {
     public void setStrokePadding(int strokePadding) {
         this.strokePadding = dpToPx(strokePadding);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getIconColor() {
@@ -253,9 +258,10 @@ public class CircularView extends View {
     }
 
     public void setIconColor(int iconColor) {
-        this.iconColor = iconColor;
+        //this.iconColor = iconColor;
+        this.iconColor = ContextCompat.getColor(getContext(), iconColor);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public Drawable getIconDrawable() {
@@ -265,7 +271,7 @@ public class CircularView extends View {
     public void setIconDrawable(Drawable iconDrawable) {
         this.iconDrawable = iconDrawable;
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getIconTopPadding() {
@@ -275,7 +281,7 @@ public class CircularView extends View {
     public void setIconTopPadding(int iconTopPadding) {
         this.iconTopPadding = dpToPx(iconTopPadding);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getIconBottomPadding() {
@@ -285,7 +291,7 @@ public class CircularView extends View {
     public void setIconBottomPadding(int iconBottomPadding) {
         this.iconBottomPadding = dpToPx(iconBottomPadding);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getIconLeftPadding() {
@@ -295,7 +301,7 @@ public class CircularView extends View {
     public void setIconLeftPadding(int iconLeftPadding) {
         this.iconLeftPadding = dpToPx(iconLeftPadding);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     public int getIconRightPadding() {
@@ -305,7 +311,7 @@ public class CircularView extends View {
     public void setIconRightPadding(int iconRightPadding) {
         this.iconRightPadding = dpToPx(iconRightPadding);
         invalidate();
-        requestLayout();
+        //requestLayout();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

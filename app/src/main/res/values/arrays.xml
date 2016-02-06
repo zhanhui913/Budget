@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer-array name="category_colors">
+        <!-- Row 1 -->
+        <item>@color/light_cyan</item>
+        <item>@color/gossip</item>
+        <item>@color/jordy_blue</item>
+        <item>@color/light_wisteria</item>
+        <item>@color/hanada</item>
+
+        <!-- Row 2 -->
         <item>@color/turquoise</item>
         <item>@color/emerald</item>
         <item>@color/peter_river</item>
         <item>@color/amethyst</item>
         <item>@color/wet_asphalt</item>
+
+        <!-- Row 3 -->
         <item>@color/green_sea</item>
         <item>@color/nephritis</item>
         <item>@color/belize_hole</item>
         <item>@color/wisteria</item>
         <item>@color/midnight_blue</item>
+
+        <!-- Row 4 -->
+        <item>@color/cream_can</item>
+        <item>@color/orange</item>
+        <item>@color/pink</item>
+        <item>@color/clouds</item>
+        <item>@color/concrete</item>
+
+        <!-- Row 5 -->
         <item>@color/sunflower</item>
         <item>@color/carrot</item>
         <item>@color/alizarin</item>
-        <item>@color/clouds</item>
-        <item>@color/concrete</item>
-        <item>@color/orange</item>
+        <item>@color/silver</item>
+        <item>@color/harbor_rat</item>
+
+        <!-- Row 6 -->
+        <item>@color/lemon</item>
         <item>@color/pumpkin</item>
         <item>@color/pomegranate</item>
-        <item>@color/silver</item>
         <item>@color/asbestos</item>
+        <item>@color/black</item>
     </integer-array>
 
     <string-array name="category_icons">

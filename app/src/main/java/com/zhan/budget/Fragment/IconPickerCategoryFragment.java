@@ -31,7 +31,7 @@ public class IconPickerCategoryFragment extends Fragment {
     private GridView iconCategoryGridView;
     private IconCategoryGridAdapter iconCategoryGridAdapter;
 
-    private String selectedColor = "";
+    private int selectedColor;
 
     public IconPickerCategoryFragment() {
         // Required empty public constructor
@@ -64,7 +64,7 @@ public class IconPickerCategoryFragment extends Fragment {
 
     }
 
-    public void updateColor(String color){
+    public void updateColor(int color){
         Log.d("ICON_PICKER_CATEGORY", "updating color to "+color);
         selectedColor = color;
 

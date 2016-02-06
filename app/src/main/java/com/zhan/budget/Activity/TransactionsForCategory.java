@@ -19,7 +19,6 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.circularview.CircularView;
 
@@ -94,7 +93,7 @@ public class TransactionsForCategory extends AppCompatActivity {
         endMonth = Util.getPreviousDate(Util.getNextMonth(currentMonth));
 
         transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
-                CategoryUtil.getIconResourceId(selectedCategory.getIcon()), getTheme()));
+                selectedCategory.getIcon(), getTheme()));
 
         transactionCategoryName.setText(selectedCategory.getName());
 

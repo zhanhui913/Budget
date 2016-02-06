@@ -114,7 +114,7 @@ public class TransactionIncomeFragment extends Fragment {
                         //Set first category as selected by default
                         ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(0);
                         CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
-                        cv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                        cv.setStrokeColor(R.color.darkgray);
 
                         // unregister listener (this is important)
                         categoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -129,10 +129,10 @@ public class TransactionIncomeFragment extends Fragment {
                 for (int i = 0; i < parent.getChildCount(); i++) {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+                    ccv.setStrokeColor(R.color.transparent);
 
                     if (i == position) {
-                        ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                        ccv.setStrokeColor(R.color.darkgray);
                     }
                 }
 

@@ -19,20 +19,20 @@ import java.util.List;
 public class IconCategoryGridAdapter extends ArrayAdapter<Integer> {
     private Context context;
     private List<Integer> iconList;
-    private String color;
+    private int color;
 
     static class ViewHolder {
         public CircularView circularView;
     }
 
-    public IconCategoryGridAdapter(Context context, List<Integer> iconList, String color) {
+    public IconCategoryGridAdapter(Context context, List<Integer> iconList, int color) {
         super(context, R.layout.item_category_grid, iconList);
         this.context = context;
         this.iconList = iconList;
         this.color = color;
     }
 
-    public void updateColor(String color){
+    public void updateColor(int color){
         this.color = color;
         notifyDataSetChanged();
     }
@@ -54,7 +54,7 @@ public class IconCategoryGridAdapter extends ArrayAdapter<Integer> {
         }
 
         //get drawable data
-        viewHolder.circularView.setCircleColor(Color.parseColor(this.color));
+        viewHolder.circularView.setCircleColor(this.color);
         viewHolder.circularView.setIconDrawable(
                 ResourcesCompat.getDrawable(
                         this.context.getResources(),
