@@ -67,7 +67,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         Category category = categoryList.get(position);
 
         //Icon
-        viewHolder.circularView.setCircleColor(Color.parseColor(category.getColor()));
+        viewHolder.circularView.setCircleColor(category.getColor());
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), CategoryUtil.getIconResourceId(category.getIcon()), activity.getTheme()));
 
         viewHolder.name.setText(category.getName());

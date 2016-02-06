@@ -46,7 +46,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private IconPickerCategoryFragment iconPickerCategoryFragment;
 
     //Selected color
-    private String selectedColor;
+    private int selectedColor;
 
     //Selected icon
     private int selectedIcon;
@@ -94,11 +94,11 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
     private void initCategoryCircularView(){
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
-        categoryCircularView.setCircleColor(Color.parseColor(category.getColor()));
+        categoryCircularView.setCircleColor(category.getColor());
 
         categoryCircularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
                 CategoryUtil.getIconResourceId(category.getIcon()), getTheme()));
-        categoryCircularView.setIconColor(Color.parseColor("#FFFFFF"));
+        categoryCircularView.setIconColor(R.color.white);
     }
 
     /**
@@ -142,7 +142,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     private void updateCategoryColor(){
-        categoryCircularView.setCircleColor(Color.parseColor(selectedColor));
+        categoryCircularView.setCircleColor(selectedColor);
         iconPickerCategoryFragment.updateColor(selectedColor);
     }
 
@@ -187,7 +187,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onColorCategoryClick(String color){
+    public void onColorCategoryClick(int color){
         Log.d("CATEGORY_INFO", "click on color : "+color);
         selectedColor = color;
         updateCategoryColor();

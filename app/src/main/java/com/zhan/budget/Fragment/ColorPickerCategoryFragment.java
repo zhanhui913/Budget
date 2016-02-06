@@ -72,14 +72,14 @@ public class ColorPickerCategoryFragment extends Fragment {
                 for (int i = 0; i < parent.getChildCount(); i++) {
                     View childView = parent.getChildAt(i);
                     CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+                    ccv.setStrokeColor(R.color.transparent);
 
                     if (i == position) {
-                        ccv.setStrokeColor(ContextCompat.getColor(getActivity(), R.color.darkgray));
+                        ccv.setStrokeColor(R.color.darkgray);
                     }
                 }
 
-                mListener.onColorCategoryClick(String.format("#%06X", 0xFFFFFF & colorList.get(position)));
+                mListener.onColorCategoryClick(colorList.get(position));
             }
         });
     }
@@ -112,6 +112,6 @@ public class ColorPickerCategoryFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnColorPickerCategoryFragmentInteractionListener {
-        void onColorCategoryClick(String color);
+        void onColorCategoryClick(int color);
     }
 }
