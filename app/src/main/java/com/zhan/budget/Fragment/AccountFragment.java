@@ -90,7 +90,6 @@ public class AccountFragment extends Fragment implements
 
         accountList = new ArrayList<>();
 
-        //accountListView = (SwipeMenuListView) view.findViewById(R.id.accountListView);
         accountListView = (ListView) view.findViewById(R.id.accountListView);
         accountListAdapter = new AccountListAdapter(this, accountList);
         accountListView.setAdapter(accountListAdapter);

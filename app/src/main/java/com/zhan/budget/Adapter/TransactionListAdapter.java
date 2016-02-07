@@ -44,7 +44,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         this.activity = fragment.getActivity();
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnTransactionAdapterInteractionListener) {
             mListener = (OnTransactionAdapterInteractionListener) fragment;
         } else {
@@ -57,7 +57,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         this.activity = activity;
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if(activity instanceof  OnTransactionAdapterInteractionListener){
             mListener = (OnTransactionAdapterInteractionListener) activity;
         }else {

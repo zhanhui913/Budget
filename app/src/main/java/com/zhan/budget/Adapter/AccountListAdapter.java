@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Model.Account;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 
 import java.util.List;
@@ -34,17 +35,28 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         public ImageView editBtn;
     }
 
+    public AccountListAdapter(Activity activity, List<Account> accountList){
+        super(activity, R.layout.item_account, accountList);
+        this.activity = activity;
+        this.accountList = accountList;
+
+        //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
+        if(activity instanceof OnAccountAdapterInteractionListener){
+            mListener = (OnAccountAdapterInteractionListener) activity;
+        }else {
+            throw new RuntimeException(activity.toString() + " must implement OnAccountAdapterInteractionListener.");
+        }
+    }
+
     public AccountListAdapter(Fragment fragment,  List<Account> accountList) {
-        super(fragment.getActivity(), R.layout.item_category, accountList);
+        super(fragment.getActivity(), R.layout.item_account, accountList);
         this.activity = fragment.getActivity();
         this.accountList = accountList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if (fragment instanceof OnAccountAdapterInteractionListener) {
             mListener = (OnAccountAdapterInteractionListener) fragment;
-        } else if(activity instanceof  OnAccountAdapterInteractionListener){
-            mListener = (OnAccountAdapterInteractionListener) activity;
-        }else {
+        } else {
             throw new RuntimeException(activity.toString() + " must implement OnAccountAdapterInteractionListener.");
         }
     }

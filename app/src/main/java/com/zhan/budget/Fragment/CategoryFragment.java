@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,15 +51,8 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CategoryFragment.OnCategoryInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CategoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment implements
+        CategoryListAdapter.OnCategoryAdapterInteractionListener{
 
     private OnCategoryInteractionListener mListener;
     private View view;
@@ -67,7 +61,7 @@ public class CategoryFragment extends Fragment {
     private PlusView header;
     private ViewGroup emptyLayout;
 
-    private SwipeMenuListView categoryListView;
+    private ListView categoryListView;
     private CategoryListAdapter categoryAdapter;
     private TextView emptyCategoryText;
 
@@ -117,14 +111,14 @@ public class CategoryFragment extends Fragment {
 
         currentMonth = new Date();
 
-        categoryListView = (SwipeMenuListView) view.findViewById(R.id.categoryListView);
+        categoryListView = (ListView) view.findViewById(R.id.categoryListView);
         emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
         emptyCategoryText.setText("Pull down to add a category");
 
         transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
-        categoryAdapter = new CategoryListAdapter(getActivity(), categoryList);
+        categoryAdapter = new CategoryListAdapter(this, categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
@@ -189,6 +183,7 @@ public class CategoryFragment extends Fragment {
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
                 //ParcelableCategory parcelableCategory = new ParcelableCategory();
                 //parcelableCategory.convertCategoryToParcelable(categoryList.get(position));
 
@@ -376,7 +371,7 @@ public class CategoryFragment extends Fragment {
      */
     private void createSwipeMenu() {
         // step 1. create a MenuCreator
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
+        /*SwipeMenuCreator creator = new SwipeMenuCreator() {
 
             @Override
             public void create(SwipeMenu menu) {
@@ -412,11 +407,10 @@ public class CategoryFragment extends Fragment {
                         break;
                     case 1:
                         //delete
-                        /*
-                        categoryList.get(position).removeFromRealm();
+                        //categoryList.get(position).removeFromRealm();
 
-                        categoryAdapter.remove(categoryList.get(position));
-                        categoryList.remove(position);*/
+                        //categoryAdapter.remove(categoryList.get(position));
+                        //categoryList.remove(position);
                         Toast.makeText(getContext(), "Deleting "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -442,7 +436,7 @@ public class CategoryFragment extends Fragment {
                 Log.d("CATEGORY_FRAGMENT", "swiping... done");
                 frame.setPtrHandler(enablePullDown);
             }
-        });
+        });*/
     }
 
     PtrHandler enablePullDown = new PtrHandler() {
@@ -594,5 +588,40 @@ public class CategoryFragment extends Fragment {
         void nextMonth();
 
         void previousMonth();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onDeleteCategory(int position){
+        /*myRealm.beginTransaction();
+        resultsAccount.remove(position);
+        myRealm.commitTransaction();
+
+        accountListAdapter.clear();
+        accountListAdapter.addAll(accountList);*/
+
+        Toast.makeText(getContext(), "deleting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onEditCategory(int position){
+        Toast.makeText(getContext(), "editting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+        editCategory(position);
+    }
+
+    @Override
+    public void onDisablePtrPullDown(boolean value){
+        if(value){ //disable
+            frame.setPtrHandler(disablePullDown);
+        }else{ //enable
+            frame.setPtrHandler(enablePullDown);
+        }
     }
 }

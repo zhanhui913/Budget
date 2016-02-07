@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,7 +73,7 @@ public class CalendarFragment extends Fragment implements
 
     private TextView  totalCostForDay, dateTextView;
 
-    private SwipeMenuListView transactionListView;
+    private ListView transactionListView;
     private TransactionListAdapter transactionAdapter;
     private List<Transaction> transactionList;
 
@@ -143,7 +144,7 @@ public class CalendarFragment extends Fragment implements
         totalCostForDay = (TextView) view.findViewById(R.id.totalCostForDay);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
-        transactionListView = (SwipeMenuListView) view.findViewById(R.id.transactionListView);
+        transactionListView = (ListView) view.findViewById(R.id.transactionListView);
         transactionList = new ArrayList<>();
         transactionAdapter = new TransactionListAdapter(this, transactionList);
         transactionListView.setAdapter(transactionAdapter);
@@ -402,6 +403,7 @@ public class CalendarFragment extends Fragment implements
      * From 3rd party library.
      */
     private void createSwipeMenu(){
+        /*
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -468,6 +470,7 @@ public class CalendarFragment extends Fragment implements
                 transactionListView.smoothCloseMenu();
             }
         });
+        */
     }
 
     private void updateTransactionStatus(){
