@@ -7,11 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.IconCategoryGridAdapter;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -32,9 +35,15 @@ public class IconPickerCategoryFragment extends Fragment {
     private IconCategoryGridAdapter iconCategoryGridAdapter;
 
     private int selectedColor;
+    private int selectedCategoryIcon;
 
     public IconPickerCategoryFragment() {
         // Required empty public constructor
+    }
+
+    public void setSelectedCategoryIcon(int selectedCategoryIcon){
+        this.selectedCategoryIcon = selectedCategoryIcon;
+        Log.d("ICON_FRAGMENT", "1) selected icon is "+selectedCategoryIcon);
     }
 
     @Override
@@ -50,6 +59,8 @@ public class IconPickerCategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
+        listenToIconGridView();
+        addListeners();
     }
 
     private void init(){
@@ -60,8 +71,47 @@ public class IconPickerCategoryFragment extends Fragment {
         Log.d("ICON_PICKER_CATEGORY", "init");
     }
 
-    private void addListeners(){
+    private void listenToIconGridView(){
+        iconCategoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
 
+                    @Override
+                    public void onGlobalLayout() {
+                        int k=0;
+                        for(int i = 0; i < iconList.size(); i++){
+                            if(iconList.get(i) == selectedCategoryIcon){
+                                Log.d("COLOR_FRAGMENT", "found icon at index:"+i);
+                                k = i;
+                            }
+                        }
+
+                        ViewGroup gridChild = (ViewGroup) iconCategoryGridView.getChildAt(k);
+                        CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
+                        cv.setStrokeColor(R.color.darkgray);
+
+                        // unregister listener (this is important)
+                        iconCategoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+    }
+
+    private void addListeners(){
+        iconCategoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                for (int i = 0; i < parent.getChildCount(); i++) {
+                    View childView = parent.getChildAt(i);
+                    CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
+                    ccv.setStrokeColor(R.color.transparent);
+
+                    if (i == position) {
+                        ccv.setStrokeColor(R.color.darkgray);
+                    }
+                }
+
+                mListener.onIconCategoryClick(iconList.get(position));
+            }
+        });
     }
 
     public void updateColor(int color){
@@ -103,6 +153,6 @@ public class IconPickerCategoryFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnIconPickerCategoryFragmentInteractionListener {
-        void onIconCategoryClick(String icon);
+        void onIconCategoryClick(int icon);
     }
 }

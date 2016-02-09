@@ -88,6 +88,8 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryBudget.setText("$" + category.getBudget());
         categoryCost.setText("$" + category.getCost());
         */
+
+        colorPickerCategoryFragment.setSelectedCategoryColor(category.getColor());
     }
 
     private void initCategoryCircularView(){
@@ -192,7 +194,10 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onIconCategoryClick(String icon){
+    public void onIconCategoryClick(int icon){
         Log.d("CATEGORY_INFO", "click on icon : "+icon);
+        selectedIcon = icon;
+        categoryCircularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
+                icon, getTheme()));
     }
 }

@@ -76,8 +76,14 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     private Realm myRealm;
 
-
     private BudgetType currentPage; //Determines if the current page is in expense or income page
+
+    private ArrayAdapter<String> accountAdapter;
+    private List<String> accountList;
+    private RealmResults<Account> resultsAccount;
+    private View accountDialogView;
+    private AlertDialog.Builder accountAlertDialogBuilder;
+    private AlertDialog accountDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,13 +285,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }
         });
     }
-
-    private ArrayAdapter<String> accountAdapter;
-    private List<String> accountList;
-    private RealmResults<Account> resultsAccount;
-    private View accountDialogView;
-    private AlertDialog.Builder accountAlertDialogBuilder;
-    private AlertDialog accountDialog;
 
     private void createAccountDialog(){
         // get prompts.xml view

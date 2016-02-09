@@ -3,9 +3,11 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -31,8 +33,15 @@ public class ColorPickerCategoryFragment extends Fragment {
     private GridView colorCategoryGridView;
     private ColorCategoryGridAdapter colorCategoryGridAdapter;
 
+    private int selectedCategoryColor;
+
     public ColorPickerCategoryFragment() {
         // Required empty public constructor
+    }
+
+    public void setSelectedCategoryColor(int selectedCategoryColor){
+        this.selectedCategoryColor = selectedCategoryColor;
+        Log.d("COLOR_FRAGMENT", "1) selected color is "+selectedCategoryColor);
     }
 
     @Override
@@ -48,6 +57,7 @@ public class ColorPickerCategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
+        listenToColorGridView();
         addListeners();
     }
 
@@ -57,6 +67,30 @@ public class ColorPickerCategoryFragment extends Fragment {
         colorCategoryGridView = (GridView) view.findViewById(R.id.colorGrid);
         colorCategoryGridAdapter = new ColorCategoryGridAdapter(getContext(), colorList);
         colorCategoryGridView.setAdapter(colorCategoryGridAdapter);
+    }
+
+    private void listenToColorGridView(){
+        colorCategoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+
+                    @Override
+                    public void onGlobalLayout() {
+                        int k = 0;
+                        for (int i = 0; i < colorList.size(); i++) {
+                            if (colorList.get(i) == selectedCategoryColor) {
+                                Log.d("COLOR_FRAGMENT", "found color at index:" + i);
+                                k = i;
+                            }
+                        }
+
+                        ViewGroup gridChild = (ViewGroup) colorCategoryGridView.getChildAt(k);
+                        CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
+                        cv.setStrokeColor(R.color.darkgray);
+
+                        // unregister listener (this is important)
+                        colorCategoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
     }
 
     private void addListeners(){
