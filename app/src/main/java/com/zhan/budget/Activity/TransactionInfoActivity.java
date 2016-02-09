@@ -53,7 +53,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private boolean isEditMode = false;
     private Activity instance;
     private Toolbar toolbar;
-    private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0,buttonX;
+    private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0;
+    private ImageButton buttonX;
     private ImageView addNoteBtn;
     private ImageButton addAccountBtn;
     private TextView transactionCostView;
@@ -115,7 +116,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         button8 = (Button)findViewById(R.id.number8);
         button9 = (Button)findViewById(R.id.number9);
         button0 = (Button)findViewById(R.id.number0);
-        buttonX = (Button)findViewById(R.id.numberX);
+        buttonX = (ImageButton)findViewById(R.id.numberX);
 
         addNoteBtn = (ImageView)findViewById(R.id.addNoteBtn);
         addAccountBtn = (ImageButton)findViewById(R.id.addAccountBtn);
@@ -400,9 +401,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         priceString += digit;
         StringBuilder cashAmountBuilder = new StringBuilder(priceString);
 
-        while (cashAmountBuilder.length() > 3 && cashAmountBuilder.charAt(0) == '0') {
-            cashAmountBuilder.deleteCharAt(0);
-        }
         while (cashAmountBuilder.length() < 3) {
             cashAmountBuilder.insert(0, '0');
         }
