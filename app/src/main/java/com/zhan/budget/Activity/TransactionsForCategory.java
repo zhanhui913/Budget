@@ -41,7 +41,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
     private Date beginMonth;
     private Date endMonth;
     private Realm myRealm;
-    //private ParcelableCategory selectedParcelableCategory;
     private Category selectedCategory;
 
     private ImageView transactionCategoryIcon;
@@ -61,7 +60,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
 
         //Get intents from caller activity
         currentMonth = Util.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH));
-        //selectedParcelableCategory = (getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY);
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
 
         init();
@@ -87,7 +85,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
         }
 
         transactionCategoryList = new ArrayList<>();
-        transactionCategoryAdapter = new TransactionListAdapter(this, transactionCategoryList);
+        transactionCategoryAdapter = new TransactionListAdapter(this, transactionCategoryList, true); //display date in each transaction item
         transactionCategoryListView.setAdapter(transactionCategoryAdapter);
 
         beginMonth = Util.refreshMonth(currentMonth);
@@ -102,7 +100,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
 
         emptyStateContainer = (ViewGroup) findViewById(R.id.emptyStateContainer);
 
-        Log.d("ZHAN", "selected parcelable category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
+        Log.d("ZHAN", "selected category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
         getAllTransactionsWithCategoryForMonth();
     }

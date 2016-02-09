@@ -146,7 +146,7 @@ public class CalendarFragment extends Fragment implements
 
         transactionListView = (ListView) view.findViewById(R.id.transactionListView);
         transactionList = new ArrayList<>();
-        transactionAdapter = new TransactionListAdapter(this, transactionList);
+        transactionAdapter = new TransactionListAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
         dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));

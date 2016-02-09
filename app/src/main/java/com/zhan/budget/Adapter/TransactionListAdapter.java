@@ -28,21 +28,24 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     private Activity activity;
     private List<Transaction> transactionList;
     private OnTransactionAdapterInteractionListener mListener;
+    private boolean showDate;
 
     static class ViewHolder {
         public CircularView circularView;
         public TextView name;
         public TextView cost;
+        public TextView date;
 
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn;
         public ImageView approveBtn;
     }
 
-    public TransactionListAdapter(Fragment fragment, List<Transaction> transactionList) {
+    public TransactionListAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         super(fragment.getActivity(), R.layout.item_category, transactionList);
         this.activity = fragment.getActivity();
         this.transactionList = transactionList;
+        this.showDate = showDate;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnTransactionAdapterInteractionListener) {
@@ -52,10 +55,11 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         }
     }
 
-    public TransactionListAdapter(Activity activity, List<Transaction> transactionList){
+    public TransactionListAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
         super(activity, R.layout.item_category, transactionList);
         this.activity = activity;
         this.transactionList = transactionList;
+        this.showDate = showDate;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if(activity instanceof  OnTransactionAdapterInteractionListener){
@@ -85,6 +89,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.transactionNote);
             viewHolder.cost = (TextView) convertView.findViewById(R.id.transactionCost);
+            viewHolder.date = (TextView) convertView.findViewById(R.id.transactionDate);
 
             viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipeTransaction);
             viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
@@ -148,7 +153,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         // getting transaction data for the row
         Transaction transaction = transactionList.get(position);
 
-        //Icon
+        //If transaction is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidth(0); //in dp
             viewHolder.circularView.setStrokeColor(R.color.transparent);
@@ -159,7 +164,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
-        }else{
+        }else{ //If transaction is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidth(2); //in dp
             viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
             viewHolder.circularView.setCircleColor(R.color.transparent);
@@ -174,6 +179,13 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.name.setText(transaction.getNote());
         }else{
             viewHolder.name.setText(transaction.getCategory().getName());
+        }
+
+        if(this.showDate){
+            viewHolder.date.setVisibility(View.VISIBLE);
+            viewHolder.date.setText(Util.convertDateToStringFormat1(transaction.getDate()));
+        }else{
+            viewHolder.date.setVisibility(View.INVISIBLE);
         }
 
         viewHolder.cost.setText(Util.setPriceToCorrectDecimalInString(transaction.getPrice()));

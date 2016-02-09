@@ -22,7 +22,7 @@ public class CircularView extends View {
 
     //Default values
     private final static int DEFAULT_BG_RADIUS = 50; //pixels
-    private final static int DEFAULT_BG_COLOR = R.color.white;
+    private final static int DEFAULT_BG_COLOR = R.color.black;
     private final static int DEFAULT_STROKE_WIDTH = 0; //pixels
     private final static int DEFAULT_STROKE_COLOR = R.color.black;
     private final static int DEFAULT_STROKE_PADDING = 0; //pixels
