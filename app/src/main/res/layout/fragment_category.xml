@@ -21,7 +21,8 @@
                 android:divider="@color/gray"
                 android:dividerHeight="1dp"
                 android:visibility="visible"
-                android:background="@color/white"/>
+                android:background="@color/white"
+                android:drawSelectorOnTop="true"/>
 
             <include layout="@layout/empty_transaction_indicator"
                 android:id="@+id/emptyCategoryLayout"

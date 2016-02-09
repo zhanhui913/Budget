@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.zhan.budget.Model.CategoryColor;
 import com.zhan.budget.R;
 import com.zhan.circularview.CircularView;
 
@@ -14,15 +15,15 @@ import java.util.List;
 /**
  * Created by zhanyap on 2016-02-04.
  */
-public class ColorCategoryGridAdapter extends ArrayAdapter<Integer> {
+public class ColorCategoryGridAdapter extends ArrayAdapter<CategoryColor> {
     private Context context;
-    private List<Integer> colorList;
+    private List<CategoryColor> colorList;
 
     static class ViewHolder {
         public CircularView circularView;
     }
 
-    public ColorCategoryGridAdapter(Context context, List<Integer> colorList) {
+    public ColorCategoryGridAdapter(Context context, List<CategoryColor> colorList) {
         super(context, R.layout.item_category_grid, colorList);
         this.context = context;
         this.colorList = colorList;
@@ -45,7 +46,13 @@ public class ColorCategoryGridAdapter extends ArrayAdapter<Integer> {
         }
 
         //get color data
-        viewHolder.circularView.setCircleColor(colorList.get(position));
+        viewHolder.circularView.setCircleColor(colorList.get(position).getColor());
+
+        if(colorList.get(position).isSelected()){
+            viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+        }else{
+            viewHolder.circularView.setStrokeColor(R.color.transparent);
+        }
 
         return convertView;
     }

@@ -7,14 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.ColorCategoryGridAdapter;
+import com.zhan.budget.Model.CategoryColor;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -29,11 +28,12 @@ public class ColorPickerCategoryFragment extends Fragment {
     private OnColorPickerCategoryFragmentInteractionListener mListener;
     private View view;
 
-    private List<Integer> colorList;
     private GridView colorCategoryGridView;
     private ColorCategoryGridAdapter colorCategoryGridAdapter;
 
     private int selectedCategoryColor;
+
+    private List<CategoryColor> categoryColorList;
 
     public ColorPickerCategoryFragment() {
         // Required empty public constructor
@@ -57,57 +57,35 @@ public class ColorPickerCategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
-        listenToColorGridView();
         addListeners();
     }
 
     private void init(){
-        colorList = CategoryUtil.getListOfColors(getContext());
+        categoryColorList = CategoryUtil.getListOfCategoryColors(getContext());
+
+        for(int i = 0; i < categoryColorList.size(); i++){
+            if(categoryColorList.get(i).getColor() == selectedCategoryColor){
+                categoryColorList.get(i).setIsSelected(true);
+            }
+        }
 
         colorCategoryGridView = (GridView) view.findViewById(R.id.colorGrid);
-        colorCategoryGridAdapter = new ColorCategoryGridAdapter(getContext(), colorList);
+        colorCategoryGridAdapter = new ColorCategoryGridAdapter(getContext(), categoryColorList);
         colorCategoryGridView.setAdapter(colorCategoryGridAdapter);
-    }
-
-    private void listenToColorGridView(){
-        colorCategoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-
-                    @Override
-                    public void onGlobalLayout() {
-                        int k = 0;
-                        for (int i = 0; i < colorList.size(); i++) {
-                            if (colorList.get(i) == selectedCategoryColor) {
-                                Log.d("COLOR_FRAGMENT", "found color at index:" + i);
-                                k = i;
-                            }
-                        }
-
-                        ViewGroup gridChild = (ViewGroup) colorCategoryGridView.getChildAt(k);
-                        CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
-                        cv.setStrokeColor(R.color.darkgray);
-
-                        // unregister listener (this is important)
-                        colorCategoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                });
     }
 
     private void addListeners(){
         colorCategoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for (int i = 0; i < parent.getChildCount(); i++) {
-                    View childView = parent.getChildAt(i);
-                    CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(R.color.transparent);
-
-                    if (i == position) {
-                        ccv.setStrokeColor(R.color.darkgray);
-                    }
+                for(int i = 0; i < categoryColorList.size(); i++){
+                    categoryColorList.get(i).setIsSelected(false);
                 }
 
-                mListener.onColorCategoryClick(colorList.get(position));
+                categoryColorList.get(position).setIsSelected(true);
+                colorCategoryGridAdapter.notifyDataSetChanged();
+
+                mListener.onColorCategoryClick(categoryColorList.get(position).getColor());
             }
         });
     }

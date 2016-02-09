@@ -17,11 +17,8 @@ import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
-import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
-import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.circularview.CircularView;
 
