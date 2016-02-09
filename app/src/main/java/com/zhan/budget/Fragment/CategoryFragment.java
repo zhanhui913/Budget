@@ -89,8 +89,7 @@ public class CategoryFragment extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_category, container, false);
         return view;
@@ -122,7 +121,6 @@ public class CategoryFragment extends Fragment implements
         categoryListView.setAdapter(categoryAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
-
 
         populateCategoryWithNoInfo();
 
@@ -174,46 +172,20 @@ public class CategoryFragment extends Fragment implements
     }
 
     private void addListener(){
-        /*fab.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                displayPrompt();
-            }
-        });*/
-
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-                //ParcelableCategory parcelableCategory = new ParcelableCategory();
-                //parcelableCategory.convertCategoryToParcelable(categoryList.get(position));
 
                 Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
                 viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, Util.convertDateToString(currentMonth));
-                //viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, parcelableCategory);
 
                 Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
 
                 viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
                 startActivity(viewAllTransactionsForCategory);
             }
         });
-
-        /*
-        categoryListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                int topRowVerticalPosition =
-                        (categoryListView == null || categoryListView.getChildCount() == 0) ?
-                                0 : categoryListView.getChildAt(0).getTop();
-                swipeContainer.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-            }
-        });*/
     }
 
     private void updateCategoryStatus(){
@@ -514,12 +486,6 @@ public class CategoryFragment extends Fragment implements
     }
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
-  /*      Calendar cal = Calendar.getInstance();
-        cal.setTime(currentMonth);
-        cal.add(Calendar.MONTH, direction);
-
-        currentMonth = cal.getTime();
-*/
         currentMonth = Util.getMonthWithDirection(currentMonth, direction);
 
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
@@ -606,7 +572,6 @@ public class CategoryFragment extends Fragment implements
         accountListAdapter.addAll(accountList);*/
 
         Toast.makeText(getContext(), "deleting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
     }
 
     @Override

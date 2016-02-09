@@ -166,7 +166,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.colorPrimary));
         }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.green));
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.sunflower));
         }else{ //If exceeded budget
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.red));
         }
