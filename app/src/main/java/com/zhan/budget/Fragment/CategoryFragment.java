@@ -459,17 +459,26 @@ public class CategoryFragment extends Fragment implements
 
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                Category category = data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY);
+                final Category category = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
+
 
                 Log.d("ZHAN", "category name is "+category.getName());
+                Log.d("ZHAN", "category color is "+category.getColor());
+                Log.d("ZHAN", "category icon is "+category.getIcon());
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                //db.updateCategory(category);
+                Log.i("ZHAN", "eddited index :"+categoryIndexEditted);
+
+
+
 
                 updateCategoryStatus();
 
                 categoryList.set(categoryIndexEditted, category);
-                categoryAdapter.notifyDataSetChanged();
+
+                categoryAdapter.clear();
+                categoryAdapter.addAll(categoryList);
+                //categoryAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -577,7 +586,7 @@ public class CategoryFragment extends Fragment implements
     @Override
     public void onEditCategory(int position){
         Toast.makeText(getContext(), "editting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
+        categoryIndexEditted = position;
         editCategory(position);
     }
 

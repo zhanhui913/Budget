@@ -38,6 +38,7 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="ZHAN" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="DEBUG" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
@@ -61,7 +62,57 @@
     <favorites_list name="Budget" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="CategoryFragment.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-9.925926">
+              <caret line="471" column="0" selection-start-line="471" selection-start-column="0" selection-end-line="471" selection-end-column="0" />
+              <folding>
+                <element signature="method#onCreate#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onCreateView#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onActivityCreated#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#init#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#createPullDownToAddCategory#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="class#4575:5508" expanded="false" />
+                <element signature="method#addListener#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#updateCategoryStatus#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#addNewCategory#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#populateCategoryWithNoInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#populateCategoryWithInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#aggregateCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="docComment;method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="class#15327:15922" expanded="false" />
+                <element signature="class#15962:16222" expanded="false" />
+                <element signature="method#editCategory#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#resetCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onCreateOptionsMenu#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
+                <element signature="e#20424#20520#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CategoryInfoActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/CategoryInfoActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.6606852">
+              <caret line="65" column="90" selection-start-line="65" selection-start-column="90" selection-end-line="65" selection-end-column="90" />
+              <folding>
+                <element signature="e#4579#4751#0" expanded="true" />
+                <element signature="e#4750#4751#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -3985,9 +4036,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionsForCategory.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/ColorPickerCategoryFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/IconPickerCategoryFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/CategoryListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/CategoryInfoActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/CategoryListAdapter.java" />
       </list>
     </option>
   </component>
@@ -3995,9 +4046,9 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="245" />
+    <option name="x" value="640" />
     <option name="y" value="23" />
-    <option name="width" value="1666" />
+    <option name="width" value="1271" />
     <option name="height" value="1173" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -4076,28 +4127,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="budget" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="budget" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Fragment" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -4335,8 +4364,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="245" y="23" width="1666" height="1173" extended-state="0" />
-    <editor active="false" />
+    <frame x="640" y="23" width="1271" height="1173" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -4345,7 +4374,7 @@
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282876" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3680227" sideWeight="0.49581993" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3680227" sideWeight="0.49581993" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -4360,7 +4389,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18965517" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25061026" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282876" sideWeight="0.49722221" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -4427,25 +4456,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Util/CategoryUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33024335">
-          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_icon_picker_category.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/ColorCategoryGridAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -4603,6 +4613,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1216686">
           <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -4625,14 +4636,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.3076923">
-          <caret line="189" column="17" selection-start-line="189" selection-start-column="17" selection-end-line="189" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4716,6 +4719,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="method#populateAccount#0;class#AccountFragment#0" expanded="false" />
+            <element signature="class#3662:4594" expanded="false" />
+            <element signature="class#4640:5234" expanded="false" />
+            <element signature="class#5274:5534" expanded="false" />
+            <element signature="method#addNewAccount#0;class#AccountFragment#0" expanded="false" />
+            <element signature="method#updateAccountStatus#0;class#AccountFragment#0" expanded="false" />
+            <element signature="method#onDestroy#0;class#AccountFragment#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -4734,25 +4747,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2729805">
           <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="148" column="133" selection-start-line="148" selection-start-column="87" selection-end-line="148" selection-end-column="133" />
-          <folding>
-            <element signature="class#5490:6426" expanded="false" />
-            <element signature="method#createCalendar#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#getCustomEventList#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#initEvents#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#getEvents#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#GetTransactionsForThese3Month#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="method#compareDecorators#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="initializer##0;class#11355:11441" expanded="false" />
-            <element signature="method#populateTransactionsForDate#0;class#CalendarFragment#0" expanded="false" />
-            <element signature="class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -4781,27 +4775,6 @@
           <caret line="150" column="9" selection-start-line="150" selection-start-column="9" selection-end-line="150" selection-end-column="9" />
           <folding>
             <element signature="class#4074:5387" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionInfoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5546875">
-          <caret line="83" column="35" selection-start-line="83" selection-start-column="35" selection-end-line="83" selection-end-column="35" />
-          <folding>
-            <element signature="method#init#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#createToolbar#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#addListeners#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="class#8322:9145" expanded="false" />
-            <element signature="method#createAccountDialog#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#createNoteDialog#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#addDigitToTextView#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#removeDigit#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#onBackPressed#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#save#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#onCreateOptionsMenu#0;class#TransactionInfoActivity#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#TransactionInfoActivity#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -4862,14 +4835,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/CategoryInfoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16639479">
-          <caret line="147" column="0" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/ColorPickerCategoryFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.56404734">
@@ -4878,37 +4843,107 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="106" column="25" selection-start-line="106" selection-start-column="23" selection-end-line="106" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.realm/realm-android/0.87.4/b6dbd7580259c289794079722898056ecf1353b1/realm-android-0.87.4-sources.jar!/io/realm/RealmQuery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="1790" column="13" selection-start-line="1790" selection-start-column="13" selection-end-line="1790" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/TransactionInfoActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36875">
+          <caret line="443" column="2" selection-start-line="443" selection-start-column="2" selection-end-line="463" selection-end-column="17" />
+          <folding>
+            <element signature="method#init#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#createToolbar#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#addListeners#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="class#8322:9145" expanded="false" />
+            <element signature="method#createAccountDialog#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#createNoteDialog#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#addDigitToTextView#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#removeDigit#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#onBackPressed#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#onCreateOptionsMenu#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#TransactionInfoActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CalendarFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="541" column="25" selection-start-line="541" selection-start-column="0" selection-end-line="542" selection-end-column="0" />
+          <folding>
+            <element signature="method#init#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#createPullToAddTransaction#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="class#5490:6426" expanded="false" />
+            <element signature="method#createCalendar#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#getCustomEventList#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#initEvents#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#getEvents#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#GetTransactionsForThese3Month#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#compareDecorators#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="initializer##0;class#11355:11441" expanded="false" />
+            <element signature="method#populateTransactionsForDate#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#createSwipeMenu#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#addNewTransaction#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="class#18705:19303" expanded="false" />
+            <element signature="class#19343:19603" expanded="false" />
+            <element signature="class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/CategoryListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.25655976">
-          <caret line="133" column="57" selection-start-line="133" selection-start-column="57" selection-end-line="133" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-23/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.496875">
+          <caret line="310" column="13" selection-start-line="310" selection-start-column="13" selection-end-line="310" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3022352">
-          <caret line="119" column="34" selection-start-line="119" selection-start-column="30" selection-end-line="119" selection-end-column="49" />
+        <state vertical-scroll-proportion="-9.925926">
+          <caret line="471" column="0" selection-start-line="471" selection-start-column="0" selection-end-line="471" selection-end-column="0" />
           <folding>
             <element signature="method#onCreate#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#onCreateView#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#onActivityCreated#0;class#CategoryFragment#0" expanded="false" />
+            <element signature="method#init#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#createPullDownToAddCategory#0;class#CategoryFragment#0" expanded="false" />
             <element signature="class#4575:5508" expanded="false" />
+            <element signature="method#addListener#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#updateCategoryStatus#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#addNewCategory#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#populateCategoryWithNoInfo#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#populateCategoryWithInfo#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#aggregateCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
             <element signature="docComment;method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#createSwipeMenu#0;class#CategoryFragment#0" expanded="false" />
             <element signature="class#15327:15922" expanded="false" />
             <element signature="class#15962:16222" expanded="false" />
             <element signature="method#editCategory#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#onActivityResult#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="method#updateMonthInToolbar#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#resetCategoryInfo#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#onDestroy#0;class#CategoryFragment#0" expanded="false" />
@@ -4916,7 +4951,18 @@
             <element signature="method#onOptionsItemSelected#0;class#CategoryFragment#0" expanded="false" />
             <element signature="docComment;class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
             <element signature="class#OnCategoryInteractionListener#0;class#CategoryFragment#0" expanded="false" />
-            <element signature="e#20132#20228#0" expanded="false" />
+            <element signature="e#20424#20520#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/CategoryInfoActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6606852">
+          <caret line="65" column="90" selection-start-line="65" selection-start-column="90" selection-end-line="65" selection-end-column="90" />
+          <folding>
+            <element signature="e#4579#4751#0" expanded="true" />
+            <element signature="e#4750#4751#0" expanded="true" />
           </folding>
         </state>
       </provider>

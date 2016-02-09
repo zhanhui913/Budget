@@ -2,6 +2,7 @@ package com.zhan.budget.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +17,17 @@ import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.circularview.CircularView;
 
 import org.parceler.Parcels;
+
+import io.realm.Realm;
 
 public class CategoryInfoActivity extends AppCompatActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
@@ -49,6 +55,8 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     //Selected icon
     private int selectedIcon;
 
+    private Realm myRealm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +64,6 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
         isEditMode = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
-
 
         Log.d("CATEGORY_INFO", "this category type is "+category.getType());
 
@@ -67,7 +74,11 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     private void init(){
+        myRealm = Realm.getDefaultInstance();
+
         colorPickerCategoryFragment = new ColorPickerCategoryFragment();
+        colorPickerCategoryFragment.setSelectedCategoryColor(category.getColor());
+
         iconPickerCategoryFragment = new IconPickerCategoryFragment();
         iconPickerCategoryFragment.updateColor(category.getColor()); //set initial color from category
 
@@ -88,8 +99,6 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryBudget.setText("$" + category.getBudget());
         categoryCost.setText("$" + category.getCost());
         */
-
-        colorPickerCategoryFragment.setSelectedCategoryColor(category.getColor());
     }
 
     private void initCategoryCircularView(){
@@ -124,6 +133,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeRealm();
                 finish();
             }
         });
@@ -132,12 +142,18 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private void save(){
         Intent intent = new Intent();
 
-        Category newCategory = category;
-        newCategory.setCost(category.getCost()+ 1 );
+        Category c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
+        myRealm.beginTransaction();
+        c.setIcon(selectedIcon);
+        c.setColor(selectedColor);
+        myRealm.commitTransaction();
 
-        //intent.putExtra(Constants.RESULT_EDIT_CATEGORY, newCategory);
+        Parcelable wrapped = Parcels.wrap(c);
+
+        intent.putExtra(Constants.RESULT_EDIT_CATEGORY,wrapped);
         setResult(RESULT_OK, intent);
 
+        closeRealm();
         finish();
     }
 
@@ -148,7 +164,14 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
+        closeRealm();
         finish();
+    }
+
+    private void closeRealm(){
+        if(!myRealm.isClosed()){
+            myRealm.close();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
