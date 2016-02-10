@@ -7,6 +7,9 @@ public class Constants {
     public static final String REALM_NAME = "budget.realm";
     public static final String CSV_NAME = "budget.csv";
 
+    //Permissions for Android M
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+
     //First time
     public static final String FIRST_TIME = "First Time";
 
