@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.ColorCategoryGridAdapter;
-import com.zhan.budget.Model.CategoryColor;
+import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 
@@ -33,7 +33,7 @@ public class ColorPickerCategoryFragment extends Fragment {
 
     private int selectedCategoryColor;
 
-    private List<CategoryColor> categoryColorList;
+    private List<CategoryIconColor> categoryIconColorList;
 
     public ColorPickerCategoryFragment() {
         // Required empty public constructor
@@ -61,16 +61,16 @@ public class ColorPickerCategoryFragment extends Fragment {
     }
 
     private void init(){
-        categoryColorList = CategoryUtil.getListOfCategoryColors(getContext());
+        categoryIconColorList = CategoryUtil.getListOfCategoryColors(getContext());
 
-        for(int i = 0; i < categoryColorList.size(); i++){
-            if(categoryColorList.get(i).getColor() == selectedCategoryColor){
-                categoryColorList.get(i).setIsSelected(true);
+        for(int i = 0; i < categoryIconColorList.size(); i++){
+            if(categoryIconColorList.get(i).getColor() == selectedCategoryColor){
+                categoryIconColorList.get(i).setIsSelected(true);
             }
         }
 
         colorCategoryGridView = (GridView) view.findViewById(R.id.colorGrid);
-        colorCategoryGridAdapter = new ColorCategoryGridAdapter(getContext(), categoryColorList);
+        colorCategoryGridAdapter = new ColorCategoryGridAdapter(getContext(), categoryIconColorList);
         colorCategoryGridView.setAdapter(colorCategoryGridAdapter);
     }
 
@@ -78,14 +78,14 @@ public class ColorPickerCategoryFragment extends Fragment {
         colorCategoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for(int i = 0; i < categoryColorList.size(); i++){
-                    categoryColorList.get(i).setIsSelected(false);
+                for(int i = 0; i < categoryIconColorList.size(); i++){
+                    categoryIconColorList.get(i).setIsSelected(false);
                 }
 
-                categoryColorList.get(position).setIsSelected(true);
+                categoryIconColorList.get(position).setIsSelected(true);
                 colorCategoryGridAdapter.notifyDataSetChanged();
 
-                mListener.onColorCategoryClick(categoryColorList.get(position).getColor());
+                mListener.onColorCategoryClick(categoryIconColorList.get(position).getColor());
             }
         });
     }

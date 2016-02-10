@@ -7,14 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.IconCategoryGridAdapter;
+import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.circularview.CircularView;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class IconPickerCategoryFragment extends Fragment {
 
     private View view;
 
-    private List<Integer> iconList;
+    private List<CategoryIconColor> categoryIconColorList;
     private GridView iconCategoryGridView;
     private IconCategoryGridAdapter iconCategoryGridAdapter;
 
@@ -59,57 +58,36 @@ public class IconPickerCategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
-        listenToIconGridView();
         addListeners();
     }
 
     private void init(){
-        iconList = CategoryUtil.getListOfUniqueIcon(getContext());
+        categoryIconColorList = CategoryUtil.getListOfUniqueIcons(getContext());
+
+        for(int i = 0; i < categoryIconColorList.size(); i++){
+            if(categoryIconColorList.get(i).getIcon() == selectedCategoryIcon){
+                categoryIconColorList.get(i).setIsSelected(true);
+            }
+        }
+
         iconCategoryGridView = (GridView) view.findViewById(R.id.iconGrid);
-        iconCategoryGridAdapter = new IconCategoryGridAdapter(getContext(), iconList, selectedColor);
+        iconCategoryGridAdapter = new IconCategoryGridAdapter(getContext(), categoryIconColorList, selectedColor);
         iconCategoryGridView.setAdapter(iconCategoryGridAdapter);
         Log.d("ICON_PICKER_CATEGORY", "init");
-    }
-
-    private void listenToIconGridView(){
-        iconCategoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-
-                    @Override
-                    public void onGlobalLayout() {
-                        int k=0;
-                        for(int i = 0; i < iconList.size(); i++){
-                            if(iconList.get(i) == selectedCategoryIcon){
-                                Log.d("COLOR_FRAGMENT", "found icon at index:"+i);
-                                k = i;
-                            }
-                        }
-
-                        ViewGroup gridChild = (ViewGroup) iconCategoryGridView.getChildAt(k);
-                        CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
-                        cv.setStrokeColor(R.color.darkgray);
-
-                        // unregister listener (this is important)
-                        iconCategoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                });
     }
 
     private void addListeners(){
         iconCategoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for (int i = 0; i < parent.getChildCount(); i++) {
-                    View childView = parent.getChildAt(i);
-                    CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(R.color.transparent);
-
-                    if (i == position) {
-                        ccv.setStrokeColor(R.color.darkgray);
-                    }
+                for(int i = 0; i < categoryIconColorList.size(); i++){
+                    categoryIconColorList.get(i).setIsSelected(false);
                 }
 
-                mListener.onIconCategoryClick(iconList.get(position));
+                categoryIconColorList.get(position).setIsSelected(true);
+                iconCategoryGridAdapter.notifyDataSetChanged();
+
+                mListener.onIconCategoryClick(categoryIconColorList.get(position).getIcon());
             }
         });
     }

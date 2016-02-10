@@ -69,9 +69,10 @@
             android:id="@+id/number0"
             android:text="0"/>
 
-        <Button style="@style/NumberPadStyle"
+        <ImageButton style="@style/NumberPadStyle"
             android:id="@+id/numberX"
-            android:text="X"/>
+            android:src="@drawable/svg_ic_backspace"
+            android:tint="@color/black"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -1,13 +1,13 @@
 package com.zhan.budget.Adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
 import com.zhan.circularview.CircularView;
 
@@ -16,16 +16,16 @@ import java.util.List;
 /**
  * Created by zhanyap on 2016-02-04.
  */
-public class IconCategoryGridAdapter extends ArrayAdapter<Integer> {
+public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
     private Context context;
-    private List<Integer> iconList;
+    private List<CategoryIconColor> iconList;
     private int color;
 
     static class ViewHolder {
         public CircularView circularView;
     }
 
-    public IconCategoryGridAdapter(Context context, List<Integer> iconList, int color) {
+    public IconCategoryGridAdapter(Context context, List<CategoryIconColor> iconList, int color) {
         super(context, R.layout.item_category_grid, iconList);
         this.context = context;
         this.iconList = iconList;
@@ -58,9 +58,15 @@ public class IconCategoryGridAdapter extends ArrayAdapter<Integer> {
         viewHolder.circularView.setIconDrawable(
                 ResourcesCompat.getDrawable(
                         this.context.getResources(),
-                        iconList.get(position),
+                        iconList.get(position).getIcon(),
                         this.context.getTheme())
                 );
+
+        if(iconList.get(position).isSelected()){
+            viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+        }else{
+            viewHolder.circularView.setStrokeColor(R.color.transparent);
+        }
 
         return convertView;
     }

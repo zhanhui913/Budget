@@ -35,11 +35,10 @@
         android:paddingLeft="20dp"
         android:paddingTop="20dp" />
         -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <com.zhan.circularview.CircularView
             xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -52,16 +51,28 @@
             custom:cv_iconBottomPadding="12dp"
             custom:cv_iconLeftPadding="12dp"
             custom:cv_iconRightPadding="12dp"
-            custom:cv_bgRadius="25dp" />
+            custom:cv_bgRadius="25dp"
+            android:layout_centerVertical="true" />
+
+        <EditText
+            android:id="@+id/categoryNameEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="categoryName"
+            android:textSize="20sp"
+            android:layout_toRightOf="@+id/categoryCircularView"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:id="@+id/transactionCostText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="-$0.00"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:textSize="30sp"
@@ -71,10 +82,12 @@
             android:paddingEnd="15dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:layout_toRightOf="@+id/categoryName"
+            android:layout_centerVertical="true" />
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <include layout="@layout/transaction_circle_indicator"
         android:id="@+id/indicatorPanel"

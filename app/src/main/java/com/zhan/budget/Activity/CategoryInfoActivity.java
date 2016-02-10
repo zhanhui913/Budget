@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -33,6 +34,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private TextView categoryName, categoryBudget, categoryCost;
 
+    private EditText categoryNameEditText;
     private CircularView categoryCircularView;
 
     private Category category;
@@ -78,6 +80,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         iconPickerCategoryFragment = new IconPickerCategoryFragment();
         iconPickerCategoryFragment.updateColor(category.getColor()); //set initial color from category
+        iconPickerCategoryFragment.setSelectedCategoryIcon(category.getIcon());
 
         viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
         adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), colorPickerCategoryFragment, iconPickerCategoryFragment);
@@ -85,6 +88,9 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
+
+        categoryNameEditText = (EditText) findViewById(R.id.categoryNameEditText);
+        categoryNameEditText.setText(category.getName());
 
 /*
         categoryName = (TextView) findViewById(R.id.categoryName);

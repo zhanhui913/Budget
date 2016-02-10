@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.zhan.budget.Model.CategoryColor;
+import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
 import com.zhan.circularview.CircularView;
 
@@ -15,15 +15,15 @@ import java.util.List;
 /**
  * Created by zhanyap on 2016-02-04.
  */
-public class ColorCategoryGridAdapter extends ArrayAdapter<CategoryColor> {
+public class ColorCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
     private Context context;
-    private List<CategoryColor> colorList;
+    private List<CategoryIconColor> colorList;
 
     static class ViewHolder {
         public CircularView circularView;
     }
 
-    public ColorCategoryGridAdapter(Context context, List<CategoryColor> colorList) {
+    public ColorCategoryGridAdapter(Context context, List<CategoryIconColor> colorList) {
         super(context, R.layout.item_category_grid, colorList);
         this.context = context;
         this.colorList = colorList;
