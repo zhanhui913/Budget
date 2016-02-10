@@ -14,8 +14,6 @@ import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.daimajia.swipe.SwipeLayout;
-import com.zhan.budget.Fragment.CategoryFragment;
-import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -127,26 +125,26 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
                 }
             });
 
-            viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "delete", Toast.LENGTH_SHORT).show();
-                    mListener.onDeleteCategory(position);
-                }
-            });
-
-            viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "edit", Toast.LENGTH_SHORT).show();
-                    mListener.onEditCategory(position);
-                }
-            });
-
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
+        viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "delete category at :"+position, Toast.LENGTH_SHORT).show();
+                mListener.onDeleteCategory(position);
+            }
+        });
+
+        viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "edit", Toast.LENGTH_SHORT).show();
+                mListener.onEditCategory(position);
+            }
+        });
 
         // getting category data for the row
         Category category = categoryList.get(position);
