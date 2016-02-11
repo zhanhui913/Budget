@@ -26,7 +26,7 @@ public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
     }
 
     public IconCategoryGridAdapter(Context context, List<CategoryIconColor> iconList, int color) {
-        super(context, R.layout.item_category_grid, iconList);
+        super(context, R.layout.item_icon_picker_category, iconList);
         this.context = context;
         this.iconList = iconList;
         this.color = color;

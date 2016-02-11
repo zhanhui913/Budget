@@ -42,7 +42,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     }
 
     public TransactionListAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
-        super(fragment.getActivity(), R.layout.item_category, transactionList);
+        super(fragment.getActivity(), R.layout.item_transaction, transactionList);
         this.activity = fragment.getActivity();
         this.transactionList = transactionList;
         this.showDate = showDate;
@@ -56,7 +56,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     }
 
     public TransactionListAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
-        super(activity, R.layout.item_category, transactionList);
+        super(activity, R.layout.item_transaction, transactionList);
         this.activity = activity;
         this.transactionList = transactionList;
         this.showDate = showDate;
