@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     swipe:leftEdgeSwipeOffset="0dp"
-    swipe:rightEdgeSwipeOffset="0dp">
+    swipe:rightEdgeSwipeOffset="0dp"
+    android:background="@drawable/budget_white_button">
 
     <!-- Bottom view -->
     <LinearLayout
@@ -34,7 +35,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/budget_white_button"
         android:padding="5dp">
 
         <com.zhan.circularview.CircularView
