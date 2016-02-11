@@ -54,19 +54,21 @@
             custom:cv_bgRadius="25dp"
             android:layout_centerVertical="true" />
 
-        <EditText
-            android:id="@+id/categoryNameEditText"
+        <TextView
+            android:id="@+id/categoryNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="categoryName"
-            android:textSize="20sp"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:singleLine="true"
             android:layout_toRightOf="@+id/categoryCircularView"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
         <TextView
-            android:id="@+id/transactionCostText"
+            android:id="@+id/categoryBudgetTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="-$0.00"
@@ -83,7 +85,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:singleLine="true"
-            android:layout_toRightOf="@+id/categoryName"
+            android:layout_toRightOf="@+id/categoryNameTextView"
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
@@ -110,7 +112,7 @@
         android:layout_alignParentBottom="true">
 
         <ImageButton
-            android:id="@+id/changeBudgetBtn2"
+            android:id="@+id/changeNameBtn"
             android:layout_weight="0.33"
             android:layout_width="0dp"
             android:layout_height="match_parent"

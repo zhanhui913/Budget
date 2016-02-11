@@ -1,25 +1,36 @@
 package com.zhan.budget.Activity;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
+import com.zhan.budget.Model.Account;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.circularview.CircularView;
 
@@ -32,9 +43,9 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener{
 
     private Toolbar toolbar;
-    private TextView categoryName, categoryBudget, categoryCost;
+    private TextView categoryNameTextView, categoryBudgetTextView;
+    private ImageButton deleteCategoryBtn, changeBudgetBtn, changeNameBtn;
 
-    private EditText categoryNameEditText;
     private CircularView categoryCircularView;
 
     private Category category;
@@ -89,19 +100,15 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
-        categoryNameEditText = (EditText) findViewById(R.id.categoryNameEditText);
-        categoryNameEditText.setText(category.getName());
+        categoryNameTextView = (TextView) findViewById(R.id.categoryNameTextView);
+        categoryBudgetTextView = (TextView) findViewById(R.id.categoryBudgetTextView);
 
-/*
-        categoryName = (TextView) findViewById(R.id.categoryName);
-        categoryBudget = (TextView) findViewById(R.id.categoryBudget);
-        categoryCost = (TextView) findViewById(R.id.categoryCost);
+        categoryNameTextView.setText(category.getName());
+        categoryBudgetTextView.setText("$"+category.getBudget());
 
-
-        categoryName.setText(category.getName());
-        categoryBudget.setText("$" + category.getBudget());
-        categoryCost.setText("$" + category.getCost());
-        */
+        changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
+        deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
+        changeBudgetBtn = (ImageButton) findViewById(R.id.changeBudgetBtn);
     }
 
     private void initCategoryCircularView(){
@@ -140,6 +147,216 @@ public class CategoryInfoActivity extends AppCompatActivity implements
                 finish();
             }
         });
+
+        changeNameBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeName();
+            }
+        });
+
+        deleteCategoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDelete();
+            }
+        });
+
+        changeBudgetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Change budget Category ", Toast.LENGTH_SHORT).show();
+                changeBudget();
+            }
+        });
+    }
+
+    private void changeName(){
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
+
+        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
+        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+
+        genericTitle.setText("Category Name");
+        input.setText(categoryNameTextView.getText());
+
+        new AlertDialog.Builder(this)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        categoryNameTextView.setText(input.getText().toString());
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void changeBudget(){
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_number_pad, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
+        TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
+        String priceString = "";
+
+        title.setText("Change Budget");
+
+        new AlertDialog.Builder(this)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+
+        Button button1 = (Button)findViewById(R.id.number1);
+        Button button2 = (Button)findViewById(R.id.number2);
+        Button button3 = (Button)findViewById(R.id.number3);
+        Button button4 = (Button)findViewById(R.id.number4);
+        Button button5 = (Button)findViewById(R.id.number5);
+        Button button6 = (Button)findViewById(R.id.number6);
+        Button button7 = (Button)findViewById(R.id.number7);
+        Button button8 = (Button)findViewById(R.id.number8);
+        Button button9 = (Button)findViewById(R.id.number9);
+        Button button0 = (Button)findViewById(R.id.number0);
+        ImageButton buttonX = (ImageButton)findViewById(R.id.numberX);
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(1);
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(2);
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(3);
+            }
+        });
+
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(4);
+            }
+        });
+
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(5);
+            }
+        });
+
+        button6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(6);
+            }
+        });
+
+        button7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(7);
+            }
+        });
+
+        button8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(8);
+            }
+        });
+
+        button9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(9);
+            }
+        });
+
+        button0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDigitToTextView(0);
+            }
+        });
+
+        buttonX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeDigit();
+            }
+        });
+    }
+
+
+    priceString += digit;
+    StringBuilder cashAmountBuilder = new StringBuilder(priceString);
+
+    while (cashAmountBuilder.length() < 3) {
+        cashAmountBuilder.insert(0, '0');
+    }
+
+    cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
+    priceStringWithDot = cashAmountBuilder.toString();
+
+    String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
+    transactionCostView.setText(appendString + priceStringWithDot);
+
+
+    private void confirmDelete(){
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm delete")
+                .setMessage("Are you sure you want to delete this category?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
     }
 
     private void save(){
@@ -147,6 +364,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         Category c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
         myRealm.beginTransaction();
+        c.setName(categoryNameTextView.getText().toString());
         c.setIcon(selectedIcon);
         c.setColor(selectedColor);
         myRealm.commitTransaction();
