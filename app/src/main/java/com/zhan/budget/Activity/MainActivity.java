@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
 
             new AlertDialog.Builder(this)
                     .setTitle("Permission denied")
-                    .setMessage("You need to allow access to storage in order to save mission information.")
+                    .setMessage("You need to allow access to storage in order to create a backup of the database.")
                     .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

@@ -85,8 +85,6 @@
             android:singleLine="true"
             android:layout_toRightOf="@+id/categoryName"
             android:layout_centerVertical="true" />
-
-
     </RelativeLayout>
 
     <include layout="@layout/transaction_circle_indicator"
@@ -103,39 +101,40 @@
         android:layout_below="@+id/indicatorPanel"
         android:layout_above="@+id/centerPanel"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/centerPanel"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/gray"
-        android:layout_above="@+id/numberPad">
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
 
         <ImageButton
-            android:id="@+id/addAccountBtn"
-            android:layout_width="wrap_content"
+            android:id="@+id/changeBudgetBtn2"
+            android:layout_weight="0.33"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/svg_ic_add"
-            android:layout_alignParentRight="false"
-            android:padding="15dp"
-            android:layout_toLeftOf="@+id/addNoteBtn" />
+            android:layout_marginRight="1dp"
+            android:background="@drawable/budget_button"
+            android:src="@drawable/svg_ic_edit" />
 
-        <ImageView
-            android:id="@+id/addNoteBtn"
-            android:layout_width="wrap_content"
+        <ImageButton
+            android:id="@+id/changeBudgetBtn"
+            android:layout_weight="0.33"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/svg_ic_add"
-            android:layout_alignParentRight="true"
-            android:padding="15dp"/>
+            android:background="@drawable/budget_button"
+            android:src="@drawable/svg_ic_dollar" />
 
-    </RelativeLayout>
+        <ImageButton
+            android:id="@+id/deleteCategoryBtn"
+            android:layout_weight="0.33"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:background="@drawable/budget_button"
+            android:src="@drawable/svg_ic_delete" />
 
-    <include layout="@layout/number_pad"
-        android:id="@+id/numberPad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true" />
+    </LinearLayout>
+
 </RelativeLayout>

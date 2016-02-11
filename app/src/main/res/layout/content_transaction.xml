@@ -45,25 +45,24 @@
         android:id="@+id/centerPanel"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/gray"
+        android:background="@color/green"
         android:layout_above="@+id/numberPad">
 
         <ImageButton
             android:id="@+id/addAccountBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/svg_ic_add"
-            android:layout_alignParentRight="false"
-            android:padding="15dp"
-            android:layout_toLeftOf="@+id/addNoteBtn" />
+            android:src="@drawable/svg_ic_menu_account"
+            android:layout_toLeftOf="@+id/addNoteBtn"
+            android:background="@drawable/budget_button"/>
 
-        <ImageView
+        <ImageButton
             android:id="@+id/addNoteBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:src="@drawable/svg_ic_add"
             android:layout_alignParentRight="true"
-            android:padding="15dp"/>
+            android:background="@drawable/budget_button"/>
 
     </RelativeLayout>
 
