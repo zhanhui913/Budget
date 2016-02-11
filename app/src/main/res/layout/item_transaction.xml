@@ -16,7 +16,7 @@
             android:src="@drawable/svg_ic_check"
             android:layout_height="match_parent"
             android:layout_width="100dp"
-            android:background="@color/green"
+            android:background="@drawable/budget_green_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
         <ImageView
@@ -24,7 +24,7 @@
             android:src="@drawable/svg_ic_delete"
             android:layout_height="match_parent"
             android:layout_width="100dp"
-            android:background="@color/red"
+            android:background="@drawable/budget_red_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
     </LinearLayout>
@@ -33,7 +33,8 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:background="@drawable/budget_white_button">
 
         <com.zhan.circularview.CircularView
             xmlns:custom="http://schemas.android.com/apk/res-auto"

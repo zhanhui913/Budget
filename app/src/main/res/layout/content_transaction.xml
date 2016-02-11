@@ -54,7 +54,7 @@
             android:layout_height="match_parent"
             android:src="@drawable/svg_ic_menu_account"
             android:layout_toLeftOf="@+id/addNoteBtn"
-            android:background="@drawable/budget_button"/>
+            android:background="@drawable/budget_green_button"/>
 
         <ImageButton
             android:id="@+id/addNoteBtn"
@@ -62,7 +62,7 @@
             android:layout_height="match_parent"
             android:src="@drawable/svg_ic_add"
             android:layout_alignParentRight="true"
-            android:background="@drawable/budget_button"/>
+            android:background="@drawable/budget_green_button"/>
 
     </RelativeLayout>
 

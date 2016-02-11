@@ -4,8 +4,12 @@
     <color name="colorPrimaryDark">#1c8046</color>
     <color name="colorAccent">#9A023D</color>
 
-    <color name="red">#9A023D</color>
+    <color name="red">#c7042e</color>
+    <color name="dark_red">#970019</color>
+
     <color name="green">#28b463</color>
+    <color name="dark_green">#1c8046</color>
+
     <color name="purple">#551A8B</color>
     <color name="tan">#E6E6CD</color>
     <color name="white">#FFFFFF</color>

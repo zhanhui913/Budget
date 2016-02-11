@@ -13,14 +13,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
@@ -126,6 +123,7 @@ public class CalendarFragment extends Fragment implements
 
         init();
         initEvents();
+        addListeners();
         createPullToAddTransaction();
         createCalendar();
         //createSwipeMenu();
@@ -152,6 +150,15 @@ public class CalendarFragment extends Fragment implements
         dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyTransactionLayout);
+    }
+
+    private void addListeners(){
+        transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "clicked on transaction :"+position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void createPullToAddTransaction(){

@@ -16,7 +16,7 @@
             android:src="@drawable/svg_ic_edit"
             android:layout_height="match_parent"
             android:layout_width="100dp"
-            android:background="@color/green"
+            android:background="@drawable/budget_green_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
         <ImageView
@@ -24,7 +24,7 @@
             android:src="@drawable/svg_ic_delete"
             android:layout_height="match_parent"
             android:layout_width="100dp"
-            android:background="@color/red"
+            android:background="@drawable/budget_red_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
     </LinearLayout>
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:background="@drawable/item_selector">
+        android:background="@drawable/budget_white_button">
 
         <TextView
             android:id="@+id/accountName"
