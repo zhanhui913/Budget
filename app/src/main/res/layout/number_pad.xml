@@ -59,11 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:background="@drawable/numeric_button" />
+        <View style="@style/NumberPadStyle" />
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number0"
