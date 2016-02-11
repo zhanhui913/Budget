@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
     private ImageView transactionCategoryIcon;
     private TextView transactionCategoryName, transactionCategoryBalance;
 
-    private SwipeMenuListView transactionCategoryListView;
+    private ListView transactionCategoryListView;
     private TransactionListAdapter transactionCategoryAdapter;
     private List<Transaction> transactionCategoryList;
 
@@ -70,7 +71,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
     private void init(){
         myRealm = Realm.getDefaultInstance();
 
-        transactionCategoryListView = (SwipeMenuListView) findViewById(R.id.transactionCategoryListView);
+        transactionCategoryListView = (ListView) findViewById(R.id.transactionCategoryListView);
         transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
@@ -152,6 +153,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
      * From 3rd party library.
      */
     private void createSwipeMenu(){
+        /*
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -202,6 +204,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
                 // swipe end
             }
         });
+        */
     }
 
     private void updateStatus(){
