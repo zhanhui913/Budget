@@ -46,10 +46,21 @@ public final class CurrencyTextFormatter {
     public static float formatCurrency(String val, Locale locale){
         final float CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(locale).getDefaultFractionDigits());
 
-        float newTextValue = Float.valueOf(val);
+        float newTextValue;
+
+        if(val.equals("") && !val.equals("-")){
+            newTextValue = 0;
+        }else{
+            newTextValue = Float.valueOf(val);
+        }
 
         newTextValue = newTextValue / CURRENCY_DECIMAL_DIVISOR;
 
         return newTextValue;
+    }
+
+    public static String formatFloat(float val, Locale locale){
+        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
+        return currencyFormatter.format(val);
     }
 }
