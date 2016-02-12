@@ -1,12 +1,10 @@
 package com.zhan.budget.Activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,22 +20,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blackcat.currencyedittext.CurrencyTextFormatter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
-import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.circularview.CircularView;
 
 import org.parceler.Parcels;
 
-import java.util.Currency;
 import java.util.Locale;
 
 import io.realm.Realm;
@@ -55,7 +50,6 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private Category category;
     private boolean isEditMode;
     private String priceString = "";
-    private String priceStringWithDot = "";
 
     private TwoPageViewPager adapterViewPager;
     private ViewPager viewPager;
@@ -112,7 +106,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryNameTextView.setText(category.getName());
         categoryBudgetTextView.setText("$"+category.getBudget());
 
-        priceStringWithDot = Float.toString(category.getBudget());
+        priceString = Float.toString(category.getBudget());
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
@@ -124,22 +118,44 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         runTest();
     }
 
-    private void runTest(){
-        Log.d("CURRENCY", "----- TEST -----");
-        String cad = "";
-        for(int i = 0; i < 7; i++){
-            cad += i;
-            Log.d("CURRENCY", "CAD "+cad+" => "+com.zhan.budget.Etc.CurrencyTextFormatter.formatText(cad, Locale.CANADA));
-        }
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // test
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////
 
-        String yen = "";
-        for(int i = 0; i < 7; i++){
-            yen += i;
-            Log.d("CURRENCY", "YEN "+yen+" => "+com.zhan.budget.Etc.CurrencyTextFormatter.formatText(yen, Locale.JAPAN));
+
+    private void runTest(){
+        createCurrency(Locale.CANADA);
+        createCurrency(Locale.JAPAN);
+        createCurrency(Locale.KOREA);
+        createCurrency(Locale.FRANCE);
+        createCurrency(Locale.US);
+        createCurrency(Locale.UK);
+    }
+
+    private void createCurrency(Locale locale){
+        Log.d("CURRENCY", "----- TEST -----");
+
+        String currency = "";
+        for(int i = 0; i < 8; i++){
+            if(i == 6){
+                currency += 0;
+            }else{
+                currency += i;
+            }
+
+            Log.d("CURRENCY", locale+" "+currency+" => "+CurrencyTextFormatter.formatText(currency, locale)+" -> float:"+CurrencyTextFormatter.formatCurrency(currency, locale));
         }
 
         Log.d("CURRENCY", "----- END TEST -----");
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // end of test
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void initCategoryCircularView(){
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
@@ -245,7 +261,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
         title.setText("Change Budget");
-        budgetTextView.setText(priceStringWithDot);
+        budgetTextView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -355,6 +371,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     private void addDigitToTextView(TextView textView, int digit){
+       /*
         priceString += digit;
         StringBuilder cashAmountBuilder = new StringBuilder(priceString);
 
@@ -367,9 +384,16 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         String appendString = (category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()))?"-$":"+$";
         textView.setText(appendString + priceStringWithDot);
+        */
+
+
+
+        priceString += digit;
+        textView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
     }
 
     private void removeDigit(TextView textView){
+        /*
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
         }
@@ -385,6 +409,12 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         String appendString = (category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()))?"-$":"+$";
         textView.setText(appendString + priceStringWithDot);
+        */
+
+        if (priceString != null && priceString.length() >= 1) {
+            priceString = priceString.substring(0, priceString.length() - 1);
+        }
+        textView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
     }
 
     private void confirmDelete(){
@@ -417,9 +447,9 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         c.setColor(selectedColor);
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-            c.setCost(-Float.parseFloat(priceStringWithDot));
+            c.setCost(-CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
         }else{
-            c.setCost(Float.parseFloat(priceStringWithDot));
+            c.setCost(CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
         }
 
         myRealm.commitTransaction();

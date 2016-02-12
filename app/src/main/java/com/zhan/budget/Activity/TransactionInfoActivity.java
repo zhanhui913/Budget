@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
 import com.zhan.budget.Model.Account;
@@ -41,6 +42,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -271,11 +273,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 switch (position) {
                     case 0:
                         currentPage = BudgetType.EXPENSE;
-                        transactionCostView.setText("-$" + priceStringWithDot);
+                        transactionCostView.setText("-" + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
-                        transactionCostView.setText("+$" + priceStringWithDot);
+                        transactionCostView.setText("+" + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
                         break;
                 }
             }
@@ -399,7 +401,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     private void addDigitToTextView(int digit){
         priceString += digit;
-        StringBuilder cashAmountBuilder = new StringBuilder(priceString);
+        /*StringBuilder cashAmountBuilder = new StringBuilder(priceString);
 
         while (cashAmountBuilder.length() < 3) {
             cashAmountBuilder.insert(0, '0');
@@ -410,13 +412,17 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
         transactionCostView.setText(appendString + priceStringWithDot);
+        */
+
+        String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
+        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
     }
 
     private void removeDigit(){
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
         }
-
+/*
         StringBuilder cashAmountBuilder = new StringBuilder(priceString);
 
         while (cashAmountBuilder.length() < 3) {
@@ -427,7 +433,12 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         priceStringWithDot = cashAmountBuilder.toString();
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
-        transactionCostView.setText(appendString + priceStringWithDot);
+        transactionCostView.setText(appendString + priceStringWithDot);*/
+
+
+        String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
+        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+
     }
 
     @Override
@@ -448,10 +459,10 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){
-            transaction.setPrice(-Float.parseFloat(priceStringWithDot));
+            transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
             transaction.setCategory(selectedExpenseCategory);
         }else{
-            transaction.setPrice(Float.parseFloat(priceStringWithDot));
+            transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
             transaction.setCategory(selectedIncomeCategory);
         }
 

@@ -9,10 +9,8 @@ import java.util.Locale;
  */
 public final class CurrencyTextFormatter {
 
-
     //Setting a max length because after this length, java represents doubles in scientific notation which breaks the formatter
     static final int MAX_RAW_INPUT_LENGTH = 15;
-
 
     private CurrencyTextFormatter(){}
 
@@ -25,7 +23,7 @@ public final class CurrencyTextFormatter {
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
 
         //if there's nothing left, that means we were handed an empty string. Also, cap the raw input so the formatter doesn't break.
-        if(!val.equals("") && val.length() < MAX_RAW_INPUT_LENGTH && !val.equals("-")) {
+        if(!val.equals("") /*&& val.length() < MAX_RAW_INPUT_LENGTH*/ && !val.equals("-")) {
             //Convert the string into a double, which will later be passed into the currency formatter
             double newTextValue = Double.valueOf(val);
 
@@ -36,11 +34,22 @@ public final class CurrencyTextFormatter {
              */
             newTextValue = newTextValue / CURRENCY_DECIMAL_DIVISOR;
             val = currencyFormatter.format(newTextValue);
+        }else if(val.equals("")){
+            val = currencyFormatter.format(0);
         }
-        else {
-            throw new IllegalArgumentException("Invalid amount of digits found (either zero or too many) in argument val");
-        }
+        /*else {
+            throw new IllegalArgumentException("Invalid argument in val");
+        }*/
         return val;
     }
 
+    public static float formatCurrency(String val, Locale locale){
+        final float CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(locale).getDefaultFractionDigits());
+
+        float newTextValue = Float.valueOf(val);
+
+        newTextValue = newTextValue / CURRENCY_DECIMAL_DIVISOR;
+
+        return newTextValue;
+    }
 }
