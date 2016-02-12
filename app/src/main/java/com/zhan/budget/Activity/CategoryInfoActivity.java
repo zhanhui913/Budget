@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blackcat.currencyedittext.CurrencyTextFormatter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
@@ -35,6 +36,9 @@ import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.circularview.CircularView;
 
 import org.parceler.Parcels;
+
+import java.util.Currency;
+import java.util.Locale;
 
 import io.realm.Realm;
 
@@ -50,6 +54,8 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
     private Category category;
     private boolean isEditMode;
+    private String priceString = "";
+    private String priceStringWithDot = "";
 
     private TwoPageViewPager adapterViewPager;
     private ViewPager viewPager;
@@ -106,9 +112,33 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryNameTextView.setText(category.getName());
         categoryBudgetTextView.setText("$"+category.getBudget());
 
+        priceStringWithDot = Float.toString(category.getBudget());
+
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
         changeBudgetBtn = (ImageButton) findViewById(R.id.changeBudgetBtn);
+
+
+
+
+        runTest();
+    }
+
+    private void runTest(){
+        Log.d("CURRENCY", "----- TEST -----");
+        String cad = "";
+        for(int i = 0; i < 7; i++){
+            cad += i;
+            Log.d("CURRENCY", "CAD "+cad+" => "+com.zhan.budget.Etc.CurrencyTextFormatter.formatText(cad, Locale.CANADA));
+        }
+
+        String yen = "";
+        for(int i = 0; i < 7; i++){
+            yen += i;
+            Log.d("CURRENCY", "YEN "+yen+" => "+com.zhan.budget.Etc.CurrencyTextFormatter.formatText(yen, Locale.JAPAN));
+        }
+
+        Log.d("CURRENCY", "----- END TEST -----");
     }
 
     private void initCategoryCircularView(){
@@ -212,10 +242,10 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         View promptView = layoutInflater.inflate(R.layout.alertdialog_number_pad, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
-        TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
-        String priceString = "";
+        final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
         title.setText("Change Budget");
+        budgetTextView.setText(priceStringWithDot);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -234,110 +264,128 @@ public class CategoryInfoActivity extends AppCompatActivity implements
                 .create()
                 .show();
 
-        Button button1 = (Button)findViewById(R.id.number1);
-        Button button2 = (Button)findViewById(R.id.number2);
-        Button button3 = (Button)findViewById(R.id.number3);
-        Button button4 = (Button)findViewById(R.id.number4);
-        Button button5 = (Button)findViewById(R.id.number5);
-        Button button6 = (Button)findViewById(R.id.number6);
-        Button button7 = (Button)findViewById(R.id.number7);
-        Button button8 = (Button)findViewById(R.id.number8);
-        Button button9 = (Button)findViewById(R.id.number9);
-        Button button0 = (Button)findViewById(R.id.number0);
-        ImageButton buttonX = (ImageButton)findViewById(R.id.numberX);
+        Button button1 = (Button) promptView.findViewById(R.id.number1);
+        Button button2 = (Button) promptView.findViewById(R.id.number2);
+        Button button3 = (Button) promptView.findViewById(R.id.number3);
+        Button button4 = (Button) promptView.findViewById(R.id.number4);
+        Button button5 = (Button) promptView.findViewById(R.id.number5);
+        Button button6 = (Button) promptView.findViewById(R.id.number6);
+        Button button7 = (Button) promptView.findViewById(R.id.number7);
+        Button button8 = (Button) promptView.findViewById(R.id.number8);
+        Button button9 = (Button) promptView.findViewById(R.id.number9);
+        Button button0 = (Button) promptView.findViewById(R.id.number0);
+        ImageButton buttonX = (ImageButton) promptView.findViewById(R.id.numberX);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(1);
+                addDigitToTextView(budgetTextView, 1);
             }
         });
 
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(2);
+                addDigitToTextView(budgetTextView, 2);
             }
         });
 
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(3);
+                addDigitToTextView(budgetTextView, 3);
             }
         });
 
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(4);
+                addDigitToTextView(budgetTextView, 4);
             }
         });
 
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(5);
+                addDigitToTextView(budgetTextView, 5);
             }
         });
 
         button6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(6);
+                addDigitToTextView(budgetTextView, 6);
             }
         });
 
         button7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(7);
+                addDigitToTextView(budgetTextView, 7);
             }
         });
 
         button8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(8);
+                addDigitToTextView(budgetTextView, 8);
             }
         });
 
         button9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(9);
+                addDigitToTextView(budgetTextView, 9);
             }
         });
 
         button0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDigitToTextView(0);
+                addDigitToTextView(budgetTextView, 0);
             }
         });
 
         buttonX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeDigit();
+                removeDigit(budgetTextView);
             }
         });
     }
 
+    private void addDigitToTextView(TextView textView, int digit){
+        priceString += digit;
+        StringBuilder cashAmountBuilder = new StringBuilder(priceString);
 
-    priceString += digit;
-    StringBuilder cashAmountBuilder = new StringBuilder(priceString);
+        while (cashAmountBuilder.length() < 3) {
+            cashAmountBuilder.insert(0, '0');
+        }
 
-    while (cashAmountBuilder.length() < 3) {
-        cashAmountBuilder.insert(0, '0');
+        cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
+        priceStringWithDot = cashAmountBuilder.toString();
+
+        String appendString = (category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()))?"-$":"+$";
+        textView.setText(appendString + priceStringWithDot);
     }
 
-    cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-    priceStringWithDot = cashAmountBuilder.toString();
+    private void removeDigit(TextView textView){
+        if (priceString != null && priceString.length() >= 1) {
+            priceString = priceString.substring(0, priceString.length() - 1);
+        }
 
-    String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
-    transactionCostView.setText(appendString + priceStringWithDot);
+        StringBuilder cashAmountBuilder = new StringBuilder(priceString);
 
+        while (cashAmountBuilder.length() < 3) {
+            cashAmountBuilder.insert(0, '0');
+        }
+
+        cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
+        priceStringWithDot = cashAmountBuilder.toString();
+
+        String appendString = (category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()))?"-$":"+$";
+        textView.setText(appendString + priceStringWithDot);
+    }
 
     private void confirmDelete(){
         new AlertDialog.Builder(this)
@@ -367,6 +415,13 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         c.setName(categoryNameTextView.getText().toString());
         c.setIcon(selectedIcon);
         c.setColor(selectedColor);
+
+        if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+            c.setCost(-Float.parseFloat(priceStringWithDot));
+        }else{
+            c.setCost(Float.parseFloat(priceStringWithDot));
+        }
+
         myRealm.commitTransaction();
 
         Parcelable wrapped = Parcels.wrap(c);
