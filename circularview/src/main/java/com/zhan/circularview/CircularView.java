@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -217,7 +215,7 @@ public class CircularView extends View {
     public void setCircleColor( int circleColor) {
         //this.circleColor = circleColor;
         this.circleColor = ContextCompat.getColor(getContext(), circleColor);
-
+        checkColorAndDrawable(this.circleColor);
         invalidate();
         //requestLayout();
     }
@@ -239,6 +237,7 @@ public class CircularView extends View {
     public void setStrokeColor(int strokeColor) {
         //this.strokeColor = strokeColor;
         this.strokeColor = ContextCompat.getColor(getContext(), strokeColor);
+        checkColorAndDrawable(this.strokeColor);
         invalidate();
         //requestLayout();
     }
@@ -260,6 +259,7 @@ public class CircularView extends View {
     public void setIconColor(int iconColor) {
         //this.iconColor = iconColor;
         this.iconColor = ContextCompat.getColor(getContext(), iconColor);
+        checkColorAndDrawable(this.iconColor);
         invalidate();
         //requestLayout();
     }
@@ -319,6 +319,12 @@ public class CircularView extends View {
     // Etc
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void checkColorAndDrawable(int value){
+        if(value == 0){
+            throw new IllegalArgumentException("Cannot process color or drawable with value = 0");
+        }
+    }
 
         /*
     public int dp2px(int dp) {

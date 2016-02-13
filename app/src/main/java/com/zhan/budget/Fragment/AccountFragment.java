@@ -191,9 +191,14 @@ public class AccountFragment extends Fragment implements
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
         //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_account_add, null);
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.editTextAccount);
+        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        title.setText("Add Account");
+
+        input.setHint("Account");
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)

@@ -25,7 +25,6 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
-import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.circleindicator.CircleIndicator;
@@ -104,16 +103,17 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryBudgetTextView = (TextView) findViewById(R.id.categoryBudgetTextView);
 
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText("$"+category.getBudget());
-
-        priceString = Float.toString(category.getBudget());
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
         changeBudgetBtn = (ImageButton) findViewById(R.id.changeBudgetBtn);
 
+        //default color selected
+        selectedColor = category.getColor();
 
-
+        //default icon selected
+        selectedIcon = category.getIcon();
 
         runTest();
     }
@@ -230,6 +230,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         genericTitle.setText("Category Name");
         input.setText(categoryNameTextView.getText());
+        input.setHint("Category");
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -260,15 +261,18 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
+        priceString = "";
+
         title.setText("Change Budget");
-        budgetTextView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setCancelable(true)
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
+                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -371,6 +375,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     private void addDigitToTextView(TextView textView, int digit){
+        Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
         priceString += digit;
         textView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
     }
@@ -410,13 +415,8 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         c.setName(categoryNameTextView.getText().toString());
         c.setIcon(selectedIcon);
         c.setColor(selectedColor);
-
-        if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-            c.setCost(-CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
-        }else{
-            c.setCost(CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
-        }
-
+        c.setBudget(category.getBudget());
+        c.setCost(category.getCost());
         myRealm.commitTransaction();
 
         Parcelable wrapped = Parcels.wrap(c);

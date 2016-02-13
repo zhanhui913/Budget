@@ -25,7 +25,7 @@
             android:id="@+id/genericEditText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="Account Name" />
+            android:hint="Generic Hint" />
 
         <requestFocus />
     </RelativeLayout>

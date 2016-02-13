@@ -22,10 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryListAdapter;
@@ -459,22 +455,22 @@ public class CategoryFragment extends Fragment implements
 
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                final Category category = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
+                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
 
 
-                Log.d("ZHAN", "category name is "+category.getName());
-                Log.d("ZHAN", "category color is "+category.getColor());
-                Log.d("ZHAN", "category icon is "+category.getIcon());
+                Log.d("ZHAN", "category name is "+categoryReturned.getName());
+                Log.d("ZHAN", "category color is "+categoryReturned.getColor());
+                Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
+                Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
+                Log.d("ZHAN", "category cost is "+categoryReturned.getCost());
+
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
                 Log.i("ZHAN", "eddited index :"+categoryIndexEditted);
 
-
-
-
                 updateCategoryStatus();
 
-                categoryList.set(categoryIndexEditted, category);
+                categoryList.set(categoryIndexEditted, categoryReturned);
 
                 categoryAdapter.clear();
                 categoryAdapter.addAll(categoryList);

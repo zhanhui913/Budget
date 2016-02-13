@@ -370,14 +370,16 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
         //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_note_transaction, null);
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.alertEditText);
+        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        TextView title = (TextView) promptView.findViewById(R.id.alertTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Add Note");
 
+        input.setHint("Note");
         input.setText(noteString);
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)

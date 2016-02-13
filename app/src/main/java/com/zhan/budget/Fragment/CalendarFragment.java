@@ -406,6 +406,9 @@ public class CalendarFragment extends Fragment implements
                 transactionAdapter.clear();
                 transactionAdapter.addAll(transactionList);
                 //transactionAdapter.addAll(resultsTransactionForDay);
+
+                //Removing on change listener
+                resultsTransactionForDay.removeChangeListener(this);
             }
         });
     }
