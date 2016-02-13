@@ -14,12 +14,13 @@ import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.daimajia.swipe.SwipeLayout;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
 import com.zhan.circularview.CircularView;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by zhanyap on 2016-01-08.
@@ -154,8 +155,8 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), category.getIcon(), activity.getTheme()));
 
         viewHolder.name.setText(category.getName());
-        viewHolder.budget.setText("$" + Util.setPriceToCorrectDecimalInString(category.getBudget()));
-        viewHolder.cost.setText(Util.setPriceToCorrectDecimalInString(category.getCost()));
+        viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Locale.CANADA));
 
         //ProgressBar
         viewHolder.progressBar.setMax(category.getBudget());

@@ -371,46 +371,11 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     private void addDigitToTextView(TextView textView, int digit){
-       /*
-        priceString += digit;
-        StringBuilder cashAmountBuilder = new StringBuilder(priceString);
-
-        while (cashAmountBuilder.length() < 3) {
-            cashAmountBuilder.insert(0, '0');
-        }
-
-        cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-        priceStringWithDot = cashAmountBuilder.toString();
-
-        String appendString = (category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()))?"-$":"+$";
-        textView.setText(appendString + priceStringWithDot);
-        */
-
-
-
         priceString += digit;
         textView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
     }
 
     private void removeDigit(TextView textView){
-        /*
-        if (priceString != null && priceString.length() >= 1) {
-            priceString = priceString.substring(0, priceString.length() - 1);
-        }
-
-        StringBuilder cashAmountBuilder = new StringBuilder(priceString);
-
-        while (cashAmountBuilder.length() < 3) {
-            cashAmountBuilder.insert(0, '0');
-        }
-
-        cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-        priceStringWithDot = cashAmountBuilder.toString();
-
-        String appendString = (category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()))?"-$":"+$";
-        textView.setText(appendString + priceStringWithDot);
-        */
-
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
         }

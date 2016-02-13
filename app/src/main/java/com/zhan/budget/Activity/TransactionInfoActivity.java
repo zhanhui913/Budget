@@ -61,7 +61,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private ImageButton addAccountBtn;
     private TextView transactionCostView;
 
-    private String priceString, priceStringWithDot;
+    private String priceString;
     private String noteString;
 
     private Date selectedDate;
@@ -135,7 +135,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
-        priceString = priceStringWithDot = "";
+        priceString = "";
 
         //Call one time to give priceStringWithDot the correct string format of 0.00
         removeDigit();
@@ -401,18 +401,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     private void addDigitToTextView(int digit){
         priceString += digit;
-        /*StringBuilder cashAmountBuilder = new StringBuilder(priceString);
-
-        while (cashAmountBuilder.length() < 3) {
-            cashAmountBuilder.insert(0, '0');
-        }
-
-        cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-        priceStringWithDot = cashAmountBuilder.toString();
-
-        String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
-        transactionCostView.setText(appendString + priceStringWithDot);
-        */
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
         transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
@@ -422,23 +410,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
         }
-/*
-        StringBuilder cashAmountBuilder = new StringBuilder(priceString);
-
-        while (cashAmountBuilder.length() < 3) {
-            cashAmountBuilder.insert(0, '0');
-        }
-
-        cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-        priceStringWithDot = cashAmountBuilder.toString();
-
-        String appendString = (currentPage == BudgetType.EXPENSE)?"-$":"+$";
-        transactionCostView.setText(appendString + priceStringWithDot);*/
-
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
         transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
-
     }
 
     @Override

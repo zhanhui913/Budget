@@ -24,6 +24,7 @@ import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.Calendar.CustomEvent;
 import com.zhan.budget.Model.Category;
@@ -42,6 +43,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -379,7 +381,7 @@ public class CalendarFragment extends Fragment implements
     }
 
     private void populateTransactionsForDate(Date date) {
-        Date beginDate = Util.refreshDate(date);
+        final Date beginDate = Util.refreshDate(date);
         Date endDate = Util.getNextDate(date);
 
         Log.d("CALENDAR_FRAGMENT", " populate transaction list for date between " + beginDate.toString() + " and " + endDate.toString());
@@ -393,7 +395,10 @@ public class CalendarFragment extends Fragment implements
             public void onChange() {
                 Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
 
-                totalCostForDay.setText(Util.setPriceToCorrectDecimalInString(resultsTransactionForDay.sum("price")));
+                float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
+                Toast.makeText(getContext(), "total is "+sumFloatValue, Toast.LENGTH_LONG).show();
+
+                totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Locale.CANADA));
 
                 transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
                 updateTransactionStatus();

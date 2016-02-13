@@ -12,12 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -29,6 +26,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -139,7 +137,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
                 Log.d("ZHAN", "there are " + transactionCategoryList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
 
                 //update balance
-                transactionCategoryBalance.setText(Util.setPriceToCorrectDecimalInString(total));
+                transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Locale.CANADA));
 
                 transactionCategoryAdapter.notifyDataSetChanged();
 

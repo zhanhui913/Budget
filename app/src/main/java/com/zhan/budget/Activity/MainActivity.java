@@ -261,8 +261,8 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 //Create fake transactions
-                Date startDate = Util.convertStringToDate("2016-01-01");
-                Date endDate = Util.convertStringToDate("2017-01-01");
+                Date startDate = Util.convertStringToDate("2016-02-01");
+                Date endDate = Util.convertStringToDate("2016-03-01");
 
                 Calendar start = Calendar.getInstance();
                 start.setTime(startDate);

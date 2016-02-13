@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -18,6 +19,7 @@ import com.zhan.budget.Util.Util;
 import com.zhan.circularview.CircularView;
 
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -188,7 +190,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.date.setVisibility(View.INVISIBLE);
         }
 
-        viewHolder.cost.setText(Util.setPriceToCorrectDecimalInString(transaction.getPrice()));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Locale.CANADA));
 
         return convertView;
     }
