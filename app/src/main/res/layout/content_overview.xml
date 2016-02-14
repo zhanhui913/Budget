@@ -9,7 +9,40 @@
     tools:showIn="@layout/activity_overview">
 
     <com.zhan.percentview.PercentView
+        android:id="@+id/percentView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"/>
+        android:layout_height="150dp"
+        android:background="@color/white"/>
 
+    <LinearLayout
+        android:id="@+id/centerPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/gray"
+        android:layout_below="@+id/percentView"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/svg_ic_date"
+            android:tint="@color/secondary_text_default_material_light"/>
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dec 2016"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"/>
+
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/percentListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/centerPanel"/>
 </RelativeLayout>

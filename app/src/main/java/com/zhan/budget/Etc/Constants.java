@@ -20,12 +20,14 @@ public class Constants {
     public static final String REQUEST_EDIT_CATEGORY = "Edit Category";
     public static final String REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH = "Request all transaction for category month";
     public static final String REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY = "Request all transaction for category category";
+    public static final String REQUEST_NEW_OVERVIEW_MONTH = "New Overview Month";
 
     //Return result
     public static final int RETURN_NEW_TRANSACTION = 1;
     public static final int RETURN_EDIT_TRANSACTION = 2;
     public static final int RETURN_NEW_CATEGORY = 3;
     public static final int RETURN_EDIT_CATEGORY = 4;
+    public static final int RETURN_NEW_OVERVIEW = 5;
 
     public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
     public static final String RESULT_EDIT_TRANSACTION = "Edit Transaction Result";

@@ -1,6 +1,7 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.zhan.budget.Activity.OverviewActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.MonthReportGridAdapter;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -112,7 +116,11 @@ public class MonthReportFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "Click on month :"+monthReportList.get(position).getCostThisMonth(), Toast.LENGTH_SHORT).show();
-                
+
+                Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
+
+                overviewActivity.putExtra(Constants.REQUEST_NEW_OVERVIEW_MONTH, monthReportList.get(position).getMonth());
+                startActivityForResult(overviewActivity, Constants.RETURN_NEW_OVERVIEW);
             }
         });
     }
