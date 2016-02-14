@@ -26,6 +26,7 @@ dependencies {
     compile project(':calendar')
     compile project(':circularview')
     compile project(':circleindicator')
+    compile project(':percentview')
     apt 'org.parceler:parceler:1.0.4'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'

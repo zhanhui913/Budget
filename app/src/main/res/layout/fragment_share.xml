@@ -23,8 +23,15 @@
     <ImageButton
         android:id="@+id/changeBudgetBtn"
         android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_height="50dp"
         android:src="@drawable/svg_ic_dollar"
         android:tint="@color/green"
         android:layout_below="@+id/categoryIcon" />
+
+    <com.zhan.percentview.PercentView
+        android:id="@+id/percentView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/light_cyan"
+        android:layout_below="@id/changeBudgetBtn"/>
 </RelativeLayout>

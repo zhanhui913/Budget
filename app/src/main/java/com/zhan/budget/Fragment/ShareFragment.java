@@ -1,40 +1,37 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.percentview.Model.Slice;
+import com.zhan.percentview.PercentView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link ShareFragment.OnShareInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ShareFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class ShareFragment extends Fragment {
 
     private OnShareInteractionListener mListener;
 
+    private View view;
+    private PercentView percentView;
+
     public ShareFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ShareFragment.
-     */
-    public static ShareFragment newInstance() {
-        ShareFragment fragment = new ShareFragment();
-        return fragment;
     }
 
     @Override
@@ -46,7 +43,32 @@ public class ShareFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_share, container, false);
+        view = inflater.inflate(R.layout.fragment_share, container, false);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        init();
+    }
+
+    private void init(){
+        percentView = (PercentView) view.findViewById(R.id.percentView);
+
+        List<CategoryIconColor> categoryColorList = CategoryUtil.getListOfCategoryColors(getContext());
+
+        List<Slice> sliceList = new ArrayList<>();
+        for(int i = 0; i < 5; i++){
+            Slice s = new Slice();
+            s.setColor(categoryColorList.get(i).getColor());
+            s.setWeight((i * 2) + 1);
+            sliceList.add(s);
+        }
+
+
+        percentView.setSliceList(sliceList);
     }
 
     @Override

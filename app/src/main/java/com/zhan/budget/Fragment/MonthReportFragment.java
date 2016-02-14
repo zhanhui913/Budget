@@ -12,7 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.MonthReportGridAdapter;
 import com.zhan.budget.Model.MonthReport;
@@ -33,8 +35,6 @@ import io.realm.RealmResults;
  * Activities that contain this fragment must implement the
  * {@link MonthReportFragment.OnOverviewInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MonthReportFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class MonthReportFragment extends Fragment {
 
@@ -56,17 +56,6 @@ public class MonthReportFragment extends Fragment {
 
     public MonthReportFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment OverviewFragment.
-     */
-    public static MonthReportFragment newInstance() {
-        MonthReportFragment fragment = new MonthReportFragment();
-        return fragment;
     }
 
     @Override
@@ -118,6 +107,14 @@ public class MonthReportFragment extends Fragment {
             }
             monthReportList.add(monthReport);
         }
+
+        monthReportGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "Click on month :"+monthReportList.get(position).getCostThisMonth(), Toast.LENGTH_SHORT).show();
+                
+            }
+        });
     }
 
     /**
@@ -213,13 +210,6 @@ public class MonthReportFragment extends Fragment {
     }
 
     private void updateYearInToolbar(int direction){
-        /*Calendar cal = Calendar.getInstance();
-        cal.setTime(currentYear);
-        cal.add(Calendar.YEAR, direction);
-
-        currentYear = cal.getTime();
-        */
-
         currentYear = Util.getYearWithDirection(currentYear, direction);
 
         getMonthReport();

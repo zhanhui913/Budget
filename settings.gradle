@@ -1,1 +1,1 @@
-include ':app', ':calendar', ':circularview', ':circleindicator'
+include ':app', ':calendar', ':circularview', ':circleindicator', ':percentview'
