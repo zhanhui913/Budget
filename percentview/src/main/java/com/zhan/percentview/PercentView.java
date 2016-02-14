@@ -132,9 +132,14 @@ public class PercentView extends View {
     private void drawRectangle(Canvas canvas, int width, int height){
         int w = 0;
 
-        for(int i = 0; i < sliceList.size(); i++){
-            paint.setColor(ContextCompat.getColor(getContext(), sliceList.get(i).getColor()));
-            canvas.drawRect(w, 0, w += ((sliceList.get(i).getWeight() / sumWeight) * getWidth()), getHeight(), paint);
+        if(sliceList.size() != 0) {
+            for (int i = 0; i < sliceList.size(); i++) {
+                paint.setColor(ContextCompat.getColor(getContext(), sliceList.get(i).getColor()));
+                canvas.drawRect(w, 0, w += ((sliceList.get(i).getWeight() / sumWeight) * getWidth()), getHeight(), paint);
+            }
+        }else{
+            paint.setColor(ContextCompat.getColor(getContext(), R.color.harbor_rat));
+            canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
         }
     }
 

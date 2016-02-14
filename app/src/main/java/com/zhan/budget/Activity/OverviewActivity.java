@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -26,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.realm.Realm;
@@ -37,7 +40,7 @@ public class OverviewActivity extends AppCompatActivity implements
 
     private Toolbar toolbar;
     private Date currentMonth;
-    private TextView dateTextView;
+    private TextView dateTextView, totalCostForMonthTextView;
     private PercentView percentView;
 
     private Realm myRealm;
@@ -75,7 +78,7 @@ public class OverviewActivity extends AppCompatActivity implements
         categoryListAdapter = new CategoryListAdapter(this, categoryList);
         categoryListView.setAdapter(categoryListAdapter);
 
-
+        totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
         dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(Util.convertDateToStringFormat2(currentMonth));
 
@@ -182,6 +185,8 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 }
 
+
+
 /*
                 for (int i = 0; i < transactionList.size(); i++) {
                     if(!map.containsKey(transactionList.get(i).getCategory().getId())){
@@ -199,6 +204,8 @@ public class OverviewActivity extends AppCompatActivity implements
             @Override
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
+
+                float sumCost = 0;
 
 /*
                 Iterator it = map.entrySet().iterator();
@@ -218,17 +225,19 @@ public class OverviewActivity extends AppCompatActivity implements
                 }*/
 
                 for(int i = 0; i < categoryList.size(); i++){
-                    Log.d("ZHAN1", "category : "+categoryList.get(i).getName()+" -> "+categoryList.get(i).getCost());
+                    Log.d("ZHAN1", "category : " + categoryList.get(i).getName() + " -> " + categoryList.get(i).getCost());
 
+                    if(categoryList.get(i).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                        Slice slice = new Slice();
+                        slice.setColor(categoryList.get(i).getColor());
+                        slice.setWeight(categoryList.get(i).getCost());
 
-                    Slice slice = new Slice();
-                    slice.setColor(categoryList.get(i).getColor());
-                    slice.setWeight(categoryList.get(i).getCost());
-
-                    sliceList.add(slice);
-
+                        sliceList.add(slice);
+                        sumCost += categoryList.get(i).getCost();
+                    }
                 }
 
+                totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Locale.CANADA));
 
                 percentView.setSliceList(sliceList);
 

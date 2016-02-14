@@ -170,7 +170,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
             viewHolder.progressBar.setVisibility(View.GONE);
         }
-        
+
 
         if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.colorPrimary));

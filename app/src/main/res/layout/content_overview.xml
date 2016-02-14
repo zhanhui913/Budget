@@ -8,11 +8,28 @@
     tools:context="com.zhan.budget.Activity.OverviewActivity"
     tools:showIn="@layout/activity_overview">
 
-    <com.zhan.percentview.PercentView
-        android:id="@+id/percentView"
+    <RelativeLayout
+        android:id="@+id/topPanel"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@color/white"/>
+        android:layout_height="150dp">
+
+        <com.zhan.percentview.PercentView
+            android:id="@+id/percentView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"/>
+
+        <TextView
+            android:id="@+id/totalCostForMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            android:text="$0.00"
+            android:textAlignment="center"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/centerPanel"
@@ -20,7 +37,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/gray"
-        android:layout_below="@+id/percentView"
+        android:layout_below="@+id/topPanel"
         android:padding="5dp">
 
         <ImageView
