@@ -223,7 +223,9 @@ public class TransactionsForCategory extends AppCompatActivity implements
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        myRealm.close();
+        if(!myRealm.isClosed()){
+            myRealm.close();
+        }
     }
 
     @Override

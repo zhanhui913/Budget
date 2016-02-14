@@ -39,9 +39,8 @@
 
     </LinearLayout>
 
-
     <ListView
-        android:id="@+id/percentListView"
+        android:id="@+id/percentCategoryListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/centerPanel"/>

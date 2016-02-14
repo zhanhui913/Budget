@@ -296,7 +296,6 @@ public class CategoryFragment extends Fragment implements
 
                 //Go through each transaction and put them into the correct category
                 for(int t = 0; t < transactionMonthList.size(); t++){
-                    //Log.d("POP", "transaction with category id : " +resultsTransaction.get(t).getCategory().getId());
                     for(int c = 0; c < categoryList.size(); c++){
                         if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
                             float transactionPrice = transactionMonthList.get(t).getPrice();
@@ -316,8 +315,6 @@ public class CategoryFragment extends Fragment implements
                 for(int i = 0; i < categoryList.size(); i++){
                     Log.d("ZHAN1", "category : "+categoryList.get(i).getName()+" -> "+categoryList.get(i).getCost());
                 }
-
-
 
                 categoryAdapter.notifyDataSetChanged();
 
