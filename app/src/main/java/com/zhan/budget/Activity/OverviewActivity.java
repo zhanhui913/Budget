@@ -133,8 +133,6 @@ public class OverviewActivity extends AppCompatActivity implements
 
         //map = new HashMap<String, Float>();
 
-        //monthReportGridAdapter.notifyDataSetChanged();
-
         Log.d("OVERVIEW_ACT", "("+Util.convertDateToStringFormat1(month) + "-> "+Util.convertDateToStringFormat1(endMonth)+")");
 
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();

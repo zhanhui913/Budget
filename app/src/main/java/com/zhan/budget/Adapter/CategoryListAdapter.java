@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.circularview.CircularView;
@@ -156,11 +157,20 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
         viewHolder.name.setText(category.getName());
         viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Locale.CANADA));
 
-        //ProgressBar
-        viewHolder.progressBar.setMax(category.getBudget());
-        viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
+        if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
+            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Locale.CANADA));
+
+            //ProgressBar
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+            viewHolder.progressBar.setMax(category.getBudget());
+            viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
+        }else{
+            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Locale.CANADA));
+
+            viewHolder.progressBar.setVisibility(View.GONE);
+        }
+        
 
         if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.colorPrimary));
