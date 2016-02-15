@@ -192,6 +192,8 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 }*/
 
+                categoryListAdapter.notifyDataSetChanged();
+
                 return null;
             }
 

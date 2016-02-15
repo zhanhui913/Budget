@@ -71,8 +71,8 @@
       <file leaf-file-name="OverviewActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/OverviewActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.76244813">
-              <caret line="87" column="37" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
+            <state vertical-scroll-proportion="0.7313278">
+              <caret line="194" column="59" selection-start-line="194" selection-start-column="59" selection-end-line="194" selection-end-column="59" />
               <folding>
                 <element signature="method#onCreate#0;class#OverviewActivity#0" expanded="false" />
                 <element signature="method#onDestroy#0;class#OverviewActivity#0" expanded="false" />
@@ -3878,7 +3878,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="10182632055000" />
+        <entry key="$PROJECT_DIR$" value="10182633750000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -5331,6 +5331,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6111111">
           <caret line="437" column="98" selection-start-line="437" selection-start-column="34" selection-end-line="437" selection-end-column="98" />
+          <folding>
+            <element signature="method#createToolbar#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#createAccountDialog#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#createNoteDialog#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#addDigitToTextView#0;class#TransactionInfoActivity#0" expanded="false" />
+            <element signature="method#removeDigit#0;class#TransactionInfoActivity#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -5450,6 +5457,35 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.80801105">
           <caret line="501" column="0" selection-start-line="501" selection-start-column="0" selection-end-line="506" selection-end-column="81" />
+          <folding>
+            <element signature="method#onActivityCreated#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#init#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#addListeners#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#createPullToAddTransaction#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#createCalendar#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#getCustomEventList#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#initEvents#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#getEvents#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#GetTransactionsForThese3Month#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#compareDecorators#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#populateTransactionsForDate#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="docComment;method#createSwipeMenu#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#createSwipeMenu#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#updateTransactionStatus#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#updateMonthInToolbar#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="class#19319:19917" expanded="false" />
+            <element signature="class#19957:20217" expanded="false" />
+            <element signature="method#onActivityResult#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onCreateOptionsMenu#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onAttach#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onDetach#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onDestroy#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="docComment;class#OnCalendarListener#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onDeleteTransaction#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onApproveTransaction#0;class#CalendarFragment#0" expanded="false" />
+            <element signature="method#onDisablePtrPullDown#0;class#CalendarFragment#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -5483,6 +5519,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9585635">
           <caret line="198" column="34" selection-start-line="198" selection-start-column="34" selection-end-line="198" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -5576,8 +5613,8 @@
         <state vertical-scroll-proportion="0.50276244">
           <caret line="140" column="84" selection-start-line="140" selection-start-column="84" selection-end-line="140" selection-end-column="84" />
           <folding>
-            <element signature="e#5636#5637#0" expanded="true" />
-            <element signature="e#5668#5669#0" expanded="true" />
+            <element signature="e#5636#5637#0" expanded="false" />
+            <element signature="e#5668#5669#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -5616,8 +5653,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/OverviewActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76244813">
-          <caret line="87" column="37" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.7313278">
+          <caret line="194" column="59" selection-start-line="194" selection-start-column="59" selection-end-line="194" selection-end-column="59" />
           <folding>
             <element signature="method#onCreate#0;class#OverviewActivity#0" expanded="false" />
             <element signature="method#onDestroy#0;class#OverviewActivity#0" expanded="false" />
