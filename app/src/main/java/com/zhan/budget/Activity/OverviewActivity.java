@@ -192,7 +192,6 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 }*/
 
-                categoryListAdapter.notifyDataSetChanged();
 
                 return null;
             }
@@ -219,6 +218,9 @@ public class OverviewActivity extends AppCompatActivity implements
 
                     it.remove(); // avoids a ConcurrentModificationException
                 }*/
+
+                categoryListAdapter.notifyDataSetChanged();
+
 
                 for(int i = 0; i < categoryList.size(); i++){
                     Log.d("ZHAN1", "category : " + categoryList.get(i).getName() + " -> " + categoryList.get(i).getCost());
