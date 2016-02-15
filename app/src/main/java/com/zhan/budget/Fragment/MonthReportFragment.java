@@ -18,9 +18,9 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.zhan.budget.Activity.OverviewActivity;
-import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.MonthReportGridAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
@@ -115,7 +115,7 @@ public class MonthReportFragment extends Fragment {
         monthReportGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Click on month :"+monthReportList.get(position).getCostThisMonth(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Click on month :" + monthReportList.get(position).getCostThisMonth(), Toast.LENGTH_SHORT).show();
 
                 Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
 
@@ -182,12 +182,14 @@ public class MonthReportFragment extends Fragment {
                 startTime = System.nanoTime();
 
                 for (int i = 0; i < transactionList.size(); i++) {
+                    //Only add Category of type EXPENSE
+                    if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
+                        int month = Util.getMonthFromDate(transactionList.get(i).getDate());
 
-                    int month = Util.getMonthFromDate(transactionList.get(i).getDate());
-
-                    for(int a = 0; a < monthReportList.size(); a++){
-                        if(month == Util.getMonthFromDate(monthReportList.get(a).getMonth())){
-                            monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
+                        for (int a = 0; a < monthReportList.size(); a++) {
+                            if (month == Util.getMonthFromDate(monthReportList.get(a).getMonth())) {
+                                monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
+                            }
                         }
                     }
                 }

@@ -2,15 +2,12 @@ package com.zhan.budget.Activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Etc.Constants;
@@ -25,11 +22,8 @@ import com.zhan.percentview.PercentView;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -92,10 +86,10 @@ public class OverviewActivity extends AppCompatActivity implements
         //Create the toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.svg_ic_navback);
 
         if(getSupportActionBar() != null){
             getSupportActionBar().setTitle("Overview");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
