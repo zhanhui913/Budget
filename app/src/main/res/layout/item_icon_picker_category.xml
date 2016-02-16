@@ -16,5 +16,5 @@
         custom:cv_iconBottomPadding="12dp"
         custom:cv_iconLeftPadding="12dp"
         custom:cv_iconRightPadding="12dp"
-        custom:cv_bgRadius="22dp"/>
+        custom:cv_bgRadius="25dp"/>
 </RelativeLayout>

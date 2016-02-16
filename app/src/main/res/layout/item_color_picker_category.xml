@@ -12,9 +12,10 @@
         custom:cv_strokePadding="3dp"
         custom:cv_strokeWidth="1dp"
         custom:cv_strokeColor="@android:color/transparent"
+        custom:cv_iconColor="@color/transparent"
         custom:cv_iconTopPadding="12dp"
         custom:cv_iconBottomPadding="12dp"
         custom:cv_iconLeftPadding="12dp"
         custom:cv_iconRightPadding="12dp"
-        custom:cv_bgRadius="22dp"/>
+        custom:cv_bgRadius="25dp"/>
 </RelativeLayout>
