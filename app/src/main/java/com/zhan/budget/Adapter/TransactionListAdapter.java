@@ -157,6 +157,8 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         //If transaction is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidthInDP(0);
+            viewHolder.circularView.setStrokePaddingInDP(0);
+            viewHolder.circularView.setCircleRadiusInDP(25);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
             viewHolder.circularView.setIconResource(transaction.getCategory().getIcon());
@@ -166,6 +168,8 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.approveBtn.setVisibility(View.GONE);
         }else{ //If transaction is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
+            viewHolder.circularView.setStrokePaddingInDP(0);
+            viewHolder.circularView.setCircleRadiusInDP(23);
             viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
             viewHolder.circularView.setCircleColor(R.color.transparent);
             viewHolder.circularView.setIconResource(transaction.getCategory().getIcon());
