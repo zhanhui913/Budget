@@ -2,7 +2,6 @@ package com.zhan.budget.Adapter;
 
 
 import android.content.Context;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import java.util.List;
 
@@ -56,8 +55,7 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
         Category category = categoryList.get(position);
 
         viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(this.context.getResources(), category.getIcon(), this.context.getTheme()));
-
+        viewHolder.circularView.setIconResource(category.getIcon());
 
         // Name
         viewHolder.name.setText(category.getName());

@@ -7,7 +7,6 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +32,6 @@ import io.realm.RealmResults;
  * Activities that contain this fragment must implement the
  * {@link MonthReportFragment.OnOverviewInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MonthReportFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class TransactionIncomeFragment extends Fragment {
 

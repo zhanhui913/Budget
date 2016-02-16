@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 
 import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import java.util.List;
 

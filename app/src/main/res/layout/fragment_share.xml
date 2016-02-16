@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.ShareFragment">
 
-    <com.zhan.circularview.CircularView
+    <com.zhan.library.CircularView
         xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/categoryIcon"
         android:layout_width="wrap_content"

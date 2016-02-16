@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +27,7 @@ import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.circleindicator.CircleIndicator;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
@@ -161,8 +160,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
         categoryCircularView.setCircleColor(category.getColor());
 
-        categoryCircularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
-                category.getIcon(), getTheme()));
+        categoryCircularView.setIconResource(category.getIcon());
         categoryCircularView.setIconColor(R.color.white);
     }
 
@@ -491,7 +489,6 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     public void onIconCategoryClick(int icon){
         Log.d("CATEGORY_INFO", "click on icon : "+icon);
         selectedIcon = icon;
-        categoryCircularView.setIconDrawable(ResourcesCompat.getDrawable(getResources(),
-                icon, getTheme()));
+        categoryCircularView.setIconResource(icon);
     }
 }

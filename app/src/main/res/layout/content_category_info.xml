@@ -7,40 +7,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Activity.CategoryInfoActivity"
     tools:showIn="@layout/activity_category_info">
-<!--
-    <TextView
-        android:id="@+id/categoryName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="categoryName"
-        android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/categoryBudget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="categoryBudget"
-        android:textSize="20sp"
-        android:layout_below="@+id/categoryName"
-        android:paddingTop="20dp" />
-
-    <TextView
-        android:id="@+id/categoryCost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="categoryCost"
-        android:textSize="20sp"
-        android:layout_below="@+id/categoryName"
-        android:layout_toRightOf="@+id/categoryBudget"
-        android:paddingLeft="20dp"
-        android:paddingTop="20dp" />
-        -->
     <RelativeLayout
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.zhan.circularview.CircularView
+        <com.zhan.library.CircularView
             xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/categoryCircularView"
             android:layout_width="wrap_content"

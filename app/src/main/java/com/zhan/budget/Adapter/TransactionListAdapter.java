@@ -2,7 +2,6 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import java.util.List;
 import java.util.Locale;
@@ -157,21 +156,19 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
         //If transaction is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
-            viewHolder.circularView.setStrokeWidth(0); //in dp
+            viewHolder.circularView.setStrokeWidthInDP(0);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
-            viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
-                    transaction.getCategory().getIcon(), activity.getTheme()));
+            viewHolder.circularView.setIconResource(transaction.getCategory().getIcon());
             viewHolder.circularView.setIconColor(R.color.white);
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
         }else{ //If transaction is SCHEDULED but not COMPLETED
-            viewHolder.circularView.setStrokeWidth(2); //in dp
+            viewHolder.circularView.setStrokeWidthInDP(2);
             viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
             viewHolder.circularView.setCircleColor(R.color.transparent);
-            viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(),
-                    transaction.getCategory().getIcon(), activity.getTheme()));
+            viewHolder.circularView.setIconResource(transaction.getCategory().getIcon());
             viewHolder.circularView.setIconColor(R.color.harbor_rat);
 
             viewHolder.approveBtn.setVisibility(View.VISIBLE);

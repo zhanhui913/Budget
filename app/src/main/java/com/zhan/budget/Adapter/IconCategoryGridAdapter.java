@@ -1,7 +1,6 @@
 package com.zhan.budget.Adapter;
 
 import android.content.Context;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,7 @@ import android.widget.ArrayAdapter;
 
 import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import java.util.List;
 
@@ -55,12 +54,7 @@ public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
 
         //get drawable data
         viewHolder.circularView.setCircleColor(this.color);
-        viewHolder.circularView.setIconDrawable(
-                ResourcesCompat.getDrawable(
-                        this.context.getResources(),
-                        iconList.get(position).getIcon(),
-                        this.context.getTheme())
-                );
+        viewHolder.circularView.setIconResource(iconList.get(position).getIcon());
 
         if(iconList.get(position).isSelected()){
             viewHolder.circularView.setStrokeColor(R.color.harbor_rat);

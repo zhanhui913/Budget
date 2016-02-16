@@ -3,7 +3,6 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import java.util.List;
 import java.util.Locale;
@@ -153,7 +152,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconDrawable(ResourcesCompat.getDrawable(activity.getResources(), category.getIcon(), activity.getTheme()));
+        viewHolder.circularView.setIconResource(category.getIcon());
 
         viewHolder.name.setText(category.getName());
         viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));

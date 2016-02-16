@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="2dp">
 
-    <com.zhan.circularview.CircularView
+    <com.zhan.library.CircularView
         xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/categoryIcon"
         android:layout_width="wrap_content"

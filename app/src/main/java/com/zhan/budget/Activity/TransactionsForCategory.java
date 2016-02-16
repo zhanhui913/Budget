@@ -19,7 +19,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
-import com.zhan.circularview.CircularView;
+import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 

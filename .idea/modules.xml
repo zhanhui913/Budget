@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/calendar/calendar.iml" filepath="$PROJECT_DIR$/calendar/calendar.iml" />
       <module fileurl="file://$PROJECT_DIR$/circleindicator/circleindicator.iml" filepath="$PROJECT_DIR$/circleindicator/circleindicator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/circularview/circularview.iml" filepath="$PROJECT_DIR$/circularview/circularview.iml" />
       <module fileurl="file://$PROJECT_DIR$/percentview/percentview.iml" filepath="$PROJECT_DIR$/percentview/percentview.iml" />
     </modules>
   </component>
