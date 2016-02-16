@@ -37,19 +37,13 @@
         android:layout_height="match_parent"
         android:padding="5dp">
 
-        <com.zhan.library.CircularView
-            xmlns:custom="http://schemas.android.com/apk/res-auto"
+        <com.zhan.library.CircularView style="@style/CircularViewStyle"
             android:id="@+id/categoryIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="false"
-            android:layout_alignParentLeft="false"
-            custom:cv_iconTopPadding="12dp"
-            custom:cv_iconBottomPadding="12dp"
-            custom:cv_iconLeftPadding="12dp"
-            custom:cv_iconRightPadding="12dp"
-            custom:cv_bgRadius="25dp"/>
+            android:layout_alignParentLeft="false" />
 
         <TextView
             android:id="@+id/categoryName"

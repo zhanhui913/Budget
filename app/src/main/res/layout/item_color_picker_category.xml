@@ -3,19 +3,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.zhan.library.CircularView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
+    <com.zhan.library.CircularView style="@style/CircularViewStyle"
         android:id="@+id/colorIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        custom:cv_strokePadding="3dp"
-        custom:cv_strokeWidth="1dp"
-        custom:cv_strokeColor="@android:color/transparent"
-        custom:cv_iconColor="@color/transparent"
-        custom:cv_iconTopPadding="12dp"
-        custom:cv_iconBottomPadding="12dp"
-        custom:cv_iconLeftPadding="12dp"
-        custom:cv_iconRightPadding="12dp"
-        custom:cv_bgRadius="25dp"/>
+        android:layout_gravity="center" />
 </RelativeLayout>
