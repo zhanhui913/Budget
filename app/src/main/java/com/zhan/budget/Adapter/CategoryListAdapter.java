@@ -27,7 +27,6 @@ import java.util.List;
  */
 public class CategoryListAdapter extends ArrayAdapter<Category> {
 
-
     private OnCategoryAdapterInteractionListener mListener;
     private Activity activity;
     private List<Category> categoryList;

@@ -10,10 +10,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zhan.budget.Adapter.CategoryListAdapter;
+import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -42,10 +44,11 @@ public class OverviewActivity extends AppCompatActivity implements
 
     private List<Transaction> transactionList;
     private List<Category> categoryList;
+    private List<CategoryPercent> categoryPercentList;
     private List<Slice> sliceList;
 
     private ListView categoryListView;
-    private CategoryListAdapter categoryListAdapter;
+    private CategoryPercentListAdapter categoryPercentListAdapter;
 
     //private HashMap<String, Float> map;
 
@@ -67,9 +70,10 @@ public class OverviewActivity extends AppCompatActivity implements
         myRealm = Realm.getDefaultInstance();
 
         categoryList = new ArrayList<>();
+        categoryPercentList = new ArrayList<>();
         categoryListView = (ListView) findViewById(R.id.percentCategoryListView);
-        categoryListAdapter = new CategoryListAdapter(this, categoryList);
-        categoryListView.setAdapter(categoryListAdapter);
+        categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryPercentList);
+        categoryListView.setAdapter(categoryPercentListAdapter);
 
         totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
         dateTextView = (TextView) findViewById(R.id.dateTextView);
@@ -109,9 +113,6 @@ public class OverviewActivity extends AppCompatActivity implements
             public void onChange() {
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(resultsCategory);
-
-                categoryListAdapter.addAll(categoryList);
-                categoryListAdapter.notifyDataSetChanged();
 
                 getMonthReport(currentMonth);
             }
@@ -178,45 +179,6 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 }
 
-                //List of integer that is the position of category in categoryList who's sum for cost is 0
-                // or INCOME type
-                List<Integer> zeroSumList = new ArrayList<>();
-
-                //Get position of Category who's sum cost is 0 or INCOME type
-                for(int i = 0; i < categoryList.size(); i++){
-                    if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                        Log.d("PERCENT_VIEW", "Category : "+categoryList.get(i).getName()+" -> with cost "+categoryList.get(i).getCost());
-
-                        zeroSumList.add(i);
-                    }
-                }
-                Log.d("PERCENT_VIEW", "BEFORE REMOVING THERE ARE "+categoryList.size());
-
-                for(int i = 0; i < zeroSumList.size(); i++){
-                    Log.d("PERCENT_VIEW", "ZERO SUM LIST : "+zeroSumList.get(i));
-                }
-
-                //Remove those category who's sum for cost is 0
-                for(int i = 0; i < zeroSumList.size(); i++){
-                    categoryList.remove(zeroSumList.get(i));
-                }
-                Log.d("PERCENT_VIEW", "AFTER REMOVING THERE ARE " + categoryList.size());
-
-
-
-                //categoryListAdapter.notifyDataSetChanged();
-/*
-                for (int i = 0; i < transactionList.size(); i++) {
-                    if(!map.containsKey(transactionList.get(i).getCategory().getId())){
-                        map.put(transactionList.get(i).getCategory().getId(), transactionList.get(i).getPrice());
-                    }else{
-                        float f = transactionList.get(i).getPrice();
-                        float m = map.get(transactionList.get(i).getCategory().getId());
-                        map.put(transactionList.get(i).getCategory().getId(), f + m);
-                    }
-                }*/
-
-
                 return null;
             }
 
@@ -226,28 +188,60 @@ public class OverviewActivity extends AppCompatActivity implements
 
                 float sumCost = 0;
 
-/*
-                Iterator it = map.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry)it.next();
-                    //System.out.println(pair.getKey() + " = " + pair.getValue());
+                //List of string that is the ID of category in categoryList who's sum for cost is 0
+                // or INCOME type
+                List<Category> zeroSumList = new ArrayList<>();
+
+                //Get position of Category who's sum cost is 0 or INCOME type
+                for(int i = 0; i < categoryList.size(); i++){
+                    if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                        Log.d("PERCENT_VIEW", "Category : " + categoryList.get(i).getName() + " -> with cost " + categoryList.get(i).getCost());
+                        zeroSumList.add(categoryList.get(i));
+                    }
+                }
+                Log.d("PERCENT_VIEW", "BEFORE REMOVING THERE ARE "+categoryList.size());
+
+                for(int i = 0; i < zeroSumList.size(); i++){
+                    Log.d("PERCENT_VIEW", "ZERO SUM LIST : "+zeroSumList.get(i).getName());
+                }
+
+                //Remove those category who's sum for cost is 0 or INCOME type
+                for(int i = 0; i < zeroSumList.size(); i++){
+                    //categoryList.remove(zeroSumList.get(i));
+                    categoryList.remove(zeroSumList.get(i));
+                }
+                Log.d("PERCENT_VIEW", "AFTER REMOVING THERE ARE " + categoryList.size());
+
+
+
+                //Go through list cost to get sumCost
+                for(int i = 0; i < categoryList.size(); i++){
+                    sumCost += categoryList.get(i).getCost();
+                }
+
+                //Now calculate percentage for each category
+                for(int i = 0; i < categoryList.size(); i++){
+                    CategoryPercent cp = new CategoryPercent();
+                    cp.setCategory(categoryList.get(i));
+                    cp.setPercent((categoryList.get(i).getCost() / sumCost) * 100);
+
+                    Log.d("PERCENT_VIEW", i+", "+cp.getCategory().getName()+"->"+cp.getPercent());
+
+                    categoryPercentList.add(cp);
 
                     Slice slice = new Slice();
-                    slice.setColor(R.color.colorPrimary);
-                    slice.setWeight(Math.abs((float) (pair.getValue())));
-
-                    Log.d("OVERVIEW_ACT", "weight :"+slice.getWeight());
-
+                    slice.setColor(categoryList.get(i).getColor());
+                    slice.setWeight(categoryList.get(i).getCost());
                     sliceList.add(slice);
-
-                    it.remove(); // avoids a ConcurrentModificationException
-                }*/
+                }
 
 
-                categoryListAdapter.clear();
-                categoryListAdapter.addAll(categoryList);
-                //categoryListAdapter.notifyDataSetChanged();
 
+                categoryPercentListAdapter.clear();
+                categoryPercentListAdapter.addAll(categoryPercentList);
+                categoryPercentListAdapter.notifyDataSetChanged();
+
+                /*
                 Log.d("PERCENT_VIEW", "BEFORE, There are " + sliceList.size() + " items in the list");
 
                 for(int i = 0; i < categoryList.size(); i++){
@@ -265,7 +259,7 @@ public class OverviewActivity extends AppCompatActivity implements
                             sumCost += categoryList.get(i).getCost();
                         }
                     }
-                }
+                }*/
 
                 totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
 
@@ -277,7 +271,7 @@ public class OverviewActivity extends AppCompatActivity implements
                 long milli = (duration / 1000000);
                 long second = (milli / 1000);
                 float minutes = (second / 60.0f);
-                Log.d("OVERVIEW_ACT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+                Log.d("PERCENT_VIEW", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
         };
         loader.execute();
