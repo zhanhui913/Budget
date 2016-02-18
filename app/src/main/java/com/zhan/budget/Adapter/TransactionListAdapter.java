@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
@@ -18,7 +19,6 @@ import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -157,7 +157,6 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         //If transaction is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidthInDP(0);
-            viewHolder.circularView.setStrokePaddingInDP(0);
             viewHolder.circularView.setCircleRadiusInDP(25);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
@@ -168,7 +167,6 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.approveBtn.setVisibility(View.GONE);
         }else{ //If transaction is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
-            viewHolder.circularView.setStrokePaddingInDP(0);
             viewHolder.circularView.setCircleRadiusInDP(23);
             viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
             viewHolder.circularView.setCircleColor(R.color.transparent);
@@ -191,7 +189,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.date.setVisibility(View.INVISIBLE);
         }
 
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Locale.CANADA));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
 
         return convertView;
     }

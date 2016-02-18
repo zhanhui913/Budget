@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.daimajia.swipe.SwipeLayout;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
@@ -20,7 +21,6 @@ import com.zhan.budget.R;
 import com.zhan.library.CircularView;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by zhanyap on 2016-01-08.
@@ -155,17 +155,17 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         viewHolder.circularView.setIconResource(category.getIcon());
 
         viewHolder.name.setText(category.getName());
-        viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
+        viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
-            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Locale.CANADA));
+            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
 
             //ProgressBar
             viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.progressBar.setMax(category.getBudget());
             viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
         }else{
-            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Locale.CANADA));
+            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
 
             viewHolder.progressBar.setVisibility(View.GONE);
         }

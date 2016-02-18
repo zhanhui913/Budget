@@ -26,7 +26,6 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -137,7 +136,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
                 Log.d("ZHAN", "there are " + transactionCategoryList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
 
                 //update balance
-                transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Locale.CANADA));
+                transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
 
                 transactionCategoryAdapter.notifyDataSetChanged();
 

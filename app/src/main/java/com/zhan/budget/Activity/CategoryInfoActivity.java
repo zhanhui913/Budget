@@ -102,7 +102,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryBudgetTextView = (TextView) findViewById(R.id.categoryBudgetTextView);
 
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
@@ -262,15 +262,15 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         priceString = "";
 
         title.setText("Change Budget");
-        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
+        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setCancelable(true)
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
-                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Locale.CANADA));
+                        category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -375,14 +375,14 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private void addDigitToTextView(TextView textView, int digit){
         Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
         priceString += digit;
-        textView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 
     private void removeDigit(TextView textView){
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
         }
-        textView.setText(CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 
     private void confirmDelete(){

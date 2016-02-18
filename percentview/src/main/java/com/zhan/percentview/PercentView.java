@@ -5,12 +5,8 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.zhan.percentview.Model.Slice;
@@ -31,6 +27,7 @@ public class PercentView extends View {
 
     private Paint paint;
     private float sumWeight;
+    List<Slice> sliceList = new ArrayList<>();
 
     public PercentView(Context context) {
         super(context);
@@ -124,10 +121,7 @@ public class PercentView extends View {
         super.onDraw(canvas);
 
         drawRectangle(canvas, this.getWidth(), this.getHeight());
-        invalidate();
     }
-
-    List<Slice> sliceList = new ArrayList<>();
 
     private void drawRectangle(Canvas canvas, int width, int height){
         int w = 0;

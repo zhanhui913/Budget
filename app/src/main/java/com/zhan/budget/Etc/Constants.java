@@ -1,11 +1,16 @@
 package com.zhan.budget.Etc;
 
+import java.util.Locale;
+
 /**
  * Created by zhanyap on 15-12-21.
  */
 public class Constants {
     public static final String REALM_NAME = "budget.realm";
     public static final String CSV_NAME = "budget.csv";
+
+    //Locale
+    public static final Locale BUDGET_LOCALE = Locale.CANADA;
 
     //Permissions for Android M
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;

@@ -43,7 +43,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -398,7 +397,7 @@ public class CalendarFragment extends Fragment implements
                 float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
                 Toast.makeText(getContext(), "total is "+sumFloatValue, Toast.LENGTH_LONG).show();
 
-                totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Locale.CANADA));
+                totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                 transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
                 updateTransactionStatus();

@@ -42,7 +42,6 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -273,11 +272,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 switch (position) {
                     case 0:
                         currentPage = BudgetType.EXPENSE;
-                        transactionCostView.setText("-" + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+                        transactionCostView.setText("-" + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
-                        transactionCostView.setText("+" + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+                        transactionCostView.setText("+" + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
                         break;
                 }
             }
@@ -405,7 +404,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         priceString += digit;
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
-        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 
     private void removeDigit(){
@@ -414,7 +413,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
-        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Locale.CANADA));
+        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 
     @Override
@@ -435,10 +434,10 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){
-            transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
+            transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
             transaction.setCategory(selectedExpenseCategory);
         }else{
-            transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Locale.CANADA));
+            transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
             transaction.setCategory(selectedIncomeCategory);
         }
 

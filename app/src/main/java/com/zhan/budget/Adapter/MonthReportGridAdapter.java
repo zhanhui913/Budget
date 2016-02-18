@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
 import java.util.List;
-import java.util.Locale;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
@@ -71,8 +71,8 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         MonthReport monthReport = monthReportList.get(position);
 
         viewHolder.month.setText(Util.convertDateToStringFormat4(monthReport.getMonth()));
-        viewHolder.costThisMonth.setText(CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Locale.CANADA));
-        viewHolder.changeCost.setText(CurrencyTextFormatter.formatFloat(monthReport.getChangeCost(), Locale.CANADA));
+        viewHolder.costThisMonth.setText(CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
+        viewHolder.changeCost.setText(CurrencyTextFormatter.formatFloat(monthReport.getChangeCost(), Constants.BUDGET_LOCALE));
 
         if(monthReport.isDoneCalculation()){
             viewHolder.costThisMonth.setVisibility(View.VISIBLE);

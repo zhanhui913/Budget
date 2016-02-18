@@ -15,6 +15,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.zhan.budget.Etc.Constants;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -271,7 +272,7 @@ public final class Util {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Date convertStringToDate(String stringDate){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
         Date date = null;
         try{
             date = formatter.parse(stringDate);
@@ -282,12 +283,12 @@ public final class Util {
     }
 
     public static String convertDateToString(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
         return formatter.format(date);
     }
 
     public static Date formatDate(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
 
         String dateString = convertDateToString(date);
         Date newDate = null;
@@ -301,27 +302,27 @@ public final class Util {
     }
 
     public static String convertDateToStringFormat1(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", Constants.BUDGET_LOCALE);
         return formatter.format(date);
     }
 
     public static String convertDateToStringFormat2(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy", Constants.BUDGET_LOCALE);
         return formatter.format(date);
     }
 
     public static String convertDateToStringFormat3(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy", Constants.BUDGET_LOCALE);
         return formatter.format(date);
     }
 
     public static String convertDateToStringFormat4(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM", Constants.BUDGET_LOCALE);
         return formatter.format(date);
     }
 
     public static String convertDateToStringFormat5(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd", Locale.CANADA);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd", Constants.BUDGET_LOCALE);
         return formatter.format(date);
     }
 

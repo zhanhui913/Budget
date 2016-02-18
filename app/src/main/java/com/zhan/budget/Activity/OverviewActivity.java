@@ -23,7 +23,6 @@ import com.zhan.percentview.PercentView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -179,8 +178,33 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 }
 
+                //List of integer that is the position of category in categoryList who's sum for cost is 0
+                // or INCOME type
+                List<Integer> zeroSumList = new ArrayList<>();
+
+                //Get position of Category who's sum cost is 0 or INCOME type
+                for(int i = 0; i < categoryList.size(); i++){
+                    if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                        Log.d("PERCENT_VIEW", "Category : "+categoryList.get(i).getName()+" -> with cost "+categoryList.get(i).getCost());
+
+                        zeroSumList.add(i);
+                    }
+                }
+                Log.d("PERCENT_VIEW", "BEFORE REMOVING THERE ARE "+categoryList.size());
+
+                for(int i = 0; i < zeroSumList.size(); i++){
+                    Log.d("PERCENT_VIEW", "ZERO SUM LIST : "+zeroSumList.get(i));
+                }
+
+                //Remove those category who's sum for cost is 0
+                for(int i = 0; i < zeroSumList.size(); i++){
+                    categoryList.remove(zeroSumList.get(i));
+                }
+                Log.d("PERCENT_VIEW", "AFTER REMOVING THERE ARE " + categoryList.size());
 
 
+
+                //categoryListAdapter.notifyDataSetChanged();
 /*
                 for (int i = 0; i < transactionList.size(); i++) {
                     if(!map.containsKey(transactionList.get(i).getCategory().getId())){
@@ -219,25 +243,34 @@ public class OverviewActivity extends AppCompatActivity implements
                     it.remove(); // avoids a ConcurrentModificationException
                 }*/
 
-                categoryListAdapter.notifyDataSetChanged();
 
+                categoryListAdapter.clear();
+                categoryListAdapter.addAll(categoryList);
+                //categoryListAdapter.notifyDataSetChanged();
+
+                Log.d("PERCENT_VIEW", "BEFORE, There are " + sliceList.size() + " items in the list");
 
                 for(int i = 0; i < categoryList.size(); i++){
                     Log.d("ZHAN1", "category : " + categoryList.get(i).getName() + " -> " + categoryList.get(i).getCost());
 
+                    //Add only EXPENSE category type
                     if(categoryList.get(i).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                        Slice slice = new Slice();
-                        slice.setColor(categoryList.get(i).getColor());
-                        slice.setWeight(categoryList.get(i).getCost());
-
-                        sliceList.add(slice);
-                        sumCost += categoryList.get(i).getCost();
+                        //Don't add those Category who's sum cost is 0
+                        if(categoryList.get(i).getCost() != 0f){
+                            Slice slice = new Slice();
+                            slice.setColor(categoryList.get(i).getColor());
+                            slice.setWeight(categoryList.get(i).getCost());
+                            Log.d("PERCENT_VIEW", i + ") DURING, weigh sum :" + categoryList.get(i).getCost());
+                            sliceList.add(slice);
+                            sumCost += categoryList.get(i).getCost();
+                        }
                     }
                 }
 
-                totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Locale.CANADA));
+                totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
 
                 percentView.setSliceList(sliceList);
+                Log.d("PERCENT_VIEW", "AFTER, There are " + sliceList.size() + " items in the list");
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);

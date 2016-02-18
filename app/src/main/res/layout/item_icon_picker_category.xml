@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.zhan.library.CircularView style="@style/CircularViewStyle"
+    <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
         android:id="@+id/categoryIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

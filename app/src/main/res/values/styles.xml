@@ -26,10 +26,18 @@
         <item name="android:layout_margin">1dp</item>
     </style>
 
-    <style name="CircularViewStyle">
+    <style name="CircularViewStyle_selected">
         <item name="cv_strokePadding">3dp</item>
         <item name="cv_strokeWidth">1dp</item>
         <item name="cv_strokeColor">@color/transparent</item>
+        <item name="cv_iconTopPadding">12dp</item>
+        <item name="cv_iconBottomPadding">12dp</item>
+        <item name="cv_iconLeftPadding">12dp</item>
+        <item name="cv_iconRightPadding">12dp</item>
+        <item name="cv_bgRadius">25dp</item>
+    </style>
+
+    <style name="CircularViewStyle_unselected">
         <item name="cv_iconTopPadding">12dp</item>
         <item name="cv_iconBottomPadding">12dp</item>
         <item name="cv_iconLeftPadding">12dp</item>
