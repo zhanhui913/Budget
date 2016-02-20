@@ -4,7 +4,6 @@ import org.parceler.Parcel;
 
 import io.realm.CategoryRealmProxy;
 import io.realm.RealmObject;
-import io.realm.TransactionRealmProxy;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 

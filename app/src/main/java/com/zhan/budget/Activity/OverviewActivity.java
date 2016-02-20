@@ -24,6 +24,8 @@ import com.zhan.percentview.PercentView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -149,14 +151,12 @@ public class OverviewActivity extends AppCompatActivity implements
         });
     }
 
-
-
     float sumCost = 0;
     /**
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(){
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        final AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             long startTime, endTime, duration;
 
@@ -186,8 +186,6 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 }
 
-
-
                 //List of string that is the ID of category in categoryList who's sum for cost is 0
                 // or INCOME type
                 List<Category> zeroSumList = new ArrayList<>();
@@ -216,6 +214,27 @@ public class OverviewActivity extends AppCompatActivity implements
                     sumCost += categoryList.get(i).getCost();
                 }
 
+
+
+
+                //Sort from largest to smallest percentage
+                Collections.sort(categoryList, new Comparator<Category>() {
+                    @Override
+                    public int compare(Category c1, Category c2) {
+
+                        float cost1 = c1.getCost();
+                        float cost2 = c2.getCost();
+
+                        //ascending order
+                        return ((int)cost1) - ((int)cost2);
+                    }
+                });
+
+
+
+
+                float percentSumValue = 0f;
+
                 //Now calculate percentage for each category
                 for(int i = 0; i < categoryList.size(); i++){
                     CategoryPercent cp = new CategoryPercent();
@@ -227,13 +246,13 @@ public class OverviewActivity extends AppCompatActivity implements
                     BigDecimal hundred = new BigDecimal(100);
 
 
-                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_CEILING);
+                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
 
 
                     cp.setPercent(percent.multiply(hundred).floatValue());
 
 
-
+                    percentSumValue += cp.getPercent();
 
                     //cp.setPercent((categoryList.get(i).getCost() / sumCost) * 100f);
 
@@ -246,7 +265,7 @@ public class OverviewActivity extends AppCompatActivity implements
                     slice.setWeight(categoryList.get(i).getCost());
                     sliceList.add(slice);
                 }
-
+                Log.d("PERCENT_VIEW", "TOTAL PERCENT SUM =>" + percentSumValue);
 
 
                 return null;
