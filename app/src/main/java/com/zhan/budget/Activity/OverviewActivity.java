@@ -22,6 +22,7 @@ import com.zhan.budget.Util.Util;
 import com.zhan.percentview.Model.Slice;
 import com.zhan.percentview.PercentView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -111,9 +112,10 @@ public class OverviewActivity extends AppCompatActivity implements
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsCategory.removeChangeListener(this);
+
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(resultsCategory);
-
                 getMonthReport(currentMonth);
             }
         });
@@ -128,14 +130,14 @@ public class OverviewActivity extends AppCompatActivity implements
 
         sliceList = new ArrayList<>();
 
-        //map = new HashMap<String, Float>();
-
         Log.d("OVERVIEW_ACT", "("+Util.convertDateToStringFormat1(month) + "-> "+Util.convertDateToStringFormat1(endMonth)+")");
 
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                transactionsResults.removeChangeListener(this);
+
                 if (transactionList != null) {
                     transactionList.clear();
                 }
@@ -147,6 +149,9 @@ public class OverviewActivity extends AppCompatActivity implements
         });
     }
 
+
+
+    float sumCost = 0;
     /**
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
@@ -164,6 +169,8 @@ public class OverviewActivity extends AppCompatActivity implements
             @Override
             protected Void doInBackground(Void... voids) {
 
+                categoryPercentList.clear();
+
                 Log.d("OVERVIEW_ACT", "Transaction size : "+transactionList.size());
 
                 startTime = System.nanoTime();
@@ -179,14 +186,7 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 }
 
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-
-                float sumCost = 0;
 
                 //List of string that is the ID of category in categoryList who's sum for cost is 0
                 // or INCOME type
@@ -207,12 +207,9 @@ public class OverviewActivity extends AppCompatActivity implements
 
                 //Remove those category who's sum for cost is 0 or INCOME type
                 for(int i = 0; i < zeroSumList.size(); i++){
-                    //categoryList.remove(zeroSumList.get(i));
                     categoryList.remove(zeroSumList.get(i));
                 }
                 Log.d("PERCENT_VIEW", "AFTER REMOVING THERE ARE " + categoryList.size());
-
-
 
                 //Go through list cost to get sumCost
                 for(int i = 0; i < categoryList.size(); i++){
@@ -223,9 +220,24 @@ public class OverviewActivity extends AppCompatActivity implements
                 for(int i = 0; i < categoryList.size(); i++){
                     CategoryPercent cp = new CategoryPercent();
                     cp.setCategory(categoryList.get(i));
-                    cp.setPercent((categoryList.get(i).getCost() / sumCost) * 100);
 
-                    Log.d("PERCENT_VIEW", i+", "+cp.getCategory().getName()+"->"+cp.getPercent());
+
+                    BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
+                    BigDecimal total = BigDecimal.valueOf(sumCost);
+                    BigDecimal hundred = new BigDecimal(100);
+
+
+                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_CEILING);
+
+
+                    cp.setPercent(percent.multiply(hundred).floatValue());
+
+
+
+
+                    //cp.setPercent((categoryList.get(i).getCost() / sumCost) * 100f);
+
+                    Log.d("PERCENT_VIEW", i+", "+cp.getCategory().getName()+"->"+cp.getPercent()+"=> "+percent.floatValue());
 
                     categoryPercentList.add(cp);
 
@@ -237,34 +249,20 @@ public class OverviewActivity extends AppCompatActivity implements
 
 
 
-                categoryPercentListAdapter.clear();
-                categoryPercentListAdapter.addAll(categoryPercentList);
-                categoryPercentListAdapter.notifyDataSetChanged();
+                return null;
+            }
 
-                /*
-                Log.d("PERCENT_VIEW", "BEFORE, There are " + sliceList.size() + " items in the list");
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
 
-                for(int i = 0; i < categoryList.size(); i++){
-                    Log.d("ZHAN1", "category : " + categoryList.get(i).getName() + " -> " + categoryList.get(i).getCost());
+                Log.d("PERCENT_VIEW", "ZZ There are " + categoryPercentList.size() + " categories items in the list");
+                //categoryPercentListAdapter.addAll(categoryPercentList);
 
-                    //Add only EXPENSE category type
-                    if(categoryList.get(i).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                        //Don't add those Category who's sum cost is 0
-                        if(categoryList.get(i).getCost() != 0f){
-                            Slice slice = new Slice();
-                            slice.setColor(categoryList.get(i).getColor());
-                            slice.setWeight(categoryList.get(i).getCost());
-                            Log.d("PERCENT_VIEW", i + ") DURING, weigh sum :" + categoryList.get(i).getCost());
-                            sliceList.add(slice);
-                            sumCost += categoryList.get(i).getCost();
-                        }
-                    }
-                }*/
-
+                //Display the total cost for that month in the percent view
                 totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
 
                 percentView.setSliceList(sliceList);
-                Log.d("PERCENT_VIEW", "AFTER, There are " + sliceList.size() + " items in the list");
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);

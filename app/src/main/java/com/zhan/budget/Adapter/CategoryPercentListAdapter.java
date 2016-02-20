@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.R;
 import com.zhan.library.CircularView;
@@ -67,6 +66,7 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
         viewHolder.circularView.setIconResource(category.getCategory().getIcon());
 
         viewHolder.name.setText(category.getCategory().getName());
+       // viewHolder.percent.setText(String.format("%.2f", category.getPercent())+"%");
         viewHolder.percent.setText(category.getPercent()+"%");
 
         //Only EXPENSE Category type would be displayed using this layout, so no need to check if
