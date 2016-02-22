@@ -227,7 +227,8 @@ public class OverviewActivity extends AppCompatActivity implements
                         float cost2 = c2.getCost();
 
                         //ascending order
-                        return ((int)cost1) - ((int)cost2);
+                        //return ((int) cost1) - ((int) cost2);
+                        return Float.compare(cost1, cost2);
                     }
                 });
 

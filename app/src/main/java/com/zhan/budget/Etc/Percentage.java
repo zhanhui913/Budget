@@ -54,6 +54,13 @@ public final class Percentage {
      */
 
     public static void roundTo100(List<Float> list){
+        //fake the list for now
+        /*list = new ArrayList<>();
+        list.add( 13.626332f);
+        list.add(47.989636f);
+        list.add(9.596008f);
+        list.add(28.788024f);*/
+
         List<Float> unRoundedPercentList = new ArrayList<>();
         List<Float> errorList = new ArrayList<>();
         List<Float> roundedPercentList = new ArrayList<>();
@@ -82,6 +89,16 @@ public final class Percentage {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+        int pos = -1;
+        for(int i = 0; i < errorList.size(); i++){
+            if(errorList.get(i) > errorList.size()){
+                Log.d("PERCENTAGE", "DONT ROUND " + errorList.get(i) + " @ pos " + i);
+                pos = i;
+                //replace rounded at position with unrounded
+                double v =  Math.floor(unRoundedPercentList.get(i) * Math.pow(10, SCALE)) / Math.pow(10, SCALE);
+                roundedPercentList.set(i, (float)v);
+            }
+        }
 
 
 
@@ -91,17 +108,71 @@ public final class Percentage {
         for(int i = 0; i < unRoundedPercentList.size(); i++){
             notRoundedSum += unRoundedPercentList.get(i);
         }
-        Log.d("PERCENTAGE", "UNROUNDED PERCENT SUM : "+notRoundedSum);
+        Log.d("PERCENTAGE", "UNROUNDED PERCENT SUM : " + notRoundedSum);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
         //after percent rounded
         float roundedSum = 0;
         for(int i = 0; i < roundedPercentList.size(); i++){
             roundedSum += roundedPercentList.get(i);
         }
-        Log.d("PERCENTAGE", "ROUNDED PERCENT SUM : "+roundedSum);
+        Log.d("PERCENTAGE","ROUNDED PERCENT SUM : " + roundedSum);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        Log.d("PERCENTAGE", "ROUNDED PERCENT LIST [");
+        for(int i = 0; i < roundedPercentList.size(); i++){
+            Log.d("PERCENTAGE", roundedPercentList.get(i) + ",");
+        }
+        Log.d("PERCENTAGE", "]");
+
     }
 
+/*
+    function foo(l, target) {
+        var off = target - _.reduce(l, function(acc, x) {
+            return acc + Math.round(x)
+        }, 0);
+        return _.chain(l).sortBy(function(x) {
+            return Math.round(x) - x
+        }).
+        map(function(x, i) {
+            return Math.round(x) + (off > i) - (i >= (l.length + off))
+        }).
+        value();
+    }
+    */
+
+    public static void foo(List<Float> list, int target){
+        float off = target - getSumFromList(list);
+/*
+        //chain sort by smallest
+        List<Float> diffList = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            diffList.add(Math.round(list.get(i)) - list.get(i));
+        }
+
+        //Sort from smallest to largest
+        Collections.sort(diffList, new Comparator<Float>() {
+            @Override
+            public int compare(Float f1, Float f2) {
+                //ascending order
+                return Float.compare(f1, f2);
+            }
+        });*/
+
+
+
+
+    }
+
+    public static float getSumFromList(List<Float> list) {
+        float sum = 0;
+        for (int i = 0; i < list.size(); i++){
+            sum += list.get(i);
+        }
+        return sum;
+    }
 
     public static BigDecimal roundTo2DecimalPlace(float value, int scale){
         BigDecimal current = BigDecimal.valueOf(value);
@@ -110,8 +181,8 @@ public final class Percentage {
 
     public static Float getError(float unRoundedValue){
         BigDecimal rounded = roundTo2DecimalPlace(unRoundedValue, SCALE);
-        float error = ((rounded.floatValue() - unRoundedValue) / rounded.floatValue()) * 100;
-        Log.d("PERCENTAGE", unRoundedValue+", "+rounded.floatValue()+" => "+Math.abs(error * 100)+"%");
+        float error = ((rounded.floatValue() - unRoundedValue) / unRoundedValue) * (float)Math.pow(10, SCALE);
+        Log.d("PERCENTAGE",unRoundedValue+", "+rounded.floatValue()+" => "+Math.abs(error)+"%");
         return error;
     }
 }
