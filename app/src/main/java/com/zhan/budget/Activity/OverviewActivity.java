@@ -13,6 +13,7 @@ import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Etc.Percentage;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.CategoryPercent;
@@ -229,6 +230,18 @@ public class OverviewActivity extends AppCompatActivity implements
                         return ((int)cost1) - ((int)cost2);
                     }
                 });
+
+
+                ////////////// debug
+
+                List<Float> ff = new ArrayList<>();
+                for(int i = 0; i < categoryList.size(); i++){
+                    ff.add(categoryList.get(i).getCost());
+                }
+
+                Percentage.roundTo100(ff);
+
+                ////////////// debug
 
 
 
