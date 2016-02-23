@@ -47,8 +47,14 @@ public class TransactionExpenseFragment extends Fragment {
 
     private Category selectedExpenseCategory;
 
+    private String selectedExpenseCategoryId = "";
+
     public TransactionExpenseFragment() {
         // Required empty public constructor
+    }
+
+    public void setSelectedExpenseCategoryId(String id){
+        this.selectedExpenseCategoryId = id;
     }
 
     @Override
@@ -103,13 +109,21 @@ public class TransactionExpenseFragment extends Fragment {
 
                     @Override
                     public void onGlobalLayout() {
+                        //Default is 0 if selectedExpenseCategoryId is not defined.
+                        int pos = 0;
 
-                        //default selected expense category
-                        selectedExpenseCategory = categoryExpenseList.get(0);
+                        for(int i = 0; i < categoryExpenseList.size(); i++){
+                            if(selectedExpenseCategoryId.equalsIgnoreCase(categoryExpenseList.get(i).getId())){
+                                pos = i;
+                                break;
+                            }
+                        }
+
+                        selectedExpenseCategory = categoryExpenseList.get(pos);
                         mListener.onCategoryExpenseClick(selectedExpenseCategory);
 
                         //Set first category as selected by default
-                        ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(0);
+                        ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(pos);
                         CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
                         cv.setStrokeColor(R.color.darkgray);
 

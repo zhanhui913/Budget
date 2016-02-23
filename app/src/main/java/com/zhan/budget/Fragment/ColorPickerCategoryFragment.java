@@ -66,6 +66,7 @@ public class ColorPickerCategoryFragment extends Fragment {
         for(int i = 0; i < categoryIconColorList.size(); i++){
             if(categoryIconColorList.get(i).getColor() == selectedCategoryColor){
                 categoryIconColorList.get(i).setIsSelected(true);
+                break;
             }
         }
 

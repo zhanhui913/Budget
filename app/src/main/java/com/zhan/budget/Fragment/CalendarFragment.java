@@ -3,6 +3,7 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -59,8 +60,6 @@ import io.realm.RealmResults;
  * Activities that contain this fragment must implement the
  * {@link CalendarFragment.OnCalendarListener} interface
  * to handle interaction events.
- * Use the {@link CalendarFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class CalendarFragment extends Fragment implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
@@ -92,16 +91,6 @@ public class CalendarFragment extends Fragment implements
 
     public CalendarFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CalendarFragment.
-     */
-    public static CalendarFragment newInstance() {
-        return new CalendarFragment();
     }
 
     @Override
@@ -157,7 +146,8 @@ public class CalendarFragment extends Fragment implements
         transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "clicked on transaction :"+position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "clicked on transaction :" + position, Toast.LENGTH_SHORT).show();
+                editTransaction(position);
             }
         });
     }
@@ -395,7 +385,7 @@ public class CalendarFragment extends Fragment implements
                 Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
 
                 float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
-                Toast.makeText(getContext(), "total is "+sumFloatValue, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "total is " + sumFloatValue, Toast.LENGTH_LONG).show();
 
                 totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
@@ -412,81 +402,6 @@ public class CalendarFragment extends Fragment implements
         });
     }
 
-    /**
-     * Add swipe capability on list view to delete that item.
-     * From 3rd party library.
-     */
-    private void createSwipeMenu(){
-        /*
-        // step 1. create a MenuCreator
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-
-            @Override
-            public void create(SwipeMenu menu) {
-                createDeleteItem(menu);
-                createApproveItem(menu);
-            }
-
-            //past and current transactions
-            private void createDeleteItem(SwipeMenu menu){
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-                deleteItem.setBackground(R.color.red);// set item background
-                deleteItem.setWidth(Util.dp2px(getContext(), 100));// set item width
-                deleteItem.setIcon(R.drawable.svg_ic_delete);// set a icon
-                menu.addMenuItem(deleteItem);// add to menu
-            }
-
-            //future transactions
-            private void createApproveItem(SwipeMenu menu){
-                SwipeMenuItem approveItem = new SwipeMenuItem(getContext());
-                approveItem.setBackground(R.color.green);// set item background
-                approveItem.setWidth(Util.dp2px(getContext(), 100));// set item width
-                approveItem.setIcon(R.drawable.svg_ic_check);// set a icon
-                menu.addMenuItem(approveItem);// add to menu
-            }
-        };
-
-        //set creator
-        transactionListView.setMenuCreator(creator);
-
-        // step 2. listener item click event
-        transactionListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        myRealm.beginTransaction();
-                        resultsTransactionForDay.get(position).removeFromRealm();
-                        myRealm.commitTransaction();
-                        break;
-                    case 1:
-
-                        break;
-                }
-                //False: Close the menu
-                //True: Did not close the menu
-                return false;
-            }
-        });
-
-        // set SwipeListener
-        transactionListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-                transactionListView.smoothOpenMenu(position);
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-                transactionListView.smoothCloseMenu();
-            }
-        });
-        */
-    }
-
     private void updateTransactionStatus(){
         if(transactionList.size() > 0){
             emptyLayout.setVisibility(View.GONE);
@@ -500,10 +415,23 @@ public class CalendarFragment extends Fragment implements
     private void addNewTransaction(){
         Intent newTransaction = new Intent(getContext(), TransactionInfoActivity.class);
 
-        //This is not edit mode
-        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+        //This is new transaction
+        newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, true);
         newTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, Util.convertDateToString(selectedDate));
         startActivityForResult(newTransaction, Constants.RETURN_NEW_TRANSACTION);
+    }
+
+    private void editTransaction(int position){
+        Intent editTransaction = new Intent(getContext(), TransactionInfoActivity.class);
+
+        //This is edit mode, not a new transaction
+        editTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+        editTransaction.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, Util.convertDateToString(selectedDate));
+
+        Parcelable wrapped = Parcels.wrap(transactionList.get(position));
+        editTransaction.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
+
+        startActivityForResult(editTransaction, Constants.RETURN_EDIT_TRANSACTION);
     }
 
     private void updateMonthInToolbar(int direction){
@@ -553,8 +481,10 @@ public class CalendarFragment extends Fragment implements
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
 
-                final Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
+                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
 
+                addNewOrEditTransaction(tt);
+                /*
                 Log.i("ZHAN", "----------- Parceler Result ----------");
                 Log.d("ZHAN", "transaction id "+tt.getId());
                 Log.d("ZHAN", "transaction name is " + tt.getNote() + " cost is " + tt.getPrice());
@@ -605,9 +535,60 @@ public class CalendarFragment extends Fragment implements
                         }
                     }
                 });
+                */
+            }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
+                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
 
+                addNewOrEditTransaction(tt);
             }
         }
+    }
+
+    private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
+        Log.i("ZHAN", "----------- Parceler Result ----------");
+        Log.d("ZHAN", "transaction id "+newOrEditTransaction.getId());
+        Log.d("ZHAN", "transaction name is " + newOrEditTransaction.getNote() + " cost is " + newOrEditTransaction.getPrice());
+        Log.d("ZHAN", "category is " + newOrEditTransaction.getCategory().getName() + ", " + newOrEditTransaction.getCategory().getId());
+        Log.d("ZHAN", "account id is : " + newOrEditTransaction.getAccount().getId());
+        Log.d("ZHAN", "account name is : " + newOrEditTransaction.getAccount().getName());
+        Log.i("ZHAN", "----------- Parceler Result ----------");
+
+        //Attaching account
+        final RealmResults<Account> accountRealmResults = myRealm.where(Account.class).equalTo("id", newOrEditTransaction.getAccount().getId()).findAll();
+        final Account account = myRealm.copyToRealm(accountRealmResults.get(0));
+
+        //Attaching category
+        final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", newOrEditTransaction.getCategory().getId()).findAllAsync();
+        cateList.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                if (cateList.size() != 0) {
+                    Category cat = myRealm.copyToRealm(cateList.get(0));
+
+                    myRealm.beginTransaction();
+                    Transaction transactionReturnedFromTransaction = myRealm.createObject(Transaction.class);
+                    transactionReturnedFromTransaction.setId(newOrEditTransaction.getId());
+                    transactionReturnedFromTransaction.setPrice(newOrEditTransaction.getPrice());
+                    transactionReturnedFromTransaction.setDate(newOrEditTransaction.getDate());
+                    transactionReturnedFromTransaction.setNote(newOrEditTransaction.getNote());
+                    transactionReturnedFromTransaction.setCategory(cat);
+                    transactionReturnedFromTransaction.setAccount(account);
+
+                    if(Util.getDaysFromDate(newOrEditTransaction.getDate()) > Util.getDaysFromDate(new Date())){
+                        transactionReturnedFromTransaction.setDayType(DayType.SCHEDULED.toString());
+                    }else{
+                        transactionReturnedFromTransaction.setDayType(DayType.COMPLETED.toString());
+                    }
+
+                    myRealm.commitTransaction();
+
+                    Log.d("ZHAN", "successfully added transaction : " + transactionReturnedFromTransaction.getNote() + " for cat : " + transactionReturnedFromTransaction.getCategory().getName());
+
+                    populateTransactionsForDate(newOrEditTransaction.getDate());
+                    updateTransactionStatus();
+                }
+            }
+        });
     }
 
     @Override

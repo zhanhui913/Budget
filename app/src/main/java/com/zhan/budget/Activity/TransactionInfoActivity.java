@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +52,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         TransactionExpenseFragment.OnTransactionExpenseFragmentInteractionListener,
         TransactionIncomeFragment.OnTransactionIncomeFragmentInteractionListener{
 
-    private boolean isEditMode = false;
+    private boolean isNewTransaction = false;
     private Activity instance;
     private Toolbar toolbar;
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0;
@@ -62,6 +63,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     private String priceString;
     private String noteString;
+
+    private TransactionExpenseFragment transactionExpenseFragment;
+    private TransactionIncomeFragment transactionIncomeFragment;
 
     private Date selectedDate;
 
@@ -87,6 +91,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private AlertDialog.Builder accountAlertDialogBuilder;
     private AlertDialog accountDialog;
 
+    private Transaction editTransaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,8 +101,12 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         instance = TransactionInfoActivity.this;
 
         //Get intents from caller activity
-        isEditMode = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
+        isNewTransaction = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
         selectedDate = Util.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
+
+        if(!isNewTransaction){
+            editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
+        }
 
         init();
     }
@@ -106,6 +116,17 @@ public class TransactionInfoActivity extends AppCompatActivity implements
      */
     private void init(){
         myRealm = Realm.getDefaultInstance();
+
+        transactionExpenseFragment = new TransactionExpenseFragment();
+        transactionIncomeFragment = new TransactionIncomeFragment();
+
+        if(!isNewTransaction){
+            if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                transactionExpenseFragment.setSelectedExpenseCategoryId(editTransaction.getCategory().getId());
+            }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                transactionIncomeFragment.setSelectedIncomeCategoryId(editTransaction.getCategory().getId());
+            }
+        }
 
         button1 = (Button)findViewById(R.id.number1);
         button2 = (Button)findViewById(R.id.number2);
@@ -128,7 +149,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         currentPage = BudgetType.EXPENSE;
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
-        adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), new TransactionExpenseFragment(), new TransactionIncomeFragment());
+        adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), transactionExpenseFragment, transactionIncomeFragment);
         viewPager.setAdapter(adapterViewPager);
 
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
@@ -138,6 +159,29 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         //Call one time to give priceStringWithDot the correct string format of 0.00
         removeDigit();
+
+        if(!isNewTransaction){
+            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
+            priceString = priceString.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","");
+
+            Log.d("DEBUG", "---------->" + priceString);
+            String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
+            transactionCostView.setText(appendString + CurrencyTextFormatter.formatFloat(Math.abs(editTransaction.getPrice()), Constants.BUDGET_LOCALE));
+
+            Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
+
+
+            //Check which category this transaction belongs to.
+            //If its EXPENSE category, change page to EXPENSE view pager
+            //If its INCOME category, change page to INCOME view pager
+            if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                viewPager.setCurrentItem(0);
+            }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                viewPager.setCurrentItem(1);
+            }
+
+
+        }
 
         createToolbar();
         addListeners();
@@ -154,7 +198,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         toolbar.setNavigationIcon(R.drawable.svg_ic_clear);
 
         if(getSupportActionBar() != null){
-            if(isEditMode){
+            if(!isNewTransaction){
                 getSupportActionBar().setTitle("Edit Transaction");
             }else{
                 getSupportActionBar().setTitle("Add Transaction");
@@ -313,12 +357,22 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 accountSpinner.setAdapter(accountAdapter);
 
-                //Default is first item in list to be selected in the spinner
-                selectedAccountIndexInSpinner = 0;
-                selectedAccount = myRealm.copyFromRealm(resultsAccount.get(0));
+                int pos = 0; //default is first item to be selected in the spinner
+                if(!isNewTransaction) {
+                    for (int i = 0; i < resultsAccount.size(); i++) {
+                        if (editTransaction.getAccount().getId().equalsIgnoreCase(resultsAccount.get(i).getId())) {
+                            pos = i;
+                            break;
+                        }
+                    }
+                }
 
-                accountSpinner.setPrompt(accountList.get(0));
+                selectedAccountIndexInSpinner = pos;
+                selectedAccount = myRealm.copyFromRealm(resultsAccount.get(pos));
+
+                accountSpinner.setPrompt(accountList.get(pos));
                 accountSpinner.setSelected(true);
+                accountSpinner.setSelection(pos);
 
                 myRealm.close();
             }
@@ -376,9 +430,17 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Add Note");
 
-        input.setHint("Note");
-        input.setText(noteString);
 
+        input.setHint("Note");
+
+        if(!isNewTransaction){
+            if(editTransaction.getNote() != null){
+                Log.d("DEBUG","@@@@@"+editTransaction.getNote());
+                noteString = editTransaction.getNote();
+            }
+        }
+
+        input.setText(noteString);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
@@ -440,9 +502,15 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
             transaction.setCategory(selectedIncomeCategory);
         }
-
+        Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
         Parcelable wrapped = Parcels.wrap(transaction);
-        intent.putExtra(Constants.RESULT_NEW_TRANSACTION, wrapped);
+
+        if(!isNewTransaction){
+            intent.putExtra(Constants.RESULT_EDIT_TRANSACTION, wrapped);
+        }else{
+            intent.putExtra(Constants.RESULT_NEW_TRANSACTION, wrapped);
+        }
+
         setResult(RESULT_OK, intent);
 
         finish();

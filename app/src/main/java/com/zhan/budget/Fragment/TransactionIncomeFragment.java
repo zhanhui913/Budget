@@ -47,8 +47,15 @@ public class TransactionIncomeFragment extends Fragment {
 
     private Category selectedIncomeCategory;
 
+    private String selectedIncomeCategoryId = "";
+
+
     public TransactionIncomeFragment() {
         // Required empty public constructor
+    }
+
+    public void setSelectedIncomeCategoryId(String id){
+        this.selectedIncomeCategoryId = id;
     }
 
     @Override
@@ -103,13 +110,21 @@ public class TransactionIncomeFragment extends Fragment {
 
                     @Override
                     public void onGlobalLayout() {
+                        //Default is 0 if selectedIncomeCategoryId is not defined.
+                        int pos = 0;
 
-                        //default selected expense category
-                        selectedIncomeCategory = categoryIncomeList.get(0);
+                        for(int i = 0; i < categoryIncomeList.size(); i++){
+                            if(selectedIncomeCategoryId.equalsIgnoreCase(categoryIncomeList.get(i).getId())){
+                                pos = i;
+                                break;
+                            }
+                        }
+
+                        selectedIncomeCategory = categoryIncomeList.get(pos);
                         mListener.onCategoryIncomeClick(selectedIncomeCategory);
 
                         //Set first category as selected by default
-                        ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(0);
+                        ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(pos);
                         CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
                         cv.setStrokeColor(R.color.darkgray);
 
