@@ -33,6 +33,7 @@ import com.zhan.budget.Fragment.TransactionIncomeFragment;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -490,10 +491,24 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         Intent intent = new Intent();
 
         Transaction transaction = new Transaction();
-        transaction.setId(Util.generateUUID());
+
+        if(!isNewTransaction){
+            transaction.setId(editTransaction.getId());
+            transaction.setDayType(editTransaction.getDayType());
+        }else{
+            transaction.setId(Util.generateUUID());
+
+            if(Util.getDaysFromDate(selectedDate) <= Util.getDaysFromDate(new Date())){
+                transaction.setDayType(DayType.COMPLETED.toString());
+            }else{
+                transaction.setDayType(DayType.SCHEDULED.toString());
+            }
+        }
+
         transaction.setNote(this.noteString);
         transaction.setDate(Util.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
+
 
         if(currentPage == BudgetType.EXPENSE){
             transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
@@ -502,7 +517,10 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
             transaction.setCategory(selectedIncomeCategory);
         }
+
         Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
+
+
         Parcelable wrapped = Parcels.wrap(transaction);
 
         if(!isNewTransaction){

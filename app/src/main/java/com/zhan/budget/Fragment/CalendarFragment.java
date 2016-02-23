@@ -392,7 +392,7 @@ public class CalendarFragment extends Fragment implements
                 transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
                 updateTransactionStatus();
 
-                transactionAdapter.clear();
+                //transactionAdapter.clear();
                 transactionAdapter.addAll(transactionList);
                 //transactionAdapter.addAll(resultsTransactionForDay);
 
@@ -481,10 +481,10 @@ public class CalendarFragment extends Fragment implements
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
 
-                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
+                final Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
 
-                addNewOrEditTransaction(tt);
-                /*
+                //addNewOrEditTransaction(tt);
+
                 Log.i("ZHAN", "----------- Parceler Result ----------");
                 Log.d("ZHAN", "transaction id "+tt.getId());
                 Log.d("ZHAN", "transaction name is " + tt.getNote() + " cost is " + tt.getPrice());
@@ -535,7 +535,7 @@ public class CalendarFragment extends Fragment implements
                         }
                     }
                 });
-                */
+
             }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
 
@@ -544,49 +544,64 @@ public class CalendarFragment extends Fragment implements
         }
     }
 
+
+
+    private Transaction updatedTransaction;
     private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
         Log.i("ZHAN", "----------- Parceler Result ----------");
-        Log.d("ZHAN", "transaction id "+newOrEditTransaction.getId());
-        Log.d("ZHAN", "transaction name is " + newOrEditTransaction.getNote() + " cost is " + newOrEditTransaction.getPrice());
-        Log.d("ZHAN", "category is " + newOrEditTransaction.getCategory().getName() + ", " + newOrEditTransaction.getCategory().getId());
-        Log.d("ZHAN", "account id is : " + newOrEditTransaction.getAccount().getId());
-        Log.d("ZHAN", "account name is : " + newOrEditTransaction.getAccount().getName());
+        Log.d("ZHAN", "transaction id :"+newOrEditTransaction.getId());
+        Log.d("ZHAN", "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
+        Log.d("ZHAN", "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
+        Log.d("ZHAN", "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
+        Log.d("ZHAN", "account id : " + newOrEditTransaction.getAccount().getId());
+        Log.d("ZHAN", "account name : " + newOrEditTransaction.getAccount().getName());
         Log.i("ZHAN", "----------- Parceler Result ----------");
 
         //Attaching account
         final RealmResults<Account> accountRealmResults = myRealm.where(Account.class).equalTo("id", newOrEditTransaction.getAccount().getId()).findAll();
         final Account account = myRealm.copyToRealm(accountRealmResults.get(0));
 
+        /*
         //Attaching category
-        final RealmResults<Category> cateList = myRealm.where(Category.class).equalTo("id", newOrEditTransaction.getCategory().getId()).findAllAsync();
-        cateList.addChangeListener(new RealmChangeListener() {
+        final Category cc = myRealm.where(Category.class).equalTo("id", newOrEditTransaction.getCategory().getId()).findFirstAsync();
+        cc.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                if (cateList.size() != 0) {
-                    Category cat = myRealm.copyToRealm(cateList.get(0));
+                Log.d("ZHAN", "found cat");
 
-                    myRealm.beginTransaction();
-                    Transaction transactionReturnedFromTransaction = myRealm.createObject(Transaction.class);
-                    transactionReturnedFromTransaction.setId(newOrEditTransaction.getId());
-                    transactionReturnedFromTransaction.setPrice(newOrEditTransaction.getPrice());
-                    transactionReturnedFromTransaction.setDate(newOrEditTransaction.getDate());
-                    transactionReturnedFromTransaction.setNote(newOrEditTransaction.getNote());
-                    transactionReturnedFromTransaction.setCategory(cat);
-                    transactionReturnedFromTransaction.setAccount(account);
+                findTransaction(newOrEditTransaction, cc);
 
-                    if(Util.getDaysFromDate(newOrEditTransaction.getDate()) > Util.getDaysFromDate(new Date())){
-                        transactionReturnedFromTransaction.setDayType(DayType.SCHEDULED.toString());
-                    }else{
-                        transactionReturnedFromTransaction.setDayType(DayType.COMPLETED.toString());
-                    }
+                cc.removeChangeListener(this);
+            }
+        });
+*/
 
-                    myRealm.commitTransaction();
 
-                    Log.d("ZHAN", "successfully added transaction : " + transactionReturnedFromTransaction.getNote() + " for cat : " + transactionReturnedFromTransaction.getCategory().getName());
+        myRealm.beginTransaction();
+        myRealm.copyToRealmOrUpdate(newOrEditTransaction);
+        myRealm.commitTransaction();
 
-                    populateTransactionsForDate(newOrEditTransaction.getDate());
-                    updateTransactionStatus();
-                }
+        populateTransactionsForDate(newOrEditTransaction.getDate());
+        updateTransactionStatus();
+    }
+
+    private void findTransaction(final Transaction tt, final Category cc){ Log.d("ZHAN", "findTranny 1");
+        updatedTransaction = myRealm.where(Transaction.class).equalTo("id", tt.getId()).findFirstAsync();Log.d("ZHAN", "findTranny 2");
+        updatedTransaction.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                Log.d("ZHAN", "found transaction");
+                myRealm.beginTransaction();
+                updatedTransaction.setCategory(cc);
+                updatedTransaction.setPrice(tt.getPrice());
+                updatedTransaction.setDayType(tt.getDayType());
+                updatedTransaction.setDate(tt.getDate());
+                updatedTransaction.setAccount(tt.getAccount());
+                updatedTransaction.setNote(tt.getNote());
+                myRealm.commitTransaction();
+                Log.d("ZHAN", "update transaction");
+
+                updatedTransaction.removeChangeListener(this);
             }
         });
     }
