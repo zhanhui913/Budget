@@ -6,6 +6,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -640,6 +641,28 @@ public class FlexibleCalendarView extends LinearLayout implements
         if(monthDifference!=0){
             resetAdapters = true;
             if(monthDifference<0){
+                //set fake count to avoid freezing in InfiniteViewPager as it iterates to Integer.MAX_VALUE
+                monthInfPagerAdapter.setFakeCount(lastPosition);
+                monthInfPagerAdapter.notifyDataSetChanged();
+            }
+            moveToPosition(monthDifference);
+        }
+    }
+
+    /**
+     * move the position to the desired month
+     */
+    public void goToDate(Date date){
+        int y = FlexibleCalendarHelper.getYearFromDate(date);
+        int m = FlexibleCalendarHelper.getMonthFromDate(date);
+
+        //check has to go left side or right
+        int monthDifference = FlexibleCalendarHelper.
+                getMonthDifference(displayYear, displayMonth, y, m);
+
+        if(monthDifference != 0){
+            resetAdapters = true;
+            if(monthDifference < 0){
                 //set fake count to avoid freezing in InfiniteViewPager as it iterates to Integer.MAX_VALUE
                 monthInfPagerAdapter.setFakeCount(lastPosition);
                 monthInfPagerAdapter.notifyDataSetChanged();
