@@ -158,7 +158,8 @@ public class CalendarFragment extends Fragment implements
 
         frame.setHeaderView(header);
 
-        frame.setPtrHandler(enablePullDown); //default
+        //frame.setPtrHandler(enablePullDown); //default
+        frame.setPtrHandler(ptrHandler);
 
         frame.addPtrUIHandler(new PtrUIHandler() {
 
@@ -445,10 +446,14 @@ public class CalendarFragment extends Fragment implements
         }
     }
 
+
+
+
+    private Boolean isPulldownAllow = true;
+
     PtrHandler enablePullDown = new PtrHandler() {
         @Override
         public void onRefreshBegin(PtrFrameLayout insideFrame) {
-            Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
             insideFrame.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -473,6 +478,30 @@ public class CalendarFragment extends Fragment implements
             return false;
         }
     };
+
+    PtrHandler ptrHandler = new PtrHandler() {
+        @Override
+        public void onRefreshBegin(PtrFrameLayout insideFrame) {
+            if(isPulldownAllow){
+                insideFrame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        frame.refreshComplete();
+                    }
+                }, 500);
+            }
+        }
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+            if(isPulldownAllow){
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
+            }else{
+                return false;
+            }
+        }
+    };
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -693,10 +722,11 @@ public class CalendarFragment extends Fragment implements
 
     @Override
     public void onDisablePtrPullDown(boolean value){
-        if(value){ //disable
+        /*if(value){ //disable
             frame.setPtrHandler(disablePullDown);
         }else{ //enable
             frame.setPtrHandler(enablePullDown);
-        }
+        }*/
+        isPulldownAllow = !value;
     }
 }
