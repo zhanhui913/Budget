@@ -18,9 +18,9 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,8 +58,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private Toolbar toolbar;
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0;
     private ImageButton buttonX;
-    private ImageView addNoteBtn;
-    private ImageButton addAccountBtn;
+
+    private ImageButton addNoteBtn, addAccountBtn, dateBtn;
+
     private TextView transactionCostView;
 
     private String priceString;
@@ -88,9 +89,17 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private ArrayAdapter<String> accountAdapter;
     private List<String> accountList;
     private RealmResults<Account> resultsAccount;
+
     private View accountDialogView;
     private AlertDialog.Builder accountAlertDialogBuilder;
     private AlertDialog accountDialog;
+
+
+    //Alert dialog for date
+    private View dateDialogView;
+    private AlertDialog.Builder dateAlertDialogBuilder;
+    private AlertDialog dateDialog;
+    private DatePicker datePicker;
 
     private Transaction editTransaction;
 
@@ -141,8 +150,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         button0 = (Button)findViewById(R.id.number0);
         buttonX = (ImageButton)findViewById(R.id.numberX);
 
-        addNoteBtn = (ImageView)findViewById(R.id.addNoteBtn);
+        addNoteBtn = (ImageButton)findViewById(R.id.addNoteBtn);
         addAccountBtn = (ImageButton)findViewById(R.id.addAccountBtn);
+        dateBtn = (ImageButton)findViewById(R.id.dateBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
 
@@ -187,6 +197,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         createToolbar();
         addListeners();
         createAccountDialog();
+        createDateDialog();
     }
 
     /**
@@ -306,6 +317,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }
         });
 
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayDateDialog();
+            }
+        });
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -331,6 +349,48 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
             }
         });
+    }
+
+   /* @Override
+    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+        Toast.makeText(this, year+"-"+monthOfYear+"-"+dayOfMonth, Toast.LENGTH_SHORT).show();
+
+    }*/
+
+    private void createDateDialog(){
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(instance);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        dateDialogView = layoutInflater.inflate(R.layout.alertdialog_date, null);
+
+        datePicker = (DatePicker) dateDialogView.findViewById(R.id.datePicker);
+
+        dateAlertDialogBuilder = new AlertDialog.Builder(instance)
+                .setTitle("Select Date")
+                .setView(dateDialogView)
+                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        Toast.makeText(getApplicationContext(), "Selected date is ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.dismiss();
+                    }
+                });
+
+        dateDialog = dateAlertDialogBuilder.create();
+        dateDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
+
+    private void displayDateDialog(){
+        Toast.makeText(this, "display date dialog", Toast.LENGTH_SHORT).show();
+        dateDialog.show();
     }
 
     private void createAccountDialog(){

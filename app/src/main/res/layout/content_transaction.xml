@@ -49,6 +49,14 @@
         android:layout_above="@+id/numberPad">
 
         <ImageButton
+            android:id="@+id/dateBtn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/svg_ic_date"
+            android:background="@drawable/budget_green_button"
+            android:layout_alignParentLeft="true" />
+
+        <ImageButton
             android:id="@+id/addAccountBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"

@@ -116,7 +116,6 @@ public class CalendarFragment extends Fragment implements
         addListeners();
         createPullToAddTransaction();
         createCalendar();
-        //createSwipeMenu();
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
