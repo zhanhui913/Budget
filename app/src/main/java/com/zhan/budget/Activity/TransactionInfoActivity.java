@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,17 +15,20 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.p_v.flexiblecalendar.FlexibleCalendarView;
+import com.p_v.flexiblecalendar.FlexibleCalendarView.CalendarView;
+import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -37,12 +41,14 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
+import com.zhan.budget.View.RectangleCellView;
 import com.zhan.circleindicator.CircleIndicator;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.realm.Realm;
@@ -99,7 +105,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private View dateDialogView;
     private AlertDialog.Builder dateAlertDialogBuilder;
     private AlertDialog dateDialog;
-    private DatePicker datePicker;
+    private FlexibleCalendarView calendarView;
+    private TextView monthTextView;
 
     private Transaction editTransaction;
 
@@ -351,12 +358,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         });
     }
 
-   /* @Override
-    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-        Toast.makeText(this, year+"-"+monthOfYear+"-"+dayOfMonth, Toast.LENGTH_SHORT).show();
-
-    }*/
 
     private void createDateDialog(){
         // get prompts.xml view
@@ -366,7 +367,76 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         //AlertDialog, where it not necessary to know what the parent is.
         dateDialogView = layoutInflater.inflate(R.layout.alertdialog_date, null);
 
-        datePicker = (DatePicker) dateDialogView.findViewById(R.id.datePicker);
+        monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogMonthTextView);
+        calendarView = (FlexibleCalendarView) dateDialogView.findViewById(R.id.alertdialogCalendarView);
+
+        int year = Util.getYearFromDate(selectedDate);
+        int month = Util.getMonthFromDate(selectedDate);
+        int date = Util.getDateFromDate(selectedDate);
+
+        monthTextView.setText(Util.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
+
+        calendarView.setCalendarView(new CalendarView() {
+            @Override
+            public BaseCellView getCellView(int position, View convertView, ViewGroup parent, @BaseCellView.CellType int cellType) {
+                BaseCellView cellView = (BaseCellView) convertView;
+                if (cellView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                    cellView = (BaseCellView) inflater.inflate(R.layout.date_cell_view, null);
+                }
+
+                if (cellType == BaseCellView.TODAY) {
+                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+                } else if (cellType == BaseCellView.SELECTED_TODAY) {
+                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                }
+                cellView.setTextSize(16);
+
+                return cellView;
+            }
+
+            @Override
+            public BaseCellView getWeekdayCellView(int position, View convertView, ViewGroup parent) {
+                BaseCellView cellView = (BaseCellView) convertView;
+                if (cellView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                    cellView = (RectangleCellView) inflater.inflate(R.layout.week_cell_view, null);
+                }
+                return cellView;
+            }
+
+            @Override
+            public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
+                return String.valueOf(defaultValue.toUpperCase());
+            }
+        });
+
+        calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
+            @Override
+            public void onMonthChange(int year, int month, int direction) {
+                monthTextView.setText(Util.convertDateToStringFormat2(new GregorianCalendar(year, month, 1).getTime()));
+            }
+        });
+
+        calendarView.setOnDateClickListener(new FlexibleCalendarView.OnDateClickListener() {
+            @Override
+            public void onDateClick(int year, int month, int day) {
+                /*selectedDate = (new GregorianCalendar(year, month, day)).getTime();
+
+                dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
+
+                populateTransactionsForDate(selectedDate);
+                */
+            }
+        });
+
+        calendarView.goToDate(selectedDate);
+
+        //TODO: Add function in FlexibleCalendarView that allows user to specify which date to set selected
+
+
+
+
 
         dateAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setTitle("Select Date")

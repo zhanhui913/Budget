@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@drawable/calendar_cell_inset_background"
+    android:textColor="@color/darkgray"
     flexible:event_radius="2dp"
     flexible:event_background="@color/red"
     flexible:event_circle_padding="2dp" />

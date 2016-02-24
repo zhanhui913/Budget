@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:support="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp">
 
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/alertdialogMonthTextView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="10dp"
+        android:textSize="25sp"
+        android:text="Jan 2016" />
+
+    <com.p_v.flexiblecalendar.FlexibleCalendarView
+        android:id="@+id/alertdialogCalendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        support:monthDayVerticalSpacing="0dp"
+        support:startDayOfTheWeek="SUNDAY"
+        android:layout_below="@+id/alertdialogMonthTextView" />
 
 </RelativeLayout>
