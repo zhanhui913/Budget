@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -76,6 +77,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private TransactionIncomeFragment transactionIncomeFragment;
 
     private Date selectedDate;
+    private Date tempDate;
 
     private TwoPageViewPager adapterViewPager;
     private ViewPager viewPager;
@@ -178,6 +180,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         //Call one time to give priceStringWithDot the correct string format of 0.00
         removeDigit();
 
+        //If its edit mode
         if(!isNewTransaction){
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
             priceString = priceString.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","");
@@ -197,8 +200,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
                 viewPager.setCurrentItem(1);
             }
-
-
         }
 
         createToolbar();
@@ -358,7 +359,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         });
     }
 
-
     private void createDateDialog(){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
@@ -373,6 +373,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         int year = Util.getYearFromDate(selectedDate);
         int month = Util.getMonthFromDate(selectedDate);
         int date = Util.getDateFromDate(selectedDate);
+
+        tempDate = selectedDate;
 
         monthTextView.setText(Util.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
 
@@ -427,30 +429,35 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
                 populateTransactionsForDate(selectedDate);
                 */
+                tempDate = new GregorianCalendar(year, month, day).getTime();
             }
         });
 
-        calendarView.goToDate(selectedDate);
-
-        //TODO: Add function in FlexibleCalendarView that allows user to specify which date to set selected
-
-
-
-
+        //When the calendar view is done being drawn, move the display to the selectedDate
+        calendarView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                monthTextView.setText(Util.convertDateToStringFormat2(selectedDate));
+                calendarView.goToDate(selectedDate);
+                calendarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
         dateAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setTitle("Select Date")
                 .setView(dateDialogView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
-                        Toast.makeText(getApplicationContext(), "Selected date is ", Toast.LENGTH_SHORT).show();
+                        selectedDate = tempDate;
+                        Toast.makeText(getApplicationContext(), "Selected date is "+selectedDate, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        tempDate = selectedDate;
                         dialog.dismiss();
+                        calendarView.goToDate(selectedDate);
+                        Toast.makeText(getApplicationContext(), "Selected date is "+selectedDate, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -649,7 +656,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }
 
         Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
-
+        Log.d("DEBUG", "new date is "+selectedDate);
 
         Parcelable wrapped = Parcels.wrap(transaction);
 

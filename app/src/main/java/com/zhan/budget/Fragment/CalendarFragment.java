@@ -87,6 +87,8 @@ public class CalendarFragment extends Fragment implements
     private PtrFrameLayout frame;
     private PlusView header;
 
+    private Boolean isPulldownToAddAllow = true;
+
     private ViewGroup emptyLayout;
 
     public CalendarFragment() {
@@ -446,43 +448,10 @@ public class CalendarFragment extends Fragment implements
         }
     }
 
-
-
-
-    private Boolean isPulldownAllow = true;
-
-    PtrHandler enablePullDown = new PtrHandler() {
-        @Override
-        public void onRefreshBegin(PtrFrameLayout insideFrame) {
-            insideFrame.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    frame.refreshComplete();
-                }
-            }, 500);
-        }
-
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            return PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
-        }
-    };
-
-    PtrHandler disablePullDown = new PtrHandler() {
-        @Override
-        public void onRefreshBegin(PtrFrameLayout insideFrame) {
-        }
-
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            return false;
-        }
-    };
-
     PtrHandler ptrHandler = new PtrHandler() {
         @Override
         public void onRefreshBegin(PtrFrameLayout insideFrame) {
-            if(isPulldownAllow){
+            if(isPulldownToAddAllow){
                 insideFrame.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -494,14 +463,13 @@ public class CalendarFragment extends Fragment implements
 
         @Override
         public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            if(isPulldownAllow){
+            if(isPulldownToAddAllow){
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
             }else{
                 return false;
             }
         }
     };
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -571,8 +539,6 @@ public class CalendarFragment extends Fragment implements
             }
         }
     }
-
-
 
     private Transaction updatedTransaction;
     private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
@@ -722,11 +688,6 @@ public class CalendarFragment extends Fragment implements
 
     @Override
     public void onDisablePtrPullDown(boolean value){
-        /*if(value){ //disable
-            frame.setPtrHandler(disablePullDown);
-        }else{ //enable
-            frame.setPtrHandler(enablePullDown);
-        }*/
-        isPulldownAllow = !value;
+        isPulldownToAddAllow = !value;
     }
 }

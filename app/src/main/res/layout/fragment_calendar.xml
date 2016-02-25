@@ -3,8 +3,7 @@
     xmlns:support="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_below="@+id/calendarView">
+    android:orientation="vertical">
 
      <com.p_v.flexiblecalendar.FlexibleCalendarView
          android:id="@+id/calendarView"
