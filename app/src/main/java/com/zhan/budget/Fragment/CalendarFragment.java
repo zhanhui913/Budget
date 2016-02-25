@@ -208,7 +208,7 @@ public class CalendarFragment extends Fragment implements
 
                 if (cellType == BaseCellView.TODAY) {
                     cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-                } else if(cellType == BaseCellView.SELECTED_TODAY){
+                } else if (cellType == BaseCellView.SELECTED_TODAY) {
                     cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 }
                 cellView.setTextSize(16);
@@ -291,7 +291,7 @@ public class CalendarFragment extends Fragment implements
         Date after = Util.getMonthWithDirection(current, 2); //Gets 2 month after
         after = Util.getPreviousDate(after); //gets 1 day before
 
-        Log.d("DECORATORS", "before:" + before + ", current:" + current + ", after:"+after);
+        Log.d("DECORATORS", "before:" + before + ", current:" + current + ", after:" + after);
 
         resultsTransactionForMonth = myRealm.where(Transaction.class).between("date", before, after).findAllAsync();
         resultsTransactionForMonth.addChangeListener(new RealmChangeListener() {
@@ -300,6 +300,7 @@ public class CalendarFragment extends Fragment implements
                 Log.d("DECORATORS", "there are " + resultsTransactionForMonth.size() + " transactions");
                 dateListWithTransactions = myRealm.copyFromRealm(resultsTransactionForMonth);
                 compareDecorators();
+                resultsTransactionForMonth.removeChangeListener(this);
             }
         });
     }
@@ -380,7 +381,6 @@ public class CalendarFragment extends Fragment implements
         transactionAdapter.clear();
 
         resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
-        //resultsTransactionForDay = myRealm.where(Transaction.class).equalTo("date", beginDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
@@ -474,6 +474,9 @@ public class CalendarFragment extends Fragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        resumeRealm();
+
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
 
@@ -527,7 +530,11 @@ public class CalendarFragment extends Fragment implements
                             //option 2
                             //dont update anything
 
+                            calendarView.selectDate(transactionReturnedFromTransaction.getDate());
+                            populateTransactionsForDate(transactionReturnedFromTransaction.getDate());
                             updateTransactionStatus();
+
+                            cateList.removeChangeListener(this);
                         }
                     }
                 });
@@ -551,30 +558,11 @@ public class CalendarFragment extends Fragment implements
         Log.d("ZHAN", "account name : " + newOrEditTransaction.getAccount().getName());
         Log.i("ZHAN", "----------- Parceler Result ----------");
 
-        //Attaching account
-        final RealmResults<Account> accountRealmResults = myRealm.where(Account.class).equalTo("id", newOrEditTransaction.getAccount().getId()).findAll();
-        final Account account = myRealm.copyToRealm(accountRealmResults.get(0));
-
-        /*
-        //Attaching category
-        final Category cc = myRealm.where(Category.class).equalTo("id", newOrEditTransaction.getCategory().getId()).findFirstAsync();
-        cc.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                Log.d("ZHAN", "found cat");
-
-                findTransaction(newOrEditTransaction, cc);
-
-                cc.removeChangeListener(this);
-            }
-        });
-*/
-
-
         myRealm.beginTransaction();
         myRealm.copyToRealmOrUpdate(newOrEditTransaction);
         myRealm.commitTransaction();
 
+        calendarView.selectDate(newOrEditTransaction.getDate());
         populateTransactionsForDate(newOrEditTransaction.getDate());
         updateTransactionStatus();
     }
@@ -633,22 +621,64 @@ public class CalendarFragment extends Fragment implements
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }Log.d("LIFECYCLE", "onAttach");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d("LIFECYCLE", "onResume");
+        resumeRealm();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d("LIFECYCLE", "onPause");
+        closeRealm();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d("LIFECYCLE", "onStop");
+        closeRealm();
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        Log.d("LIFECYCLE", "onDestroyView");
+        closeRealm();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d("LIFECYCLE", "onDestroy");
+        closeRealm();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        closeRealm();
+        Log.d("LIFECYCLE", "onDetach");
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(!myRealm.isClosed()) {
+    private void resumeRealm(){
+        if(myRealm == null || myRealm.isClosed()){
+            myRealm = Realm.getDefaultInstance();
+        }
+    }
+
+    private void closeRealm(){
+        if(myRealm != null && !myRealm.isClosed()){
             myRealm.close();
         }
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

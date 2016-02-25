@@ -98,16 +98,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private List<String> accountList;
     private RealmResults<Account> resultsAccount;
 
-    private View accountDialogView;
-    private AlertDialog.Builder accountAlertDialogBuilder;
+    //Alert dialog for account
     private AlertDialog accountDialog;
 
-
     //Alert dialog for date
-    private View dateDialogView;
-    private AlertDialog.Builder dateAlertDialogBuilder;
     private AlertDialog dateDialog;
-    private FlexibleCalendarView calendarView;
     private TextView monthTextView;
 
     private Transaction editTransaction;
@@ -321,14 +316,14 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         addAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayAccountDialog();
+                accountDialog.show();
             }
         });
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayDateDialog();
+                dateDialog.show();
             }
         });
 
@@ -360,15 +355,15 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     }
 
     private void createDateDialog(){
-        // get prompts.xml view
+        // get alertdialog_date.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
         //AlertDialog, where it not necessary to know what the parent is.
-        dateDialogView = layoutInflater.inflate(R.layout.alertdialog_date, null);
+        View dateDialogView = layoutInflater.inflate(R.layout.alertdialog_date, null);
 
         monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogMonthTextView);
-        calendarView = (FlexibleCalendarView) dateDialogView.findViewById(R.id.alertdialogCalendarView);
+        final FlexibleCalendarView calendarView = (FlexibleCalendarView) dateDialogView.findViewById(R.id.alertdialogCalendarView);
 
         int year = Util.getYearFromDate(selectedDate);
         int month = Util.getMonthFromDate(selectedDate);
@@ -423,12 +418,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         calendarView.setOnDateClickListener(new FlexibleCalendarView.OnDateClickListener() {
             @Override
             public void onDateClick(int year, int month, int day) {
-                /*selectedDate = (new GregorianCalendar(year, month, day)).getTime();
-
-                dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
-
-                populateTransactionsForDate(selectedDate);
-                */
                 tempDate = new GregorianCalendar(year, month, day).getTime();
             }
         });
@@ -438,26 +427,24 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             @Override
             public void onGlobalLayout() {
                 monthTextView.setText(Util.convertDateToStringFormat2(selectedDate));
-                calendarView.goToDate(selectedDate);
+                calendarView.selectDate(selectedDate);
                 calendarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
 
-        dateAlertDialogBuilder = new AlertDialog.Builder(instance)
+        AlertDialog.Builder dateAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setTitle("Select Date")
                 .setView(dateDialogView)
-                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         selectedDate = tempDate;
-                        Toast.makeText(getApplicationContext(), "Selected date is "+selectedDate, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         tempDate = selectedDate;
                         dialog.dismiss();
-                        calendarView.goToDate(selectedDate);
-                        Toast.makeText(getApplicationContext(), "Selected date is "+selectedDate, Toast.LENGTH_SHORT).show();
+                        calendarView.selectDate(selectedDate);
                     }
                 });
 
@@ -465,18 +452,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         dateDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
-    private void displayDateDialog(){
-        Toast.makeText(this, "display date dialog", Toast.LENGTH_SHORT).show();
-        dateDialog.show();
-    }
-
     private void createAccountDialog(){
-        // get prompts.xml view
+        // get alertdialog_account_transaction.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
         //AlertDialog, where it not necessary to know what the parent is.
-        accountDialogView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
+        View accountDialogView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
 
         final Spinner accountSpinner = (Spinner) accountDialogView.findViewById(R.id.accountSpinner);
 
@@ -496,7 +478,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 accountSpinner.setAdapter(accountAdapter);
 
                 int pos = 0; //default is first item to be selected in the spinner
-                if(!isNewTransaction) {
+                if (!isNewTransaction) {
                     for (int i = 0; i < resultsAccount.size(); i++) {
                         if (editTransaction.getAccount().getId().equalsIgnoreCase(resultsAccount.get(i).getId())) {
                             pos = i;
@@ -528,7 +510,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }
         });
 
-        accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+        AlertDialog.Builder accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setTitle("Select Account")
                 .setView(accountDialogView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
@@ -549,10 +531,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         accountDialog = accountAlertDialogBuilder.create();
         accountDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-    }
-
-    private void displayAccountDialog(){
-        accountDialog.show();
     }
 
     private void createNoteDialog(){
@@ -646,7 +624,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         transaction.setDate(Util.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
 
-
         if(currentPage == BudgetType.EXPENSE){
             transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
             transaction.setCategory(selectedExpenseCategory);
@@ -656,7 +633,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }
 
         Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
-        Log.d("DEBUG", "new date is "+selectedDate);
 
         Parcelable wrapped = Parcels.wrap(transaction);
 
