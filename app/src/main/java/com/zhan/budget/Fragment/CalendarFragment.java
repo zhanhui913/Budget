@@ -57,30 +57,28 @@ public class CalendarFragment extends Fragment implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
     private View view;
-    private FlexibleCalendarView calendarView;
-
+    private ViewGroup emptyLayout;
     private OnCalendarInteractionListener mListener;
+
+    //Calendar
+    private FlexibleCalendarView calendarView;
 
     private TextView  totalCostForDay, dateTextView;
 
+    //Transaction
     private ListView transactionListView;
     private TransactionListAdapter transactionAdapter;
     private List<Transaction> transactionList;
+    private RealmResults<Transaction> resultsTransactionForDay;
 
     private Date selectedDate;
 
     private Realm myRealm;
 
-
-    private RealmResults<Transaction> resultsTransactionForDay;
-
-
+    //Pull down
     private PtrFrameLayout frame;
     private PlusView header;
-
     private Boolean isPulldownToAddAllow = true;
-
-    private ViewGroup emptyLayout;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -90,10 +88,12 @@ public class CalendarFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        Log.d("LIFECYCLE", "onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("LIFECYCLE", "onCreateView");
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
         return view;
     }
@@ -101,23 +101,17 @@ public class CalendarFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        Log.d("LIFECYCLE", "onActivityCreated");
         init();
         addListeners();
         createPullToAddTransaction();
         createCalendar();
 
         //List all transactions for today
-        //populateTransactionsForDate(selectedDate);
-
-
-        final Date beginDate = Util.refreshDate(selectedDate);
-        final Date endDate = Util.getNextDate(selectedDate);
-        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
-        resultsTransactionForDay.addChangeListener(resultsTransactionForDayChangeListener);
+        populateTransactionsForDate(selectedDate);
     }
 
-    private void init(){
+    private void init(){ Log.d("LIFECYCLE", "init");
         myRealm = Realm.getDefaultInstance();
 
         //By default it will be the current date;
@@ -141,7 +135,6 @@ public class CalendarFragment extends Fragment implements
         transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "clicked on transaction :" + position, Toast.LENGTH_SHORT).show();
                 editTransaction(position);
             }
         });
@@ -154,8 +147,24 @@ public class CalendarFragment extends Fragment implements
 
         frame.setHeaderView(header);
 
-        //frame.setPtrHandler(enablePullDown); //default
-        frame.setPtrHandler(ptrHandler);
+        frame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout insideFrame) {
+                if(isPulldownToAddAllow){
+                    insideFrame.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            frame.refreshComplete();
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
+            }
+        });
 
         frame.addPtrUIHandler(new PtrUIHandler() {
 
@@ -259,32 +268,32 @@ public class CalendarFragment extends Fragment implements
 
         transactionAdapter.clear();
 
-        if(!myRealm.isClosed()) {
-            resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
-            Log.d("CALENDAR_FRAGMENT", "realm not CLOSE");
+        resumeRealm();
 
-            /*resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
-                @Override
-                public void onChange() {
-                    Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
+        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
+        Log.d("CALENDAR_FRAGMENT", "realm not CLOSE");
 
-                    float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
-                    totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
+        resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                Log.d("ZHAN", "THeres a change; update adapter");
 
-                    transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
-                    transactionAdapter.addAll(transactionList);
+                Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
 
-                    updateTransactionStatus();
+                float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
+                totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
+                transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
+                transactionAdapter.addAll(transactionList);
 
-                    //Removing on change listener
-                    resultsTransactionForDay.removeChangeListener(this);
+                updateTransactionStatus();
 
-                }
-            });*/
-        }else{
-            Log.d("CALENDAR_FRAGMENT", "myRealm was CLOSED");
-        }
+                transactionAdapter.notifyDataSetChanged();
+
+                //Removing on change listener
+                resultsTransactionForDay.removeChangeListener(this);
+            }
+        });
     }
 
     private void updateTransactionStatus(){
@@ -324,29 +333,11 @@ public class CalendarFragment extends Fragment implements
         mListener.updateToolbar(selectedDate);
     }
 
-    PtrHandler ptrHandler = new PtrHandler() {
-        @Override
-        public void onRefreshBegin(PtrFrameLayout insideFrame) {
-            if(isPulldownToAddAllow){
-                insideFrame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        frame.refreshComplete();
-                    }
-                }, 500);
-            }
-        }
 
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
-        }
-    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        resumeRealm();
 
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
@@ -374,26 +365,6 @@ public class CalendarFragment extends Fragment implements
     // Realm functions
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private RealmChangeListener resultsTransactionForDayChangeListener = new RealmChangeListener() {
-        @Override
-        public void onChange() {
-            Log.d("ZHAN", "THeres a change; update adapter");
-
-            Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
-
-            float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
-            totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
-
-            transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
-            transactionAdapter.addAll(transactionList);
-
-            updateTransactionStatus();
-
-            transactionAdapter.notifyDataSetChanged();
-        }
-    };
-
 
     private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
         Log.i("ZHAN", "----------- Parceler Result ----------");
@@ -467,49 +438,55 @@ public class CalendarFragment extends Fragment implements
             throw new RuntimeException(context.toString()
                     + " must implement OnCalendarInteractionListener");
         }
+
+        Log.d("LIFECYCLE", "onAttach");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        Log.d("LIFECYCLE", "onDetach");
     }
-
+/*
     @Override
     public void onResume(){
         super.onResume();
         Log.d("LIFECYCLE", "onResume");
-        resumeRealm();
     }
 
     @Override
     public void onPause(){
         super.onPause();
         Log.d("LIFECYCLE", "onPause");
-        closeRealm();
+    }
+*/
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d("LIFECYCLE", "onStart");
+        resumeRealm();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         Log.d("LIFECYCLE", "onStop");
         closeRealm();
     }
-
+/*
     @Override
     public void onDestroyView(){
         super.onDestroyView();
         Log.d("LIFECYCLE", "onDestroyView");
-        closeRealm();
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
         Log.d("LIFECYCLE", "onDestroy");
-        closeRealm();
     }
-
+*/
     private void resumeRealm(){
         if(myRealm == null || myRealm.isClosed()){
             myRealm = Realm.getDefaultInstance();
