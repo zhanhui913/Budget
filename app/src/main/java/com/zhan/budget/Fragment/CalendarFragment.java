@@ -99,7 +99,7 @@ public class CalendarFragment extends Fragment implements
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         init();
@@ -108,7 +108,13 @@ public class CalendarFragment extends Fragment implements
         createCalendar();
 
         //List all transactions for today
-        populateTransactionsForDate(selectedDate);
+        //populateTransactionsForDate(selectedDate);
+
+
+        final Date beginDate = Util.refreshDate(selectedDate);
+        final Date endDate = Util.getNextDate(selectedDate);
+        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
+        resultsTransactionForDay.addChangeListener(resultsTransactionForDayChangeListener);
     }
 
     private void init(){
@@ -191,7 +197,7 @@ public class CalendarFragment extends Fragment implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (BaseCellView) inflater.inflate(R.layout.date_cell_view, null);
+                    cellView = (BaseCellView) inflater.inflate(R.layout.date_cell_view, parent, false);
                 }
 
                 if (cellType == BaseCellView.TODAY) {
@@ -209,7 +215,7 @@ public class CalendarFragment extends Fragment implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (RectangleCellView) inflater.inflate(R.layout.week_cell_view, null);
+                    cellView = (RectangleCellView) inflater.inflate(R.layout.week_cell_view, parent, false);
                 }
                 return cellView;
             }
@@ -255,27 +261,27 @@ public class CalendarFragment extends Fragment implements
 
         if(!myRealm.isClosed()) {
             resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
-            resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
+            Log.d("CALENDAR_FRAGMENT", "realm not CLOSE");
+
+            /*resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
                 @Override
                 public void onChange() {
                     Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
 
                     float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
-                    Toast.makeText(getContext(), "total is " + sumFloatValue, Toast.LENGTH_LONG).show();
-
                     totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                     transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
+                    transactionAdapter.addAll(transactionList);
+
                     updateTransactionStatus();
 
-                    //transactionAdapter.clear();
-                    transactionAdapter.addAll(transactionList);
-                    //transactionAdapter.addAll(resultsTransactionForDay);
 
                     //Removing on change listener
                     resultsTransactionForDay.removeChangeListener(this);
+
                 }
-            });
+            });*/
         }else{
             Log.d("CALENDAR_FRAGMENT", "myRealm was CLOSED");
         }
@@ -333,11 +339,7 @@ public class CalendarFragment extends Fragment implements
 
         @Override
         public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            if(isPulldownToAddAllow){
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
-            }else{
-                return false;
-            }
+            return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
         }
     };
 
@@ -347,7 +349,6 @@ public class CalendarFragment extends Fragment implements
         resumeRealm();
 
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
 
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
@@ -368,13 +369,31 @@ public class CalendarFragment extends Fragment implements
         }
     }
 
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm functions
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private RealmChangeListener resultsTransactionForDayChangeListener = new RealmChangeListener() {
+        @Override
+        public void onChange() {
+            Log.d("ZHAN", "THeres a change; update adapter");
+
+            Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
+
+            float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
+            totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
+
+            transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
+            transactionAdapter.addAll(transactionList);
+
+            updateTransactionStatus();
+
+            transactionAdapter.notifyDataSetChanged();
+        }
+    };
+
 
     private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
         Log.i("ZHAN", "----------- Parceler Result ----------");
@@ -438,7 +457,6 @@ public class CalendarFragment extends Fragment implements
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     public void onAttach(Context context) {
