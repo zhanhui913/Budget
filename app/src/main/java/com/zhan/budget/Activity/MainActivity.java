@@ -46,7 +46,7 @@ import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CalendarFragment.OnCalendarListener,
+        CalendarFragment.OnCalendarInteractionListener,
         CategoryFragment.OnCategoryInteractionListener,
         MonthReportFragment.OnOverviewInteractionListener,
         SendFragment.OnSendInteractionListener,
@@ -341,7 +341,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         displayView(item.getItemId());
-
         return true;
     }
 
@@ -354,20 +353,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 Fragment fragment = null;
-                String title = getString(R.string.app_name);
+                String title = "";
 
                 switch (viewId) {
                     case R.id.nav_calendar:
                         fragment = calendarFragment;
-                        title = "Entry";
                         break;
                     case R.id.nav_category:
                         fragment = categoryFragment;
-                        title = "Category";
                         break;
                     case R.id.nav_overview:
                         fragment = monthReportFragment;
-                        title = "Overview";
                         break;
                     case R.id.nav_account:
                         fragment = accountFragment;
@@ -404,8 +400,11 @@ public class MainActivity extends AppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onCalendarInteraction(String value){
-
+    public void updateToolbar(Date date){
+        //set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(Util.convertDateToStringFormat2(date));
+        }
     }
 
     @Override
