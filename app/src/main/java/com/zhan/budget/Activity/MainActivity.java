@@ -27,6 +27,7 @@ import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.SendFragment;
+import com.zhan.budget.Fragment.SettingFragment;
 import com.zhan.budget.Fragment.ShareFragment;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private AccountFragment accountFragment;
     private ShareFragment shareFragment;
     private SendFragment sendFragment;
+    private SettingFragment settingFragment;
 
     private ArrayList<Category> categoryList = new ArrayList<>();
     private ArrayList<Account> accountList = new ArrayList<>();
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity
         categoryFragment = new CategoryFragment();
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
+        settingFragment = new SettingFragment();
         shareFragment = new ShareFragment();
         sendFragment = new SendFragment();
     }
@@ -368,6 +371,10 @@ public class MainActivity extends AppCompatActivity
                     case R.id.nav_account:
                         fragment = accountFragment;
                         title = "Account";
+                        break;
+                    case R.id.nav_setting:
+                        fragment = settingFragment;
+                        title = "Setting";
                         break;
                     case R.id.nav_share:
                         fragment = shareFragment;
