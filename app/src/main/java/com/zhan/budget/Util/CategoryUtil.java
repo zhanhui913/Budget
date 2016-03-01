@@ -2,6 +2,7 @@ package com.zhan.budget.Util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.util.Log;
 
 import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
@@ -43,12 +44,15 @@ public final class CategoryUtil {
         for(int i = 0; i < icons.length(); i++){
             // get resource ID by index
             int s = icons.getResourceId(i, 0);
-            //Log.d("ZHAN", i+"->"+s+", name :"+context.getResources().getResourceName(s)+", entry name:"+context.getResources().getResourceEntryName(s));
+            Log.d("CATEGORY_UTIL", i + "->" + s + ", name :" + context.getResources().getResourceName(s) + ", entry name:" + context.getResources().getResourceEntryName(s) + " -> " + context.getResources().getString(s));
 
             CategoryIconColor cc = new CategoryIconColor();
+
+
+            //Log.d("CATEGORY_UTIL", "        -> "+);
+
             cc.setColor(s);
             cc.setIsSelected(false); //default
-
             colorList.add(cc);
         }
 
