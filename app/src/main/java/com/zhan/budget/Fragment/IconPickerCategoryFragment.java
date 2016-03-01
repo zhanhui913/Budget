@@ -90,7 +90,6 @@ public class IconPickerCategoryFragment extends Fragment {
             }
         }
 
-
         iconCategoryGridView = (GridView) view.findViewById(R.id.iconGrid);
         iconCategoryGridAdapter = new IconCategoryGridAdapter(getContext(), categoryIconColorList, selectedColor);
         iconCategoryGridView.setAdapter(iconCategoryGridAdapter);

@@ -73,6 +73,9 @@ public class ShareFragment extends Fragment {
         circularView.setTextColor("#ff00ff00");
         circularView.setTextSizeInDP(50);
 
+        int rid = CategoryUtil.getIconID(getContext(), "c_camera");
+        circularView.setIconResource(rid);
+
     }
 
     @Override

@@ -55,4 +55,8 @@ public final class CategoryUtil {
         return colorList;
     }
 
+    public static int getIconID(Context context, String value){
+        return context.getResources().getIdentifier(value, "drawable", context.getPackageName());
+    }
+
 }
