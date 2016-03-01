@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -128,7 +129,7 @@ public class PercentView extends View {
 
         if(sliceList.size() != 0) {
             for (int i = 0; i < sliceList.size(); i++) {
-                paint.setColor(ContextCompat.getColor(getContext(), sliceList.get(i).getColor()));
+                paint.setColor(Color.parseColor(sliceList.get(i).getColor()));
                 canvas.drawRect(w, 0, w += ((sliceList.get(i).getWeight() / sumWeight) * getWidth()), getHeight(), paint);
             }
         }else{

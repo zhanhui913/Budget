@@ -1,15 +1,32 @@
 package com.zhan.budget.Util;
 
-/**
- * Created by Zhan on 16-02-29.
- */
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public final class Colors {
 
-    private Colors(){}
+    private static final String HEX_PATTERN = "^#([A-Fa-f0-9])$";
 
-    public static final int LIGHT_CYAN = 0xFF64BAA7;
-    public static final int GOSSIP = 0xFF87d37c;
-    public static final int JORDY_BLUE = 0xFF89c4f4;
-    public static final int LIGHT_WISTERIA = 0xFFbe90d4;
+    private Colors() {
+    }
 
+    public static long hex2Long(String s){
+
+        return Long.parseLong(s, 16);
+    }
+
+    public static String long2Hex(long value){
+        return Long.toHexString(value).toUpperCase();
+    }
+
+    public static String validateHex(String hex) throws Exception{
+        Pattern pattern = Pattern.compile(HEX_PATTERN);
+        Matcher matcher = pattern.matcher(hex);
+
+        if(matcher.matches()){
+            return String.format("#%08X", hex2Long(hex.replace("#","")));
+        }
+        throw new Exception(hex+" contains values that shouldnt be in hexadecimal.");
+    }
 }

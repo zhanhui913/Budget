@@ -26,18 +26,34 @@ import java.util.List;
 public class IconPickerCategoryFragment extends Fragment {
 
     private OnIconPickerCategoryFragmentInteractionListener mListener;
-
     private View view;
+
+    private static final String ARG_1 = "selectedCategoryIcon";
+    private static final String ARG_2 = "selectedCategoryColor";
 
     private List<CategoryIconColor> categoryIconColorList;
     private GridView iconCategoryGridView;
     private IconCategoryGridAdapter iconCategoryGridAdapter;
 
-    private int selectedColor;
+    private String selectedColor;
     private int selectedCategoryIcon;
 
     public IconPickerCategoryFragment() {
         // Required empty public constructor
+    }
+
+    public static IconPickerCategoryFragment newInstance(int selectedCategoryIcon, String selectedColor) {
+        IconPickerCategoryFragment fragment = new IconPickerCategoryFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_1, selectedCategoryIcon);
+        args.putString(ARG_2, selectedColor);
+        fragment.setArguments(args);
+
+        Log.d("ICON_FRAGMENT", "1) selected icon is " + selectedCategoryIcon);
+        Log.d("ICON_FRAGMENT", "1) selected color is "+selectedColor);
+
+        return fragment;
     }
 
     public void setSelectedCategoryIcon(int selectedCategoryIcon){
@@ -64,12 +80,16 @@ public class IconPickerCategoryFragment extends Fragment {
     private void init(){
         categoryIconColorList = CategoryUtil.getListOfUniqueIcons(getContext());
 
+        selectedCategoryIcon = getArguments().getInt(ARG_1);
+        selectedColor = getArguments().getString(ARG_2);
+
         for(int i = 0; i < categoryIconColorList.size(); i++){
             if(categoryIconColorList.get(i).getIcon() == selectedCategoryIcon){
                 categoryIconColorList.get(i).setIsSelected(true);
                 break;
             }
         }
+
 
         iconCategoryGridView = (GridView) view.findViewById(R.id.iconGrid);
         iconCategoryGridAdapter = new IconCategoryGridAdapter(getContext(), categoryIconColorList, selectedColor);
@@ -93,7 +113,7 @@ public class IconPickerCategoryFragment extends Fragment {
         });
     }
 
-    public void updateColor(int color){
+    public void updateColor(String color){
         Log.d("ICON_PICKER_CATEGORY", "updating color to "+color);
         selectedColor = color;
 

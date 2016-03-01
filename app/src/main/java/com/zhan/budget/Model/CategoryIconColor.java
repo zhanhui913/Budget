@@ -6,7 +6,7 @@ package com.zhan.budget.Model;
 public class CategoryIconColor {
 
     private int icon;
-    private int color;
+    private String color;
     private boolean isSelected;
 
     public CategoryIconColor(){}
@@ -27,11 +27,11 @@ public class CategoryIconColor {
         this.isSelected = isSelected;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 }

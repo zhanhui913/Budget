@@ -28,10 +28,12 @@ public class ColorPickerCategoryFragment extends Fragment {
     private OnColorPickerCategoryFragmentInteractionListener mListener;
     private View view;
 
+    private static final String ARG_1 = "selectedCategoryColor";
+
     private GridView colorCategoryGridView;
     private ColorCategoryGridAdapter colorCategoryGridAdapter;
 
-    private int selectedCategoryColor;
+    private String selectedCategoryColor;
 
     private List<CategoryIconColor> categoryIconColorList;
 
@@ -39,15 +41,26 @@ public class ColorPickerCategoryFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public void setSelectedCategoryColor(int selectedCategoryColor){
+    public static ColorPickerCategoryFragment newInstance(String selectedCategoryColor) {
+        ColorPickerCategoryFragment fragment = new ColorPickerCategoryFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_1, selectedCategoryColor);
+        fragment.setArguments(args);
+
+        Log.d("COLOR_FRAGMENT", "1) selected color is " + selectedCategoryColor);
+
+        return fragment;
+    }
+
+    public void setSelectedCategoryColor(String selectedCategoryColor){
         this.selectedCategoryColor = selectedCategoryColor;
-        Log.d("COLOR_FRAGMENT", "1) selected color is "+selectedCategoryColor);
+        Log.d("COLOR_FRAGMENT", "1) selected color is " + selectedCategoryColor);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_color_picker_category, container, false);
         return view;
     }
@@ -63,9 +76,12 @@ public class ColorPickerCategoryFragment extends Fragment {
     private void init(){
         categoryIconColorList = CategoryUtil.getListOfCategoryColors(getContext());
 
+        selectedCategoryColor = getArguments().getString(ARG_1);
+
         for(int i = 0; i < categoryIconColorList.size(); i++){
-            if(categoryIconColorList.get(i).getColor() == selectedCategoryColor){
+            if(categoryIconColorList.get(i).getColor().equalsIgnoreCase(selectedCategoryColor)){
                 categoryIconColorList.get(i).setIsSelected(true);
+                Log.d("COLOR_FRAGMENT", "found it at "+i);
                 break;
             }
         }
@@ -119,6 +135,6 @@ public class ColorPickerCategoryFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnColorPickerCategoryFragmentInteractionListener {
-        void onColorCategoryClick(int color);
+        void onColorCategoryClick(String color);
     }
 }

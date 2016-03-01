@@ -58,7 +58,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private IconPickerCategoryFragment iconPickerCategoryFragment;
 
     //Selected color
-    private int selectedColor;
+    private String selectedColor;
 
     //Selected icon
     private int selectedIcon;
@@ -84,12 +84,8 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private void init(){
         myRealm = Realm.getDefaultInstance();
 
-        colorPickerCategoryFragment = new ColorPickerCategoryFragment();
-        colorPickerCategoryFragment.setSelectedCategoryColor(category.getColor());
-
-        iconPickerCategoryFragment = new IconPickerCategoryFragment();
-        iconPickerCategoryFragment.updateColor(category.getColor()); //set initial color from category
-        iconPickerCategoryFragment.setSelectedCategoryIcon(category.getIcon());
+        colorPickerCategoryFragment = ColorPickerCategoryFragment.newInstance(category.getColor());
+        iconPickerCategoryFragment = IconPickerCategoryFragment.newInstance(category.getIcon(), category.getColor());
 
         viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
         adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), colorPickerCategoryFragment, iconPickerCategoryFragment);
@@ -479,7 +475,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onColorCategoryClick(int color){
+    public void onColorCategoryClick(String color){
         Log.d("CATEGORY_INFO", "click on color : "+color);
         selectedColor = color;
         updateCategoryColor();

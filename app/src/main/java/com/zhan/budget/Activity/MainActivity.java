@@ -35,7 +35,6 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
@@ -186,10 +185,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void isFirstTime(){
-        CategoryUtil.getListOfCategoryColors(getApplicationContext());
-
-
-
         SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
         boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, true);
 
@@ -222,7 +217,7 @@ public class MainActivity extends AppCompatActivity
                     Category c = bgRealm.createObject(Category.class);
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryNameList[i]);
-                    c.setColor(tempCategoryColorList[i]);
+                    c.setColor(getApplicationContext().getResources().getString(tempCategoryColorList[i]));
                     c.setIcon(tempCategoryIconList[i]);
                     c.setBudget(100.0f + (i/5));
                     c.setType(BudgetType.EXPENSE.toString());
@@ -240,7 +235,7 @@ public class MainActivity extends AppCompatActivity
                     Category c = bgRealm.createObject(Category.class);
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryIncomeNameList[i]);
-                    c.setColor(tempCategoryIncomeColorList[i]);
+                    c.setColor(getApplicationContext().getResources().getString(tempCategoryIncomeColorList[i]));
                     c.setIcon(tempCategoryIncomeIconList[i]);
                     c.setBudget(0);
                     c.setType(BudgetType.INCOME.toString());
@@ -269,8 +264,8 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 //Create fake transactions
-                Date startDate = Util.convertStringToDate("2016-02-01");
-                Date endDate = Util.convertStringToDate("2016-03-01");
+                Date startDate = Util.convertStringToDate("2016-03-01");
+                Date endDate = Util.convertStringToDate("2016-04-01");
 
                 Calendar start = Calendar.getInstance();
                 start.setTime(startDate);

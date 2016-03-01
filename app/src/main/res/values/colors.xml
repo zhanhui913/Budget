@@ -32,39 +32,39 @@
 
 
     <!-- colors to be used for category -->
-    <color name="light_cyan">#64baa7</color>
-    <color name="gossip">#87d37c</color>
-    <color name="jordy_blue">#89c4f4</color>
-    <color name="light_wisteria">#be90d4</color>
-    <color name="hanada">#4b5560</color>
+    <color name="light_cyan">#FF64baa7</color>
+    <color name="gossip">#FF87d37c</color>
+    <color name="jordy_blue">#FF89c4f4</color>
+    <color name="light_wisteria">#FFbe90d4</color>
+    <color name="hanada">#FF4b5560</color>
 
-    <color name="turquoise">#1abc9c</color>
-    <color name="emerald">#2ecc71</color>
-    <color name="peter_river">#3498db</color>
-    <color name="amethyst">#9b59b6</color>
-    <color name="wet_asphalt">#34495e</color>
+    <color name="turquoise">#FF1abc9c</color>
+    <color name="emerald">#FF2ecc71</color>
+    <color name="peter_river">#FF3498db</color>
+    <color name="amethyst">#FF9b59b6</color>
+    <color name="wet_asphalt">#FF34495e</color>
 
-    <color name="green_sea">#16a085</color>
-    <color name="nephritis">#27ae60</color>
-    <color name="belize_hole">#2980b9</color>
-    <color name="wisteria">#8e44ad</color>
-    <color name="midnight_blue">#263a4e</color>
+    <color name="green_sea">#FF16a085</color>
+    <color name="nephritis">#FF27ae60</color>
+    <color name="belize_hole">#FF2980b9</color>
+    <color name="wisteria">#FF8e44ad</color>
+    <color name="midnight_blue">#FF263a4e</color>
 
-    <color name="cream_can">#f5e16e</color>
-    <color name="orange">#f39c12</color>
-    <color name="pink">#e76558</color>
-    <color name="clouds">#D4D8D8</color>
-    <color name="concrete">#95a5a6</color>
+    <color name="cream_can">#FFf5e16e</color>
+    <color name="orange">#FFf39c12</color>
+    <color name="pink">#FFe76558</color>
+    <color name="clouds">#FFD4D8D8</color>
+    <color name="concrete">#FF95a5a6</color>
 
-    <color name="sunflower">#ecc62c</color>
-    <color name="carrot">#e67e22</color>
-    <color name="alizarin">#e74c3c</color>
-    <color name="silver">#bdc3c7</color>
-    <color name="harbor_rat">#5f665f</color>
+    <color name="sunflower">#FFecc62c</color>
+    <color name="carrot">#FFe67e22</color>
+    <color name="alizarin">#FFe74c3c</color>
+    <color name="silver">#FFbdc3c7</color>
+    <color name="harbor_rat">#FF5f665f</color>
 
-    <color name="lemon">#ffcc00</color>
-    <color name="pumpkin">#d35400</color>
-    <color name="pomegranate">#c0392b</color>
-    <color name="asbestos">#7f8c8d</color>
-    <color name="black">#131313</color>
+    <color name="lemon">#FFffcc00</color>
+    <color name="pumpkin">#FFd35400</color>
+    <color name="pomegranate">#FFc0392b</color>
+    <color name="asbestos">#FF7f8c8d</color>
+    <color name="black">#FF131313</color>
 </resources>

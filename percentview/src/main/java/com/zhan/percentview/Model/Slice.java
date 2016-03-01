@@ -5,18 +5,18 @@ package com.zhan.percentview.Model;
  */
 public class Slice {
 
-    private int color;
+    private String color;
     private float weight;
 
     public Slice(){
 
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 

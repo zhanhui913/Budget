@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.library.CircularView;
 import com.zhan.percentview.Model.Slice;
 import com.zhan.percentview.PercentView;
 
@@ -29,6 +29,7 @@ public class ShareFragment extends Fragment {
 
     private View view;
     private PercentView percentView;
+    private CircularView circularView;
 
     public ShareFragment() {
         // Required empty public constructor
@@ -42,7 +43,6 @@ public class ShareFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_share, container, false);
         return view;
     }
@@ -50,7 +50,6 @@ public class ShareFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
         init();
     }
 
@@ -66,9 +65,14 @@ public class ShareFragment extends Fragment {
             s.setWeight((i * 2) + 1);
             sliceList.add(s);
         }
-
-
         percentView.setSliceList(sliceList);
+
+        circularView = (CircularView)view.findViewById(R.id.categoryIcon);
+        circularView.setCircleColor("#ff8e44ad");
+        circularView.setText("Z");
+        circularView.setTextColor("#ff00ff00");
+        circularView.setTextSizeInDP(50);
+
     }
 
     @Override
