@@ -143,61 +143,7 @@ public final class Util {
         Log.d("ZHAN", content);
     }
 
-    /**
-     * Sets ListView height dynamically based on the height of the items.
-     *
-     * @param listView to be resized
-     * @return true if the listView is successfully resized, false otherwise
-     */
-    public static boolean setListViewHeightBasedOnItems(ListView listView) {
 
-        if (listView.getAdapter() != null) {
-            // Set list height.
-            ViewGroup.LayoutParams params = listView.getLayoutParams();
-            params.height = getListViewHeight(listView);
-            listView.setLayoutParams(params);
-            listView.requestLayout();
-            Write("set) HEIGHT OF LIST VIEW IS " + params.height);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets ListView height dynamically based on the height of all items.
-     *
-     * @param listView to be resized
-     * @return int the total height of the list view
-     */
-    public static int getListViewHeight(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter != null) {
-
-            int numberOfItems = listAdapter.getCount();
-
-            // Get total height of all items.
-            int totalItemsHeight = 0;
-            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
-                View item = listAdapter.getView(itemPos, null, listView);
-                //Individual items such as image_item.xml, marker_item.xml, and item_transactiontion.xml needs to be relative layout
-                if (item instanceof ViewGroup) {
-                    item.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                }
-                item.measure(0, 0);
-                totalItemsHeight += item.getMeasuredHeight();
-            }
-
-            // Get total height of all item dividers.
-            int totalDividersHeight = listView.getDividerHeight() * (numberOfItems - 1);
-
-            int totalHeight = totalItemsHeight + totalDividersHeight;
-
-            Write("get) HEIGHT OF LIST VIEW IS " + totalHeight);
-            return totalHeight;
-        }
-        return 0;
-    }
 
     /**
      * Converting DP to PX
@@ -243,12 +189,6 @@ public final class Util {
         } else {
             Write("fail at Hiding KEYBOARD");
         }
-    }
-
-    public static boolean checkInternetConnection(Activity activity) {
-        final ConnectivityManager conMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
-        return (activeNetwork != null && activeNetwork.isConnected());
     }
 
     public static String setPriceToCorrectDecimalInString(float price){

@@ -35,6 +35,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
@@ -185,6 +186,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void isFirstTime(){
+        CategoryUtil.getListOfCategoryColors(getApplicationContext());
+
+
+
         SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
         boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, true);
 

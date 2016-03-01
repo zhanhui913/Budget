@@ -49,7 +49,16 @@ public final class CategoryUtil {
             CategoryIconColor cc = new CategoryIconColor();
 
 
-            //Log.d("CATEGORY_UTIL", "        -> "+);
+
+
+            String hex = context.getResources().getString(s);
+            int dd = Hex2Decimal.hex2decimal(hex);
+            Log.d("CATEGORY_UTIL", hex + " -> " + dd);
+            String hex2 = Hex2Decimal.decimal2hex(dd);
+            Log.d("CATEGORY_UTIL", dd + " -> " + hex2);
+
+
+
 
             cc.setColor(s);
             cc.setIsSelected(false); //default
