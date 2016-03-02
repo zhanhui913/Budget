@@ -7,24 +7,23 @@
     android:padding="5dp"
     tools:context="com.zhan.budget.Fragment.SettingFragment">
 
-    <TextView
+    <TextView style="@style/SettingsTextViewHeaderStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="General"/>
+        android:text="General" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/harbor_rat"/>
 
-    <Button
+    <TextView style="@style/SettingsTextViewButtonStyle"
         android:id="@+id/firstDayBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/budget_transparent_button"
+        android:layout_height="50dp"
         android:text="First day of the week"/>
 
-    <TextView
+    <TextView style="@style/SettingsTextViewHeaderStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Data"/>
@@ -34,13 +33,10 @@
         android:layout_height="2dp"
         android:background="@color/harbor_rat"/>
 
-    <TextView
+    <TextView style="@style/SettingsTextViewButtonStyle"
         android:id="@+id/backupBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/budget_transparent_button"
-        android:gravity="center_vertical"
-        android:clickable="true"
         android:text="Backup data"/>
 
     <View
@@ -48,10 +44,10 @@
         android:layout_height="1dp"
         android:background="@color/darkgray"/>
 
-    <Button
+    <TextView style="@style/SettingsTextViewButtonStyle"
         android:id="@+id/resetDataBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Reset data"/>
 
     <View
@@ -59,14 +55,13 @@
         android:layout_height="1dp"
         android:background="@color/darkgray"/>
 
-    <Button
+    <TextView style="@style/SettingsTextViewButtonStyle"
         android:id="@+id/exportCSVBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Export data in CSV"/>
 
-
-    <TextView
+    <TextView style="@style/SettingsTextViewHeaderStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Feedback"/>
@@ -76,10 +71,10 @@
         android:layout_height="2dp"
         android:background="@color/harbor_rat"/>
 
-    <Button
+    <TextView style="@style/SettingsTextViewButtonStyle"
         android:id="@+id/emailBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Email me"/>
 
     <View
@@ -87,10 +82,10 @@
         android:layout_height="1dp"
         android:background="@color/darkgray"/>
 
-    <Button
+    <TextView style="@style/SettingsTextViewButtonStyle"
         android:id="@+id/tourBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Tour"/>
 
     <View
@@ -98,10 +93,10 @@
         android:layout_height="1dp"
         android:background="@color/darkgray"/>
 
-    <Button
+    <TextView style="@style/SettingsTextViewButtonStyle"
         android:id="@+id/faqBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="FAQ"/>
 
     <TextView

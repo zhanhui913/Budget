@@ -35,7 +35,6 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -186,10 +185,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void isFirstTime(){
-        CategoryUtil.getListOfUniqueIcons(getApplicationContext());
-
-
-
         SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
         boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, true);
 
@@ -251,20 +246,10 @@ public class MainActivity extends AppCompatActivity
 
                 //Create default accounts
                 String[] tempAccountList = new String[]{"Credit Card","Debit Card", "Cash"};
-                /*for(int k = 0; k < 4; k++) {
-                    for (int i = 0; i < tempAccountList.length; i++) {
-                        Account account = bgRealm.createObject(Account.class);
-                        account.setId(Util.generateUUID());
-                        account.setName(k+"-"+tempAccountList[i]);
-
-                        accountList.add(account);
-                    }
-                }*/
-                for(int i = 0 ; i < 12; i++){
+                for(int i = 0 ; i < tempAccountList.length; i++){
                     Account account = bgRealm.createObject(Account.class);
                     account.setId(Util.generateUUID());
-                    account.setName("Account "+i);
-
+                    account.setName(tempAccountList[i]);
                     accountList.add(account);
                 }
 
@@ -356,7 +341,7 @@ public class MainActivity extends AppCompatActivity
         //Close drawer first
         drawer.closeDrawer(GravityCompat.START);
 
-        //Creates a 250 millisecond delay to remove lag when drawer is closing
+        //Creates a 300 millisecond delay to remove lag when drawer is closing
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -385,9 +370,9 @@ public class MainActivity extends AppCompatActivity
                         fragment = shareFragment;
                         title = "Share";
                         break;
-                    case R.id.nav_send:
+                    case R.id.nav_rate:
                         fragment = sendFragment;
-                        title = "Send";
+                        title = "Rate";
                         break;
                 }
 
