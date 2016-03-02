@@ -24,7 +24,7 @@
 
 
 
-    <color name="background_light">#FFEEEEEE</color>
+    <color name="background_light">@android:color/background_light</color>
 
 
 

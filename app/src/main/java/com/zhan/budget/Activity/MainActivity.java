@@ -366,9 +366,9 @@ public class MainActivity extends AppCompatActivity
                         fragment = settingFragment;
                         title = "Setting";
                         break;
-                    case R.id.nav_share:
+                    case R.id.nav_info:
                         fragment = shareFragment;
-                        title = "Share";
+                        title = "Info";
                         break;
                     case R.id.nav_rate:
                         fragment = sendFragment;

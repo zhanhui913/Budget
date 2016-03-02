@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/nav1" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/svg_ic_menu_calendar"
@@ -26,9 +26,9 @@
             android:icon="@drawable/svg_ic_settings"
             android:title="Setting" />
         <item
-            android:id="@+id/nav_share"
-            android:icon="@drawable/ic_menu_share"
-            android:title="Share" />
+            android:id="@+id/nav_info"
+            android:icon="@drawable/svg_ic_menu_info"
+            android:title="Info" />
         <item
             android:id="@+id/nav_rate"
             android:icon="@drawable/svg_ic_menu_rate"
