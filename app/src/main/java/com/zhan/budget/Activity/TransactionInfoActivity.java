@@ -41,6 +41,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.RectangleCellView;
 import com.zhan.circleindicator.CircleIndicator;
@@ -116,7 +117,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
         //Get intents from caller activity
         isNewTransaction = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
-        selectedDate = Util.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
+        selectedDate = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
 
         if(!isNewTransaction){
             editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
@@ -365,13 +366,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogMonthTextView);
         final FlexibleCalendarView calendarView = (FlexibleCalendarView) dateDialogView.findViewById(R.id.alertdialogCalendarView);
 
-        int year = Util.getYearFromDate(selectedDate);
-        int month = Util.getMonthFromDate(selectedDate);
-        int date = Util.getDateFromDate(selectedDate);
+        int year = DateUtil.getYearFromDate(selectedDate);
+        int month = DateUtil.getMonthFromDate(selectedDate);
+        int date = DateUtil.getDateFromDate(selectedDate);
 
         tempDate = selectedDate;
 
-        monthTextView.setText(Util.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
+        monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
 
         calendarView.setCalendarView(new CalendarView() {
             @Override
@@ -411,7 +412,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                monthTextView.setText(Util.convertDateToStringFormat2(new GregorianCalendar(year, month, 1).getTime()));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, 1).getTime()));
             }
         });
 
@@ -426,7 +427,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         calendarView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                monthTextView.setText(Util.convertDateToStringFormat2(selectedDate));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(selectedDate));
                 calendarView.selectDate(selectedDate);
                 calendarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -613,7 +614,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }else{
             transaction.setId(Util.generateUUID());
 
-            if(Util.getDaysFromDate(selectedDate) <= Util.getDaysFromDate(new Date())){
+            if(DateUtil.getDaysFromDate(selectedDate) <= DateUtil.getDaysFromDate(new Date())){
                 transaction.setDayType(DayType.COMPLETED.toString());
             }else{
                 transaction.setDayType(DayType.SCHEDULED.toString());
@@ -621,7 +622,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }
 
         transaction.setNote(this.noteString);
-        transaction.setDate(Util.formatDate(selectedDate));
+        transaction.setDate(DateUtil.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){

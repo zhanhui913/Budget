@@ -16,7 +16,7 @@ import android.widget.Button;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
+import com.zhan.budget.Util.DateUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -161,7 +161,7 @@ public class SendFragment extends Fragment {
                     for(int i = 0; i < transactionList.size(); i++){
                         fileWriter.append(transactionList.get(i).getCategory().getType().toString());
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(Util.convertDateToStringFormat5(transactionList.get(i).getDate()));
+                        fileWriter.append(DateUtil.convertDateToStringFormat5(transactionList.get(i).getDate()));
                         fileWriter.append(COMMA_DELIMITER);
                         fileWriter.append(transactionList.get(i).getNote());
                         fileWriter.append(COMMA_DELIMITER);

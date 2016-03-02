@@ -24,9 +24,8 @@
 
 
 
-    <color name="background_light">@android:color/background_light</color>
 
-
+    <color name="background_light">#26f3f3f3</color>
 
 
 

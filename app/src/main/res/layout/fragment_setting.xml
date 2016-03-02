@@ -1,109 +1,113 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp"
+    android:layout_height="wrap_content"
     tools:context="com.zhan.budget.Fragment.SettingFragment">
 
-    <TextView style="@style/SettingsTextViewHeaderStyle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="General" />
+        android:orientation="vertical"
+        android:padding="5dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/harbor_rat"/>
+        <TextView style="@style/SettingsTextViewHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="General" />
 
-    <TextView style="@style/SettingsTextViewButtonStyle"
-        android:id="@+id/firstDayBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="First day of the week"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/harbor_rat"/>
 
-    <TextView style="@style/SettingsTextViewHeaderStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Data"/>
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/firstDayBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="First day of the week"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/harbor_rat"/>
+        <TextView style="@style/SettingsTextViewHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Data"/>
 
-    <TextView style="@style/SettingsTextViewButtonStyle"
-        android:id="@+id/backupBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Backup data"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/harbor_rat"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/darkgray"/>
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/backupBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Backup data"/>
 
-    <TextView style="@style/SettingsTextViewButtonStyle"
-        android:id="@+id/resetDataBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Reset data"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/darkgray"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/darkgray"/>
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/resetDataBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Reset data"/>
 
-    <TextView style="@style/SettingsTextViewButtonStyle"
-        android:id="@+id/exportCSVBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Export data in CSV"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/darkgray"/>
 
-    <TextView style="@style/SettingsTextViewHeaderStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Feedback"/>
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/exportCSVBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Export data in CSV"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/harbor_rat"/>
+        <TextView style="@style/SettingsTextViewHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Feedback"/>
 
-    <TextView style="@style/SettingsTextViewButtonStyle"
-        android:id="@+id/emailBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Email me"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/harbor_rat"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/darkgray"/>
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/emailBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Email me"/>
 
-    <TextView style="@style/SettingsTextViewButtonStyle"
-        android:id="@+id/tourBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Tour"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/darkgray"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/darkgray"/>
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/tourBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Tour"/>
 
-    <TextView style="@style/SettingsTextViewButtonStyle"
-        android:id="@+id/faqBtn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="FAQ"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/darkgray"/>
 
-    <TextView
-        android:id="@+id/appVersionTextId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="v1.0.0"
-        android:layout_margin="10dp"
-        android:gravity="center_horizontal" />
-</LinearLayout>
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/faqBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="FAQ"/>
+
+        <TextView
+            android:id="@+id/appVersionTextId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="v1.0.0"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+</ScrollView>

@@ -16,6 +16,7 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
@@ -185,7 +186,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
         if(this.showDate){
             viewHolder.date.setVisibility(View.VISIBLE);
-            viewHolder.date.setText(Util.convertDateToStringFormat1(transaction.getDate()));
+            viewHolder.date.setText(DateUtil.convertDateToStringFormat1(transaction.getDate()));
         }else{
             viewHolder.date.setVisibility(View.INVISIBLE);
         }

@@ -18,7 +18,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.percentview.Model.Slice;
 import com.zhan.percentview.PercentView;
 
@@ -80,7 +80,7 @@ public class OverviewActivity extends AppCompatActivity implements
 
         totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
         dateTextView = (TextView) findViewById(R.id.dateTextView);
-        dateTextView.setText(Util.convertDateToStringFormat2(currentMonth));
+        dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
         percentView = (PercentView) findViewById(R.id.percentView);
     }
@@ -125,14 +125,14 @@ public class OverviewActivity extends AppCompatActivity implements
 
     private void getMonthReport(Date date){
         //Refresh these variables
-        final Date month = Util.refreshMonth(date);
+        final Date month = DateUtil.refreshMonth(date);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        final Date endMonth = Util.getPreviousDate(Util.getNextMonth(month));
+        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
 
         sliceList = new ArrayList<>();
 
-        Log.d("OVERVIEW_ACT", "("+Util.convertDateToStringFormat1(month) + "-> "+Util.convertDateToStringFormat1(endMonth)+")");
+        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener() {

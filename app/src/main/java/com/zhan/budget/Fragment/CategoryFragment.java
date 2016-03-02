@@ -29,6 +29,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
@@ -174,7 +175,7 @@ public class CategoryFragment extends Fragment implements
                 Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
 
                 Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, Util.convertDateToString(currentMonth));
+                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
 
                 Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 
@@ -255,10 +256,10 @@ public class CategoryFragment extends Fragment implements
     }
 
     private void populateCategoryWithInfo(){
-        final Date startMonth = Util.refreshMonth(currentMonth);
+        final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        final Date endMonth = Util.getPreviousDate(Util.getNextMonth(currentMonth));
+        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
 
         Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
 
@@ -488,10 +489,10 @@ public class CategoryFragment extends Fragment implements
     }
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
-        currentMonth = Util.getMonthWithDirection(currentMonth, direction);
+        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
 
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentMonth));
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(currentMonth));
         }
 
         if(updateCategoryInfo) {

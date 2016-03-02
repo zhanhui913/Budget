@@ -11,7 +11,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
+import com.zhan.budget.Util.DateUtil;
 
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         // getting monthReport data for the row
         MonthReport monthReport = monthReportList.get(position);
 
-        viewHolder.month.setText(Util.convertDateToStringFormat4(monthReport.getMonth()));
+        viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
         viewHolder.costThisMonth.setText(CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
         viewHolder.changeCost.setText(CurrencyTextFormatter.formatFloat(monthReport.getChangeCost(), Constants.BUDGET_LOCALE));
 

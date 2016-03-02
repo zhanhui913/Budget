@@ -24,7 +24,7 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
+import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,9 +105,9 @@ public class MonthReportFragment extends Fragment {
             monthReport.setDoneCalculation(false); //default
 
             if(i == 0) {
-                monthReport.setMonth(Util.refreshMonth(Util.refreshYear(currentYear)));
+                monthReport.setMonth(DateUtil.refreshMonth(DateUtil.refreshYear(currentYear)));
             }else{
-                monthReport.setMonth(Util.getNextMonth(monthReportList.get(i - 1).getMonth()));
+                monthReport.setMonth(DateUtil.getNextMonth(monthReportList.get(i - 1).getMonth()));
             }
             monthReportList.add(monthReport);
         }
@@ -130,10 +130,10 @@ public class MonthReportFragment extends Fragment {
      */
     private void getMonthReport(){
         //Refresh these variables
-        beginYear = Util.refreshYear(currentYear);
+        beginYear = DateUtil.refreshYear(currentYear);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        endYear = Util.getPreviousDate(Util.getNextYear(beginYear));
+        endYear = DateUtil.getPreviousDate(DateUtil.getNextYear(beginYear));
 
         Log.d("DEBUG", "get report from " + beginYear.toString() + " to " + endYear.toString());
 
@@ -184,10 +184,10 @@ public class MonthReportFragment extends Fragment {
                 for (int i = 0; i < transactionList.size(); i++) {
                     //Only add Category of type EXPENSE
                     if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
-                        int month = Util.getMonthFromDate(transactionList.get(i).getDate());
+                        int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
 
                         for (int a = 0; a < monthReportList.size(); a++) {
-                            if (month == Util.getMonthFromDate(monthReportList.get(a).getMonth())) {
+                            if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
                                 monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
                             }
                         }
@@ -220,12 +220,12 @@ public class MonthReportFragment extends Fragment {
     }
 
     private void updateYearInToolbar(int direction){
-        currentYear = Util.getYearWithDirection(currentYear, direction);
+        currentYear = DateUtil.getYearWithDirection(currentYear, direction);
 
         getMonthReport();
 
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(Util.convertDateToStringFormat3(currentYear));
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat3(currentYear));
         }
     }
 

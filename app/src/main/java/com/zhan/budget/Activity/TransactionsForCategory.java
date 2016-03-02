@@ -18,7 +18,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.budget.Util.Util;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
@@ -57,7 +57,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
         setContentView(R.layout.activity_transactions_for_category);
 
         //Get intents from caller activity
-        currentMonth = Util.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH));
+        currentMonth = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH));
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
 
         init();
@@ -79,17 +79,17 @@ public class TransactionsForCategory extends AppCompatActivity implements
 
         if(toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(Util.convertDateToStringFormat2(currentMonth));
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(currentMonth));
         }
 
         transactionCategoryList = new ArrayList<>();
         transactionCategoryAdapter = new TransactionListAdapter(this, transactionCategoryList, true); //display date in each transaction item
         transactionCategoryListView.setAdapter(transactionCategoryAdapter);
 
-        beginMonth = Util.refreshMonth(currentMonth);
+        beginMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        endMonth = Util.getPreviousDate(Util.getNextMonth(currentMonth));
+        endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
 /*
         transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
                 selectedCategory.getIcon(), getTheme()));

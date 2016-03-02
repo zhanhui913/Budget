@@ -35,6 +35,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // storage-related task you need to do.
                     Toast.makeText(getApplicationContext(), "YAY", Toast.LENGTH_SHORT).show();
                 } else if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
 
@@ -181,6 +182,7 @@ public class MainActivity extends AppCompatActivity
         //code to load my fragment
         getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
 
+        //set first fragment as default
         navigationView.getMenu().getItem(0).setChecked(true);
     }
 
@@ -203,7 +205,7 @@ public class MainActivity extends AppCompatActivity
     private void createFakeTransactions(){
         Realm realm = Realm.getDefaultInstance();
 
-        final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
+        //final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -254,8 +256,8 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 //Create fake transactions
-                Date startDate = Util.convertStringToDate("2016-03-01");
-                Date endDate = Util.convertStringToDate("2016-04-01");
+                Date startDate = DateUtil.convertStringToDate("2016-03-01");
+                Date endDate = DateUtil.convertStringToDate("2016-04-01");
 
                 Calendar start = Calendar.getInstance();
                 start.setTime(startDate);
@@ -272,7 +274,7 @@ public class MainActivity extends AppCompatActivity
                     int rda = random.nextInt(accountList.size());
 
 
-                    if(Util.getDaysFromDate(date) <= Util.getDaysFromDate(new Date())){
+                    if(DateUtil.getDaysFromDate(date) <= DateUtil.getDaysFromDate(new Date())){
                         dayType = DayType.COMPLETED.toString();
                     }else{
                         dayType = DayType.SCHEDULED.toString();
@@ -292,9 +294,9 @@ public class MainActivity extends AppCompatActivity
                         transaction.setAccount(account);
                         transaction.setCategory(category);
                         transaction.setPrice(-120.0f + (rd * 0.5f));
-                        transaction.setNote("Note " + j + " for "+Util.convertDateToString(date));
+                        transaction.setNote("Note " + j + " for "+DateUtil.convertDateToString(date));
 
-                        transactionArrayList.add(transaction);
+                        //transactionArrayList.add(transaction);
                     }
                 }
             }
@@ -400,7 +402,7 @@ public class MainActivity extends AppCompatActivity
     public void updateToolbar(Date date){
         //set the toolbar title
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(Util.convertDateToStringFormat2(date));
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(date));
         }
     }
 

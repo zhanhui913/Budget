@@ -27,7 +27,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
@@ -123,7 +123,7 @@ public class CalendarFragment extends Fragment implements
         transactionAdapter = new TransactionListAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
-        dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
+        dateTextView.setText(DateUtil.convertDateToStringFormat1(selectedDate));
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyTransactionLayout);
 
@@ -245,7 +245,7 @@ public class CalendarFragment extends Fragment implements
             public void onMonthChange(int year, int month, int direction) {
                 //This is temporary for now because when we move to a new month, the 1st of that month is selected by default
                 selectedDate = (new GregorianCalendar(year, month, 1)).getTime();
-                dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
+                dateTextView.setText(DateUtil.convertDateToStringFormat1(selectedDate));
 
                 populateTransactionsForDate(selectedDate);
 
@@ -257,7 +257,7 @@ public class CalendarFragment extends Fragment implements
             @Override
             public void onDateClick(int year, int month, int day) {
                 selectedDate = (new GregorianCalendar(year, month, day)).getTime();
-                dateTextView.setText(Util.convertDateToStringFormat1(selectedDate));
+                dateTextView.setText(DateUtil.convertDateToStringFormat1(selectedDate));
                 populateTransactionsForDate(selectedDate);
             }
         });
@@ -268,10 +268,10 @@ public class CalendarFragment extends Fragment implements
      * @param date The date to search in db.
      */
     private void populateTransactionsForDate(Date date) {
-        final Date beginDate = Util.refreshDate(date);
-        final Date endDate = Util.getNextDate(date);
+        final Date beginDate = DateUtil.refreshDate(date);
+        final Date endDate = DateUtil.getNextDate(date);
 
-        Log.d("CALENDAR_FRAGMENT", " populate transaction list (" + Util.convertDateToStringFormat5(beginDate) + " -> " + Util.convertDateToStringFormat5(endDate) + ")");
+        Log.d("CALENDAR_FRAGMENT", " populate transaction list (" + DateUtil.convertDateToStringFormat5(beginDate) + " -> " + DateUtil.convertDateToStringFormat5(endDate) + ")");
 
         resumeRealm();
 
@@ -324,7 +324,7 @@ public class CalendarFragment extends Fragment implements
 
         //This is new transaction
         newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, true);
-        newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, Util.convertDateToString(selectedDate));
+        newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
         startActivityForResult(newTransactionIntent, Constants.RETURN_NEW_TRANSACTION);
     }
 
@@ -336,7 +336,7 @@ public class CalendarFragment extends Fragment implements
 
         //This is edit mode, not a new transaction
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, Util.convertDateToString(selectedDate));
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
 
         Parcelable wrapped = Parcels.wrap(transactionList.get(position));
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
@@ -349,7 +349,7 @@ public class CalendarFragment extends Fragment implements
      * @param direction how many to add to the current month.
      */
     private void updateMonthInToolbar(int direction){
-        selectedDate = Util.getMonthWithDirection(selectedDate, direction);
+        selectedDate = DateUtil.getMonthWithDirection(selectedDate, direction);
         mListener.updateToolbar(selectedDate);
     }
 
@@ -361,7 +361,7 @@ public class CalendarFragment extends Fragment implements
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
 
                 //Compare with today's date
-                if(Util.getDaysFromDate(tt.getDate()) > Util.getDaysFromDate(new Date())){
+                if(DateUtil.getDaysFromDate(tt.getDate()) > DateUtil.getDaysFromDate(new Date())){
                     tt.setDayType(DayType.SCHEDULED.toString());
                 }else{
                     tt.setDayType(DayType.COMPLETED.toString());
