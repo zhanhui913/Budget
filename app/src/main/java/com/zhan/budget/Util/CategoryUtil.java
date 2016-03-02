@@ -25,10 +25,10 @@ public final class CategoryUtil {
         for(int i = 0; i < icons.length(); i++){
             // get resource ID by index
             int s = icons.getResourceId(i, 0);
-            //Log.d("ZHAN", i+"->"+s+", name :"+context.getResources().getResourceName(s)+", entry name:"+context.getResources().getResourceEntryName(s));
+            Log.d("ZHAN", i+"->"+s+", name :"+context.getResources().getResourceName(s)+", entry name:"+context.getResources().getResourceEntryName(s)+" -> "+context.getResources().getString(s));
 
             CategoryIconColor cc = new CategoryIconColor();
-            cc.setIcon(s);
+            cc.setIcon(context.getResources().getResourceEntryName(s));
             cc.setIsSelected(false); //default
 
             iconList.add(cc);

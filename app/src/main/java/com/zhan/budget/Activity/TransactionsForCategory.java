@@ -1,7 +1,6 @@
 package com.zhan.budget.Activity;
 
 import android.os.Bundle;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +17,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
@@ -90,9 +90,11 @@ public class TransactionsForCategory extends AppCompatActivity implements
 
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = Util.getPreviousDate(Util.getNextMonth(currentMonth));
-
+/*
         transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
                 selectedCategory.getIcon(), getTheme()));
+        */
+        transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(getApplicationContext(), selectedCategory.getIcon()));
 
         transactionCategoryName.setText(selectedCategory.getName());
 

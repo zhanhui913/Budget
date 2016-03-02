@@ -218,7 +218,7 @@ public class CategoryFragment extends Fragment implements
                         c.setId(Util.generateUUID());
                         c.setName(input.getText().toString());
                         c.setColor("#FF000000");
-                        c.setIcon(6);
+                        c.setIcon("c_android");
                         c.setBudget(100.0f);
                         c.setCost(0);
 

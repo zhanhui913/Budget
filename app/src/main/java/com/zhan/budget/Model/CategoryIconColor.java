@@ -5,17 +5,17 @@ package com.zhan.budget.Model;
  */
 public class CategoryIconColor {
 
-    private int icon;
+    private String icon;
     private String color;
     private boolean isSelected;
 
     public CategoryIconColor(){}
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

@@ -35,6 +35,7 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
@@ -185,6 +186,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void isFirstTime(){
+        CategoryUtil.getListOfUniqueIcons(getApplicationContext());
+
+
+
         SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
         boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, true);
 
@@ -218,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryNameList[i]);
                     c.setColor(getApplicationContext().getResources().getString(tempCategoryColorList[i]));
-                    c.setIcon(tempCategoryIconList[i]);
+                    c.setIcon(getApplicationContext().getResources().getResourceEntryName(tempCategoryIconList[i]));
                     c.setBudget(100.0f + (i/5));
                     c.setType(BudgetType.EXPENSE.toString());
                     c.setCost(0);
@@ -236,7 +241,7 @@ public class MainActivity extends AppCompatActivity
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryIncomeNameList[i]);
                     c.setColor(getApplicationContext().getResources().getString(tempCategoryIncomeColorList[i]));
-                    c.setIcon(tempCategoryIncomeIconList[i]);
+                    c.setIcon(getApplicationContext().getResources().getResourceEntryName(tempCategoryIncomeIconList[i]));
                     c.setBudget(0);
                     c.setType(BudgetType.INCOME.toString());
                     c.setCost(0);

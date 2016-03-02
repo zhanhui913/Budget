@@ -18,6 +18,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -151,7 +152,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconResource(category.getIcon());
+        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), category.getIcon()));
 
         viewHolder.name.setText(category.getName());
         viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));

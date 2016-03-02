@@ -15,6 +15,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
@@ -160,7 +161,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.circularView.setCircleRadiusInDP(25);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
-            viewHolder.circularView.setIconResource(transaction.getCategory().getIcon());
+            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), transaction.getCategory().getIcon()));
             viewHolder.circularView.setIconColor(R.color.white);
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
@@ -170,7 +171,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.circularView.setCircleRadiusInDP(23);
             viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
             viewHolder.circularView.setCircleColor(R.color.transparent);
-            viewHolder.circularView.setIconResource(transaction.getCategory().getIcon());
+            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), transaction.getCategory().getIcon()));
             viewHolder.circularView.setIconColor(R.color.harbor_rat);
 
             viewHolder.approveBtn.setVisibility(View.VISIBLE);

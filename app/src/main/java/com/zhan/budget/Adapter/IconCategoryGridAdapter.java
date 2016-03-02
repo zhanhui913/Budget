@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 
 import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
 
         //get drawable data
         viewHolder.circularView.setCircleColor(this.color);
-        viewHolder.circularView.setIconResource(iconList.get(position).getIcon());
+        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, iconList.get(position).getIcon()));
 
         if(iconList.get(position).isSelected()){
             viewHolder.circularView.setStrokeColor(R.color.harbor_rat);

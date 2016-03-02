@@ -26,6 +26,7 @@ import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.library.CircularView;
 
@@ -61,7 +62,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private String selectedColor;
 
     //Selected icon
-    private int selectedIcon;
+    private String selectedIcon;
 
     private Realm myRealm;
 
@@ -156,7 +157,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
         categoryCircularView.setCircleColor(category.getColor());
 
-        categoryCircularView.setIconResource(category.getIcon());
+        categoryCircularView.setIconResource(CategoryUtil.getIconID(getApplicationContext(), category.getIcon()));
         categoryCircularView.setIconColor(R.color.white);
     }
 
@@ -482,9 +483,9 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onIconCategoryClick(int icon){
+    public void onIconCategoryClick(String icon){
         Log.d("CATEGORY_INFO", "click on icon : "+icon);
         selectedIcon = icon;
-        categoryCircularView.setIconResource(icon);
+        categoryCircularView.setIconResource(CategoryUtil.getIconID(getApplicationContext(), icon));
     }
 }

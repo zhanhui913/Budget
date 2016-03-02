@@ -11,6 +11,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getCategory().getColor());
-        viewHolder.circularView.setIconResource(category.getCategory().getIcon());
+        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), category.getCategory().getIcon()));
 
         viewHolder.name.setText(category.getCategory().getName());
        // viewHolder.percent.setText(String.format("%.2f", category.getPercent())+"%");

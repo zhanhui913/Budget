@@ -36,17 +36,17 @@ public class IconPickerCategoryFragment extends Fragment {
     private IconCategoryGridAdapter iconCategoryGridAdapter;
 
     private String selectedColor;
-    private int selectedCategoryIcon;
+    private String selectedCategoryIcon;
 
     public IconPickerCategoryFragment() {
         // Required empty public constructor
     }
 
-    public static IconPickerCategoryFragment newInstance(int selectedCategoryIcon, String selectedColor) {
+    public static IconPickerCategoryFragment newInstance(String selectedCategoryIcon, String selectedColor) {
         IconPickerCategoryFragment fragment = new IconPickerCategoryFragment();
 
         Bundle args = new Bundle();
-        args.putInt(ARG_1, selectedCategoryIcon);
+        args.putString(ARG_1, selectedCategoryIcon);
         args.putString(ARG_2, selectedColor);
         fragment.setArguments(args);
 
@@ -56,7 +56,7 @@ public class IconPickerCategoryFragment extends Fragment {
         return fragment;
     }
 
-    public void setSelectedCategoryIcon(int selectedCategoryIcon){
+    public void setSelectedCategoryIcon(String selectedCategoryIcon){
         this.selectedCategoryIcon = selectedCategoryIcon;
         Log.d("ICON_FRAGMENT", "1) selected icon is "+selectedCategoryIcon);
     }
@@ -80,11 +80,11 @@ public class IconPickerCategoryFragment extends Fragment {
     private void init(){
         categoryIconColorList = CategoryUtil.getListOfUniqueIcons(getContext());
 
-        selectedCategoryIcon = getArguments().getInt(ARG_1);
+        selectedCategoryIcon = getArguments().getString(ARG_1);
         selectedColor = getArguments().getString(ARG_2);
 
         for(int i = 0; i < categoryIconColorList.size(); i++){
-            if(categoryIconColorList.get(i).getIcon() == selectedCategoryIcon){
+            if(categoryIconColorList.get(i).getIcon().equalsIgnoreCase(selectedCategoryIcon)){
                 categoryIconColorList.get(i).setIsSelected(true);
                 break;
             }
@@ -151,6 +151,6 @@ public class IconPickerCategoryFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnIconPickerCategoryFragmentInteractionListener {
-        void onIconCategoryClick(int icon);
+        void onIconCategoryClick(String icon);
     }
 }

@@ -21,7 +21,7 @@ public class Category extends RealmObject{
     @Ignore
     private float cost;
     private String color;
-    private int icon;
+    private String icon;
 
     public Category(){
 
@@ -75,11 +75,11 @@ public class Category extends RealmObject{
         this.color = color;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 }
