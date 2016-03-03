@@ -204,8 +204,6 @@ public class MainActivity extends AppCompatActivity
     private void createFakeTransactions(){
         final Realm realm = Realm.getDefaultInstance();
 
-        //final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
-
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
@@ -294,8 +292,6 @@ public class MainActivity extends AppCompatActivity
                         transaction.setCategory(category);
                         transaction.setPrice(-120.0f + (rd * 0.5f));
                         transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
-
-                        //transactionArrayList.add(transaction);
                     }
                 }
             }

@@ -100,7 +100,7 @@
             android:layout_toRightOf="@+id/categoryIcon"
             android:layout_marginLeft="15dp"
             app:rcBackgroundPadding="1dp"
-            app:rcRadius="0dp"
+            app:rcRadius="5dp"
             app:rcBackgroundColor="@color/gray"
             app:rcProgressColor="@color/colorPrimary"
             app:rcProgress="5"

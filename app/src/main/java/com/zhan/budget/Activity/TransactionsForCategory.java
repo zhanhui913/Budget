@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
@@ -48,9 +46,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
     private TransactionListAdapter transactionCategoryAdapter;
     private List<Transaction> transactionCategoryList;
 
-    private CircularView circularView;
-    private ViewGroup emptyStateContainer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,12 +67,11 @@ public class TransactionsForCategory extends AppCompatActivity implements
         transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
-        circularView = (CircularView) findViewById(R.id.emptyCategoryView);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(toolbar != null) {
+        if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(currentMonth));
         }
@@ -90,15 +84,10 @@ public class TransactionsForCategory extends AppCompatActivity implements
 
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
-/*
-        transactionCategoryIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
-                selectedCategory.getIcon(), getTheme()));
-        */
+
         transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(getApplicationContext(), selectedCategory.getIcon()));
 
         transactionCategoryName.setText(selectedCategory.getName());
-
-        emptyStateContainer = (ViewGroup) findViewById(R.id.emptyStateContainer);
 
         Log.d("ZHAN", "selected category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
@@ -141,8 +130,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
                 transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
 
                 transactionCategoryAdapter.notifyDataSetChanged();
-
-                updateStatus();
             }
         });
     }
@@ -204,16 +191,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
             }
         });
         */
-    }
-
-    private void updateStatus(){
-        if(transactionCategoryList.size() > 0){
-            transactionCategoryListView.setVisibility(View.VISIBLE);
-            emptyStateContainer.setVisibility(View.GONE);
-        }else{
-            transactionCategoryListView.setVisibility(View.GONE);
-            emptyStateContainer.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
