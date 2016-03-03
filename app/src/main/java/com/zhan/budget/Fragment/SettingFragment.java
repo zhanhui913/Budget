@@ -1,7 +1,10 @@
 package com.zhan.budget.Fragment;
 
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +29,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -80,6 +84,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "reset", Toast.LENGTH_SHORT).show();
+                resetData();
             }
         });
 
@@ -218,6 +223,31 @@ public class SettingFragment extends Fragment {
             }
         };
         loader.execute();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Reset Data
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void resetData(){
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        //set Constants.FIRST_TIME shared preferences to true to reset it
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(Constants.FIRST_TIME, true);
+        editor.apply();
+
+        RealmConfiguration config = new RealmConfiguration.Builder(getContext())
+                .name(Constants.REALM_NAME)
+                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(1)
+                .build();
+
+        Realm.deleteRealm(config);
+        Toast.makeText(getContext(), "Reset data", Toast.LENGTH_SHORT).show();
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

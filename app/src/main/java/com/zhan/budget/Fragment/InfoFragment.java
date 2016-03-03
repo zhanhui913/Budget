@@ -20,10 +20,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ShareFragment.OnShareInteractionListener} interface
+ * {@link InfoFragment.OnShareInteractionListener} interface
  * to handle interaction events.
  */
-public class ShareFragment extends Fragment {
+public class InfoFragment extends Fragment {
 
     private OnShareInteractionListener mListener;
 
@@ -31,7 +31,7 @@ public class ShareFragment extends Fragment {
     private PercentView percentView;
     private CircularView circularView;
 
-    public ShareFragment() {
+    public InfoFragment() {
         // Required empty public constructor
     }
 
@@ -43,7 +43,7 @@ public class ShareFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_share, container, false);
+        view = inflater.inflate(R.layout.fragment_info, container, false);
         return view;
     }
 

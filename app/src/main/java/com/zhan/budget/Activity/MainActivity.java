@@ -26,9 +26,9 @@ import com.zhan.budget.Fragment.AccountFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
-import com.zhan.budget.Fragment.SendFragment;
+import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
-import com.zhan.budget.Fragment.ShareFragment;
+import com.zhan.budget.Fragment.InfoFragment;
 import com.zhan.budget.Model.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity
         CalendarFragment.OnCalendarInteractionListener,
         CategoryFragment.OnCategoryInteractionListener,
         MonthReportFragment.OnOverviewInteractionListener,
-        SendFragment.OnSendInteractionListener,
-        ShareFragment.OnShareInteractionListener{
+        InfoFragment.OnShareInteractionListener{
 
     MainActivity activity;
     Toolbar toolbar;
@@ -64,8 +63,8 @@ public class MainActivity extends AppCompatActivity
     private CategoryFragment categoryFragment;
     private MonthReportFragment monthReportFragment;
     private AccountFragment accountFragment;
-    private ShareFragment shareFragment;
-    private SendFragment sendFragment;
+    private InfoFragment infoFragment;
+    private RateFragment rateFragment;
     private SettingFragment settingFragment;
 
     private ArrayList<Category> categoryList = new ArrayList<>();
@@ -92,8 +91,8 @@ public class MainActivity extends AppCompatActivity
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
         settingFragment = new SettingFragment();
-        shareFragment = new ShareFragment();
-        sendFragment = new SendFragment();
+        infoFragment = new InfoFragment();
+        rateFragment = new RateFragment();
     }
 
     private void requestFilePermission(){
@@ -203,7 +202,7 @@ public class MainActivity extends AppCompatActivity
 
     long startTime,endTime,duration;
     private void createFakeTransactions(){
-        Realm realm = Realm.getDefaultInstance();
+        final Realm realm = Realm.getDefaultInstance();
 
         //final ArrayList<Transaction> transactionArrayList = new ArrayList<>();
 
@@ -294,7 +293,7 @@ public class MainActivity extends AppCompatActivity
                         transaction.setAccount(account);
                         transaction.setCategory(category);
                         transaction.setPrice(-120.0f + (rd * 0.5f));
-                        transaction.setNote("Note " + j + " for "+DateUtil.convertDateToString(date));
+                        transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
 
                         //transactionArrayList.add(transaction);
                     }
@@ -312,6 +311,8 @@ public class MainActivity extends AppCompatActivity
                 float minutes = (second / 60.0f);
 
                 Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+
+                realm.close();
             }
 
             @Override
@@ -369,11 +370,11 @@ public class MainActivity extends AppCompatActivity
                         title = "Setting";
                         break;
                     case R.id.nav_info:
-                        fragment = shareFragment;
+                        fragment = infoFragment;
                         title = "Info";
                         break;
                     case R.id.nav_rate:
-                        fragment = sendFragment;
+                        fragment = rateFragment;
                         title = "Rate";
                         break;
                 }
@@ -420,11 +421,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onOverviewInteraction(String value){
-
-    }
-
-    @Override
-    public void onSendInteraction(String value){
 
     }
 
