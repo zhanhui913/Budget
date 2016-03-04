@@ -1,14 +1,11 @@
 package com.zhan.budget.Fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +26,6 @@ import com.zhan.budget.Model.Category;
 import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
@@ -75,6 +70,8 @@ public class CategoryFragment extends Fragment implements
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
+    private Boolean isPulldownToAddAllow = true;
+
     public CategoryFragment() {
         // Required empty public constructor
     }
@@ -99,7 +96,6 @@ public class CategoryFragment extends Fragment implements
         init();
         createPullDownToAddCategory();
         addListener();
-        createSwipeMenu();
     }
 
     private void init(){
@@ -135,7 +131,24 @@ public class CategoryFragment extends Fragment implements
 
         frame.setHeaderView(header);
 
-        frame.setPtrHandler(enablePullDown); //default
+        frame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout insideFrame) {
+                if(isPulldownToAddAllow){
+                    insideFrame.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            frame.refreshComplete();
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
+            }
+        });
 
         frame.addPtrUIHandler(new PtrUIHandler() {
 
@@ -195,48 +208,10 @@ public class CategoryFragment extends Fragment implements
         }
     }
 
-    /**
-     * Displays prompt for user to add new category.
-     */
     private void addNewCategory(){
-        // get prompts.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.zz_mission_prompt, null);
-
-        final EditText input = (EditText) promptView.findViewById(R.id.editTextCategory);
-
-        new AlertDialog.Builder(getActivity())
-                .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("add", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        myRealm.beginTransaction();
-
-                        Category c = myRealm.createObject(Category.class);
-                        c.setId(Util.generateUUID());
-                        c.setName(input.getText().toString());
-                        c.setColor("#FF000000");
-                        c.setIcon("c_android");
-                        c.setBudget(100.0f);
-                        c.setCost(0);
-
-                        myRealm.commitTransaction();
-
-                        categoryList.add(c);
-                        categoryAdapter.notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
+        Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
+        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
+        startActivityForResult(addNewCategoryIntent, Constants.RETURN_EDIT_CATEGORY);
     }
 
     //Should be called only the first time when the fragment is created
@@ -331,116 +306,13 @@ public class CategoryFragment extends Fragment implements
         loader.execute();
     }
 
-    /**
-     * Add swipe capability on list view to delete that item.
-     * From 3rd party library.
-     */
-    private void createSwipeMenu() {
-        // step 1. create a MenuCreator
-        /*SwipeMenuCreator creator = new SwipeMenuCreator() {
-
-            @Override
-            public void create(SwipeMenu menu) {
-                // create "edit" item
-                SwipeMenuItem editItem = new SwipeMenuItem(getContext());
-                editItem.setBackground(R.color.colorPrimary);// set item background
-                editItem.setWidth(Util.dp2px(getContext(), 90));// set item width
-                editItem.setIcon(R.drawable.svg_ic_edit);// set a icon
-                menu.addMenuItem(editItem);// add to menu
-
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext());
-                deleteItem.setBackground(R.color.red);// set item background
-                deleteItem.setWidth(Util.dp2px(getContext(), 90));// set item width
-                deleteItem.setIcon(R.drawable.svg_ic_delete);// set a icon
-                menu.addMenuItem(deleteItem);// add to menu
-            }
-        };
-        //set creator
-        categoryListView.setMenuCreator(creator);
-
-        // step 2. listener item click event
-        categoryListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        //edit
-                        categoryIndexEditted = position;
-
-                        editCategory(position);
-
-                        break;
-                    case 1:
-                        //delete
-                        //categoryList.get(position).removeFromRealm();
-
-                        //categoryAdapter.remove(categoryList.get(position));
-                        //categoryList.remove(position);
-                        Toast.makeText(getContext(), "Deleting "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                //False: Close the menu
-                //True: Did not close the menu
-                return false;
-            }
-        });
-
-        // set SwipeListener
-        categoryListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-                Log.d("CATEGORY_FRAGMENT", "swiping...");
-                frame.setPtrHandler(disablePullDown);
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-                Log.d("CATEGORY_FRAGMENT", "swiping... done");
-                frame.setPtrHandler(enablePullDown);
-            }
-        });*/
-    }
-
-    PtrHandler enablePullDown = new PtrHandler() {
-        @Override
-        public void onRefreshBegin(PtrFrameLayout insideFrame) {
-            Log.d("CATEGORY_FRAGMENT", "-- on refresh begin");
-            insideFrame.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    frame.refreshComplete();
-                }
-            }, 500);
-        }
-
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            return PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
-        }
-    };
-
-    PtrHandler disablePullDown = new PtrHandler() {
-        @Override
-        public void onRefreshBegin(PtrFrameLayout insideFrame) {
-        }
-
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            return false;
-        }
-    };
-
     private void editCategory(int position){
         Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
 
         Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 
         editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
+        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
 
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
@@ -491,9 +363,7 @@ public class CategoryFragment extends Fragment implements
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
 
-        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(currentMonth));
-        }
+        mListener.updateToolbar(currentMonth);
 
         if(updateCategoryInfo) {
             resetCategoryInfo();
@@ -554,9 +424,7 @@ public class CategoryFragment extends Fragment implements
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCategoryInteractionListener {
-        void nextMonth();
-
-        void previousMonth();
+        void updateToolbar(Date date);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -586,10 +454,6 @@ public class CategoryFragment extends Fragment implements
 
     @Override
     public void onDisablePtrPullDown(boolean value){
-        if(value){ //disable
-            frame.setPtrHandler(disablePullDown);
-        }else{ //enable
-            frame.setPtrHandler(enablePullDown);
-        }
+        isPulldownToAddAllow = !value;
     }
 }

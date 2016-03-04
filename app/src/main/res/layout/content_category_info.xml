@@ -80,7 +80,7 @@
 
         <ImageButton
             android:id="@+id/changeNameBtn"
-            android:layout_weight="0.33"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="1dp"
@@ -89,7 +89,7 @@
 
         <ImageButton
             android:id="@+id/changeBudgetBtn"
-            android:layout_weight="0.33"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/budget_green_button"
@@ -97,13 +97,11 @@
 
         <ImageButton
             android:id="@+id/deleteCategoryBtn"
-            android:layout_weight="0.33"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="1dp"
             android:background="@drawable/budget_green_button"
             android:src="@drawable/svg_ic_delete" />
-
     </LinearLayout>
-
 </RelativeLayout>

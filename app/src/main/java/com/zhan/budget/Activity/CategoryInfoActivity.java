@@ -24,15 +24,15 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
-
-import java.util.Locale;
 
 import io.realm.Realm;
 
@@ -47,7 +47,7 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private CircularView categoryCircularView;
 
     private Category category;
-    private boolean isEditMode;
+    private boolean isNewCategory;
     private String priceString = "";
 
     private TwoPageViewPager adapterViewPager;
@@ -71,10 +71,20 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_info);
 
-        category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
-        isEditMode = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
+        isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
 
-        Log.d("CATEGORY_INFO", "this category type is "+category.getType());
+        if(!isNewCategory){
+            category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
+        }else{
+            //Give default category values
+            category = new Category();
+            category.setId(Util.generateUUID());
+            category.setColor(CategoryUtil.getDefaultCategoryColor(getApplicationContext()));
+            category.setIcon(CategoryUtil.getDefaultCategoryIcon(getApplicationContext()));
+
+            //Default is expense for now, need to change later when there are tabs in the category fragment
+            category.setType(BudgetType.EXPENSE.toString());
+        }
 
         init();
         initCategoryCircularView();
@@ -105,53 +115,16 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
         changeBudgetBtn = (ImageButton) findViewById(R.id.changeBudgetBtn);
 
+        if(isNewCategory){
+            deleteCategoryBtn.setVisibility(View.GONE);
+        }
+
         //default color selected
         selectedColor = category.getColor();
 
         //default icon selected
         selectedIcon = category.getIcon();
-
-        runTest();
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // test
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    private void runTest(){
-        createCurrency(Locale.CANADA);
-        createCurrency(Locale.JAPAN);
-        createCurrency(Locale.KOREA);
-        createCurrency(Locale.FRANCE);
-        createCurrency(Locale.US);
-        createCurrency(Locale.UK);
-    }
-
-    private void createCurrency(Locale locale){
-        Log.d("CURRENCY", "----- TEST -----");
-
-        String currency = "";
-        for(int i = 0; i < 8; i++){
-            if(i == 6){
-                currency += 0;
-            }else{
-                currency += i;
-            }
-
-            Log.d("CURRENCY", locale+" "+currency+" => "+CurrencyTextFormatter.formatText(currency, locale)+" -> float:"+CurrencyTextFormatter.formatCurrency(currency, locale));
-        }
-
-        Log.d("CURRENCY", "----- END TEST -----");
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // end of test
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void initCategoryCircularView(){
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
@@ -171,11 +144,10 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         toolbar.setNavigationIcon(R.drawable.svg_ic_clear);
         
         if(getSupportActionBar() != null){
-            if(isEditMode){
-                getSupportActionBar().setTitle("Edit Category");
-
-            }else{
+            if(isNewCategory){
                 getSupportActionBar().setTitle("Add Category");
+            }else{
+                getSupportActionBar().setTitle("Edit Category");
             }
         }
     }
@@ -405,14 +377,54 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     private void save(){
         Intent intent = new Intent();
 
-        Category c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
-        myRealm.beginTransaction();
+        Category c;
+/*        if(!isNewCategory){
+            c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
+            myRealm.beginTransaction();
+            c.setName(categoryNameTextView.getText().toString());
+            c.setIcon(selectedIcon);
+            c.setColor(selectedColor);
+            c.setBudget(category.getBudget());
+            c.setCost(category.getCost());
+            myRealm.commitTransaction();
+        }else{
+            c = myRealm.createObject(Category.class);
+            c.setId(category.getId());
+            c.setName(categoryNameTextView.getText().toString());
+            c.setIcon(selectedIcon);
+            c.setColor(selectedColor);
+            c.setBudget(category.getBudget());
+            c.setCost(category.getCost());
+        }
+*/
+
+        if(!isNewCategory){
+            c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
+            myRealm.beginTransaction();
+        }
+        else{
+            myRealm.beginTransaction();
+            c = myRealm.createObject(Category.class);
+            c.setId(category.getId());
+        }
+
         c.setName(categoryNameTextView.getText().toString());
         c.setIcon(selectedIcon);
         c.setColor(selectedColor);
         c.setBudget(category.getBudget());
         c.setCost(category.getCost());
+        c.setType(category.getType());
         myRealm.commitTransaction();
+
+        Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
+        Log.d("CATEGORY_INFO_ACTIVITY", "Category name : "+c.getName());
+        Log.d("CATEGORY_INFO_ACTIVITY", "id : " + c.getId());
+        Log.d("CATEGORY_INFO_ACTIVITY", "budget : " + c.getBudget());
+        Log.d("CATEGORY_INFO_ACTIVITY", "type : " + c.getType());
+        Log.d("CATEGORY_INFO_ACTIVITY", "color : " + c.getColor());
+        Log.d("CATEGORY_INFO_ACTIVITY", "icon : " + c.getIcon());
+        Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
+
 
         Parcelable wrapped = Parcels.wrap(c);
 

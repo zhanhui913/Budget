@@ -404,18 +404,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void nextMonth(){
-        Log.d("MAIN ACTIVITY", "next value : ");
-
-    }
-
-    @Override
-    public void previousMonth(){
-        Log.d("MAIN ACTIVITY", "previous value : ");
-
-    }
-
-    @Override
     public void onOverviewInteraction(String value){
 
     }

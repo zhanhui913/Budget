@@ -59,4 +59,24 @@ public final class CategoryUtil {
         return context.getResources().getIdentifier(value, "drawable", context.getPackageName());
     }
 
+    /**
+     * Get first color in R.array.category_colors
+     * @param context
+     * @return name of first color in array
+     */
+    public static String getDefaultCategoryColor(Context context){
+        TypedArray colors = context.getResources().obtainTypedArray(R.array.category_colors);
+        return context.getResources().getString(colors.getResourceId(0, 0));
+    }
+
+    /**
+     * Get the first icon in R.array.category_icons
+     * @param context
+     * @return name of first icon in array
+     */
+    public static String getDefaultCategoryIcon(Context context){
+        TypedArray icons = context.getResources().obtainTypedArray(R.array.category_icons);
+        return context.getResources().getResourceEntryName(icons.getResourceId(0, 0));
+    }
+
 }
