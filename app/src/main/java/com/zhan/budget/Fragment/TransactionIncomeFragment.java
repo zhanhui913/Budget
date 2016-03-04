@@ -66,8 +66,7 @@ public class TransactionIncomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_transaction_income, container, false);
+        view = inflater.inflate(R.layout.fragment_transaction_expense_and_income, container, false);
         return view;
     }
 
@@ -82,7 +81,7 @@ public class TransactionIncomeFragment extends Fragment {
         myRealm = Realm.getDefaultInstance();
 
         categoryIncomeList = new ArrayList<>();
-        categoryGridView = (GridView) view.findViewById(R.id.categoryIncomeGrid);
+        categoryGridView = (GridView) view.findViewById(R.id.categoryExpenseAndIncomeGrid);
         categoryGridAdapter = new CategoryGridAdapter(getContext(), categoryIncomeList);
         categoryGridView.setAdapter(categoryGridAdapter);
 

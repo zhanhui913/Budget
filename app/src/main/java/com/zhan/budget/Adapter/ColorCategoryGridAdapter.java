@@ -24,7 +24,7 @@ public class ColorCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
     }
 
     public ColorCategoryGridAdapter(Context context, List<CategoryIconColor> colorList) {
-        super(context, R.layout.item_color_picker_category, colorList);
+        super(context, R.layout.item_circular_view, colorList);
         this.context = context;
         this.colorList = colorList;
     }
@@ -37,9 +37,10 @@ public class ColorCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
             viewHolder = new ViewHolder();
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_color_picker_category, parent, false);
+            convertView = inflater.inflate(R.layout.item_circular_view, parent, false);
 
-            viewHolder.circularView = (CircularView) convertView.findViewById(R.id.colorIcon);
+            viewHolder.circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
+            convertView.findViewById(R.id.categoryName).setVisibility(View.GONE);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();

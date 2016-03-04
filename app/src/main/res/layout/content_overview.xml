@@ -16,8 +16,7 @@
         <com.zhan.percentview.PercentView
             android:id="@+id/percentView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/totalCostForMonth"
@@ -61,5 +60,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/centerPanel"
+        android:drawSelectorOnTop="true"
         android:background="@color/white"/>
 </RelativeLayout>

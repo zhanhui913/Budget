@@ -30,7 +30,7 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
     }
 
     public CategoryGridAdapter(Context context, List<Category> categoryList) {
-        super(context, R.layout.item_category_grid, categoryList);
+        super(context, R.layout.item_circular_view, categoryList);
         this.context = context;
         this.categoryList = categoryList;
     }
@@ -43,7 +43,7 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
             viewHolder = new ViewHolder();
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_category_grid, parent, false);
+            convertView = inflater.inflate(R.layout.item_circular_view, parent, false);
 
             viewHolder.circularView = (CircularView) convertView.findViewById(R.id.categoryIcon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.categoryName);

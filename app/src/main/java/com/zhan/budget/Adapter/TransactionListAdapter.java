@@ -188,7 +188,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.date.setVisibility(View.VISIBLE);
             viewHolder.date.setText(DateUtil.convertDateToStringFormat1(transaction.getDate()));
         }else{
-            viewHolder.date.setVisibility(View.INVISIBLE);
+            viewHolder.date.setVisibility(View.GONE);
         }
 
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
