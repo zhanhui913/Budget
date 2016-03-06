@@ -57,6 +57,8 @@ public class AccountFragment extends Fragment implements
 
     private Realm myRealm;
 
+    private Boolean isPulldownToAddAllow = true;
+
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -120,7 +122,24 @@ public class AccountFragment extends Fragment implements
 
         frame.setHeaderView(header);
 
-        frame.setPtrHandler(enablePullDown);
+        frame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout insideFrame) {
+                if (isPulldownToAddAllow) {
+                    insideFrame.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            frame.refreshComplete();
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
+            }
+        });
 
         frame.addPtrUIHandler(new PtrUIHandler() {
 
@@ -143,7 +162,7 @@ public class AccountFragment extends Fragment implements
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
                 Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
-                addNewAccount();
+                addNewAccount(false, null);
             }
 
             @Override
@@ -153,39 +172,10 @@ public class AccountFragment extends Fragment implements
         });
     }
 
-    PtrHandler enablePullDown = new PtrHandler() {
-        @Override
-        public void onRefreshBegin(PtrFrameLayout insideFrame) {
-            Log.d("CALENDAR_FRAGMENT", "-- on refresh begin");
-            insideFrame.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    frame.refreshComplete();
-                }
-            }, 500);
-        }
-
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            return PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
-        }
-    };
-
-    PtrHandler disablePullDown = new PtrHandler() {
-        @Override
-        public void onRefreshBegin(PtrFrameLayout insideFrame) {
-        }
-
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-            return false;
-        }
-    };
-
     /**
      * Displays prompt for user to add new account.
      */
-    private void addNewAccount(){
+    private void addNewAccount(final Boolean isEdit, final Account account){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
@@ -196,20 +186,35 @@ public class AccountFragment extends Fragment implements
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Account");
+
+        String positiveString;
+
+        if(isEdit){
+            title.setText("Edit Account");
+            positiveString = "Save";
+            input.setText(account.getName());
+        }else{
+            title.setText("Add Account");
+            positiveString = "Add";
+        }
 
         input.setHint("Account");
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("add", new DialogInterface.OnClickListener() {
+                .setPositiveButton(positiveString, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         myRealm.beginTransaction();
 
-                        Account account = myRealm.createObject(Account.class);
-                        account.setId(Util.generateUUID());
-                        account.setName(input.getText().toString());
+                        if(!isEdit) {
+                            Account newAccount = myRealm.createObject(Account.class);
+                            newAccount.setId(Util.generateUUID());
+                            newAccount.setName(input.getText().toString());
+                        }else{
+                            account.setName(input.getText().toString());
+                            myRealm.copyToRealmOrUpdate(account);
+                        }
 
                         accountListAdapter.clear();
                         myRealm.commitTransaction();
@@ -265,15 +270,12 @@ public class AccountFragment extends Fragment implements
 
     @Override
     public void onEditAccount(int position){
+        addNewAccount(true, accountList.get(position));
         Toast.makeText(getContext(), "editting account "+accountList.get(position).getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDisablePtrPullDown(boolean value){
-        if(value){ //disable
-            frame.setPtrHandler(disablePullDown);
-        }else{ //enable
-            frame.setPtrHandler(enablePullDown);
-        }
+        isPulldownToAddAllow = !value;
     }
 }

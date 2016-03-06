@@ -13,12 +13,14 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="General" />
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:text="GENERAL" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/harbor_rat"/>
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/firstDayBtn"
@@ -29,12 +31,14 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Data"/>
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:text="DATA"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/harbor_rat"/>
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/backupBtn"
@@ -45,7 +49,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/darkgray"/>
+            android:background="@color/gray"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/resetDataBtn"
@@ -56,7 +60,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/darkgray"/>
+            android:background="@color/gray"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/exportCSVBtn"
@@ -67,12 +71,14 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Feedback"/>
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:text="FEEDBACK"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/harbor_rat"/>
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/emailBtn"
@@ -83,7 +89,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/darkgray"/>
+            android:background="@color/gray"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/tourBtn"
@@ -94,7 +100,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/darkgray"/>
+            android:background="@color/gray"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/faqBtn"

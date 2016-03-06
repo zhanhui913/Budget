@@ -29,7 +29,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
     static class ViewHolder {
         public TextView name;
-        public TextView cost;
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn;
         public ImageView editBtn;
@@ -79,7 +78,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             convertView = inflater.inflate(R.layout.item_account, parent, false);
 
             viewHolder.name = (TextView) convertView.findViewById(R.id.accountName);
-            viewHolder.cost = (TextView) convertView.findViewById(R.id.accountCost);
             viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipeAccount);
             viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
             viewHolder.editBtn = (ImageView) convertView.findViewById(R.id.editBtn);
@@ -121,7 +119,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "delete", Toast.LENGTH_SHORT).show();
                     mListener.onDeleteAccount(position);
                 }
             });
@@ -129,7 +126,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "edit", Toast.LENGTH_SHORT).show();
                     mListener.onEditAccount(position);
                 }
             });
@@ -146,7 +142,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
         //Name
         viewHolder.name.setText(account.getName());
-        viewHolder.cost.setText(account.getName());
 
         return convertView;
     }

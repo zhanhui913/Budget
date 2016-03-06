@@ -40,23 +40,13 @@
             android:id="@+id/accountName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="credit card"/>
+            android:text="credit card"
+            android:layout_centerVertical="true" />
 
-        <TextView
-            android:id="@+id/accountCost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/accountName"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:textSize="15sp"
-            android:text="-40"
-            android:tag="Hover"/>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
