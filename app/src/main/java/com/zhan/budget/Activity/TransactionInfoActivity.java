@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,11 +44,13 @@ import com.zhan.budget.Model.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
+import com.zhan.budget.View.ExtendedNumberPicker;
 import com.zhan.budget.View.RectangleCellView;
 import com.zhan.circleindicator.CircleIndicator;
 
 import org.parceler.Parcels;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -67,7 +70,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0;
     private ImageButton buttonX;
 
-    private ImageButton addNoteBtn, addAccountBtn, dateBtn;
+    private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn;
 
     private TextView transactionCostView;
 
@@ -158,6 +161,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         addNoteBtn = (ImageButton)findViewById(R.id.addNoteBtn);
         addAccountBtn = (ImageButton)findViewById(R.id.addAccountBtn);
         dateBtn = (ImageButton)findViewById(R.id.dateBtn);
+        repeatBtn = (ImageButton)findViewById(R.id.repeatBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
 
@@ -328,6 +332,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }
         });
 
+        repeatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createRepeatDialog();
+            }
+        });
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -481,9 +492,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 int pos = 0; //default is first item to be selected in the spinner
                 if (!isNewTransaction) {
                     for (int i = 0; i < resultsAccount.size(); i++) {
-                        if (editTransaction.getAccount().getId().equalsIgnoreCase(resultsAccount.get(i).getId())) {
-                            pos = i;
-                            break;
+                        if (editTransaction.getAccount() != null) {
+                            if (editTransaction.getAccount().getId().equalsIgnoreCase(resultsAccount.get(i).getId())) {
+                                pos = i;
+                                break;
+                            }
                         }
                     }
                 }
@@ -535,7 +548,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     }
 
     private void createNoteDialog(){
-        // get prompts.xml view
+        // get alertdialog_generic.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
@@ -577,6 +590,72 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         noteDialog.show();
 
         input.requestFocus();
+    }
+
+    private void createRepeatDialog(){
+        // get alertdialog_repeat.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(instance);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_repeat, null);
+
+        ExtendedNumberPicker quantityNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.quantityNumberPicker);
+        quantityNumberPicker.setMaxValue(50);
+        quantityNumberPicker.setMinValue(0);
+        quantityNumberPicker.setWrapSelectorWheel(true);
+        quantityNumberPicker.setOnValueChangedListener(new NumberPicker.
+                OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+            }
+        });
+
+        ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
+
+        //Initializing a new string array with elements
+        final String[] values= {"days", "weeks", "months"};
+
+        //Populate NumberPicker values from String array values
+        //Set the minimum value of NumberPicker
+        repeatNumberPicker.setMinValue(0); //from array first value
+
+        //Specify the maximum value/number of NumberPicker
+        repeatNumberPicker.setMaxValue(values.length - 1); //to array last value
+
+        //Specify the NumberPicker data source as array elements
+        repeatNumberPicker.setDisplayedValues(values);
+
+        //Gets whether the selector wheel wraps when reaching the min/max value.
+        repeatNumberPicker.setWrapSelectorWheel(false);
+
+        //Set a value change listener for NumberPicker
+        repeatNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
+                //Display the newly selected value from picker
+                Log.d("WHEEL","Selected value : " + values[newVal]);
+            }
+        });
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
+                .setTitle("Repeat")
+                .setView(promptView)
+                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog noteDialog = builder.create();
+        noteDialog.show();
     }
 
     private void addDigitToTextView(int digit){

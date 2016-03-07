@@ -23,7 +23,10 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +103,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "email", Toast.LENGTH_SHORT).show();
+                sendRealmData();
             }
         });
 
@@ -116,6 +120,35 @@ public class SettingFragment extends Fragment {
                 Toast.makeText(getContext(), "faq", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void sendRealmData() {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                if(createDirectory()){ Log.d("FILE", "can write file");
+                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
+                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
+                    File currentDB = new File(data, currentDBPath);
+                    File backupDB = new File(sd, backupDBPath);
+
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+
+                    File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
+                    email(exportRealmFile);
+                }else{
+                    Log.d("FILE","cannot write file");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,6 +288,17 @@ public class SettingFragment extends Fragment {
     // Etc
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean createDirectory(){
+        File directory = new File(Environment.getExternalStorageDirectory().toString() + "/Budget");
+
+        //If file doesnt exist
+        if(!directory.exists()){
+            return directory.mkdirs();
+        }else{
+            return true;
+        }
+    }
 
     public void email(File file) {
         // init email intent and add file as attachment
