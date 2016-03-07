@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/accountSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <com.zhan.budget.View.ExtendedNumberPicker
+        android:id="@+id/accountNumberPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

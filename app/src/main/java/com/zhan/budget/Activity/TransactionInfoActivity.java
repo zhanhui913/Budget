@@ -98,8 +98,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
     private BudgetType currentPage; //Determines if the current page is in expense or income page
 
-    private ArrayAdapter<String> accountAdapter;
-    private List<String> accountList;
+    private List<String> accountNameList;
     private RealmResults<Account> resultsAccount;
 
     //Alert dialog for account
@@ -472,9 +471,10 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         //AlertDialog, where it not necessary to know what the parent is.
         View accountDialogView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
 
-        final Spinner accountSpinner = (Spinner) accountDialogView.findViewById(R.id.accountSpinner);
+        //final Spinner accountSpinner = (Spinner) accountDialogView.findViewById(R.id.accountSpinner);
+        final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.accountNumberPicker);
 
-        accountList = new ArrayList<>();
+        accountNameList = new ArrayList<>();
 
         //Get list of accounts
         resultsAccount = myRealm.where(Account.class).findAllAsync();
@@ -482,12 +482,15 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             @Override
             public void onChange() {
                 for (int i = 0; i < resultsAccount.size(); i++) {
-                    accountList.add(resultsAccount.get(i).getName());
+                    accountNameList.add(resultsAccount.get(i).getName());
                 }
 
-                accountAdapter = new ArrayAdapter<String>(instance, android.R.layout.simple_spinner_item, accountList);
-                accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                accountSpinner.setAdapter(accountAdapter);
+                accountPicker.setMinValue(0);
+                accountPicker.setMaxValue(accountNameList.size() - 1);
+
+                accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
+                accountPicker.setWrapSelectorWheel(false);
+
 
                 int pos = 0; //default is first item to be selected in the spinner
                 if (!isNewTransaction) {
@@ -504,23 +507,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 selectedAccountIndexInSpinner = pos;
                 selectedAccount = myRealm.copyFromRealm(resultsAccount.get(pos));
 
-                accountSpinner.setPrompt(accountList.get(pos));
-                accountSpinner.setSelected(true);
-                accountSpinner.setSelection(pos);
+                accountPicker.setValue(pos);
 
                 myRealm.close();
-            }
-        });
-
-        accountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                accountSpinner.setSelection(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -529,7 +518,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 .setView(accountDialogView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        selectedAccountIndexInSpinner = accountSpinner.getSelectedItemPosition();
+                        selectedAccountIndexInSpinner = accountPicker.getValue();
                         selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
                         Toast.makeText(getApplicationContext(), "Selected account is "+selectedAccount.getName(), Toast.LENGTH_SHORT).show();
                     }
@@ -537,14 +526,12 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //Reset the selection back to previous
-                        accountSpinner.setSelection(selectedAccountIndexInSpinner);
-
+                        accountPicker.setValue(selectedAccountIndexInSpinner);
                         dialog.dismiss();
                     }
                 });
 
         accountDialog = accountAlertDialogBuilder.create();
-        accountDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     private void createNoteDialog(){
@@ -637,8 +624,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 Log.d("WHEEL","Selected value : " + values[newVal]);
             }
         });
-
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setTitle("Repeat")
