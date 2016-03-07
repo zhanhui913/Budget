@@ -5,18 +5,22 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
+    <!-- set blockDescendants so that it doesn't auto highlight the first option -->
     <com.zhan.budget.View.ExtendedNumberPicker
         android:id="@+id/quantityNumberPicker"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:descendantFocusability="blocksDescendants"/>
 
+    <!-- set blockDescendants so that it doesn't auto highlight the first option -->
     <com.zhan.budget.View.ExtendedNumberPicker
         android:id="@+id/repeatNumberPicker"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:descendantFocusability="blocksDescendants"/>
 
 </LinearLayout>

@@ -460,7 +460,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 });
 
         dateDialog = dateAlertDialogBuilder.create();
-        dateDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     private void createAccountDialog(){
