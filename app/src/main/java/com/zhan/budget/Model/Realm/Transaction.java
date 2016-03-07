@@ -1,4 +1,4 @@
-package com.zhan.budget.Model;
+package com.zhan.budget.Model.Realm;
 
 import org.parceler.Parcel;
 

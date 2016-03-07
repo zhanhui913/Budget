@@ -16,7 +16,7 @@ import android.widget.GridView;
 
 import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.library.CircularView;
 

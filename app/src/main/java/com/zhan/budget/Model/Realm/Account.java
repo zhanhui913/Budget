@@ -1,10 +1,9 @@
-package com.zhan.budget.Model;
+package com.zhan.budget.Model.Realm;
 
 import org.parceler.Parcel;
 
 import io.realm.AccountRealmProxy;
 import io.realm.RealmObject;
-import io.realm.TransactionRealmProxy;
 import io.realm.annotations.PrimaryKey;
 
 @Parcel(implementations = {AccountRealmProxy.class},

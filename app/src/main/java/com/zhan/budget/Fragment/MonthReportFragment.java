@@ -22,7 +22,7 @@ import com.zhan.budget.Adapter.MonthReportGridAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.MonthReport;
-import com.zhan.budget.Model.Transaction;
+import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 

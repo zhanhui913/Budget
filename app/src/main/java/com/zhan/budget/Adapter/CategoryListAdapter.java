@@ -16,7 +16,7 @@ import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.library.CircularView;

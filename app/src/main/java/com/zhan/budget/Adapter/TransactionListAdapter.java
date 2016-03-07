@@ -13,7 +13,7 @@ import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Transaction;
+import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.DateUtil;

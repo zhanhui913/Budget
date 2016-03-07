@@ -1,5 +1,7 @@
 package com.zhan.budget.Model;
 
+import com.zhan.budget.Model.Realm.Category;
+
 /**
  * Created by Zhan on 16-02-17.
  */

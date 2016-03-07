@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.zhan.budget.Model.Account;
-import com.zhan.budget.Model.Transaction;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
 
 import java.util.List;

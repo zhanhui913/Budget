@@ -18,13 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,11 +33,12 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionIncomeFragment;
-import com.zhan.budget.Model.Account;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Category;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Transaction;
+import com.zhan.budget.Model.Realm.RepeatedTransaction;
+import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
@@ -50,7 +48,6 @@ import com.zhan.circleindicator.CircleIndicator;
 
 import org.parceler.Parcels;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -109,6 +106,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private TextView monthTextView;
 
     private Transaction editTransaction;
+    private Boolean isRepeatedTransaction = false; //default is false
+    private RepeatedTransaction repeatedTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -470,7 +469,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         //AlertDialog, where it not necessary to know what the parent is.
         View accountDialogView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
 
-        //final Spinner accountSpinner = (Spinner) accountDialogView.findViewById(R.id.accountSpinner);
         final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.accountNumberPicker);
 
         accountNameList = new ArrayList<>();
@@ -586,7 +584,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         //AlertDialog, where it not necessary to know what the parent is.
         View promptView = layoutInflater.inflate(R.layout.alertdialog_repeat, null);
 
-        ExtendedNumberPicker quantityNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.quantityNumberPicker);
+        final ExtendedNumberPicker quantityNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.quantityNumberPicker);
         quantityNumberPicker.setMaxValue(50);
         quantityNumberPicker.setMinValue(0);
         quantityNumberPicker.setWrapSelectorWheel(true);
@@ -597,7 +595,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             }
         });
 
-        ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
+        final ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
 
         //Initializing a new string array with elements
         final String[] values= {"days", "weeks", "months"};
@@ -629,7 +627,16 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 .setView(promptView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        if (quantityNumberPicker.getValue() == 0) {
+                            isRepeatedTransaction = false;
+                        } else {
+                            isRepeatedTransaction = true;
 
+                            repeatedTransaction = new RepeatedTransaction();
+                            repeatedTransaction.setId(Util.generateUUID());
+                            repeatedTransaction.setRepeatUnit(quantityNumberPicker.getValue());
+                            repeatedTransaction.setRepeatType(values[repeatNumberPicker.getValue()]);
+                        }
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -695,6 +702,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
             transaction.setCategory(selectedIncomeCategory);
         }
+
+
+        if(isRepeatedTransaction){
+            repeatedTransaction.setTransaction(transaction);
+        }
+
+
 
         Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
 
