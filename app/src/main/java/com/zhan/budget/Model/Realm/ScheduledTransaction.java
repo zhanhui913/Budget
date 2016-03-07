@@ -3,19 +3,19 @@ package com.zhan.budget.Model.Realm;
 import org.parceler.Parcel;
 
 import io.realm.RealmObject;
-import io.realm.RepeatedTransactionRealmProxy;
+import io.realm.ScheduledTransactionRealmProxy;
 
-@Parcel(implementations = {RepeatedTransactionRealmProxy.class},
+@Parcel(implementations = {ScheduledTransactionRealmProxy.class},
         value = Parcel.Serialization.BEAN,
-        analyze = {RepeatedTransaction.class})
-public class RepeatedTransaction extends RealmObject {
+        analyze = {ScheduledTransaction.class})
+public class ScheduledTransaction extends RealmObject {
 
     private String id;
     private Transaction transaction;
     private int repeatUnit;
     private String repeatType;
 
-    public RepeatedTransaction(){}
+    public ScheduledTransaction(){}
 
     public String getId() {
         return id;

@@ -37,7 +37,7 @@ import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Realm.RepeatedTransaction;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -106,8 +106,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private TextView monthTextView;
 
     private Transaction editTransaction;
-    private Boolean isRepeatedTransaction = false; //default is false
-    private RepeatedTransaction repeatedTransaction;
+    private Boolean isScheduledTransaction = false; //default is false
+    private ScheduledTransaction scheduledTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -628,14 +628,14 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (quantityNumberPicker.getValue() == 0) {
-                            isRepeatedTransaction = false;
+                            isScheduledTransaction = false;
                         } else {
-                            isRepeatedTransaction = true;
+                            isScheduledTransaction = true;
 
-                            repeatedTransaction = new RepeatedTransaction();
-                            repeatedTransaction.setId(Util.generateUUID());
-                            repeatedTransaction.setRepeatUnit(quantityNumberPicker.getValue());
-                            repeatedTransaction.setRepeatType(values[repeatNumberPicker.getValue()]);
+                            scheduledTransaction = new ScheduledTransaction();
+                            scheduledTransaction.setId(Util.generateUUID());
+                            scheduledTransaction.setRepeatUnit(quantityNumberPicker.getValue());
+                            scheduledTransaction.setRepeatType(values[repeatNumberPicker.getValue()]);
                         }
                     }
                 })
@@ -704,8 +704,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }
 
 
-        if(isRepeatedTransaction){
-            repeatedTransaction.setTransaction(transaction);
+        if(isScheduledTransaction){
+            scheduledTransaction.setTransaction(transaction);
         }
 
 
