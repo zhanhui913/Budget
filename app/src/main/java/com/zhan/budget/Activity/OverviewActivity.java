@@ -1,10 +1,12 @@
 package com.zhan.budget.Activity;
 
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,8 +16,8 @@ import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.CategoryPercent;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -265,6 +267,25 @@ public class OverviewActivity extends AppCompatActivity implements
                     slice.setWeight(categoryList.get(i).getCost());
                     sliceList.add(slice);
                 }
+
+                int sum = 0;
+                for(int i = 0; i < sliceList.size(); i++){
+                    sum += sliceList.get(i).getWeight();
+                }
+
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int screenWidth = size.x;
+
+
+                for(int i = 0; i < sliceList.size(); i++){
+                    sliceList.get(i).setPixels((int)((sliceList.get(i).getWeight() / sum) * screenWidth));
+                }
+
+
+                //calculate remainder pixels to give to first slice
+
                 Log.d("PERCENT_VIEW", "TOTAL PERCENT SUM =>" + percentSumValue);
 
 

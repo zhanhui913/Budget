@@ -7,6 +7,7 @@ public class Slice {
 
     private String color;
     private float weight;
+    private int pixels;
 
     public Slice(){
 
@@ -26,5 +27,13 @@ public class Slice {
 
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    public int getPixels() {
+        return pixels;
+    }
+
+    public void setPixels(int pixels) {
+        this.pixels = pixels;
     }
 }
