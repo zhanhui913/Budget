@@ -21,6 +21,7 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 import com.zhan.percentview.Model.Slice;
 import com.zhan.percentview.PercentView;
 
@@ -273,20 +274,21 @@ public class OverviewActivity extends AppCompatActivity implements
                     sum += sliceList.get(i).getWeight();
                 }
 
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int screenWidth = size.x;
-
+                int screenWidth = Util.getScreenWidth(getApplicationContext());
 
                 for(int i = 0; i < sliceList.size(); i++){
                     sliceList.get(i).setPixels((int)((sliceList.get(i).getWeight() / sum) * screenWidth));
                 }
 
+                //calculate remainder pixels to give to first (largest) slice
+                int remainder = screenWidth;
+                for(int i = 0; i < sliceList.size(); i++){
+                    remainder -= sliceList.get(i).getPixels();
+                }
 
-                //calculate remainder pixels to give to first slice
-
-                Log.d("PERCENT_VIEW", "TOTAL PERCENT SUM =>" + percentSumValue);
+                if(sliceList.size() > 0) {
+                    sliceList.get(0).setPixels(sliceList.get(0).getPixels() + remainder);
+                }
 
 
                 return null;
