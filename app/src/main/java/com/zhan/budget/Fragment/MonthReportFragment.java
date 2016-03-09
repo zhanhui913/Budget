@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.zhan.budget.Activity.OverviewActivity;
 import com.zhan.budget.Adapter.MonthReportGridAdapter;
@@ -115,8 +114,6 @@ public class MonthReportFragment extends Fragment {
         monthReportGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Click on month :" + monthReportList.get(position).getCostThisMonth(), Toast.LENGTH_SHORT).show();
-
                 Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
 
                 overviewActivity.putExtra(Constants.REQUEST_NEW_OVERVIEW_MONTH, monthReportList.get(position).getMonth());
