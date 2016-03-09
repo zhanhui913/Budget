@@ -44,7 +44,6 @@ public class OverviewActivity extends AppCompatActivity implements
     private TextView dateTextView, totalCostForMonthTextView;
     private PercentView percentView;
     private CircularProgressBar circularProgressBar;
-    private ImageView emptyIcon;
 
     private Realm myRealm;
     private RealmResults<Category> resultsCategory;
@@ -88,7 +87,6 @@ public class OverviewActivity extends AppCompatActivity implements
         percentView = (PercentView) findViewById(R.id.percentView);
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
-        emptyIcon = (ImageView) findViewById(R.id.emptyIcon);
     }
 
     /**
@@ -274,10 +272,6 @@ public class OverviewActivity extends AppCompatActivity implements
 
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
-
-                if(categoryList.size() == 0){
-                    emptyIcon.setVisibility(View.VISIBLE);
-                }
 
                 Log.d("PERCENT_VIEW", "ZZ There are " + categoryPercentList.size() + " categories items in the list");
                 //categoryPercentListAdapter.addAll(categoryPercentList);

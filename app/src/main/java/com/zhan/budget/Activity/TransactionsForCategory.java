@@ -178,14 +178,4 @@ public class TransactionsForCategory extends AppCompatActivity implements
     public void onDisablePtrPullDown(boolean value){
         //no need to implement this as this activity has no pull down to refresh feature
     }
-
-    @Override
-    public void onSurfaceClick(boolean value){
-
-    }
-
-    @Override
-    public void onClickClick(int position){
-
-    }
 }

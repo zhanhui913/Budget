@@ -80,16 +80,5 @@
             app:cpb_stroke_width="5dp"
             app:cpb_min_sweep_angle="10"
             app:cpb_max_sweep_angle="300" />
-
-        <ImageView
-            android:id="@+id/emptyIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/svg_ic_dollar"
-            android:tint="@color/harbor_rat"
-            android:layout_centerInParent="true"
-            android:visibility="gone"/>
-
     </RelativeLayout>
-
 </RelativeLayout>

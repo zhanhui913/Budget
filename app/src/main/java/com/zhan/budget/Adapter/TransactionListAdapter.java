@@ -103,25 +103,25 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
                     Log.d("TRANSACTION_ADAPTER", "onstartopen");
-                    mListener.onSurfaceClick(false);
+
                 }
 
                 @Override
                 public void onOpen(SwipeLayout layout) {
                     Log.d("TRANSACTION_ADAPTER", "on open");
-                    mListener.onSurfaceClick(false);
+
                 }
 
                 @Override
                 public void onStartClose(SwipeLayout layout) {
                     Log.d("TRANSACTION_ADAPTER", "onstartclose");
-                    mListener.onSurfaceClick(false);
+
                 }
 
                 @Override
                 public void onClose(SwipeLayout layout) {
                     Log.d("TRANSACTION_ADAPTER", "onclose");
-                    mListener.onSurfaceClick(true);
+
                 }
 
                 @Override
@@ -136,10 +136,6 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
                     mListener.onDisablePtrPullDown(false);
                 }
             });
-
-            if(viewHolder.swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
-                mListener.onSurfaceClick(true);
-            }
 
             viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -211,9 +207,5 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         void onApproveTransaction(int position);
 
         void onDisablePtrPullDown(boolean value);
-
-        void onSurfaceClick(boolean value);
-
-        void onClickClick(int position);
     }
 }
