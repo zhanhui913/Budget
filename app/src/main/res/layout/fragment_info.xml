@@ -4,34 +4,29 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.InfoFragment">
 
-    <com.zhan.library.CircularView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/categoryIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="false"
-        custom:cv_strokeColor="@color/lightPurple"
-        custom:cv_strokeWidth="0dp"
-        custom:cv_strokePadding="5dp"
-        custom:cv_iconColor="@color/red"
-        custom:cv_iconDrawable="@drawable/c_android"
-        custom:cv_bgRadius="100dp" />
-
-
-    <ImageButton
-        android:id="@+id/changeBudgetBtn"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:src="@drawable/svg_ic_dollar"
-        android:tint="@color/green"
-        android:layout_below="@+id/categoryIcon" />
-
-    <com.zhan.percentview.PercentView
-        android:id="@+id/percentView"
+    <ImageView
+        android:id="@+id/profileImageView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@color/light_cyan"
-        android:layout_below="@id/changeBudgetBtn"/>
+        android:layout_height="300dp"
+        android:src="@drawable/profile"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zhan H. Yap"
+        android:textSize="20sp"
+        android:textColor="@color/belize_hole"
+        android:layout_below="@id/profileImageView"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Founder and Lead Developer"
+        android:layout_below="@+id/name"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp" />
+    
 </RelativeLayout>

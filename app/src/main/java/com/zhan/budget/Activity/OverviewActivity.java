@@ -1,13 +1,12 @@
 package com.zhan.budget.Activity;
 
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,6 +31,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -43,6 +43,8 @@ public class OverviewActivity extends AppCompatActivity implements
     private Date currentMonth;
     private TextView dateTextView, totalCostForMonthTextView;
     private PercentView percentView;
+    private CircularProgressBar circularProgressBar;
+    private ImageView emptyIcon;
 
     private Realm myRealm;
     private RealmResults<Category> resultsCategory;
@@ -55,8 +57,6 @@ public class OverviewActivity extends AppCompatActivity implements
 
     private ListView categoryListView;
     private CategoryPercentListAdapter categoryPercentListAdapter;
-
-    //private HashMap<String, Float> map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,9 @@ public class OverviewActivity extends AppCompatActivity implements
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
         percentView = (PercentView) findViewById(R.id.percentView);
+
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
+        emptyIcon = (ImageView) findViewById(R.id.emptyIcon);
     }
 
     /**
@@ -94,11 +97,11 @@ public class OverviewActivity extends AppCompatActivity implements
     private void createToolbar(){
         //Create the toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.svg_ic_nav_back);
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
             getSupportActionBar().setTitle("Overview");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -154,12 +157,11 @@ public class OverviewActivity extends AppCompatActivity implements
         });
     }
 
-    float sumCost = 0;
     /**
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(){
-        final AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        final AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
 
             long startTime, endTime, duration;
 
@@ -170,8 +172,8 @@ public class OverviewActivity extends AppCompatActivity implements
             }
 
             @Override
-            protected Void doInBackground(Void... voids) {
-
+            protected Float doInBackground(Void... voids) {
+                float sumCost = 0;
                 categoryPercentList.clear();
 
                 Log.d("OVERVIEW_ACT", "Transaction size : "+transactionList.size());
@@ -217,14 +219,10 @@ public class OverviewActivity extends AppCompatActivity implements
                     sumCost += categoryList.get(i).getCost();
                 }
 
-
-
-
                 //Sort from largest to smallest percentage
                 Collections.sort(categoryList, new Comparator<Category>() {
                     @Override
                     public int compare(Category c1, Category c2) {
-
                         float cost1 = c1.getCost();
                         float cost2 = c2.getCost();
 
@@ -233,76 +231,59 @@ public class OverviewActivity extends AppCompatActivity implements
                     }
                 });
 
-
-
-
-                float percentSumValue = 0f;
+                int screenWidth = Util.getScreenWidth(getApplicationContext());
 
                 //Now calculate percentage for each category
                 for(int i = 0; i < categoryList.size(); i++){
                     CategoryPercent cp = new CategoryPercent();
                     cp.setCategory(categoryList.get(i));
 
-
                     BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
                     BigDecimal total = BigDecimal.valueOf(sumCost);
                     BigDecimal hundred = new BigDecimal(100);
-
-
                     BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
 
-
                     cp.setPercent(percent.multiply(hundred).floatValue());
-
-
-                    percentSumValue += cp.getPercent();
-
-                    //cp.setPercent((categoryList.get(i).getCost() / sumCost) * 100f);
-
-                    Log.d("PERCENT_VIEW", i+", "+cp.getCategory().getName()+"->"+cp.getPercent()+"=> "+percent.floatValue());
-
                     categoryPercentList.add(cp);
+                    Log.d("PERCENT_VIEW", i + ", " + cp.getCategory().getName() + "->" + cp.getPercent() + "=> " + percent.floatValue());
 
+                    //Create new slice as well
                     Slice slice = new Slice();
                     slice.setColor(categoryList.get(i).getColor());
-                    slice.setWeight(categoryList.get(i).getCost());
+                    slice.setPixels((int) ((categoryList.get(i).getCost() / sumCost) * screenWidth));
                     sliceList.add(slice);
                 }
 
-                int sum = 0;
-                for(int i = 0; i < sliceList.size(); i++){
-                    sum += sliceList.get(i).getWeight();
-                }
-
-                int screenWidth = Util.getScreenWidth(getApplicationContext());
-
-                for(int i = 0; i < sliceList.size(); i++){
-                    sliceList.get(i).setPixels((int)((sliceList.get(i).getWeight() / sum) * screenWidth));
-                }
-
-                //calculate remainder pixels to give to first (largest) slice
+                //calculate remainder pixels left d ue to rounding errors
                 int remainder = screenWidth;
                 for(int i = 0; i < sliceList.size(); i++){
                     remainder -= sliceList.get(i).getPixels();
                 }
 
+                //Give remainder pixels to first (largest) slice
                 if(sliceList.size() > 0) {
                     sliceList.get(0).setPixels(sliceList.get(0).getPixels() + remainder);
                 }
 
-
-                return null;
+                return sumCost;
             }
 
             @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
+            protected void onPostExecute(Float result) {
+                super.onPostExecute(result);
+
+                //Once the calculation is done, remove it
+                circularProgressBar.setVisibility(View.GONE);
+
+                if(categoryList.size() == 0){
+                    emptyIcon.setVisibility(View.VISIBLE);
+                }
 
                 Log.d("PERCENT_VIEW", "ZZ There are " + categoryPercentList.size() + " categories items in the list");
                 //categoryPercentListAdapter.addAll(categoryPercentList);
 
                 //Display the total cost for that month in the percent view
-                totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
+                totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
 
                 percentView.setSliceList(sliceList);
 

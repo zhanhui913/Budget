@@ -7,15 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.library.CircularView;
-import com.zhan.percentview.Model.Slice;
-import com.zhan.percentview.PercentView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,8 +20,6 @@ public class InfoFragment extends Fragment {
     private OnShareInteractionListener mListener;
 
     private View view;
-    private PercentView percentView;
-    private CircularView circularView;
 
     public InfoFragment() {
         // Required empty public constructor
@@ -54,27 +44,6 @@ public class InfoFragment extends Fragment {
     }
 
     private void init(){
-        percentView = (PercentView) view.findViewById(R.id.percentView);
-
-        List<CategoryIconColor> categoryColorList = CategoryUtil.getListOfCategoryColors(getContext());
-
-        List<Slice> sliceList = new ArrayList<>();
-        for(int i = 0; i < 5; i++){
-            Slice s = new Slice();
-            s.setColor(categoryColorList.get(i).getColor());
-            s.setWeight((i * 2) + 1);
-            sliceList.add(s);
-        }
-        percentView.setSliceList(sliceList);
-
-        circularView = (CircularView)view.findViewById(R.id.categoryIcon);
-        circularView.setCircleColor("#ff8e44ad");
-        circularView.setText("Z");
-        circularView.setTextColor("#ff00ff00");
-        circularView.setTextSizeInDP(50);
-
-        int rid = CategoryUtil.getIconID(getContext(), "c_camera");
-        circularView.setIconResource(rid);
 
     }
 

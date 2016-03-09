@@ -6,7 +6,6 @@ package com.zhan.percentview.Model;
 public class Slice {
 
     private String color;
-    private float weight;
     private int pixels;
 
     public Slice(){
@@ -19,14 +18,6 @@ public class Slice {
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public float getWeight() {
-        return weight;
-    }
-
-    public void setWeight(float weight) {
-        this.weight = weight;
     }
 
     public int getPixels() {

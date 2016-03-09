@@ -130,7 +130,6 @@ public class PercentView extends View {
         if(sliceList.size() != 0) {
             for (int i = 0; i < sliceList.size(); i++) {
                 paint.setColor(Color.parseColor(sliceList.get(i).getColor()));
-                //canvas.drawRect(w, 0, w += (int)((sliceList.get(i).getWeight() / sumWeight) * getWidth()), getHeight(), paint);
                 canvas.drawRect(w, 0, w += sliceList.get(i).getPixels(), getHeight(), paint);
             }
         }else{
@@ -151,11 +150,6 @@ public class PercentView extends View {
 
     public void setSliceList(List<Slice> sliceList) {
         this.sliceList = sliceList;
-
-        sumWeight = 0;
-        for(int i = 0; i < sliceList.size(); i++){
-            sumWeight += sliceList.get(i).getWeight();
-        }
 
         invalidate();
     }
