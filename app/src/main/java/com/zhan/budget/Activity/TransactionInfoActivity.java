@@ -483,8 +483,10 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 }
 
                 accountPicker.setMinValue(0);
-                accountPicker.setMaxValue(accountNameList.size() - 1);
 
+                if(accountNameList.size() > 0) {
+                    accountPicker.setMaxValue(accountNameList.size() - 1);
+                }
                 accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
                 accountPicker.setWrapSelectorWheel(false);
 
@@ -506,6 +508,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
                 accountPicker.setValue(pos);
 
+                resultsAccount.removeChangeListener(this);
                 myRealm.close();
             }
         });
