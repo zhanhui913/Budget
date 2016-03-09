@@ -80,6 +80,8 @@ public class CalendarFragment extends Fragment implements
     private PlusView header;
     private Boolean isPulldownToAddAllow = true;
 
+    private boolean isSurfaceClickAllow = true;
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -133,7 +135,9 @@ public class CalendarFragment extends Fragment implements
         transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                editTransaction(position);
+               // if(isSurfaceClickAllow && isPulldownToAddAllow) {
+                    editTransaction(position);
+                //}
             }
         });
     }
@@ -522,6 +526,16 @@ public class CalendarFragment extends Fragment implements
     @Override
     public void onDisablePtrPullDown(boolean value){
         isPulldownToAddAllow = !value;
+    }
+
+    @Override
+    public void onSurfaceClick(boolean value){
+        isSurfaceClickAllow = value;
+    }
+
+    @Override
+    public void onClickClick(int position){
+        //editTransaction(position);
     }
 
     /**

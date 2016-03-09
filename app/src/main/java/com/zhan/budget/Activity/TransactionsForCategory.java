@@ -57,7 +57,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
 
         init();
         addListeners();
-        createSwipeMenu();
     }
 
     private void init(){
@@ -134,65 +133,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
         });
     }
 
-    /**
-     * Add swipe capability on list view to delete that item.
-     * From 3rd party library.
-     */
-    private void createSwipeMenu(){
-        /*
-        // step 1. create a MenuCreator
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-
-            @Override
-            public void create(SwipeMenu menu) {
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
-                deleteItem.setBackground(R.color.red);// set item background
-                deleteItem.setWidth(Util.dp2px(getApplicationContext(), 90));// set item width
-                deleteItem.setIcon(R.drawable.svg_ic_delete);// set a icon
-                menu.addMenuItem(deleteItem);// add to menu
-            }
-        };
-        //set creator
-        transactionCategoryListView.setMenuCreator(creator);
-
-        // step 2. listener item click event
-        transactionCategoryListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        //deleting a transaction
-                        Transaction transactionToBeDeleted = transactionCategoryList.get(position);
-
-                        myRealm.beginTransaction();
-                        //resultsTransactionForDay.get(position).removeFromRealm();
-                        myRealm.commitTransaction();
-
-                        break;
-                }
-                //False: Close the menu
-                //True: Did not close the menu
-                return false;
-            }
-        });
-
-        // set SwipeListener
-        transactionCategoryListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
-
-            @Override
-            public void onSwipeStart(int position) {
-                // swipe start
-            }
-
-            @Override
-            public void onSwipeEnd(int position) {
-                // swipe end
-            }
-        });
-        */
-    }
-
     @Override
     public void onBackPressed() {
         finish();
@@ -237,5 +177,15 @@ public class TransactionsForCategory extends AppCompatActivity implements
     @Override
     public void onDisablePtrPullDown(boolean value){
         //no need to implement this as this activity has no pull down to refresh feature
-}
+    }
+
+    @Override
+    public void onSurfaceClick(boolean value){
+
+    }
+
+    @Override
+    public void onClickClick(int position){
+
+    }
 }

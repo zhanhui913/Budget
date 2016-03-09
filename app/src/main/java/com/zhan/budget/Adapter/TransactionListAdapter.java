@@ -2,6 +2,7 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,36 +102,44 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
-                    //Log.d("TRANSACTION_LIST_ADAPTER", "onstartopen");
+                    Log.d("TRANSACTION_ADAPTER", "onstartopen");
+                    mListener.onSurfaceClick(false);
                 }
 
                 @Override
                 public void onOpen(SwipeLayout layout) {
-                    //Log.d("TRANSACTION_LIST_ADAPTER", "on open");
+                    Log.d("TRANSACTION_ADAPTER", "on open");
+                    mListener.onSurfaceClick(false);
                 }
 
                 @Override
                 public void onStartClose(SwipeLayout layout) {
-                    //Log.d("TRANSACTION_LIST_ADAPTER", "onstartclose");
+                    Log.d("TRANSACTION_ADAPTER", "onstartclose");
+                    mListener.onSurfaceClick(false);
                 }
 
                 @Override
                 public void onClose(SwipeLayout layout) {
-                    //Log.d("TRANSACTION_LIST_ADAPTER", "onclose");
+                    Log.d("TRANSACTION_ADAPTER", "onclose");
+                    mListener.onSurfaceClick(true);
                 }
 
                 @Override
                 public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                    //Log.d("TRANSACTION_LIST_ADAPTER", "onupdate "+leftOffset+","+topOffset);
+                    //Log.d("TRANSACTION_ADAPTER", "onupdate "+leftOffset+","+topOffset);
                     mListener.onDisablePtrPullDown(true);
                 }
 
                 @Override
                 public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                    //Log.d("TRANSACTION_LIST_ADAPTER", "onhandrelease :"+xvel+","+yvel);
+                    //Log.d("TRANSACTION_ADAPTER", "onhandrelease :"+xvel+","+yvel);
                     mListener.onDisablePtrPullDown(false);
                 }
             });
+
+            if(viewHolder.swipeLayout.getOpenStatus() == SwipeLayout.Status.Close){
+                mListener.onSurfaceClick(true);
+            }
 
             viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -202,5 +211,9 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         void onApproveTransaction(int position);
 
         void onDisablePtrPullDown(boolean value);
+
+        void onSurfaceClick(boolean value);
+
+        void onClickClick(int position);
     }
 }
