@@ -123,8 +123,6 @@ public class CalendarFragment extends Fragment implements
         transactionAdapter = new TransactionListAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
-        dateTextView.setText(DateUtil.convertDateToStringFormat1(selectedDate));
-
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyTransactionLayout);
 
         //List all transactions for today
@@ -245,10 +243,7 @@ public class CalendarFragment extends Fragment implements
             public void onMonthChange(int year, int month, int direction) {
                 //This is temporary for now because when we move to a new month, the 1st of that month is selected by default
                 selectedDate = (new GregorianCalendar(year, month, 1)).getTime();
-                dateTextView.setText(DateUtil.convertDateToStringFormat1(selectedDate));
-
                 populateTransactionsForDate(selectedDate);
-
                 updateMonthInToolbar(0);
             }
         });
@@ -257,7 +252,6 @@ public class CalendarFragment extends Fragment implements
             @Override
             public void onDateClick(int year, int month, int day) {
                 selectedDate = (new GregorianCalendar(year, month, day)).getTime();
-                dateTextView.setText(DateUtil.convertDateToStringFormat1(selectedDate));
                 populateTransactionsForDate(selectedDate);
             }
         });
@@ -270,6 +264,9 @@ public class CalendarFragment extends Fragment implements
     private void populateTransactionsForDate(Date date) {
         final Date beginDate = DateUtil.refreshDate(date);
         final Date endDate = DateUtil.getNextDate(date);
+
+        //Update date text view in center panel
+        dateTextView.setText(DateUtil.convertDateToStringFormat1(beginDate));
 
         Log.d("CALENDAR_FRAGMENT", " populate transaction list (" + DateUtil.convertDateToStringFormat5(beginDate) + " -> " + DateUtil.convertDateToStringFormat5(endDate) + ")");
 
@@ -399,13 +396,7 @@ public class CalendarFragment extends Fragment implements
             populateTransactionsForDate(newOrEditTransaction.getDate());
             updateTransactionStatus();
         }catch(Exception e){
-            if(realm != null){
-                try{
-                    realm.cancelTransaction();
-                }catch(Exception e1){
-                    Log.e("REALM", "Failed to cancel transaction", e1);
-                }
-            }
+            e.printStackTrace();
         }finally{
             if(realm != null && !realm.isClosed()){
                 realm.close();
