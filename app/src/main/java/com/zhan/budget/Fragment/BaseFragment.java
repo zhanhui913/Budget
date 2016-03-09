@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import io.realm.Realm;
 
 /**
- * Created by Zhan on 16-03-08.
+ * Base fragment created to be extended by every fragment that uses Realm in this application.
+ * This class handles the closing and starting of realms.
+ *
+ * @author Zhan H. Yap
  */
 public abstract class BaseFragment extends Fragment {
 
@@ -56,13 +59,15 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * Every fragment has to inflate a layout in the onCreateView method. We have added this method to
+     * Every fragment has to inflate a layout in the onCreateView method. Added this method to
      * avoid duplicate all the inflate code in every fragment. You only have to return the layout to
      * inflate in this method when extends BaseFragment.
      */
     protected abstract int getFragmentLayout();
 
-
+    /**
+     * Resume Realm if possible
+     */
     public void resumeRealm(){
         if(myRealm == null || myRealm.isClosed()){
             myRealm = Realm.getDefaultInstance();
@@ -70,6 +75,9 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    /**
+     * Close Realm if possible
+     */
     public void closeRealm(){
         if(myRealm != null && !myRealm.isClosed()){
             myRealm.close();
