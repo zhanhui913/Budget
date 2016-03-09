@@ -53,10 +53,11 @@ import io.realm.RealmResults;
  * {@link CalendarFragment.OnCalendarInteractionListener} interface
  * to handle interaction events.
  */
-public class CalendarFragment extends Fragment implements
+public class CalendarFragment extends BaseFragment implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
-    private View view;
+    private static final String TAG = "CalendarFragment";
+
     private ViewGroup emptyLayout;
     private OnCalendarInteractionListener mListener;
 
@@ -73,8 +74,6 @@ public class CalendarFragment extends Fragment implements
 
     private Date selectedDate;
 
-    private Realm myRealm;
-
     //Pull down
     private PtrFrameLayout frame;
     private PlusView header;
@@ -88,29 +87,25 @@ public class CalendarFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Log.d("LIFECYCLE", "onCreate");
+        Log.d(TAG, "onCreate");
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("LIFECYCLE", "onCreateView");
-        view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        return view;
+    protected int getFragmentLayout() {
+        return R.layout.fragment_calendar;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d("LIFECYCLE", "onActivityCreated");
+        Log.d(TAG, "onActivityCreated");
         init();
         addListeners();
         createPullToAddTransaction();
         createCalendar();
     }
 
-    private void init(){ Log.d("LIFECYCLE", "init");
-        myRealm = Realm.getDefaultInstance();
-
+    private void init(){ Log.d(TAG, "init");
         //By default it will be the current date;
         selectedDate = new Date();
 
@@ -171,23 +166,23 @@ public class CalendarFragment extends Fragment implements
 
             @Override
             public void onUIReset(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIReset");
+                Log.d(TAG, "onUIReset");
             }
 
             @Override
             public void onUIRefreshPrepare(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshPrepare");
+                Log.d(TAG, "onUIRefreshPrepare");
             }
 
             @Override
             public void onUIRefreshBegin(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshBegin");
+                Log.d(TAG, "onUIRefreshBegin");
                 header.playRotateAnimation();
             }
 
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
+                Log.d(TAG, "onUIRefreshComplete");
                 addNewTransaction();
             }
 
@@ -268,7 +263,7 @@ public class CalendarFragment extends Fragment implements
         //Update date text view in center panel
         dateTextView.setText(DateUtil.convertDateToStringFormat1(beginDate));
 
-        Log.d("CALENDAR_FRAGMENT", " populate transaction list (" + DateUtil.convertDateToStringFormat5(beginDate) + " -> " + DateUtil.convertDateToStringFormat5(endDate) + ")");
+        Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(beginDate) + " -> " + DateUtil.convertDateToStringFormat5(endDate) + ")");
 
         resumeRealm();
 
@@ -276,7 +271,7 @@ public class CalendarFragment extends Fragment implements
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                Log.d("CALENDAR_FRAGMENT", "received " + resultsTransactionForDay.size() + " transactions");
+                Log.d(TAG, "received " + resultsTransactionForDay.size() + " transactions");
 
                 float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
                 totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
@@ -377,14 +372,14 @@ public class CalendarFragment extends Fragment implements
      * @param newOrEditTransaction The new transaction information.
      */
     private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
-        Log.i("ZHAN", "----------- Parceler Result ----------");
-        Log.d("ZHAN", "transaction id :"+newOrEditTransaction.getId());
-        Log.d("ZHAN", "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
-        Log.d("ZHAN", "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
-        Log.d("ZHAN", "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
-        Log.d("ZHAN", "account id : " + newOrEditTransaction.getAccount().getId());
-        Log.d("ZHAN", "account name : " + newOrEditTransaction.getAccount().getName());
-        Log.i("ZHAN", "----------- Parceler Result ----------");
+        Log.d(TAG, "----------- Parceler Result ----------");
+        Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
+        Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
+        Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
+        Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
+        Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
+        Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
+        Log.i(TAG, "----------- Parceler Result ----------");
 
         Realm realm = Realm.getDefaultInstance();
         try{
@@ -443,40 +438,14 @@ public class CalendarFragment extends Fragment implements
                     + " must implement OnCalendarInteractionListener");
         }
 
-        Log.d("LIFECYCLE", "onAttach");
+        Log.d(TAG, "onAttach");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        Log.d("LIFECYCLE", "onDetach");
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        Log.d("LIFECYCLE", "onStart");
-        resumeRealm();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("LIFECYCLE", "onStop");
-        closeRealm();
-    }
-
-    private void resumeRealm(){
-        if(myRealm == null || myRealm.isClosed()){
-            myRealm = Realm.getDefaultInstance();
-        }
-    }
-
-    private void closeRealm(){
-        if(myRealm != null && !myRealm.isClosed()){
-            myRealm.close();
-        }
+        Log.d(TAG, "onDetach");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -490,11 +459,11 @@ public class CalendarFragment extends Fragment implements
         Realm realm = Realm.getDefaultInstance();
         try{
             realm.beginTransaction();
-            Log.d("ZHAN", "remove "+position+"-> from result");
-            Log.d("ZHAN", "b4 There are "+resultsTransactionForDay.size()+" transactions today");
+            Log.d(TAG, "remove " + position + "-> from result");
+            Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
             resultsTransactionForDay.get(position).removeFromRealm();
             realm.commitTransaction();
-            Log.d("ZHAN", "After There are "+resultsTransactionForDay.size()+" transactions today");
+            Log.d(TAG, "After There are "+resultsTransactionForDay.size()+" transactions today");
 
             updateTransactionList();
         }catch(Exception e){
