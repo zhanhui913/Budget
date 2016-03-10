@@ -13,9 +13,6 @@ import com.zhan.budget.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * Use the {@link RateFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class RateFragment extends Fragment {
 
@@ -23,17 +20,6 @@ public class RateFragment extends Fragment {
 
     public RateFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SendFragment.
-     */
-    public static RateFragment newInstance() {
-        RateFragment fragment = new RateFragment();
-        return fragment;
     }
 
     @Override

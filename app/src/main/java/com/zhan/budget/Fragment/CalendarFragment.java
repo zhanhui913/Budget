@@ -96,16 +96,8 @@ public class CalendarFragment extends BaseFragment implements
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated");
-        init();
-        addListeners();
-        createPullToAddTransaction();
-        createCalendar();
-    }
-
-    private void init(){ Log.d(TAG, "init");
+    protected void init(){ Log.d(TAG, "init");
+        super.init();
         //By default it will be the current date;
         selectedDate = new Date();
 
@@ -122,6 +114,10 @@ public class CalendarFragment extends BaseFragment implements
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
+
+        addListeners();
+        createPullToAddTransaction();
+        createCalendar();
     }
 
     private void addListeners(){
@@ -342,7 +338,7 @@ public class CalendarFragment extends BaseFragment implements
      */
     private void updateMonthInToolbar(int direction){
         selectedDate = DateUtil.getMonthWithDirection(selectedDate, direction);
-        mListener.updateToolbar(selectedDate);
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(selectedDate));
     }
 
     @Override
@@ -428,6 +424,12 @@ public class CalendarFragment extends BaseFragment implements
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -504,7 +506,7 @@ public class CalendarFragment extends BaseFragment implements
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCalendarInteractionListener {
-        void updateToolbar(Date date);
+        void updateToolbar(String date);
     }
 
 }

@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,15 +37,15 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class CategoryFragment extends Fragment implements
+public class CategoryFragment extends BaseFragment implements
         CategoryListAdapter.OnCategoryAdapterInteractionListener{
 
+    private static final String TAG = "CategoryFragment";
+
     private OnCategoryInteractionListener mListener;
-    private View view;
 
     private PtrFrameLayout frame;
     private PlusView header;
@@ -65,8 +63,6 @@ public class CategoryFragment extends Fragment implements
 
     private List<Transaction> transactionMonthList;
 
-    private Realm myRealm;
-
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
@@ -83,23 +79,13 @@ public class CategoryFragment extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_category, container, false);
-        return view;
+    protected int getFragmentLayout() {
+        return R.layout.fragment_category;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        init();
-        createPullDownToAddCategory();
-        addListener();
-    }
-
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
+    protected void init(){ Log.d(TAG, "init");
+        super.init();
 
         currentMonth = new Date();
 
@@ -122,7 +108,11 @@ public class CategoryFragment extends Fragment implements
         //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
         //categories
         updateMonthInToolbar(0, false);
+
+        createPullDownToAddCategory();
+        addListener();
     }
+
 
     private void createPullDownToAddCategory(){
         frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
@@ -252,7 +242,7 @@ public class CategoryFragment extends Fragment implements
     }
 
     private void aggregateCategoryInfo(){
-        Log.d("DEBUG","1) There are "+categoryList.size()+" categories");
+        Log.d("DEBUG", "1) There are " + categoryList.size() + " categories");
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
@@ -349,21 +339,10 @@ public class CategoryFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnCategoryInteractionListener) {
-            mListener = (OnCategoryInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
 
-        mListener.updateToolbar(currentMonth);
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
 
         if(updateCategoryInfo) {
             resetCategoryInfo();
@@ -378,19 +357,34 @@ public class CategoryFragment extends Fragment implements
         categoryAdapter.notifyDataSetChanged();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCategoryInteractionListener) {
+            mListener = (OnCategoryInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(!myRealm.isClosed()) {
-            myRealm.close();
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Etc
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -411,20 +405,6 @@ public class CategoryFragment extends Fragment implements
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnCategoryInteractionListener {
-        void updateToolbar(Date date);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -455,5 +435,19 @@ public class CategoryFragment extends Fragment implements
     @Override
     public void onDisablePtrPullDown(boolean value){
         isPulldownToAddAllow = !value;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnCategoryInteractionListener {
+        void updateToolbar(String date);
     }
 }

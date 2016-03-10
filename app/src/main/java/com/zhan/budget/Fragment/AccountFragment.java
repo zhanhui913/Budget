@@ -2,7 +2,6 @@ package com.zhan.budget.Fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
@@ -28,17 +26,16 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends Fragment implements
+public class AccountFragment extends BaseFragment implements
         AccountListAdapter.OnAccountAdapterInteractionListener{
 
-    private View view;
+    private static final String TAG = "AccountFragment";
 
     private ViewGroup emptyLayout;
     private PtrFrameLayout frame;
@@ -46,16 +43,11 @@ public class AccountFragment extends Fragment implements
 
     private TextView emptyAccountText;
 
-    //private SwipeMenuListView accountListView;
     private ListView accountListView;
     private AccountListAdapter accountListAdapter;
     private List<Account> accountList;
 
-    private SwipeLayout ssw;
-
     private RealmResults<Account> resultsAccount;
-
-    private Realm myRealm;
 
     private Boolean isPulldownToAddAllow = true;
 
@@ -64,32 +56,13 @@ public class AccountFragment extends Fragment implements
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getFragmentLayout() {
+        return R.layout.fragment_account;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_account, container, false);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        init();
-        createPullToAddAccount();
-        addListener();
-
-        populateAccount();
-    }
-
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
-
+    protected void init(){ Log.d(TAG, "init");
+        super.init();
         accountList = new ArrayList<>();
 
         accountListView = (ListView) view.findViewById(R.id.accountListView);
@@ -99,6 +72,9 @@ public class AccountFragment extends Fragment implements
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
         emptyAccountText.setText("Pull down to add an account");
+
+        createPullToAddAccount();
+        populateAccount();
     }
 
     private void populateAccount(){
@@ -237,18 +213,6 @@ public class AccountFragment extends Fragment implements
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
             accountListView.setVisibility(View.GONE);
-        }
-    }
-
-    private void addListener(){
-
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(!myRealm.isClosed()) {
-            myRealm.close();
         }
     }
 
