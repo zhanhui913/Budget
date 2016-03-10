@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalendarFragment.OnCalendarInteractionListener,
         CategoryFragment.OnCategoryInteractionListener,
-        MonthReportFragment.OnOverviewInteractionListener,
+        MonthReportFragment.OnMonthlyInteractionListener,
         InfoFragment.OnShareInteractionListener{
 
     MainActivity activity;
@@ -396,16 +396,11 @@ public class MainActivity extends AppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void updateToolbar(Date date){
+    public void updateToolbar(String date){
         //set the toolbar title
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(date));
+            getSupportActionBar().setTitle(date);
         }
-    }
-
-    @Override
-    public void onOverviewInteraction(String value){
-
     }
 
     @Override

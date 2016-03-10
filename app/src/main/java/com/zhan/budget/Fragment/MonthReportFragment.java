@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -30,26 +27,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MonthReportFragment.OnOverviewInteractionListener} interface
- * to handle interaction events.
  */
-public class MonthReportFragment extends Fragment {
+public class MonthReportFragment extends BaseFragment {
 
-    private OnOverviewInteractionListener mListener;
-    private View view;
+    private static final String TAG = "MonthlyFragment";
+
+    private OnMonthlyInteractionListener mListener;
 
     private List<MonthReport> monthReportList;
     private GridView monthReportGridView;
     private MonthReportGridAdapter monthReportGridAdapter;
 
-    private Realm myRealm;
     private RealmResults<Transaction> transactionsResults;
     private List<Transaction> transactionList;
 
@@ -69,21 +62,13 @@ public class MonthReportFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_overview, container, false);
-        return view;
+    protected int getFragmentLayout() {
+        return R.layout.fragment_overview;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        init();
-    }
-
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
+    protected void init(){ Log.d(TAG, "init");
+        super.init();
 
         monthReportList = new ArrayList<>();
         monthReportGridView = (GridView) view.findViewById(R.id.monthReportGridView);
@@ -221,38 +206,15 @@ public class MonthReportFragment extends Fragment {
 
     private void updateYearInToolbar(int direction){
         currentYear = DateUtil.getYearWithDirection(currentYear, direction);
-
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat3(currentYear));
         getMonthReport();
-
-        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat3(currentYear));
-        }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnOverviewInteractionListener) {
-            mListener = (OnOverviewInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(!myRealm.isClosed()) {
-            myRealm.close();
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Etc
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -275,6 +237,29 @@ public class MonthReportFragment extends Fragment {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnMonthlyInteractionListener) {
+            mListener = (OnMonthlyInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnMonthlyInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -285,7 +270,7 @@ public class MonthReportFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnOverviewInteractionListener {
-        void onOverviewInteraction(String value);
+    public interface OnMonthlyInteractionListener {
+        void updateToolbar(String date);
     }
 }

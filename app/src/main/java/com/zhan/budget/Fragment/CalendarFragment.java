@@ -338,7 +338,7 @@ public class CalendarFragment extends BaseFragment implements
      */
     private void updateMonthInToolbar(int direction){
         selectedDate = DateUtil.getMonthWithDirection(selectedDate, direction);
-        mListener.updateToolbar(selectedDate);
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(selectedDate));
     }
 
     @Override
@@ -424,6 +424,12 @@ public class CalendarFragment extends BaseFragment implements
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -500,7 +506,7 @@ public class CalendarFragment extends BaseFragment implements
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCalendarInteractionListener {
-        void updateToolbar(Date date);
+        void updateToolbar(String date);
     }
 
 }
