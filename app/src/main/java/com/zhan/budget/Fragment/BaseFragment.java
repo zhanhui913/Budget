@@ -28,6 +28,13 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated");
+        init();
+    }
+
+    @Override
     public void onStart(){
         super.onStart();
         Log.d(TAG, "onStart");
@@ -62,6 +69,15 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract int getFragmentLayout();
 
+    /**
+     * Every fragment should override this function as it should be where other initialization
+     * occurs once only in the lifecycle.
+     * Note: I would put init in the onStart function but it will call multiple times when the user
+     * comes back into the fragment which is unnecessary.
+     */
+    protected void init(){
+        resumeRealm();
+    }
 
     public void resumeRealm(){
         if(myRealm == null || myRealm.isClosed()){

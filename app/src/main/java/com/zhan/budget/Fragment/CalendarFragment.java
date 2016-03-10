@@ -96,16 +96,8 @@ public class CalendarFragment extends BaseFragment implements
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated");
-        init();
-        addListeners();
-        createPullToAddTransaction();
-        createCalendar();
-    }
-
-    private void init(){ Log.d(TAG, "init");
+    protected void init(){ Log.d(TAG, "init");
+        super.init();
         //By default it will be the current date;
         selectedDate = new Date();
 
@@ -122,6 +114,10 @@ public class CalendarFragment extends BaseFragment implements
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
+
+        addListeners();
+        createPullToAddTransaction();
+        createCalendar();
     }
 
     private void addListeners(){
