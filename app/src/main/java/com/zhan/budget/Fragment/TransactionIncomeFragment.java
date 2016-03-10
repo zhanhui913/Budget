@@ -5,9 +5,8 @@ package com.zhan.budget.Fragment;
  */
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -23,22 +22,17 @@ import com.zhan.library.CircularView;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MonthReportFragment.OnOverviewInteractionListener} interface
- * to handle interaction events.
  */
-public class TransactionIncomeFragment extends Fragment {
+public class TransactionIncomeFragment extends BaseFragment {
+
+    private static final String TAG = "TransactionINCFragment";
 
     private OnTransactionIncomeFragmentInteractionListener mListener;
-
-    private Realm myRealm;
-    private View view;
 
     private RealmResults<Category> resultsIncomeCategory;
     private List<Category> categoryIncomeList;
@@ -49,7 +43,6 @@ public class TransactionIncomeFragment extends Fragment {
 
     private String selectedIncomeCategoryId = "";
 
-
     public TransactionIncomeFragment() {
         // Required empty public constructor
     }
@@ -59,26 +52,13 @@ public class TransactionIncomeFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getFragmentLayout() {
+        return R.layout.fragment_transaction_expense_and_income;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_transaction_expense_and_income, container, false);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        init();
-    }
-
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
+    protected void init(){ Log.d(TAG, "init");
+        super.init();
 
         categoryIncomeList = new ArrayList<>();
         categoryGridView = (GridView) view.findViewById(R.id.categoryExpenseAndIncomeGrid);
@@ -112,8 +92,8 @@ public class TransactionIncomeFragment extends Fragment {
                         //Default is 0 if selectedIncomeCategoryId is not defined.
                         int pos = 0;
 
-                        for(int i = 0; i < categoryIncomeList.size(); i++){
-                            if(selectedIncomeCategoryId.equalsIgnoreCase(categoryIncomeList.get(i).getId())){
+                        for (int i = 0; i < categoryIncomeList.size(); i++) {
+                            if (selectedIncomeCategoryId.equalsIgnoreCase(categoryIncomeList.get(i).getId())) {
                                 pos = i;
                                 break;
                             }
@@ -153,13 +133,11 @@ public class TransactionIncomeFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(!myRealm.isClosed()) {
-            myRealm.close();
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onAttach(Context context) {
