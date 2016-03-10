@@ -63,7 +63,7 @@ public class MonthReportFragment extends BaseFragment {
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_overview;
+        return R.layout.fragment_month_report;
     }
 
     @Override

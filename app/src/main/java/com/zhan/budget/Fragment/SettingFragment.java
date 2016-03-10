@@ -6,13 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +35,10 @@ import io.realm.Sort;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingFragment extends Fragment {
+public class SettingFragment extends BaseFragment {
 
-    private View view;
+    private static final String TAG = "SettingFragment";
+
     private TextView backupBtn, resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
 
     //CSV
@@ -52,26 +50,22 @@ public class SettingFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_setting, container, false);
-        return view;
+    protected int getFragmentLayout() {
+        return R.layout.fragment_setting;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        init();
-        addListeners();
-    }
+    protected void init(){ Log.d(TAG, "init");
+        super.init();
 
-    private void init(){
         backupBtn = (TextView) view.findViewById(R.id.backupBtn);
         resetBtn = (TextView) view.findViewById(R.id.resetDataBtn);
         exportCSVBtn = (TextView) view.findViewById(R.id.exportCSVBtn);
         emailBtn = (TextView) view.findViewById(R.id.emailBtn);
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
+
+        addListeners();
     }
 
     private void addListeners(){
@@ -157,7 +151,6 @@ public class SettingFragment extends Fragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void getTransactionListForCSV(){
-        final Realm myRealm = Realm.getDefaultInstance();
         transactionList = new ArrayList<>();
         transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
         transactionResults.addChangeListener(new RealmChangeListener() {
@@ -165,11 +158,9 @@ public class SettingFragment extends Fragment {
             public void onChange() {
                 transactionList = myRealm.copyFromRealm(transactionResults);
 
-
                 exportCSV();
 
                 transactionResults.removeChangeListener(this);
-                myRealm.close();
             }
         });
     }
