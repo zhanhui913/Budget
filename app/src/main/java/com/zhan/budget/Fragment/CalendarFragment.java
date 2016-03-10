@@ -124,6 +124,21 @@ public class CalendarFragment extends BaseFragment implements
         transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Transaction debugTransaction = transactionList.get(position);
+
+                Log.d(TAG, "----------- Click Result ----------");
+                Log.d(TAG, "transaction id :"+debugTransaction.getId());
+                Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
+                Log.d(TAG, "transaction daytype :" + debugTransaction.getDayType() + ", date :" + debugTransaction.getDate());
+                Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
+                Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
+                Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
+                Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
+                Log.i(TAG, "----------- Click Result ----------");
+
+
+
                 editTransaction(position);
             }
         });
@@ -373,6 +388,7 @@ public class CalendarFragment extends BaseFragment implements
         Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
         Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
+        Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
         Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
         Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
         Log.i(TAG, "----------- Parceler Result ----------");

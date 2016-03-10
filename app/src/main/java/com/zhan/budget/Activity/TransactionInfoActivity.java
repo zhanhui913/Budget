@@ -190,13 +190,20 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
 
 
+            if(editTransaction.getNote() != null){
+                Log.d("DEBUG","@@@@@"+editTransaction.getNote());
+                noteString = editTransaction.getNote();
+            }
+
             //Check which category this transaction belongs to.
             //If its EXPENSE category, change page to EXPENSE view pager
             //If its INCOME category, change page to INCOME view pager
             if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
                 viewPager.setCurrentItem(0);
+                currentPage = BudgetType.EXPENSE;
             }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
                 viewPager.setCurrentItem(1);
+                currentPage = BudgetType.INCOME;
             }
         }
 
@@ -547,15 +554,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Add Note");
 
-
         input.setHint("Note");
-
-        if(!isNewTransaction){
-            if(editTransaction.getNote() != null){
-                Log.d("DEBUG","@@@@@"+editTransaction.getNote());
-                noteString = editTransaction.getNote();
-            }
-        }
 
         input.setText(noteString);
 
