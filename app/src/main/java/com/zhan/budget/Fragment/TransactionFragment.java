@@ -40,19 +40,19 @@ public class TransactionFragment extends BaseFragment {
 
     private Category selectedCategory;
 
-    private String selectedCategoryId = "";
-    private String budgetType = "";
+    private String selectedCategoryId;
+    private String budgetType;
 
     public TransactionFragment() {
         // Required empty public constructor
     }
 
-    public static TransactionFragment newInstance(String budgetType, String selectedCategoryId) {
+    public static TransactionFragment newInstance(String budgetType, String categoryId) {
         TransactionFragment fragment = new TransactionFragment();
 
         Bundle args = new Bundle();
         args.putString(ARG_1, budgetType);
-        args.putString(ARG_2, selectedCategoryId);
+        args.putString(ARG_2, categoryId);
         fragment.setArguments(args);
 
         return fragment;
@@ -77,6 +77,8 @@ public class TransactionFragment extends BaseFragment {
     protected void init(){ Log.d(TAG, "init");
         super.init();
 
+        selectedCategoryId = budgetType = "";
+        Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
         categoryList = new ArrayList<>();
         categoryGridView = (GridView) view.findViewById(R.id.categoryExpenseAndIncomeGrid);
         categoryGridAdapter = new CategoryGridAdapter(getContext(), categoryList);
@@ -91,7 +93,7 @@ public class TransactionFragment extends BaseFragment {
         addListeners();
     }
 
-    private void populateCategory(String budgetType){
+    private void populateCategory(String budgetType){Log.d(TAG, "2 selectedCategoryId : "+selectedCategoryId);
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
@@ -113,7 +115,7 @@ public class TransactionFragment extends BaseFragment {
                     public void onGlobalLayout() {
                         //Default is 0 if selectedCategoryId is not defined.
                         int pos = 0;
-
+                        Log.d(TAG, "3 selectedCategoryId : "+selectedCategoryId);
                         for (int i = 0; i < categoryList.size(); i++) {
                             if (selectedCategoryId.equalsIgnoreCase(categoryList.get(i).getId())) {
                                 pos = i;
