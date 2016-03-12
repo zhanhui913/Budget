@@ -31,12 +31,11 @@ import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Fragment.TransactionExpenseFragment;
-import com.zhan.budget.Fragment.TransactionIncomeFragment;
-import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -58,8 +57,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class TransactionInfoActivity extends AppCompatActivity implements
-        TransactionExpenseFragment.OnTransactionExpenseFragmentInteractionListener,
-        TransactionIncomeFragment.OnTransactionIncomeFragmentInteractionListener{
+        TransactionFragment.OnTransactionFragmentInteractionListener{
 
     private boolean isNewTransaction = false;
     private Activity instance;
@@ -74,8 +72,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private String priceString;
     private String noteString;
 
-    private TransactionExpenseFragment transactionExpenseFragment;
-    private TransactionIncomeFragment transactionIncomeFragment;
+    private TransactionFragment transactionExpenseFragment, transactionIncomeFragment;
 
     private Date selectedDate;
     private Date tempDate;
@@ -133,15 +130,12 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private void init(){
         myRealm = Realm.getDefaultInstance();
 
-        transactionExpenseFragment = new TransactionExpenseFragment();
-        transactionIncomeFragment = new TransactionIncomeFragment();
-
-        if(!isNewTransaction){
-            if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                transactionExpenseFragment.setSelectedExpenseCategoryId(editTransaction.getCategory().getId());
-            }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                transactionIncomeFragment.setSelectedIncomeCategoryId(editTransaction.getCategory().getId());
-            }
+        if(!isNewTransaction) {
+            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
+            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+        }else{
+            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
+            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
         }
 
         button1 = (Button)findViewById(R.id.number1);
@@ -497,7 +491,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
                 accountPicker.setWrapSelectorWheel(false);
 
-
                 int pos = 0; //default is first item to be selected in the spinner
                 if (!isNewTransaction) {
                     for (int i = 0; i < resultsAccount.size(); i++) {
@@ -765,11 +758,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     @Override
     public void onCategoryExpenseClick(Category category){
         selectedExpenseCategory = category;
+        Log.d("TRAN", "selected expense category is "+selectedExpenseCategory.getName());
     }
 
     @Override
     public void onCategoryIncomeClick(Category category){
         selectedIncomeCategory = category;
+        Log.d("TRAN", "selected income category is "+selectedIncomeCategory.getName());
     }
 
 }
