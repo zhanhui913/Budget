@@ -31,13 +31,11 @@ import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Fragment.TransactionExpenseFragment;
 import com.zhan.budget.Fragment.TransactionFragment;
-import com.zhan.budget.Fragment.TransactionIncomeFragment;
-import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -74,8 +72,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private String priceString;
     private String noteString;
 
-    private TransactionFragment transactionExpenseFragment;
-    private TransactionFragment transactionIncomeFragment;
+    private TransactionFragment transactionExpenseFragment, transactionIncomeFragment;
 
     private Date selectedDate;
     private Date tempDate;
@@ -493,7 +490,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 }
                 accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
                 accountPicker.setWrapSelectorWheel(false);
-
 
                 int pos = 0; //default is first item to be selected in the spinner
                 if (!isNewTransaction) {
