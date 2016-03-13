@@ -58,16 +58,6 @@ public class TransactionFragment extends BaseFragment {
         return fragment;
     }
 
-    public static TransactionFragment newInstance(String budgetType) {
-        TransactionFragment fragment = new TransactionFragment();
-
-        Bundle args = new Bundle();
-        args.putString(ARG_1, budgetType);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_transaction;

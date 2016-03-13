@@ -4,12 +4,14 @@ import org.parceler.Parcel;
 
 import io.realm.RealmObject;
 import io.realm.ScheduledTransactionRealmProxy;
+import io.realm.annotations.PrimaryKey;
 
 @Parcel(implementations = {ScheduledTransactionRealmProxy.class},
         value = Parcel.Serialization.BEAN,
         analyze = {ScheduledTransaction.class})
 public class ScheduledTransaction extends RealmObject {
 
+    @PrimaryKey
     private String id;
     private Transaction transaction;
     private int repeatUnit;

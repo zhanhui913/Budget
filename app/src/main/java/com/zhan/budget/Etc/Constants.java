@@ -40,4 +40,5 @@ public class Constants {
     public static final String RESULT_EDIT_TRANSACTION = "Edit Transaction Result";
     public static final String RESULT_NEW_CATEGORY = "New Category Result";
     public static final String RESULT_EDIT_CATEGORY = "Edit Category Result";
+    public static final String RESULT_SCHEDULE_TRANSACTION = "ScheduledTransaction";
 }

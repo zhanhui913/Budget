@@ -25,6 +25,7 @@ import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -128,7 +129,7 @@ public class CalendarFragment extends BaseFragment implements
                 Transaction debugTransaction = transactionList.get(position);
 
                 Log.d(TAG, "----------- Click Result ----------");
-                Log.d(TAG, "transaction id :"+debugTransaction.getId());
+                Log.d(TAG, "transaction id :" + debugTransaction.getId());
                 Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
                 Log.d(TAG, "transaction daytype :" + debugTransaction.getDayType() + ", date :" + debugTransaction.getDate());
                 Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
@@ -136,7 +137,6 @@ public class CalendarFragment extends BaseFragment implements
                 Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
                 Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
                 Log.i(TAG, "----------- Click Result ----------");
-
 
 
                 editTransaction(position);
@@ -157,7 +157,7 @@ public class CalendarFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if(isPulldownToAddAllow){
+                if (isPulldownToAddAllow) {
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -268,6 +268,8 @@ public class CalendarFragment extends BaseFragment implements
      * @param date The date to search in db.
      */
     private void populateTransactionsForDate(Date date) {
+        transactionListView.smoothScrollToPosition(0);
+
         final Date beginDate = DateUtil.refreshDate(date);
         final Date endDate = DateUtil.getNextDate(date);
 
@@ -359,9 +361,12 @@ public class CalendarFragment extends BaseFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        resumeRealm();
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
+                ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
+                Log.d(TAG, "scheduledTransaction from new :"+scheduledTransaction.getId());
 
                 //Compare with today's date
                 if(DateUtil.getDaysFromDate(tt.getDate()) > DateUtil.getDaysFromDate(new Date())){
@@ -371,10 +376,30 @@ public class CalendarFragment extends BaseFragment implements
                 }
 
                 addNewOrEditTransaction(tt);
+                addScheduleTransaction(scheduledTransaction, tt);
             }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
+                ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
+                Log.d(TAG, "scheduledTransaction from edit :" + scheduledTransaction.getId());
+
                 addNewOrEditTransaction(tt);
+                addScheduleTransaction(scheduledTransaction, tt);
             }
+        }
+    }
+
+    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
+        if(scheduledTransaction != null){
+            myRealm.beginTransaction();
+            scheduledTransaction.setTransaction(transaction);
+            myRealm.copyToRealmOrUpdate(scheduledTransaction);
+            myRealm.commitTransaction();
+
+            Log.d(TAG, "----------- Parceler Result ----------");
+            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
+            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
+            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
+            Log.i(TAG, "----------- Parceler Result ----------");
         }
     }
 
@@ -393,22 +418,13 @@ public class CalendarFragment extends BaseFragment implements
         Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
         Log.i(TAG, "----------- Parceler Result ----------");
 
-        Realm realm = Realm.getDefaultInstance();
-        try{
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(newOrEditTransaction);
-            realm.commitTransaction();
+        myRealm.beginTransaction();
+        myRealm.copyToRealmOrUpdate(newOrEditTransaction);
+        myRealm.commitTransaction();
 
-            calendarView.selectDate(newOrEditTransaction.getDate());
-            populateTransactionsForDate(newOrEditTransaction.getDate());
-            updateTransactionStatus();
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally{
-            if(realm != null && !realm.isClosed()){
-                realm.close();
-            }
-        }
+        calendarView.selectDate(newOrEditTransaction.getDate());
+        populateTransactionsForDate(newOrEditTransaction.getDate());
+        updateTransactionStatus();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

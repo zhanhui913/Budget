@@ -134,8 +134,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
         }else{
-            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
-            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
+            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), "");
+            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), "");
         }
 
         button1 = (Button)findViewById(R.id.number1);
@@ -587,6 +587,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+
             }
         });
 
@@ -631,6 +632,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                             scheduledTransaction.setId(Util.generateUUID());
                             scheduledTransaction.setRepeatUnit(quantityNumberPicker.getValue());
                             scheduledTransaction.setRepeatType(values[repeatNumberPicker.getValue()]);
+                            //Set the scheduledTransaction's transaction property in save function
                         }
                     }
                 })
@@ -699,10 +701,20 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }
 
 
-        if(isScheduledTransaction){
-            scheduledTransaction.setTransaction(transaction);
-        }
 
+        ScheduledTransaction sT = new ScheduledTransaction();
+        if(isScheduledTransaction){
+            Log.d("isScheduledTransaction", "adding scheduled transaction");
+            scheduledTransaction.setTransaction(transaction);
+
+            sT.setId(Util.generateUUID());
+            sT.setRepeatUnit(scheduledTransaction.getRepeatUnit());
+            sT.setRepeatType(scheduledTransaction.getRepeatType());
+            //setting transaction in the schedule transaction in the caller fragment
+        }else{
+            Log.d("isScheduledTransaction", "not adding scheduled transaction");
+        }
+        Parcelable scheduledTransactionWrapped = Parcels.wrap(sT);
 
 
         Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
@@ -714,6 +726,11 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         }else{
             intent.putExtra(Constants.RESULT_NEW_TRANSACTION, wrapped);
         }
+
+
+        intent.putExtra(Constants.RESULT_SCHEDULE_TRANSACTION, scheduledTransactionWrapped);
+
+
 
         setResult(RESULT_OK, intent);
 
