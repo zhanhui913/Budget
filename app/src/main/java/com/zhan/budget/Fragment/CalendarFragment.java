@@ -27,6 +27,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.PlusView;
@@ -388,6 +389,11 @@ public class CalendarFragment extends BaseFragment implements
         }
     }
 
+    /**
+     * The function that will be called after user either adds or edit a scheduled transaction.
+     * @param scheduledTransaction The new scheduled transaction information.
+     * @param transaction The transaction that the scheduled transaction is based on.
+     */
     private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
         if(scheduledTransaction != null){
             myRealm.beginTransaction();
@@ -400,6 +406,20 @@ public class CalendarFragment extends BaseFragment implements
             Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
             Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
             Log.i(TAG, "----------- Parceler Result ----------");
+
+            if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
+                int repeatDays = scheduledTransaction.getRepeatUnit();
+                //Repeat 10 times
+                Date nextDate = transaction.getDate();
+                for(int i = 0; i < 10; i++){
+                    nextDate = DateUtil.getDateWithDirection(nextDate, repeatDays);
+                    Log.d(TAG, i+"-> "+DateUtil.convertDateToStringFormat5(nextDate));
+                }
+            }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
+
+            }else{
+
+            }
         }
     }
 
