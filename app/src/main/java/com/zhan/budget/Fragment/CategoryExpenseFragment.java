@@ -1,19 +1,12 @@
 package com.zhan.budget.Fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,8 +16,6 @@ import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Adapter.CategoryRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
-import com.zhan.budget.Adapter.SimpleDividerItemDecoration;
-import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
@@ -50,9 +41,7 @@ import io.realm.RealmResults;
 public class CategoryExpenseFragment extends BaseFragment implements
         CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener{
 
-    private static final String TAG = "CategoryFragment";
-
-    private OnCategoryInteractionListener mListener;
+    private static final String TAG = "CategoryEXPENSEFragment";
 
     private PtrFrameLayout frame;
     private PlusView header;
@@ -79,12 +68,6 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
     public CategoryExpenseFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -125,12 +108,6 @@ public class CategoryExpenseFragment extends BaseFragment implements
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
 
         populateCategoryWithNoInfo();
-
-        //0 represents no change in month relative to currentMonth variable
-        //false because we dont need to get all transactions yet.
-        //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
-        //categories
-        updateMonthInToolbar(0, false);
 
         createPullDownToAddCategory();
         addListener();
@@ -230,10 +207,11 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
     //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        resultsCategory = myRealm.where(Category.class).equalTo("type",BudgetType.EXPENSE.toString()).findAllSorted("index");
+        resultsCategory = myRealm.where(Category.class).equalTo("type",BudgetType.EXPENSE.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
                 Log.d("BRIANA", "There are "+categoryList.size()+" expense categories");
                 updateCategoryStatus();
@@ -365,72 +343,19 @@ public class CategoryExpenseFragment extends BaseFragment implements
         }
     }
 
-    private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
-        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-
-        //mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
-
-        if(updateCategoryInfo) {
-            resetCategoryInfo();
-            populateCategoryWithInfo();
-        }
+    public void updateMonthCategoryInfo(Date month){
+        currentMonth = DateUtil.refreshMonth(month);
+        resetCategoryInfo();
+        populateCategoryWithInfo();
     }
 
     private void resetCategoryInfo(){
-        for(int i = 0; i < categoryList.size(); i++){
-            categoryList.get(i).setCost(0);
-        }
-        //categoryAdapter.notifyDataSetChanged();
-        categoryRecyclerAdapter.setData(categoryList);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Lifecycle
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnCategoryInteractionListener) {
-            mListener = (OnCategoryInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Etc
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.change_month_year, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.leftChevron:
-                updateMonthInToolbar(-1, true);
-                return true;
-            case R.id.rightChevron:
-                updateMonthInToolbar(1, true);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if(categoryList != null) {
+            for (int i = 0; i < categoryList.size(); i++) {
+                categoryList.get(i).setCost(0);
+            }
+            //categoryAdapter.notifyDataSetChanged();
+            categoryRecyclerAdapter.setData(categoryList);
         }
     }
 
@@ -464,17 +389,14 @@ public class CategoryExpenseFragment extends BaseFragment implements
         isPulldownToAddAllow = !value;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnCategoryInteractionListener {
-        void updateToolbar(String date);
+    @Override
+    public void onItemMove(){
+        Log.d(TAG, "-----------");
+
+        for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
+            Log.d(TAG, i+"->"+categoryRecyclerAdapter.getCategoryList().get(i).getName());
+        }
+
+        Log.d(TAG, "-----------");
     }
 }

@@ -1,17 +1,9 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,37 +11,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.zhan.budget.Activity.CategoryInfoActivity;
-import com.zhan.budget.Adapter.CategoryRecyclerAdapter;
-import com.zhan.budget.Adapter.Helper.OnStartDragListener;
-import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
-import com.zhan.budget.Adapter.SimpleDividerItemDecoration;
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.Category;
-import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
-import com.zhan.budget.View.PlusView;
 
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.PtrUIHandler;
-import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class CategoryFragment extends Fragment {
 
@@ -57,29 +26,10 @@ public class CategoryFragment extends Fragment {
 
     private OnCategoryInteractionListener mListener;
 
-    private PtrFrameLayout frame;
-    private PlusView header;
-    private ViewGroup emptyLayout;
-
-    //private ListView categoryListView;
-    //private CategoryListAdapter categoryAdapter;
-    private TextView emptyCategoryText;
-    private List<Category> categoryList;
-
-    private CategoryRecyclerAdapter categoryRecyclerAdapter;
-    private RecyclerView categoryListView;
-
-    private int categoryIndexEditted;//The index of the category that the user just finished editted.
-
     private Date currentMonth;
 
-    private List<Transaction> transactionMonthList;
-
-    private RealmResults<Category> resultsCategory;
-    private RealmResults<Transaction> resultsTransaction;
-
-    private Boolean isPulldownToAddAllow = true;
-
+    private CategoryIncomeFragment categoryIncomeFragment;
+    private CategoryExpenseFragment categoryExpenseFragment;
 
     private View view;
 
@@ -113,18 +63,15 @@ public class CategoryFragment extends Fragment {
     }
 
     protected void init(){ Log.d(TAG, "init");
-
         currentMonth = new Date();
-
 
         createTabs();
 
-
-
-
-
-        //0 represents no change in month relative to currentMonth variable
-        updateMonthInToolbar(0);
+        //0 represents no change in month relative to currentMonth variable.
+        //false because we dont need to get all transactions yet.
+        //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
+        //categories
+        updateMonthInToolbar(0, false);
     }
 
     private void createTabs(){
@@ -133,17 +80,14 @@ public class CategoryFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-
-        CategoryExpenseFragment categoryExpenseFragment = new CategoryExpenseFragment();
-        CategoryIncomeFragment categoryIncomeFragment = new CategoryIncomeFragment();
-
+        categoryExpenseFragment = new CategoryExpenseFragment();
+        categoryIncomeFragment = new CategoryIncomeFragment();
 
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
-        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getActivity().getSupportFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
         viewPager.setAdapter(adapterViewPager);
-
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -164,9 +108,14 @@ public class CategoryFragment extends Fragment {
         });
     }
 
-    private void updateMonthInToolbar(int direction){
+    private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        //mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+
+        if(updateCategoryInfo) {
+            categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
+            categoryExpenseFragment.updateMonthCategoryInfo(currentMonth);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,7 +131,7 @@ public class CategoryFragment extends Fragment {
             mListener = (OnCategoryInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnCategoryInteractionListener");
         }
     }
 
@@ -209,10 +158,10 @@ public class CategoryFragment extends Fragment {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.leftChevron:
-                updateMonthInToolbar(-1);
+                updateMonthInToolbar(-1, true);
                 return true;
             case R.id.rightChevron:
-                updateMonthInToolbar(1);
+                updateMonthInToolbar(1, true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

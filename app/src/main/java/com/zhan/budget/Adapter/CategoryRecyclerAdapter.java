@@ -126,6 +126,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         Collections.swap(categoryList, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
         Log.d("RECYCLER_DEBUG", "moved from " + fromPosition + " to " + toPosition);
+        mListener.onItemMove();
         return true;
     }
 
@@ -139,6 +140,10 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     @Override
     public int getItemCount() {
         return this.categoryList.size();
+    }
+
+    public List<Category> getCategoryList(){
+        return this.categoryList;
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -201,6 +206,8 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         void onEditCategory(int position);
 
         void onDisablePtrPullDown(boolean value);
+
+        void onItemMove();
     }
 }
 
