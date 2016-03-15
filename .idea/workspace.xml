@@ -40,15 +40,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CategoryFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CategoryFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.35228848">
-              <caret line="161" column="51" selection-start-line="161" selection-start-column="51" selection-end-line="161" selection-end-column="51" />
+            <state vertical-scroll-proportion="-0.5925926">
+              <caret line="168" column="10" selection-start-line="168" selection-start-column="10" selection-end-line="168" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3485#3486#0" expanded="true" />
-                <element signature="e#3534#3535#0" expanded="true" />
+                <element signature="e#3536#3537#0" expanded="true" />
+                <element signature="e#3585#3586#0" expanded="true" />
                 <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
                 <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
               </folding>
@@ -60,7 +60,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryIncomeFragment.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="255" column="99" selection-start-line="255" selection-start-column="99" selection-end-line="255" selection-end-column="99" />
+              <caret line="401" column="5" selection-start-line="401" selection-start-column="5" selection-end-line="401" selection-end-column="5" />
               <folding>
                 <element signature="method#createPullDownToAddCategory#0;class#CategoryIncomeFragment#0" expanded="false" />
                 <element signature="method#updateCategoryStatus#0;class#CategoryIncomeFragment#0" expanded="false" />
@@ -70,6 +70,26 @@
                 <element signature="method#resetCategoryInfo#0;class#CategoryIncomeFragment#0" expanded="false" />
                 <element signature="method#onCreateOptionsMenu#0;class#CategoryIncomeFragment#0" expanded="false" />
                 <element signature="method#onOptionsItemSelected#0;class#CategoryIncomeFragment#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CategoryExpenseFragment.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryExpenseFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.36631015">
+              <caret line="232" column="125" selection-start-line="232" selection-start-column="102" selection-end-line="232" selection-end-column="125" />
+              <folding>
+                <element signature="method#createPullDownToAddCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#updateCategoryStatus#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#addNewCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#aggregateCategoryInfo#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#editCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#onActivityResult#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#resetCategoryInfo#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#onCreateOptionsMenu#0;class#CategoryExpenseFragment#0" expanded="false" />
+                <element signature="method#onOptionsItemSelected#0;class#CategoryExpenseFragment#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -4032,11 +4052,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_category_income.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_category_expense.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryIncomeFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryExpenseFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/TwoPageViewPager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/View/CustomViewPager.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_category.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryExpenseFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryIncomeFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java" />
       </list>
     </option>
@@ -4875,28 +4895,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryExpenseFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7267684">
-          <caret line="255" column="100" selection-start-line="255" selection-start-column="100" selection-end-line="255" selection-end-column="100" />
-          <folding>
-            <element signature="e#2975#2976#0" expanded="true" />
-            <element signature="e#3032#3033#0" expanded="true" />
-            <element signature="e#3482#3847#0" expanded="true" />
-            <element signature="e#3846#3847#0" expanded="true" />
-            <element signature="method#createPullDownToAddCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#updateCategoryStatus#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#addNewCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#aggregateCategoryInfo#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#editCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#onActivityResult#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#resetCategoryInfo#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#onCreateOptionsMenu#0;class#CategoryExpenseFragment#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#CategoryExpenseFragment#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/23.2.0/support-v4-23.2.0-sources.jar!/android/support/v4/app/FragmentPagerAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.2914438">
@@ -4964,7 +4962,7 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryIncomeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="255" column="99" selection-start-line="255" selection-start-column="99" selection-end-line="255" selection-end-column="99" />
+          <caret line="401" column="5" selection-start-line="401" selection-start-column="5" selection-end-line="401" selection-end-column="5" />
           <folding>
             <element signature="method#createPullDownToAddCategory#0;class#CategoryIncomeFragment#0" expanded="false" />
             <element signature="method#updateCategoryStatus#0;class#CategoryIncomeFragment#0" expanded="false" />
@@ -4980,14 +4978,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.35228848">
-          <caret line="161" column="51" selection-start-line="161" selection-start-column="51" selection-end-line="161" selection-end-column="51" />
+        <state vertical-scroll-proportion="-0.5925926">
+          <caret line="168" column="10" selection-start-line="168" selection-start-column="10" selection-end-line="168" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3485#3486#0" expanded="true" />
-            <element signature="e#3534#3535#0" expanded="true" />
+            <element signature="e#3536#3537#0" expanded="true" />
+            <element signature="e#3585#3586#0" expanded="true" />
             <element signature="method#onAttach#0;class#CategoryFragment#0" expanded="false" />
             <element signature="method#onDetach#0;class#CategoryFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/CategoryExpenseFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36631015">
+          <caret line="232" column="125" selection-start-line="232" selection-start-column="102" selection-end-line="232" selection-end-column="125" />
+          <folding>
+            <element signature="method#createPullDownToAddCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#updateCategoryStatus#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#addNewCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#aggregateCategoryInfo#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#editCategory#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#onActivityResult#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#resetCategoryInfo#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#onCreateOptionsMenu#0;class#CategoryExpenseFragment#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#CategoryExpenseFragment#0" expanded="false" />
           </folding>
         </state>
       </provider>

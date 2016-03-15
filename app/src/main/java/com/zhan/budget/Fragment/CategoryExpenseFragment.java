@@ -230,7 +230,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
     //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        resultsCategory = myRealm.where(Category.class).equalTo("type",BudgetType.EXPENSE.toString()).findAllAsync();
+        resultsCategory = myRealm.where(Category.class).equalTo("type",BudgetType.EXPENSE.toString()).findAllSorted("index");
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {

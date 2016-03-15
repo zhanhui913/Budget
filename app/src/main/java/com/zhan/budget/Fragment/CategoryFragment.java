@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -133,10 +134,14 @@ public class CategoryFragment extends Fragment {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 
+        CategoryExpenseFragment categoryExpenseFragment = new CategoryExpenseFragment();
+        CategoryIncomeFragment categoryIncomeFragment = new CategoryIncomeFragment();
+
+
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
-        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getActivity().getSupportFragmentManager(), new CategoryExpenseFragment(), new CategoryIncomeFragment());
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getActivity().getSupportFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
         viewPager.setAdapter(adapterViewPager);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -161,7 +166,7 @@ public class CategoryFragment extends Fragment {
 
     private void updateMonthInToolbar(int direction){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        //mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
