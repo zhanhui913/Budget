@@ -13,7 +13,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+<!--
             <ListView
                 android:id="@+id/categoryListView"
                 android:layout_width="match_parent"
@@ -23,6 +23,11 @@
                 android:visibility="visible"
                 android:background="@color/white"
                 android:drawSelectorOnTop="true"/>
+-->
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/categoryListView"/>
 
             <include layout="@layout/empty_transaction_indicator"
                 android:id="@+id/emptyCategoryLayout"

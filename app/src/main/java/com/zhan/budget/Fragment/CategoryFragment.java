@@ -5,20 +5,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhan.budget.Activity.CategoryInfoActivity;
-import com.zhan.budget.Activity.TransactionsForCategory;
-import com.zhan.budget.Adapter.CategoryListAdapter;
+import com.zhan.budget.Adapter.CategoryRecyclerAdapter;
+import com.zhan.budget.Adapter.Helper.OnStartDragListener;
+import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -41,7 +43,8 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class CategoryFragment extends BaseFragment implements
-        CategoryListAdapter.OnCategoryAdapterInteractionListener{
+        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener,
+        OnStartDragListener{
 
     private static final String TAG = "CategoryFragment";
 
@@ -51,11 +54,13 @@ public class CategoryFragment extends BaseFragment implements
     private PlusView header;
     private ViewGroup emptyLayout;
 
-    private ListView categoryListView;
-    private CategoryListAdapter categoryAdapter;
+    //private ListView categoryListView;
+    //private CategoryListAdapter categoryAdapter;
     private TextView emptyCategoryText;
-
     private List<Category> categoryList;
+
+    private CategoryRecyclerAdapter categoryRecyclerAdapter;
+    private RecyclerView categoryListView;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
 
@@ -67,6 +72,9 @@ public class CategoryFragment extends BaseFragment implements
     private RealmResults<Transaction> resultsTransaction;
 
     private Boolean isPulldownToAddAllow = true;
+
+
+
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -89,15 +97,28 @@ public class CategoryFragment extends BaseFragment implements
 
         currentMonth = new Date();
 
-        categoryListView = (ListView) view.findViewById(R.id.categoryListView);
+        //categoryListView = (ListView) view.findViewById(R.id.categoryListView);
         emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
         emptyCategoryText.setText("Pull down to add a category");
 
         transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
-        categoryAdapter = new CategoryListAdapter(this, categoryList);
-        categoryListView.setAdapter(categoryAdapter);
+        //categoryAdapter = new CategoryListAdapter(this, categoryList);
+        //categoryListView.setAdapter(categoryAdapter);
+
+
+
+
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, this);
+        categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
+        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        categoryListView.setAdapter(categoryRecyclerAdapter);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(categoryRecyclerAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(categoryListView);
+
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
 
@@ -113,6 +134,14 @@ public class CategoryFragment extends BaseFragment implements
         addListener();
     }
 
+    private ItemTouchHelper mItemTouchHelper;
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        isPulldownToAddAllow = false;
+        mItemTouchHelper.startDrag(viewHolder);
+        Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
+    }
 
     private void createPullDownToAddCategory(){
         frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
@@ -172,7 +201,7 @@ public class CategoryFragment extends BaseFragment implements
     }
 
     private void addListener(){
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
@@ -185,7 +214,7 @@ public class CategoryFragment extends BaseFragment implements
                 viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
                 startActivity(viewAllTransactionsForCategory);
             }
-        });
+        });*/
     }
 
     private void updateCategoryStatus(){
@@ -214,7 +243,8 @@ public class CategoryFragment extends BaseFragment implements
 
                 updateCategoryStatus();
 
-                categoryAdapter.addAll(categoryList);
+                //categoryAdapter.addAll(categoryList);
+                categoryRecyclerAdapter.setData(categoryList);
                 populateCategoryWithInfo();
             }
         });
@@ -282,7 +312,8 @@ public class CategoryFragment extends BaseFragment implements
                     Log.d("ZHAN1", "category : "+categoryList.get(i).getName()+" -> "+categoryList.get(i).getCost());
                 }
 
-                categoryAdapter.notifyDataSetChanged();
+                //categoryAdapter.notifyDataSetChanged();
+                categoryRecyclerAdapter.setData(categoryList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -322,19 +353,19 @@ public class CategoryFragment extends BaseFragment implements
                 Log.d("ZHAN", "category color is "+categoryReturned.getColor());
                 Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
                 Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
-                Log.d("ZHAN", "category cost is "+categoryReturned.getCost());
+                Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
 
                 Log.i("ZHAN", "----------- onActivityResult ----------");
 
-                Log.i("ZHAN", "eddited index :"+categoryIndexEditted);
+                Log.i("ZHAN", "eddited index :" + categoryIndexEditted);
 
                 updateCategoryStatus();
 
                 categoryList.set(categoryIndexEditted, categoryReturned);
 
-                categoryAdapter.clear();
-                categoryAdapter.addAll(categoryList);
-                //categoryAdapter.notifyDataSetChanged();
+                //categoryAdapter.clear();
+                //categoryAdapter.addAll(categoryList);
+                categoryRecyclerAdapter.setData(categoryList);
             }
         }
     }
@@ -354,7 +385,8 @@ public class CategoryFragment extends BaseFragment implements
         for(int i = 0; i < categoryList.size(); i++){
             categoryList.get(i).setCost(0);
         }
-        categoryAdapter.notifyDataSetChanged();
+        //categoryAdapter.notifyDataSetChanged();
+        categoryRecyclerAdapter.setData(categoryList);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
