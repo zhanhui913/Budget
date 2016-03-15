@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity
                     c.setBudget(100.0f + (i/5));
                     c.setType(BudgetType.EXPENSE.toString());
                     c.setCost(0);
+                    c.setIndex(i);
 
                     categoryList.add(c);
                 }
@@ -238,6 +239,7 @@ public class MainActivity extends AppCompatActivity
                     c.setBudget(0);
                     c.setType(BudgetType.INCOME.toString());
                     c.setCost(0);
+                    c.setIndex(i);
 
                     categoryList.add(c);
                 }

@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,11 +25,15 @@ import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Adapter.CategoryRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
+import com.zhan.budget.Adapter.SimpleDividerItemDecoration;
+import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.View.CustomViewPager;
 import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
@@ -42,9 +50,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class CategoryFragment extends BaseFragment implements
-        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener,
-        OnStartDragListener{
+public class CategoryFragment extends Fragment {
 
     private static final String TAG = "CategoryFragment";
 
@@ -74,10 +80,25 @@ public class CategoryFragment extends BaseFragment implements
     private Boolean isPulldownToAddAllow = true;
 
 
-
+    private View view;
 
     public CategoryFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+        view = inflater.inflate(getFragmentLayout(), container, false);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated");
+        init();
     }
 
     @Override
@@ -86,307 +107,61 @@ public class CategoryFragment extends BaseFragment implements
         setHasOptionsMenu(true);
     }
 
-    @Override
-    protected int getFragmentLayout() {
+    private int getFragmentLayout() {
         return R.layout.fragment_category;
     }
 
-    @Override
     protected void init(){ Log.d(TAG, "init");
-        super.init();
 
         currentMonth = new Date();
 
-        //categoryListView = (ListView) view.findViewById(R.id.categoryListView);
-        emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyCategoryText.setText("Pull down to add a category");
 
-        transactionMonthList = new ArrayList<>();
-
-        categoryList = new ArrayList<>();
-        //categoryAdapter = new CategoryListAdapter(this, categoryList);
-        //categoryListView.setAdapter(categoryAdapter);
+        createTabs();
 
 
 
 
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, this);
-        categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
-        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        categoryListView.setAdapter(categoryRecyclerAdapter);
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(categoryRecyclerAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(categoryListView);
-
-
-        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
-
-        populateCategoryWithNoInfo();
 
         //0 represents no change in month relative to currentMonth variable
-        //false because we dont need to get all transactions yet.
-        //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
-        //categories
-        updateMonthInToolbar(0, false);
-
-        createPullDownToAddCategory();
-        addListener();
+        updateMonthInToolbar(0);
     }
 
-    private ItemTouchHelper mItemTouchHelper;
+    private void createTabs(){
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        isPulldownToAddAllow = false;
-        mItemTouchHelper.startDrag(viewHolder);
-        Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
-    }
 
-    private void createPullDownToAddCategory(){
-        frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
+        final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
+        viewPager.setPagingEnabled(false);
 
-        header = new PlusView(getContext());
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getActivity().getSupportFragmentManager(), new CategoryExpenseFragment(), new CategoryIncomeFragment());
+        viewPager.setAdapter(adapterViewPager);
 
-        frame.setHeaderView(header);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        frame.setPtrHandler(new PtrHandler() {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if(isPulldownToAddAllow){
-                    insideFrame.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            frame.refreshComplete();
-                        }
-                    }, 500);
-                }
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
-            }
-        });
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-        frame.addPtrUIHandler(new PtrUIHandler() {
-
-            @Override
-            public void onUIReset(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIReset");
             }
 
             @Override
-            public void onUIRefreshPrepare(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshPrepare");
-            }
-
-            @Override
-            public void onUIRefreshBegin(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshBegin");
-                header.playRotateAnimation();
-            }
-
-            @Override
-            public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
-                addNewCategory();
-            }
-
-            @Override
-            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+            public void onTabReselected(TabLayout.Tab tab) {
 
             }
         });
     }
 
-    private void addListener(){
-        /*categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-                Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
-
-                Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-                startActivity(viewAllTransactionsForCategory);
-            }
-        });*/
-    }
-
-    private void updateCategoryStatus(){
-        if(categoryList.size() > 0){
-            emptyLayout.setVisibility(View.GONE);
-            categoryListView.setVisibility(View.VISIBLE);
-        }else{
-            emptyLayout.setVisibility(View.VISIBLE);
-            categoryListView.setVisibility(View.GONE);
-        }
-    }
-
-    private void addNewCategory(){
-        Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
-        startActivityForResult(addNewCategoryIntent, Constants.RETURN_EDIT_CATEGORY);
-    }
-
-    //Should be called only the first time when the fragment is created
-    private void populateCategoryWithNoInfo(){
-        resultsCategory = myRealm.where(Category.class).findAllAsync();
-        resultsCategory.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                categoryList = myRealm.copyFromRealm(resultsCategory);
-
-                updateCategoryStatus();
-
-                //categoryAdapter.addAll(categoryList);
-                categoryRecyclerAdapter.setData(categoryList);
-                populateCategoryWithInfo();
-            }
-        });
-    }
-
-    private void populateCategoryWithInfo(){
-        final Date startMonth = DateUtil.refreshMonth(currentMonth);
-
-        //Need to go a day before as Realm's between date does inclusive on both end
-        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
-
-        Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
-
-        resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
-        resultsTransaction.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
-
-                transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
-
-                aggregateCategoryInfo();
-            }
-        });
-    }
-
-    private void aggregateCategoryInfo(){
-        Log.d("DEBUG", "1) There are " + categoryList.size() + " categories");
-        Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
-
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-            long startTime, endTime, duration;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("DEBUG", "preparing to aggregate results");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                startTime = System.nanoTime();
-
-                //Go through each transaction and put them into the correct category
-                for(int t = 0; t < transactionMonthList.size(); t++){
-                    for(int c = 0; c < categoryList.size(); c++){
-                        if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                            float transactionPrice = transactionMonthList.get(t).getPrice();
-                            float currentCategoryPrice = categoryList.get(c).getCost();
-                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                        }
-                    }
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-
-                for(int i = 0; i < categoryList.size(); i++){
-                    Log.d("ZHAN1", "category : "+categoryList.get(i).getName()+" -> "+categoryList.get(i).getCost());
-                }
-
-                //categoryAdapter.notifyDataSetChanged();
-                categoryRecyclerAdapter.setData(categoryList);
-
-                endTime = System.nanoTime();
-                duration = (endTime - startTime);
-
-                long milli = (duration/1000000);
-                long second = (milli/1000);
-                float minutes = (second / 60.0f);
-                Log.d("DEBUG", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-            }
-        };
-        loader.execute();
-    }
-
-    private void editCategory(int position){
-        Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
-
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
-
-        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_CATEGORY) {
-
-                Log.i("ZHAN", "----------- onActivityResult ----------");
-
-                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
-
-
-                Log.d("ZHAN", "category name is "+categoryReturned.getName());
-                Log.d("ZHAN", "category color is "+categoryReturned.getColor());
-                Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
-                Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
-                Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
-
-                Log.i("ZHAN", "----------- onActivityResult ----------");
-
-                Log.i("ZHAN", "eddited index :" + categoryIndexEditted);
-
-                updateCategoryStatus();
-
-                categoryList.set(categoryIndexEditted, categoryReturned);
-
-                //categoryAdapter.clear();
-                //categoryAdapter.addAll(categoryList);
-                categoryRecyclerAdapter.setData(categoryList);
-            }
-        }
-    }
-
-    private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
+    private void updateMonthInToolbar(int direction){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
-
-        if(updateCategoryInfo) {
-            resetCategoryInfo();
-            populateCategoryWithInfo();
-        }
-    }
-
-    private void resetCategoryInfo(){
-        for(int i = 0; i < categoryList.size(); i++){
-            categoryList.get(i).setCost(0);
-        }
-        //categoryAdapter.notifyDataSetChanged();
-        categoryRecyclerAdapter.setData(categoryList);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -429,45 +204,16 @@ public class CategoryFragment extends BaseFragment implements
         // handle item selection
         switch (item.getItemId()) {
             case R.id.leftChevron:
-                updateMonthInToolbar(-1, true);
+                updateMonthInToolbar(-1);
                 return true;
             case R.id.rightChevron:
-                updateMonthInToolbar(1, true);
+                updateMonthInToolbar(1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Adapter listeners
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onDeleteCategory(int position){
-        /*myRealm.beginTransaction();
-        resultsAccount.remove(position);
-        myRealm.commitTransaction();
-
-        accountListAdapter.clear();
-        accountListAdapter.addAll(accountList);*/
-
-        Toast.makeText(getContext(), "deleting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onEditCategory(int position){
-        Toast.makeText(getContext(), "editting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-        categoryIndexEditted = position;
-        editCategory(position);
-    }
-
-    @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
-    }
 
     /**
      * This interface must be implemented by activities that contain this
