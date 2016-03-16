@@ -126,7 +126,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         Collections.swap(categoryList, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
         Log.d("RECYCLER_DEBUG", "moved from " + fromPosition + " to " + toPosition);
-        mListener.onItemMove();
         return true;
     }
 
@@ -134,6 +133,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     public void onItemEndDrag(){
         Log.d("RECYCLER_DEBUG", "end drag");
         mListener.onDisablePtrPullDown(false);
+        mListener.onDoneDrag();
     }
 
     // Return the total count of items
@@ -207,7 +207,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         void onDisablePtrPullDown(boolean value);
 
-        void onItemMove();
+        void onDoneDrag();
     }
 }
 

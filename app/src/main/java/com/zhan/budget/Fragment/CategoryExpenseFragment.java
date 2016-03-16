@@ -211,6 +211,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsCategory.removeChangeListeners();
                 resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
                 Log.d("BRIANA", "There are "+categoryList.size()+" expense categories");
@@ -235,6 +236,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
         resultsTransaction.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsCategory.removeChangeListeners();
                 Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
 
                 transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
@@ -390,7 +392,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
     }
 
     @Override
-    public void onItemMove(){
+    public void onDoneDrag(){
         Log.d(TAG, "-----------");
 
         for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){

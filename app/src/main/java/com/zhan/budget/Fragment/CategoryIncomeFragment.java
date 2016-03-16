@@ -211,6 +211,8 @@ public class CategoryIncomeFragment extends BaseFragment implements
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsCategory.removeChangeListeners();
+
                 resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
                 Log.d(TAG, "There are " + categoryList.size() + " income categories");
@@ -234,6 +236,8 @@ public class CategoryIncomeFragment extends BaseFragment implements
         resultsTransaction.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsCategory.removeChangeListeners();
+
                 Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
 
                 transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
@@ -389,22 +393,58 @@ public class CategoryIncomeFragment extends BaseFragment implements
     }
 
     @Override
-    public void onItemMove(){
-        Log.d(TAG, "-----------");
+    public void onDoneDrag(){
+        Log.d(TAG, "onDoneDrag -----------");
 
         for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
             Log.d(TAG, i+"->"+categoryRecyclerAdapter.getCategoryList().get(i).getName());
         }
 
-        Log.d(TAG, "-----------");
-
-
-/*
-        myRealm.beginTransaction();
+        Log.d(TAG, "onDoneDrag -----------");
 
 
 
-        myRealm.commitTransaction();*/
+
+
+        resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.INCOME.toString()).findAllAsync();
+        resultsCategory.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                resultsCategory.removeChangeListeners();
+
+
+                myRealm.beginTransaction();
+                Log.d(TAG, "Updating indices");
+
+                for(int i =0;i<resultsCategory.size(); i++){
+                    Log.d(TAG, i+"->"+resultsCategory.get(i).getName());
+
+                }                Log.d(TAG, "Updating indices");
+
+
+                for (int i = 0; i < resultsCategory.size(); i++) {
+                    for (int j = 0; j < categoryRecyclerAdapter.getCategoryList().size(); j++) {
+                        String id1 = resultsCategory.get(i).getId();
+                        String id2 = categoryRecyclerAdapter.getCategoryList().get(j).getId();
+                        Log.d(TAG, "comparing ("+id1+" with "+id2+")");
+
+                        if (resultsCategory.get(i).getId().equalsIgnoreCase(categoryRecyclerAdapter.getCategoryList().get(j).getId())) {
+                            Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
+                            resultsCategory.get(i).setIndex(categoryRecyclerAdapter.getCategoryList().get(j).getIndex());
+                            Log.d(TAG, resultsCategory.get(i).getName()+" new index is now "+categoryRecyclerAdapter.getCategoryList().get(j).getIndex());
+                            break;
+                        }
+                    }
+                }
+
+                myRealm.commitTransaction();
+
+                Log.d(TAG, "DONE UPDATING indices");
+
+            }
+        });
+
+
 
     }
 
