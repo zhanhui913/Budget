@@ -236,7 +236,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
         resultsTransaction.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                resultsCategory.removeChangeListeners();
+                resultsTransaction.removeChangeListeners();
                 Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
 
                 transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
@@ -393,14 +393,14 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
     @Override
     public void onDoneDrag(){
-        Log.d(TAG, "new suppose indices -----------");
+        //Log.d(TAG, "new suppose indices -----------");
 
         for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
             String name = categoryRecyclerAdapter.getCategoryList().get(i).getName();
-            Log.d(TAG, i+"->"+name);
+            //Log.d(TAG, i+"->"+name);
         }
 
-        Log.d(TAG, "new suppose indices -----------");
+        //Log.d(TAG, "new suppose indices -----------");
 
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
@@ -411,14 +411,14 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
 
                 myRealm.beginTransaction();
-                Log.d(TAG, "old indices -----------");
+                //Log.d(TAG, "old indices -----------");
 
                 for (int i = 0; i < resultsCategory.size(); i++) {
                     int index = resultsCategory.get(i).getIndex();
                     String name = resultsCategory.get(i).getName();
-                    Log.d(TAG, index + "->" + name);
+                    //Log.d(TAG, index + "->" + name);
                 }
-                Log.d(TAG, "old indices -----------");
+                //Log.d(TAG, "old indices -----------");
 
                 for (int i = 0; i < resultsCategory.size(); i++) {
                     for (int j = 0; j < categoryRecyclerAdapter.getCategoryList().size(); j++) {
@@ -427,14 +427,14 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
                         String id2 = categoryRecyclerAdapter.getCategoryList().get(j).getId();
                         String name2 = categoryRecyclerAdapter.getCategoryList().get(j).getName();
-                        Log.d(TAG, "comparing (" + id1 + "," + name1 + ") with (" + id2 + "," + name2 + ")");
+                        //Log.d(TAG, "comparing (" + id1 + "," + name1 + ") with (" + id2 + "," + name2 + ")");
 
                         if (resultsCategory.get(i).getId().equalsIgnoreCase(categoryRecyclerAdapter.getCategoryList().get(j).getId())) {
 
-                            Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
-                            Log.d(TAG, "assigning new index : " + j + " came from " + categoryRecyclerAdapter.getCategoryList().get(j).getName());
+                            //Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
+                            //Log.d(TAG, "assigning new index : " + j + " came from " + categoryRecyclerAdapter.getCategoryList().get(j).getName());
                             resultsCategory.get(i).setIndex(j);
-                            Log.d(TAG, resultsCategory.get(i).getName() + " new index is now " + resultsCategory.get(i).getIndex());
+                            //Log.d(TAG, resultsCategory.get(i).getName() + " new index is now " + resultsCategory.get(i).getIndex());
 
                             break;
                         }
@@ -443,7 +443,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
                 myRealm.commitTransaction();
 
-                Log.d(TAG, "DONE UPDATING indices");
+                //Log.d(TAG, "DONE UPDATING indices");
             }
         });
     }
