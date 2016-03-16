@@ -393,12 +393,58 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
     @Override
     public void onDoneDrag(){
-        Log.d(TAG, "-----------");
+        Log.d(TAG, "new suppose indices -----------");
 
         for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
-            Log.d(TAG, i+"->"+categoryRecyclerAdapter.getCategoryList().get(i).getName());
+            String name = categoryRecyclerAdapter.getCategoryList().get(i).getName();
+            Log.d(TAG, i+"->"+name);
         }
 
-        Log.d(TAG, "-----------");
+        Log.d(TAG, "new suppose indices -----------");
+
+
+        resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
+        resultsCategory.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                resultsCategory.removeChangeListeners();
+
+
+                myRealm.beginTransaction();
+                Log.d(TAG, "old indices -----------");
+
+                for (int i = 0; i < resultsCategory.size(); i++) {
+                    int index = resultsCategory.get(i).getIndex();
+                    String name = resultsCategory.get(i).getName();
+                    Log.d(TAG, index + "->" + name);
+                }
+                Log.d(TAG, "old indices -----------");
+
+                for (int i = 0; i < resultsCategory.size(); i++) {
+                    for (int j = 0; j < categoryRecyclerAdapter.getCategoryList().size(); j++) {
+                        String id1 = resultsCategory.get(i).getId();
+                        String name1 = resultsCategory.get(i).getName();
+
+                        String id2 = categoryRecyclerAdapter.getCategoryList().get(j).getId();
+                        String name2 = categoryRecyclerAdapter.getCategoryList().get(j).getName();
+                        Log.d(TAG, "comparing (" + id1 + "," + name1 + ") with (" + id2 + "," + name2 + ")");
+
+                        if (resultsCategory.get(i).getId().equalsIgnoreCase(categoryRecyclerAdapter.getCategoryList().get(j).getId())) {
+
+                            Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
+                            Log.d(TAG, "assigning new index : " + j + " came from " + categoryRecyclerAdapter.getCategoryList().get(j).getName());
+                            resultsCategory.get(i).setIndex(j);
+                            Log.d(TAG, resultsCategory.get(i).getName() + " new index is now " + resultsCategory.get(i).getIndex());
+
+                            break;
+                        }
+                    }
+                }
+
+                myRealm.commitTransaction();
+
+                Log.d(TAG, "DONE UPDATING indices");
+            }
+        });
     }
 }
