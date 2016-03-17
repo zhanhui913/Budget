@@ -62,18 +62,12 @@ public class TransactionsForCategory extends AppCompatActivity implements
     private void init(){
         myRealm = Realm.getDefaultInstance();
 
+        createToolbar();
+
         transactionCategoryListView = (ListView) findViewById(R.id.transactionCategoryListView);
         transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(currentMonth));
-        }
 
         transactionCategoryList = new ArrayList<>();
         transactionCategoryAdapter = new TransactionListAdapter(this, transactionCategoryList, true); //display date in each transaction item
@@ -91,6 +85,20 @@ public class TransactionsForCategory extends AppCompatActivity implements
         Log.d("ZHAN", "selected category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
         getAllTransactionsWithCategoryForMonth();
+    }
+
+    /**
+     * Create toolbar
+     */
+    private void createToolbar(){
+        //Create the toolbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.svg_ic_nav_back);
+        setSupportActionBar(toolbar);
+
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(currentMonth));
+        }
     }
 
     private void addListeners(){
