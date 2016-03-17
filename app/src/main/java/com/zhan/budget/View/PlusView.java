@@ -28,7 +28,7 @@ public class PlusView extends View {
     //Default values
     private final static int DEFAULT_BG_COLOR = R.color.transparent;
     private final static int DEFAULT_ICON_SIZE  = 0;//NONE
-    private final static int DEFAULT_ICON_COLOR = R.color.white;
+    private final static int DEFAULT_ICON_COLOR = R.color.colorPrimary;
 
     private Context context;
     private int backgroundColor;

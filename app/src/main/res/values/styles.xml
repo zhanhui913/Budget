@@ -63,7 +63,7 @@
     </style>
 
     <style name="SettingsTextViewButtonStyle">
-        <item name="android:background">@drawable/budget_transparent_button</item>
+
         <item name="android:gravity">center_vertical</item>
         <item name="android:clickable">true</item>
         <item name="android:paddingLeft">20dp</item>
