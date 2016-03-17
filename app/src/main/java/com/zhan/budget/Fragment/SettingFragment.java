@@ -17,6 +17,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +32,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import io.realm.processor.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,6 +106,7 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "tour", Toast.LENGTH_SHORT).show();
+                Util.changeToTheme(getActivity(), Util.THEME_BLUE);
             }
         });
 

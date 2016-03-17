@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.zhan.budget.Util.Util;
+
 import io.realm.Realm;
+import io.realm.processor.Utils;
 
 /**
  * Base activity created to be extended by every activity that uses Realm in this application.
@@ -19,9 +22,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Util.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(getActivityLayout());
         init();
+
     }
 
     @Override
