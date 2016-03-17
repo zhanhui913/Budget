@@ -23,6 +23,17 @@
             android:background="@color/colorPrimaryDark"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/themeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Light Theme"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"/>
+
+        <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/firstDayBtn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
