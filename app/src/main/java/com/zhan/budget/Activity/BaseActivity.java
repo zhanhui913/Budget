@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.zhan.budget.Util.Util;
+
 import io.realm.Realm;
 
 /**
@@ -20,8 +22,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.onActivityCreateSetTheme(this);
         setContentView(getActivityLayout());
         init();
+
     }
 
     @Override

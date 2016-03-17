@@ -17,6 +17,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +40,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private TextView backupBtn, resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
+    private TextView themeBtn, backupBtn, resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
+
+    //
+    private static int CURRENT_THEME;
 
     //CSV
     private List<Transaction> transactionList;
@@ -57,7 +61,7 @@ public class SettingFragment extends BaseFragment {
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
-
+        themeBtn = (TextView) view.findViewById(R.id.themeBtn);
         backupBtn = (TextView) view.findViewById(R.id.backupBtn);
         resetBtn = (TextView) view.findViewById(R.id.resetDataBtn);
         exportCSVBtn = (TextView) view.findViewById(R.id.exportCSVBtn);
@@ -65,10 +69,22 @@ public class SettingFragment extends BaseFragment {
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
 
+        CURRENT_THEME = Util.getCurrentTheme();
+        themeBtn.setText((CURRENT_THEME == Util.THEME_DARK ? "Dark Theme": "Light Theme"));
+
         addListeners();
     }
 
     private void addListeners(){
+        themeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CURRENT_THEME = Util.getCurrentTheme();
+                themeBtn.setText((CURRENT_THEME == Util.THEME_DARK ? "Dark Theme": "Light Theme"));
+                Util.changeToTheme(getActivity(), (CURRENT_THEME == Util.THEME_DARK ? Util.THEME_LIGHT : Util.THEME_DARK));
+            }
+        });
+
         backupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -60,8 +60,7 @@
                 android:layout_height="match_parent"
                 android:divider="@color/gray"
                 android:dividerHeight="1dp"
-                android:visibility="visible"
-                android:background="@color/white"/>
+                android:visibility="visible" />
 
             <include layout="@layout/empty_transaction_indicator"
                 android:id="@+id/emptyTransactionLayout"
