@@ -285,15 +285,14 @@ public class CalendarFragment extends BaseFragment implements
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsTransactionForDay.removeChangeListener(this);
+
                 Log.d(TAG, "received " + resultsTransactionForDay.size() + " transactions");
 
                 float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
                 totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                 updateTransactionList();
-
-                //Removing on change listener
-                resultsTransactionForDay.removeChangeListener(this);
             }
         });
     }

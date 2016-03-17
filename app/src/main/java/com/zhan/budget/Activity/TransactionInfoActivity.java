@@ -479,6 +479,8 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsAccount.removeChangeListener(this);
+
                 for (int i = 0; i < resultsAccount.size(); i++) {
                     accountNameList.add(resultsAccount.get(i).getName());
                 }
@@ -508,7 +510,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
 
                 accountPicker.setValue(pos);
 
-                resultsAccount.removeChangeListener(this);
                 myRealm.close();
             }
         });

@@ -88,14 +88,14 @@ public class TransactionFragment extends BaseFragment {
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsCategory.removeChangeListener(this);
+
                 resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
                 categoryGridAdapter.clear();
                 categoryGridAdapter.addAll(categoryList);
 
                 listenToGridView();
-
-                resultsCategory.removeChangeListener(this);
             }
         });
     }

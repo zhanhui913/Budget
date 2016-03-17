@@ -237,6 +237,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
             @Override
             public void onChange() {
                 resultsTransaction.removeChangeListeners();
+
                 Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
 
                 transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
@@ -408,7 +409,6 @@ public class CategoryExpenseFragment extends BaseFragment implements
             @Override
             public void onChange() {
                 resultsCategory.removeChangeListeners();
-
 
                 myRealm.beginTransaction();
                 //Log.d(TAG, "old indices -----------");

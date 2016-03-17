@@ -109,6 +109,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
         resultsInMonth.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsInMonth.removeChangeListener(this);
 
                 //sort by date
                 resultsInMonth.sort("date");

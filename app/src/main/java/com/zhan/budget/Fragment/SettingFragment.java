@@ -156,11 +156,9 @@ public class SettingFragment extends BaseFragment {
         transactionResults.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                transactionList = myRealm.copyFromRealm(transactionResults);
-
-                exportCSV();
-
                 transactionResults.removeChangeListener(this);
+                transactionList = myRealm.copyFromRealm(transactionResults);
+                exportCSV();
             }
         });
     }
