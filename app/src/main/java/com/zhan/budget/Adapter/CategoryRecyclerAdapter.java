@@ -23,6 +23,7 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.Collections;
@@ -198,12 +199,16 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.WHITE);
+            if(Util.getCurrentTheme() == Util.THEME_LIGHT){
+                itemView.setBackgroundColor(Color.WHITE);
+            }else{
+                itemView.setBackgroundColor(Color.BLACK);
+            }
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(Color.WHITE);
+            itemView.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 

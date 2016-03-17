@@ -9,19 +9,19 @@
          android:id="@+id/calendarView"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         android:background="@color/white"
          support:monthDayVerticalSpacing="0dp"
          support:startDayOfTheWeek="SUNDAY"/>
 
     <LinearLayout
-        android:id="@+id/expenseLayout"
+        android:id="@+id/centerPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/gray"
+        android:background="@color/light_gray"
         android:padding="5dp">
 
         <ImageView
+            android:id="@+id/dateIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/svg_ic_date"

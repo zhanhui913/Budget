@@ -11,9 +11,9 @@
     <color name="dark_green">#1c8046</color>
 
     <color name="purple">#551A8B</color>
-    <color name="tan">#E6E6CD</color>
     <color name="white">#FFFFFF</color>
-    <color name="gray">#D1D1D1</color>
+    <color name="light_gray">#D1D1D1</color>
+    <color name="gray">#616161</color>
     <color name="darkgray">#888888</color>
     <color name="lightBlue">#6BB9F0</color>
     <color name="lightPurple">#BE90D4</color>

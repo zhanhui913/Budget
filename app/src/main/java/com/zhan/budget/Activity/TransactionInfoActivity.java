@@ -390,7 +390,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-                    cellView = (BaseCellView) inflater.inflate(R.layout.date_cell_view, null);
+                    cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, null);
                 }
 
                 if (cellType == BaseCellView.TODAY) {
@@ -408,7 +408,7 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-                    cellView = (RectangleCellView) inflater.inflate(R.layout.week_cell_view, null);
+                    cellView = (RectangleCellView) inflater.inflate(R.layout.calendar_week_cell_view, null);
                 }
                 return cellView;
             }

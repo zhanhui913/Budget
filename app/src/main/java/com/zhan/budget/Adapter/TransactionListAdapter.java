@@ -175,10 +175,17 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         }else{ //If transaction is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
             viewHolder.circularView.setCircleRadiusInDP(23);
-            viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+
             viewHolder.circularView.setCircleColor(R.color.transparent);
             viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), transaction.getCategory().getIcon()));
-            viewHolder.circularView.setIconColor(R.color.harbor_rat);
+
+            if(Util.getCurrentTheme() != Util.THEME_DARK){
+                viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+                viewHolder.circularView.setIconColor(R.color.harbor_rat);
+            }else{
+                viewHolder.circularView.setStrokeColor(R.color.white);
+                viewHolder.circularView.setIconColor(R.color.white);
+            }
 
             viewHolder.approveBtn.setVisibility(View.VISIBLE);
         }

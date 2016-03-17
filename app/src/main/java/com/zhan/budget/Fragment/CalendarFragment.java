@@ -2,6 +2,7 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,7 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
@@ -60,7 +63,7 @@ public class CalendarFragment extends BaseFragment implements
 
     private static final String TAG = "CalendarFragment";
 
-    private ViewGroup emptyLayout;
+    private ViewGroup emptyLayout, centerPanel;
     private OnCalendarInteractionListener mListener;
 
     //Calendar
@@ -80,6 +83,8 @@ public class CalendarFragment extends BaseFragment implements
     private PtrFrameLayout frame;
     private PlusView header;
     private Boolean isPulldownToAddAllow = true;
+
+    private ImageView dateIcon;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -112,7 +117,18 @@ public class CalendarFragment extends BaseFragment implements
         transactionAdapter = new TransactionListAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
-        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyTransactionLayout);
+        emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
+        centerPanel = (ViewGroup) view.findViewById(R.id.centerPanel);
+
+        dateIcon = (ImageView) view.findViewById(R.id.dateIcon);
+
+        if(Util.getCurrentTheme() != Util.THEME_DARK){
+            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+            dateIcon.setColorFilter(R.color.lightBlue, PorterDuff.Mode.SRC_IN);
+        }else{
+            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black));
+            dateIcon.setColorFilter(R.color.lightBlue, PorterDuff.Mode.SRC_IN);
+        }
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
@@ -217,7 +233,7 @@ public class CalendarFragment extends BaseFragment implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (BaseCellView) inflater.inflate(R.layout.date_cell_view, parent, false);
+                    cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, parent, false);
                 }
 
                 if (cellType == BaseCellView.TODAY) {
@@ -234,7 +250,7 @@ public class CalendarFragment extends BaseFragment implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (RectangleCellView) inflater.inflate(R.layout.week_cell_view, parent, false);
+                    cellView = (RectangleCellView) inflater.inflate(R.layout.calendar_week_cell_view, parent, false);
                 }
                 return cellView;
             }
