@@ -351,12 +351,15 @@ public class MainActivity extends AppCompatActivity
                 switch (viewId) {
                     case R.id.nav_calendar:
                         fragment = calendarFragment;
+                        title = "";
                         break;
                     case R.id.nav_category:
                         fragment = categoryFragment;
+                        title = "";
                         break;
                     case R.id.nav_overview:
                         fragment = monthReportFragment;
+                        title = "";
                         break;
                     case R.id.nav_account:
                         fragment = accountFragment;
@@ -384,7 +387,9 @@ public class MainActivity extends AppCompatActivity
 
                 //set the toolbar title
                 if (getSupportActionBar() != null) {
-                    getSupportActionBar().setTitle(title);
+                    if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(title)) {
+                        getSupportActionBar().setTitle(title);
+                    }
                 }
             }
         }, 300);
