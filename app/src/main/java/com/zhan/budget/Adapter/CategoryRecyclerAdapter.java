@@ -23,7 +23,7 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.library.CircularView;
 
 import java.util.Collections;
@@ -70,8 +70,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     // Involves populating data into the item through holder
@@ -208,11 +207,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         @Override
         public void onItemSelected() {
-            if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT){
-                itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.day));
-            }else{
-                itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.night));
-            }
+            itemView.setBackgroundColor(Colors.getColorFromAttr(itemView.getContext(), R.attr.themeColorHighlight));
         }
 
         @Override

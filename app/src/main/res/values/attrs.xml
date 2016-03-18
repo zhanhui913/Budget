@@ -33,5 +33,6 @@
     <attr name="themeColor" format="reference" />
     <attr name="themeColorHighlight" format="reference" />
     <attr name="themeColorText" format="reference" />
+    <attr name="themeColorBtn" format="reference" />
 
 </resources>

@@ -13,7 +13,7 @@ import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.library.CircularView;
 
 import java.util.ArrayList;
@@ -128,11 +128,7 @@ public class TransactionFragment extends BaseFragment {
                         //Set first category as selected by default
                         ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(pos);
                         CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
-                        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT){
-                            cv.setStrokeColor(R.color.night_text);
-                        }else{
-                            cv.setStrokeColor(R.color.day_text);
-                        }
+                        cv.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
 
                         // unregister listener (this is important)
                         categoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -150,11 +146,7 @@ public class TransactionFragment extends BaseFragment {
                     ccv.setStrokeColor(R.color.transparent);
 
                     if (i == position) {
-                        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT){
-                            ccv.setStrokeColor(R.color.night_text);
-                        }else{
-                            ccv.setStrokeColor(R.color.day_text);
-                        }
+                        ccv.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
                     }
                 }
 

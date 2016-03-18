@@ -1,11 +1,8 @@
 package com.zhan.budget.Activity;
 
-import android.graphics.PorterDuff;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,7 +16,6 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.ThemeUtil;
 
 import org.parceler.Parcels;
 
@@ -38,8 +34,6 @@ public class TransactionsForCategory extends BaseActivity implements
     private Date beginMonth;
     private Date endMonth;
     private Category selectedCategory;
-
-    private ViewGroup topPanel;
 
     private ImageView transactionCategoryIcon;
     private TextView transactionCategoryName, transactionCategoryBalance;
@@ -63,8 +57,6 @@ public class TransactionsForCategory extends BaseActivity implements
 
         createToolbar();
 
-        topPanel = (ViewGroup) findViewById(R.id.topPanel);
-
         transactionCategoryListView = (ListView) findViewById(R.id.transactionCategoryListView);
         transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
@@ -80,13 +72,6 @@ public class TransactionsForCategory extends BaseActivity implements
         endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
 
         transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(getApplicationContext(), selectedCategory.getIcon()));
-        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT){
-            topPanel.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.day_highlight));
-            transactionCategoryIcon.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.night_text), PorterDuff.Mode.SRC_IN);
-        }else{
-            topPanel.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.night_highlight));
-            transactionCategoryIcon.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.day_text), PorterDuff.Mode.SRC_IN);
-        }
 
         transactionCategoryName.setText(selectedCategory.getName());
 

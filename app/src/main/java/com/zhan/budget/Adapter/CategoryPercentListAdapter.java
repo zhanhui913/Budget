@@ -12,6 +12,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -65,9 +66,9 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
         //Icon
         viewHolder.circularView.setCircleColor(category.getCategory().getColor());
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), category.getCategory().getIcon()));
+        viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
 
         viewHolder.name.setText(category.getCategory().getName());
-       // viewHolder.percent.setText(String.format("%.2f", category.getPercent())+"%");
         viewHolder.percent.setText(category.getPercent()+"%");
 
         //Only EXPENSE Category type would be displayed using this layout, so no need to check if

@@ -12,6 +12,7 @@
         <item name="themeColor">@color/day</item>
         <item name="themeColorHighlight">@color/day_highlight</item>
         <item name="themeColorText">@color/night_text</item>
+        <item name="themeColorBtn">@drawable/budget_white_button</item>
     </style>
 
     <style name="AppThemeLight.NoActionBar">
@@ -35,6 +36,7 @@
         <item name="themeColor">@color/night</item>
         <item name="themeColorHighlight">@color/night_highlight</item>
         <item name="themeColorText">@color/day_text</item>
+        <item name="themeColorBtn">@drawable/budget_night_button</item>
     </style>
 
     <style name="AppThemeDark.NoActionBar">
@@ -47,13 +49,14 @@
 
     <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 -->
+
     <!-- Other view's style -->
     <style name="NumberPadStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:layout_weight">0.3</item>
         <item name="android:textSize">@dimen/num_pad_text_size</item>
-        <item name="android:background">@drawable/budget_white_button</item>
+        <item name="android:background">?attr/themeColorBtn</item>
         <item name="android:layout_margin">1dp</item>
     </style>
 

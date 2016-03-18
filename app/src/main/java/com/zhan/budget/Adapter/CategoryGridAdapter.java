@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -58,12 +58,7 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
 
         viewHolder.circularView.setCircleColor(category.getColor());
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), category.getIcon()));
-
-        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT){
-            viewHolder.circularView.setIconColor(R.color.day);
-        }else{
-            viewHolder.circularView.setIconColor(R.color.night);
-        }
+        viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
 
         // Name
         viewHolder.name.setText(category.getName());
