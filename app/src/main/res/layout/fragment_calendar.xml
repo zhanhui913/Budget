@@ -17,14 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/day_highlight"
+        android:background="?attr/themeColorHighlight"
         android:padding="5dp">
 
         <ImageView
             android:id="@+id/dateIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/svg_ic_date" />
+            android:src="@drawable/svg_ic_date"
+            android:tint="?attr/themeColorText"/>
 
         <TextView
             android:id="@+id/dateTextView"
@@ -57,7 +58,9 @@
                 android:id="@+id/transactionListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:divider="?attr/themeColorHighlight"
+                android:dividerHeight="2dp"/>
 
             <include layout="@layout/empty_transaction_indicator"
                 android:id="@+id/emptyTransactionLayout"

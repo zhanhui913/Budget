@@ -2,8 +2,6 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -16,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +30,6 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.ThemeUtil;
-import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
@@ -65,7 +60,7 @@ public class CalendarFragment extends BaseFragment implements
 
     private static final String TAG = "CalendarFragment";
 
-    private ViewGroup emptyLayout, centerPanel;
+    private ViewGroup emptyLayout;
     private OnCalendarInteractionListener mListener;
 
     //Calendar
@@ -86,7 +81,6 @@ public class CalendarFragment extends BaseFragment implements
     private PlusView header;
     private Boolean isPulldownToAddAllow = true;
 
-    private ImageView dateIcon;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -119,27 +113,7 @@ public class CalendarFragment extends BaseFragment implements
         transactionAdapter = new TransactionListAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
-        ColorDrawable divider;
-        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_DARK){
-            divider = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.night_highlight));
-        }else{
-            divider = new ColorDrawable(ContextCompat.getColor(getContext(), R.color.day_highlight));
-        }
-        transactionListView.setDivider(divider);
-        transactionListView.setDividerHeight(Util.dpToPx(1));
-
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
-        centerPanel = (ViewGroup) view.findViewById(R.id.centerPanel);
-
-        dateIcon = (ImageView) view.findViewById(R.id.dateIcon);
-
-        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT){
-            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.day_highlight));
-            dateIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.night_text), PorterDuff.Mode.SRC_IN);
-        }else{
-            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.night_highlight));
-            dateIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.day_text), PorterDuff.Mode.SRC_IN);
-        }
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);

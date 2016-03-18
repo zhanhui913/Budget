@@ -29,4 +29,9 @@
             <enum name="NONE" value="0"/>
         </attr>
     </declare-styleable>
+
+    <attr name="themeColor" format="reference" />
+    <attr name="themeColorHighlight" format="reference" />
+    <attr name="themeColorText" format="reference" />
+
 </resources>

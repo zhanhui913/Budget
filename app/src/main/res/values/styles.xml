@@ -7,6 +7,11 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/night_text</item>
         <item name="android:windowBackground">@color/day</item>
+
+        <!-- For xml uses -->
+        <item name="themeColor">@color/day</item>
+        <item name="themeColorHighlight">@color/day_highlight</item>
+        <item name="themeColorText">@color/night_text</item>
     </style>
 
     <style name="AppThemeLight.NoActionBar">
@@ -23,8 +28,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/day</item>
+        <item name="android:textColor">@color/day_text</item>
         <item name="android:windowBackground">@color/night</item>
+
+        <!-- For xml uses -->
+        <item name="themeColor">@color/night</item>
+        <item name="themeColorHighlight">@color/night_highlight</item>
+        <item name="themeColorText">@color/day_text</item>
     </style>
 
     <style name="AppThemeDark.NoActionBar">

@@ -23,5 +23,5 @@
         android:layout_below="@+id/pullDownText"
         android:src="@drawable/svg_ic_down_chevron"
         android:layout_centerHorizontal="true"
-        android:tint="@color/harbor_rat"/>
+        android:tint="?attr/themeColorText"/>
 </RelativeLayout>

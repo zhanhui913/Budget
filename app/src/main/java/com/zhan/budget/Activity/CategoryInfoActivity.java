@@ -26,7 +26,6 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.library.CircularView;
@@ -125,11 +124,6 @@ public class CategoryInfoActivity extends BaseActivity implements
         categoryCircularView.setCircleColor(category.getColor());
 
         categoryCircularView.setIconResource(CategoryUtil.getIconID(getApplicationContext(), category.getIcon()));
-        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT) {
-            categoryCircularView.setIconColor(R.color.day);
-        }else{
-            categoryCircularView.setIconColor(R.color.night);
-        }
     }
 
     /**

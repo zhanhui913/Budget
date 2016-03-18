@@ -122,7 +122,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mListener.onDeleteCategory(position);
+                mListener.onEditCategory(position);
                 Toast.makeText(fragment.getContext(), "onEdit "+position, Toast.LENGTH_SHORT).show();
             }
         });
@@ -130,6 +130,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mListener.onDeleteCategory(position);
                 Toast.makeText(fragment.getContext(), "onDelete "+position, Toast.LENGTH_SHORT).show();
             }
         });
