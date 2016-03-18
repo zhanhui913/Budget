@@ -32,7 +32,7 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.Util;
+import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
@@ -122,12 +122,12 @@ public class CalendarFragment extends BaseFragment implements
 
         dateIcon = (ImageView) view.findViewById(R.id.dateIcon);
 
-        if(Util.getCurrentTheme() != Util.THEME_DARK){
-            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
-            dateIcon.setColorFilter(R.color.lightBlue, PorterDuff.Mode.SRC_IN);
+        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT){
+            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.day_focus));
+            dateIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.night_text), PorterDuff.Mode.SRC_IN);
         }else{
-            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black));
-            dateIcon.setColorFilter(R.color.lightBlue, PorterDuff.Mode.SRC_IN);
+            centerPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.night_focus));
+            dateIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.day_text), PorterDuff.Mode.SRC_IN);
         }
 
         //List all transactions for today
