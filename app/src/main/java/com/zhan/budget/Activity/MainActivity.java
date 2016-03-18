@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -36,7 +35,6 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ import java.util.Random;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalendarFragment.OnCalendarInteractionListener,
         CategoryFragment.OnCategoryInteractionListener,
@@ -72,18 +70,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initRealm();
         super.onCreate(savedInstanceState);
-        ThemeUtil.onActivityCreateSetTheme(this);
-        setContentView(R.layout.activity_main);
+    }
 
-        createFragments();
+    private void initRealm(){
+        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
+                .name(Constants.REALM_NAME)
+                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(1)
+                .build();
+        Realm.setDefaultConfiguration(config);
+    }
 
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            //STORAGE permission has not been granted
-            requestFilePermission();
-        }
-
-        init();
+    @Override
+    protected int getActivityLayout(){
+        return R.layout.activity_main;
     }
 
     private void createFragments(){
@@ -156,15 +158,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void init(){
-        activity = MainActivity.this;
+    @Override
+    protected void init(){
+        super.init();
 
-        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
-                .name(Constants.REALM_NAME)
-                .deleteRealmIfMigrationNeeded()
-                .schemaVersion(1)
-                .build();
-        Realm.setDefaultConfiguration(config);
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            //STORAGE permission has not been granted
+            requestFilePermission();
+        }
+
+        createFragments();
+
+        activity = MainActivity.this;
 
         isFirstTime();
 

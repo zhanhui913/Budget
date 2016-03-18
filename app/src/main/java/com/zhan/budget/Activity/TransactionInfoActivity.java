@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,11 +50,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionInfoActivity extends AppCompatActivity implements
+public class TransactionInfoActivity extends BaseActivity implements
         TransactionFragment.OnTransactionFragmentInteractionListener{
 
     private boolean isNewTransaction = false;
@@ -88,8 +85,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private Account selectedAccount;
     private int selectedAccountIndexInSpinner;
 
-    private Realm myRealm;
-
     private BudgetType currentPage; //Determines if the current page is in expense or income page
 
     private List<String> accountNameList;
@@ -107,9 +102,13 @@ public class TransactionInfoActivity extends AppCompatActivity implements
     private ScheduledTransaction scheduledTransaction;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction_info);
+    protected int getActivityLayout(){
+        return R.layout.activity_transaction_info;
+    }
+
+    @Override
+    protected void init(){
+        super.init();
 
         instance = TransactionInfoActivity.this;
 
@@ -120,15 +119,6 @@ public class TransactionInfoActivity extends AppCompatActivity implements
         if(!isNewTransaction){
             editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
         }
-
-        init();
-    }
-
-    /**
-     * Perform all initializations here.
-     */
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
 
         if(!isNewTransaction) {
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
@@ -394,9 +384,9 @@ public class TransactionInfoActivity extends AppCompatActivity implements
                 }
 
                 if (cellType == BaseCellView.TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
                 } else if (cellType == BaseCellView.SELECTED_TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.day_text));
                 }
                 cellView.setTextSize(16);
 

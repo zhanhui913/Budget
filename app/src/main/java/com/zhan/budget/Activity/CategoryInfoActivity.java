@@ -3,10 +3,8 @@ package com.zhan.budget.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,15 +26,14 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
-import io.realm.Realm;
-
-public class CategoryInfoActivity extends AppCompatActivity implements
+public class CategoryInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
         IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener{
 
@@ -64,12 +61,14 @@ public class CategoryInfoActivity extends AppCompatActivity implements
     //Selected icon
     private String selectedIcon;
 
-    private Realm myRealm;
+    @Override
+    protected int getActivityLayout(){
+        return R.layout.activity_category_info;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_info);
+    protected void init(){
+        super.init();
 
         isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
 
@@ -85,15 +84,6 @@ public class CategoryInfoActivity extends AppCompatActivity implements
             //Default is expense for now, need to change later when there are tabs in the category fragment
             category.setType(BudgetType.EXPENSE.toString());
         }
-
-        init();
-        initCategoryCircularView();
-        createToolbar();
-        addListeners();
-    }
-
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
 
         colorPickerCategoryFragment = ColorPickerCategoryFragment.newInstance(category.getColor());
         iconPickerCategoryFragment = IconPickerCategoryFragment.newInstance(category.getIcon(), category.getColor());
@@ -124,6 +114,10 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         //default icon selected
         selectedIcon = category.getIcon();
+
+        initCategoryCircularView();
+        createToolbar();
+        addListeners();
     }
 
     private void initCategoryCircularView(){
@@ -131,7 +125,11 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         categoryCircularView.setCircleColor(category.getColor());
 
         categoryCircularView.setIconResource(CategoryUtil.getIconID(getApplicationContext(), category.getIcon()));
-        categoryCircularView.setIconColor(R.color.white);
+        if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT) {
+            categoryCircularView.setIconColor(R.color.day);
+        }else{
+            categoryCircularView.setIconColor(R.color.night);
+        }
     }
 
     /**
@@ -156,7 +154,6 @@ public class CategoryInfoActivity extends AppCompatActivity implements
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                closeRealm();
                 finish();
             }
         });
@@ -428,10 +425,9 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
         Parcelable wrapped = Parcels.wrap(c);
 
-        intent.putExtra(Constants.RESULT_EDIT_CATEGORY,wrapped);
+        intent.putExtra(Constants.RESULT_EDIT_CATEGORY, wrapped);
         setResult(RESULT_OK, intent);
 
-        closeRealm();
         finish();
     }
 
@@ -442,15 +438,9 @@ public class CategoryInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        closeRealm();
         finish();
     }
 
-    private void closeRealm(){
-        if(!myRealm.isClosed()){
-            myRealm.close();
-        }
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

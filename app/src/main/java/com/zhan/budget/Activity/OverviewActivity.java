@@ -1,12 +1,9 @@
 package com.zhan.budget.Activity;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,11 +29,10 @@ import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class OverviewActivity extends AppCompatActivity implements
+public class OverviewActivity extends BaseActivity implements
         CategoryListAdapter.OnCategoryAdapterInteractionListener{
 
     private Toolbar toolbar;
@@ -45,7 +41,6 @@ public class OverviewActivity extends AppCompatActivity implements
     private PercentView percentView;
     private CircularProgressBar circularProgressBar;
 
-    private Realm myRealm;
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
 
@@ -58,21 +53,15 @@ public class OverviewActivity extends AppCompatActivity implements
     private CategoryPercentListAdapter categoryPercentListAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_overview);
-
-        currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
-
-        init();
-        createToolbar();
-        addListeners();
-
-        getCategoryList();
+    protected int getActivityLayout(){
+        return R.layout.activity_overview;
     }
 
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
+    @Override
+    protected void init(){
+        super.init();
+
+        currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         categoryList = new ArrayList<>();
         categoryPercentList = new ArrayList<>();
@@ -87,6 +76,11 @@ public class OverviewActivity extends AppCompatActivity implements
         percentView = (PercentView) findViewById(R.id.percentView);
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
+
+        createToolbar();
+        addListeners();
+
+        getCategoryList();
     }
 
     /**
@@ -295,20 +289,6 @@ public class OverviewActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         finish();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        if(!myRealm.isClosed()){
-            myRealm.close();
-        }
-    }
-
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-        myRealm = Realm.getDefaultInstance();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

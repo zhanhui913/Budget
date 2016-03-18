@@ -133,6 +133,14 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
                 Toast.makeText(fragment.getContext(), "onDelete "+position, Toast.LENGTH_SHORT).show();
             }
         });
+
+        //temporary
+        viewHolder.circularView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClick(position);
+            }
+        });
     }
 
     @Override
@@ -160,11 +168,11 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         return this.categoryList;
     }
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     /**
      * Simple example of a view holder that implements {@link ItemTouchHelperViewHolder} and has a
      * "handle" view that initiates a drag event when touched.
+     * Provide a direct reference to each of the views within a data item.
+     * Used to cache the views within the item layout for fast access
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
         // Your holder should contain a member variable
@@ -226,6 +234,8 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         void onDisablePtrPullDown(boolean value);
 
         void onDoneDrag();
+
+        void onClick(int position);
     }
 }
 

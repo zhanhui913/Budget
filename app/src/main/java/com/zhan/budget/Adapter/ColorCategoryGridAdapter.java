@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 
 import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -50,7 +51,11 @@ public class ColorCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
         viewHolder.circularView.setCircleColor(colorList.get(position).getColor());
 
         if(colorList.get(position).isSelected()){
-            viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+            if(ThemeUtil.getCurrentTheme() == ThemeUtil.THEME_LIGHT) {
+                viewHolder.circularView.setStrokeColor(R.color.night_text);
+            }else{
+                viewHolder.circularView.setStrokeColor(R.color.day_text);
+            }
         }else{
             viewHolder.circularView.setStrokeColor(R.color.transparent);
         }

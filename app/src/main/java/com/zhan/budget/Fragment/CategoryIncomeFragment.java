@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhan.budget.Activity.CategoryInfoActivity;
+import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
@@ -449,4 +450,16 @@ public class CategoryIncomeFragment extends BaseFragment implements
         });
     }
 
+    @Override
+    public void onClick(int position){
+        Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+        Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
+        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
+
+        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+
+        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
+        startActivity(viewAllTransactionsForCategory);
+    }
 }
