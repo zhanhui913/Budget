@@ -134,20 +134,6 @@ public final class Util {
         Log.d("ZHAN", content);
     }
 
-
-
-    /**
-     * Converting DP to PX
-     *
-     * @param context Context
-     * @param dp      dp to be converted to px
-     * @return px
-     */
-    public static int dp2px(Context context, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                context.getResources().getDisplayMetrics());
-    }
-
     public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }

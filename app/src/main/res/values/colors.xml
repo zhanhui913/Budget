@@ -28,8 +28,8 @@
     <color name="day">#FFFFFFFF</color>
     <color name="night">#FF2C2C2C</color>
 
-    <color name="day_focus">#FFBDBDBD</color>
-    <color name="night_focus">#FF212121</color>
+    <color name="day_highlight">#FFBDBDBD</color>
+    <color name="night_highlight">#FF212121</color>
 
     <color name="day_text">#FFFFFFFF</color>
     <color name="night_text">#FF616161</color>
