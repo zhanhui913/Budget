@@ -23,7 +23,6 @@
     <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-
     <!-- Dark application theme. -->
     <style name="AppThemeDark" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -43,12 +42,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-<!--
-    <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
+    <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
--->
+
 
     <!-- Other view's style -->
     <style name="NumberPadStyle">
@@ -80,7 +76,6 @@
     </style>
 
     <style name="SettingsTextViewButtonStyle">
-
         <item name="android:gravity">center_vertical</item>
         <item name="android:clickable">true</item>
         <item name="android:paddingLeft">20dp</item>
@@ -92,6 +87,11 @@
         <item name="android:textSize">15sp</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="AlertDialogTitleStyle">
+        <item name="android:textSize">25sp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
 </resources>

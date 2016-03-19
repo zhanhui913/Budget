@@ -3,12 +3,18 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="20dp">
+
+    <TextView style="@style/AlertDialogTitleStyle"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Account" />
 
     <!-- set blockDescendants so that it doesn't auto highlight the first option -->
     <com.zhan.budget.View.ExtendedNumberPicker
         android:id="@+id/accountNumberPicker"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:descendantFocusability="blocksDescendants"/>

@@ -12,7 +12,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/budget_white_button"
+        android:background="?attr/themeColorBtn"
+        android:clickable="true"
         android:padding="10dp">
 
         <TextView

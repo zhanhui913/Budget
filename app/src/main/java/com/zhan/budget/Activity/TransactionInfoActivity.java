@@ -434,7 +434,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         });
 
         AlertDialog.Builder dateAlertDialogBuilder = new AlertDialog.Builder(instance)
-                .setTitle("Select Date")
                 .setView(dateDialogView)
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -505,7 +504,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         });
 
         AlertDialog.Builder accountAlertDialogBuilder = new AlertDialog.Builder(instance)
-                .setTitle("Select Account")
                 .setView(accountDialogView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -610,7 +608,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
-                .setTitle("Repeat")
                 .setView(promptView)
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

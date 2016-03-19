@@ -134,10 +134,10 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             }
         });
 
-        //temporary
-        viewHolder.circularView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.swipeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(fragment.getContext(), "onClick "+position, Toast.LENGTH_SHORT).show();
                 mListener.onClick(position);
             }
         });
