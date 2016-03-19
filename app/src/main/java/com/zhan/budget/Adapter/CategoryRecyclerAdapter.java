@@ -1,6 +1,6 @@
 package com.zhan.budget.Adapter;
 
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -187,6 +187,8 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         public ImageView deleteBtn;
         public ImageView editBtn;
 
+        private Drawable defaultDrawable;
+
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView){
@@ -203,6 +205,8 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
+
+            defaultDrawable = itemView.getBackground();
         }
 
         @Override
@@ -212,7 +216,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(Color.TRANSPARENT);
+            itemView.setBackground(defaultDrawable);
         }
     }
 
