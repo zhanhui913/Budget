@@ -203,7 +203,8 @@ public class CategoryIncomeFragment extends BaseFragment implements
     private void addNewCategory(){
         Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
         addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
-        startActivityForResult(addNewCategoryIntent, Constants.RETURN_EDIT_CATEGORY);
+        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, BudgetType.INCOME.toString());
+        startActivityForResult(addNewCategoryIntent, Constants.RETURN_NEW_CATEGORY);
     }
 
     //Should be called only the first time when the fragment is created
@@ -321,7 +322,7 @@ public class CategoryIncomeFragment extends BaseFragment implements
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_CATEGORY) {
 
-                Log.i("ZHAN", "----------- onActivityResult ----------");
+                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
 
                 final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
 
@@ -332,7 +333,7 @@ public class CategoryIncomeFragment extends BaseFragment implements
                 Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
                 Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
 
-                Log.i("ZHAN", "----------- onActivityResult ----------");
+                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
 
                 Log.i("ZHAN", "eddited index :" + categoryIndexEditted);
 
@@ -340,8 +341,23 @@ public class CategoryIncomeFragment extends BaseFragment implements
 
                 categoryList.set(categoryIndexEditted, categoryReturned);
 
-                //categoryAdapter.clear();
-                //categoryAdapter.addAll(categoryList);
+                categoryRecyclerAdapter.setData(categoryList);
+            }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
+                Log.i("ZHAN", "----------- onActivityResult new category ----------");
+
+                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_CATEGORY));
+
+                Log.d("ZHAN", "category name is "+categoryReturned.getName());
+                Log.d("ZHAN", "category color is "+categoryReturned.getColor());
+                Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
+                Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
+                Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
+
+                Log.i("ZHAN", "----------- onActivityResult new category ----------");
+
+                updateCategoryStatus();
+
+                categoryList.add(categoryReturned);
                 categoryRecyclerAdapter.setData(categoryList);
             }
         }

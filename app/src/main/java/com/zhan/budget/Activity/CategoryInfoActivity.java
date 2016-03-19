@@ -22,7 +22,6 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
-import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -31,6 +30,8 @@ import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
+
+import io.realm.RealmResults;
 
 public class CategoryInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
@@ -79,9 +80,7 @@ public class CategoryInfoActivity extends BaseActivity implements
             category.setId(Util.generateUUID());
             category.setColor(CategoryUtil.getDefaultCategoryColor(getApplicationContext()));
             category.setIcon(CategoryUtil.getDefaultCategoryIcon(getApplicationContext()));
-
-            //Default is expense for now, need to change later when there are tabs in the category fragment
-            category.setType(BudgetType.EXPENSE.toString());
+            category.setType(getIntent().getExtras().getString(Constants.REQUEST_NEW_CATEGORY_TYPE));
         }
 
         colorPickerCategoryFragment = ColorPickerCategoryFragment.newInstance(category.getColor());
@@ -365,38 +364,27 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .show();
     }
 
+    int nextIndexCategory;
+    private void getLatestIndexForCategory(){ Log.d("ZHAP", "trying to get latest index for new category for type :"+category.getType());
+        RealmResults<Category> categoryRealmResults = myRealm.where(Category.class).equalTo("type", category.getType()).findAllSorted("index");
+        Log.d("ZHAP", "size :"+categoryRealmResults.size());
+        Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
+        nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+    }
+
     private void save(){
         Intent intent = new Intent();
 
         Category c;
-/*        if(!isNewCategory){
-            c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
-            myRealm.beginTransaction();
-            c.setName(categoryNameTextView.getText().toString());
-            c.setIcon(selectedIcon);
-            c.setColor(selectedColor);
-            c.setBudget(category.getBudget());
-            c.setCost(category.getCost());
-            myRealm.commitTransaction();
-        }else{
-            c = myRealm.createObject(Category.class);
-            c.setId(category.getId());
-            c.setName(categoryNameTextView.getText().toString());
-            c.setIcon(selectedIcon);
-            c.setColor(selectedColor);
-            c.setBudget(category.getBudget());
-            c.setCost(category.getCost());
-        }
-*/
 
         if(!isNewCategory){
             c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
             myRealm.beginTransaction();
-        }
-        else{
+        } else{
             myRealm.beginTransaction();
             c = myRealm.createObject(Category.class);
             c.setId(category.getId());
+            c.setIndex(nextIndexCategory);
         }
 
         c.setName(categoryNameTextView.getText().toString());
@@ -419,7 +407,12 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         Parcelable wrapped = Parcels.wrap(c);
 
-        intent.putExtra(Constants.RESULT_EDIT_CATEGORY, wrapped);
+        if(!isNewCategory){
+            intent.putExtra(Constants.RESULT_EDIT_CATEGORY, wrapped);
+        }else{
+            intent.putExtra(Constants.RESULT_NEW_CATEGORY, wrapped);
+        }
+
         setResult(RESULT_OK, intent);
 
         finish();
@@ -458,6 +451,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
+            getLatestIndexForCategory();
             save();
             return true;
         }

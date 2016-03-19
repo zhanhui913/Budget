@@ -100,58 +100,6 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
             viewHolder.approveBtn = (ImageView) convertView.findViewById(R.id.approveBtn);
 
-            viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-                @Override
-                public void onStartOpen(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "onstartopen");
-
-                }
-
-                @Override
-                public void onOpen(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "on open");
-
-                }
-
-                @Override
-                public void onStartClose(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "onstartclose");
-
-                }
-
-                @Override
-                public void onClose(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "onclose");
-
-                }
-
-                @Override
-                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                    //Log.d("TRANSACTION_ADAPTER", "onupdate "+leftOffset+","+topOffset);
-                    mListener.onDisablePtrPullDown(true);
-                }
-
-                @Override
-                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                    //Log.d("TRANSACTION_ADAPTER", "onhandrelease :"+xvel+","+yvel);
-                    mListener.onDisablePtrPullDown(false);
-                }
-            });
-
-            viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onDeleteTransaction(position);
-                }
-            });
-
-            viewHolder.approveBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onApproveTransaction(position);
-                }
-            });
-
             // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(viewHolder);
         }else {
@@ -199,6 +147,58 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         }
 
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
+
+        viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+            @Override
+            public void onStartOpen(SwipeLayout layout) {
+                Log.d("TRANSACTION_ADAPTER", "onstartopen");
+
+            }
+
+            @Override
+            public void onOpen(SwipeLayout layout) {
+                Log.d("TRANSACTION_ADAPTER", "on open");
+
+            }
+
+            @Override
+            public void onStartClose(SwipeLayout layout) {
+                Log.d("TRANSACTION_ADAPTER", "onstartclose");
+
+            }
+
+            @Override
+            public void onClose(SwipeLayout layout) {
+                Log.d("TRANSACTION_ADAPTER", "onclose");
+
+            }
+
+            @Override
+            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+                //Log.d("TRANSACTION_ADAPTER", "onupdate "+leftOffset+","+topOffset);
+                mListener.onDisablePtrPullDown(true);
+            }
+
+            @Override
+            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+                //Log.d("TRANSACTION_ADAPTER", "onhandrelease :"+xvel+","+yvel);
+                mListener.onDisablePtrPullDown(false);
+            }
+        });
+
+        viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onDeleteTransaction(position);
+            }
+        });
+
+        viewHolder.approveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onApproveTransaction(position);
+            }
+        });
 
         return convertView;
     }

@@ -24,6 +24,7 @@ public class Constants {
     public static final String REQUEST_EDIT_TRANSACTION = "Edit Transaction";
 
     public static final String REQUEST_NEW_CATEGORY = "New Category";
+    public static final String REQUEST_NEW_CATEGORY_TYPE = "New Category Type";
     public static final String REQUEST_EDIT_CATEGORY = "Edit Category";
     public static final String REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH = "Request all transaction for category month";
     public static final String REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY = "Request all transaction for category category";

@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.zhan.budget.Adapter.CategoryListAdapter;
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -32,8 +31,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class OverviewActivity extends BaseActivity implements
-        CategoryListAdapter.OnCategoryAdapterInteractionListener{
+public class OverviewActivity extends BaseActivity {
 
     private Toolbar toolbar;
     private Date currentMonth;
@@ -291,26 +289,6 @@ public class OverviewActivity extends BaseActivity implements
         finish();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Interfaces from CategoryListAdapter
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onDeleteCategory(int position){
-
-    }
-
-    @Override
-    public void onEditCategory(int position){
-
-    }
-
-    @Override
-    public void onDisablePtrPullDown(boolean value){
-
-    }
 }
 
 

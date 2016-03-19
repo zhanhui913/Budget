@@ -45,7 +45,6 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -510,36 +509,23 @@ public class CalendarFragment extends BaseFragment implements
 
     @Override
     public void onDeleteTransaction(int position){
-        Realm realm = Realm.getDefaultInstance();
-        try{
-            realm.beginTransaction();
-            Log.d(TAG, "remove " + position + "-> from result");
-            Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
-            resultsTransactionForDay.get(position).removeFromRealm();
-            realm.commitTransaction();
-            Log.d(TAG, "After There are "+resultsTransactionForDay.size()+" transactions today");
-
-            updateTransactionList();
-        }catch(Exception e){
-            if(realm != null){
-                try{
-                    realm.cancelTransaction();
-                }catch(Exception e1){
-                    Log.e("REALM", "Failed to cancel transaction", e1);
-                }
-            }
-        }finally{
-            if(realm != null && !realm.isClosed()){
-                realm.close();
-            }
-        }
-
+        myRealm.beginTransaction();
+        Log.d(TAG, "remove " + position + "-> from result");
+        Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
+        resultsTransactionForDay.get(position).removeFromRealm();
+        myRealm.commitTransaction();
+        Log.d(TAG, "After There are "+resultsTransactionForDay.size()+" transactions today");
+        updateTransactionList();
         Toast.makeText(getContext(), "calendar fragment delete transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onApproveTransaction(int position){
         Toast.makeText(getContext(), "calendar fragment approve transaction :"+position, Toast.LENGTH_SHORT).show();
+        myRealm.beginTransaction();
+        resultsTransactionForDay.get(position).setDayType(DayType.COMPLETED.toString());
+        myRealm.commitTransaction();
+        updateTransactionList();
     }
 
     @Override
