@@ -131,6 +131,8 @@ public class MonthReportFragment extends BaseFragment {
         transactionsResults.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                transactionsResults.removeChangeListener(this);
+
                 if (transactionList != null) {
                     transactionList.clear();
                 }

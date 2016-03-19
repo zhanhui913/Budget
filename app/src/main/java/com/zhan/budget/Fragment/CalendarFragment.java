@@ -27,6 +27,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.PlusView;
@@ -80,6 +81,7 @@ public class CalendarFragment extends BaseFragment implements
     private PlusView header;
     private Boolean isPulldownToAddAllow = true;
 
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -111,7 +113,7 @@ public class CalendarFragment extends BaseFragment implements
         transactionAdapter = new TransactionListAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
-        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyTransactionLayout);
+        emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
@@ -216,13 +218,13 @@ public class CalendarFragment extends BaseFragment implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (BaseCellView) inflater.inflate(R.layout.date_cell_view, parent, false);
+                    cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, parent, false);
                 }
 
                 if (cellType == BaseCellView.TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
                 } else if (cellType == BaseCellView.SELECTED_TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.day_text));
                 }
 
                 return cellView;
@@ -233,7 +235,7 @@ public class CalendarFragment extends BaseFragment implements
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
                     LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (RectangleCellView) inflater.inflate(R.layout.week_cell_view, parent, false);
+                    cellView = (RectangleCellView) inflater.inflate(R.layout.calendar_week_cell_view, parent, false);
                 }
                 return cellView;
             }
@@ -284,15 +286,14 @@ public class CalendarFragment extends BaseFragment implements
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsTransactionForDay.removeChangeListener(this);
+
                 Log.d(TAG, "received " + resultsTransactionForDay.size() + " transactions");
 
                 float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
                 totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                 updateTransactionList();
-
-                //Removing on change listener
-                resultsTransactionForDay.removeChangeListener(this);
             }
         });
     }
@@ -388,6 +389,11 @@ public class CalendarFragment extends BaseFragment implements
         }
     }
 
+    /**
+     * The function that will be called after user either adds or edit a scheduled transaction.
+     * @param scheduledTransaction The new scheduled transaction information.
+     * @param transaction The transaction that the scheduled transaction is based on.
+     */
     private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
         if(scheduledTransaction != null){
             myRealm.beginTransaction();
@@ -400,6 +406,20 @@ public class CalendarFragment extends BaseFragment implements
             Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
             Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
             Log.i(TAG, "----------- Parceler Result ----------");
+
+            if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
+                int repeatDays = scheduledTransaction.getRepeatUnit();
+                //Repeat 10 times
+                Date nextDate = transaction.getDate();
+                for(int i = 0; i < 10; i++){
+                    nextDate = DateUtil.getDateWithDirection(nextDate, repeatDays);
+                    Log.d(TAG, i+"-> "+DateUtil.convertDateToStringFormat5(nextDate));
+                }
+            }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
+
+            }else{
+
+            }
         }
     }
 

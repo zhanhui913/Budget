@@ -17,6 +17,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
 import java.io.File;
@@ -69,8 +70,8 @@ public class SettingFragment extends BaseFragment {
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
 
-        CURRENT_THEME = Util.getCurrentTheme();
-        themeBtn.setText((CURRENT_THEME == Util.THEME_DARK ? "Dark Theme": "Light Theme"));
+        CURRENT_THEME = ThemeUtil.getCurrentTheme();
+        themeBtn.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Dark Theme": "Light Theme"));
 
         addListeners();
     }
@@ -79,9 +80,8 @@ public class SettingFragment extends BaseFragment {
         themeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CURRENT_THEME = Util.getCurrentTheme();
-                themeBtn.setText((CURRENT_THEME == Util.THEME_DARK ? "Dark Theme": "Light Theme"));
-                Util.changeToTheme(getActivity(), (CURRENT_THEME == Util.THEME_DARK ? Util.THEME_LIGHT : Util.THEME_DARK));
+                themeBtn.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Dark Theme": "Light Theme"));
+                ThemeUtil.changeToTheme(getActivity(), (CURRENT_THEME == ThemeUtil.THEME_DARK ? ThemeUtil.THEME_LIGHT : ThemeUtil.THEME_DARK));
             }
         });
 
@@ -172,11 +172,9 @@ public class SettingFragment extends BaseFragment {
         transactionResults.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                transactionList = myRealm.copyFromRealm(transactionResults);
-
-                exportCSV();
-
                 transactionResults.removeChangeListener(this);
+                transactionList = myRealm.copyFromRealm(transactionResults);
+                exportCSV();
             }
         });
     }

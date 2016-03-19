@@ -22,6 +22,7 @@ public class Category extends RealmObject{
     private float cost;
     private String color;
     private String icon;
+    private int index;
 
     public Category(){
 
@@ -81,5 +82,13 @@ public class Category extends RealmObject{
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

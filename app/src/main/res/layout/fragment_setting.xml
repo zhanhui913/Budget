@@ -19,7 +19,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:background="@color/colorPrimaryDark"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
@@ -31,7 +31,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="?attr/themeColorHighlight"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/firstDayBtn"
@@ -48,7 +48,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:background="@color/colorPrimaryDark"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
@@ -60,7 +60,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="?attr/themeColorHighlight"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/resetDataBtn"
@@ -71,7 +71,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="?attr/themeColorHighlight"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/exportCSVBtn"
@@ -88,7 +88,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:background="@color/colorPrimaryDark"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
@@ -100,7 +100,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="?attr/themeColorHighlight"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/tourBtn"
@@ -111,7 +111,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:background="?attr/themeColorHighlight"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/faqBtn"

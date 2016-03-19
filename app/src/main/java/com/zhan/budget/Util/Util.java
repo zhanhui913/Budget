@@ -134,20 +134,6 @@ public final class Util {
         Log.d("ZHAN", content);
     }
 
-
-
-    /**
-     * Converting DP to PX
-     *
-     * @param context Context
-     * @param dp      dp to be converted to px
-     * @return px
-     */
-    public static int dp2px(Context context, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                context.getResources().getDisplayMetrics());
-    }
-
     public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
@@ -209,40 +195,4 @@ public final class Util {
         wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.widthPixels;
     }
-
-    private static int sTheme;
-    public final static int THEME_DEFAULT = 0;
-    public final static int THEME_LIGHT = 1;
-    public final static int THEME_DARK = 2;
-
-    /**
-     * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
-     */
-    public static void changeToTheme(Activity activity, int theme) {
-        sTheme = theme;
-        Log.d("THEME_COLOR_DEBUG", "changing theme to "+sTheme);
-        activity.finish();
-        activity.startActivity(new Intent(activity, activity.getClass()));
-        activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-    }
-
-    /** Set the theme of the activity, according to the configuration. */
-    public static void onActivityCreateSetTheme(Activity activity) {
-        Log.d("THEME_COLOR_DEBUG", "current theme is "+sTheme);
-        switch (sTheme) {
-            default:
-            case THEME_DEFAULT:
-            case THEME_LIGHT:
-                activity.setTheme(R.style.AppThemeLight_NoActionBar);
-                break;
-            case THEME_DARK:
-                activity.setTheme(R.style.AppThemeDark_NoActionBar);
-                break;
-        }
-    }
-
-    public static int getCurrentTheme(){
-        return sTheme;
-    }
-
 }

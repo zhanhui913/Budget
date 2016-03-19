@@ -68,7 +68,7 @@
         <ImageButton style="@style/NumberPadStyle"
             android:id="@+id/numberX"
             android:src="@drawable/svg_ic_backspace"
-            android:tint="@color/black"/>
+            android:tint="?attr/themeColorText"/>
     </LinearLayout>
 
 </LinearLayout>

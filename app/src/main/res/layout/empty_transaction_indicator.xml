@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/infoPanel"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/pullDownText"
@@ -24,5 +23,5 @@
         android:layout_below="@+id/pullDownText"
         android:src="@drawable/svg_ic_down_chevron"
         android:layout_centerHorizontal="true"
-        android:tint="@color/harbor_rat"/>
+        android:tint="?attr/themeColorText"/>
 </RelativeLayout>

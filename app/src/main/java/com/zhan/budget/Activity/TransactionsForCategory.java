@@ -1,7 +1,5 @@
 package com.zhan.budget.Activity;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -25,18 +23,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionsForCategory extends AppCompatActivity implements
+public class TransactionsForCategory extends BaseActivity implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
     private Toolbar toolbar;
     private Date currentMonth;
     private Date beginMonth;
     private Date endMonth;
-    private Realm myRealm;
     private Category selectedCategory;
 
     private ImageView transactionCategoryIcon;
@@ -47,20 +43,17 @@ public class TransactionsForCategory extends AppCompatActivity implements
     private List<Transaction> transactionCategoryList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transactions_for_category);
+    protected int getActivityLayout(){
+        return R.layout.activity_transactions_for_category;
+    }
+
+    @Override
+    protected void init(){
+        super.init();
 
         //Get intents from caller activity
         currentMonth = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH));
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
-
-        init();
-        addListeners();
-    }
-
-    private void init(){
-        myRealm = Realm.getDefaultInstance();
 
         createToolbar();
 
@@ -85,6 +78,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
         Log.d("ZHAN", "selected category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
         getAllTransactionsWithCategoryForMonth();
+        addListeners();
     }
 
     /**
@@ -117,6 +111,7 @@ public class TransactionsForCategory extends AppCompatActivity implements
         resultsInMonth.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsInMonth.removeChangeListener(this);
 
                 //sort by date
                 resultsInMonth.sort("date");
@@ -124,8 +119,8 @@ public class TransactionsForCategory extends AppCompatActivity implements
                 float total = 0f;
 
                 //filter by category
-                for(int i = 0; i < resultsInMonth.size(); i++){
-                    if(resultsInMonth.get(i).getCategory().getId().equalsIgnoreCase(selectedCategory.getId())){
+                for (int i = 0; i < resultsInMonth.size(); i++) {
+                    if (resultsInMonth.get(i).getCategory().getId().equalsIgnoreCase(selectedCategory.getId())) {
                         transactionCategoryList.add(resultsInMonth.get(i));
                         total += resultsInMonth.get(i).getPrice();
                     }
@@ -144,20 +139,6 @@ public class TransactionsForCategory extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         finish();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        if(!myRealm.isClosed()){
-            myRealm.close();
-        }
-    }
-
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-        myRealm = Realm.getDefaultInstance();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

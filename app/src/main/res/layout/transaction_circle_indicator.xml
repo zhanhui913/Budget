@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_weight="0.45"
-        android:background="@color/gray"
+        android:background="@color/day_highlight"
         android:layout_gravity="center_vertical" />
 
     <com.zhan.circleindicator.CircleIndicator
@@ -19,8 +19,8 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="0.1"
-        CircleIndicator:ci_background="@color/gray"
-        CircleIndicator:ci_selected_background="@color/colorPrimaryDark"
+        CircleIndicator:ci_background="@color/day_highlight"
+        CircleIndicator:ci_selected_background="@color/colorPrimary"
         CircleIndicator:ci_mode="outside"
         CircleIndicator:ci_gravity="center"
         CircleIndicator:ci_radius="3dp"
@@ -32,7 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_weight="0.45"
-        android:background="@color/gray"
+        android:background="@color/day_highlight"
         android:layout_gravity="center_vertical" />
 
 </LinearLayout>

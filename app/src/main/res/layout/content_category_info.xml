@@ -14,12 +14,14 @@
         android:layout_height="wrap_content">
 
         <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/categoryCircularView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            custom:cv_iconColor="?attr/themeColor"/>
 
         <TextView
             android:id="@+id/categoryNameTextView"

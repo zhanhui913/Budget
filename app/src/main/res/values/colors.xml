@@ -4,32 +4,39 @@
     <color name="colorPrimaryDark">#1c8046</color>
     <color name="colorAccent">#28b463</color>
 
-    <color name="red">#c7042e</color>
-    <color name="dark_red">#970019</color>
 
-    <color name="green">#28b463</color>
-    <color name="dark_green">#1c8046</color>
 
-    <color name="purple">#551A8B</color>
-    <color name="tan">#E6E6CD</color>
     <color name="white">#FFFFFF</color>
-    <color name="gray">#D1D1D1</color>
-    <color name="darkgray">#888888</color>
-    <color name="lightBlue">#6BB9F0</color>
-    <color name="lightPurple">#BE90D4</color>
-    <color name="cyan">#1ABC9C</color>
+    <color name="gray">#616161</color>
 
     <color name="transparent">#00FFFFFF</color>
 
 
 
 
-    <color name="background_light">#26f3f3f3</color>
+    <!-- Theme colors -->
+
+    <color name="day">#FFFFFFFF</color>
+    <color name="night">#FF2C2C2C</color>
+
+    <color name="day_highlight">#FFBDBDBD</color>
+    <color name="night_highlight">#FF212121</color>
+
+    <color name="day_text">#FFFFFFFF</color>
+    <color name="night_text">#FF616161</color>
 
 
 
 
-    <!-- colors to be used for category -->
+
+    <!-- Button colors -->
+    <color name="red">#c7042e</color>
+    <color name="dark_red">#970019</color>
+
+    <color name="green">#28b463</color>
+    <color name="dark_green">#1c8046</color>
+
+    <!-- Colors to be used for category -->
     <color name="light_cyan">#FF64baa7</color>
     <color name="gossip">#FF87d37c</color>
     <color name="jordy_blue">#FF89c4f4</color>

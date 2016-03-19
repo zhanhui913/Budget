@@ -6,7 +6,8 @@
     android:layout_height="70dp"
     swipe:leftEdgeSwipeOffset="0dp"
     swipe:rightEdgeSwipeOffset="0dp"
-    android:background="@drawable/budget_white_button">
+    android:clickable="true"
+    android:background="?attr/themeColorBtn">
 
     <!-- Bottom view -->
     <LinearLayout
@@ -38,13 +39,15 @@
         android:padding="5dp">
 
         <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/categoryIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
             android:layout_alignParentBottom="false"
             android:layout_alignParentLeft="false"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            custom:cv_iconColor="?attr/themeColor"/>
 
         <TextView
             android:id="@+id/categoryName"
@@ -102,8 +105,7 @@
             android:layout_marginLeft="5dp"
             app:rcBackgroundPadding="1dp"
             app:rcRadius="5dp"
-            app:rcBackgroundColor="@color/gray"
-            app:rcProgressColor="@color/colorPrimary"
+            app:rcBackgroundColor="?attr/themeColorHighlight"
             app:rcProgress="5"
             app:rcMax="10"
             android:layout_below="@+id/categoryBudgetTitle" />
