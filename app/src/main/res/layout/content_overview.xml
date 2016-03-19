@@ -22,10 +22,10 @@
             android:id="@+id/totalCostForMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:textSize="50sp"
             android:text="$0.00"
             android:textAlignment="center"
+            android:textColor="@color/day_text"
             android:layout_centerInParent="true" />
 
     </RelativeLayout>
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/gray"
+        android:background="?attr/themeColorHighlight"
         android:layout_below="@+id/topPanel"
         android:padding="5dp">
 
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/svg_ic_date"
-            android:tint="@color/secondary_text_default_material_light"/>
+            android:tint="?attr/themeColorText"/>
 
         <TextView
             android:id="@+id/dateTextView"
@@ -61,7 +61,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/centerPanel"
         android:drawSelectorOnTop="true"
-        android:background="@color/white"/>
+        android:divider="?attr/themeColorHighlight"
+        android:dividerHeight="1dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

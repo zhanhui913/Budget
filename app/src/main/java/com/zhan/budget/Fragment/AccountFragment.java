@@ -82,6 +82,8 @@ public class AccountFragment extends BaseFragment implements
         resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsAccount.removeChangeListener(this);
+
                 accountList = myRealm.copyFromRealm(resultsAccount);
 
                 updateAccountStatus();

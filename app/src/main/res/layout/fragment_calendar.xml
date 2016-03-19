@@ -9,23 +9,23 @@
          android:id="@+id/calendarView"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         android:background="@color/white"
          support:monthDayVerticalSpacing="0dp"
          support:startDayOfTheWeek="SUNDAY"/>
 
     <LinearLayout
-        android:id="@+id/expenseLayout"
+        android:id="@+id/centerPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/gray"
+        android:background="?attr/themeColorHighlight"
         android:padding="5dp">
 
         <ImageView
+            android:id="@+id/dateIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/svg_ic_date"
-            android:tint="@color/secondary_text_default_material_light"/>
+            android:tint="?attr/themeColorText"/>
 
         <TextView
             android:id="@+id/dateTextView"
@@ -58,9 +58,9 @@
                 android:id="@+id/transactionListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/gray"
-                android:dividerHeight="1dp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:divider="?attr/themeColorHighlight"
+                android:dividerHeight="1dp"/>
 
             <include layout="@layout/empty_transaction_indicator"
                 android:id="@+id/emptyTransactionLayout"

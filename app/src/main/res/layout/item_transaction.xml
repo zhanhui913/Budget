@@ -6,7 +6,8 @@
     android:layout_height="70dp"
     swipe:leftEdgeSwipeOffset="0dp"
     swipe:rightEdgeSwipeOffset="0dp"
-    >
+    android:clickable="true"
+    android:background="?attr/themeColorBtn">
 
     <!-- Bottom view -->
     <LinearLayout

@@ -5,15 +5,13 @@
     android:layout_height="wrap_content"
     android:padding="20dp">
 
-    <TextView
+    <TextView style="@style/AlertDialogTitleStyle"
         android:id="@+id/alertdialogMonthTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:paddingBottom="10dp"
-        android:textSize="25sp"
         android:text="Jan 2016" />
 
     <com.p_v.flexiblecalendar.FlexibleCalendarView

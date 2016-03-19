@@ -17,6 +17,7 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
@@ -168,17 +169,18 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
             viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), transaction.getCategory().getIcon()));
-            viewHolder.circularView.setIconColor(R.color.white);
+            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
         }else{ //If transaction is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
             viewHolder.circularView.setCircleRadiusInDP(23);
-            viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+
             viewHolder.circularView.setCircleColor(R.color.transparent);
             viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), transaction.getCategory().getIcon()));
-            viewHolder.circularView.setIconColor(R.color.harbor_rat);
+            viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
+            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
 
             viewHolder.approveBtn.setVisibility(View.VISIBLE);
         }

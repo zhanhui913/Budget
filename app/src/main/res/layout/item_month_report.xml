@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="3dp"
-    card_view:cardElevation="3dp"
-    card_view:cardBackgroundColor="@color/white">
+    card_view:cardElevation="5dp"
+    card_view:cardBackgroundColor="?attr/themeColorHighlight">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/budget_white_button"
+        android:background="?attr/themeColorBtn"
+        android:clickable="true"
         android:padding="10dp">
 
         <TextView

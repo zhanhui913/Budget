@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.List;
  * Created by zhanyap on 2016-02-04.
  */
 public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
-    private Context context;
     private List<CategoryIconColor> iconList;
     private String color;
 
@@ -27,7 +27,6 @@ public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
 
     public IconCategoryGridAdapter(Context context, List<CategoryIconColor> iconList, String color) {
         super(context, R.layout.item_circular_view, iconList);
-        this.context = context;
         this.iconList = iconList;
         this.color = color;
     }
@@ -56,10 +55,11 @@ public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
 
         //get drawable data
         viewHolder.circularView.setCircleColor(this.color);
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, iconList.get(position).getIcon()));
+        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), iconList.get(position).getIcon()));
+        viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
 
         if(iconList.get(position).isSelected()){
-            viewHolder.circularView.setStrokeColor(R.color.harbor_rat);
+            viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
         }else{
             viewHolder.circularView.setStrokeColor(R.color.transparent);
         }

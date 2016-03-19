@@ -201,6 +201,20 @@ public final class DateUtil {
     }
 
     /**
+     * Get new date with directions
+     * @param date Starting date point
+     * @param direction -1, 0, 1 => (previous date, this date, next date)
+     * @return date
+     */
+    public static Date getDateWithDirection(Date date, int direction){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, direction);
+
+        return cal.getTime();
+    }
+
+    /**
      * Get new month with directions
      * @param date Starting date point
      * @param direction -1, 0, 1 => (previous month, this month, next month)
