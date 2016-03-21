@@ -293,7 +293,7 @@ public class SettingFragment extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void resetData(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         //set Constants.FIRST_TIME shared preferences to true to reset it
         SharedPreferences.Editor editor = sharedPreferences.edit();

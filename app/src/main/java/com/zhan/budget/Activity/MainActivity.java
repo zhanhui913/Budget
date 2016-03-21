@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void initRealm(){
-        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext())
+        RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
                 .deleteRealmIfMigrationNeeded()
                 .schemaVersion(1)
@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void isFirstTime(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isFirstTIme = sharedPreferences.getBoolean(Constants.FIRST_TIME, true);
 
         if(isFirstTIme){
@@ -222,8 +222,8 @@ public class MainActivity extends BaseActivity
                     Category c = bgRealm.createObject(Category.class);
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryNameList[i]);
-                    c.setColor(getApplicationContext().getResources().getString(tempCategoryColorList[i]));
-                    c.setIcon(getApplicationContext().getResources().getResourceEntryName(tempCategoryIconList[i]));
+                    c.setColor(getResources().getString(tempCategoryColorList[i]));
+                    c.setIcon(getResources().getResourceEntryName(tempCategoryIconList[i]));
                     c.setBudget(100.0f + (i/5));
                     c.setType(BudgetType.EXPENSE.toString());
                     c.setCost(0);
@@ -241,8 +241,8 @@ public class MainActivity extends BaseActivity
                     Category c = bgRealm.createObject(Category.class);
                     c.setId(Util.generateUUID());
                     c.setName(tempCategoryIncomeNameList[i]);
-                    c.setColor(getApplicationContext().getResources().getString(tempCategoryIncomeColorList[i]));
-                    c.setIcon(getApplicationContext().getResources().getResourceEntryName(tempCategoryIncomeIconList[i]));
+                    c.setColor(getResources().getString(tempCategoryIncomeColorList[i]));
+                    c.setIcon(getResources().getResourceEntryName(tempCategoryIncomeIconList[i]));
                     c.setBudget(0);
                     c.setType(BudgetType.INCOME.toString());
                     c.setCost(0);

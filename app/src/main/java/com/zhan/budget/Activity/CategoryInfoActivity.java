@@ -78,8 +78,8 @@ public class CategoryInfoActivity extends BaseActivity implements
             //Give default category values
             category = new Category();
             category.setId(Util.generateUUID());
-            category.setColor(CategoryUtil.getDefaultCategoryColor(getApplicationContext()));
-            category.setIcon(CategoryUtil.getDefaultCategoryIcon(getApplicationContext()));
+            category.setColor(CategoryUtil.getDefaultCategoryColor(this));
+            category.setIcon(CategoryUtil.getDefaultCategoryIcon(this));
             category.setType(getIntent().getExtras().getString(Constants.REQUEST_NEW_CATEGORY_TYPE));
         }
 
@@ -122,7 +122,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
         categoryCircularView.setCircleColor(category.getColor());
 
-        categoryCircularView.setIconResource(CategoryUtil.getIconID(getApplicationContext(), category.getIcon()));
+        categoryCircularView.setIconResource(CategoryUtil.getIconID(this, category.getIcon()));
     }
 
     /**
@@ -476,6 +476,6 @@ public class CategoryInfoActivity extends BaseActivity implements
     public void onIconCategoryClick(String icon){
         Log.d("CATEGORY_INFO", "click on icon : "+icon);
         selectedIcon = icon;
-        categoryCircularView.setIconResource(CategoryUtil.getIconID(getApplicationContext(), icon));
+        categoryCircularView.setIconResource(CategoryUtil.getIconID(this, icon));
     }
 }

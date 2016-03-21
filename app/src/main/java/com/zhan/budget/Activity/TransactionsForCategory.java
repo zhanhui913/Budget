@@ -71,7 +71,7 @@ public class TransactionsForCategory extends BaseActivity implements
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
 
-        transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(getApplicationContext(), selectedCategory.getIcon()));
+        transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
 
         transactionCategoryName.setText(selectedCategory.getName());
 

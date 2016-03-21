@@ -379,14 +379,16 @@ public class TransactionInfoActivity extends BaseActivity implements
             public BaseCellView getCellView(int position, View convertView, ViewGroup parent, @BaseCellView.CellType int cellType) {
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                    LayoutInflater inflater = LayoutInflater.from(instance);
                     cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, null);
                 }
 
                 if (cellType == BaseCellView.TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    cellView.setTextColor(ContextCompat.getColor(instance, R.color.colorPrimary));
                 } else if (cellType == BaseCellView.SELECTED_TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.day_text));
+                    cellView.setTextColor(ContextCompat.getColor(instance, R.color.day_text));
+                }else if(cellType == BaseCellView.REGULAR){
+                    //cellView.setTextColor(ContextCompat.getColor(instance, R.color.red));
                 }
                 cellView.setTextSize(16);
 
@@ -397,8 +399,9 @@ public class TransactionInfoActivity extends BaseActivity implements
             public BaseCellView getWeekdayCellView(int position, View convertView, ViewGroup parent) {
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                    LayoutInflater inflater = LayoutInflater.from(instance);
                     cellView = (RectangleCellView) inflater.inflate(R.layout.calendar_week_cell_view, null);
+                    //cellView.setTextColor(ContextCompat.getColor(instance, R.color.peter_river));
                 }
                 return cellView;
             }

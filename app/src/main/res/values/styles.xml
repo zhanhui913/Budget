@@ -42,9 +42,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
-
 
     <!-- Number pad's style -->
     <style name="NumberPadStyle">

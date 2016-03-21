@@ -182,22 +182,22 @@ public final class Util {
         //return String.format("%.2f", price);
     }
 
-    public static int getScreenHeight(Context context){
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    public static int getScreenHeight(Activity activity){
+        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics metrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.heightPixels;
     }
 
-    public static int getScreenWidth(Context context){
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    public static int getScreenWidth(Activity activity){
+        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics metrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.widthPixels;
     }
 
     public static void setStartDayOfWeekPreference(Activity activity, int startDay){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
         if(startDay == 1){
             Log.d("THEME_UTIL", "setStartDayOfWeekPreference : SUNDAY");
@@ -212,7 +212,7 @@ public final class Util {
     }
 
     public static int getStartDayOfWeekPreference(Activity activity){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int startDay = sharedPreferences.getInt(Constants.START_DAY_CALENDAR, 1);
 
         if(startDay == 1){

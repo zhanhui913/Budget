@@ -50,7 +50,7 @@ public final class ThemeUtil {
     }
 
     private static void setDefaultThemePreference(Activity activity, int theme){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         Log.d("THEME_UTIL", "setDefaultThemePreference : "+theme);
         //set Constants.DEFAULT_THEME shared preferences to whatever the current theme is
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -59,7 +59,7 @@ public final class ThemeUtil {
     }
 
     public static int getCurrentThemePreference(Activity activity){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int retrievedTheme = sharedPreferences.getInt(Constants.DEFAULT_THEME, THEME_LIGHT);
         Log.d("THEME_UTIL", "getCurrentThemePreference : "+retrievedTheme);
         return retrievedTheme;

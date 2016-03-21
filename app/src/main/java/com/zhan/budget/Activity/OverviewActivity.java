@@ -221,7 +221,7 @@ public class OverviewActivity extends BaseActivity {
                     }
                 });
 
-                int screenWidth = Util.getScreenWidth(getApplicationContext());
+                int screenWidth = Util.getScreenWidth(OverviewActivity.this);
 
                 //Now calculate percentage for each category
                 for(int i = 0; i < categoryList.size(); i++){
