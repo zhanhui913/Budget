@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Activity.OverviewActivity;
@@ -32,7 +30,8 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MonthReportFragment extends BaseFragment {
+public class MonthReportFragment extends BaseFragment implements
+        MonthReportGridAdapter.OnMonthReportAdapterInteractionListener{
 
     private static final String TAG = "MonthlyFragment";
 
@@ -71,7 +70,7 @@ public class MonthReportFragment extends BaseFragment {
 
         monthReportList = new ArrayList<>();
         monthReportGridView = (GridView) view.findViewById(R.id.monthReportGridView);
-        monthReportGridAdapter = new MonthReportGridAdapter(getActivity(), monthReportList);
+        monthReportGridAdapter = new MonthReportGridAdapter(this, monthReportList);
         monthReportGridView.setAdapter(monthReportGridAdapter);
 
         currentYear = new Date();
@@ -95,16 +94,6 @@ public class MonthReportFragment extends BaseFragment {
             }
             monthReportList.add(monthReport);
         }
-
-        monthReportGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
-
-                overviewActivity.putExtra(Constants.REQUEST_NEW_OVERVIEW_MONTH, monthReportList.get(position).getMonth());
-                startActivityForResult(overviewActivity, Constants.RETURN_NEW_OVERVIEW);
-            }
-        });
     }
 
     /**
@@ -203,10 +192,25 @@ public class MonthReportFragment extends BaseFragment {
         loader.execute();
     }
 
+
+
     private void updateYearInToolbar(int direction){
         currentYear = DateUtil.getYearWithDirection(currentYear, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat3(currentYear));
         getMonthReport();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listener
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onClickMonth(int position){
+        Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
+        overviewActivity.putExtra(Constants.REQUEST_NEW_OVERVIEW_MONTH, monthReportList.get(position).getMonth());
+        startActivityForResult(overviewActivity, Constants.RETURN_NEW_OVERVIEW);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
