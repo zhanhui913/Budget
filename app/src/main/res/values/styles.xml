@@ -12,7 +12,7 @@
         <item name="themeColor">@color/day</item>
         <item name="themeColorHighlight">@color/day_highlight</item>
         <item name="themeColorText">@color/night_text</item>
-        <item name="themeColorBtn">@drawable/budget_white_button</item>
+        <item name="themeColorBtn">@drawable/budget_day_button</item>
     </style>
 
     <style name="AppThemeLight.NoActionBar">

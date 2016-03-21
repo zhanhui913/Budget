@@ -18,7 +18,6 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
-import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,7 +69,7 @@ public class SettingFragment extends BaseFragment {
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
 
-        CURRENT_THEME = ThemeUtil.getCurrentTheme();
+        CURRENT_THEME = ThemeUtil.getCurrentThemePreference(getActivity());
         themeBtn.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Dark Theme": "Light Theme"));
 
         addListeners();
