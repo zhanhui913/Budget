@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="CircleView">
-        <attr name="strokeWidth" format="dimension"/>
-        <attr name="strokeColor" format="color|reference"/>
-        <attr name="fillColor" format="color|reference"/>
-        <attr name="circleRadius" format="dimension"/>
-        <attr name="circleGap" format="dimension"/>
-    </declare-styleable>
-
-    <declare-styleable name="LovelyView">
-        <attr name="circleColor" format="color" />
-        <attr name="circleLabel" format="string"></attr>
-        <attr name="circleIcon" format="integer"></attr>
-        <attr name="labelColor" format="color"></attr>
-    </declare-styleable>
-
     <declare-styleable name="PlusView">
         <attr name="pv_bgColor" format="color"/>
         <attr name="pv_iconDrawable" format="integer"/>

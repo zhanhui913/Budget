@@ -717,9 +717,9 @@ public class TransactionInfoActivity extends BaseActivity implements
             intent.putExtra(Constants.RESULT_NEW_TRANSACTION, wrapped);
         }
 
-
-        intent.putExtra(Constants.RESULT_SCHEDULE_TRANSACTION, scheduledTransactionWrapped);
-
+        if(isScheduledTransaction) {
+            intent.putExtra(Constants.RESULT_SCHEDULE_TRANSACTION, scheduledTransactionWrapped);
+        }
 
 
         setResult(RESULT_OK, intent);

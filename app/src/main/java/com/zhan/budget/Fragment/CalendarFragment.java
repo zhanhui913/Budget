@@ -369,7 +369,7 @@ public class CalendarFragment extends BaseFragment implements
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
                 ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
-                Log.d(TAG, "scheduledTransaction from new :"+scheduledTransaction.getId());
+                //Log.d(TAG, "scheduledTransaction from new :"+scheduledTransaction.getId());
 
                 //Compare with today's date
                 if(DateUtil.getDaysFromDate(tt.getDate()) > DateUtil.getDaysFromDate(new Date())){
@@ -379,14 +379,20 @@ public class CalendarFragment extends BaseFragment implements
                 }
 
                 addNewOrEditTransaction(tt);
-                addScheduleTransaction(scheduledTransaction, tt);
+
+                if(scheduledTransaction != null) {
+                    addScheduleTransaction(scheduledTransaction, tt);
+                }
             }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
                 ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
-                Log.d(TAG, "scheduledTransaction from edit :" + scheduledTransaction.getId());
+                //Log.d(TAG, "scheduledTransaction from edit :" + scheduledTransaction.getId());
 
                 addNewOrEditTransaction(tt);
-                addScheduleTransaction(scheduledTransaction, tt);
+
+                if(scheduledTransaction != null) {
+                    addScheduleTransaction(scheduledTransaction, tt);
+                }
             }
         }
     }
@@ -397,7 +403,7 @@ public class CalendarFragment extends BaseFragment implements
      * @param transaction The transaction that the scheduled transaction is based on.
      */
     private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
-        if(scheduledTransaction != null){
+        if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
             myRealm.beginTransaction();
             scheduledTransaction.setTransaction(transaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
