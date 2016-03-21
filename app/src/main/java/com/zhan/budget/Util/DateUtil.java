@@ -215,6 +215,21 @@ public final class DateUtil {
     }
 
     /**
+     * Get new week with directions
+     * @param date Starting date point
+     * @param direction -1, 0, 1 => (previous week, this week, next week)
+     * @return date
+     */
+    public static Date getWeekWithDirection(Date date, int direction){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.WEEK_OF_MONTH, direction);
+
+        return cal.getTime();
+    }
+
+
+    /**
      * Get new month with directions
      * @param date Starting date point
      * @param direction -1, 0, 1 => (previous month, this month, next month)

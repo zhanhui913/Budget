@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp"
-    android:background="@drawable/budget_white_button">
+    android:background="?attr/themeColorBtn">
 
     <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
         android:id="@+id/categoryIcon"
