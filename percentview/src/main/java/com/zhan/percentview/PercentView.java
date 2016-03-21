@@ -2,7 +2,6 @@ package com.zhan.percentview;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -52,26 +51,6 @@ public class PercentView extends View {
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){
         this.context = context;
-
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.PercentView, 0, 0);
-        try{
-            /*
-            circleRadius = a.getDimensionPixelSize(R.styleable.CircularView_cv_bgRadius, DEFAULT_BG_RADIUS);
-            circleColor = a.getColor(R.styleable.CircularView_cv_bgColor, ContextCompat.getColor(this.context, DEFAULT_BG_COLOR));
-            strokeWidth = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokeWidth, DEFAULT_STROKE_WIDTH);
-            strokeColor = a.getColor(R.styleable.CircularView_cv_strokeColor, ContextCompat.getColor(this.context, DEFAULT_STROKE_COLOR));
-            strokePadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_strokePadding, DEFAULT_STROKE_PADDING);
-            iconDrawable = a.getDrawable(R.styleable.CircularView_cv_iconDrawable);
-            iconColor = a.getColor(R.styleable.CircularView_cv_iconColor, ContextCompat.getColor(this.context, DEFAULT_ICON_COLOR));
-            iconTopPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconTopPadding, DEFAULT_ICON_TOP_PADDING);
-            iconBottomPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconBottomPadding, DEFAULT_ICON_BOTTOM_PADDING);
-            iconLeftPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconLeftPadding, DEFAULT_ICON_LEFT_PADDING);
-            iconRightPadding = a.getDimensionPixelSize(R.styleable.CircularView_cv_iconRightPadding, DEFAULT_ICON_RIGHT_PADDING);
-            */
-        }finally {
-            a.recycle();
-        }
-
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);

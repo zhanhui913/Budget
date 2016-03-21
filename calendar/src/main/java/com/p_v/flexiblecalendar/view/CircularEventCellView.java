@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.p_v.flexiblecalendar.entity.Event;
@@ -106,7 +107,7 @@ public class CircularEventCellView extends BaseCellView {
             for(Event e: colorList){
                 Paint eventPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 eventPaint.setStyle(Paint.Style.FILL);
-                eventPaint.setColor(getContext().getResources().getColor(e.getColor()));
+                eventPaint.setColor(ContextCompat.getColor(getContext(), e.getColor()));
                 paintList.add(eventPaint);
             }
             invalidate();

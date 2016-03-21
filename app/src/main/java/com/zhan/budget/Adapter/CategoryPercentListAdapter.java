@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
 
-    private Activity activity;
     private List<CategoryPercent> categoryList;
 
     static class ViewHolder {
@@ -34,7 +33,6 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
 
     public CategoryPercentListAdapter(Activity activity, List<CategoryPercent> categoryList) {
         super(activity, R.layout.item_category_percent_view, categoryList);
-        this.activity = activity;
         this.categoryList = categoryList;
     }
 

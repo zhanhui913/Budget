@@ -62,11 +62,11 @@ public class PlusView extends View {
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, com.zhan.budget.R.styleable.CircularView, 0, 0);
         try{
-            backgroundColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_bgColor, getResources().getColor(DEFAULT_BG_COLOR));
+            backgroundColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_bgColor, ContextCompat.getColor(getContext(), DEFAULT_BG_COLOR));
             //iconDrawable = a.getDrawable(R.styleable.PlusView_pv_iconDrawable);
             iconDrawable = ContextCompat.getDrawable(context, com.zhan.budget.R.drawable.svg_ic_add_big);
             iconSize = a.getInteger(com.zhan.budget.R.styleable.PlusView_pv_iconSize, DEFAULT_ICON_SIZE);
-            iconColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_iconColor, getResources().getColor(DEFAULT_ICON_COLOR));
+            iconColor = a.getColor(com.zhan.budget.R.styleable.PlusView_pv_iconColor, ContextCompat.getColor(getContext(), DEFAULT_ICON_COLOR));
         }finally {
             a.recycle();
         }

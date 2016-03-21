@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class CategoryGridAdapter extends ArrayAdapter<Category> {
 
-    private Context context;
     private List<Category> categoryList;
 
     static class ViewHolder {
@@ -32,7 +31,6 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
 
     public CategoryGridAdapter(Context context, List<Category> categoryList) {
         super(context, R.layout.item_circular_view, categoryList);
-        this.context = context;
         this.categoryList = categoryList;
     }
 

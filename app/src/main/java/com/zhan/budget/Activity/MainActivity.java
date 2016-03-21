@@ -150,7 +150,6 @@ public class MainActivity extends BaseActivity
                     // functionality that depends on this permission.
                     Toast.makeText(getApplicationContext(), "BOO", Toast.LENGTH_SHORT).show();
                 }
-                return;
             }
 
             // other 'case' lines to check for other

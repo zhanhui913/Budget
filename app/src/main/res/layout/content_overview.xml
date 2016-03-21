@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:textSize="50sp"
             android:text="$0.00"
-            android:textAlignment="center"
             android:textColor="@color/day_text"
             android:layout_centerInParent="true" />
 

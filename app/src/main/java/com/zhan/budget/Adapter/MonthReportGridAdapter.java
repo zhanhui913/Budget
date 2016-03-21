@@ -1,6 +1,5 @@
 package com.zhan.budget.Adapter;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
  */
 public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
-    private Activity activity;
     private List<MonthReport> monthReportList;
     private OnMonthReportAdapterInteractionListener mListener;
 
@@ -38,14 +36,13 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
     public MonthReportGridAdapter(Fragment fragment, List<MonthReport> monthReportList) {
         super(fragment.getActivity(), R.layout.item_month_report, monthReportList);
-        this.activity = fragment.getActivity();
         this.monthReportList = monthReportList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
         if(fragment instanceof  OnMonthReportAdapterInteractionListener){
             mListener = (OnMonthReportAdapterInteractionListener) fragment;
         }else {
-            throw new RuntimeException(activity.toString() + " must implement OnMonthReportAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnMonthReportAdapterInteractionListener.");
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.p_v.flexiblecalendar.entity.Event;
@@ -49,10 +50,8 @@ public class EventCountCellView extends BaseCellView{
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.EventCountCellView);
         try{
             radius = (int)a.getDimension(R.styleable.EventCountCellView_event_count_radius,15);
-            eventBackground = a.getColor(R.styleable.EventCountCellView_event_background,
-                    getResources().getColor(android.R.color.black));
-            eventTextColor = a.getColor(R.styleable.EventCountCellView_event_count_text_color,
-                    getResources().getColor(android.R.color.white));
+            eventBackground = a.getColor(R.styleable.EventCountCellView_event_background, ContextCompat.getColor(getContext(), android.R.color.black));
+            eventTextColor = a.getColor(R.styleable.EventCountCellView_event_count_text_color, ContextCompat.getColor(getContext(), android.R.color.white));
             eventTextSize = (int)a.getDimension(R.styleable.EventCountCellView_event_text_size,-1);
         }finally {
             a.recycle();

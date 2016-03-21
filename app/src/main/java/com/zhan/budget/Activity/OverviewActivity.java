@@ -35,7 +35,7 @@ public class OverviewActivity extends BaseActivity {
 
     private Toolbar toolbar;
     private Date currentMonth;
-    private TextView dateTextView, totalCostForMonthTextView;
+    private TextView totalCostForMonthTextView;
     private PercentView percentView;
     private CircularProgressBar circularProgressBar;
 
@@ -46,9 +46,6 @@ public class OverviewActivity extends BaseActivity {
     private List<Category> categoryList;
     private List<CategoryPercent> categoryPercentList;
     private List<Slice> sliceList;
-
-    private ListView categoryListView;
-    private CategoryPercentListAdapter categoryPercentListAdapter;
 
     @Override
     protected int getActivityLayout(){
@@ -63,12 +60,12 @@ public class OverviewActivity extends BaseActivity {
 
         categoryList = new ArrayList<>();
         categoryPercentList = new ArrayList<>();
-        categoryListView = (ListView) findViewById(R.id.percentCategoryListView);
-        categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryPercentList);
+        ListView categoryListView = (ListView) findViewById(R.id.percentCategoryListView);
+        CategoryPercentListAdapter categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryPercentList);
         categoryListView.setAdapter(categoryPercentListAdapter);
 
         totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
-        dateTextView = (TextView) findViewById(R.id.dateTextView);
+        TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
         percentView = (PercentView) findViewById(R.id.percentView);
