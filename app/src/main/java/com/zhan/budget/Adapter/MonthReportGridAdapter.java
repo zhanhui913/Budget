@@ -1,6 +1,8 @@
 package com.zhan.budget.Adapter;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,22 +26,31 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
     private Activity activity;
     private List<MonthReport> monthReportList;
+    private OnMonthReportAdapterInteractionListener mListener;
 
     static class ViewHolder {
+        public CardView background;
         public TextView month;
         public TextView costThisMonth;
         public TextView changeCost;
         public CircularProgressBar progressBar;
     }
 
-    public MonthReportGridAdapter(Activity activity, List<MonthReport> monthReportList) {
-        super(activity, R.layout.item_month_report, monthReportList);
-        this.activity = activity;
+    public MonthReportGridAdapter(Fragment fragment, List<MonthReport> monthReportList) {
+        super(fragment.getActivity(), R.layout.item_month_report, monthReportList);
+        this.activity = fragment.getActivity();
         this.monthReportList = monthReportList;
+
+        //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
+        if(fragment instanceof  OnMonthReportAdapterInteractionListener){
+            mListener = (OnMonthReportAdapterInteractionListener) fragment;
+        }else {
+            throw new RuntimeException(activity.toString() + " must implement OnMonthReportAdapterInteractionListener.");
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // Avoid un-necessary calls to findViewById() on each row, which is expensive!
         ViewHolder viewHolder;
 
@@ -55,6 +66,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_month_report, parent, false);
 
+            viewHolder.background = (CardView) convertView.findViewById(R.id.monthCardView);
             viewHolder.month = (TextView) convertView.findViewById(R.id.monthName);
             viewHolder.costThisMonth = (TextView) convertView.findViewById(R.id.monthTotalCost);
             viewHolder.changeCost = (TextView) convertView.findViewById(R.id.monthChangeCost);
@@ -82,6 +94,17 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder.progressBar.setVisibility(View.VISIBLE);
         }
 
+        viewHolder.background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickMonth(position);
+            }
+        });
+
         return convertView;
+    }
+
+    public interface OnMonthReportAdapterInteractionListener {
+        void onClickMonth(int position);
     }
 }

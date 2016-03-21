@@ -30,6 +30,7 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
@@ -406,19 +407,72 @@ public class CalendarFragment extends BaseFragment implements
             Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
             Log.i(TAG, "----------- Parceler Result ----------");
 
-            if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
-                int repeatDays = scheduledTransaction.getRepeatUnit();
+            transaction.setDayType(DayType.SCHEDULED.toString());
+            Date nextDate = transaction.getDate();
+            /*if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
                 //Repeat 10 times
-                Date nextDate = transaction.getDate();
                 for(int i = 0; i < 10; i++){
-                    nextDate = DateUtil.getDateWithDirection(nextDate, repeatDays);
-                    Log.d(TAG, i+"-> "+DateUtil.convertDateToStringFormat5(nextDate));
+                    myRealm.beginTransaction();
+                    nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                    myRealm.copyToRealmOrUpdate(transaction);
+                    myRealm.commitTransaction();
                 }
             }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
-
+                //Repeat 10 times
+                for(int i = 0; i < 10; i++){
+                    myRealm.beginTransaction();
+                    nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                    myRealm.copyToRealmOrUpdate(transaction);
+                    myRealm.commitTransaction();
+                }
             }else{
+                //Repeat 10 times
+                for(int i = 0; i < 10; i++){
+                    myRealm.beginTransaction();
+                    nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                    myRealm.copyToRealmOrUpdate(transaction);
+                    myRealm.commitTransaction();
+                }
+            }*/
 
+
+
+
+            for(int i = 0; i < 10; i++){
+                myRealm.beginTransaction();
+
+                if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
+                    nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
+                    nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                }else{
+                    nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                }
+
+                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                myRealm.copyToRealmOrUpdate(transaction);
+                myRealm.commitTransaction();
             }
+
+
+
+
+
         }
     }
 

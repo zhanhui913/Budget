@@ -7,28 +7,31 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 <!--
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Budget"
-        android:layout_alignParentRight="false"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true" />
--->
-    <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/banner"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"/>
+-->
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/background"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/foreground"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/foreground_small"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:scaleType="fitEnd"
+        android:paddingLeft="25dp" />
 
 </RelativeLayout>

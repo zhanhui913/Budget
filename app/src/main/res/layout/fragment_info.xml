@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:text="Zhan H. Yap"
         android:textSize="20sp"
-        android:textColor="@color/belize_hole"
+        android:textColor="@color/colorPrimary"
         android:layout_below="@id/profileImageView"
         android:gravity="center_horizontal"
         android:layout_marginTop="20dp" />
