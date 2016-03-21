@@ -24,6 +24,9 @@ public class Constants {
     //Starting fragment in MainActivity
     public static final String START_FRAGMENT = "Starting Fragment";
 
+    //Start day of calendar (Sunday or Monday)
+    public static final String START_DAY_CALENDAR = "Start Day of Calendar";
+
     //Activity request
     public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
     public static final String REQUEST_NEW_TRANSACTION_DATE = "New Transaction Date";

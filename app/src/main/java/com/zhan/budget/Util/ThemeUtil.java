@@ -1,9 +1,9 @@
 package com.zhan.budget.Util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.zhan.budget.Etc.Constants;
@@ -50,7 +50,7 @@ public final class ThemeUtil {
     }
 
     private static void setDefaultThemePreference(Activity activity, int theme){
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         Log.d("THEME_UTIL", "setDefaultThemePreference : "+theme);
         //set Constants.DEFAULT_THEME shared preferences to whatever the current theme is
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -59,7 +59,7 @@ public final class ThemeUtil {
     }
 
     public static int getCurrentThemePreference(Activity activity){
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         int retrievedTheme = sharedPreferences.getInt(Constants.DEFAULT_THEME, THEME_LIGHT);
         Log.d("THEME_UTIL", "getCurrentThemePreference : "+retrievedTheme);
         return retrievedTheme;

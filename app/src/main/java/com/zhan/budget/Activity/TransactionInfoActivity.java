@@ -409,6 +409,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         });
 
+        calendarView.setStartDayOfTheWeek(Util.getStartDayOfWeekPreference(this));
+
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {

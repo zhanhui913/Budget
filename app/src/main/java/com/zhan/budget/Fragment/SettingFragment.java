@@ -1,15 +1,16 @@
 package com.zhan.budget.Fragment;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +42,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private TextView themeBtn, backupBtn, resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
+    private ViewGroup themeBtn, firstDayBtn, backupBtn;
+    private TextView themeContent, firstDayContent, backupContent;
+
+    private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
 
     //
     private static int CURRENT_THEME;
@@ -61,8 +66,15 @@ public class SettingFragment extends BaseFragment {
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
-        themeBtn = (TextView) view.findViewById(R.id.themeBtn);
-        backupBtn = (TextView) view.findViewById(R.id.backupBtn);
+        themeBtn = (ViewGroup) view.findViewById(R.id.themeBtn);
+        themeContent = (TextView) view.findViewById(R.id.themeContent);
+
+        firstDayBtn = (ViewGroup) view.findViewById(R.id.firstDayBtn);
+        firstDayContent = (TextView) view.findViewById(R.id.firstDayContent);
+
+        backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
+        backupContent = (TextView) view.findViewById(R.id.backupContent);
+
         resetBtn = (TextView) view.findViewById(R.id.resetDataBtn);
         exportCSVBtn = (TextView) view.findViewById(R.id.exportCSVBtn);
         emailBtn = (TextView) view.findViewById(R.id.emailBtn);
@@ -70,7 +82,10 @@ public class SettingFragment extends BaseFragment {
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
 
         CURRENT_THEME = ThemeUtil.getCurrentThemePreference(getActivity());
-        themeBtn.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Dark Theme": "Light Theme"));
+        themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode": "Day Mode"));
+
+        int startDay = Util.getStartDayOfWeekPreference(getActivity());
+        firstDayContent.setText(startDay == 1 ? "Sunday" : "Monday");
 
         addListeners();
     }
@@ -79,8 +94,18 @@ public class SettingFragment extends BaseFragment {
         themeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                themeBtn.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Dark Theme": "Light Theme"));
+                Toast.makeText(getContext(), "them button click", Toast.LENGTH_SHORT).show();
+                themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode": "Day Mode"));
                 ThemeUtil.changeToTheme(getActivity(), (CURRENT_THEME == ThemeUtil.THEME_DARK ? ThemeUtil.THEME_LIGHT : ThemeUtil.THEME_DARK));
+            }
+        });
+
+        firstDayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int startDay = Util.getStartDayOfWeekPreference(getActivity());
+                firstDayContent.setText(startDay == 1 ? "Monday" : "Sunday");
+                Util.setStartDayOfWeekPreference(getActivity(), startDay == 1 ? 2 : 1);
             }
         });
 
@@ -268,7 +293,7 @@ public class SettingFragment extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void resetData(){
-        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
         //set Constants.FIRST_TIME shared preferences to true to reset it
         SharedPreferences.Editor editor = sharedPreferences.edit();

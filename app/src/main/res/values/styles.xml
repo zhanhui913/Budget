@@ -46,7 +46,7 @@
     <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
 
-    <!-- Other view's style -->
+    <!-- Number pad's style -->
     <style name="NumberPadStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">35dp</item>
@@ -56,6 +56,7 @@
         <item name="android:layout_margin">1dp</item>
     </style>
 
+    <!-- Circular view's style -->
     <style name="CircularViewStyle_selected">
         <item name="cv_strokePadding">3dp</item>
         <item name="cv_strokeWidth">1dp</item>
@@ -75,12 +76,20 @@
         <item name="cv_bgRadius">25dp</item>
     </style>
 
+    <!--Setting's style -->
     <style name="SettingsTextViewButtonStyle">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:clickable">true</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:paddingTop">10dp</item>
+    </style>
+
+    <style name="SettingsTextViewContentStyle">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">35dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
     <style name="SettingsTextViewHeaderStyle">
@@ -89,6 +98,7 @@
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
+    <!-- Alert dialog's style -->
     <style name="AlertDialogTitleStyle">
         <item name="android:textSize">25sp</item>
         <item name="android:paddingBottom">10dp</item>

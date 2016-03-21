@@ -246,6 +246,8 @@ public class CalendarFragment extends BaseFragment implements
             }
         });
 
+        calendarView.setStartDayOfTheWeek(Util.getStartDayOfWeekPreference(getActivity()));
+
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {

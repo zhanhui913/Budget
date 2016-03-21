@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:orientation="vertical">
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
@@ -22,22 +22,52 @@
             android:layout_height="2dp"
             android:background="@color/colorPrimaryDark"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <LinearLayout
             android:id="@+id/themeBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Light Theme"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Current Theme"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/themeContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="day mode"/>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <LinearLayout
             android:id="@+id/firstDayBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="First day of the week"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="First day of the week"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/firstDayContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="sunday"/>
+        </LinearLayout>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
@@ -51,11 +81,26 @@
             android:layout_height="2dp"
             android:background="@color/colorPrimaryDark"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <LinearLayout
             android:id="@+id/backupBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Backup data"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Backup data"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/backupContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="last backup Feb 2, 2016"/>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -65,7 +110,8 @@
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/resetDataBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:text="Reset data"/>
 
         <View
@@ -76,7 +122,8 @@
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/exportCSVBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:text="Export data in CSV"/>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
@@ -94,7 +141,8 @@
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/emailBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:text="Email me"/>
 
         <View
@@ -105,7 +153,8 @@
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/tourBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:text="Tour"/>
 
         <View
@@ -116,7 +165,9 @@
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/faqBtn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:background="?attr/themeColorBtn"
             android:text="FAQ"/>
 
         <TextView
@@ -124,6 +175,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="v1.0.0"
+            android:textSize="15sp"
+            android:paddingBottom="10dp"
             android:layout_margin="10dp"
             android:gravity="center_horizontal" />
     </LinearLayout>

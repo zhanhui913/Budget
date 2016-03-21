@@ -21,7 +21,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/alertdialogMonthTextView"
-        support:monthDayVerticalSpacing="0dp"
-        support:startDayOfTheWeek="SUNDAY" />
+        support:monthDayVerticalSpacing="0dp" />
 
 </RelativeLayout>

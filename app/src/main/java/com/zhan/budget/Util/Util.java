@@ -2,16 +2,16 @@ package com.zhan.budget.Util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.zhan.budget.R;
+import com.zhan.budget.Etc.Constants;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -194,5 +194,33 @@ public final class Util {
         DisplayMetrics metrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.widthPixels;
+    }
+
+    public static void setStartDayOfWeekPreference(Activity activity, int startDay){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+
+        if(startDay == 1){
+            Log.d("THEME_UTIL", "setStartDayOfWeekPreference : SUNDAY");
+        }else if(startDay == 2){
+            Log.d("THEME_UTIL", "setStartDayOfWeekPreference : MONDAY");
+        }
+
+        //set Constants.START_DAY_CALENDAR shared preferences to whatever the selected start day is
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(Constants.START_DAY_CALENDAR, startDay);
+        editor.apply();
+    }
+
+    public static int getStartDayOfWeekPreference(Activity activity){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        int startDay = sharedPreferences.getInt(Constants.START_DAY_CALENDAR, 1);
+
+        if(startDay == 1){
+            Log.d("THEME_UTIL", "getStartDayOfWeekPreference : SUNDAY" );
+        }else if(startDay == 2){
+            Log.d("THEME_UTIL", "getStartDayOfWeekPreference : MONDAY" );
+        }
+
+        return startDay;
     }
 }
