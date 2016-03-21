@@ -18,6 +18,12 @@ public class Constants {
     //First time
     public static final String FIRST_TIME = "First Time";
 
+    //Default theme
+    public static final String DEFAULT_THEME = "Default Theme";
+
+    //Starting fragment in MainActivity
+    public static final String START_FRAGMENT = "Starting Fragment";
+
     //Activity request
     public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
     public static final String REQUEST_NEW_TRANSACTION_DATE = "New Transaction Date";
