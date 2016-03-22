@@ -14,13 +14,7 @@
             android:id="@+id/alertdialogMonthTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/day_text"
-            android:text="Jan 2016"
-            android:textStyle="bold"
-            android:padding="15dp"/>
+            android:text="Jan 2016" />
     </LinearLayout>
 
     <com.p_v.flexiblecalendar.FlexibleCalendarView

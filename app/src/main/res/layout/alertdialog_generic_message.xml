@@ -17,12 +17,11 @@
             android:text="Account Name" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/genericEditText"
+    <TextView
+        android:id="@+id/genericMessage"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Generic Hint"
         android:padding="15dp" />
 </LinearLayout>
