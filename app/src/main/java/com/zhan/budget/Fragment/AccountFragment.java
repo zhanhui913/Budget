@@ -10,16 +10,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -45,7 +41,6 @@ public class AccountFragment extends BaseFragment implements
 
     private ListView accountListView;
     private AccountListAdapter accountListAdapter;
-    private List<Account> accountList;
 
     private RealmResults<Account> resultsAccount;
 
@@ -63,11 +58,9 @@ public class AccountFragment extends BaseFragment implements
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
-        accountList = new ArrayList<>();
 
         accountListView = (ListView) view.findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(this, accountList);
-        accountListView.setAdapter(accountListAdapter);
+
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
@@ -84,12 +77,10 @@ public class AccountFragment extends BaseFragment implements
             public void onChange() {
                 resultsAccount.removeChangeListener(this);
 
-                accountList = myRealm.copyFromRealm(resultsAccount);
+                accountListAdapter = new AccountListAdapter(instance, resultsAccount);
+                accountListView.setAdapter(accountListAdapter);
 
                 updateAccountStatus();
-
-                //accountListAdapter.addAll(accountList);
-                accountListAdapter.updateRealm(accountList);
             }
         });
     }
@@ -151,7 +142,6 @@ public class AccountFragment extends BaseFragment implements
         });
     }
 
-
     private void editAccount(final int position){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
@@ -160,13 +150,12 @@ public class AccountFragment extends BaseFragment implements
         //AlertDialog, where it not necessary to know what the parent is.
         View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+        final Account account = accountListAdapter.getItem(position);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-
-        final Account account = accountList.get(position);
-
         title.setText("Edit Account");
+
+        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
         input.setText(account.getName());
         input.setHint("Account");
 
@@ -179,8 +168,9 @@ public class AccountFragment extends BaseFragment implements
                         account.setName(input.getText().toString());
                         myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
-                        accountList.set(position, account);
-                        accountListAdapter.updateRealm(accountList);
+
+                        accountListAdapter.remove(account);
+                        accountListAdapter.insert(account, position);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -202,9 +192,11 @@ public class AccountFragment extends BaseFragment implements
         View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
 
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+        input.setText("");
+        input.setHint("Account");
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setHint("Account");
+        title.setText("Add Account");
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
@@ -216,8 +208,9 @@ public class AccountFragment extends BaseFragment implements
                         newAccount.setId(Util.generateUUID());
                         newAccount.setName(input.getText().toString());
                         myRealm.commitTransaction();
-                        accountList.add(newAccount);
-                        accountListAdapter.add(newAccount);
+
+                        //accountListAdapter.add(newAccount);
+                        accountListAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -231,7 +224,7 @@ public class AccountFragment extends BaseFragment implements
     }
 
     private void updateAccountStatus(){
-        if(accountList.size() > 0){
+        if(accountListAdapter.getCount() > 0){
             emptyLayout.setVisibility(View.GONE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
@@ -248,17 +241,26 @@ public class AccountFragment extends BaseFragment implements
 
     @Override
     public void onDeleteAccount(int position){
-        myRealm.beginTransaction();
+  /*      myRealm.beginTransaction();
         resultsAccount.remove(position);
         myRealm.commitTransaction();
 
-        accountList = myRealm.copyFromRealm(resultsAccount);
-        accountListAdapter.updateRealm(accountList);
+        accountList.remove(position);
+*/
+        //accountList = myRealm.copyFromRealm(resultsAccount);
+
+        Log.d(TAG,"There are "+accountListAdapter.getCount()+" items in adapter");
+
+        myRealm.beginTransaction();
+
+        accountListAdapter.getRealmResults().remove(position);
+
+        myRealm.commitTransaction();
     }
 
     @Override
     public void onEditAccount(int position){
-        Toast.makeText(getContext(), "editting account "+accountList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "editting account "+accountList.get(position).getName(), Toast.LENGTH_SHORT).show();
         editAccount(position);
     }
 
