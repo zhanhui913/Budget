@@ -5,32 +5,31 @@
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <!--
+		<ImageView
+			android:id="@+id/background"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:src="@drawable/banner"
+			android:layout_centerVertical="true"
+			android:scaleType="centerCrop"/>
+	-->
+		<ImageView
+			android:id="@+id/background"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:src="@drawable/background"
+			android:layout_centerVertical="true"
+			android:scaleType="centerCrop"/>
 
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/banner"
-        android:layout_centerVertical="true"
-        android:scaleType="centerCrop"/>
-<!--
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/background"
-        android:layout_centerVertical="true"
-        android:scaleType="centerCrop"/>
-
-    <ImageView
-        android:id="@+id/foreground"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/foreground_small"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:scaleType="fitEnd"
-        android:paddingLeft="25dp" />
--->
+		<ImageView
+			android:id="@+id/foreground"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:src="@drawable/foreground_small"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:scaleType="fitEnd"
+			android:paddingLeft="25dp" />
 </RelativeLayout>
