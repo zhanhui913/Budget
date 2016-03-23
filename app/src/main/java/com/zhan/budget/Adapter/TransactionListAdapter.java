@@ -31,7 +31,6 @@ import java.util.List;
 public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
     private Activity activity;
-    private List<Transaction> transactionList;
     private OnTransactionAdapterInteractionListener mListener;
     private boolean showDate;
 
@@ -49,7 +48,6 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     public TransactionListAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         super(fragment.getActivity(), R.layout.item_transaction, transactionList);
         this.activity = fragment.getActivity();
-        this.transactionList = transactionList;
         this.showDate = showDate;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
@@ -63,7 +61,6 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     public TransactionListAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
         super(activity, R.layout.item_transaction, transactionList);
         this.activity = activity;
-        this.transactionList = transactionList;
         this.showDate = showDate;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
@@ -108,7 +105,7 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         }
 
         // getting transaction data for the row
-        Transaction transaction = transactionList.get(position);
+        Transaction transaction = getItem(position);
 
         //If transaction is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
@@ -201,6 +198,12 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
         });
 
         return convertView;
+    }
+
+    public void updateRealm(List<Transaction> transactionList){
+        clear();
+        addAll(transactionList);
+        notifyDataSetChanged();
     }
 
     public interface OnTransactionAdapterInteractionListener {

@@ -305,13 +305,9 @@ public class CalendarFragment extends BaseFragment implements
      * the UI.
      */
     private void updateTransactionList(){
-        transactionAdapter.clear();
         transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
-        transactionAdapter.addAll(transactionList);
-
+        transactionAdapter.updateRealm(transactionList);
         updateTransactionStatus();
-
-        transactionAdapter.notifyDataSetChanged();
     }
 
     private void updateTransactionStatus(){
