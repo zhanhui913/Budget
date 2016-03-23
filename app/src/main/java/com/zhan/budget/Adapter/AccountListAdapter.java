@@ -22,7 +22,6 @@ import java.util.List;
 public class AccountListAdapter extends ArrayAdapter<Account> {
 
     private Activity activity;
-    private List<Account> accountList;
     private OnAccountAdapterInteractionListener mListener;
 
     static class ViewHolder {
@@ -35,7 +34,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
     public AccountListAdapter(Activity activity, List<Account> accountList){
         super(activity, R.layout.item_account, accountList);
         this.activity = activity;
-        this.accountList = accountList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if(activity instanceof OnAccountAdapterInteractionListener){
@@ -48,7 +46,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
     public AccountListAdapter(Fragment fragment,  List<Account> accountList) {
         super(fragment.getActivity(), R.layout.item_account, accountList);
         this.activity = fragment.getActivity();
-        this.accountList = accountList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if (fragment instanceof OnAccountAdapterInteractionListener) {
@@ -56,6 +53,12 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         } else {
             throw new RuntimeException(activity.toString() + " must implement OnAccountAdapterInteractionListener.");
         }
+    }
+
+    public void updateRealm(List<Account> accountList){
+        clear();
+        addAll(accountList);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -135,8 +138,8 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // getting transaction data for the row
-        Account account = accountList.get(position);
+        // getting account data for the row
+        Account account = getItem(position);
 
         //Name
         viewHolder.name.setText(account.getName());

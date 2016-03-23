@@ -88,7 +88,8 @@ public class AccountFragment extends BaseFragment implements
 
                 updateAccountStatus();
 
-                accountListAdapter.addAll(accountList);
+                //accountListAdapter.addAll(accountList);
+                accountListAdapter.updateRealm(accountList);
             }
         });
     }
@@ -140,7 +141,7 @@ public class AccountFragment extends BaseFragment implements
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
                 Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
-                addNewAccount(false, null);
+                addAccount();
             }
 
             @Override
@@ -150,10 +151,8 @@ public class AccountFragment extends BaseFragment implements
         });
     }
 
-    /**
-     * Displays prompt for user to add new account.
-     */
-    private void addNewAccount(final Boolean isEdit, final Account account){
+
+    private void editAccount(final int position){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
@@ -165,40 +164,63 @@ public class AccountFragment extends BaseFragment implements
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
 
-        String positiveString;
+        final Account account = accountList.get(position);
 
-        if(isEdit){
-            title.setText("Edit Account");
-            positiveString = "Save";
-            input.setText(account.getName());
-        }else{
-            title.setText("Add Account");
-            positiveString = "Add";
-        }
-
+        title.setText("Edit Account");
+        input.setText(account.getName());
         input.setHint("Account");
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton(positiveString, new DialogInterface.OnClickListener() {
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         myRealm.beginTransaction();
-
-                        if(!isEdit) {
-                            Account newAccount = myRealm.createObject(Account.class);
-                            newAccount.setId(Util.generateUUID());
-                            newAccount.setName(input.getText().toString());
-                        }else{
-                            account.setName(input.getText().toString());
-                            myRealm.copyToRealmOrUpdate(account);
-                        }
-
-                        accountListAdapter.clear();
+                        account.setName(input.getText().toString());
+                        myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
+                        accountList.set(position, account);
+                        accountListAdapter.updateRealm(accountList);
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void addAccount(){
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        title.setHint("Account");
+
+        new AlertDialog.Builder(getActivity())
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        myRealm.beginTransaction();
+                        Account newAccount = myRealm.createObject(Account.class);
+                        newAccount.setId(Util.generateUUID());
+                        newAccount.setName(input.getText().toString());
+                        myRealm.commitTransaction();
+                        accountList.add(newAccount);
+                        accountListAdapter.add(newAccount);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -230,14 +252,14 @@ public class AccountFragment extends BaseFragment implements
         resultsAccount.remove(position);
         myRealm.commitTransaction();
 
-        accountListAdapter.clear();
-        accountListAdapter.addAll(accountList);
+        accountList = myRealm.copyFromRealm(resultsAccount);
+        accountListAdapter.updateRealm(accountList);
     }
 
     @Override
     public void onEditAccount(int position){
-        addNewAccount(true, accountList.get(position));
         Toast.makeText(getContext(), "editting account "+accountList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        editAccount(position);
     }
 
     @Override
