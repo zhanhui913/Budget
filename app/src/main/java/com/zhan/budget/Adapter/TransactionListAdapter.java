@@ -30,7 +30,6 @@ import java.util.List;
  */
 public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
-    private Activity activity;
     private OnTransactionAdapterInteractionListener mListener;
     private boolean showDate;
 
@@ -47,20 +46,18 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
 
     public TransactionListAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         super(fragment.getActivity(), R.layout.item_transaction, transactionList);
-        this.activity = fragment.getActivity();
         this.showDate = showDate;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnTransactionAdapterInteractionListener) {
             mListener = (OnTransactionAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterInteractionListener.");
         }
     }
 
     public TransactionListAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
         super(activity, R.layout.item_transaction, transactionList);
-        this.activity = activity;
         this.showDate = showDate;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface

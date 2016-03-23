@@ -29,8 +29,6 @@ import java.util.List;
 public class CategoryListAdapter extends ArrayAdapter<Category> {
 
     private OnCategoryAdapterInteractionListener mListener;
-    private Activity activity;
-    private List<Category> categoryList;
 
     static class ViewHolder {
         public CircularView circularView;
@@ -46,8 +44,6 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
     public CategoryListAdapter(Activity activity, List<Category> categoryList) {
         super(activity, R.layout.item_category, categoryList);
-        this.activity = activity;
-        this.categoryList = categoryList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryAdapterInteractionListener interface
         if(activity instanceof OnCategoryAdapterInteractionListener){
@@ -59,14 +55,12 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
     public CategoryListAdapter(Fragment fragment,  List<Category> categoryList) {
         super(fragment.getActivity(), R.layout.item_category, categoryList);
-        this.activity = fragment.getActivity();
-        this.categoryList = categoryList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryAdapterInteractionListener interface
         if (fragment instanceof OnCategoryAdapterInteractionListener) {
             mListener = (OnCategoryAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(activity.toString() + " must implement OnCategoryAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnCategoryAdapterInteractionListener.");
         }
     }
 
@@ -148,7 +142,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         });
 
         // getting category data for the row
-        Category category = categoryList.get(position);
+        Category category = getItem(position);
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getColor());
@@ -172,11 +166,11 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
 
 
         if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.sunflower));
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(getContext(), R.color.sunflower));
         }else{ //If exceeded budget
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(activity, R.color.red));
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(getContext(), R.color.red));
         }
 
         return convertView;

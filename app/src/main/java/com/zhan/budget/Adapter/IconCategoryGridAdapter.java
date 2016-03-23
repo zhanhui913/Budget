@@ -18,7 +18,7 @@ import java.util.List;
  * Created by zhanyap on 2016-02-04.
  */
 public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
-    private List<CategoryIconColor> iconList;
+
     private String color;
 
     static class ViewHolder {
@@ -27,7 +27,6 @@ public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
 
     public IconCategoryGridAdapter(Context context, List<CategoryIconColor> iconList, String color) {
         super(context, R.layout.item_circular_view, iconList);
-        this.iconList = iconList;
         this.color = color;
     }
 
@@ -55,10 +54,10 @@ public class IconCategoryGridAdapter extends ArrayAdapter<CategoryIconColor> {
 
         //get drawable data
         viewHolder.circularView.setCircleColor(this.color);
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), iconList.get(position).getIcon()));
+        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), getItem(position).getIcon()));
         viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
 
-        if(iconList.get(position).isSelected()){
+        if(getItem(position).isSelected()){
             viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
         }else{
             viewHolder.circularView.setStrokeColor(R.color.transparent);

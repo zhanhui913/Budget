@@ -15,14 +15,16 @@ import com.zhan.budget.R;
 
 import java.util.List;
 
+import io.realm.RealmResults;
+
 
 /**
  * Created by zhanyap on 15-08-19.
  */
 public class AccountListAdapter extends ArrayAdapter<Account> {
 
-    private Activity activity;
     private OnAccountAdapterInteractionListener mListener;
+    private RealmResults<Account> list;
 
     static class ViewHolder {
         public TextView name;
@@ -31,9 +33,10 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         public ImageView editBtn;
     }
 
-    public AccountListAdapter(Activity activity, List<Account> accountList){
+    public AccountListAdapter(Activity activity, RealmResults<Account> accountList){
         super(activity, R.layout.item_account, accountList);
-        this.activity = activity;
+        setNotifyOnChange(true);
+        list = accountList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if(activity instanceof OnAccountAdapterInteractionListener){
@@ -45,20 +48,14 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
     public AccountListAdapter(Fragment fragment,  List<Account> accountList) {
         super(fragment.getActivity(), R.layout.item_account, accountList);
-        this.activity = fragment.getActivity();
+        setNotifyOnChange(true);
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if (fragment instanceof OnAccountAdapterInteractionListener) {
             mListener = (OnAccountAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(activity.toString() + " must implement OnAccountAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnAccountAdapterInteractionListener.");
         }
-    }
-
-    public void updateRealm(List<Account> accountList){
-        clear();
-        addAll(accountList);
-        notifyDataSetChanged();
     }
 
     @Override
@@ -145,6 +142,16 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         viewHolder.name.setText(account.getName());
 
         return convertView;
+    }
+
+    public void updateRealm(RealmResults<Account> accountList){
+        clear();
+        addAll(accountList);
+        notifyDataSetChanged();
+    }
+
+    public RealmResults<Account> getRealmResults(){
+        return this.list;
     }
 
     public interface OnAccountAdapterInteractionListener {

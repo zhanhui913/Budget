@@ -22,8 +22,6 @@ import java.util.List;
  */
 public class CategoryGridAdapter extends ArrayAdapter<Category> {
 
-    private List<Category> categoryList;
-
     static class ViewHolder {
         public CircularView circularView;
         public TextView name;
@@ -31,7 +29,6 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
 
     public CategoryGridAdapter(Context context, List<Category> categoryList) {
         super(context, R.layout.item_circular_view, categoryList);
-        this.categoryList = categoryList;
     }
 
     @Override
@@ -52,7 +49,7 @@ public class CategoryGridAdapter extends ArrayAdapter<Category> {
         }
 
         //get category data
-        Category category = categoryList.get(position);
+        Category category = getItem(position);
 
         viewHolder.circularView.setCircleColor(category.getColor());
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), category.getIcon()));

@@ -22,8 +22,6 @@ import java.util.List;
  */
 public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
 
-    private List<CategoryPercent> categoryList;
-
     static class ViewHolder {
         public CircularView circularView;
         public TextView name;
@@ -33,7 +31,6 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
 
     public CategoryPercentListAdapter(Activity activity, List<CategoryPercent> categoryList) {
         super(activity, R.layout.item_category_percent_view, categoryList);
-        this.categoryList = categoryList;
     }
 
     @Override
@@ -59,7 +56,7 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
         }
 
         // getting category data for the row
-        CategoryPercent category = categoryList.get(position);
+        CategoryPercent category = getItem(position);
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getCategory().getColor());

@@ -17,10 +17,11 @@ import io.realm.Realm;
  */
 public abstract class BaseFragment extends Fragment {
 
-    private static final String TAG = "BaseFragment";
+    private static String TAG = "BaseFragment";
 
     protected Realm myRealm;
     protected View view;
+    protected Fragment instance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,13 +80,14 @@ public abstract class BaseFragment extends Fragment {
      * comes back into the fragment which is unnecessary.
      */
     protected void init(){
+        instance = this;
         resumeRealm();
     }
 
     public void resumeRealm(){
         if(myRealm == null || myRealm.isClosed()){
             myRealm = Realm.getDefaultInstance();
-            Log.d(TAG, "resumeRealm");
+            Log.d(TAG, "----- RESUME REALM -----");
         }
     }
 
@@ -95,7 +97,7 @@ public abstract class BaseFragment extends Fragment {
     public void closeRealm(){
         if(myRealm != null && !myRealm.isClosed()){
             myRealm.close();
-            Log.d(TAG, "closeRealm");
+            Log.d(TAG, "----- CLOSE REALM -----");
         }
     }
 }

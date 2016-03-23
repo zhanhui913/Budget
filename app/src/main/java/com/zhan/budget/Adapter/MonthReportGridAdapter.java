@@ -23,7 +23,6 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
  */
 public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
-    private List<MonthReport> monthReportList;
     private OnMonthReportAdapterInteractionListener mListener;
 
     static class ViewHolder {
@@ -36,7 +35,6 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
     public MonthReportGridAdapter(Fragment fragment, List<MonthReport> monthReportList) {
         super(fragment.getActivity(), R.layout.item_month_report, monthReportList);
-        this.monthReportList = monthReportList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
         if(fragment instanceof  OnMonthReportAdapterInteractionListener){
@@ -77,7 +75,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         }
 
         // getting monthReport data for the row
-        MonthReport monthReport = monthReportList.get(position);
+        MonthReport monthReport = getItem(position);
 
         viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
         viewHolder.costThisMonth.setText(CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
