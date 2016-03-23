@@ -15,6 +15,12 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="TintLayout">
+        <attr name="colors" format="reference" />
+        <attr name="angle" format="float" />
+        <attr name="resize" format="boolean" />
+    </declare-styleable>
+
     <attr name="themeColor" format="reference" />
     <attr name="themeColorHighlight" format="reference" />
     <attr name="themeColorText" format="reference" />

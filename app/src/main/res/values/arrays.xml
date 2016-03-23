@@ -75,4 +75,9 @@
         <item>@drawable/c_train</item>
         <item>@drawable/c_utilities</item>
     </string-array>
+
+    <string-array name="tint_shadow">
+        <item>@color/light_wisteria</item>
+        <item>@color/transparent</item>
+    </string-array>
 </resources>
