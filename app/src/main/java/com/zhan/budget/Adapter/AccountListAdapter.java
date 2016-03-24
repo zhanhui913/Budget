@@ -2,6 +2,7 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,34 +80,41 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
-                    //Log.d("ACCOUNT_LIST_ADAPTER", "onstartopen");
+                    Log.d("AccountFragment 1", "onstartopen");
                 }
 
                 @Override
                 public void onOpen(SwipeLayout layout) {
-                    //Log.d("ACCOUNT_LIST_ADAPTER", "on open");
+                    Log.d("AccountFragment 1", "on open");
                 }
 
                 @Override
                 public void onStartClose(SwipeLayout layout) {
-                    //Log.d("ACCOUNT_LIST_ADAPTER", "onstartclose");
+                    Log.d("AccountFragment 1", "onstartclose");
                 }
 
                 @Override
                 public void onClose(SwipeLayout layout) {
-                    //Log.d("ACCOUNT_LIST_ADAPTER", "onclose");
+                    Log.d("AccountFragment 1", "onclose");
                 }
 
                 @Override
                 public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                    //Log.d("ACCOUNT_LIST_ADAPTER", "onupdate "+leftOffset+","+topOffset);
-                    mListener.onDisablePtrPullDown(true);
+                    Log.d("AccountFragment 1", "onupdate "+leftOffset+","+topOffset);
+                    mListener.onPullDownAllow(false);
                 }
 
                 @Override
                 public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                    //Log.d("ACCOUNT_LIST_ADAPTER", "onhandrelease :"+xvel+","+yvel);
-                    mListener.onDisablePtrPullDown(false);
+                    Log.d("AccountFragment 1", "onhandrelease :"+xvel+","+yvel);
+                    mListener.onPullDownAllow(true);
+                }
+            });
+
+            viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickAccount(position);
                 }
             });
 
@@ -140,11 +148,18 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         return convertView;
     }
 
+    public void updateList(List<Account> list){
+        clear();
+        addAll(list);
+    }
+
     public interface OnAccountAdapterInteractionListener {
+        void onClickAccount(int position);
+
         void onDeleteAccount(int position);
 
         void onEditAccount(int position);
 
-        void onDisablePtrPullDown(boolean value);
+        void onPullDownAllow(boolean value);
     }
 }

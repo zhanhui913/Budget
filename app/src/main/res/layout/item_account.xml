@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     swipe:leftEdgeSwipeOffset="0dp"
-    swipe:rightEdgeSwipeOffset="0dp"
-    android:background="?attr/themeColorBtn">
+    swipe:rightEdgeSwipeOffset="0dp">
 
     <!-- Bottom view -->
     <LinearLayout
@@ -34,7 +33,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:clickable="true"
+        android:background="?attr/themeColorBtn">
 
         <TextView
             android:id="@+id/accountName"

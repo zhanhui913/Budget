@@ -17,6 +17,9 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -43,8 +46,9 @@ public class AccountFragment extends BaseFragment implements
     private AccountListAdapter accountListAdapter;
 
     private RealmResults<Account> resultsAccount;
+    private List<Account> accountList;
 
-    private Boolean isPulldownToAddAllow = true;
+    private Boolean isPulldownAllow = true;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -59,8 +63,10 @@ public class AccountFragment extends BaseFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
 
+        accountList = new ArrayList<>();
         accountListView = (ListView) view.findViewById(R.id.accountListView);
-
+        accountListAdapter = new AccountListAdapter(instance, accountList);
+        accountListView.setAdapter(accountListAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
@@ -72,7 +78,7 @@ public class AccountFragment extends BaseFragment implements
 
     private void populateAccount(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
-        resultsAccount.addChangeListener(new RealmChangeListener() {
+        /*resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
                 resultsAccount.removeChangeListener(this);
@@ -81,7 +87,23 @@ public class AccountFragment extends BaseFragment implements
                 accountListView.setAdapter(accountListAdapter);
                 updateAccountStatus();
             }
-        });
+        });*/
+
+
+
+
+        RealmChangeListener changeListener = new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                Log.d(TAG, "there's a change in results account ");
+                accountList = myRealm.copyFromRealm(resultsAccount);
+                accountListAdapter.updateList(accountList);
+
+                updateAccountStatus();
+            }
+        };
+
+        resultsAccount.addChangeListener(changeListener);
     }
 
     private void createPullToAddAccount(){
@@ -94,7 +116,7 @@ public class AccountFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if (isPulldownToAddAllow) {
+                if (isPulldownAllow) {
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -106,7 +128,7 @@ public class AccountFragment extends BaseFragment implements
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
             }
         });
 
@@ -114,23 +136,23 @@ public class AccountFragment extends BaseFragment implements
 
             @Override
             public void onUIReset(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIReset");
+                Log.d(TAG, "onUIReset");
             }
 
             @Override
             public void onUIRefreshPrepare(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshPrepare");
+                Log.d(TAG, "onUIRefreshPrepare");
             }
 
             @Override
             public void onUIRefreshBegin(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshBegin");
+                Log.d(TAG, "onUIRefreshBegin");
                 header.playRotateAnimation();
             }
 
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
+                Log.d(TAG, "onUIRefreshComplete");
                 addAccount();
             }
 
@@ -168,7 +190,7 @@ public class AccountFragment extends BaseFragment implements
                         myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
 
-                        accountListAdapter.notifyDataSetChanged();
+                        //accountListAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -207,7 +229,7 @@ public class AccountFragment extends BaseFragment implements
                         newAccount.setName(input.getText().toString());
                         myRealm.commitTransaction();
 
-                        accountListAdapter.notifyDataSetChanged();
+                        //accountListAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -237,23 +259,27 @@ public class AccountFragment extends BaseFragment implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
+    public void onClickAccount(int position){
+
+    }
+
+    @Override
     public void onDeleteAccount(int position){
         myRealm.beginTransaction();
         resultsAccount.remove(position);
         myRealm.commitTransaction();
 
-        accountListAdapter.notifyDataSetChanged();
+       // accountListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onEditAccount(int position){
-        //Toast.makeText(getContext(), "editting account "+accountList.get(position).getName(), Toast.LENGTH_SHORT).show();
         editAccount(position);
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
 
 }
