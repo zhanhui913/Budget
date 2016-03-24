@@ -180,6 +180,13 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             }
         });
 
+        viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickTransaction(position);
+            }
+        });
+
         viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,6 +211,8 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     }
 
     public interface OnTransactionAdapterInteractionListener {
+        void onClickTransaction(int position);
+
         void onDeleteTransaction(int position);
 
         void onApproveTransaction(int position);

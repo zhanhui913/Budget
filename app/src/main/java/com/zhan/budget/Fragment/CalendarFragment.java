@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,7 +123,7 @@ public class CalendarFragment extends BaseFragment implements
     }
 
     private void addListeners(){
-        transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -143,7 +142,7 @@ public class CalendarFragment extends BaseFragment implements
 
                 editTransaction(position);
             }
-        });
+        });*/
     }
 
     /**
@@ -564,6 +563,26 @@ public class CalendarFragment extends BaseFragment implements
     // Adapter listeners
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onClickTransaction(int position){
+
+        Transaction debugTransaction = transactionList.get(position);
+
+        Log.d(TAG, "----------- Click Result ----------");
+        Log.d(TAG, "transaction id :" + debugTransaction.getId());
+        Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
+        Log.d(TAG, "transaction daytype :" + debugTransaction.getDayType() + ", date :" + debugTransaction.getDate());
+        Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
+        Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
+        Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
+        Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
+        Log.i(TAG, "----------- Click Result ----------");
+
+
+        editTransaction(position);
+
+    }
 
     @Override
     public void onDeleteTransaction(int position){

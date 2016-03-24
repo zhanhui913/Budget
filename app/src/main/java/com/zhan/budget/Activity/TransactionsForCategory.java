@@ -148,6 +148,11 @@ public class TransactionsForCategory extends BaseActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
+    public void onClickTransaction(int position){
+
+    }
+
+    @Override
     public void onDeleteTransaction(int position){
         /*myRealm.beginTransaction();
         resultsAccount.remove(position);
