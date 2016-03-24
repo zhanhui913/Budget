@@ -15,8 +15,6 @@ import com.zhan.budget.R;
 
 import java.util.List;
 
-import io.realm.RealmResults;
-
 
 /**
  * Created by zhanyap on 15-08-19.
@@ -24,7 +22,6 @@ import io.realm.RealmResults;
 public class AccountListAdapter extends ArrayAdapter<Account> {
 
     private OnAccountAdapterInteractionListener mListener;
-    private RealmResults<Account> list;
 
     static class ViewHolder {
         public TextView name;
@@ -33,10 +30,9 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         public ImageView editBtn;
     }
 
-    public AccountListAdapter(Activity activity, RealmResults<Account> accountList){
+    public AccountListAdapter(Activity activity, List<Account> accountList){
         super(activity, R.layout.item_account, accountList);
         setNotifyOnChange(true);
-        list = accountList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if(activity instanceof OnAccountAdapterInteractionListener){
@@ -142,16 +138,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         viewHolder.name.setText(account.getName());
 
         return convertView;
-    }
-
-    public void updateRealm(RealmResults<Account> accountList){
-        clear();
-        addAll(accountList);
-        notifyDataSetChanged();
-    }
-
-    public RealmResults<Account> getRealmResults(){
-        return this.list;
     }
 
     public interface OnAccountAdapterInteractionListener {

@@ -79,7 +79,6 @@ public class AccountFragment extends BaseFragment implements
 
                 accountListAdapter = new AccountListAdapter(instance, resultsAccount);
                 accountListView.setAdapter(accountListAdapter);
-
                 updateAccountStatus();
             }
         });
@@ -150,7 +149,7 @@ public class AccountFragment extends BaseFragment implements
         //AlertDialog, where it not necessary to know what the parent is.
         View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
 
-        final Account account = accountListAdapter.getItem(position);
+        final Account account = resultsAccount.get(position);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Edit Account");
@@ -169,8 +168,7 @@ public class AccountFragment extends BaseFragment implements
                         myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
 
-                        accountListAdapter.remove(account);
-                        accountListAdapter.insert(account, position);
+                        accountListAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -209,7 +207,6 @@ public class AccountFragment extends BaseFragment implements
                         newAccount.setName(input.getText().toString());
                         myRealm.commitTransaction();
 
-                        //accountListAdapter.add(newAccount);
                         accountListAdapter.notifyDataSetChanged();
                     }
                 })
@@ -241,21 +238,11 @@ public class AccountFragment extends BaseFragment implements
 
     @Override
     public void onDeleteAccount(int position){
-  /*      myRealm.beginTransaction();
+        myRealm.beginTransaction();
         resultsAccount.remove(position);
         myRealm.commitTransaction();
 
-        accountList.remove(position);
-*/
-        //accountList = myRealm.copyFromRealm(resultsAccount);
-
-        Log.d(TAG,"There are "+accountListAdapter.getCount()+" items in adapter");
-
-        myRealm.beginTransaction();
-
-        accountListAdapter.getRealmResults().remove(position);
-
-        myRealm.commitTransaction();
+        accountListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -268,4 +255,5 @@ public class AccountFragment extends BaseFragment implements
     public void onDisablePtrPullDown(boolean value){
         isPulldownToAddAllow = !value;
     }
+
 }
