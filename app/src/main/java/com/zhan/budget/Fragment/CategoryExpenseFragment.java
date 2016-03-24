@@ -43,7 +43,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class CategoryExpenseFragment extends BaseFragment implements
-        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener{
+        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener, OnStartDragListener{
 
     private static final String TAG = "CategoryEXPENSEFragment";
 
@@ -92,14 +92,18 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
+        /*categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                Log.d("RECYCLER_DEBUG", "start drag");
+
                 isPulldownToAddAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
                 Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
+
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, this);
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
         categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(categoryRecyclerAdapter);
@@ -115,6 +119,15 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
         createPullDownToAddCategory();
         addListener();
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        Log.d("RECYCLER_DEBUG", "start drag");
+
+        isPulldownToAddAllow = false;
+        mItemTouchHelper.startDrag(viewHolder);
+        Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
     }
 
     private ItemTouchHelper mItemTouchHelper;

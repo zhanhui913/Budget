@@ -108,12 +108,11 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.red));
         }
 
-        viewHolder.swipeLayout.setOnLongClickListener(new View.OnLongClickListener() {
+        viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 mDragStartListener.onStartDrag(viewHolder);
                 mListener.onDisablePtrPullDown(true);
-                Log.d("RECYCLER_DEBUG", "start drag");
                 return true;
             }
         });
@@ -134,7 +133,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             }
         });
 
-        viewHolder.swipeLayout.setOnClickListener(new View.OnClickListener() {
+        viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(fragment.getContext(), "onClick "+position, Toast.LENGTH_SHORT).show();
