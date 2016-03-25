@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeCategory"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    swipe:leftEdgeSwipeOffset="0dp"
-    swipe:rightEdgeSwipeOffset="0dp">
+    android:layout_height="70dp">
 
     <!-- Bottom view -->
     <LinearLayout
