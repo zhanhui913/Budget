@@ -412,43 +412,6 @@ public class CalendarFragment extends BaseFragment implements
 
             transaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = transaction.getDate();
-            /*if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
-                //Repeat 10 times
-                for(int i = 0; i < 10; i++){
-                    myRealm.beginTransaction();
-                    nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                    myRealm.copyToRealmOrUpdate(transaction);
-                    myRealm.commitTransaction();
-                }
-            }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
-                //Repeat 10 times
-                for(int i = 0; i < 10; i++){
-                    myRealm.beginTransaction();
-                    nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                    myRealm.copyToRealmOrUpdate(transaction);
-                    myRealm.commitTransaction();
-                }
-            }else{
-                //Repeat 10 times
-                for(int i = 0; i < 10; i++){
-                    myRealm.beginTransaction();
-                    nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                    myRealm.copyToRealmOrUpdate(transaction);
-                    myRealm.commitTransaction();
-                }
-            }*/
-
-
-
 
             for(int i = 0; i < 10; i++){
                 myRealm.beginTransaction();
@@ -471,11 +434,6 @@ public class CalendarFragment extends BaseFragment implements
                 myRealm.copyToRealmOrUpdate(transaction);
                 myRealm.commitTransaction();
             }
-
-
-
-
-
         }
     }
 

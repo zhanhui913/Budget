@@ -112,7 +112,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             @Override
             public boolean onLongClick(View v) {
                 mDragStartListener.onStartDrag(viewHolder);
-                mListener.onDisablePtrPullDown(true);
+                mListener.onPullDownAllow(false);
                 return true;
             }
         });
@@ -153,7 +153,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     @Override
     public void onItemEndDrag(){
         Log.d("RECYCLER_DEBUG", "end drag");
-        mListener.onDisablePtrPullDown(false);
+        mListener.onPullDownAllow(true);
         mListener.onDoneDrag();
     }
 
@@ -230,7 +230,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         void onEditCategory(int position);
 
-        void onDisablePtrPullDown(boolean value);
+        void onPullDownAllow(boolean value);
 
         void onDoneDrag();
 

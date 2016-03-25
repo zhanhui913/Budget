@@ -68,7 +68,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
-    private Boolean isPulldownToAddAllow = true;
+    private Boolean isPulldownAllow = true;
 
     public CategoryExpenseFragment() {
         // Required empty public constructor
@@ -97,7 +97,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 Log.d("RECYCLER_DEBUG", "start drag");
 
-                isPulldownToAddAllow = false;
+                isPulldownAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
                 Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
             }
@@ -125,7 +125,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         Log.d("RECYCLER_DEBUG", "start drag");
 
-        isPulldownToAddAllow = false;
+        isPulldownAllow = false;
         mItemTouchHelper.startDrag(viewHolder);
         Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
     }
@@ -142,7 +142,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if(isPulldownToAddAllow){
+                if(isPulldownAllow){
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -154,7 +154,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
             }
         });
 
@@ -455,8 +455,8 @@ public class CategoryExpenseFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
 
     @Override
