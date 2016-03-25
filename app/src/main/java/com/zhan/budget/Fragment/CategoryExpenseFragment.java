@@ -31,6 +31,7 @@ import com.zhan.budget.View.PlusView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -449,7 +450,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
     @Override
     public void onEditCategory(int position){
-        Toast.makeText(getContext(), "editting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "editting category "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
         categoryIndexEditted = position;
         editCategory(position);
     }
@@ -526,5 +527,11 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition){
+        Collections.swap(categoryList, fromPosition, toPosition);
+        Log.d("ZHAP", "2 moved from " + fromPosition + " to " + toPosition);
     }
 }

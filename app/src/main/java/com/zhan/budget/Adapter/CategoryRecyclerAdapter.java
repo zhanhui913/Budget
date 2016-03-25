@@ -77,7 +77,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         // getting category data for the row
-        Category category = categoryList.get(position);
+        final Category category = categoryList.get(position);
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getColor());
@@ -120,8 +120,9 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("ZHAP", "editting category : "+category.getName());
                 mListener.onEditCategory(position);
-                Toast.makeText(fragment.getContext(), "onEdit " + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(fragment.getContext(), "onEdit " + position+" -> "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -146,7 +147,8 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     public boolean onItemMove(int fromPosition, int toPosition) {
         Collections.swap(categoryList, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
-        Log.d("RECYCLER_DEBUG", "moved from " + fromPosition + " to " + toPosition);
+        mListener.onItemMove(fromPosition, toPosition);
+        Log.d("ZHAP", "1 moved from " + fromPosition + " to " + toPosition);
         return true;
     }
 
@@ -235,6 +237,8 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         void onDoneDrag();
 
         void onClick(int position);
+
+        void onItemMove(int fromPosition, int toPosition);
     }
 }
 

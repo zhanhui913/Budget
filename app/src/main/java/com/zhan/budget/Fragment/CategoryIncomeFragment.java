@@ -31,6 +31,7 @@ import com.zhan.budget.View.PlusView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -515,5 +516,11 @@ public class CategoryIncomeFragment extends BaseFragment implements
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition){
+        Collections.swap(categoryList, fromPosition, toPosition);
+        Log.d("ZHAP", "2 moved from " + fromPosition + " to " + toPosition);
     }
 }

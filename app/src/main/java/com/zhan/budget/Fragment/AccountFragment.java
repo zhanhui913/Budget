@@ -78,20 +78,20 @@ public class AccountFragment extends BaseFragment implements
 
     private void populateAccount(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
-        /*resultsAccount.addChangeListener(new RealmChangeListener() {
+        resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                resultsAccount.removeChangeListener(this);
+                Log.d(TAG, "there's a change in results account ");
+                accountList = myRealm.copyFromRealm(resultsAccount);
+                accountListAdapter.updateList(accountList);
 
-                accountListAdapter = new AccountListAdapter(instance, resultsAccount);
-                accountListView.setAdapter(accountListAdapter);
                 updateAccountStatus();
             }
-        });*/
+        });
 
 
 
-
+/*
         RealmChangeListener changeListener = new RealmChangeListener() {
             @Override
             public void onChange() {
@@ -104,6 +104,7 @@ public class AccountFragment extends BaseFragment implements
         };
 
         resultsAccount.addChangeListener(changeListener);
+        */
     }
 
     private void createPullToAddAccount(){
