@@ -210,12 +210,12 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Colors.getColorFromAttr(itemView.getContext(), R.attr.themeColorHighlight));
+            swipeLayout.getSurfaceView().setBackgroundColor(Colors.getColorFromAttr(itemView.getContext(), R.attr.themeColorHighlight));
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackground(defaultDrawable);
+            swipeLayout.getSurfaceView().setBackground(defaultDrawable);
         }
     }
 
