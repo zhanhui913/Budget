@@ -78,7 +78,7 @@ public class CalendarFragment extends BaseFragment implements
     //Pull down
     private PtrFrameLayout frame;
     private PlusView header;
-    private Boolean isPulldownToAddAllow = true;
+    private Boolean isPulldownAllow = true;
 
 
     public CalendarFragment() {
@@ -158,7 +158,7 @@ public class CalendarFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if (isPulldownToAddAllow) {
+                if (isPulldownAllow) {
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -170,7 +170,7 @@ public class CalendarFragment extends BaseFragment implements
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
             }
         });
 
@@ -564,8 +564,8 @@ public class CalendarFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
 
     /**

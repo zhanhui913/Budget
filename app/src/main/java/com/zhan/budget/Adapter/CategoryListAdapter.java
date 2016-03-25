@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * Created by zhanyap on 2016-01-08.
  */
+//Not being used
 public class CategoryListAdapter extends ArrayAdapter<Category> {
 
     private OnCategoryAdapterInteractionListener mListener;

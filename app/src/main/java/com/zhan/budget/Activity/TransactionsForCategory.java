@@ -169,7 +169,7 @@ public class TransactionsForCategory extends BaseActivity implements
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
+    public void onPullDownAllow(boolean value){
         //no need to implement this as this activity has no pull down to refresh feature
     }
 }
