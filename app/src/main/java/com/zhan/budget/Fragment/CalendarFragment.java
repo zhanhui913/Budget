@@ -18,16 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
+import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
@@ -38,7 +41,9 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -120,6 +125,8 @@ public class CalendarFragment extends BaseFragment implements
         addListeners();
         createPullToAddTransaction();
         createCalendar();
+
+        updateScheduledTransactionsForDecoration();
     }
 
     private void addListeners(){
@@ -264,6 +271,43 @@ public class CalendarFragment extends BaseFragment implements
                 populateTransactionsForDate(selectedDate);
             }
         });
+
+        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
+            @Override
+            public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
+                return getEvents((new GregorianCalendar(year, month, day)).getTime());
+            }
+        });
+    }
+
+    private Map<Date,List<BudgetEvent>> eventMap;
+    private List<BudgetEvent> getEvents(Date date){
+        return eventMap.get(date);
+    }
+
+    private void updateScheduledTransactionsForDecoration(){
+        eventMap = new HashMap<>();
+        Log.d("EVENT", "there are "+eventMap.size()+" items in map");
+        final RealmResults<ScheduledTransaction> scheduledTransactions = myRealm.where(ScheduledTransaction.class).findAllAsync();
+        scheduledTransactions.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                scheduledTransactions.removeChangeListener(this);
+
+                for(int i = 0 ; i < scheduledTransactions.size(); i++) {
+                    List<BudgetEvent> colorList = new ArrayList<>();
+                    try {
+                        colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
+                        eventMap.put(scheduledTransactions.get(i).getTransaction().getDate(), colorList);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("EVENT", "there are "+scheduledTransactions.size()+" items in schedule list");
+                Log.d("EVENT", "there are "+eventMap.size()+" items in map");
+            }
+        });
+        calendarView.refresh();
     }
 
     /**
@@ -434,6 +478,8 @@ public class CalendarFragment extends BaseFragment implements
                 myRealm.copyToRealmOrUpdate(transaction);
                 myRealm.commitTransaction();
             }
+
+            updateScheduledTransactionsForDecoration();
         }
     }
 

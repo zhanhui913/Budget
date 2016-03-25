@@ -59,6 +59,25 @@ public final class CategoryUtil {
         return context.getResources().getIdentifier(value, "drawable", context.getPackageName());
     }
 
+    public static int getColorID(Context context, String value) throws Exception{
+        List<CategoryIconColor> colorList = getListOfCategoryColors(context);
+
+        int position = -1;
+
+        for(int i = 0; i < colorList.size(); i++){
+            if(colorList.get(i).getColor().equalsIgnoreCase(value)){
+                position = i;
+            }
+        }
+
+        if(position != -1){
+            TypedArray colors = context.getResources().obtainTypedArray(R.array.category_colors);
+            // get resource ID by index
+            return colors.getResourceId(position, 0);
+        }
+        throw new Exception("Cannot find color value in list of colors for category in array.xml");
+    }
+
     /**
      * Get first color in R.array.category_colors
      * @param context
