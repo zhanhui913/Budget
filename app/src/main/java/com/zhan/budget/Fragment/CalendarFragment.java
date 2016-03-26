@@ -230,7 +230,9 @@ public class CalendarFragment extends BaseFragment implements
                 if (cellType == BaseCellView.TODAY) {
                     cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
                 } else if (cellType == BaseCellView.SELECTED_TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.day_text));
+                    //cellView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+
+                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 }
 
                 return cellView;

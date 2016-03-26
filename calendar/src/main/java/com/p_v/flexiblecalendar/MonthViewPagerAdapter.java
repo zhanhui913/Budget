@@ -1,6 +1,7 @@
 package com.p_v.flexiblecalendar;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.List;
 public class MonthViewPagerAdapter extends PagerAdapter {
 
     public static final int VIEWS_IN_PAGER = 4;
+    static final String GRID_TAG_PREFIX = "MonthGrid-";
 
     private Context context;
     private List<FlexibleCalendarGridAdapter> dateAdapters;
@@ -124,6 +126,7 @@ public class MonthViewPagerAdapter extends PagerAdapter {
         adapter.setCellViewDrawer(cellViewDrawer);
 
         GridView view = (GridView)inflater.inflate(R.layout.month_grid_layout,null);
+        view.setTag(GRID_TAG_PREFIX+position);
         view.setAdapter(adapter);
         view.setVerticalSpacing(gridViewVerticalSpacing);
         view.setHorizontalSpacing(gridViewHorizontalSpacing);
@@ -182,12 +185,6 @@ public class MonthViewPagerAdapter extends PagerAdapter {
             return POSITION_NONE;
         }
         return POSITION_UNCHANGED;
-    }
-
-    public void refreshAdapters(){
-        this.refreshMonthViewAdpater = true;
-        this.notifyDataSetChanged();
-        this.refreshMonthViewAdpater = false;
     }
 
     public void setStartDayOfTheWeek(int startDayOfTheWeek){
