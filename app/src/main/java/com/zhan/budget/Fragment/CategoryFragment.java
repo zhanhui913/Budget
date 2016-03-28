@@ -76,9 +76,8 @@ public class CategoryFragment extends Fragment {
 
     private void createTabs(){
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
-
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         categoryExpenseFragment = new CategoryExpenseFragment();
@@ -87,7 +86,7 @@ public class CategoryFragment extends Fragment {
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
-        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryIncomeFragment, categoryExpenseFragment);
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
         viewPager.setAdapter(adapterViewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 

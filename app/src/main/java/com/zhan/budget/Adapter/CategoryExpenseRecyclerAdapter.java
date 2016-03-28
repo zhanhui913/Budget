@@ -35,24 +35,24 @@ import java.util.List;
  *
  * @author Paul Burke (ipaulpro)
  */
-public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecyclerAdapter.ViewHolder>
+public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<CategoryExpenseRecyclerAdapter.ViewHolder>
         implements ItemTouchHelperAdapter{
 
     private Context context;
     private List<Category> categoryList;
-    private static OnCategoryAdapterInteractionListener mListener;
+    private static OnCategoryExpenseAdapterInteractionListener mListener;
     private static OnStartDragListener mDragStartListener;
 
-    public CategoryRecyclerAdapter(Fragment fragment, List<Category> list, OnStartDragListener startDragListener) {
+    public CategoryExpenseRecyclerAdapter(Fragment fragment, List<Category> list, OnStartDragListener startDragListener) {
         this.context = fragment.getContext();
         this.categoryList = list;
         mDragStartListener = startDragListener;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if (fragment instanceof OnCategoryAdapterInteractionListener) {
-            mListener = (OnCategoryAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
+        if (fragment instanceof OnCategoryExpenseAdapterInteractionListener) {
+            mListener = (OnCategoryExpenseAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnCategoryAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnCategoryExpenseAdapterInteractionListener.");
         }
     }
 
@@ -237,7 +237,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnCategoryAdapterInteractionListener {
+    public interface OnCategoryExpenseAdapterInteractionListener {
         void onDeleteCategory(int position);
 
         void onEditCategory(int position);
