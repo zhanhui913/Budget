@@ -195,32 +195,4 @@ public final class Util {
         wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.widthPixels;
     }
-
-    public static void setStartDayOfWeekPreference(Activity activity, int startDay){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
-        if(startDay == 1){
-            Log.d("THEME_UTIL", "setStartDayOfWeekPreference : SUNDAY");
-        }else if(startDay == 2){
-            Log.d("THEME_UTIL", "setStartDayOfWeekPreference : MONDAY");
-        }
-
-        //set Constants.START_DAY_CALENDAR shared preferences to whatever the selected start day is
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(Constants.START_DAY_CALENDAR, startDay);
-        editor.apply();
-    }
-
-    public static int getStartDayOfWeekPreference(Activity activity){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        int startDay = sharedPreferences.getInt(Constants.START_DAY_CALENDAR, 1);
-
-        if(startDay == 1){
-            Log.d("THEME_UTIL", "getStartDayOfWeekPreference : SUNDAY" );
-        }else if(startDay == 2){
-            Log.d("THEME_UTIL", "getStartDayOfWeekPreference : MONDAY" );
-        }
-
-        return startDay;
-    }
 }

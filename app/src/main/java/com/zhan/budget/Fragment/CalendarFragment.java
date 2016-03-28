@@ -30,7 +30,9 @@ import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
@@ -59,7 +61,7 @@ import io.realm.RealmResults;
  * {@link CalendarFragment.OnCalendarInteractionListener} interface
  * to handle interaction events.
  */
-public class CalendarFragment extends BaseFragment implements
+public class CalendarFragment extends BaseRealmFragment implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
     private static final String TAG = "CalendarFragment";
@@ -230,9 +232,7 @@ public class CalendarFragment extends BaseFragment implements
                 if (cellType == BaseCellView.TODAY) {
                     cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
                 } else if (cellType == BaseCellView.SELECTED_TODAY) {
-                    //cellView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
-
-                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    cellView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColor));
                 }
 
                 return cellView;
@@ -254,7 +254,7 @@ public class CalendarFragment extends BaseFragment implements
             }
         });
 
-        calendarView.setStartDayOfTheWeek(Util.getStartDayOfWeekPreference(getActivity()));
+        calendarView.setStartDayOfTheWeek(BudgetPreference.getStartDay(getContext()));
 
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override

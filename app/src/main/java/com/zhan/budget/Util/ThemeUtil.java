@@ -2,11 +2,8 @@ package com.zhan.budget.Util;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.R;
 
 /**
@@ -24,7 +21,7 @@ public final class ThemeUtil {
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
     public static void changeToTheme(Activity activity, int theme) {
-        setDefaultThemePreference(activity, theme);
+        BudgetPreference.setCurrentTheme(activity, theme);
 
         Log.d("THEME_COLOR_DEBUG", "changing theme to " + theme);
         activity.finish();
@@ -35,7 +32,7 @@ public final class ThemeUtil {
     /** Set the theme of the activity, according to the configuration. */
     public static void onActivityCreateSetTheme(Activity activity) {
 
-        int sTheme = getCurrentThemePreference(activity);
+        int sTheme = BudgetPreference.getCurrentTheme(activity);
 
         Log.d("THEME_COLOR_DEBUG", "current theme is " + sTheme);
         switch (sTheme) {
@@ -47,21 +44,5 @@ public final class ThemeUtil {
                 activity.setTheme(R.style.AppThemeDark_NoActionBar);
                 break;
         }
-    }
-
-    private static void setDefaultThemePreference(Activity activity, int theme){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        Log.d("THEME_UTIL", "setDefaultThemePreference : "+theme);
-        //set Constants.DEFAULT_THEME shared preferences to whatever the current theme is
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(Constants.DEFAULT_THEME, theme);
-        editor.apply();
-    }
-
-    public static int getCurrentThemePreference(Activity activity){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        int retrievedTheme = sharedPreferences.getInt(Constants.DEFAULT_THEME, THEME_LIGHT);
-        Log.d("THEME_UTIL", "getCurrentThemePreference : "+retrievedTheme);
-        return retrievedTheme;
     }
 }

@@ -1,14 +1,15 @@
 package com.zhan.budget.Fragment;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,9 +18,9 @@ import android.widget.Toast;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
-import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
@@ -81,11 +83,11 @@ public class SettingFragment extends BaseFragment {
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
 
-        CURRENT_THEME = ThemeUtil.getCurrentThemePreference(getActivity());
-        themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode": "Day Mode"));
+        CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
+        themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode" : "Day Mode"));
 
-        int startDay = Util.getStartDayOfWeekPreference(getActivity());
-        firstDayContent.setText(startDay == 1 ? "Sunday" : "Monday");
+        int startDay = BudgetPreference.getStartDay(getContext());
+        firstDayContent.setText(startDay == Calendar.SUNDAY ? "Sunday" : "Monday");
 
         addListeners();
     }
@@ -103,9 +105,15 @@ public class SettingFragment extends BaseFragment {
         firstDayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int startDay = Util.getStartDayOfWeekPreference(getActivity());
-                firstDayContent.setText(startDay == 1 ? "Monday" : "Sunday");
-                Util.setStartDayOfWeekPreference(getActivity(), startDay == 1 ? 2 : 1);
+                int startDay = BudgetPreference.getStartDay(getContext());
+
+                if(startDay == Calendar.SUNDAY){
+                    firstDayContent.setText("Monday");
+                    BudgetPreference.setMondayStartDay(getContext());
+                }else{
+                    firstDayContent.setText("Sunday");
+                    BudgetPreference.setSundayStartDay(getContext());
+                }
             }
         });
 
@@ -191,6 +199,7 @@ public class SettingFragment extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void getTransactionListForCSV(){
+        final Realm myRealm = Realm.getDefaultInstance();
         transactionList = new ArrayList<>();
         transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
         transactionResults.addChangeListener(new RealmChangeListener() {
@@ -198,6 +207,7 @@ public class SettingFragment extends BaseFragment {
             public void onChange() {
                 transactionResults.removeChangeListener(this);
                 transactionList = myRealm.copyFromRealm(transactionResults);
+                myRealm.close();
                 exportCSV();
             }
         });
@@ -293,22 +303,46 @@ public class SettingFragment extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void resetData(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        // get alertdialog_generic_message.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
-        //set Constants.FIRST_TIME shared preferences to true to reset it
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(Constants.FIRST_TIME, true);
-        editor.apply();
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_message, null);
 
-        RealmConfiguration config = new RealmConfiguration.Builder(getContext())
-                .name(Constants.REALM_NAME)
-                .deleteRealmIfMigrationNeeded()
-                .schemaVersion(1)
-                .build();
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        Realm.deleteRealm(config);
-        Toast.makeText(getContext(), "Reset data", Toast.LENGTH_SHORT).show();
 
+        title.setText("Confirm Delete");
+        message.setText("Resetting data will remove all data you've entered, are you sure you want to reset?");
+
+        new AlertDialog.Builder(getActivity())
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getContext(), "RESETTING...", Toast.LENGTH_SHORT).show();
+
+                        BudgetPreference.resetFirstTime(getContext());
+
+                        RealmConfiguration config = new RealmConfiguration.Builder(getContext())
+                                .name(Constants.REALM_NAME)
+                                .deleteRealmIfMigrationNeeded()
+                                .schemaVersion(1)
+                                .build();
+
+                        Realm.deleteRealm(config);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -43,7 +43,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class CategoryExpenseFragment extends BaseFragment implements
+public class CategoryExpenseFragment extends BaseRealmFragment implements
         CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener, OnStartDragListener{
 
     private static final String TAG = "CategoryEXPENSEFragment";
@@ -416,7 +416,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
     }
 
     private void confirmDelete(int position){
-        // get prompts.xml view
+        // get alertdialog_generic_message.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a

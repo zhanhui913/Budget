@@ -31,7 +31,7 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends BaseFragment implements
+public class AccountFragment extends BaseRealmFragment implements
         AccountListAdapter.OnAccountAdapterInteractionListener{
 
     private static final String TAG = "AccountFragment";

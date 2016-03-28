@@ -37,6 +37,8 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.ExtendedNumberPicker;
@@ -386,11 +388,8 @@ public class TransactionInfoActivity extends BaseActivity implements
                 if (cellType == BaseCellView.TODAY) {
                     cellView.setTextColor(ContextCompat.getColor(instance, R.color.colorPrimary));
                 } else if (cellType == BaseCellView.SELECTED_TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(instance, R.color.day_text));
-                }else if(cellType == BaseCellView.REGULAR){
-                    //cellView.setTextColor(ContextCompat.getColor(instance, R.color.red));
+                    cellView.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColor));
                 }
-                cellView.setTextSize(16);
 
                 return cellView;
             }
@@ -412,7 +411,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         });
 
-        calendarView.setStartDayOfTheWeek(Util.getStartDayOfWeekPreference(this));
+        calendarView.setStartDayOfTheWeek(BudgetPreference.getStartDay(this));
 
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
