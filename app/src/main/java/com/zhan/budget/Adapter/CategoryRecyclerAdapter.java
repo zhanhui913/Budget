@@ -1,5 +1,6 @@
 package com.zhan.budget.Adapter;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -37,23 +38,21 @@ import java.util.List;
 public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecyclerAdapter.ViewHolder>
         implements ItemTouchHelperAdapter{
 
-    private Fragment fragment;
+    private Context context;
     private List<Category> categoryList;
     private static OnCategoryAdapterInteractionListener mListener;
     private static OnStartDragListener mDragStartListener;
-    private boolean showDate;
 
-    public CategoryRecyclerAdapter(Fragment fragment, List<Category> list, boolean showDate, OnStartDragListener startDragListener) {
-        this.fragment = fragment;
+    public CategoryRecyclerAdapter(Fragment fragment, List<Category> list, OnStartDragListener startDragListener) {
+        this.context = fragment.getContext();
         this.categoryList = list;
-        this.showDate = showDate;
         mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnCategoryAdapterInteractionListener) {
             mListener = (OnCategoryAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(fragment.getContext().toString() + " must implement OnCategoryAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnCategoryAdapterInteractionListener.");
         }
     }
 
@@ -75,7 +74,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(this.fragment.getContext(), category.getIcon()));
+        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
 
         viewHolder.name.setText(category.getName());
         viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
@@ -89,23 +88,22 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
         }else{
             viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
-
             viewHolder.progressBar.setVisibility(View.GONE);
         }
 
         if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.colorPrimary));
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
         }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.sunflower));
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.sunflower));
         }else{ //If exceeded budget
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.red));
+            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
         }
 
         viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mDragStartListener.onStartDrag(viewHolder);
                 mListener.onPullDownAllow(false);
+                mDragStartListener.onStartDrag(viewHolder);
                 return false;
             }
         });

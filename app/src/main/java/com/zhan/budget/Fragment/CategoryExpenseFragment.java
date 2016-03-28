@@ -51,7 +51,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     private PlusView header;
     private ViewGroup emptyLayout;
 
-    private TextView emptyCategoryText;
     private List<Category> categoryList;
 
     private CategoryRecyclerAdapter categoryRecyclerAdapter;
@@ -84,18 +83,17 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
         currentMonth = new Date();
 
-        emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
+        TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
         emptyCategoryText.setText("Pull down to add a category");
 
         transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                Log.d(TAG, "start drag");
-                isPulldownAllow = false;
+                //isPulldownAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
             }
         });
@@ -197,7 +195,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 resultsCategory.removeChangeListeners();
                 resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
-                Log.d("BRIANA", "There are " + categoryList.size() + " expense categories");
                 updateCategoryStatus();
 
                 categoryRecyclerAdapter.setCategoryList(categoryList);
@@ -419,6 +416,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     @Override
     public void onPullDownAllow(boolean value){
         isPulldownAllow = value;
+        Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -431,6 +429,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         Log.d(TAG, "new suppose indices -----------");
 */
         isPulldownAllow = true;
+        Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {

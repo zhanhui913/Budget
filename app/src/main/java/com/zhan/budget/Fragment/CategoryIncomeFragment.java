@@ -51,9 +51,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     private PlusView header;
     private ViewGroup emptyLayout;
 
-    private TextView emptyCategoryText;
     private List<Category> categoryList;
-
     private CategoryRecyclerAdapter categoryRecyclerAdapter;
     private RecyclerView categoryListView;
 
@@ -84,17 +82,17 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
         currentMonth = new Date();
 
-        emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
+        TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
         emptyCategoryText.setText("Pull down to add a category");
 
         transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                isPulldownAllow = false;
+                //isPulldownAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
             }
         });
@@ -198,7 +196,6 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
                 resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
-                Log.d(TAG, "There are " + categoryList.size() + " income categories");
                 updateCategoryStatus();
 
                 categoryRecyclerAdapter.setCategoryList(categoryList);
@@ -421,6 +418,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     @Override
     public void onPullDownAllow(boolean value){
         isPulldownAllow = value;
+        Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -436,6 +434,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
         */
 
         isPulldownAllow = true;
+        Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
 
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.INCOME.toString()).findAllAsync();
@@ -485,12 +484,12 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
     @Override
     public void onClick(int position){
-        Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "click on category :"+categoryRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
 
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+        Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);

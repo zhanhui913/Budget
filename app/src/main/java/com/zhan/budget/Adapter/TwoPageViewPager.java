@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
  * Created by Zhan on 16-01-11.
  */
 public class TwoPageViewPager extends FragmentPagerAdapter {
-    private static int NUM_ITEMS = 2;
     private Fragment firstPage;
     private Fragment secondPage;
 
@@ -34,6 +33,6 @@ public class TwoPageViewPager extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return NUM_ITEMS;
+        return 2;
     }
 }
