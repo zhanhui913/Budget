@@ -15,16 +15,15 @@ import io.realm.Realm;
  *
  * @author Zhan H. Yap
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseRealmFragment extends Fragment {
+    private static String TAG = "BaseRealmFragment";
 
-    private static String TAG = "BaseFragment";
-
+    protected Realm myRealm;
     protected View view;
     protected Fragment instance;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                       Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         view = inflater.inflate(getFragmentLayout(), container, false);
         return view;
@@ -35,6 +34,34 @@ public abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated");
         init();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG, "onStart");
+        resumeRealm();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG, "onResume");
+        resumeRealm();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(TAG, "onPause");
+        closeRealm();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d(TAG, "onStop");
+        closeRealm();
     }
 
     /**
@@ -52,6 +79,23 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void init(){
         instance = this;
+        resumeRealm();
     }
 
+    public void resumeRealm(){
+        if(myRealm == null || myRealm.isClosed()){
+            myRealm = Realm.getDefaultInstance();
+            Log.d(TAG, "----- RESUME REALM -----");
+        }
+    }
+
+    /**
+     * Close Realm if possible
+     */
+    public void closeRealm(){
+        if(myRealm != null && !myRealm.isClosed()){
+            myRealm.close();
+            Log.d(TAG, "----- CLOSE REALM -----");
+        }
+    }
 }

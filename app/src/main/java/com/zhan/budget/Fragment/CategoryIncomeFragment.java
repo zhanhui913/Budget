@@ -31,6 +31,7 @@ import com.zhan.budget.View.PlusView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class CategoryIncomeFragment extends BaseFragment implements
+public class CategoryIncomeFragment extends BaseRealmFragment implements
         CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener{
 
     private static final String TAG = "CategoryINCOMEFragment";
@@ -68,7 +69,7 @@ public class CategoryIncomeFragment extends BaseFragment implements
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
-    private Boolean isPulldownToAddAllow = true;
+    private Boolean isPulldownAllow = true;
 
     public CategoryIncomeFragment() {
         // Required empty public constructor
@@ -95,7 +96,7 @@ public class CategoryIncomeFragment extends BaseFragment implements
         categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                isPulldownToAddAllow = false;
+                isPulldownAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
                 Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
             }
@@ -129,7 +130,7 @@ public class CategoryIncomeFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if(isPulldownToAddAllow){
+                if(isPulldownAllow){
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -141,7 +142,7 @@ public class CategoryIncomeFragment extends BaseFragment implements
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
             }
         });
 
@@ -403,7 +404,7 @@ public class CategoryIncomeFragment extends BaseFragment implements
     }
 
     private void confirmDelete(int position){
-        // get prompts.xml view
+        // get alertdialog_generic_message.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
@@ -443,8 +444,8 @@ public class CategoryIncomeFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
 
     @Override
@@ -515,5 +516,11 @@ public class CategoryIncomeFragment extends BaseFragment implements
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition){
+        Collections.swap(categoryList, fromPosition, toPosition);
+        Log.d("ZHAP", "2 moved from " + fromPosition + " to " + toPosition);
     }
 }

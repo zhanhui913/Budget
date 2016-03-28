@@ -31,6 +31,6 @@ public class ColorsTest extends TestCase {
     }
 
     public void testBoth() throws Exception{
-        assertEquals("#FF00F", Colors.validateHex("#FF00F"));
+        assertEquals("FF00F123", Colors.validateHex("123"));
     }
 }

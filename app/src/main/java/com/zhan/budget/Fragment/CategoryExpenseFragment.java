@@ -42,8 +42,8 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class CategoryExpenseFragment extends BaseFragment implements
-        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener{
+public class CategoryExpenseFragment extends BaseRealmFragment implements
+        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener, OnStartDragListener{
 
     private static final String TAG = "CategoryEXPENSEFragment";
 
@@ -68,7 +68,8 @@ public class CategoryExpenseFragment extends BaseFragment implements
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
-    private Boolean isPulldownToAddAllow = true;
+    private Boolean isPulldownAllow = true;
+    private ItemTouchHelper mItemTouchHelper;
 
     public CategoryExpenseFragment() {
         // Required empty public constructor
@@ -92,14 +93,18 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
+        /*categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                isPulldownToAddAllow = false;
+                Log.d("RECYCLER_DEBUG", "start drag");
+
+                isPulldownAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
                 Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
+
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, this);
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
         categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(categoryRecyclerAdapter);
@@ -114,10 +119,16 @@ public class CategoryExpenseFragment extends BaseFragment implements
         populateCategoryWithNoInfo();
 
         createPullDownToAddCategory();
-        addListener();
     }
 
-    private ItemTouchHelper mItemTouchHelper;
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        Log.d("RECYCLER_DEBUG", "start drag");
+
+        isPulldownAllow = false;
+        mItemTouchHelper.startDrag(viewHolder);
+        Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
+    }
 
     private void createPullDownToAddCategory(){
         frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
@@ -129,7 +140,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if(isPulldownToAddAllow){
+                if(isPulldownAllow){
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -141,7 +152,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, categoryListView, header);
             }
         });
 
@@ -174,23 +185,6 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
             }
         });
-    }
-
-    private void addListener(){
-        /*categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-                Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
-
-                Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-                startActivity(viewAllTransactionsForCategory);
-            }
-        });*/
     }
 
     private void updateCategoryStatus(){
@@ -402,7 +396,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
     }
 
     private void confirmDelete(int position){
-        // get prompts.xml view
+        // get alertdialog_generic_message.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
@@ -436,27 +430,25 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
     @Override
     public void onEditCategory(int position){
-        Toast.makeText(getContext(), "editting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "editting category "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
         categoryIndexEditted = position;
         editCategory(position);
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
 
     @Override
     public void onDoneDrag(){
-        //Log.d(TAG, "new suppose indices -----------");
-
+ /*       Log.d(TAG, "new suppose indices -----------");
         for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
             String name = categoryRecyclerAdapter.getCategoryList().get(i).getName();
-            //Log.d(TAG, i+"->"+name);
+            Log.d(TAG, i+"->"+name);
         }
-
-        //Log.d(TAG, "new suppose indices -----------");
-
+        Log.d(TAG, "new suppose indices -----------");
+*/
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
@@ -465,7 +457,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
                 resultsCategory.removeChangeListeners();
 
                 myRealm.beginTransaction();
-                //Log.d(TAG, "old indices -----------");
+               //Log.d(TAG, "old indices -----------");
 
                 for (int i = 0; i < resultsCategory.size(); i++) {
                     int index = resultsCategory.get(i).getIndex();
@@ -497,7 +489,7 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
                 myRealm.commitTransaction();
 
-                //Log.d(TAG, "DONE UPDATING indices");
+                Log.d(TAG, "DONE UPDATING indices");
             }
         });
     }
@@ -513,5 +505,24 @@ public class CategoryExpenseFragment extends BaseFragment implements
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition){
+        /*Log.d(TAG, "1 old indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d(TAG, i+"->"+name);
+        }
+        Log.d(TAG, "1 old indices -----------");
+
+        Collections.swap(categoryList, fromPosition, toPosition);
+
+        Log.d(TAG, "1 new suppose indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d(TAG, i+"->"+name);
+        }
+        Log.d(TAG, "1 new suppose indices -----------");*/
     }
 }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Realm.Account;
@@ -32,7 +31,7 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends BaseFragment implements
+public class AccountFragment extends BaseRealmFragment implements
         AccountListAdapter.OnAccountAdapterInteractionListener{
 
     private static final String TAG = "AccountFragment";
@@ -45,11 +44,11 @@ public class AccountFragment extends BaseFragment implements
 
     private ListView accountListView;
     private AccountListAdapter accountListAdapter;
-    private List<Account> accountList;
 
     private RealmResults<Account> resultsAccount;
+    private List<Account> accountList;
 
-    private Boolean isPulldownToAddAllow = true;
+    private Boolean isPulldownAllow = true;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -63,10 +62,10 @@ public class AccountFragment extends BaseFragment implements
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
-        accountList = new ArrayList<>();
 
+        accountList = new ArrayList<>();
         accountListView = (ListView) view.findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(this, accountList);
+        accountListAdapter = new AccountListAdapter(instance, accountList);
         accountListView.setAdapter(accountListAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
@@ -82,16 +81,30 @@ public class AccountFragment extends BaseFragment implements
         resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                resultsAccount.removeChangeListener(this);
-
+                Log.d(TAG, "there's a change in results account ");
                 accountList = myRealm.copyFromRealm(resultsAccount);
+                accountListAdapter.updateList(accountList);
 
                 updateAccountStatus();
-
-                //accountListAdapter.addAll(accountList);
-                accountListAdapter.updateRealm(accountList);
             }
         });
+
+
+
+/*
+        RealmChangeListener changeListener = new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                Log.d(TAG, "there's a change in results account ");
+                accountList = myRealm.copyFromRealm(resultsAccount);
+                accountListAdapter.updateList(accountList);
+
+                updateAccountStatus();
+            }
+        };
+
+        resultsAccount.addChangeListener(changeListener);
+        */
     }
 
     private void createPullToAddAccount(){
@@ -104,7 +117,7 @@ public class AccountFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if (isPulldownToAddAllow) {
+                if (isPulldownAllow) {
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -116,7 +129,7 @@ public class AccountFragment extends BaseFragment implements
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
             }
         });
 
@@ -124,23 +137,23 @@ public class AccountFragment extends BaseFragment implements
 
             @Override
             public void onUIReset(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIReset");
+                Log.d(TAG, "onUIReset");
             }
 
             @Override
             public void onUIRefreshPrepare(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshPrepare");
+                Log.d(TAG, "onUIRefreshPrepare");
             }
 
             @Override
             public void onUIRefreshBegin(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshBegin");
+                Log.d(TAG, "onUIRefreshBegin");
                 header.playRotateAnimation();
             }
 
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
+                Log.d(TAG, "onUIRefreshComplete");
                 addAccount();
             }
 
@@ -151,7 +164,6 @@ public class AccountFragment extends BaseFragment implements
         });
     }
 
-
     private void editAccount(final int position){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
@@ -160,13 +172,12 @@ public class AccountFragment extends BaseFragment implements
         //AlertDialog, where it not necessary to know what the parent is.
         View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+        final Account account = resultsAccount.get(position);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-
-        final Account account = accountList.get(position);
-
         title.setText("Edit Account");
+
+        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
         input.setText(account.getName());
         input.setHint("Account");
 
@@ -179,8 +190,8 @@ public class AccountFragment extends BaseFragment implements
                         account.setName(input.getText().toString());
                         myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
-                        accountList.set(position, account);
-                        accountListAdapter.updateRealm(accountList);
+
+                        //accountListAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -202,9 +213,11 @@ public class AccountFragment extends BaseFragment implements
         View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
 
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+        input.setText("");
+        input.setHint("Account");
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setHint("Account");
+        title.setText("Add Account");
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
@@ -216,8 +229,8 @@ public class AccountFragment extends BaseFragment implements
                         newAccount.setId(Util.generateUUID());
                         newAccount.setName(input.getText().toString());
                         myRealm.commitTransaction();
-                        accountList.add(newAccount);
-                        accountListAdapter.add(newAccount);
+
+                        //accountListAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -231,7 +244,7 @@ public class AccountFragment extends BaseFragment implements
     }
 
     private void updateAccountStatus(){
-        if(accountList.size() > 0){
+        if(accountListAdapter.getCount() > 0){
             emptyLayout.setVisibility(View.GONE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
@@ -247,23 +260,27 @@ public class AccountFragment extends BaseFragment implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
+    public void onClickAccount(int position){
+
+    }
+
+    @Override
     public void onDeleteAccount(int position){
         myRealm.beginTransaction();
         resultsAccount.remove(position);
         myRealm.commitTransaction();
 
-        accountList = myRealm.copyFromRealm(resultsAccount);
-        accountListAdapter.updateRealm(accountList);
+       // accountListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onEditAccount(int position){
-        Toast.makeText(getContext(), "editting account "+accountList.get(position).getName(), Toast.LENGTH_SHORT).show();
         editAccount(position);
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
+
 }

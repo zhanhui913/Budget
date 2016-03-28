@@ -13,22 +13,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
+import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
@@ -39,7 +43,9 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -55,7 +61,7 @@ import io.realm.RealmResults;
  * {@link CalendarFragment.OnCalendarInteractionListener} interface
  * to handle interaction events.
  */
-public class CalendarFragment extends BaseFragment implements
+public class CalendarFragment extends BaseRealmFragment implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
     private static final String TAG = "CalendarFragment";
@@ -79,7 +85,7 @@ public class CalendarFragment extends BaseFragment implements
     //Pull down
     private PtrFrameLayout frame;
     private PlusView header;
-    private Boolean isPulldownToAddAllow = true;
+    private Boolean isPulldownAllow = true;
 
 
     public CalendarFragment() {
@@ -121,10 +127,12 @@ public class CalendarFragment extends BaseFragment implements
         addListeners();
         createPullToAddTransaction();
         createCalendar();
+
+        updateScheduledTransactionsForDecoration();
     }
 
     private void addListeners(){
-        transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -143,7 +151,7 @@ public class CalendarFragment extends BaseFragment implements
 
                 editTransaction(position);
             }
-        });
+        });*/
     }
 
     /**
@@ -159,7 +167,7 @@ public class CalendarFragment extends BaseFragment implements
         frame.setPtrHandler(new PtrHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if (isPulldownToAddAllow) {
+                if (isPulldownAllow) {
                     insideFrame.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -171,7 +179,7 @@ public class CalendarFragment extends BaseFragment implements
 
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownToAddAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, transactionListView, header);
             }
         });
 
@@ -224,7 +232,7 @@ public class CalendarFragment extends BaseFragment implements
                 if (cellType == BaseCellView.TODAY) {
                     cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
                 } else if (cellType == BaseCellView.SELECTED_TODAY) {
-                    cellView.setTextColor(ContextCompat.getColor(getContext(), R.color.day_text));
+                    cellView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColor));
                 }
 
                 return cellView;
@@ -246,7 +254,7 @@ public class CalendarFragment extends BaseFragment implements
             }
         });
 
-        calendarView.setStartDayOfTheWeek(Util.getStartDayOfWeekPreference(getActivity()));
+        calendarView.setStartDayOfTheWeek(BudgetPreference.getStartDay(getContext()));
 
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
@@ -265,6 +273,43 @@ public class CalendarFragment extends BaseFragment implements
                 populateTransactionsForDate(selectedDate);
             }
         });
+
+        calendarView.setEventDataProvider(new FlexibleCalendarView.EventDataProvider() {
+            @Override
+            public List<? extends Event> getEventsForTheDay(int year, int month, int day) {
+                return getEvents((new GregorianCalendar(year, month, day)).getTime());
+            }
+        });
+    }
+
+    private Map<Date,List<BudgetEvent>> eventMap;
+    private List<BudgetEvent> getEvents(Date date){
+        return eventMap.get(date);
+    }
+
+    private void updateScheduledTransactionsForDecoration(){
+        eventMap = new HashMap<>();
+        Log.d("EVENT", "there are "+eventMap.size()+" items in map");
+        final RealmResults<ScheduledTransaction> scheduledTransactions = myRealm.where(ScheduledTransaction.class).findAllAsync();
+        scheduledTransactions.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                scheduledTransactions.removeChangeListener(this);
+
+                for(int i = 0 ; i < scheduledTransactions.size(); i++) {
+                    List<BudgetEvent> colorList = new ArrayList<>();
+                    try {
+                        colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
+                        eventMap.put(scheduledTransactions.get(i).getTransaction().getDate(), colorList);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("EVENT", "there are "+scheduledTransactions.size()+" items in schedule list");
+                Log.d("EVENT", "there are "+eventMap.size()+" items in map");
+            }
+        });
+        calendarView.refresh();
     }
 
     /**
@@ -413,43 +458,6 @@ public class CalendarFragment extends BaseFragment implements
 
             transaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = transaction.getDate();
-            /*if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
-                //Repeat 10 times
-                for(int i = 0; i < 10; i++){
-                    myRealm.beginTransaction();
-                    nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                    myRealm.copyToRealmOrUpdate(transaction);
-                    myRealm.commitTransaction();
-                }
-            }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
-                //Repeat 10 times
-                for(int i = 0; i < 10; i++){
-                    myRealm.beginTransaction();
-                    nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                    myRealm.copyToRealmOrUpdate(transaction);
-                    myRealm.commitTransaction();
-                }
-            }else{
-                //Repeat 10 times
-                for(int i = 0; i < 10; i++){
-                    myRealm.beginTransaction();
-                    nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                    myRealm.copyToRealmOrUpdate(transaction);
-                    myRealm.commitTransaction();
-                }
-            }*/
-
-
-
 
             for(int i = 0; i < 10; i++){
                 myRealm.beginTransaction();
@@ -473,10 +481,7 @@ public class CalendarFragment extends BaseFragment implements
                 myRealm.commitTransaction();
             }
 
-
-
-
-
+            updateScheduledTransactionsForDecoration();
         }
     }
 
@@ -566,6 +571,26 @@ public class CalendarFragment extends BaseFragment implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
+    public void onClickTransaction(int position){
+
+        Transaction debugTransaction = transactionList.get(position);
+
+        Log.d(TAG, "----------- Click Result ----------");
+        Log.d(TAG, "transaction id :" + debugTransaction.getId());
+        Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
+        Log.d(TAG, "transaction daytype :" + debugTransaction.getDayType() + ", date :" + debugTransaction.getDate());
+        Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
+        Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
+        Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
+        Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
+        Log.i(TAG, "----------- Click Result ----------");
+
+
+        editTransaction(position);
+
+    }
+
+    @Override
     public void onDeleteTransaction(int position){
         myRealm.beginTransaction();
         Log.d(TAG, "remove " + position + "-> from result");
@@ -587,8 +612,8 @@ public class CalendarFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDisablePtrPullDown(boolean value){
-        isPulldownToAddAllow = !value;
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
 
     /**

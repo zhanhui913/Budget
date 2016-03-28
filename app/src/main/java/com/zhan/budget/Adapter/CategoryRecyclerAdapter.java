@@ -77,7 +77,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         // getting category data for the row
-        Category category = categoryList.get(position);
+        final Category category = categoryList.get(position);
 
         //Icon
         viewHolder.circularView.setCircleColor(category.getColor());
@@ -108,12 +108,11 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.red));
         }
 
-        viewHolder.swipeLayout.setOnLongClickListener(new View.OnLongClickListener() {
+        viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 mDragStartListener.onStartDrag(viewHolder);
-                mListener.onDisablePtrPullDown(true);
-                Log.d("RECYCLER_DEBUG", "start drag");
+                mListener.onPullDownAllow(false);
                 return true;
             }
         });
@@ -121,8 +120,8 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("ZHAP", "editting category : "+category.getName());
                 mListener.onEditCategory(position);
-                Toast.makeText(fragment.getContext(), "onEdit " + position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -134,7 +133,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             }
         });
 
-        viewHolder.swipeLayout.setOnClickListener(new View.OnClickListener() {
+        viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(fragment.getContext(), "onClick "+position, Toast.LENGTH_SHORT).show();
@@ -145,16 +144,33 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+
+        Log.d("RECYCLER_DEBUG", "old indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d("RECYCLER_DEBUG", i+"->"+name);
+        }
+        Log.d("RECYCLER_DEBUG", "old indices -----------");
+
         Collections.swap(categoryList, fromPosition, toPosition);
+
+        Log.d("RECYCLER_DEBUG", "new suppose indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d("RECYCLER_DEBUG", i+"->"+name);
+        }
+        Log.d("RECYCLER_DEBUG", "new suppose indices -----------");
+
         notifyItemMoved(fromPosition, toPosition);
-        Log.d("RECYCLER_DEBUG", "moved from " + fromPosition + " to " + toPosition);
+        mListener.onItemMove(fromPosition, toPosition);
+        Log.d("ZHAP", "1 moved from " + fromPosition + " to " + toPosition);
         return true;
     }
 
     @Override
     public void onItemEndDrag(){
         Log.d("RECYCLER_DEBUG", "end drag");
-        mListener.onDisablePtrPullDown(false);
+        mListener.onPullDownAllow(true);
         mListener.onDoneDrag();
     }
 
@@ -211,12 +227,12 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Colors.getColorFromAttr(itemView.getContext(), R.attr.themeColorHighlight));
+            swipeLayout.getSurfaceView().setBackgroundColor(Colors.getColorFromAttr(itemView.getContext(), R.attr.themeColorHighlight));
         }
 
         @Override
         public void onItemClear() {
-            itemView.setBackground(defaultDrawable);
+            swipeLayout.getSurfaceView().setBackground(defaultDrawable);
         }
     }
 
@@ -231,11 +247,13 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         void onEditCategory(int position);
 
-        void onDisablePtrPullDown(boolean value);
+        void onPullDownAllow(boolean value);
 
         void onDoneDrag();
 
         void onClick(int position);
+
+        void onItemMove(int fromPosition, int toPosition);
     }
 }
 

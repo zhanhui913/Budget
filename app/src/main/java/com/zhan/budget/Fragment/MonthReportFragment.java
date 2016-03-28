@@ -30,7 +30,7 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MonthReportFragment extends BaseFragment implements
+public class MonthReportFragment extends BaseRealmFragment implements
         MonthReportGridAdapter.OnMonthReportAdapterInteractionListener{
 
     private static final String TAG = "MonthlyFragment";

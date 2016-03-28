@@ -13,12 +13,13 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
-import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.entity.SelectedDateItem;
 import com.p_v.flexiblecalendar.exception.HighValueException;
 import com.p_v.flexiblecalendar.view.BaseCellView;
+import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.impl.DateCellViewImpl;
 import com.p_v.flexiblecalendar.view.impl.WeekdayCellViewImpl;
 import com.p_v.fliexiblecalendar.R;
@@ -474,8 +475,32 @@ public class FlexibleCalendarView extends LinearLayout implements
             //do nothing if same month
             this.selectedDateItem = selectedItem;
         }
+
+        // redraw current month grid as the events were getting disappeared for selected day
+        redrawMonthGrid(lastPosition % MonthViewPagerAdapter.VIEWS_IN_PAGER);
+
         if(onDateClickListener!=null) {
             onDateClickListener.onDateClick(selectedItem.getYear(), selectedItem.getMonth(), selectedItem.getDay());
+        }
+    }
+
+    private void redrawMonthGrid(int position){
+        if(position == -1){
+            //redraw all
+            for(int i = 0; i<=3;i++){
+                View view = monthViewPager.findViewWithTag(MonthViewPagerAdapter.GRID_TAG_PREFIX+i);
+                reAddAdapter(view);
+            }
+        }else{
+            View view = monthViewPager.findViewWithTag(MonthViewPagerAdapter.GRID_TAG_PREFIX+position);
+            reAddAdapter(view);
+        }
+    }
+
+    private void reAddAdapter(View view){
+        if(view!=null){
+            ListAdapter adapter = ((GridView)view).getAdapter();
+            ((GridView)view).setAdapter(adapter);
         }
     }
 
@@ -649,29 +674,6 @@ public class FlexibleCalendarView extends LinearLayout implements
     }
 
     /**
-     * Move the position to the specified month
-     * @param date
-     */
-    public void goToMonth(Date date){
-       Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        //check has to go left side or right
-        int monthDifference = FlexibleCalendarHelper.
-                getMonthDifference(displayYear, displayMonth, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH));
-
-        if(monthDifference != 0){
-            resetAdapters = true;
-            if(monthDifference < 0){
-                //set fake count to avoid freezing in InfiniteViewPager as it iterates to Integer.MAX_VALUE
-                monthInfPagerAdapter.setFakeCount(lastPosition);
-                monthInfPagerAdapter.notifyDataSetChanged();
-            }
-            moveToPosition(monthDifference);
-        }
-    }
-
-    /**
      * move the position to today's date
      */
     public void goToCurrentDay(){
@@ -747,7 +749,7 @@ public class FlexibleCalendarView extends LinearLayout implements
      * Refresh the calendar view. Invalidate and redraw all the cells
      */
     public void refresh(){
-        monthViewPagerAdapter.refreshAdapters();
+        redrawMonthGrid(-1);
     }
 
     /**

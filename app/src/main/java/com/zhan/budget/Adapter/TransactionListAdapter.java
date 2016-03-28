@@ -170,13 +170,20 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
             @Override
             public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
                 //Log.d("TRANSACTION_ADAPTER", "onupdate "+leftOffset+","+topOffset);
-                mListener.onDisablePtrPullDown(true);
+                mListener.onPullDownAllow(false);
             }
 
             @Override
             public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
                 //Log.d("TRANSACTION_ADAPTER", "onhandrelease :"+xvel+","+yvel);
-                mListener.onDisablePtrPullDown(false);
+                mListener.onPullDownAllow(true);
+            }
+        });
+
+        viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickTransaction(position);
             }
         });
 
@@ -204,10 +211,12 @@ public class TransactionListAdapter extends ArrayAdapter<Transaction> {
     }
 
     public interface OnTransactionAdapterInteractionListener {
+        void onClickTransaction(int position);
+
         void onDeleteTransaction(int position);
 
         void onApproveTransaction(int position);
 
-        void onDisablePtrPullDown(boolean value);
+        void onPullDownAllow(boolean value);
     }
 }

@@ -25,7 +25,7 @@ import io.realm.RealmResults;
 /**
  * Created by Zhan on 16-03-09.
  */
-public class TransactionFragment extends BaseFragment {
+public class TransactionFragment extends BaseRealmFragment {
 
     private static final String TAG = "TransactionFragment";
 

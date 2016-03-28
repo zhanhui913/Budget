@@ -17,7 +17,6 @@ public final class Colors {
     }
 
     public static long hex2Long(String s){
-
         return Long.parseLong(s, 16);
     }
 
