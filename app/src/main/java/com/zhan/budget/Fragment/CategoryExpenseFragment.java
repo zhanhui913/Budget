@@ -75,7 +75,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_category_expense;
+        return R.layout.fragment_category_expense_income;
     }
 
     @Override
@@ -430,6 +430,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         }
         Log.d(TAG, "new suppose indices -----------");
 */
+        isPulldownAllow = true;
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {

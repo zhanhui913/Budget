@@ -75,7 +75,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_category_income;
+        return R.layout.fragment_category_expense_income;
     }
 
     @Override
@@ -425,14 +425,17 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
     @Override
     public void onDoneDrag(){
-        //Log.d(TAG, "new suppose indices -----------");
+     /*   Log.d(TAG, "new suppose indices -----------");
 
         for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
             String name = categoryRecyclerAdapter.getCategoryList().get(i).getName();
             //Log.d(TAG, i+"->"+name);
         }
 
-        //Log.d(TAG, "new suppose indices -----------");
+        Log.d(TAG, "new suppose indices -----------");
+        */
+
+        isPulldownAllow = true;
 
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.INCOME.toString()).findAllAsync();

@@ -100,6 +100,15 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         }else{ //If exceeded budget
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.red));
         }
+
+        viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mDragStartListener.onStartDrag(viewHolder);
+                mListener.onPullDownAllow(false);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -129,7 +138,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     @Override
     public void onItemEndDrag(){
         Log.d("RECYCLER_DEBUG", "end drag");
-        mListener.onPullDownAllow(true);
         mListener.onDoneDrag();
     }
 
@@ -196,14 +204,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
                 }
             });
 
-            swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mDragStartListener.onStartDrag(ViewHolder.this);
-                    mListener.onPullDownAllow(false);
-                    return true;
-                }
-            });
+
 
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
