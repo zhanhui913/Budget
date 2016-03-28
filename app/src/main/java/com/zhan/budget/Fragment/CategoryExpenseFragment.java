@@ -43,7 +43,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class CategoryExpenseFragment extends BaseRealmFragment implements
-        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener, OnStartDragListener{
+        CategoryRecyclerAdapter.OnCategoryAdapterInteractionListener{
 
     private static final String TAG = "CategoryEXPENSEFragment";
 
@@ -51,8 +51,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     private PlusView header;
     private ViewGroup emptyLayout;
 
-    //private ListView categoryListView;
-    //private CategoryListAdapter categoryAdapter;
     private TextView emptyCategoryText;
     private List<Category> categoryList;
 
@@ -93,18 +91,14 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        /*categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                Log.d("RECYCLER_DEBUG", "start drag");
-
+                Log.d(TAG, "start drag");
                 isPulldownAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
-                Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
             }
-        });*/
-
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(this, categoryList, false, this);
+        });
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
         categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(categoryRecyclerAdapter);
@@ -113,21 +107,11 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(categoryListView);
 
-
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
 
         populateCategoryWithNoInfo();
 
         createPullDownToAddCategory();
-    }
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        Log.d("RECYCLER_DEBUG", "start drag");
-
-        isPulldownAllow = false;
-        mItemTouchHelper.startDrag(viewHolder);
-        Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
     }
 
     private void createPullDownToAddCategory(){
@@ -216,8 +200,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 Log.d("BRIANA", "There are " + categoryList.size() + " expense categories");
                 updateCategoryStatus();
 
-                //categoryAdapter.addAll(categoryList);
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
                 populateCategoryWithInfo();
             }
         });
@@ -288,7 +271,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 }
 
                 //categoryAdapter.notifyDataSetChanged();
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -305,7 +288,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     private void editCategory(int position){
         Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
 
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+        Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 
         editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
         editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
@@ -323,7 +306,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
                 final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
 
-
                 Log.d("ZHAN", "category name is "+categoryReturned.getName());
                 Log.d("ZHAN", "category color is "+categoryReturned.getColor());
                 Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
@@ -337,7 +319,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 updateCategoryStatus();
 
                 categoryList.set(categoryIndexEditted, categoryReturned);
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
             }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
                 Log.i("ZHAN", "----------- onActivityResult new category ----------");
 
@@ -354,7 +336,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 updateCategoryStatus();
 
                 categoryList.add(categoryReturned);
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
             }
         }
     }
@@ -371,7 +353,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 categoryList.get(i).setCost(0);
             }
             //categoryAdapter.notifyDataSetChanged();
-            categoryRecyclerAdapter.setData(categoryList);
+            categoryRecyclerAdapter.setCategoryList(categoryList);
         }
     }
 
@@ -430,7 +412,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
     @Override
     public void onEditCategory(int position){
-        //Toast.makeText(getContext(), "editting category "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
         categoryIndexEditted = position;
         editCategory(position);
     }
@@ -457,7 +438,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 resultsCategory.removeChangeListeners();
 
                 myRealm.beginTransaction();
-               //Log.d(TAG, "old indices -----------");
+                //Log.d(TAG, "old indices -----------");
 
                 for (int i = 0; i < resultsCategory.size(); i++) {
                     int index = resultsCategory.get(i).getIndex();
@@ -496,33 +477,14 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
     @Override
     public void onClick(int position){
-        Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "click on category :"+categoryRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
 
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+        Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
-    }
-
-    @Override
-    public void onItemMove(int fromPosition, int toPosition){
-        /*Log.d(TAG, "1 old indices -----------");
-        for(int i = 0; i < categoryList.size(); i++){
-            String name = categoryList.get(i).getName();
-            Log.d(TAG, i+"->"+name);
-        }
-        Log.d(TAG, "1 old indices -----------");
-
-        Collections.swap(categoryList, fromPosition, toPosition);
-
-        Log.d(TAG, "1 new suppose indices -----------");
-        for(int i = 0; i < categoryList.size(); i++){
-            String name = categoryList.get(i).getName();
-            Log.d(TAG, i+"->"+name);
-        }
-        Log.d(TAG, "1 new suppose indices -----------");*/
     }
 }

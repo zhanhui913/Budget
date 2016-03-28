@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.daimajia.swipe.SwipeLayout;
@@ -40,15 +39,15 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     private Fragment fragment;
     private List<Category> categoryList;
-    private OnCategoryAdapterInteractionListener mListener;
-    private final OnStartDragListener mDragStartListener;
+    private static OnCategoryAdapterInteractionListener mListener;
+    private static OnStartDragListener mDragStartListener;
     private boolean showDate;
 
     public CategoryRecyclerAdapter(Fragment fragment, List<Category> list, boolean showDate, OnStartDragListener startDragListener) {
         this.fragment = fragment;
         this.categoryList = list;
         this.showDate = showDate;
-        this.mDragStartListener = startDragListener;
+        mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnCategoryAdapterInteractionListener) {
@@ -56,11 +55,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         } else {
             throw new RuntimeException(fragment.getContext().toString() + " must implement OnCategoryAdapterInteractionListener.");
         }
-    }
-
-    public void setData(List<Category> list){
-        this.categoryList = list;
-        notifyDataSetChanged();
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -75,7 +69,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         // getting category data for the row
         final Category category = categoryList.get(position);
 
@@ -99,7 +93,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             viewHolder.progressBar.setVisibility(View.GONE);
         }
 
-
         if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.colorPrimary));
         }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
@@ -107,39 +100,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         }else{ //If exceeded budget
             viewHolder.progressBar.setProgressColor(ContextCompat.getColor(this.fragment.getContext(), R.color.red));
         }
-
-        viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mDragStartListener.onStartDrag(viewHolder);
-                mListener.onPullDownAllow(false);
-                return true;
-            }
-        });
-
-        viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("ZHAP", "editting category : "+category.getName());
-                mListener.onEditCategory(position);
-            }
-        });
-
-        viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onDeleteCategory(position);
-                Toast.makeText(fragment.getContext(), "onDelete "+position, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(fragment.getContext(), "onClick "+position, Toast.LENGTH_SHORT).show();
-                mListener.onClick(position);
-            }
-        });
     }
 
     @Override
@@ -162,7 +122,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         Log.d("RECYCLER_DEBUG", "new suppose indices -----------");
 
         notifyItemMoved(fromPosition, toPosition);
-        mListener.onItemMove(fromPosition, toPosition);
         Log.d("ZHAP", "1 moved from " + fromPosition + " to " + toPosition);
         return true;
     }
@@ -174,10 +133,14 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         mListener.onDoneDrag();
     }
 
-    // Return the total count of items
     @Override
     public int getItemCount() {
         return this.categoryList.size();
+    }
+
+    public void setCategoryList(List<Category> list){
+        this.categoryList = list;
+        notifyDataSetChanged();
     }
 
     public List<Category> getCategoryList(){
@@ -191,6 +154,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
      * Used to cache the views within the item layout for fast access
      */
     public static class ViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
+
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
@@ -207,7 +171,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
-        public ViewHolder(View itemView){
+        public ViewHolder(final View itemView){
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
@@ -223,6 +187,38 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
 
             defaultDrawable = itemView.getBackground();
+
+            swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClick(getLayoutPosition());
+                    Log.d("ZHAP", "on click : " + getLayoutPosition());
+                }
+            });
+
+            swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mDragStartListener.onStartDrag(ViewHolder.this);
+                    mListener.onPullDownAllow(false);
+                    return true;
+                }
+            });
+
+            editBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    mListener.onEditCategory(getLayoutPosition());
+                }
+            });
+
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onDeleteCategory(getLayoutPosition());
+                }
+            });
         }
 
         @Override
@@ -252,8 +248,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
         void onDoneDrag();
 
         void onClick(int position);
-
-        void onItemMove(int fromPosition, int toPosition);
     }
 }
 

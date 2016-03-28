@@ -31,7 +31,6 @@ import com.zhan.budget.View.PlusView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +51,6 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     private PlusView header;
     private ViewGroup emptyLayout;
 
-    //private ListView categoryListView;
-    //private CategoryListAdapter categoryAdapter;
     private TextView emptyCategoryText;
     private List<Category> categoryList;
 
@@ -70,6 +67,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     private RealmResults<Transaction> resultsTransaction;
 
     private Boolean isPulldownAllow = true;
+    private ItemTouchHelper mItemTouchHelper;
 
     public CategoryIncomeFragment() {
         // Required empty public constructor
@@ -98,7 +96,6 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 isPulldownAllow = false;
                 mItemTouchHelper.startDrag(viewHolder);
-                Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
             }
         });
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
@@ -115,10 +112,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
         populateCategoryWithNoInfo();
 
         createPullDownToAddCategory();
-        addListener();
     }
-
-    private ItemTouchHelper mItemTouchHelper;
 
     private void createPullDownToAddCategory(){
         frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
@@ -177,23 +171,6 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
         });
     }
 
-    private void addListener(){
-        /*categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-                Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
-
-                Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-                startActivity(viewAllTransactionsForCategory);
-            }
-        });*/
-    }
-
     private void updateCategoryStatus(){
         if(categoryList.size() > 0){
             emptyLayout.setVisibility(View.GONE);
@@ -224,7 +201,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 Log.d(TAG, "There are " + categoryList.size() + " income categories");
                 updateCategoryStatus();
 
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
                 populateCategoryWithInfo();
             }
         });
@@ -295,7 +272,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 }
 
                 //categoryAdapter.notifyDataSetChanged();
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -312,7 +289,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     private void editCategory(int position){
         Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
 
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+        Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 
         editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
         editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
@@ -345,7 +322,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
                 categoryList.set(categoryIndexEditted, categoryReturned);
 
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
             }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
                 Log.i("ZHAN", "----------- onActivityResult new category ----------");
 
@@ -362,7 +339,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 updateCategoryStatus();
 
                 categoryList.add(categoryReturned);
-                categoryRecyclerAdapter.setData(categoryList);
+                categoryRecyclerAdapter.setCategoryList(categoryList);
             }
         }
     }
@@ -379,7 +356,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 categoryList.get(i).setCost(0);
             }
             //categoryAdapter.notifyDataSetChanged();
-            categoryRecyclerAdapter.setData(categoryList);
+            categoryRecyclerAdapter.setCategoryList(categoryList);
         }
     }
 
@@ -414,7 +391,6 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-
         title.setText("Confirm Delete");
         message.setText("Are you sure you want to delete this category?");
 
@@ -438,7 +414,6 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
     @Override
     public void onEditCategory(int position){
-        Toast.makeText(getContext(), "editting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
         categoryIndexEditted = position;
         editCategory(position);
     }
@@ -470,7 +445,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 myRealm.beginTransaction();
                 //Log.d(TAG, "old indices -----------");
 
-                for(int i =0;i<resultsCategory.size(); i++) {
+                for (int i = 0; i < resultsCategory.size(); i++) {
                     int index = resultsCategory.get(i).getIndex();
                     String name = resultsCategory.get(i).getName();
                     //Log.d(TAG, index+"->"+name);
@@ -516,11 +491,5 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
-    }
-
-    @Override
-    public void onItemMove(int fromPosition, int toPosition){
-        Collections.swap(categoryList, fromPosition, toPosition);
-        Log.d("ZHAP", "2 moved from " + fromPosition + " to " + toPosition);
     }
 }
