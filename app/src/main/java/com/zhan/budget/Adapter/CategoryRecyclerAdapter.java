@@ -122,7 +122,6 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
             public void onClick(View v) {
                 Log.d("ZHAP", "editting category : "+category.getName());
                 mListener.onEditCategory(position);
-                //Toast.makeText(fragment.getContext(), "onEdit " + position+" -> "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -145,7 +144,23 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
+
+        Log.d("RECYCLER_DEBUG", "old indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d("RECYCLER_DEBUG", i+"->"+name);
+        }
+        Log.d("RECYCLER_DEBUG", "old indices -----------");
+
         Collections.swap(categoryList, fromPosition, toPosition);
+
+        Log.d("RECYCLER_DEBUG", "new suppose indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d("RECYCLER_DEBUG", i+"->"+name);
+        }
+        Log.d("RECYCLER_DEBUG", "new suppose indices -----------");
+
         notifyItemMoved(fromPosition, toPosition);
         mListener.onItemMove(fromPosition, toPosition);
         Log.d("ZHAP", "1 moved from " + fromPosition + " to " + toPosition);

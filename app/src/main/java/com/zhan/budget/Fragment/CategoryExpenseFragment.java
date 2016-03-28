@@ -31,7 +31,6 @@ import com.zhan.budget.View.PlusView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -70,6 +69,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     private RealmResults<Transaction> resultsTransaction;
 
     private Boolean isPulldownAllow = true;
+    private ItemTouchHelper mItemTouchHelper;
 
     public CategoryExpenseFragment() {
         // Required empty public constructor
@@ -119,7 +119,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         populateCategoryWithNoInfo();
 
         createPullDownToAddCategory();
-        addListener();
     }
 
     @Override
@@ -130,8 +129,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         mItemTouchHelper.startDrag(viewHolder);
         Toast.makeText(getActivity().getApplicationContext(), "start dragging", Toast.LENGTH_SHORT).show();
     }
-
-    private ItemTouchHelper mItemTouchHelper;
 
     private void createPullDownToAddCategory(){
         frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
@@ -188,23 +185,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
             }
         });
-    }
-
-    private void addListener(){
-        /*categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "click on category :"+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-                Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
-
-                Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-                viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-                startActivity(viewAllTransactionsForCategory);
-            }
-        });*/
     }
 
     private void updateCategoryStatus(){
@@ -462,15 +442,13 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
     @Override
     public void onDoneDrag(){
-        //Log.d(TAG, "new suppose indices -----------");
-
+ /*       Log.d(TAG, "new suppose indices -----------");
         for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
             String name = categoryRecyclerAdapter.getCategoryList().get(i).getName();
-            //Log.d(TAG, i+"->"+name);
+            Log.d(TAG, i+"->"+name);
         }
-
-        //Log.d(TAG, "new suppose indices -----------");
-
+        Log.d(TAG, "new suppose indices -----------");
+*/
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
@@ -479,7 +457,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 resultsCategory.removeChangeListeners();
 
                 myRealm.beginTransaction();
-                //Log.d(TAG, "old indices -----------");
+               //Log.d(TAG, "old indices -----------");
 
                 for (int i = 0; i < resultsCategory.size(); i++) {
                     int index = resultsCategory.get(i).getIndex();
@@ -511,7 +489,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
                 myRealm.commitTransaction();
 
-                //Log.d(TAG, "DONE UPDATING indices");
+                Log.d(TAG, "DONE UPDATING indices");
             }
         });
     }
@@ -531,7 +509,20 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
     @Override
     public void onItemMove(int fromPosition, int toPosition){
+        /*Log.d(TAG, "1 old indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d(TAG, i+"->"+name);
+        }
+        Log.d(TAG, "1 old indices -----------");
+
         Collections.swap(categoryList, fromPosition, toPosition);
-        Log.d("ZHAP", "2 moved from " + fromPosition + " to " + toPosition);
+
+        Log.d(TAG, "1 new suppose indices -----------");
+        for(int i = 0; i < categoryList.size(); i++){
+            String name = categoryList.get(i).getName();
+            Log.d(TAG, i+"->"+name);
+        }
+        Log.d(TAG, "1 new suppose indices -----------");*/
     }
 }
