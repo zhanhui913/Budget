@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import io.realm.Realm;
-
 /**
  * Base fragment created to be extended by every fragment that uses Realm in this application.
  * This class handles the closing and starting of realms.
@@ -23,8 +21,7 @@ public abstract class BaseFragment extends Fragment {
     protected Fragment instance;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                       Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         view = inflater.inflate(getFragmentLayout(), container, false);
         return view;

@@ -14,7 +14,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -26,20 +25,8 @@ import com.zhan.budget.Fragment.InfoFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
-import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.Category;
-import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
-import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -50,7 +37,6 @@ public class MainActivity extends BaseActivity
         CategoryFragment.OnCategoryInteractionListener,
         MonthReportFragment.OnMonthlyInteractionListener{
 
-    MainActivity activity;
     Toolbar toolbar;
     DrawerLayout drawer;
     ActionBarDrawerToggle toggle;
@@ -63,9 +49,6 @@ public class MainActivity extends BaseActivity
     private InfoFragment infoFragment;
     private RateFragment rateFragment;
     private SettingFragment settingFragment;
-
-    private ArrayList<Category> categoryList = new ArrayList<>();
-    private ArrayList<Account> accountList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,18 +141,12 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void init(){
-        super.init();
-
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
             requestFilePermission();
         }
 
         createFragments();
-
-        activity = MainActivity.this;
-
-        isFirstTime();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -187,123 +164,6 @@ public class MainActivity extends BaseActivity
 
         //set first fragment as default
         navigationView.getMenu().getItem(0).setChecked(true);
-    }
-
-    private void isFirstTime(){
-        boolean isFirstTime = BudgetPreference.getFirstTime(this);
-
-        if(isFirstTime){
-            Toast.makeText(getApplicationContext(), "first time", Toast.LENGTH_SHORT).show();
-            createFakeTransactions();
-
-            BudgetPreference.setFirstTime(this);
-        }
-    }
-
-    private void createFakeTransactions(){
-        long startTime,endTime,duration;
-        myRealm.beginTransaction();
-
-        String[] tempCategoryNameList = new String[]{"Breakfast", "Lunch", "Dinner", "Snacks", "Drink", "Rent", "Travel", "Car", "Shopping", "Necessity", "Utilities", "Bill", "Groceries"};
-        int[] tempCategoryColorList = new int[]{R.color.lemon, R.color.orange, R.color.pumpkin, R.color.alizarin, R.color.cream_can, R.color.midnight_blue, R.color.peter_river, R.color.turquoise, R.color.wisteria, R.color.jordy_blue, R.color.concrete, R.color.emerald, R.color.gossip};
-        int[] tempCategoryIconList = new int[]{R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_cafe, R.drawable.c_house, R.drawable.c_airplane, R.drawable.c_car, R.drawable.c_shirt, R.drawable.c_etc, R.drawable.c_utilities, R.drawable.c_bill, R.drawable.c_groceries};
-
-        //create expense category
-        for (int i = 0; i < tempCategoryNameList.length; i++) {
-            Category c = myRealm.createObject(Category.class);
-            c.setId(Util.generateUUID());
-            c.setName(tempCategoryNameList[i]);
-            c.setColor(getResources().getString(tempCategoryColorList[i]));
-            c.setIcon(getResources().getResourceEntryName(tempCategoryIconList[i]));
-            c.setBudget(100.0f + (i/5));
-            c.setType(BudgetType.EXPENSE.toString());
-            c.setCost(0);
-            c.setIndex(i);
-
-            categoryList.add(c);
-        }
-
-        String[] tempCategoryIncomeNameList = new String[]{"Salary", "Other"};
-        int[] tempCategoryIncomeColorList = new int[]{R.color.light_wisteria, R.color.harbor_rat};
-        int[] tempCategoryIncomeIconList = new int[]{R.drawable.c_bill, R.drawable.c_etc};
-
-        //create income category
-        for (int i = 0; i < tempCategoryIncomeNameList.length; i++) {
-            Category c = myRealm.createObject(Category.class);
-            c.setId(Util.generateUUID());
-            c.setName(tempCategoryIncomeNameList[i]);
-            c.setColor(getResources().getString(tempCategoryIncomeColorList[i]));
-            c.setIcon(getResources().getResourceEntryName(tempCategoryIncomeIconList[i]));
-            c.setBudget(0);
-            c.setType(BudgetType.INCOME.toString());
-            c.setCost(0);
-            c.setIndex(i);
-
-            categoryList.add(c);
-        }
-
-        //Create default accounts
-        String[] tempAccountList = new String[]{"Credit Card","Debit Card", "Cash"};
-        for(int i = 0 ; i < tempAccountList.length; i++){
-            Account account = myRealm.createObject(Account.class);
-            account.setId(Util.generateUUID());
-            account.setName(tempAccountList[i]);
-            accountList.add(account);
-        }
-
-        //Create fake transactions
-        Date startDate = DateUtil.convertStringToDate("2016-01-01");
-        Date endDate = DateUtil.convertStringToDate("2017-01-01");
-
-        Calendar start = Calendar.getInstance();
-        start.setTime(startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
-
-        startTime = System.nanoTime();
-
-        String dayType;
-
-        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            Random random = new Random();
-            int rd = random.nextInt(categoryList.size());
-            int rda = random.nextInt(accountList.size());
-
-
-            if(DateUtil.getDaysFromDate(date) <= DateUtil.getDaysFromDate(new Date())){
-                dayType = DayType.COMPLETED.toString();
-            }else{
-                dayType = DayType.SCHEDULED.toString();
-            }
-
-            //Create random transactions per day
-            for (int j = 0; j < rd; j++) {
-                Transaction transaction = myRealm.createObject(Transaction.class);
-                transaction.setId(Util.generateUUID());
-                transaction.setDate(date);
-                transaction.setDayType(dayType);
-
-                Account account = accountList.get(rda);
-
-                Category category = categoryList.get(rd);
-
-                transaction.setAccount(account);
-                transaction.setCategory(category);
-                transaction.setPrice(-120.0f + (rd * 0.5f));
-                transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
-            }
-        }
-
-        myRealm.commitTransaction();
-        endTime = System.nanoTime();
-
-        duration = (endTime - startTime);
-
-        long milli = (duration / 1000000);
-        long second = (milli / 1000);
-        float minutes = (second / 60.0f);
-
-        Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
     }
 
     @Override

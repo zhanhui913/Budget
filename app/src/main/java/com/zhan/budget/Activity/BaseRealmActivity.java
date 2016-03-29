@@ -1,21 +1,20 @@
-package com.zhan.budget.Fragment;
+package com.zhan.budget.Activity;
 
 import android.util.Log;
-import android.view.View;
 
 import io.realm.Realm;
 
 /**
- * Base fragment created to be extended by every fragment that uses Realm in this application.
+ * Base activity created to be extended by every activity that uses Realm in this application.
  * This class handles the closing and starting of realms.
  *
  * @author Zhan H. Yap
  */
-public abstract class BaseRealmFragment extends BaseFragment {
-    private static String TAG = "BaseRealmFragment";
+public abstract class BaseRealmActivity extends BaseActivity {
+    private static final String TAG = "BaseRealmActivity";
 
     protected Realm myRealm;
-    protected View view;
+
 
     @Override
     public void onStart(){
@@ -46,27 +45,27 @@ public abstract class BaseRealmFragment extends BaseFragment {
     }
 
     /**
-     * Every fragment has to inflate a layout in the onCreateView method. Added this method to
-     * avoid duplicate all the inflate code in every fragment. You only have to return the layout to
-     * inflate in this method when extends BaseFragment.
+     * Every Activity has to inflate a layout in the onCreate method. Added this method to
+     * avoid duplicate all the inflate code in every activity. You only have to return the layout to
+     * inflate in this method when extends BaseActivity.
      */
-    protected abstract int getFragmentLayout();
+    protected abstract int getActivityLayout();
 
     /**
-     * Every fragment should override this function as it should be where other initialization
+     * Every Activity should override this function as it should be where other initialization
      * occurs once only in the lifecycle.
      * Note: I would put init in the onStart function but it will call multiple times when the user
-     * comes back into the fragment which is unnecessary.
+     * comes back into the activity which is unnecessary.
      */
+    @Override
     protected void init(){
-        super.init();
         resumeRealm();
     }
 
     protected void resumeRealm(){
         if(myRealm == null || myRealm.isClosed()){
             myRealm = Realm.getDefaultInstance();
-            Log.d(TAG, "----- RESUME REALM -----");
+            Log.d(TAG, "resumeRealm");
         }
     }
 
@@ -76,7 +75,7 @@ public abstract class BaseRealmFragment extends BaseFragment {
     protected void closeRealm(){
         if(myRealm != null && !myRealm.isClosed()){
             myRealm.close();
-            Log.d(TAG, "----- CLOSE REALM -----");
+            Log.d(TAG, "closeRealm");
         }
     }
 }

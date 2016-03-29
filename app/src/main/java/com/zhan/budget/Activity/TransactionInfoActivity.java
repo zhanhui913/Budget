@@ -55,7 +55,7 @@ import java.util.List;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionInfoActivity extends BaseActivity implements
+public class TransactionInfoActivity extends BaseRealmActivity implements
         TransactionFragment.OnTransactionFragmentInteractionListener{
 
     private boolean isNewTransaction = false;

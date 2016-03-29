@@ -26,7 +26,7 @@ import java.util.List;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionsForCategory extends BaseActivity implements
+public class TransactionsForCategory extends BaseRealmActivity implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
     private Toolbar toolbar;

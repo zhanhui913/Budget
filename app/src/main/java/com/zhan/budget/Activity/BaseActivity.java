@@ -2,23 +2,15 @@ package com.zhan.budget.Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.zhan.budget.Util.ThemeUtil;
-import com.zhan.budget.Util.Util;
-
-import io.realm.Realm;
 
 /**
- * Base activity created to be extended by every activity that uses Realm in this application.
- * This class handles the closing and starting of realms.
+ * Base activity created to be extended by every activity.
  *
  * @author Zhan H. Yap
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    private static final String TAG = "BaseActivity";
-
-    protected Realm myRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,35 +18,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(getActivityLayout());
         init();
-
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        Log.d(TAG, "onStart");
-        resumeRealm();
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d(TAG, "onResume");
-        resumeRealm();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        Log.d(TAG, "onPause");
-        closeRealm();
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        Log.d(TAG, "onStop");
-        closeRealm();
     }
 
     /**
@@ -70,24 +33,5 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Note: I would put init in the onStart function but it will call multiple times when the user
      * comes back into the activity which is unnecessary.
      */
-    protected void init(){
-        resumeRealm();
-    }
-
-    public void resumeRealm(){
-        if(myRealm == null || myRealm.isClosed()){
-            myRealm = Realm.getDefaultInstance();
-            Log.d(TAG, "resumeRealm");
-        }
-    }
-
-    /**
-     * Close Realm if possible
-     */
-    public void closeRealm(){
-        if(myRealm != null && !myRealm.isClosed()){
-            myRealm.close();
-            Log.d(TAG, "closeRealm");
-        }
-    }
+    protected abstract void init();
 }

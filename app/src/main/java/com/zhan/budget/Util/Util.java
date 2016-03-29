@@ -2,16 +2,12 @@ package com.zhan.budget.Util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-
-import com.zhan.budget.Etc.Constants;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -19,8 +15,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.UUID;
 
 /**
@@ -166,20 +160,6 @@ public final class Util {
         } else {
             Write("fail at Hiding KEYBOARD");
         }
-    }
-
-    public static String setPriceToCorrectDecimalInString(float price){
-        BigDecimal d = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
-        return d.toPlainString();
-
-        //return String.format("%.2f", price);
-    }
-
-    public static String setPriceToCorrectDecimalInString(Number price){
-        BigDecimal d = new BigDecimal((double)price).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
-        return d.toPlainString();
-
-        //return String.format("%.2f", price);
     }
 
     public static int getScreenHeight(Activity activity){

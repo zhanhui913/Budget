@@ -33,7 +33,7 @@ import org.parceler.Parcels;
 
 import io.realm.RealmResults;
 
-public class CategoryInfoActivity extends BaseActivity implements
+public class CategoryInfoActivity extends BaseRealmActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
         IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener{
 

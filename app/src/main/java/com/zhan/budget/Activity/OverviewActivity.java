@@ -31,7 +31,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class OverviewActivity extends BaseActivity {
+public class OverviewActivity extends BaseRealmActivity {
 
     private Toolbar toolbar;
     private Date currentMonth;
