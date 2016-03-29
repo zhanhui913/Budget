@@ -424,27 +424,28 @@ public class CalendarFragment extends BaseRealmFragment implements
             public void onChange() {
                 scheduledTransactions.removeChangeListener(this);
 
-                for(int i = 0 ; i < scheduledTransactions.size(); i++) {
+                for (int i = 0; i < scheduledTransactions.size(); i++) {
                     List<BudgetEvent> colorList = new ArrayList<>();
                     try {
 
-                        if(eventMap.containsKey(scheduledTransactions.get(i).getTransaction().getDate())){
+                        if (eventMap.containsKey(scheduledTransactions.get(i).getTransaction().getDate())) {
                             eventMap.get(scheduledTransactions.get(i).getTransaction().getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
-                        }else{
+                        } else {
                             colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
                             eventMap.put(scheduledTransactions.get(i).getTransaction().getDate(), colorList);
                         }
 
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                Log.d("EVENT", "there are "+scheduledTransactions.size()+" items in schedule list");
-                Log.d("EVENT", "there are "+eventMap.size()+" items in map");
+                Log.d("EVENT", "there are " + scheduledTransactions.size() + " items in schedule list");
+                Log.d("EVENT", "there are " + eventMap.size() + " items in map");
+
+                calendarView.refresh();
             }
         });
-        Log.d(TAG, "calendar refresh");
-        calendarView.refresh();
+
     }
 
     /**
@@ -571,7 +572,6 @@ public class CalendarFragment extends BaseRealmFragment implements
                 }
             }
         }
-        calendarView.refresh();
     }
 
     /**
