@@ -1,7 +1,6 @@
 package com.zhan.budget.Fragment;
 
 import android.util.Log;
-import android.view.View;
 
 import io.realm.Realm;
 
@@ -15,7 +14,6 @@ public abstract class BaseRealmFragment extends BaseFragment {
     private static String TAG = "BaseRealmFragment";
 
     protected Realm myRealm;
-    protected View view;
 
     @Override
     public void onStart(){
@@ -52,14 +50,8 @@ public abstract class BaseRealmFragment extends BaseFragment {
      */
     protected abstract int getFragmentLayout();
 
-    /**
-     * Every fragment should override this function as it should be where other initialization
-     * occurs once only in the lifecycle.
-     * Note: I would put init in the onStart function but it will call multiple times when the user
-     * comes back into the fragment which is unnecessary.
-     */
+    @Override
     protected void init(){
-        super.init();
         resumeRealm();
     }
 

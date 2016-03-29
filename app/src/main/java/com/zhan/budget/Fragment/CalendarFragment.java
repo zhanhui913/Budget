@@ -437,6 +437,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 Log.d("EVENT", "there are "+eventMap.size()+" items in map");
             }
         });
+        Log.d("EVENT", "calendar refresh");
         calendarView.refresh();
     }
 

@@ -67,7 +67,6 @@ public class SettingFragment extends BaseFragment {
 
     @Override
     protected void init(){ Log.d(TAG, "init");
-        super.init();
         themeBtn = (ViewGroup) view.findViewById(R.id.themeBtn);
         themeContent = (TextView) view.findViewById(R.id.themeContent);
 

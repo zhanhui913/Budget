@@ -32,6 +32,7 @@ public abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated");
         init();
+        instance = this;
     }
 
     /**
@@ -47,8 +48,5 @@ public abstract class BaseFragment extends Fragment {
      * Note: I would put init in the onStart function but it will call multiple times when the user
      * comes back into the fragment which is unnecessary.
      */
-    protected void init(){
-        instance = this;
-    }
-
+    protected abstract void init();
 }

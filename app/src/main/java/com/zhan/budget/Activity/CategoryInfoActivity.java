@@ -47,10 +47,6 @@ public class CategoryInfoActivity extends BaseRealmActivity implements
     private boolean isNewCategory;
     private String priceString = "";
 
-    private TwoPageViewPager adapterViewPager;
-    private ViewPager viewPager;
-    private CircleIndicator circleIndicator;
-
     //Fragments
     private ColorPickerCategoryFragment colorPickerCategoryFragment;
     private IconPickerCategoryFragment iconPickerCategoryFragment;
@@ -86,11 +82,11 @@ public class CategoryInfoActivity extends BaseRealmActivity implements
         colorPickerCategoryFragment = ColorPickerCategoryFragment.newInstance(category.getColor());
         iconPickerCategoryFragment = IconPickerCategoryFragment.newInstance(category.getIcon(), category.getColor());
 
-        viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
-        adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), colorPickerCategoryFragment, iconPickerCategoryFragment);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), colorPickerCategoryFragment, iconPickerCategoryFragment);
         viewPager.setAdapter(adapterViewPager);
 
-        circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
+        CircleIndicator circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
         categoryNameTextView = (TextView) findViewById(R.id.categoryNameTextView);
