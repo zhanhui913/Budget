@@ -417,7 +417,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     private void updateScheduledTransactionsForDecoration(){
         eventMap = new HashMap<>();
-        Log.d("EVENT", "there are "+eventMap.size()+" items in map");
+        Log.d("EVENT", "there are " + eventMap.size() + " items in map");
         final RealmResults<ScheduledTransaction> scheduledTransactions = myRealm.where(ScheduledTransaction.class).findAllAsync();
         scheduledTransactions.addChangeListener(new RealmChangeListener() {
             @Override
@@ -427,8 +427,14 @@ public class CalendarFragment extends BaseRealmFragment implements
                 for(int i = 0 ; i < scheduledTransactions.size(); i++) {
                     List<BudgetEvent> colorList = new ArrayList<>();
                     try {
-                        colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
-                        eventMap.put(scheduledTransactions.get(i).getTransaction().getDate(), colorList);
+
+                        if(eventMap.containsKey(scheduledTransactions.get(i).getTransaction().getDate())){
+                            eventMap.get(scheduledTransactions.get(i).getTransaction().getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
+                        }else{
+                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
+                            eventMap.put(scheduledTransactions.get(i).getTransaction().getDate(), colorList);
+                        }
+
                     }catch(Exception e){
                         e.printStackTrace();
                     }
@@ -437,7 +443,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 Log.d("EVENT", "there are "+eventMap.size()+" items in map");
             }
         });
-        Log.d("EVENT", "calendar refresh");
+        Log.d(TAG, "calendar refresh");
         calendarView.refresh();
     }
 
@@ -565,6 +571,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 }
             }
         }
+        calendarView.refresh();
     }
 
     /**
