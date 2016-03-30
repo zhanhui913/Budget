@@ -23,6 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:descendantFocusability="blocksDescendants"
-        android:padding="15dp" />
+        android:layout_margin="15dp" />
 
 </LinearLayout>

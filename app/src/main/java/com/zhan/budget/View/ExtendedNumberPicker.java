@@ -3,6 +3,9 @@ package com.zhan.budget.View;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 
 import java.lang.reflect.Field;
@@ -42,6 +45,32 @@ public class ExtendedNumberPicker extends NumberPicker {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addView(View child) {
+        super.addView(child);
+        updateView(child);
+    }
+
+    @Override
+    public void addView(View child, int index, android.view.ViewGroup.LayoutParams params) {
+        super.addView(child, index, params);
+        updateView(child);
+    }
+
+    @Override
+    public void addView(View child, android.view.ViewGroup.LayoutParams params) {
+        super.addView(child, params);
+        updateView(child);
+    }
+
+    private void updateView(View view) {
+        if(view instanceof EditText){
+            ((EditText) view).setTextSize(25);
+            //((EditText) view).setTextColor(Color.parseColor("#fff00f"));
+            Log.d("NUMBER","update views");
         }
     }
 }
