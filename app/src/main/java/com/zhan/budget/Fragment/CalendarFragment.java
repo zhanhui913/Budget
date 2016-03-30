@@ -418,6 +418,8 @@ public class CalendarFragment extends BaseRealmFragment implements
     private void updateScheduledTransactionsForDecoration(){
         eventMap = new HashMap<>();
         Log.d("EVENT", "there are " + eventMap.size() + " items in map");
+
+        /*
         final RealmResults<ScheduledTransaction> scheduledTransactions = myRealm.where(ScheduledTransaction.class).findAllAsync();
         scheduledTransactions.addChangeListener(new RealmChangeListener() {
             @Override
@@ -445,6 +447,39 @@ public class CalendarFragment extends BaseRealmFragment implements
                 calendarView.refresh();
             }
         });
+*/
+
+
+        //Option 2 with non completed transactions
+        final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
+        scheduledTransactions.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                scheduledTransactions.removeChangeListener(this);
+
+                for (int i = 0; i < scheduledTransactions.size(); i++) {
+                    List<BudgetEvent> colorList = new ArrayList<>();
+                    try {
+
+                        if (eventMap.containsKey(scheduledTransactions.get(i).getDate())) {
+                            eventMap.get(scheduledTransactions.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
+                        } else {
+                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
+                            eventMap.put(scheduledTransactions.get(i).getDate(), colorList);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("EVENT", "there are " + scheduledTransactions.size() + " items in schedule list");
+                Log.d("EVENT", "there are " + eventMap.size() + " items in map");
+
+                calendarView.refresh();
+            }
+        });
+
+
 
     }
 
@@ -723,7 +758,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
 
         editTransaction(position);
-
+        //updateScheduledTransactionsForDecoration();
     }
 
     @Override
@@ -733,9 +768,11 @@ public class CalendarFragment extends BaseRealmFragment implements
         Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
         resultsTransactionForDay.get(position).removeFromRealm();
         myRealm.commitTransaction();
-        Log.d(TAG, "After There are "+resultsTransactionForDay.size()+" transactions today");
+        Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
         updateTransactionList();
         Toast.makeText(getContext(), "calendar fragment delete transaction :"+position, Toast.LENGTH_SHORT).show();
+
+        updateScheduledTransactionsForDecoration();
     }
 
     @Override
@@ -745,6 +782,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         resultsTransactionForDay.get(position).setDayType(DayType.COMPLETED.toString());
         myRealm.commitTransaction();
         updateTransactionList();
+
+        updateScheduledTransactionsForDecoration();
     }
 
     @Override
