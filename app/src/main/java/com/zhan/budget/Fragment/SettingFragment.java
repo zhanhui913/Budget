@@ -1,12 +1,15 @@
 package com.zhan.budget.Fragment;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -119,7 +122,7 @@ public class SettingFragment extends BaseFragment {
         backupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "backup", Toast.LENGTH_SHORT).show();
+                checkPermission();
             }
         });
 
@@ -189,6 +192,52 @@ public class SettingFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Backup Data
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void checkPermission(){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            //STORAGE permission has not been granted
+            requestFilePermission();
+        }else{
+            Toast.makeText(getContext(), "backup successful", Toast.LENGTH_SHORT).show();
+            backUpData();
+        }
+    }
+
+    public void requestFilePermission(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Permission denied")
+                    //.setMessage("You need to allow access to storage in order to create a backup of the database.")
+                    .setMessage("Without this permission the app is unable to create a backup data.")
+                    .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                        }
+                    })
+                    .setNegativeButton("Deny", null)
+                    .create()
+                    .show();
+
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    public void backUpData(){
+        
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

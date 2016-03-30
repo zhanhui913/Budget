@@ -1,8 +1,6 @@
 package com.zhan.budget.Activity;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -80,72 +79,8 @@ public class MainActivity extends BaseActivity
         rateFragment = new RateFragment();
     }
 
-    private void requestFilePermission(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission denied")
-                    .setMessage("You need to allow access to storage in order to create a backup of the database.")
-                    .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                        }
-                    })
-                    .setNegativeButton("I'm sure", null)
-                    .create()
-                    .show();
-
-        }else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // storage-related task you need to do.
-                    Toast.makeText(getApplicationContext(), "YAY", Toast.LENGTH_SHORT).show();
-                } else if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
-
-                    boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-                    if(showRationale){
-                        //Permission was denied without checking the check box "Never ask again"
-                        Util.Write("permission denied without never ask again");
-                        requestFilePermission();
-                    }else{
-                        //Permission was denied while checking the check box "Never ask again"
-                        Util.Write("permission denied with never ask again");
-                    }
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(getApplicationContext(), "BOO", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
     @Override
     protected void init(){
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            //STORAGE permission has not been granted
-            requestFilePermission();
-        }
-
         createFragments();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -164,6 +99,39 @@ public class MainActivity extends BaseActivity
 
         //set first fragment as default
         navigationView.getMenu().getItem(0).setChecked(true);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the storage-related task you need to do.
+                    Toast.makeText(getApplicationContext(), "YAY", Toast.LENGTH_SHORT).show();
+                    settingFragment.backUpData();
+                } else if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
+
+                    boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                    if(showRationale){
+                        //Permission was denied without checking the check box "Never ask again"
+                        Log.d("SETTINGS", "permission denied without never ask again");
+                        settingFragment.requestFilePermission();
+                    }else{
+                        //Permission was denied while checking the check box "Never ask again"
+                        Log.d("SETTINGS", "permission denied with never ask again");
+                    }
+
+                    // permission denied, boo! Disable the functionality that depends on this permission.
+                    Toast.makeText(getApplicationContext(), "BOO", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Override
