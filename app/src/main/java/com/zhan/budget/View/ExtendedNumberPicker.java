@@ -3,7 +3,6 @@ package com.zhan.budget.View;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -68,9 +67,7 @@ public class ExtendedNumberPicker extends NumberPicker {
 
     private void updateView(View view) {
         if(view instanceof EditText){
-            ((EditText) view).setTextSize(25);
-            //((EditText) view).setTextColor(Color.parseColor("#fff00f"));
-            Log.d("NUMBER","update views");
+            ((EditText) view).setTextSize(20);
         }
     }
 }

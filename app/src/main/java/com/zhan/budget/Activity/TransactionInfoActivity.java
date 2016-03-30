@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -480,7 +479,7 @@ public class TransactionInfoActivity extends BaseRealmActivity implements
 
                 accountPicker.setMinValue(0);
 
-                if(accountNameList.size() > 0) {
+                if (accountNameList.size() > 0) {
                     accountPicker.setMaxValue(accountNameList.size() - 1);
                 }
                 accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
@@ -576,13 +575,6 @@ public class TransactionInfoActivity extends BaseRealmActivity implements
         quantityNumberPicker.setMaxValue(50);
         quantityNumberPicker.setMinValue(0);
         quantityNumberPicker.setWrapSelectorWheel(true);
-        quantityNumberPicker.setOnValueChangedListener(new NumberPicker.
-                OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-
-            }
-        });
 
         final ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
 
@@ -601,15 +593,6 @@ public class TransactionInfoActivity extends BaseRealmActivity implements
 
         //Gets whether the selector wheel wraps when reaching the min/max value.
         repeatNumberPicker.setWrapSelectorWheel(false);
-
-        //Set a value change listener for NumberPicker
-        repeatNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
-                //Display the newly selected value from picker
-                Log.d("WHEEL","Selected value : " + values[newVal]);
-            }
-        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
