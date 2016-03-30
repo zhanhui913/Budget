@@ -1,6 +1,7 @@
 package com.zhan.budget.View;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -42,12 +43,14 @@ public class CalendarSmallCircleView extends BaseCellView {
     private void init(AttributeSet attrs){
         TypedArray a = getContext().obtainStyledAttributes(attrs, com.p_v.fliexiblecalendar.R.styleable.CircularEventCellView);
         try{
-            radius = (int)a.getDimension(com.p_v.fliexiblecalendar.R.styleable.CircularEventCellView_event_radius,5);
-            padding = (int)a.getDimension(com.p_v.fliexiblecalendar.R.styleable.CircularEventCellView_event_circle_padding,1);
+            radius = a.getDimensionPixelSize(com.p_v.fliexiblecalendar.R.styleable.CircularEventCellView_event_radius, dpToPx(2));
+            padding = a.getDimensionPixelSize(com.p_v.fliexiblecalendar.R.styleable.CircularEventCellView_event_circle_padding,dpToPx(1));
         }finally {
             a.recycle();
         }
     }
+
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -112,5 +115,13 @@ public class CalendarSmallCircleView extends BaseCellView {
         int height =  (3 * width) / 5;
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    private int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 }
