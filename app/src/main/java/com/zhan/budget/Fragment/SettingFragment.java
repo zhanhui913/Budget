@@ -513,7 +513,6 @@ public class SettingFragment extends BaseFragment {
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-
         title.setText("Confirm Delete");
         message.setText("Resetting data will remove all data you've entered, are you sure you want to reset?");
 
@@ -533,6 +532,10 @@ public class SettingFragment extends BaseFragment {
                                 .build();
 
                         Realm.deleteRealm(config);
+
+                        //Also reset default account
+                        BudgetPreference.resetDefaultAccount(getContext());
+                        defaultAccountContent.setText("Credit Card");
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

@@ -192,7 +192,10 @@ public class AccountFragment extends BaseRealmFragment implements
                         myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
 
-                        BudgetPreference.setDefaultAccount(getContext(), input.getText().toString());
+                        //Change name only if edited account is default
+                        if(account.isDefault()) {
+                            BudgetPreference.setDefaultAccount(getContext(), input.getText().toString());
+                        }
 
                         //accountListAdapter.notifyDataSetChanged();
                     }

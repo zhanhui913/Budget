@@ -86,6 +86,10 @@ public final class BudgetPreference {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static void resetDefaultAccount(Context context){
+        setPreferenceString(context, Constants.DEFAULT_ACCOUNT, "Credit Card");
+    }
+
     public static void setDefaultAccount(Context context, String value){
         setPreferenceString(context, Constants.DEFAULT_ACCOUNT, value);
     }
