@@ -25,11 +25,11 @@ public class Constants {
     //Last backup
     public static final String LAST_BACKUP = "Last Backup";
 
-    //Starting fragment in MainActivity
-    public static final String START_FRAGMENT = "Starting Fragment";
-
     //Start day of calendar (Sunday or Monday)
     public static final String START_DAY_CALENDAR = "Start Day of Calendar";
+
+    //Default account
+    public static final String DEFAULT_ACCOUNT = "Default Account";
 
     //Activity request
     public static final String REQUEST_NEW_TRANSACTION = "New Transaction";

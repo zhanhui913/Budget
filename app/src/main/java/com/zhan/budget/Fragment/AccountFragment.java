@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
@@ -65,7 +66,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
         accountList = new ArrayList<>();
         accountListView = (ListView) view.findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(instance, accountList);
+        accountListAdapter = new AccountListAdapter(this, accountList);
         accountListView.setAdapter(accountListAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
@@ -190,6 +191,8 @@ public class AccountFragment extends BaseRealmFragment implements
                         account.setName(input.getText().toString());
                         myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
+
+                        BudgetPreference.setDefaultAccount(getContext(), input.getText().toString());
 
                         //accountListAdapter.notifyDataSetChanged();
                     }

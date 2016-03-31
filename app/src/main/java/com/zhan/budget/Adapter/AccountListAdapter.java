@@ -29,6 +29,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn;
         public ImageView editBtn;
+        public ImageView defaultAccountIndicator;
     }
 
     public AccountListAdapter(Activity activity, List<Account> accountList){
@@ -76,6 +77,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipeAccount);
             viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
             viewHolder.editBtn = (ImageView) convertView.findViewById(R.id.editBtn);
+            viewHolder.defaultAccountIndicator = (ImageView) convertView.findViewById(R.id.defaultAccountIndicator);
 
             viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
@@ -139,11 +141,18 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        // getting account data for the row
+        // getting account_popup data for the row
         Account account = getItem(position);
 
         //Name
         viewHolder.name.setText(account.getName());
+
+        //Default indicator
+        if(account.isDefault()){
+            viewHolder.defaultAccountIndicator.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.defaultAccountIndicator.setVisibility(View.INVISIBLE);
+        }
 
         return convertView;
     }

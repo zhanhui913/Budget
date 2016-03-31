@@ -69,6 +69,32 @@
                 android:text="sunday"/>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/themeColorHighlight"/>
+
+        <LinearLayout
+            android:id="@+id/defaultAccountBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Default Account"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                      android:id="@+id/defaultAccountContent"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Credit Card"/>
+        </LinearLayout>
+
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

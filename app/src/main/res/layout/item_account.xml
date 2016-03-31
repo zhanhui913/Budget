@@ -34,17 +34,25 @@
         android:clickable="true"
         android:background="?attr/themeColorBtn">
 
+        <ImageView
+            android:id="@+id/defaultAccountIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/svg_ic_star"
+            android:tint="@color/pomegranate"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
         <TextView
             android:id="@+id/accountName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="credit card"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/defaultAccountIndicator"/>
 
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

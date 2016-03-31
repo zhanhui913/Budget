@@ -13,12 +13,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -32,6 +35,7 @@ import java.io.FileWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -48,8 +52,8 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, backupBtn;
-    private TextView themeContent, firstDayContent, backupContent;
+    private ViewGroup themeBtn, firstDayBtn, defaultAccountBtn, backupBtn;
+    private TextView themeContent, firstDayContent, defaultAccountContent, backupContent;
 
     private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
 
@@ -77,6 +81,9 @@ public class SettingFragment extends BaseFragment {
         firstDayBtn = (ViewGroup) view.findViewById(R.id.firstDayBtn);
         firstDayContent = (TextView) view.findViewById(R.id.firstDayContent);
 
+        defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
+        defaultAccountContent = (TextView) view.findViewById(R.id.defaultAccountContent);
+
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
@@ -93,6 +100,9 @@ public class SettingFragment extends BaseFragment {
         //Set start day
         int startDay = BudgetPreference.getStartDay(getContext());
         firstDayContent.setText(startDay == Calendar.SUNDAY ? "Sunday" : "Monday");
+
+        //Set default account
+        defaultAccountContent.setText(BudgetPreference.getDefaultAccount(getContext()));
 
         //Set last backup
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
@@ -122,6 +132,13 @@ public class SettingFragment extends BaseFragment {
                     firstDayContent.setText("Sunday");
                     BudgetPreference.setSundayStartDay(getContext());
                 }
+            }
+        });
+
+        defaultAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAccountList();
             }
         });
 
@@ -193,11 +210,100 @@ public class SettingFragment extends BaseFragment {
                     email(exportRealmFile);
                 }else{
                     Log.d("FILE","cannot write file");
+                    Toast.makeText(getContext(), "Fail to retrieve file.", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Default Account
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void getAccountList(){
+        Toast.makeText(getContext(), "click on default account_popup", Toast.LENGTH_SHORT).show();
+
+        final Realm myRealm = Realm.getDefaultInstance();
+        final RealmResults<Account> accountResults = myRealm.where(Account.class).findAllAsync();
+
+        accountResults.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                accountResults.removeChangeListener(this);
+                openAccountPopupMenu(myRealm.copyFromRealm(accountResults));
+                myRealm.close();
+            }
+        });
+    }
+
+    private void openAccountPopupMenu(final List<Account> accountList){
+        //Creating the instance of PopupMenu
+        final PopupMenu popup = new PopupMenu(getContext(), defaultAccountBtn);
+
+        int defaultAccountIndex = -1;
+
+        for(int i = 0; i < accountList.size(); i++){
+            if(accountList.get(i).isDefault()){
+                defaultAccountIndex = i;
+                break;
+            }
+        }
+
+        //Set the default as the first index
+        Collections.swap(accountList, 0, defaultAccountIndex);
+
+        for (int i = 0; i < accountList.size(); i++) {
+            popup.getMenu().add(0,0,i, accountList.get(i).getName());
+        }
+
+        //Inflating the Popup using xml file
+        popup.getMenuInflater().inflate(R.menu.account_popup, popup.getMenu());
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getContext(), "You Clicked : " + item.getTitle()+" at index "+item.getOrder(), Toast.LENGTH_SHORT).show();
+                setDefaultAccount(accountList.get(item.getOrder()));
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    private void setDefaultAccount(final Account defaultAccount){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
+        accounts.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                accounts.removeChangeListener(this);
+
+                myRealm.beginTransaction();
+
+                for(int i = 0; i < accounts.size(); i++){
+                    if(defaultAccount.getId().equalsIgnoreCase(accounts.get(i).getId())){
+                        //myRealm.copyToRealmOrUpdate(accounts.get(i).setIsDefault(true));
+
+                        accounts.get(i).setIsDefault(true);
+                    }else{
+                        //myRealm.copyToRealmOrUpdate();
+                        accounts.get(i).setIsDefault(false);
+                    }
+                }
+
+                myRealm.commitTransaction();
+                myRealm.close();
+
+                BudgetPreference.setDefaultAccount(getContext(), defaultAccount.getName());
+                defaultAccountContent.setText(defaultAccount.getName());
+            }
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,12 +352,12 @@ public class SettingFragment extends BaseFragment {
         try {
             File sd = Environment.getExternalStorageDirectory();
             File data = Environment.getDataDirectory();
-            long timeStamp = 0;
+            Date date = new Date();
 
             if (sd.canWrite()) {
                 if(createDirectory()){ Log.d("FILE", "can write file");
                     String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
-                    String backupDBPath = "Budget/" + Constants.NAME + "_" + DateUtil.convertDateToStringFormat6(new Date()) + ".realm";
+                    String backupDBPath = "Budget/" + Constants.NAME + "_" + DateUtil.convertDateToStringFormat6(date) + ".realm";
                     File currentDB = new File(data, currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
 
@@ -261,16 +367,15 @@ public class SettingFragment extends BaseFragment {
                     src.close();
                     dst.close();
 
-                    Toast.makeText(getContext(), "DONE CREATING BACKUP", Toast.LENGTH_SHORT).show();
+                    String dateString = DateUtil.convertDateToStringFormat7(date);
 
-                    File backupFile = new File(Environment.getExternalStorageDirectory().toString() + backupDBPath);
-                    Log.d("FILE", "backupFile : "+Environment.getExternalStorageDirectory().toString() + backupDBPath);
-                    timeStamp = backupFile.lastModified();
-                    updateLastBackupInfo(DateUtil.convertLongToStringFormat(timeStamp));
-                    BudgetPreference.setLastBackup(getContext(), DateUtil.convertLongToStringFormat(timeStamp));
+                    Log.d("FILE", "backupFile : "+Environment.getExternalStorageDirectory().toString() + backupDBPath+" -> "+dateString);
+
+                    updateLastBackupInfo(dateString);
+                    BudgetPreference.setLastBackup(getContext(), dateString);
                 }else{
                     Log.d("FILE","cannot write file");
-                    Toast.makeText(getContext(), "Fail to backup data at "+DateUtil.convertLongToStringFormat(timeStamp), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Fail to backup data at "+DateUtil.convertDateToStringFormat7(date), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {

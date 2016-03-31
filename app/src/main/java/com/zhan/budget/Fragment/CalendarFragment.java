@@ -201,6 +201,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             Account account = myRealm.createObject(Account.class);
             account.setId(Util.generateUUID());
             account.setName(tempAccountList[i]);
+            account.setIsDefault((i == 0));
             accountList.add(account);
         }
 

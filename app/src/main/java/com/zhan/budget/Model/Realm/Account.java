@@ -15,6 +15,7 @@ public class Account extends RealmObject{
     private String id;
 
     private String name;
+    private boolean isDefault;
 
     public Account(){
 
@@ -34,5 +35,14 @@ public class Account extends RealmObject{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }
