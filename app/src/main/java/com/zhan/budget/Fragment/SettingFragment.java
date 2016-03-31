@@ -102,7 +102,11 @@ public class SettingFragment extends BaseFragment {
         firstDayContent.setText(startDay == Calendar.SUNDAY ? "Sunday" : "Monday");
 
         //Set default account
-        defaultAccountContent.setText(BudgetPreference.getDefaultAccount(getContext()));
+        if(BudgetPreference.getDefaultAccount(getContext()).equalsIgnoreCase("NA")){
+            defaultAccountContent.setText("Credit Card");
+        }else {
+            defaultAccountContent.setText(BudgetPreference.getDefaultAccount(getContext()));
+        }
 
         //Set last backup
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
@@ -254,6 +258,7 @@ public class SettingFragment extends BaseFragment {
         }
 
         //Set the default as the first index
+        //Need to set it so that onMenuItemClick can fetch the position relative to list.
         Collections.swap(accountList, 0, defaultAccountIndex);
 
         for (int i = 0; i < accountList.size(); i++) {
