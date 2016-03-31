@@ -69,6 +69,11 @@ public final class DateUtil {
         return formatter.format(date);
     }
 
+    public static String convertDateToStringFormat6(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM_d_yyyy_hh_mm_a", Constants.BUDGET_LOCALE);
+        return formatter.format(date);
+    }
+
     public static String convertLongToStringFormat(long value){
         SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", Constants.BUDGET_LOCALE);
         return formatter.format(value);

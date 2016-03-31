@@ -6,8 +6,9 @@ import java.util.Locale;
  * Created by zhanyap on 15-12-21.
  */
 public class Constants {
-    public static final String REALM_NAME = "budget.realm";
-    public static final String CSV_NAME = "budget.csv";
+    public static final String NAME = "Budget";
+    public static final String REALM_NAME = NAME + ".realm";
+    public static final String CSV_NAME = NAME + ".csv";
 
     //Locale
     public static final Locale BUDGET_LOCALE = Locale.CANADA;

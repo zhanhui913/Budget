@@ -32,6 +32,7 @@ import java.io.FileWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -250,7 +251,7 @@ public class SettingFragment extends BaseFragment {
             if (sd.canWrite()) {
                 if(createDirectory()){ Log.d("FILE", "can write file");
                     String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
-                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
+                    String backupDBPath = "Budget/" + Constants.NAME + "_" + DateUtil.convertDateToStringFormat6(new Date()) + ".realm";
                     File currentDB = new File(data, currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
 
@@ -262,7 +263,8 @@ public class SettingFragment extends BaseFragment {
 
                     Toast.makeText(getContext(), "DONE CREATING BACKUP", Toast.LENGTH_SHORT).show();
 
-                    File backupFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
+                    File backupFile = new File(Environment.getExternalStorageDirectory().toString() + backupDBPath);
+                    Log.d("FILE", "backupFile : "+Environment.getExternalStorageDirectory().toString() + backupDBPath);
                     timeStamp = backupFile.lastModified();
                     updateLastBackupInfo(DateUtil.convertLongToStringFormat(timeStamp));
                     BudgetPreference.setLastBackup(getContext(), DateUtil.convertLongToStringFormat(timeStamp));
