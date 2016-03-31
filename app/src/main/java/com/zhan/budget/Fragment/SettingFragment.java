@@ -35,7 +35,6 @@ import java.io.FileWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -248,19 +247,6 @@ public class SettingFragment extends BaseFragment {
         //Creating the instance of PopupMenu
         final PopupMenu popup = new PopupMenu(getContext(), defaultAccountBtn);
 
-        int defaultAccountIndex = -1;
-
-        for(int i = 0; i < accountList.size(); i++){
-            if(accountList.get(i).isDefault()){
-                defaultAccountIndex = i;
-                break;
-            }
-        }
-
-        //Set the default as the first index
-        //Need to set it so that onMenuItemClick can fetch the position relative to list.
-        Collections.swap(accountList, 0, defaultAccountIndex);
-
         for (int i = 0; i < accountList.size(); i++) {
             popup.getMenu().add(0,0,i, accountList.get(i).getName());
         }
@@ -272,6 +258,7 @@ public class SettingFragment extends BaseFragment {
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 Toast.makeText(getContext(), "You Clicked : " + item.getTitle()+" at index "+item.getOrder(), Toast.LENGTH_SHORT).show();
+                Log.d("TITLE", "from account list : "+accountList.get(item.getOrder()).getName());
                 setDefaultAccount(accountList.get(item.getOrder()));
                 return true;
             }
