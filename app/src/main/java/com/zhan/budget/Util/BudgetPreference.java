@@ -3,11 +3,8 @@ package com.zhan.budget.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.p_v.flexiblecalendar.FlexibleCalendarHelper;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Fragment.CalendarFragment;
 
 import java.util.Calendar;
 
@@ -35,6 +32,20 @@ public final class BudgetPreference {
 
     public static void setFirstTime(Context context){
         setPreferenceBoolean(context, Constants.FIRST_TIME, false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Last backup functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String getLastBackup(Context context){
+        return getPreferenceString(context, Constants.LAST_BACKUP, "None");
+    }
+
+    public static void setLastBackup(Context context, String value){
+        setPreferenceString(context, Constants.LAST_BACKUP, value);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,9 +105,20 @@ public final class BudgetPreference {
         editor.apply();
     }
 
-
     public static int getPreferenceInt(Context context, String key, int defVal){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getInt(key, defVal);
+    }
+
+    public static void setPreferenceString(Context context, String key, String value){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String getPreferenceString(Context context, String key, String defVal){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString(key, defVal);
     }
 }

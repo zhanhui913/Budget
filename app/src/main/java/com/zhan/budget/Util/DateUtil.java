@@ -69,6 +69,11 @@ public final class DateUtil {
         return formatter.format(date);
     }
 
+    public static String convertLongToStringFormat(long value){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", Constants.BUDGET_LOCALE);
+        return formatter.format(value);
+    }
+
     /**
      * Refreshes the date to set the time component of date to 00:00:00
      * @param date

@@ -21,6 +21,9 @@ public class Constants {
     //Default theme
     public static final String DEFAULT_THEME = "Default Theme";
 
+    //Last backup
+    public static final String LAST_BACKUP = "Last Backup";
+
     //Starting fragment in MainActivity
     public static final String START_FRAGMENT = "Starting Fragment";
 

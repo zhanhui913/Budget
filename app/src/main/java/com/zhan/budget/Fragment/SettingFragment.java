@@ -85,11 +85,16 @@ public class SettingFragment extends BaseFragment {
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
 
+        //Set theme
         CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
         themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode" : "Day Mode"));
 
+        //Set start day
         int startDay = BudgetPreference.getStartDay(getContext());
         firstDayContent.setText(startDay == Calendar.SUNDAY ? "Sunday" : "Monday");
+
+        //Set last backup
+        updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
 
         addListeners();
     }
@@ -237,7 +242,42 @@ public class SettingFragment extends BaseFragment {
     }
 
     public void backUpData(){
-        
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+            long timeStamp = 0;
+
+            if (sd.canWrite()) {
+                if(createDirectory()){ Log.d("FILE", "can write file");
+                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
+                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
+                    File currentDB = new File(data, currentDBPath);
+                    File backupDB = new File(sd, backupDBPath);
+
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+
+                    Toast.makeText(getContext(), "DONE CREATING BACKUP", Toast.LENGTH_SHORT).show();
+
+                    File backupFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
+                    timeStamp = backupFile.lastModified();
+                    updateLastBackupInfo(DateUtil.convertLongToStringFormat(timeStamp));
+                    BudgetPreference.setLastBackup(getContext(), DateUtil.convertLongToStringFormat(timeStamp));
+                }else{
+                    Log.d("FILE","cannot write file");
+                    Toast.makeText(getContext(), "Fail to backup data at "+DateUtil.convertLongToStringFormat(timeStamp), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateLastBackupInfo(String value){
+        backupContent.setText("last backup : "+value);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
