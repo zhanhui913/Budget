@@ -5,9 +5,11 @@
     android:orientation="vertical">
 
      <com.p_v.flexiblecalendar.FlexibleCalendarView
+         xmlns:flexible="http://schemas.android.com/apk/res-auto"
          android:id="@+id/calendarView"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content" />
+         android:layout_height="wrap_content"
+         flexible:disableAutoDateSelection="true"/>
 
     <LinearLayout
         android:id="@+id/centerPanel"
