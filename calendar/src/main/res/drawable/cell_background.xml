@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:p-v="http://schemas.android.com/apk/res-auto">
+
+	<!-- Regular day -->
     <item p-v:state_date_regular="true"
         android:drawable="@drawable/regular_day"/>
 
+	<!-- Current day -->
+	<item p-v:state_date_today="true"
+          android:drawable="@drawable/current_day"/>
+
+	<!-- Selected day -->
     <item p-v:state_date_selected="true"
         android:drawable="@drawable/selected_day"/>
 </selector>
