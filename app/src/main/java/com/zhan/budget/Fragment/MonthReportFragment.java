@@ -73,7 +73,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
         monthReportGridAdapter = new MonthReportGridAdapter(this, monthReportList);
         monthReportGridView.setAdapter(monthReportGridAdapter);
 
-        currentYear = new Date();
+        currentYear = DateUtil.refreshYear(new Date());
 
         createMonthCard();
         updateYearInToolbar(0);
@@ -86,12 +86,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
         for(int i = 0; i < 12; i++){
             MonthReport monthReport = new MonthReport();
             monthReport.setDoneCalculation(false); //default
-
-            if(i == 0) {
-                monthReport.setMonth(DateUtil.refreshMonth(DateUtil.refreshYear(currentYear)));
-            }else{
-                monthReport.setMonth(DateUtil.getNextMonth(monthReportList.get(i - 1).getMonth()));
-            }
+            monthReport.setMonth(DateUtil.getMonthWithDirection(currentYear, i));
             monthReportList.add(monthReport);
         }
     }
@@ -106,10 +101,11 @@ public class MonthReportFragment extends BaseRealmFragment implements
         //Need to go a day before as Realm's between date does inclusive on both end
         endYear = DateUtil.getPreviousDate(DateUtil.getNextYear(beginYear));
 
-        Log.d("DEBUG", "get report from " + beginYear.toString() + " to " + endYear.toString());
+        Log.d(TAG, "get report from " + beginYear.toString() + " to " + endYear.toString());
 
         //Reset all values in list
         for(int i = 0 ; i < monthReportList.size(); i++){
+            monthReportList.get(i).setMonth(DateUtil.getMonthWithDirection(beginYear, i));
             monthReportList.get(i).setDoneCalculation(false);
             monthReportList.get(i).setCostThisMonth(0);
             monthReportList.get(i).setChangeCost(0);
@@ -191,8 +187,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
         };
         loader.execute();
     }
-
-
 
     private void updateYearInToolbar(int direction){
         currentYear = DateUtil.getYearWithDirection(currentYear, direction);
