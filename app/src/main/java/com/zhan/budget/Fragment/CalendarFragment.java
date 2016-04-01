@@ -135,7 +135,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
 
-        addListeners();
         createPullToAddTransaction();
         createCalendar();
 
@@ -260,29 +259,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
     }
 
-    private void addListeners(){
-        /*transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Transaction debugTransaction = transactionList.get(position);
-
-                Log.d(TAG, "----------- Click Result ----------");
-                Log.d(TAG, "transaction id :" + debugTransaction.getId());
-                Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
-                Log.d(TAG, "transaction daytype :" + debugTransaction.getDayType() + ", date :" + debugTransaction.getDate());
-                Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
-                Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
-                Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
-                Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
-                Log.i(TAG, "----------- Click Result ----------");
-
-
-                editTransaction(position);
-            }
-        });*/
-    }
-
     /**
      * Create the pull down effect.
      */
@@ -347,7 +323,7 @@ public class CalendarFragment extends BaseRealmFragment implements
      * Create calendar
      */
     private void createCalendar(){
-        updateMonthInToolbar(0);
+        updateMonthInToolbar();
 
         calendarView.setCalendarView(new FlexibleCalendarView.CalendarView() {
             @Override
@@ -385,13 +361,12 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         calendarView.setStartDayOfTheWeek(BudgetPreference.getStartDay(getContext()));
 
+        calendarView.selectDate(new Date());
+
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                //This is temporary for now because when we move to a new month, the 1st of that month is selected by default
-                selectedDate = (new GregorianCalendar(year, month, 1)).getTime();
-                populateTransactionsForDate(selectedDate);
-                updateMonthInToolbar(0);
+                updateMonthInToolbar();
             }
         });
 
@@ -566,12 +541,11 @@ public class CalendarFragment extends BaseRealmFragment implements
     }
 
     /**
-     * Update the the toolbar's title with specific date.
-     * @param direction how many to add to the current month.
+     * Update the the toolbar's title with current CalendarView's date
      */
-    private void updateMonthInToolbar(int direction){
-        selectedDate = DateUtil.getMonthWithDirection(selectedDate, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(selectedDate));
+    private void updateMonthInToolbar(){
+        Date tempDate = new GregorianCalendar(calendarView.getCurrentYear(), calendarView.getCurrentMonth(), 1).getTime();
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(tempDate));
     }
 
     @Override
@@ -698,11 +672,11 @@ public class CalendarFragment extends BaseRealmFragment implements
         // handle item selection
         switch (item.getItemId()) {
             case R.id.leftChevron:
-                updateMonthInToolbar(-1);
+                updateMonthInToolbar();
                 calendarView.moveToPreviousMonth();
                 return true;
             case R.id.rightChevron:
-                updateMonthInToolbar(1);
+                updateMonthInToolbar();
                 calendarView.moveToNextMonth();
                 return true;
             default:

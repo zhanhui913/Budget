@@ -412,6 +412,8 @@ public class TransactionInfoActivity extends BaseRealmActivity implements
 
         calendarView.setStartDayOfTheWeek(BudgetPreference.getStartDay(this));
 
+        calendarView.selectDate(tempDate);
+
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
