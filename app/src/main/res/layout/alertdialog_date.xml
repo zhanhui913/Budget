@@ -17,6 +17,7 @@
     </LinearLayout>
 
     <com.p_v.flexiblecalendar.FlexibleCalendarView
+        xmlns:flexible="http://schemas.android.com/apk/res-auto"
         android:id="@+id/alertdialogCalendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,5 +26,6 @@
         android:layout_below="@+id/alertdialogMonthTextView"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingBottom="15dp" />
+        android:paddingBottom="15dp"
+        flexible:disableAutoDateSelection="true"/>
 </LinearLayout>
