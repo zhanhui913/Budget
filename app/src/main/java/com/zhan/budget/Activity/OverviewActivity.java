@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Fragment.BarChartFragment;
 import com.zhan.budget.Fragment.PercentChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.CategoryPercent;
@@ -34,6 +37,7 @@ import io.realm.RealmResults;
 public class OverviewActivity extends BaseRealmActivity {
 
     private PercentChartFragment percentChartFragment;
+    private BarChartFragment barChartFragment;
 
     private Toolbar toolbar;
     private Date currentMonth;
@@ -56,6 +60,8 @@ public class OverviewActivity extends BaseRealmActivity {
         super.init();
 
         percentChartFragment = new PercentChartFragment();
+        barChartFragment = new BarChartFragment();
+
         getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, percentChartFragment).commit();
 
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
@@ -278,15 +284,24 @@ public class OverviewActivity extends BaseRealmActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.barChart:
-                Toast.makeText(getApplicationContext(), "click here bar", Toast.LENGTH_SHORT).show();
+            case R.id.percentChart:
+                Toast.makeText(getApplicationContext(), "click here percent chart", Toast.LENGTH_SHORT).show();
+                replaceFragment(percentChartFragment);
                 return true;
-            case R.id.lineChart:
-                Toast.makeText(getApplicationContext(), "click here line", Toast.LENGTH_SHORT).show();
+            case R.id.barChart:
+                Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
+                replaceFragment(barChartFragment);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void replaceFragment(Fragment fragment){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.chartContentFrame, fragment);
+
+        ft.commit();
     }
 }
 

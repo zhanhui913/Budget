@@ -29,7 +29,7 @@ public class PercentChartFragment extends BaseFragment {
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_percent_chart;
+        return R.layout.fragment_chart_percent;
     }
 
     @Override
@@ -86,6 +86,4 @@ public class PercentChartFragment extends BaseFragment {
         this.percentView.setSliceList(this.sliceList);
         totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
     }
-
-
 }

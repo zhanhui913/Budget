@@ -1,0 +1,18 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.zhan.budget.Fragment.BarChartFragment">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/harbor_rat">
+
+		<com.db.chart.view.BarChartView
+			xmlns:chart="http://schemas.android.com/apk/res-auto"
+			android:id="@+id/barChart"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+	</RelativeLayout>
+</FrameLayout>
