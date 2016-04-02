@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Fragment.PercentChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.Model.Realm.Category;
@@ -21,7 +21,6 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.percentview.Model.Slice;
-import com.zhan.percentview.PercentView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,10 +35,12 @@ import io.realm.RealmResults;
 
 public class OverviewActivity extends BaseRealmActivity {
 
+    private PercentChartFragment percentChartFragment;
+
     private Toolbar toolbar;
     private Date currentMonth;
-    private TextView totalCostForMonthTextView;
-    private PercentView percentView;
+    //private TextView totalCostForMonthTextView;
+    //private PercentView percentView;
     private CircularProgressBar circularProgressBar;
 
     private RealmResults<Category> resultsCategory;
@@ -59,6 +60,9 @@ public class OverviewActivity extends BaseRealmActivity {
     protected void init(){
         super.init();
 
+        percentChartFragment = new PercentChartFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, percentChartFragment).commit();
+
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         categoryList = new ArrayList<>();
@@ -67,11 +71,11 @@ public class OverviewActivity extends BaseRealmActivity {
         CategoryPercentListAdapter categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryPercentList);
         categoryListView.setAdapter(categoryPercentListAdapter);
 
-        totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
+        //totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
-        percentView = (PercentView) findViewById(R.id.percentView);
+        //percentView = (PercentView) findViewById(R.id.percentView);
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
 
@@ -254,7 +258,6 @@ public class OverviewActivity extends BaseRealmActivity {
                 if(sliceList.size() > 0) {
                     sliceList.get(0).setPixels(sliceList.get(0).getPixels() + remainder);
                 }
-
                 return sumCost;
             }
 
@@ -269,9 +272,11 @@ public class OverviewActivity extends BaseRealmActivity {
                 //categoryPercentListAdapter.addAll(categoryPercentList);
 
                 //Display the total cost for that month in the percent view
-                totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
+                //totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
 
-                percentView.setSliceList(sliceList);
+                //percentView.setSliceList(sliceList);
+                //percentChartFragment.setData(sliceList, result);
+                percentChartFragment.setData(categoryList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);

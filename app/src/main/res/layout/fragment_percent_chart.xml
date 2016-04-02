@@ -2,12 +2,26 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.zhan.budget.Fragment.PercentChart">
+             tools:context=".Fragment.PercentChartFragment">
 
-	<!-- TODO: Update blank fragment layout -->
-	<TextView
+	<RelativeLayout
+		android:id="@+id/topPanel"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:text="@string/hello_blank_fragment"/>
+		android:layout_height="match_parent">
 
+		<com.zhan.percentview.PercentView
+			android:id="@+id/percentView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+		<TextView
+			android:id="@+id/totalCostForMonth"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:text="$0.00"
+			android:textColor="@color/day_text"
+			android:textSize="50sp"/>
+
+	</RelativeLayout>
 </FrameLayout>
