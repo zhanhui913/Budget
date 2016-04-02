@@ -1,19 +1,15 @@
 package com.zhan.budget.Fragment;
 
-
-import android.util.Log;
 import android.widget.TextView;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.percentview.Model.Slice;
 import com.zhan.percentview.PercentView;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,10 +19,7 @@ public class PercentChartFragment extends BaseFragment {
 
     private PercentView percentView;
     private List<Slice> sliceList;
-    private List<Category> categoryList;
-    private List<CategoryPercent> categoryPercentList;
     private TextView totalCostForMonthTextView;
-    private float totalCost;
     private int screenWidth;
     private float sumCost;
 
@@ -45,12 +38,9 @@ public class PercentChartFragment extends BaseFragment {
         totalCostForMonthTextView = (TextView) view.findViewById(R.id.totalCostForMonth);
         sliceList = new ArrayList<>();
         screenWidth = Util.getScreenWidth(getActivity());
-
     }
 
     public void setData(List<Category> categoryList){
-        this.categoryList = categoryList;
-        this.categoryPercentList = new ArrayList<>();
 
         //Go through list cost to get sumCost
         for(int i = 0; i < categoryList.size(); i++){
@@ -71,18 +61,6 @@ public class PercentChartFragment extends BaseFragment {
 
         //Now calculate percentage for each category
         for(int i = 0; i < categoryList.size(); i++){
-            CategoryPercent cp = new CategoryPercent();
-            cp.setCategory(categoryList.get(i));
-
-            BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
-            BigDecimal total = BigDecimal.valueOf(sumCost);
-            BigDecimal hundred = new BigDecimal(100);
-            BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
-
-            cp.setPercent(percent.multiply(hundred).floatValue());
-            categoryPercentList.add(cp);
-            Log.d("PERCENT_VIEW", i + ", " + cp.getCategory().getName() + "->" + cp.getPercent() + "=> " + percent.floatValue());
-
             //Create new slice as well
             Slice slice = new Slice();
             slice.setColor(categoryList.get(i).getColor());
@@ -101,14 +79,12 @@ public class PercentChartFragment extends BaseFragment {
             sliceList.get(0).setPixels(sliceList.get(0).getPixels() + remainder);
         }
 
-        this.totalCost = sumCost;
-
         notifyDataChanged();
     }
 
     private void notifyDataChanged(){
         this.percentView.setSliceList(this.sliceList);
-        totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(this.totalCost, Constants.BUDGET_LOCALE));
+        totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
     }
 
 

@@ -19,8 +19,6 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.Util;
-import com.zhan.percentview.Model.Slice;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,8 +37,6 @@ public class OverviewActivity extends BaseRealmActivity {
 
     private Toolbar toolbar;
     private Date currentMonth;
-    //private TextView totalCostForMonthTextView;
-    //private PercentView percentView;
     private CircularProgressBar circularProgressBar;
 
     private RealmResults<Category> resultsCategory;
@@ -49,7 +45,6 @@ public class OverviewActivity extends BaseRealmActivity {
     private List<Transaction> transactionList;
     private List<Category> categoryList;
     private List<CategoryPercent> categoryPercentList;
-    private List<Slice> sliceList;
 
     @Override
     protected int getActivityLayout(){
@@ -71,11 +66,8 @@ public class OverviewActivity extends BaseRealmActivity {
         CategoryPercentListAdapter categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryPercentList);
         categoryListView.setAdapter(categoryPercentListAdapter);
 
-        //totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
-
-        //percentView = (PercentView) findViewById(R.id.percentView);
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
 
@@ -129,8 +121,6 @@ public class OverviewActivity extends BaseRealmActivity {
 
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
-
-        sliceList = new ArrayList<>();
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
@@ -221,11 +211,9 @@ public class OverviewActivity extends BaseRealmActivity {
                         float cost2 = c2.getCost();
 
                         //ascending order
-                        return ((int)cost1) - ((int)cost2);
+                        return ((int) cost1) - ((int) cost2);
                     }
                 });
-
-                int screenWidth = Util.getScreenWidth(OverviewActivity.this);
 
                 //Now calculate percentage for each category
                 for(int i = 0; i < categoryList.size(); i++){
@@ -239,25 +227,8 @@ public class OverviewActivity extends BaseRealmActivity {
 
                     cp.setPercent(percent.multiply(hundred).floatValue());
                     categoryPercentList.add(cp);
-                    Log.d("PERCENT_VIEW", i + ", " + cp.getCategory().getName() + "->" + cp.getPercent() + "=> " + percent.floatValue());
-
-                    //Create new slice as well
-                    Slice slice = new Slice();
-                    slice.setColor(categoryList.get(i).getColor());
-                    slice.setPixels((int) ((categoryList.get(i).getCost() / sumCost) * screenWidth));
-                    sliceList.add(slice);
                 }
 
-                //calculate remainder pixels left d ue to rounding errors
-                int remainder = screenWidth;
-                for(int i = 0; i < sliceList.size(); i++){
-                    remainder -= sliceList.get(i).getPixels();
-                }
-
-                //Give remainder pixels to first (largest) slice
-                if(sliceList.size() > 0) {
-                    sliceList.get(0).setPixels(sliceList.get(0).getPixels() + remainder);
-                }
                 return sumCost;
             }
 
