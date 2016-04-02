@@ -1,21 +1,17 @@
 package com.zhan.budget.Fragment;
 
-import android.support.v4.app.Fragment;
 
 import com.zhan.budget.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class InfoFragment extends BaseFragment {
+public class PercentChart extends BaseFragment {
 
-    public InfoFragment() {
+    public PercentChart() {
         // Required empty public constructor
     }
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_info;
+        return R.layout.fragment_percent_chart;
     }
 
     @Override

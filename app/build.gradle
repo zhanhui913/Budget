@@ -36,6 +36,13 @@ dependencies {
     compile project(':circleindicator')
     compile project(':percentview')
     apt 'org.parceler:parceler:1.0.4'
+
+    //Espresso Testing
+    androidTestCompile 'com.android.support:support-annotations:23.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:support-v4:23.2.1'
@@ -50,12 +57,5 @@ dependencies {
     compile 'com.github.zhanhui913:circular-view:0.4.0'
     compile 'com.p_v:flexiblecalendar:1.2.1'
     compile 'com.diogobernardino:williamchart:2.2'
-
-    //Espresso Testing
-    androidTestCompile 'com.android.support:support-annotations:23.2.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-
 }
 
