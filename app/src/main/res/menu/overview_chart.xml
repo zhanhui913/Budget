@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.zhan.budget.Activity.OverviewActivity">
+
+	<item
+		android:id="@+id/barChart"
+		android:orderInCategory="100"
+		android:title="Bar"
+		app:showAsAction="never"/>
+
+	<item
+		android:id="@+id/lineChart"
+		android:orderInCategory="100"
+		android:title="Line"
+		app:showAsAction="never"/>
+</menu>

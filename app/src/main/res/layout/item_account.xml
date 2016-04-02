@@ -34,14 +34,27 @@
         android:clickable="true"
         android:background="?attr/themeColorBtn">
 
-        <ImageView
-            android:id="@+id/defaultAccountIndicator"
+        <RelativeLayout
+            android:id="@+id/indicatorContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/svg_ic_star"
-            android:tint="@color/pomegranate"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/defaultAccountIndicatorOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/svg_ic_off"
+                android:tint="@color/colorPrimaryDark"/>
+
+            <ImageView
+                android:id="@+id/defaultAccountIndicatorOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/svg_ic_on"
+                android:tint="@color/colorPrimaryDark"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/accountName"
@@ -52,7 +65,7 @@
             android:textStyle="bold"
             android:text="credit card"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/defaultAccountIndicator"/>
+            android:layout_toLeftOf="@+id/indicatorContainer"/>
 
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

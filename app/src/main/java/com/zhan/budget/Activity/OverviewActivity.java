@@ -3,9 +3,12 @@ package com.zhan.budget.Activity;
 import android.os.AsyncTask;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
@@ -286,6 +289,29 @@ public class OverviewActivity extends BaseRealmActivity {
         finish();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Menu Options
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.overview_chart, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.barChart:
+                Toast.makeText(getApplicationContext(), "click here bar", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.lineChart:
+                Toast.makeText(getApplicationContext(), "click here line", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
 
 

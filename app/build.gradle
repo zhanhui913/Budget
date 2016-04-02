@@ -49,6 +49,7 @@ dependencies {
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.0.0'
     compile 'com.github.zhanhui913:circular-view:0.4.0'
     compile 'com.p_v:flexiblecalendar:1.2.1'
+    compile 'com.diogobernardino:williamchart:2.2'
 
     //Espresso Testing
     androidTestCompile 'com.android.support:support-annotations:23.2.1'

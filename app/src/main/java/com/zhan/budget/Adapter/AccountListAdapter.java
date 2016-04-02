@@ -29,7 +29,8 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn;
         public ImageView editBtn;
-        public ImageView defaultAccountIndicator;
+        public ImageView defaultAccountIndicatorOn;
+        public ImageView defaultAccountIndicatorOff;
     }
 
     public AccountListAdapter(Activity activity, List<Account> accountList){
@@ -77,7 +78,8 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipeAccount);
             viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
             viewHolder.editBtn = (ImageView) convertView.findViewById(R.id.editBtn);
-            viewHolder.defaultAccountIndicator = (ImageView) convertView.findViewById(R.id.defaultAccountIndicator);
+            viewHolder.defaultAccountIndicatorOn = (ImageView) convertView.findViewById(R.id.defaultAccountIndicatorOn);
+            viewHolder.defaultAccountIndicatorOff = (ImageView) convertView.findViewById(R.id.defaultAccountIndicatorOff);
 
             viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
@@ -149,9 +151,11 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
         //Default indicator
         if(account.isDefault()){
-            viewHolder.defaultAccountIndicator.setVisibility(View.VISIBLE);
+            viewHolder.defaultAccountIndicatorOn.setVisibility(View.VISIBLE);
+            viewHolder.defaultAccountIndicatorOff.setVisibility(View.INVISIBLE);
         }else{
-            viewHolder.defaultAccountIndicator.setVisibility(View.INVISIBLE);
+            viewHolder.defaultAccountIndicatorOn.setVisibility(View.INVISIBLE);
+            viewHolder.defaultAccountIndicatorOff.setVisibility(View.VISIBLE);
         }
 
         return convertView;

@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/night_text</item>
         <item name="android:windowBackground">@color/day</item>
+		<item name="actionOverflowMenuStyle">@style/AppThemeLight.Menu</item>
 
         <!-- For xml uses -->
         <item name="themeColor">@color/day</item>
@@ -22,6 +23,9 @@
 
     <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+	<style name="AppThemeLight.Menu" parent="Widget.AppCompat.PopupMenu.Overflow">
+		<item name="android:popupBackground">@color/day</item>
+	</style>
 
     <!-- Dark application theme. -->
     <style name="AppThemeDark" parent="Theme.AppCompat">
@@ -30,6 +34,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/day_text</item>
         <item name="android:windowBackground">@color/night</item>
+	    <item name="actionOverflowMenuStyle">@style/AppThemeDark.Menu</item>
 
         <!-- For xml uses -->
         <item name="themeColor">@color/night</item>
@@ -42,6 +47,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+	<style name="AppThemeDark.Menu" parent="Widget.AppCompat.PopupMenu.Overflow">
+		<item name="android:popupBackground">@color/night</item>
+	</style>
 
     <!-- Number pad's style -->
     <style name="NumberPadStyle">
