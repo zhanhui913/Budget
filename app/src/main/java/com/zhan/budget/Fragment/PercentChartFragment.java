@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class PercentChartFragment extends BaseFragment {
+public class PercentChartFragment extends BaseFragment implements ChartDataListener {
 
     private PercentView percentView;
     private List<Slice> sliceList;
@@ -40,6 +40,7 @@ public class PercentChartFragment extends BaseFragment {
         screenWidth = Util.getScreenWidth(getActivity());
     }
 
+    @Override
     public void setData(List<Category> categoryList){
 
         //Go through list cost to get sumCost
@@ -82,7 +83,7 @@ public class PercentChartFragment extends BaseFragment {
         notifyDataChanged();
     }
 
-    private void notifyDataChanged(){
+    private void notifyDataChanged() {
         this.percentView.setSliceList(this.sliceList);
         totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
     }

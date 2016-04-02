@@ -62,7 +62,8 @@ public class OverviewActivity extends BaseRealmActivity {
         percentChartFragment = new PercentChartFragment();
         barChartFragment = new BarChartFragment();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, percentChartFragment).commit();
+        //getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, percentChartFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
 
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
@@ -245,15 +246,8 @@ public class OverviewActivity extends BaseRealmActivity {
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
 
-                Log.d("PERCENT_VIEW", "ZZ There are " + categoryPercentList.size() + " categories items in the list");
-                //categoryPercentListAdapter.addAll(categoryPercentList);
-
-                //Display the total cost for that month in the percent view
-                //totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
-
-                //percentView.setSliceList(sliceList);
-                //percentChartFragment.setData(sliceList, result);
-                percentChartFragment.setData(categoryList);
+                //percentChartFragment.setData(categoryList);
+                barChartFragment.setData(categoryList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -300,6 +294,17 @@ public class OverviewActivity extends BaseRealmActivity {
     private void replaceFragment(Fragment fragment){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.chartContentFrame, fragment);
+/*
+        //Needs to implement the ChartDataListener interface
+        if (fragment instanceof ChartDataListener) {
+            ((ChartDataListener) fragment).setData();
+        } else {
+            throw new RuntimeException(fragment.toString() + " must implement ChartDataListener.");
+        }
+*/
+
+        performAsyncCalculation();
+
 
         ft.commit();
     }
