@@ -150,7 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:text="Export data in CSV"/>
+            android:text="Export data to CSV"/>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
