@@ -1,5 +1,7 @@
 package com.zhan.budget.Fragment;
 
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.zhan.budget.Etc.Constants;
@@ -10,12 +12,14 @@ import com.zhan.budget.Util.Util;
 import com.zhan.percentview.Model.Slice;
 import com.zhan.percentview.PercentView;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class PercentChartFragment extends BaseFragment implements ChartDataListener {
+public class PercentChartFragment extends BaseChartFragment {
 
     private PercentView percentView;
     private List<Slice> sliceList;
@@ -27,21 +31,33 @@ public class PercentChartFragment extends BaseFragment implements ChartDataListe
         // Required empty public constructor
     }
 
+    public static PercentChartFragment newInstance(List<Category> categoryList){
+        PercentChartFragment percentChartFragment = new PercentChartFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_CHART, Parcels.wrap(categoryList));
+        percentChartFragment.setArguments(args);
+
+        return percentChartFragment;
+    }
+
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_chart_percent;
     }
 
     @Override
-    protected void init(){
+    public void init(){ Log.d("CHART", "percent chart fragment init");
         percentView = (PercentView) view.findViewById(R.id.percentView);
         totalCostForMonthTextView = (TextView) view.findViewById(R.id.totalCostForMonth);
-        sliceList = new ArrayList<>();
         screenWidth = Util.getScreenWidth(getActivity());
+        sumCost = 0;
+
+        List<Category> catList = Parcels.unwrap(getArguments().getParcelable(ARG_CHART));
+        setData(catList);
     }
 
-    @Override
     public void setData(List<Category> categoryList){
+        sliceList = new ArrayList<>();
 
         //Go through list cost to get sumCost
         for(int i = 0; i < categoryList.size(); i++){

@@ -1,7 +1,6 @@
 package com.zhan.budget.Activity;
 
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.BarChartFragment;
+import com.zhan.budget.Fragment.BaseChartFragment;
 import com.zhan.budget.Fragment.PercentChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.CategoryPercent;
@@ -58,12 +58,6 @@ public class OverviewActivity extends BaseRealmActivity {
     @Override
     protected void init(){
         super.init();
-
-        percentChartFragment = new PercentChartFragment();
-        barChartFragment = new BarChartFragment();
-
-        //getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, percentChartFragment).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
 
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
@@ -246,8 +240,9 @@ public class OverviewActivity extends BaseRealmActivity {
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
 
-                //percentChartFragment.setData(categoryList);
-                barChartFragment.setData(categoryList);
+                barChartFragment = BarChartFragment.newInstance(categoryList);
+                percentChartFragment = PercentChartFragment.newInstance(categoryList);
+                getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -291,21 +286,9 @@ public class OverviewActivity extends BaseRealmActivity {
         }
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(BaseChartFragment fragment){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.chartContentFrame, fragment);
-/*
-        //Needs to implement the ChartDataListener interface
-        if (fragment instanceof ChartDataListener) {
-            ((ChartDataListener) fragment).setData();
-        } else {
-            throw new RuntimeException(fragment.toString() + " must implement ChartDataListener.");
-        }
-*/
-
-        performAsyncCalculation();
-
-
         ft.commit();
     }
 }
