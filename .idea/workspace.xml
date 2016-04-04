@@ -30,7 +30,6 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="CHART" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="DEBUG" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
@@ -49,55 +48,17 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="PercentChartFragment.java" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/PercentChartFragment.java">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="0.33596838">
-                    <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-                    <folding />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-    <window id="4">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="BarChartFragment.java" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/BarChartFragment.java">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="0.48974943">
-                    <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
-                    <folding />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="Budget" />
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="OverviewActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="OverviewActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/OverviewActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="253" column="49" selection-start-line="253" selection-start-column="49" selection-end-line="253" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.12075029">
+              <caret line="147" column="72" selection-start-line="147" selection-start-column="72" selection-end-line="147" selection-end-column="72" />
               <folding>
                 <element signature="method#init#0;class#OverviewActivity#0" expanded="false" />
                 <element signature="method#createToolbar#0;class#OverviewActivity#0" expanded="false" />
@@ -107,22 +68,24 @@
                 <element signature="method#onPreExecute#0;class#5161:10145" expanded="false" />
                 <element signature="method#doInBackground#0;class#5161:10145" expanded="false" />
                 <element signature="method#onCreateOptionsMenu#0;class#OverviewActivity#0" expanded="false" />
+                <element signature="method#onOptionsItemSelected#0;class#OverviewActivity#0" expanded="false" />
+                <element signature="method#replaceFragment#0;class#OverviewActivity#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PieChartFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PieChartFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/PieChartFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1817116">
-              <caret line="62" column="8" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="112" column="13" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
               <folding>
                 <element signature="e#1340#1341#0" expanded="true" />
                 <element signature="e#1390#1391#0" expanded="true" />
-                <element signature="e#2669#2676#0" expanded="true" />
-                <element signature="e#3191#3199#0" expanded="true" />
-                <element signature="e#3537#3546#0" expanded="true" />
+                <element signature="e#2629#2636#0" expanded="true" />
+                <element signature="e#3021#3029#0" expanded="true" />
+                <element signature="e#3357#3366#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -3651,7 +3614,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/CategoryRecyclerAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Adapter/TransactionListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_info.xml" />
@@ -3698,9 +3660,10 @@
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/overview_chart.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/OverviewActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/content_overview.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_chart_pie.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_chart_bar.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/BarChartFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/content_overview.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/PieChartFragment.java" />
       </list>
     </option>
@@ -3761,6 +3724,28 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Budget" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -3774,6 +3759,16 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Budget" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -4467,38 +4462,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/OverviewActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="253" column="49" selection-start-line="253" selection-start-column="49" selection-end-line="253" selection-end-column="49" />
-          <folding>
-            <element signature="method#init#0;class#OverviewActivity#0" expanded="false" />
-            <element signature="method#createToolbar#0;class#OverviewActivity#0" expanded="false" />
-            <element signature="method#addListeners#0;class#OverviewActivity#0" expanded="false" />
-            <element signature="method#getCategoryList#0;class#OverviewActivity#0" expanded="false" />
-            <element signature="method#getMonthReport#0;class#OverviewActivity#0" expanded="false" />
-            <element signature="method#onPreExecute#0;class#5161:10145" expanded="false" />
-            <element signature="method#doInBackground#0;class#5161:10145" expanded="false" />
-            <element signature="method#onCreateOptionsMenu#0;class#OverviewActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.PhilJay/MPAndroidChart/v2.2.4/e6c8ef80bd335ce8fa2ce11239b3b26500dc7930/MPAndroidChart-v2.2.4-sources.jar!/com/github/mikephil/charting/charts/PieChart.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="541" column="16" selection-start-line="541" selection-start-column="16" selection-end-line="541" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_overview.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26348808">
-          <caret line="14" column="45" selection-start-line="14" selection-start-column="45" selection-end-line="14" selection-end-column="45" />
           <folding />
         </state>
       </provider>
@@ -4556,32 +4523,62 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/BarChartFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48974943">
-          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
-          <folding />
-        </state>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_overview.xml">
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/PercentChartFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33596838">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.23665048">
+          <caret line="13" column="33" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/PieChartFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1817116">
-          <caret line="62" column="8" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="112" column="13" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
           <folding>
             <element signature="e#1340#1341#0" expanded="true" />
             <element signature="e#1390#1391#0" expanded="true" />
-            <element signature="e#2669#2676#0" expanded="true" />
-            <element signature="e#3191#3199#0" expanded="true" />
-            <element signature="e#3537#3546#0" expanded="true" />
+            <element signature="e#2629#2636#0" expanded="true" />
+            <element signature="e#3021#3029#0" expanded="true" />
+            <element signature="e#3357#3366#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/BarChartFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.70615035">
+          <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Fragment/Chart/PercentChartFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.11067194">
+          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhan/budget/Activity/OverviewActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.12075029">
+          <caret line="147" column="72" selection-start-line="147" selection-start-column="72" selection-end-line="147" selection-end-column="72" />
+          <folding>
+            <element signature="method#init#0;class#OverviewActivity#0" expanded="false" />
+            <element signature="method#createToolbar#0;class#OverviewActivity#0" expanded="false" />
+            <element signature="method#addListeners#0;class#OverviewActivity#0" expanded="false" />
+            <element signature="method#getCategoryList#0;class#OverviewActivity#0" expanded="false" />
+            <element signature="method#getMonthReport#0;class#OverviewActivity#0" expanded="false" />
+            <element signature="method#onPreExecute#0;class#5161:10145" expanded="false" />
+            <element signature="method#doInBackground#0;class#5161:10145" expanded="false" />
+            <element signature="method#onCreateOptionsMenu#0;class#OverviewActivity#0" expanded="false" />
+            <element signature="method#onOptionsItemSelected#0;class#OverviewActivity#0" expanded="false" />
+            <element signature="method#replaceFragment#0;class#OverviewActivity#0" expanded="false" />
           </folding>
         </state>
       </provider>

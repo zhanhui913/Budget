@@ -76,7 +76,8 @@ public class BarChartFragment extends BaseChartFragment{
     }
 
     private void notifyDataChanged(){
-        Log.d("BAR", "displaying bar chart view" );
+        Log.d("BAR", "displaying bar chart view");
+
 
         barChartView.show();
     }

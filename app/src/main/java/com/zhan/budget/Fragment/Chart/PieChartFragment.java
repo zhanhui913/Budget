@@ -60,13 +60,11 @@ public class PieChartFragment extends BaseChartFragment {
     public void setData(List<Category> categoryList){
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
-        pieChart.setExtraOffsets(5, 10, 5, 5);
+        pieChart.setExtraOffsets(5, 5, 5, 5);
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
         pieChart.setDrawHoleEnabled(false);
         pieChart.setDrawCenterText(false);
-
-        pieChart.setRotationAngle(0);
 
         // enable rotation of the chart by touch
         pieChart.setRotationEnabled(true);
@@ -93,15 +91,10 @@ public class PieChartFragment extends BaseChartFragment {
         // xIndex (even if from different DataSets), since no values can be
         // drawn above each other.
         for (int i = 0; i < categoryList.size(); i++) {
-            //yVals1.add(new Entry((float) (Math.random() * mult) + mult / 5, i));
-            //yVals1.add(new Entry(i+1, i));
-
-
             yVals1.add(new Entry(Math.abs(categoryList.get(i).getCost()), i));
         }
 
         ArrayList<String> xVals = new ArrayList<String>();
-
         for (int i = 0; i < categoryList.size(); i++) {
             xVals.add(i + " string");
         }
@@ -110,26 +103,8 @@ public class PieChartFragment extends BaseChartFragment {
         dataSet.setSliceSpace(0f);
         dataSet.setSelectionShift(5f);
 
-        // add a lot of colors
+        // Add colors
         ArrayList<Integer> colors = new ArrayList<Integer>();
-/*
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
-*/
         for(int i = 0; i < categoryList.size(); i++){
             try {
                 colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), categoryList.get(i).getColor())));
@@ -139,11 +114,11 @@ public class PieChartFragment extends BaseChartFragment {
         }
 
         dataSet.setColors(colors);
-        dataSet.setSelectionShift(0f);
+        dataSet.setSelectionShift(10f);
 
         PieData data = new PieData(xVals, dataSet);
         data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
+        data.setValueTextSize(0f);
         data.setValueTextColor(Color.WHITE);
         pieChart.setData(data);
 
