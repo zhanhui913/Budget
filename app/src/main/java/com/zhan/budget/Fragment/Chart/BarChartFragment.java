@@ -1,4 +1,4 @@
-package com.zhan.budget.Fragment;
+package com.zhan.budget.Fragment.Chart;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

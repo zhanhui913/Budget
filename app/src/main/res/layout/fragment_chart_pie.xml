@@ -2,18 +2,15 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".Fragment.Chart.BarChartFragment">
+             tools:context="com.zhan.budget.Fragment.Chart.PieChartFragment">
 
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-		<com.db.chart.view.BarChartView
-			xmlns:chart="http://schemas.android.com/apk/res-auto"
-			android:id="@+id/barChart"
+		<com.github.mikephil.charting.charts.PieChart
+			android:id="@+id/pieChart"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			chart:chart_barSpacing="2dp"
-			chart:chart_setSpacing="5dp"/>
+			android:layout_height="match_parent"/>
 	</RelativeLayout>
 </FrameLayout>

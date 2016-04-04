@@ -13,9 +13,10 @@ import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Fragment.BarChartFragment;
-import com.zhan.budget.Fragment.BaseChartFragment;
-import com.zhan.budget.Fragment.PercentChartFragment;
+import com.zhan.budget.Fragment.Chart.BarChartFragment;
+import com.zhan.budget.Fragment.Chart.BaseChartFragment;
+import com.zhan.budget.Fragment.Chart.PercentChartFragment;
+import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.Model.Realm.Category;
@@ -38,6 +39,7 @@ public class OverviewActivity extends BaseRealmActivity {
 
     private PercentChartFragment percentChartFragment;
     private BarChartFragment barChartFragment;
+    private PieChartFragment pieChartFragment;
 
     private Toolbar toolbar;
     private Date currentMonth;
@@ -242,6 +244,7 @@ public class OverviewActivity extends BaseRealmActivity {
 
                 barChartFragment = BarChartFragment.newInstance(categoryList);
                 percentChartFragment = PercentChartFragment.newInstance(categoryList);
+                pieChartFragment = PieChartFragment.newInstance(categoryList);
                 getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
 
                 endTime = System.nanoTime();
@@ -280,6 +283,10 @@ public class OverviewActivity extends BaseRealmActivity {
             case R.id.barChart:
                 Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(barChartFragment);
+                return true;
+            case R.id.pieChart:
+                Toast.makeText(getApplicationContext(), "click here pie chart", Toast.LENGTH_SHORT).show();
+                replaceFragment(pieChartFragment);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

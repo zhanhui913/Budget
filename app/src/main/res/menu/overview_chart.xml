@@ -15,4 +15,10 @@
 		android:orderInCategory="100"
 		android:title="Bar Chart"
 		app:showAsAction="never"/>
+
+	<item
+		android:id="@+id/pieChart"
+		android:orderInCategory="100"
+		android:title="Pie Chart"
+		app:showAsAction="never"/>
 </menu>
