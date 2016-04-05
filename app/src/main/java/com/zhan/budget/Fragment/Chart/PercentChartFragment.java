@@ -23,7 +23,6 @@ public class PercentChartFragment extends BaseChartFragment {
 
     private PercentView percentView;
     private List<Slice> sliceList;
-    private TextView totalCostForMonthTextView;
     private int screenWidth;
     private float sumCost;
 
@@ -48,7 +47,6 @@ public class PercentChartFragment extends BaseChartFragment {
     @Override
     public void init(){ Log.d("CHART", "percent chart fragment init");
         percentView = (PercentView) view.findViewById(R.id.percentView);
-        totalCostForMonthTextView = (TextView) view.findViewById(R.id.totalCostForMonth);
         screenWidth = Util.getScreenWidth(getActivity());
         sumCost = 0;
 
@@ -101,6 +99,5 @@ public class PercentChartFragment extends BaseChartFragment {
 
     private void notifyDataChanged() {
         this.percentView.setSliceList(this.sliceList);
-        totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
     }
 }

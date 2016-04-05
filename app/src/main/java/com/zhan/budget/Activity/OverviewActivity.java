@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
 import com.zhan.budget.Fragment.Chart.PercentChartFragment;
@@ -44,6 +45,7 @@ public class OverviewActivity extends BaseRealmActivity {
     private Toolbar toolbar;
     private Date currentMonth;
     private CircularProgressBar circularProgressBar;
+    private TextView totalCostForMonth;
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
@@ -71,6 +73,7 @@ public class OverviewActivity extends BaseRealmActivity {
 
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+        totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
 
@@ -241,6 +244,9 @@ public class OverviewActivity extends BaseRealmActivity {
 
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
+
+                //Set total cost for month
+                totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
 
                 barChartFragment = BarChartFragment.newInstance(categoryList);
                 percentChartFragment = PercentChartFragment.newInstance(categoryList);
