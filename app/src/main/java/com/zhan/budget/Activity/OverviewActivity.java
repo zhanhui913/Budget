@@ -1,5 +1,6 @@
 package com.zhan.budget.Activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -282,6 +283,11 @@ public class OverviewActivity extends BaseRealmActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.pdfMaker:
+                Toast.makeText(getApplicationContext(), "click here pdf maker", Toast.LENGTH_SHORT).show();
+                Intent pdfIntent = new Intent(getApplicationContext(), PdfActivity.class);
+                startActivity(pdfIntent);
+                return true;
             case R.id.percentChart:
                 Toast.makeText(getApplicationContext(), "click here percent chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(percentChartFragment);
