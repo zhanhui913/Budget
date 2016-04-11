@@ -22,6 +22,9 @@ public class PdfActivity extends BaseActivity {
     private PdfDocument doc;
     private Toolbar toolbar;
 
+    private final int PDF_WIDTH = 1362;
+    private final int PDF_HEIGHT = 1920;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_pdf;
@@ -47,6 +50,9 @@ public class PdfActivity extends BaseActivity {
 
         // you can reuse the bitmap if you want
         page.setReuseBitmap(true);
+
+        (AbstractViewRenderer)page.getView().requestLayout().
+
 
         buildPDF();
     }
@@ -101,8 +107,8 @@ public class PdfActivity extends BaseActivity {
         // add as many pages as you have
         doc.addPage(page);
 
-        doc.setRenderWidth(2115);
-        doc.setRenderHeight(1500);
+        doc.setRenderWidth(PDF_WIDTH);
+        doc.setRenderHeight(PDF_HEIGHT);
         doc.setOrientation(PdfDocument.A4_MODE.PORTRAIT);
         doc.setProgressTitle(R.string.app_name);
         doc.setProgressMessage(R.string.action_settings);
@@ -112,6 +118,7 @@ public class PdfActivity extends BaseActivity {
             @Override
             public void onComplete(File file) {
                 Log.i(PdfDocument.TAG_PDF_MY_XML, "Complete : ");
+
                 savePDF();
             }
 
@@ -143,6 +150,7 @@ public class PdfActivity extends BaseActivity {
                     dst.transferFrom(src, 0, src.size());
                     src.close();
                     dst.close();
+                    Log.d("FILE", "done saving pdf at "+data.getPath());
                 }else{
                     Log.d("FILE","cannot write file");
                     Toast.makeText(getApplicationContext(), "Fail to write PDF : "+doc.getFileName(), Toast.LENGTH_SHORT).show();

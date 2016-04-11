@@ -3,8 +3,8 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
+	android:layout_width="1920px"
+	android:layout_height="1362px"
 	app:layout_behavior="@string/appbar_scrolling_view_behavior"
 	tools:context="com.zhan.budget.Activity.PdfActivity"
 	tools:showIn="@layout/activity_pdf">
@@ -19,6 +19,17 @@
 			android:layout_height="0dp"
 			android:orientation="horizontal"
 			android:layout_weight="1">
+
+			<TextView
+				android:id="@+id/tv_hello"
+				android:layout_width="150px"
+				android:layout_height="200px"
+				android:textColor="@color/black"
+				android:textSize="52px"
+				android:textStyle="bold"
+				android:text="hello"
+				android:padding="6px"/>
+
 			<View
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
@@ -65,13 +76,6 @@
 
 	</LinearLayout>
 
-	<TextView
-		android:id="@+id/tv_hello"
-		android:layout_width="match_parent"
-		android:layout_height="200px"
-		android:textColor="@color/black"
-		android:textSize="52px"
-		android:textStyle="bold"
-		android:padding="6px"/>
+
 
 </RelativeLayout>
