@@ -51,7 +51,7 @@ public class PdfActivity extends BaseActivity {
         // you can reuse the bitmap if you want
         page.setReuseBitmap(true);
 
-        (AbstractViewRenderer)page.getView().requestLayout().
+        //(AbstractViewRenderer)page.getView().requestLayout().
 
 
         buildPDF();
