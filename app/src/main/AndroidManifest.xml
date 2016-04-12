@@ -58,6 +58,12 @@
 			android:label="@string/title_activity_pdf"
 			android:theme="@style/AppThemeLight.NoActionBar">
 		</activity>
+
+		<activity
+			android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
+			android:label="@string/title_activity_tour"
+			android:theme="@style/AppThemeLight.NoActionBar">
+		</activity>
 	</application>
 
 </manifest>
