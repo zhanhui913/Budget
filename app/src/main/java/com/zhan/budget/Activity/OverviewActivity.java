@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -13,15 +15,16 @@ import android.widget.Toast;
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Fragment.Chart.BarChartFragment;
+import com.zhan.budget.Fragment.Chart.BaseChartFragment;
+import com.zhan.budget.Fragment.Chart.PercentChartFragment;
+import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.Util;
-import com.zhan.percentview.Model.Slice;
-import com.zhan.percentview.PercentView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,11 +39,14 @@ import io.realm.RealmResults;
 
 public class OverviewActivity extends BaseRealmActivity {
 
+    private PercentChartFragment percentChartFragment;
+    private BarChartFragment barChartFragment;
+    private PieChartFragment pieChartFragment;
+
     private Toolbar toolbar;
     private Date currentMonth;
-    private TextView totalCostForMonthTextView;
-    private PercentView percentView;
     private CircularProgressBar circularProgressBar;
+    private TextView totalCostForMonth;
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
@@ -48,7 +54,6 @@ public class OverviewActivity extends BaseRealmActivity {
     private List<Transaction> transactionList;
     private List<Category> categoryList;
     private List<CategoryPercent> categoryPercentList;
-    private List<Slice> sliceList;
 
     @Override
     protected int getActivityLayout(){
@@ -67,11 +72,9 @@ public class OverviewActivity extends BaseRealmActivity {
         CategoryPercentListAdapter categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryPercentList);
         categoryListView.setAdapter(categoryPercentListAdapter);
 
-        totalCostForMonthTextView = (TextView) findViewById(R.id.totalCostForMonth);
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
-
-        percentView = (PercentView) findViewById(R.id.percentView);
+        totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
 
         circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
 
@@ -125,8 +128,6 @@ public class OverviewActivity extends BaseRealmActivity {
 
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
-
-        sliceList = new ArrayList<>();
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
@@ -217,11 +218,9 @@ public class OverviewActivity extends BaseRealmActivity {
                         float cost2 = c2.getCost();
 
                         //ascending order
-                        return ((int)cost1) - ((int)cost2);
+                        return ((int) cost1) - ((int) cost2);
                     }
                 });
-
-                int screenWidth = Util.getScreenWidth(OverviewActivity.this);
 
                 //Now calculate percentage for each category
                 for(int i = 0; i < categoryList.size(); i++){
@@ -235,24 +234,6 @@ public class OverviewActivity extends BaseRealmActivity {
 
                     cp.setPercent(percent.multiply(hundred).floatValue());
                     categoryPercentList.add(cp);
-                    Log.d("PERCENT_VIEW", i + ", " + cp.getCategory().getName() + "->" + cp.getPercent() + "=> " + percent.floatValue());
-
-                    //Create new slice as well
-                    Slice slice = new Slice();
-                    slice.setColor(categoryList.get(i).getColor());
-                    slice.setPixels((int) ((categoryList.get(i).getCost() / sumCost) * screenWidth));
-                    sliceList.add(slice);
-                }
-
-                //calculate remainder pixels left d ue to rounding errors
-                int remainder = screenWidth;
-                for(int i = 0; i < sliceList.size(); i++){
-                    remainder -= sliceList.get(i).getPixels();
-                }
-
-                //Give remainder pixels to first (largest) slice
-                if(sliceList.size() > 0) {
-                    sliceList.get(0).setPixels(sliceList.get(0).getPixels() + remainder);
                 }
 
                 return sumCost;
@@ -265,13 +246,13 @@ public class OverviewActivity extends BaseRealmActivity {
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
 
-                Log.d("PERCENT_VIEW", "ZZ There are " + categoryPercentList.size() + " categories items in the list");
-                //categoryPercentListAdapter.addAll(categoryPercentList);
+                //Set total cost for month
+                totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
 
-                //Display the total cost for that month in the percent view
-                totalCostForMonthTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
-
-                percentView.setSliceList(sliceList);
+                barChartFragment = BarChartFragment.newInstance(categoryList);
+                percentChartFragment = PercentChartFragment.newInstance(categoryList);
+                pieChartFragment = PieChartFragment.newInstance(categoryList);
+                getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -302,15 +283,32 @@ public class OverviewActivity extends BaseRealmActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.barChart:
-                Toast.makeText(getApplicationContext(), "click here bar", Toast.LENGTH_SHORT).show();
+            case R.id.pdfMaker:
+                Toast.makeText(getApplicationContext(), "click here pdf maker", Toast.LENGTH_SHORT).show();
+                Intent pdfIntent = new Intent(getApplicationContext(), PdfActivity.class);
+                startActivity(pdfIntent);
                 return true;
-            case R.id.lineChart:
-                Toast.makeText(getApplicationContext(), "click here line", Toast.LENGTH_SHORT).show();
+            case R.id.percentChart:
+                Toast.makeText(getApplicationContext(), "click here percent chart", Toast.LENGTH_SHORT).show();
+                replaceFragment(percentChartFragment);
+                return true;
+            case R.id.barChart:
+                Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
+                replaceFragment(barChartFragment);
+                return true;
+            case R.id.pieChart:
+                Toast.makeText(getApplicationContext(), "click here pie chart", Toast.LENGTH_SHORT).show();
+                replaceFragment(pieChartFragment);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void replaceFragment(BaseChartFragment fragment){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.chartContentFrame, fragment);
+        ft.commit();
     }
 }
 

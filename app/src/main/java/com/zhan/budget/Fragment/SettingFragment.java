@@ -3,6 +3,7 @@ package com.zhan.budget.Fragment;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,6 +44,8 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import za.co.riggaroo.materialhelptutorial.TutorialItem;
+import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -180,6 +183,7 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "tour", Toast.LENGTH_SHORT).show();
+                loadTutorials();
             }
         });
 
@@ -533,6 +537,43 @@ public class SettingFragment extends BaseFragment {
                 })
                 .create()
                 .show();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Tutorial
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void loadTutorials(){
+        Intent mainAct = new Intent(getContext(), MaterialTutorialActivity.class);
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTourPages(getContext()));
+        startActivityForResult(mainAct, 3218);
+    }
+
+    private ArrayList<TutorialItem> getTourPages(Context context){
+        TutorialItem page1 = new TutorialItem(
+                "Title",
+                "Subtitle",
+                R.color.colorPrimary,
+                R.drawable.c_airplane,
+                R.drawable.background);
+
+        TutorialItem page2 = new TutorialItem(
+                "Title 2",
+                "Subtitle 2",
+                R.color.midnight_blue,
+                R.drawable.c_android,
+                R.drawable.background);
+
+
+
+        ArrayList<TutorialItem> tourItems = new ArrayList<>();
+        tourItems.add(page1);
+        tourItems.add(page2);
+
+
+        return tourItems;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

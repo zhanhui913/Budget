@@ -5,14 +5,26 @@
       tools:context="com.zhan.budget.Activity.OverviewActivity">
 
 	<item
-		android:id="@+id/barChart"
+		android:id="@+id/pdfMaker"
 		android:orderInCategory="100"
-		android:title="Bar"
+		android:title="PDF"
+		app:showAsAction="ifRoom"/>
+
+	<item
+		android:id="@+id/percentChart"
+		android:orderInCategory="100"
+		android:title="Percent Chart"
 		app:showAsAction="never"/>
 
 	<item
-		android:id="@+id/lineChart"
+		android:id="@+id/barChart"
 		android:orderInCategory="100"
-		android:title="Line"
+		android:title="Bar Chart"
+		app:showAsAction="never"/>
+
+	<item
+		android:id="@+id/pieChart"
+		android:orderInCategory="100"
+		android:title="Pie Chart"
 		app:showAsAction="never"/>
 </menu>
