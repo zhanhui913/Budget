@@ -18,4 +18,5 @@
 	<string name="title_activity_transactions_for_category">TransactionsForCategory</string>
 	<string name="title_activity_overview">OverviewActivity</string>
 	<string name="title_activity_pdf">PdfActivity</string>
+	<string name="title_activity_tour">Tour</string>
 </resources>
