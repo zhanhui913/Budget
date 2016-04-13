@@ -58,5 +58,7 @@ dependencies {
     compile 'com.p_v:flexiblecalendar:1.2.1'
     compile 'com.diogobernardino:williamchart:2.2'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    compile 'com.github.se-bastiaan:Android-PdfMyXml:1.0.1'
+    compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
 }
 
