@@ -128,7 +128,7 @@ public class TransactionsForCategory extends BaseActivity implements
                 //update balance
                 transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
 
-                //myRealm.close();
+                myRealm.close();
             }
         });
     }
