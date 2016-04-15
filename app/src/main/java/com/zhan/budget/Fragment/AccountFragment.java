@@ -155,7 +155,12 @@ public class AccountFragment extends BaseRealmFragment implements
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
                 Log.d(TAG, "onUIRefreshComplete");
-                addAccount();
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        addAccount();
+                    }
+                }, 250);
             }
 
             @Override

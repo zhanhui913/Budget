@@ -159,7 +159,7 @@ public class PlusView extends View {
                     public void run() {
                         Log.d("PLUS_VIEW", "animation done");
                     }
-                }, 500);
+                }, 250);
             }
 
             @Override

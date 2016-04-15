@@ -308,8 +308,13 @@ public class CalendarFragment extends BaseRealmFragment implements
 
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIRefreshComplete");
-                addNewTransaction();
+                Log.d("PLUS_VIEW", "onUIRefreshComplete");
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        addNewTransaction();
+                    }
+                }, 250);
             }
 
             @Override
