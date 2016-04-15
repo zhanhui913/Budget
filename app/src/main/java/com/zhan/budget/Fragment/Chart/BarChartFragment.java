@@ -72,12 +72,13 @@ public class BarChartFragment extends BaseChartFragment{
 
         barChartView.addData(barSet);
 
-        notifyDataChanged();
+        if(categoryList.size() > 0) {
+            notifyDataChanged();
+        }
     }
 
     private void notifyDataChanged(){
         Log.d("BAR", "displaying bar chart view");
-
 
         barChartView.show();
     }
