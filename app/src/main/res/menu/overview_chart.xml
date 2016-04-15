@@ -8,7 +8,7 @@
 		android:id="@+id/pdfMaker"
 		android:orderInCategory="100"
 		android:title="PDF"
-		app:showAsAction="ifRoom"/>
+		app:showAsAction="never"/>
 
 	<item
 		android:id="@+id/percentChart"
