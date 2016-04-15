@@ -76,7 +76,15 @@
             android:id="@+id/addNoteBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/svg_ic_add"
+            android:src="@drawable/svg_ic_note"
+            android:layout_toLeftOf="@+id/addLocationBtn"
+            android:background="@drawable/budget_green_button"/>
+
+        <ImageButton
+            android:id="@+id/addLocationBtn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/svg_ic_location"
             android:layout_alignParentRight="true"
             android:background="@drawable/budget_green_button"/>
 
