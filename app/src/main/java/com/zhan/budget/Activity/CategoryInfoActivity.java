@@ -392,7 +392,6 @@ public class CategoryInfoActivity extends BaseActivity implements
             c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
             myRealm.beginTransaction();
         } else{
-
             myRealm.beginTransaction();
             c = myRealm.createObject(Category.class);
             c.setId(category.getId());
@@ -414,9 +413,14 @@ public class CategoryInfoActivity extends BaseActivity implements
         Log.d("CATEGORY_INFO_ACTIVITY", "type : " + c.getType());
         Log.d("CATEGORY_INFO_ACTIVITY", "color : " + c.getColor());
         Log.d("CATEGORY_INFO_ACTIVITY", "icon : " + c.getIcon());
+        Log.d("CATEGORY_INFO_ACTIVITY", "cost : " + c.getCost());
         Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
 
+        //Need to explicitly copy the value of cost since its property is ignored in the model.
+        float cost = c.getCost();
+
         Category carbonCopy = myRealm.copyFromRealm(c);
+        carbonCopy.setCost(cost);
         Parcelable wrapped = Parcels.wrap(carbonCopy);
         myRealm.close();
 
