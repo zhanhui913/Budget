@@ -159,7 +159,12 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
             @Override
             public void onUIRefreshComplete(PtrFrameLayout frame) {
                 Log.d("CALENDAR_FRAGMENT", "onUIRefreshComplete");
-                addNewCategory();
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        addNewCategory();
+                    }
+                }, 250);
             }
 
             @Override

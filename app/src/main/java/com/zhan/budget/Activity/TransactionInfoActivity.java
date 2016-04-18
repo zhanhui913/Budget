@@ -51,10 +51,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionInfoActivity extends BaseRealmActivity implements
+public class TransactionInfoActivity extends BaseActivity implements
         TransactionFragment.OnTransactionFragmentInteractionListener{
 
     private boolean isNewTransaction = false;
@@ -109,8 +110,6 @@ public class TransactionInfoActivity extends BaseRealmActivity implements
 
     @Override
     protected void init(){
-        super.init();
-
         instance = TransactionInfoActivity.this;
 
         //Get intents from caller activity
@@ -468,6 +467,8 @@ public class TransactionInfoActivity extends BaseRealmActivity implements
 
         accountNameList = new ArrayList<>();
 
+        final Realm myRealm = Realm.getDefaultInstance();
+
         //Get list of accounts
         resultsAccount = myRealm.where(Account.class).findAllAsync();
         resultsAccount.addChangeListener(new RealmChangeListener() {
@@ -641,9 +642,6 @@ public class TransactionInfoActivity extends BaseRealmActivity implements
 
     @Override
     public void onBackPressed() {
-        if(!myRealm.isClosed()){
-            myRealm.close();
-        }
         finish();
     }
 

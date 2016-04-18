@@ -31,9 +31,10 @@ import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class CategoryInfoActivity extends BaseRealmActivity implements
+public class CategoryInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
         IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener{
 
@@ -64,8 +65,6 @@ public class CategoryInfoActivity extends BaseRealmActivity implements
 
     @Override
     protected void init(){
-        super.init();
-
         isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
 
         if(!isNewCategory){
@@ -375,10 +374,12 @@ public class CategoryInfoActivity extends BaseRealmActivity implements
 
     int nextIndexCategory;
     private void getLatestIndexForCategory(){ Log.d("ZHAP", "trying to get latest index for new category for type :"+category.getType());
+        Realm myRealm = Realm.getDefaultInstance();
         RealmResults<Category> categoryRealmResults = myRealm.where(Category.class).equalTo("type", category.getType()).findAllSorted("index");
         Log.d("ZHAP", "size :"+categoryRealmResults.size());
         Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
         nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+        myRealm.close();
     }
 
     private void save(){
@@ -386,6 +387,7 @@ public class CategoryInfoActivity extends BaseRealmActivity implements
 
         Category c;
 
+        Realm myRealm = Realm.getDefaultInstance();
         if(!isNewCategory){
             c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
             myRealm.beginTransaction();
@@ -411,10 +413,16 @@ public class CategoryInfoActivity extends BaseRealmActivity implements
         Log.d("CATEGORY_INFO_ACTIVITY", "type : " + c.getType());
         Log.d("CATEGORY_INFO_ACTIVITY", "color : " + c.getColor());
         Log.d("CATEGORY_INFO_ACTIVITY", "icon : " + c.getIcon());
+        Log.d("CATEGORY_INFO_ACTIVITY", "cost : " + c.getCost());
         Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
 
+        //Need to explicitly copy the value of cost since its property is ignored in the model.
+        float cost = c.getCost();
 
-        Parcelable wrapped = Parcels.wrap(c);
+        Category carbonCopy = myRealm.copyFromRealm(c);
+        carbonCopy.setCost(cost);
+        Parcelable wrapped = Parcels.wrap(carbonCopy);
+        myRealm.close();
 
         if(!isNewCategory){
             intent.putExtra(Constants.RESULT_EDIT_CATEGORY, wrapped);

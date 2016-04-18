@@ -34,10 +34,11 @@ import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class OverviewActivity extends BaseRealmActivity {
+public class OverviewActivity extends BaseActivity {
 
     private PercentChartFragment percentChartFragment;
     private BarChartFragment barChartFragment;
@@ -62,7 +63,7 @@ public class OverviewActivity extends BaseRealmActivity {
 
     @Override
     protected void init(){
-        super.init();
+        //super.init();
 
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
@@ -109,6 +110,7 @@ public class OverviewActivity extends BaseRealmActivity {
 
     //Should be called only the first time when the activity is created
     private void getCategoryList(){
+        final Realm myRealm = Realm.getDefaultInstance();
         resultsCategory = myRealm.where(Category.class).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
@@ -117,6 +119,7 @@ public class OverviewActivity extends BaseRealmActivity {
 
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(resultsCategory);
+                myRealm.close();
                 getMonthReport(currentMonth);
             }
         });
@@ -131,6 +134,7 @@ public class OverviewActivity extends BaseRealmActivity {
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
+        final Realm myRealm = Realm.getDefaultInstance();
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener() {
             @Override
@@ -142,7 +146,7 @@ public class OverviewActivity extends BaseRealmActivity {
                 }
 
                 transactionList = myRealm.copyFromRealm(transactionsResults);
-
+                myRealm.close();
                 performAsyncCalculation();
             }
         });

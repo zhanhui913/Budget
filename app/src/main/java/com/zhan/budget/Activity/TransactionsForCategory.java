@@ -1,5 +1,6 @@
 package com.zhan.budget.Activity;
 
+import android.app.Activity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -23,16 +24,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionsForCategory extends BaseRealmActivity implements
+public class TransactionsForCategory extends BaseActivity implements
         TransactionListAdapter.OnTransactionAdapterInteractionListener{
 
+    private Activity instance;
     private Toolbar toolbar;
-    private Date currentMonth;
-    private Date beginMonth;
-    private Date endMonth;
+    private Date currentMonth, beginMonth, endMonth;
     private Category selectedCategory;
 
     private ImageView transactionCategoryIcon;
@@ -49,11 +50,11 @@ public class TransactionsForCategory extends BaseRealmActivity implements
 
     @Override
     protected void init(){
-        super.init();
-
         //Get intents from caller activity
         currentMonth = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH));
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
+
+        instance = this;
 
         createToolbar();
 
@@ -61,10 +62,6 @@ public class TransactionsForCategory extends BaseRealmActivity implements
         transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
-
-        transactionCategoryList = new ArrayList<>();
-        transactionCategoryAdapter = new TransactionListAdapter(this, transactionCategoryList, true); //display date in each transaction item
-        transactionCategoryListView.setAdapter(transactionCategoryAdapter);
 
         beginMonth = DateUtil.refreshMonth(currentMonth);
 
@@ -107,7 +104,9 @@ public class TransactionsForCategory extends BaseRealmActivity implements
     private void getAllTransactionsWithCategoryForMonth(){
         Log.d("DEBUG", "getAllTransactionsWithCategoryForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
-        final RealmResults<Transaction> resultsInMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).findAllAsync();
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        final RealmResults<Transaction> resultsInMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).findAllAsync();
         resultsInMonth.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
@@ -116,22 +115,20 @@ public class TransactionsForCategory extends BaseRealmActivity implements
                 //sort by date
                 resultsInMonth.sort("date");
 
-                float total = 0f;
+                transactionCategoryList = myRealm.copyFromRealm(resultsInMonth);
+                float total = resultsInMonth.sum("price").floatValue();
 
-                //filter by category
-                for (int i = 0; i < resultsInMonth.size(); i++) {
-                    if (resultsInMonth.get(i).getCategory().getId().equalsIgnoreCase(selectedCategory.getId())) {
-                        transactionCategoryList.add(resultsInMonth.get(i));
-                        total += resultsInMonth.get(i).getPrice();
-                    }
-                }
+                transactionCategoryAdapter = new TransactionListAdapter(instance, transactionCategoryList, true); //display date in each transaction item
+                transactionCategoryListView.setAdapter(transactionCategoryAdapter);
 
                 Log.d("ZHAN", "there are " + transactionCategoryList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
+                Log.d("ZHAN", "total sum is "+total);
+
 
                 //update balance
                 transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
 
-                transactionCategoryAdapter.notifyDataSetChanged();
+                myRealm.close();
             }
         });
     }
