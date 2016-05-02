@@ -4,17 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.zhan.budget.Activity.SettingsAccount"
     tools:showIn="@layout/activity_settings_account">
 
-    <TextView
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/rotate_header_list_view_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="settings account"/>
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/accountListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="?attr/themeColorHighlight"
+                android:dividerHeight="1dp"
+                android:visibility="visible"
+                android:drawSelectorOnTop="true"/>
+
+            <include layout="@layout/empty_transaction_indicator"
+                android:id="@+id/emptyAccountLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+    </in.srain.cube.views.ptr.PtrFrameLayout>
 
 </RelativeLayout>
