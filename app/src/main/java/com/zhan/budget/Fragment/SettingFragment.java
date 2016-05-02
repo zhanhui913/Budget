@@ -21,6 +21,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zhan.budget.Activity.SettingsAccount;
+import com.zhan.budget.Activity.SettingsCategory;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -54,7 +56,7 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, defaultAccountBtn, backupBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn;
     private TextView themeContent, firstDayContent, defaultAccountContent, backupContent;
 
     private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
@@ -83,6 +85,8 @@ public class SettingFragment extends BaseFragment {
         firstDayBtn = (ViewGroup) view.findViewById(R.id.firstDayBtn);
         firstDayContent = (TextView) view.findViewById(R.id.firstDayContent);
 
+        categoryOrderBtn = (ViewGroup) view.findViewById(R.id.categoryOrderBtn);
+
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
         defaultAccountContent = (TextView) view.findViewById(R.id.defaultAccountContent);
 
@@ -104,11 +108,11 @@ public class SettingFragment extends BaseFragment {
         firstDayContent.setText(startDay == Calendar.SUNDAY ? "Sunday" : "Monday");
 
         //Set default account
-        if(BudgetPreference.getDefaultAccount(getContext()).equalsIgnoreCase("NA")){
+        /*if(BudgetPreference.getDefaultAccount(getContext()).equalsIgnoreCase("NA")){
             defaultAccountContent.setText("Credit Card");
         }else {
             defaultAccountContent.setText(BudgetPreference.getDefaultAccount(getContext()));
-        }
+        }*/
 
         //Set last backup
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
@@ -141,10 +145,25 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
+        categoryOrderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "change category info", Toast.LENGTH_SHORT).show();
+
+                Intent settingsCategory = new Intent(getContext(), SettingsCategory.class);
+                startActivity(settingsCategory);
+            }
+        });
+
         defaultAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAccountList();
+                //getAccountList();
+
+                Toast.makeText(getContext(), "change account info", Toast.LENGTH_SHORT).show();
+
+                Intent settingsAccount = new Intent(getContext(), SettingsAccount.class);
+                startActivity(settingsAccount);
             }
         });
 

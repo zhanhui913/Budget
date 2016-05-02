@@ -1,69 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.zhan.budget"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.zhan.budget">
 
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-	<application
-		android:allowBackup="true"
-		android:fullBackupContent="true"
-		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:supportsRtl="true"
-		android:theme="@style/AppThemeLight">
-		<activity
-			android:name=".Activity.MainActivity"
-			android:label="@string/app_name"
-			android:screenOrientation="portrait"
-			android:theme="@style/AppThemeLight.NoActionBar"
-			android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppThemeLight">
+        <activity
+            android:name=".Activity.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".Activity.TransactionInfoActivity"
-			android:label="@string/title_activity_transaction_info"
-			android:screenOrientation="portrait"
-			android:theme="@style/AppThemeLight.NoActionBar"
-			android:windowSoftInputMode="stateUnspecified|adjustNothing"/>
-		<activity
-			android:name=".Activity.CategoryInfoActivity"
-			android:label="@string/title_activity_category_info"
-			android:parentActivityName=".Activity.MainActivity"
-			android:theme="@style/AppThemeLight.NoActionBar"
-			android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.zhan.budget.Activity.MainActivity"/>
-		</activity>
-		<activity
-			android:name=".Activity.TransactionsForCategory"
-			android:label="@string/title_activity_transactions_for_category"
-			android:parentActivityName=".Activity.MainActivity"
-			android:theme="@style/AppThemeLight.NoActionBar">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.zhan.budget.Activity.MainActivity"/>
-		</activity>
-		<activity
-			android:name=".Activity.OverviewActivity"
-			android:label="@string/title_activity_overview"
-			android:theme="@style/AppThemeLight.NoActionBar"/>
-		<activity
-			android:name=".Activity.PdfActivity"
-			android:label="@string/title_activity_pdf"
-			android:theme="@style/AppThemeLight.NoActionBar">
-		</activity>
-
-		<activity
-			android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
-			android:label="@string/title_activity_tour"
-			android:theme="@style/AppThemeLight.NoActionBar">
-		</activity>
-	</application>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.TransactionInfoActivity"
+            android:label="@string/title_activity_transaction_info"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeLight.NoActionBar"
+            android:windowSoftInputMode="stateUnspecified|adjustNothing" />
+        <activity
+            android:name=".Activity.CategoryInfoActivity"
+            android:label="@string/title_activity_category_info"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppThemeLight.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.zhan.budget.Activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Activity.TransactionsForCategory"
+            android:label="@string/title_activity_transactions_for_category"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppThemeLight.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.zhan.budget.Activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Activity.OverviewActivity"
+            android:label="@string/title_activity_overview"
+            android:theme="@style/AppThemeLight.NoActionBar" />
+        <activity
+            android:name=".Activity.PdfActivity"
+            android:label="@string/title_activity_pdf"
+            android:theme="@style/AppThemeLight.NoActionBar" />
+        <activity
+            android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
+            android:label="@string/title_activity_tour"
+            android:theme="@style/AppThemeLight.NoActionBar" />
+        <activity
+            android:name=".Activity.SettingsAccount"
+            android:label="@string/title_activity_settings_account"
+            android:theme="@style/AppThemeLight.NoActionBar" />
+        <activity
+            android:name=".Activity.SettingsCategory"
+            android:label="@string/title_activity_settings_category"
+            android:theme="@style/AppThemeLight.NoActionBar"></activity>
+    </application>
 
 </manifest>

@@ -75,6 +75,31 @@
             android:background="?attr/themeColorHighlight"/>
 
         <LinearLayout
+            android:id="@+id/categoryOrderBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Categories"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Manage categories. Change icon, color, and others."/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/themeColorHighlight"/>
+
+        <LinearLayout
             android:id="@+id/defaultAccountBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,13 +111,13 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="Default Account"/>
+                      android:text="Accounts"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                       android:id="@+id/defaultAccountContent"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="Credit Card"/>
+                      android:text="Manage accounts. Change icons and others."/>
         </LinearLayout>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
