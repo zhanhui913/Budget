@@ -80,8 +80,8 @@ public class CategoryFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        categoryExpenseFragment = new CategoryExpenseFragment();
-        categoryIncomeFragment = new CategoryIncomeFragment();
+        categoryExpenseFragment = CategoryExpenseFragment.newInstance(true);
+        categoryIncomeFragment = CategoryIncomeFragment.newInstance(true);
 
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);

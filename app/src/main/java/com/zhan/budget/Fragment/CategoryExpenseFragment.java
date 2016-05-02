@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,8 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         CategoryExpenseRecyclerAdapter.OnCategoryExpenseAdapterInteractionListener{
 
     private static final String TAG = "CategoryEXPENSEFragment";
+    private static final String ARG_1 = "displayBudget";
+
 
     private PtrFrameLayout frame;
     private PlusView header;
@@ -67,8 +70,22 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     private Boolean isPulldownAllow = true;
     private ItemTouchHelper mItemTouchHelper;
 
+    private boolean displayBudget;
+
     public CategoryExpenseFragment() {
         // Required empty public constructor
+    }
+
+    public static CategoryExpenseFragment newInstance(boolean useSettingsAdapter) {
+        CategoryExpenseFragment fragment = new CategoryExpenseFragment();
+
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_1, useSettingsAdapter);
+        fragment.setArguments(args);
+
+        Log.d(TAG, "1) selected expense fragment is " + useSettingsAdapter);
+
+        return fragment;
     }
 
     @Override
@@ -80,6 +97,8 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
 
+        displayBudget = getArguments().getBoolean(ARG_1);
+
         currentMonth = new Date();
 
         TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
@@ -89,7 +108,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryExpenseRecyclerAdapter = new CategoryExpenseRecyclerAdapter(this, categoryList, new OnStartDragListener() {
+        categoryExpenseRecyclerAdapter = new CategoryExpenseRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 //isPulldownAllow = false;
@@ -202,7 +221,10 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 updateCategoryStatus();
 
                 categoryExpenseRecyclerAdapter.setCategoryList(categoryList);
-                populateCategoryWithInfo();
+
+                if(displayBudget) {
+                    populateCategoryWithInfo();
+                }
             }
         });
     }

@@ -3,18 +3,26 @@ package com.zhan.budget.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.zhan.budget.Adapter.TwoPageViewPager;
+import com.zhan.budget.Fragment.CategoryExpenseFragment;
+import com.zhan.budget.Fragment.CategoryIncomeFragment;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.View.CustomViewPager;
 
 import io.realm.BaseRealm;
 
 public class SettingsCategory extends BaseRealmActivity {
 
     private  Toolbar toolbar;
+    private CategoryIncomeFragment categoryIncomeFragment;
+    private CategoryExpenseFragment categoryExpenseFragment;
 
     @Override
     protected int getActivityLayout(){
@@ -26,6 +34,7 @@ public class SettingsCategory extends BaseRealmActivity {
         super.init();
 
         createToolbar();
+        createTabs();
     }
 
     /**
@@ -41,6 +50,41 @@ public class SettingsCategory extends BaseRealmActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+    }
+
+
+    private void createTabs(){
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        categoryExpenseFragment = CategoryExpenseFragment.newInstance(false);
+        categoryIncomeFragment = CategoryIncomeFragment.newInstance(false);
+
+        final CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.viewPager);
+        viewPager.setPagingEnabled(false);
+
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
+        viewPager.setAdapter(adapterViewPager);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
     }

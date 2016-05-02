@@ -40,12 +40,14 @@ public class CategoryIncomeRecyclerAdapter extends RecyclerView.Adapter<Category
 
     private Context context;
     private List<Category> categoryList;
+    private boolean displayBudget;
     private static OnCategoryIncomeAdapterInteractionListener mListener;
     private static OnStartDragListener mDragStartListener;
 
-    public CategoryIncomeRecyclerAdapter(Fragment fragment, List<Category> list, OnStartDragListener startDragListener) {
+    public CategoryIncomeRecyclerAdapter(Fragment fragment, List<Category> list, boolean displayBudget, OnStartDragListener startDragListener) {
         this.context = fragment.getContext();
         this.categoryList = list;
+        this.displayBudget = displayBudget;
         mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryIncomeAdapterInteractionListener interface
@@ -79,24 +81,15 @@ public class CategoryIncomeRecyclerAdapter extends RecyclerView.Adapter<Category
         viewHolder.name.setText(category.getName());
         viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
-        if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
-            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
-
-            //ProgressBar
-            viewHolder.progressBar.setVisibility(View.VISIBLE);
-            viewHolder.progressBar.setMax(category.getBudget());
-            viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
-        }else{
-            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
-            viewHolder.progressBar.setVisibility(View.GONE);
-        }
-
-        if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
-        }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.sunflower));
-        }else{ //If exceeded budget
-            viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
+        if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+            if(displayBudget){
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
+                viewHolder.progressBar.setVisibility(View.GONE);
+            }else{
+                viewHolder.cost.setVisibility(View.INVISIBLE);
+                viewHolder.costTitle.setVisibility(View.INVISIBLE);
+                viewHolder.progressBar.setVisibility(View.INVISIBLE);
+            }
         }
 
         viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
@@ -167,6 +160,7 @@ public class CategoryIncomeRecyclerAdapter extends RecyclerView.Adapter<Category
         public TextView name;
         public TextView budget;
         public TextView cost;
+        public TextView costTitle;
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
@@ -186,6 +180,7 @@ public class CategoryIncomeRecyclerAdapter extends RecyclerView.Adapter<Category
             name = (TextView) itemView.findViewById(R.id.categoryName);
             budget = (TextView) itemView.findViewById(R.id.categoryBudget);
             cost = (TextView) itemView.findViewById(R.id.categoryCost);
+            costTitle = (TextView) itemView.findViewById(R.id.categoryCostTitle);
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);
