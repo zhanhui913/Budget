@@ -43,7 +43,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        return false;
+        //long press to drag disabled as the user have to touch the handle to drag
     }
 
     @Override

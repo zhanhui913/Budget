@@ -115,4 +115,12 @@
         <item name="android:padding">15dp</item>
     </style>
 
+    <!-- List Adapter's individual item's xml padding -->
+    <style name="ItemPaddingStyle">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
 </resources>

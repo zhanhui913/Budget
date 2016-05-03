@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -131,9 +132,9 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
         });
         */
 
-        viewHolder.dragIcon.setOnLongClickListener(new View.OnLongClickListener() {
+        viewHolder.dragIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 mListener.onPullDownAllow(false);
                 mDragStartListener.onStartDrag(viewHolder);
                 return false;
@@ -198,16 +199,11 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
         // for any view that will be set as you render a row
         public CircularView circularView;
         public ImageView dragIcon;
-        public TextView name;
-        public TextView budget;
-        public TextView budgetTitle;
-        public TextView cost;
-        public TextView costTitle;
+        public TextView name, budget, budgetTitle, cost, costTitle;
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn;
-        public ImageView editBtn;
+        public ImageView deleteBtn, editBtn;
 
         private Drawable defaultDrawable;
 

@@ -2,7 +2,7 @@
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeAccount"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="wrap_content">
 
     <!-- Bottom view -->
     <LinearLayout
@@ -28,9 +28,9 @@
 
     <!-- Surface view -->
     <RelativeLayout
+        style="@style/ItemPaddingStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp"
         android:clickable="true"
         android:background="?attr/themeColorBtn">
 

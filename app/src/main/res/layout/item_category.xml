@@ -2,7 +2,7 @@
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeCategory"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:background="?attr/themeColorBtn">
 
     <!-- Bottom view -->
@@ -30,9 +30,9 @@
     <!-- Surface View -->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/ItemPaddingStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp"
         android:clickable="true"
         android:background="?attr/themeColorBtn">
 
@@ -110,13 +110,13 @@
 
         <ImageView
             android:id="@+id/dragIcon"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_smile"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/svg_ic_handle"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
-            android:tint="@color/amethyst"/>
+            android:tint="?attr/themeColorText"/>
 
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
