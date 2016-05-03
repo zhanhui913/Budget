@@ -54,8 +54,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     private ViewGroup emptyLayout;
 
     private List<Category> categoryList;
-    //private CategoryIncomeRecyclerAdapter categoryExpenseRecyclerAdapter;
-    private CategoryExpenseIncomeRecyclerAdapter categoryExpenseRecyclerAdapter;
+    private CategoryExpenseIncomeRecyclerAdapter categoryIncomeRecyclerAdapter;
     private RecyclerView categoryListView;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
@@ -108,7 +107,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryExpenseRecyclerAdapter = new CategoryExpenseIncomeRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
+        categoryIncomeRecyclerAdapter = new CategoryExpenseIncomeRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 //isPulldownAllow = false;
@@ -117,9 +116,9 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
         });
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
         categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        categoryListView.setAdapter(categoryExpenseRecyclerAdapter);
+        categoryListView.setAdapter(categoryIncomeRecyclerAdapter);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(categoryExpenseRecyclerAdapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(categoryIncomeRecyclerAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(categoryListView);
 
@@ -212,17 +211,16 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
     //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.INCOME.toString()).findAllAsync();
+        resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.INCOME.toString()).findAllSortedAsync("index");
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
                 resultsCategory.removeChangeListeners();
 
-                resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
                 updateCategoryStatus();
 
-                categoryExpenseRecyclerAdapter.setCategoryList(categoryList);
+                categoryIncomeRecyclerAdapter.setCategoryList(categoryList);
 
                 if(displayBudget) {
                     populateCategoryWithInfo();
@@ -296,7 +294,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 }
 
                 //categoryAdapter.notifyDataSetChanged();
-                categoryExpenseRecyclerAdapter.setCategoryList(categoryList);
+                categoryIncomeRecyclerAdapter.setCategoryList(categoryList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -313,7 +311,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     private void editCategory(int position){
         Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
 
-        Parcelable wrapped = Parcels.wrap(categoryExpenseRecyclerAdapter.getCategoryList().get(position));
+        Parcelable wrapped = Parcels.wrap(categoryIncomeRecyclerAdapter.getCategoryList().get(position));
 
         editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
         editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
@@ -346,7 +344,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
                 categoryList.set(categoryIndexEditted, categoryReturned);
 
-                categoryExpenseRecyclerAdapter.setCategoryList(categoryList);
+                categoryIncomeRecyclerAdapter.setCategoryList(categoryList);
             }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
                 Log.i("ZHAN", "----------- onActivityResult new category ----------");
 
@@ -363,7 +361,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 updateCategoryStatus();
 
                 categoryList.add(categoryReturned);
-                categoryExpenseRecyclerAdapter.setCategoryList(categoryList);
+                categoryIncomeRecyclerAdapter.setCategoryList(categoryList);
             }
         }
     }
@@ -380,7 +378,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 categoryList.get(i).setCost(0);
             }
             //categoryAdapter.notifyDataSetChanged();
-            categoryExpenseRecyclerAdapter.setCategoryList(categoryList);
+            categoryIncomeRecyclerAdapter.setCategoryList(categoryList);
         }
     }
 
@@ -482,15 +480,15 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
                 //Log.d(TAG, "old indices -----------");
 
                 for (int i = 0; i < resultsCategory.size(); i++) {
-                    for (int j = 0; j < categoryExpenseRecyclerAdapter.getCategoryList().size(); j++) {
+                    for (int j = 0; j < categoryIncomeRecyclerAdapter.getCategoryList().size(); j++) {
                         String id1 = resultsCategory.get(i).getId();
                         String name1 = resultsCategory.get(i).getName();
 
-                        String id2 = categoryExpenseRecyclerAdapter.getCategoryList().get(j).getId();
-                        String name2 = categoryExpenseRecyclerAdapter.getCategoryList().get(j).getName();
+                        String id2 = categoryIncomeRecyclerAdapter.getCategoryList().get(j).getId();
+                        String name2 = categoryIncomeRecyclerAdapter.getCategoryList().get(j).getName();
                         //Log.d(TAG, "comparing ("+id1+","+name1+") with ("+id2+","+name2+")");
 
-                        if (resultsCategory.get(i).getId().equalsIgnoreCase(categoryExpenseRecyclerAdapter.getCategoryList().get(j).getId())) {
+                        if (resultsCategory.get(i).getId().equalsIgnoreCase(categoryIncomeRecyclerAdapter.getCategoryList().get(j).getId())) {
 
                             //Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
                             //Log.d(TAG, "assigning new index : "+j+" came from "+categoryRecyclerAdapter.getCategoryList().get(j).getName());
@@ -511,12 +509,12 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
     @Override
     public void onClick(int position){
-        Toast.makeText(getContext(), "click on category :"+ categoryExpenseRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "click on category :"+ categoryIncomeRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
 
-        Parcelable wrapped = Parcels.wrap(categoryExpenseRecyclerAdapter.getCategoryList().get(position));
+        Parcelable wrapped = Parcels.wrap(categoryIncomeRecyclerAdapter.getCategoryList().get(position));
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
