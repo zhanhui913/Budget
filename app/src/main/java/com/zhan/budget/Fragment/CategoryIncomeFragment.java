@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionsForCategory;
+import com.zhan.budget.Adapter.CategoryExpenseIncomeRecyclerAdapter;
 import com.zhan.budget.Adapter.CategoryIncomeRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
@@ -44,7 +45,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class CategoryIncomeFragment extends BaseRealmFragment implements
-        CategoryIncomeRecyclerAdapter.OnCategoryIncomeAdapterInteractionListener{
+        CategoryExpenseIncomeRecyclerAdapter.OnCategoryExpenseIncomeAdapterInteractionListener{
 
     private static final String TAG = "CategoryINCOMEFragment";
     private static final String ARG_1 = "displayBudget";
@@ -54,7 +55,8 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
     private ViewGroup emptyLayout;
 
     private List<Category> categoryList;
-    private CategoryIncomeRecyclerAdapter categoryExpenseRecyclerAdapter;
+    //private CategoryIncomeRecyclerAdapter categoryExpenseRecyclerAdapter;
+    private CategoryExpenseIncomeRecyclerAdapter categoryExpenseRecyclerAdapter;
     private RecyclerView categoryListView;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
@@ -107,7 +109,7 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryExpenseRecyclerAdapter = new CategoryIncomeRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
+        categoryExpenseRecyclerAdapter = new CategoryExpenseIncomeRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                 //isPulldownAllow = false;

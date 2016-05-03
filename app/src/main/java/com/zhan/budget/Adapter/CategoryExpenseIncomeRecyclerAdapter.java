@@ -35,24 +35,24 @@ import java.util.List;
  *
  * @author Paul Burke (ipaulpro)
  */
-public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<CategoryExpenseRecyclerAdapter.ViewHolder>
+public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<CategoryExpenseIncomeRecyclerAdapter.ViewHolder>
         implements ItemTouchHelperAdapter{
 
     private Context context;
     private List<Category> categoryList;
     private boolean displayBudget;
-    private static OnCategoryExpenseAdapterInteractionListener mListener;
+    private static OnCategoryExpenseIncomeAdapterInteractionListener mListener;
     private static OnStartDragListener mDragStartListener;
 
-    public CategoryExpenseRecyclerAdapter(Fragment fragment, List<Category> list, boolean displayBudget, OnStartDragListener startDragListener) {
+    public CategoryExpenseIncomeRecyclerAdapter(Fragment fragment, List<Category> list, boolean displayBudget, OnStartDragListener startDragListener) {
         this.context = fragment.getContext();
         this.categoryList = list;
         this.displayBudget = displayBudget;
         mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
-        if (fragment instanceof OnCategoryExpenseAdapterInteractionListener) {
-            mListener = (OnCategoryExpenseAdapterInteractionListener) fragment;
+        if (fragment instanceof OnCategoryExpenseIncomeAdapterInteractionListener) {
+            mListener = (OnCategoryExpenseIncomeAdapterInteractionListener) fragment;
         } else {
             throw new RuntimeException(fragment.toString() + " must implement OnCategoryExpenseAdapterInteractionListener.");
         }
@@ -98,18 +98,21 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
                     viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
                 }
             }else{
-                viewHolder.cost.setVisibility(View.INVISIBLE);
-                viewHolder.costTitle.setVisibility(View.INVISIBLE);
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                viewHolder.cost.setVisibility(View.GONE);
+                viewHolder.costTitle.setVisibility(View.GONE);
+                viewHolder.progressBar.setVisibility(View.GONE);
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+            viewHolder.budgetTitle.setVisibility(View.GONE);
+            viewHolder.budget.setVisibility(View.GONE);
+            viewHolder.costTitle.setVisibility(View.GONE);
+
             if(displayBudget){
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
                 viewHolder.progressBar.setVisibility(View.GONE);
             }else{
-                viewHolder.cost.setVisibility(View.INVISIBLE);
-                viewHolder.costTitle.setVisibility(View.INVISIBLE);
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                viewHolder.cost.setVisibility(View.GONE);
+                viewHolder.progressBar.setVisibility(View.GONE);
             }
         }
 
@@ -180,6 +183,7 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
         public CircularView circularView;
         public TextView name;
         public TextView budget;
+        public TextView budgetTitle;
         public TextView cost;
         public TextView costTitle;
         public RoundCornerProgressBar progressBar;
@@ -200,6 +204,7 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
             circularView = (CircularView) itemView.findViewById(R.id.categoryIcon);
             name = (TextView) itemView.findViewById(R.id.categoryName);
             budget = (TextView) itemView.findViewById(R.id.categoryBudget);
+            budgetTitle = (TextView) itemView.findViewById(R.id.categoryBudgetTitle);
             cost = (TextView) itemView.findViewById(R.id.categoryCost);
             costTitle = (TextView) itemView.findViewById(R.id.categoryCostTitle);
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
@@ -253,7 +258,7 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnCategoryExpenseAdapterInteractionListener {
+    public interface OnCategoryExpenseIncomeAdapterInteractionListener {
         void onDeleteCategory(int position);
 
         void onEditCategory(int position);

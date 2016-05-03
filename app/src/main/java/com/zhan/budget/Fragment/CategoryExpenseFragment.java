@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionsForCategory;
-import com.zhan.budget.Adapter.CategoryExpenseRecyclerAdapter;
+import com.zhan.budget.Adapter.CategoryExpenseIncomeRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
 import com.zhan.budget.Etc.Constants;
@@ -44,7 +44,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class CategoryExpenseFragment extends BaseRealmFragment implements
-        CategoryExpenseRecyclerAdapter.OnCategoryExpenseAdapterInteractionListener{
+        CategoryExpenseIncomeRecyclerAdapter.OnCategoryExpenseIncomeAdapterInteractionListener{
 
     private static final String TAG = "CategoryEXPENSEFragment";
     private static final String ARG_1 = "displayBudget";
@@ -55,7 +55,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
     private ViewGroup emptyLayout;
 
     private List<Category> categoryList;
-    private CategoryExpenseRecyclerAdapter categoryExpenseRecyclerAdapter;
+    private CategoryExpenseIncomeRecyclerAdapter categoryExpenseRecyclerAdapter;
     private RecyclerView categoryListView;
 
     private int categoryIndexEditted;//The index of the category that the user just finished editted.
@@ -108,13 +108,16 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryExpenseRecyclerAdapter = new CategoryExpenseRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
-            @Override
-            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                //isPulldownAllow = false;
-                mItemTouchHelper.startDrag(viewHolder);
-            }
-        });
+        categoryExpenseRecyclerAdapter = new CategoryExpenseIncomeRecyclerAdapter
+
+                (this, categoryList, displayBudget, new OnStartDragListener() {
+                    @Override
+                    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                        //isPulldownAllow = false;
+                        mItemTouchHelper.startDrag(viewHolder);
+                    }
+                });
+
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
         categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(categoryExpenseRecyclerAdapter);
