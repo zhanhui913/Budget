@@ -108,5 +108,15 @@
             app:rcMax="10"
             android:layout_below="@+id/categoryBudgetTitle" />
 
+        <ImageView
+            android:id="@+id/dragIcon"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_smile"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:tint="@color/amethyst"/>
+
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

@@ -85,6 +85,8 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
             if(displayBudget) {
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
 
+                viewHolder.dragIcon.setVisibility(View.INVISIBLE);
+
                 //ProgressBar
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
                 viewHolder.progressBar.setMax(category.getBudget());
@@ -101,6 +103,7 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
                 viewHolder.cost.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budgetTitle.setVisibility(View.GONE);
@@ -110,13 +113,25 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
             if(displayBudget){
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
                 viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.dragIcon.setVisibility(View.INVISIBLE);
             }else{
                 viewHolder.cost.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }
         }
-
+        /*
         viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mListener.onPullDownAllow(false);
+                mDragStartListener.onStartDrag(viewHolder);
+                return false;
+            }
+        });
+        */
+
+        viewHolder.dragIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 mListener.onPullDownAllow(false);
@@ -132,7 +147,8 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
         Log.d("RECYCLER_DEBUG", "old indices -----------");
         for(int i = 0; i < categoryList.size(); i++){
             String name = categoryList.get(i).getName();
-            Log.d("RECYCLER_DEBUG", i+"->"+name);
+            int index = categoryList.get(i).getIndex();
+            Log.d("RECYCLER_DEBUG", index+"->"+name);
         }
         Log.d("RECYCLER_DEBUG", "old indices -----------");
 
@@ -181,6 +197,7 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
+        public ImageView dragIcon;
         public TextView name;
         public TextView budget;
         public TextView budgetTitle;
@@ -202,6 +219,7 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
             super(itemView);
 
             circularView = (CircularView) itemView.findViewById(R.id.categoryIcon);
+            dragIcon = (ImageView) itemView.findViewById(R.id.dragIcon);
             name = (TextView) itemView.findViewById(R.id.categoryName);
             budget = (TextView) itemView.findViewById(R.id.categoryBudget);
             budgetTitle = (TextView) itemView.findViewById(R.id.categoryBudgetTitle);
@@ -222,8 +240,6 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
                     Log.d("ZHAP", "on click : " + getLayoutPosition());
                 }
             });
-
-
 
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

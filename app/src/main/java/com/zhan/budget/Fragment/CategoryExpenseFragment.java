@@ -76,14 +76,14 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         // Required empty public constructor
     }
 
-    public static CategoryExpenseFragment newInstance(boolean useSettingsAdapter) {
+    public static CategoryExpenseFragment newInstance(boolean displayBudget) {
         CategoryExpenseFragment fragment = new CategoryExpenseFragment();
 
         Bundle args = new Bundle();
-        args.putBoolean(ARG_1, useSettingsAdapter);
+        args.putBoolean(ARG_1, displayBudget);
         fragment.setArguments(args);
 
-        Log.d(TAG, "1) selected expense fragment is " + useSettingsAdapter);
+        Log.d(TAG, "1) selected expense fragment is " + displayBudget);
 
         return fragment;
     }
@@ -108,9 +108,7 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryExpenseRecyclerAdapter = new CategoryExpenseIncomeRecyclerAdapter
-
-                (this, categoryList, displayBudget, new OnStartDragListener() {
+        categoryExpenseRecyclerAdapter = new CategoryExpenseIncomeRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
                     @Override
                     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                         //isPulldownAllow = false;
@@ -214,12 +212,21 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
     //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllAsync();
+        resultsCategory = myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllSortedAsync("index");
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
                 resultsCategory.removeChangeListeners();
-                resultsCategory.sort("index");
+                //resultsCategory.sort("index");
+
+                Log.d("ZZ", "after sorting in realm ------------");
+                for(int i = 0; i < resultsCategory.size(); i++){
+                    String name = resultsCategory.get(i).getName();
+                    int index = resultsCategory.get(i).getIndex();
+                    Log.d("RECYCLER_DEBUG", i+", index:"+index+"->"+name);
+                }
+                Log.d("ZZ", "after sorting in realm ------------");
+
                 categoryList = myRealm.copyFromRealm(resultsCategory);
                 updateCategoryStatus();
 
@@ -450,13 +457,13 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
     @Override
     public void onDoneDrag(){
- /*       Log.d(TAG, "new suppose indices -----------");
-        for(int i = 0; i < categoryRecyclerAdapter.getCategoryList().size(); i++){
-            String name = categoryRecyclerAdapter.getCategoryList().get(i).getName();
+        Log.d(TAG, "new suppose indices in fragment -----------");
+        for(int i = 0; i < categoryExpenseRecyclerAdapter.getCategoryList().size(); i++){
+            String name = categoryExpenseRecyclerAdapter.getCategoryList().get(i).getName();
             Log.d(TAG, i+"->"+name);
         }
-        Log.d(TAG, "new suppose indices -----------");
-*/
+        Log.d(TAG, "new suppose indices in fragment -----------");
+
         isPulldownAllow = true;
         Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
 
@@ -467,14 +474,6 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
                 resultsCategory.removeChangeListeners();
 
                 myRealm.beginTransaction();
-                //Log.d(TAG, "old indices -----------");
-
-                for (int i = 0; i < resultsCategory.size(); i++) {
-                    int index = resultsCategory.get(i).getIndex();
-                    String name = resultsCategory.get(i).getName();
-                    //Log.d(TAG, index + "->" + name);
-                }
-                //Log.d(TAG, "old indices -----------");
 
                 for (int i = 0; i < resultsCategory.size(); i++) {
                     for (int j = 0; j < categoryExpenseRecyclerAdapter.getCategoryList().size(); j++) {
@@ -483,14 +482,14 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
 
                         String id2 = categoryExpenseRecyclerAdapter.getCategoryList().get(j).getId();
                         String name2 = categoryExpenseRecyclerAdapter.getCategoryList().get(j).getName();
-                        //Log.d(TAG, "comparing (" + id1 + "," + name1 + ") with (" + id2 + "," + name2 + ")");
+                        Log.d(TAG, "comparing (" + id1 + "," + name1 + ") with (" + id2 + "," + name2 + ")");
 
                         if (resultsCategory.get(i).getId().equalsIgnoreCase(categoryExpenseRecyclerAdapter.getCategoryList().get(j).getId())) {
 
-                            //Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
-                            //Log.d(TAG, "assigning new index : " + j + " came from " + categoryRecyclerAdapter.getCategoryList().get(j).getName());
+                            Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
+                            Log.d(TAG, "assigning new index : " + j + " came from " + categoryExpenseRecyclerAdapter.getCategoryList().get(j).getName());
                             resultsCategory.get(i).setIndex(j);
-                            //Log.d(TAG, resultsCategory.get(i).getName() + " new index is now " + resultsCategory.get(i).getIndex());
+                            Log.d(TAG, resultsCategory.get(i).getName() + " new index is now " + resultsCategory.get(i).getIndex());
 
                             break;
                         }

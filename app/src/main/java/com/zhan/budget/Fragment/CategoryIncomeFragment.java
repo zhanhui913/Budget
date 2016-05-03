@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryExpenseIncomeRecyclerAdapter;
-import com.zhan.budget.Adapter.CategoryIncomeRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
 import com.zhan.budget.Etc.Constants;
@@ -77,14 +76,14 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
         // Required empty public constructor
     }
 
-    public static CategoryIncomeFragment newInstance(boolean useSettingsAdapter) {
+    public static CategoryIncomeFragment newInstance(boolean displayBudget) {
         CategoryIncomeFragment fragment = new CategoryIncomeFragment();
 
         Bundle args = new Bundle();
-        args.putBoolean(ARG_1, useSettingsAdapter);
+        args.putBoolean(ARG_1, displayBudget);
         fragment.setArguments(args);
 
-        Log.d(TAG, "1) selected expense fragment is " + useSettingsAdapter);
+        Log.d(TAG, "1) selected expense fragment is " + displayBudget);
 
         return fragment;
     }
