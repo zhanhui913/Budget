@@ -28,8 +28,7 @@ public class CategoryFragment extends Fragment {
 
     private Date currentMonth;
 
-    private CategoryIncomeFragment categoryIncomeFragment;
-    private CategoryExpenseFragment categoryExpenseFragment;
+    private CategoryGenericFragment categoryIncomeFragment, categoryGenericFragment;
 
     private View view;
 
@@ -80,13 +79,13 @@ public class CategoryFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        categoryExpenseFragment = CategoryExpenseFragment.newInstance(true);
-        categoryIncomeFragment = CategoryIncomeFragment.newInstance(true);
+        categoryGenericFragment = CategoryGenericFragment.newInstance(true, BudgetType.EXPENSE);
+        categoryIncomeFragment = CategoryGenericFragment.newInstance(true, BudgetType.INCOME);
 
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
-        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryGenericFragment, categoryIncomeFragment);
         viewPager.setAdapter(adapterViewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -114,7 +113,7 @@ public class CategoryFragment extends Fragment {
 
         if(updateCategoryInfo) {
             categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
-            categoryExpenseFragment.updateMonthCategoryInfo(currentMonth);
+            categoryGenericFragment.updateMonthCategoryInfo(currentMonth);
         }
     }
 

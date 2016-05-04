@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,24 +36,24 @@ import java.util.List;
  *
  * @author Paul Burke (ipaulpro)
  */
-public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<CategoryExpenseRecyclerAdapter.ViewHolder>
+public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<CategoryGenericRecyclerAdapter.ViewHolder>
         implements ItemTouchHelperAdapter{
 
     private Context context;
     private List<Category> categoryList;
     private boolean displayBudget;
-    private static OnCategoryExpenseAdapterInteractionListener mListener;
+    private static OnCategoryGenericAdapterInteractionListener mListener;
     private static OnStartDragListener mDragStartListener;
 
-    public CategoryExpenseRecyclerAdapter(Fragment fragment, List<Category> list, boolean displayBudget, OnStartDragListener startDragListener) {
+    public CategoryGenericRecyclerAdapter(Fragment fragment, List<Category> list, boolean displayBudget, OnStartDragListener startDragListener) {
         this.context = fragment.getContext();
         this.categoryList = list;
         this.displayBudget = displayBudget;
         mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
-        if (fragment instanceof OnCategoryExpenseAdapterInteractionListener) {
-            mListener = (OnCategoryExpenseAdapterInteractionListener) fragment;
+        if (fragment instanceof OnCategoryGenericAdapterInteractionListener) {
+            mListener = (OnCategoryGenericAdapterInteractionListener) fragment;
         } else {
             throw new RuntimeException(fragment.toString() + " must implement OnCategoryExpenseAdapterInteractionListener.");
         }
@@ -79,11 +80,13 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
 
         viewHolder.name.setText(category.getName());
-        viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+        viewHolder.budget.setText("Budget : "+CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
             if(displayBudget) {
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
+
+                viewHolder.dragIcon.setVisibility(View.INVISIBLE);
 
                 //ProgressBar
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -98,24 +101,29 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
                     viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
                 }
             }else{
-                viewHolder.cost.setVisibility(View.INVISIBLE);
-                viewHolder.costTitle.setVisibility(View.INVISIBLE);
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                viewHolder.cost.setVisibility(View.GONE);
+                viewHolder.costTitle.setVisibility(View.GONE);
+                viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+            viewHolder.budget.setVisibility(View.GONE);
+            viewHolder.costTitle.setVisibility(View.GONE);
+
             if(displayBudget){
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
                 viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.dragIcon.setVisibility(View.INVISIBLE);
             }else{
-                viewHolder.cost.setVisibility(View.INVISIBLE);
-                viewHolder.costTitle.setVisibility(View.INVISIBLE);
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                viewHolder.cost.setVisibility(View.GONE);
+                viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }
         }
 
-        viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
+        viewHolder.dragIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 mListener.onPullDownAllow(false);
                 mDragStartListener.onStartDrag(viewHolder);
                 return false;
@@ -129,7 +137,8 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
         Log.d("RECYCLER_DEBUG", "old indices -----------");
         for(int i = 0; i < categoryList.size(); i++){
             String name = categoryList.get(i).getName();
-            Log.d("RECYCLER_DEBUG", i+"->"+name);
+            int index = categoryList.get(i).getIndex();
+            Log.d("RECYCLER_DEBUG", index+"->"+name);
         }
         Log.d("RECYCLER_DEBUG", "old indices -----------");
 
@@ -178,15 +187,12 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
-        public TextView name;
-        public TextView budget;
-        public TextView cost;
-        public TextView costTitle;
+        public ImageView dragIcon;
+        public TextView name, budget, cost, costTitle;
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn;
-        public ImageView editBtn;
+        public ImageView deleteBtn, editBtn;
 
         private Drawable defaultDrawable;
 
@@ -198,6 +204,7 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
             super(itemView);
 
             circularView = (CircularView) itemView.findViewById(R.id.categoryIcon);
+            dragIcon = (ImageView) itemView.findViewById(R.id.dragIcon);
             name = (TextView) itemView.findViewById(R.id.categoryName);
             budget = (TextView) itemView.findViewById(R.id.categoryBudget);
             cost = (TextView) itemView.findViewById(R.id.categoryCost);
@@ -217,8 +224,6 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
                     Log.d("ZHAP", "on click : " + getLayoutPosition());
                 }
             });
-
-
 
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -253,7 +258,7 @@ public class CategoryExpenseRecyclerAdapter extends RecyclerView.Adapter<Categor
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnCategoryExpenseAdapterInteractionListener {
+    public interface OnCategoryGenericAdapterInteractionListener {
         void onDeleteCategory(int position);
 
         void onEditCategory(int position);
