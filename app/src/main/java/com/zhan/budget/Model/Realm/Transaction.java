@@ -26,6 +26,7 @@ public class Transaction extends RealmObject {
     private Category category;
     private Account account;
     private String dayType;
+    private String location;
 
     public Transaction(){
 
@@ -85,5 +86,13 @@ public class Transaction extends RealmObject {
 
     public void setDayType(String dayType) {
         this.dayType = dayType;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
