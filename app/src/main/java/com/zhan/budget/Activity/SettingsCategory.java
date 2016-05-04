@@ -1,10 +1,6 @@
 package com.zhan.budget.Activity;
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -13,10 +9,7 @@ import com.zhan.budget.Fragment.CategoryExpenseFragment;
 import com.zhan.budget.Fragment.CategoryIncomeFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
-
-import io.realm.BaseRealm;
 
 public class SettingsCategory extends BaseRealmActivity {
 

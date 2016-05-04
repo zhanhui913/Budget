@@ -80,7 +80,7 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
 
         viewHolder.name.setText(category.getName());
-        viewHolder.budget.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+        viewHolder.budget.setText("Budget : "+CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
             if(displayBudget) {
@@ -107,7 +107,6 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
-            viewHolder.budgetTitle.setVisibility(View.GONE);
             viewHolder.budget.setVisibility(View.GONE);
             viewHolder.costTitle.setVisibility(View.GONE);
 
@@ -121,16 +120,6 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }
         }
-        /*
-        viewHolder.swipeLayout.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mListener.onPullDownAllow(false);
-                mDragStartListener.onStartDrag(viewHolder);
-                return false;
-            }
-        });
-        */
 
         viewHolder.dragIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -199,7 +188,7 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
         // for any view that will be set as you render a row
         public CircularView circularView;
         public ImageView dragIcon;
-        public TextView name, budget, budgetTitle, cost, costTitle;
+        public TextView name, budget, cost, costTitle;
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
@@ -218,7 +207,6 @@ public class CategoryExpenseIncomeRecyclerAdapter extends RecyclerView.Adapter<C
             dragIcon = (ImageView) itemView.findViewById(R.id.dragIcon);
             name = (TextView) itemView.findViewById(R.id.categoryName);
             budget = (TextView) itemView.findViewById(R.id.categoryBudget);
-            budgetTitle = (TextView) itemView.findViewById(R.id.categoryBudgetTitle);
             cost = (TextView) itemView.findViewById(R.id.categoryCost);
             costTitle = (TextView) itemView.findViewById(R.id.categoryCostTitle);
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
