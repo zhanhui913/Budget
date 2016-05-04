@@ -85,13 +85,12 @@ public class TransactionFragment extends BaseRealmFragment {
     }
 
     private void populateCategory(String budgetType){Log.d(TAG, "2 selectedCategoryId : "+selectedCategoryId);
-        resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType).findAllAsync();
+        resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType).findAllSortedAsync("index");
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
                 resultsCategory.removeChangeListener(this);
 
-                resultsCategory.sort("index");
                 categoryList = myRealm.copyFromRealm(resultsCategory);
                 categoryGridAdapter.clear();
                 categoryGridAdapter.addAll(categoryList);
