@@ -60,5 +60,6 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     compile 'com.github.se-bastiaan:Android-PdfMyXml:1.0.1'
     compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
+    compile 'com.yqritc:recyclerview-flexibledivider:1.2.9'
 }
 

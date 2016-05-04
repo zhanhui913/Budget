@@ -3,9 +3,11 @@ package com.zhan.budget.Fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryExpenseIncomeRecyclerAdapter;
@@ -27,6 +30,7 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.View.DividerItemDecorator;
 import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
@@ -123,6 +127,12 @@ public class CategoryExpenseFragment extends BaseRealmFragment implements
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(categoryExpenseRecyclerAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(categoryListView);
+
+        //Add divider
+        categoryListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getContext())
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
 

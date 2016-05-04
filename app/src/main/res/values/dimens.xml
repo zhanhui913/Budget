@@ -9,4 +9,10 @@
     <dimen name="letter_icon_size">60sp</dimen>
 
     <dimen name="num_pad_text_size">20sp</dimen>
+
+    <!-- This includes the left and right padding which is 16dp each and the default background size
+    for circular view which is 50dp-->
+    <dimen name="left_padding_divider">82dp</dimen>
+    <dimen name="right_padding_divider">0dp</dimen>
+
 </resources>

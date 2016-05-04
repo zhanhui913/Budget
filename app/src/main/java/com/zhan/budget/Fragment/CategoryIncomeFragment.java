@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryExpenseIncomeRecyclerAdapter;
@@ -122,6 +123,11 @@ public class CategoryIncomeFragment extends BaseRealmFragment implements
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(categoryListView);
 
+        //Add divider
+        categoryListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getContext())
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
 
