@@ -47,66 +47,76 @@
             android:layout_centerVertical="true"
             custom:cv_iconColor="?attr/themeColor"/>
 
-        <TextView
-            android:id="@+id/categoryName"
+        <LinearLayout
+            android:id="@+id/panel1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lunch"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:orientation="vertical"
             android:layout_toRightOf="@+id/categoryIcon"
-            android:layout_marginLeft="5dp" />
+            android:layout_toLeftOf="@+id/panel2"
+            android:layout_above="@+id/categoryProgress">
 
-        <TextView
-            android:id="@+id/categoryBudgetTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Budget : "
-            android:textSize="15sp"
-            android:layout_below="@+id/categoryName"
-            android:layout_toRightOf="@+id/categoryIcon"
-            android:layout_marginLeft="5dp" />
+            <TextView
+                android:id="@+id/categoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Lunch"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical" />
 
-        <TextView
-            android:id="@+id/categoryBudget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$25.00"
-            android:textSize="15sp"
-            android:layout_below="@+id/categoryName"
-            android:layout_toRightOf="@+id/categoryBudgetTitle"/>
+            <TextView
+                android:id="@+id/categoryBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="$25.00"
+                android:textSize="15sp"
+                android:gravity="center_vertical"/>
 
-        <TextView
-            android:id="@+id/categoryCostTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Current"
-            android:textSize="15sp"
-            android:layout_below="@+id/categoryName"
-            android:layout_alignParentRight="true" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/categoryCost"
+        <LinearLayout
+            android:id="@+id/panel2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$25.00"
-            android:textSize="20sp"
-            android:layout_above="@+id/categoryCostTitle"
-            android:layout_alignParentRight="true" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/categoryProgress">
+
+            <TextView
+                android:id="@+id/categoryCost"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="$0.00"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/categoryCostTitle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:text="Current"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|end" />
+        </LinearLayout>
 
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
             android:id="@+id/categoryProgress"
             android:layout_width="fill_parent"
             android:layout_height="7dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/categoryIcon"
-            android:layout_marginLeft="5dp"
+            android:paddingLeft="16dp"
             app:rcBackgroundPadding="1dp"
             app:rcRadius="5dp"
             app:rcBackgroundColor="?attr/themeColorHighlight"
             app:rcProgress="5"
             app:rcMax="10"
-            android:layout_below="@+id/categoryBudgetTitle" />
+            android:layout_toRightOf="@+id/categoryIcon"
+            android:layout_alignParentBottom="true" />
 
         <ImageView
             android:id="@+id/dragIcon"
@@ -114,9 +124,8 @@
             android:layout_height="match_parent"
             android:src="@drawable/svg_ic_handle"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:tint="?attr/themeColorText"/>
+            android:tint="?attr/themeColorText"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
