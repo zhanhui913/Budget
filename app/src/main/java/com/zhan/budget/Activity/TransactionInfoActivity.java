@@ -64,12 +64,11 @@ public class TransactionInfoActivity extends BaseActivity implements
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0;
     private ImageButton buttonX;
 
-    private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn;
+    private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
 
     private TextView transactionCostView;
 
-    private String priceString;
-    private String noteString;
+    private String priceString, noteString, locationString;
 
     private TransactionFragment transactionExpenseFragment, transactionIncomeFragment;
 
@@ -144,6 +143,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         addAccountBtn = (ImageButton)findViewById(R.id.addAccountBtn);
         dateBtn = (ImageButton)findViewById(R.id.dateBtn);
         repeatBtn = (ImageButton)findViewById(R.id.repeatBtn);
+        locationBtn = (ImageButton)findViewById(R.id.addLocationBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
 
@@ -177,6 +177,10 @@ public class TransactionInfoActivity extends BaseActivity implements
             if(editTransaction.getNote() != null){
                 Log.d("DEBUG","@@@@@"+editTransaction.getNote());
                 noteString = editTransaction.getNote();
+            }
+
+            if(editTransaction.getLocation() != null){
+                locationString = editTransaction.getLocation();
             }
 
             //Check which category this transaction belongs to.
@@ -325,6 +329,13 @@ public class TransactionInfoActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 createRepeatDialog();
+            }
+        });
+
+        locationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createLocationDialog();
             }
         });
 
@@ -541,9 +552,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Add Note");
-
         input.setHint("Note");
-
         input.setText(noteString);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
@@ -551,6 +560,41 @@ public class TransactionInfoActivity extends BaseActivity implements
                 .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog noteDialog = builder.create();
+        noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        noteDialog.show();
+
+        input.requestFocus();
+    }
+
+    private void createLocationDialog(){
+        // get alertdialog_generic.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(instance);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        title.setText("Add Location");
+        input.setHint("Location");
+        input.setText(locationString);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        locationString = input.getText().toString();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -664,6 +708,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         transaction.setNote(this.noteString);
+        transaction.setLocation(this.locationString);
         transaction.setDate(DateUtil.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
 
@@ -674,8 +719,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
             transaction.setCategory(selectedIncomeCategory);
         }
-
-
 
         ScheduledTransaction sT = new ScheduledTransaction();
         if(isScheduledTransaction){
@@ -691,7 +734,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
         Parcelable scheduledTransactionWrapped = Parcels.wrap(sT);
 
-
         Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
 
         Parcelable wrapped = Parcels.wrap(transaction);
@@ -705,7 +747,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(isScheduledTransaction) {
             intent.putExtra(Constants.RESULT_SCHEDULE_TRANSACTION, scheduledTransactionWrapped);
         }
-
 
         setResult(RESULT_OK, intent);
 
