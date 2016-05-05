@@ -35,6 +35,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -113,6 +114,8 @@ public class AccountFragment extends BaseRealmFragment implements
         resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
+                resultsAccount.removeChangeListener(this);
+
                 Log.d(TAG, "there's a change in results account ");
                 accountList = myRealm.copyFromRealm(resultsAccount);
                 accountListAdapter.updateList(accountList);
@@ -442,6 +445,62 @@ public class AccountFragment extends BaseRealmFragment implements
     @Override
     public void onPullDownAllow(boolean value){
         isPulldownAllow = value;
+    }
+
+    @Override
+    public void onAccountSetAsDefault(final Account account){
+  /*      myRealm.beginTransaction();
+
+        for(int i = 0; i < accountList.size(); i++){
+            if(account.getId().equalsIgnoreCase(accountList.get(i).getId())){
+                accountList.get(i).setIsDefault(true);
+            }else{
+                accountList.get(i).setIsDefault(false);
+            }
+        }
+
+        myRealm.commitTransaction();
+
+        accountListAdapter.notifyDataSetChanged();
+*/
+
+
+
+
+
+
+        final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
+        accounts.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                accounts.removeChangeListener(this);
+
+                myRealm.beginTransaction();
+
+                //Update in realm
+                for(int i = 0; i < accounts.size(); i++){
+                    if(account.getId().equalsIgnoreCase(accounts.get(i).getId())){
+                        accounts.get(i).setIsDefault(true);
+                    }else{
+                        accounts.get(i).setIsDefault(false);
+                    }
+                }
+
+                myRealm.commitTransaction();
+                //myRealm.close();
+
+                //update in temp list
+                for(int i = 0; i < accountList.size(); i++){
+                    if(account.getId().equalsIgnoreCase(accountList.get(i).getId())){
+                        accountList.get(i).setIsDefault(true);
+                    }else{
+                        accountList.get(i).setIsDefault(false);
+                    }
+                }
+
+                accountListAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

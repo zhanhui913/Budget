@@ -1,14 +1,17 @@
 package com.zhan.budget.Adapter;
 
 import android.app.Activity;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Etc.Constants;
@@ -148,7 +151,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         }
 
         // getting account_popup data for the row
-        Account account = getItem(position);
+        final Account account = getItem(position);
 
         //Name
         viewHolder.name.setText(account.getName());
@@ -168,6 +171,16 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             viewHolder.defaultAccountIndicatorOff.setVisibility(View.VISIBLE);
         }
 
+        viewHolder.defaultAccountIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Snackbar.make(v, "Set "+account.getName()+" as default account", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+                mListener.onAccountSetAsDefault(account);
+                return false;
+            }
+        });
+
         return convertView;
     }
 
@@ -184,5 +197,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         void onEditAccount(int position);
 
         void onPullDownAllow(boolean value);
+
+        void onAccountSetAsDefault(Account account);
     }
 }

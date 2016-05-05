@@ -47,6 +47,8 @@ import com.zhan.circleindicator.CircleIndicator;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -54,6 +56,7 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class TransactionInfoActivity extends BaseActivity implements
         TransactionFragment.OnTransactionFragmentInteractionListener{
@@ -481,15 +484,21 @@ public class TransactionInfoActivity extends BaseActivity implements
         final Realm myRealm = Realm.getDefaultInstance();
 
         //Get list of accounts
-        resultsAccount = myRealm.where(Account.class).findAllAsync();
+        resultsAccount = myRealm.where(Account.class).findAllSortedAsync("isDefault", Sort.DESCENDING);
         resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
                 resultsAccount.removeChangeListener(this);
 
+
                 for (int i = 0; i < resultsAccount.size(); i++) {
+                    Log.d("ZHAP", i+"->"+resultsAccount.get(i).getName());
                     accountNameList.add(resultsAccount.get(i).getName());
                 }
+
+                //Swap the default account to be in index 0 (for nameList and realmList)
+                //Collections.swap(accountNameList, 0, defaultAccountIndex);
+                //Collections.swap(resultsAccount, 0 , defaultAccountIndex);
 
                 accountPicker.setMinValue(0);
 
@@ -706,7 +715,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 transaction.setDayType(DayType.SCHEDULED.toString());
             }
         }
-
+Toast.makeText(this, "selectedAccount : "+selectedAccount.getName(), Toast.LENGTH_LONG).show();
         transaction.setNote(this.noteString);
         transaction.setLocation(this.locationString);
         transaction.setDate(DateUtil.formatDate(selectedDate));
