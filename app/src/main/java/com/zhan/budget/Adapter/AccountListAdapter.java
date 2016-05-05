@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
+import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
 
@@ -23,19 +25,19 @@ import java.util.List;
 public class AccountListAdapter extends ArrayAdapter<Account> {
 
     private OnAccountAdapterInteractionListener mListener;
+    private boolean displayCost;
 
     static class ViewHolder {
-        public TextView name;
+        public TextView name, cost;
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn;
-        public ImageView editBtn;
-        public ImageView defaultAccountIndicatorOn;
-        public ImageView defaultAccountIndicatorOff;
+        public ImageView deleteBtn, editBtn;
+        public ImageView defaultAccountIndicatorOn, defaultAccountIndicatorOff;
     }
 
-    public AccountListAdapter(Activity activity, List<Account> accountList){
+    public AccountListAdapter(Activity activity, List<Account> accountList, boolean displayCost){
         super(activity, R.layout.item_account, accountList);
         setNotifyOnChange(true);
+        this.displayCost = displayCost;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if(activity instanceof OnAccountAdapterInteractionListener){
@@ -45,9 +47,10 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         }
     }
 
-    public AccountListAdapter(Fragment fragment,  List<Account> accountList) {
+    public AccountListAdapter(Fragment fragment,  List<Account> accountList, boolean displayCost) {
         super(fragment.getActivity(), R.layout.item_account, accountList);
         setNotifyOnChange(true);
+        this.displayCost = displayCost;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if (fragment instanceof OnAccountAdapterInteractionListener) {
@@ -75,6 +78,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             convertView = inflater.inflate(R.layout.item_account, parent, false);
 
             viewHolder.name = (TextView) convertView.findViewById(R.id.accountName);
+            viewHolder.cost = (TextView) convertView.findViewById(R.id.accountCost);
             viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipeAccount);
             viewHolder.deleteBtn = (ImageView) convertView.findViewById(R.id.deleteBtn);
             viewHolder.editBtn = (ImageView) convertView.findViewById(R.id.editBtn);
@@ -148,6 +152,12 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
         //Name
         viewHolder.name.setText(account.getName());
+
+        if(displayCost){
+            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(account.getCost()), Constants.BUDGET_LOCALE));
+        }else{
+            viewHolder.cost.setVisibility(View.GONE);
+        }
 
         //Default indicator
         if(account.isDefault()){

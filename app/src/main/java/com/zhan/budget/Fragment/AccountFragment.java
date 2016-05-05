@@ -1,10 +1,16 @@
 package com.zhan.budget.Fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -13,12 +19,15 @@ import android.widget.TextView;
 
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -37,6 +46,8 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private static final String TAG = "AccountFragment";
 
+    private OnAccountInteractionListener mListener;
+
     private ViewGroup emptyLayout;
     private PtrFrameLayout frame;
     private PlusView header;
@@ -50,9 +61,20 @@ public class AccountFragment extends BaseRealmFragment implements
     private List<Account> accountList;
 
     private Boolean isPulldownAllow = true;
+    private Date currentMonth;
+    private RealmResults<Transaction> resultsTransaction;
+    private List<Transaction> transactionMonthList;
+
 
     public AccountFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -64,9 +86,11 @@ public class AccountFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
 
+        currentMonth = new Date();
+
         accountList = new ArrayList<>();
         accountListView = (ListView) view.findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(this, accountList);
+        accountListAdapter = new AccountListAdapter(this, accountList, true);
         accountListView.setAdapter(accountListAdapter);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
@@ -74,10 +98,17 @@ public class AccountFragment extends BaseRealmFragment implements
         emptyAccountText.setText("Pull down to add an account");
 
         createPullToAddAccount();
-        populateAccount();
+        populateAccountWithNoInfo();
+
+        //0 represents no change in month relative to currentMonth variable.
+        //false because we dont need to get all transactions yet.
+        //This may conflict with populateAccountWithNoInfo async where its trying to get the initial
+        //accounts
+        updateMonthInToolbar(0, false);
     }
 
-    private void populateAccount(){
+    //Only called one time
+    private void populateAccountWithNoInfo(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
         resultsAccount.addChangeListener(new RealmChangeListener() {
             @Override
@@ -86,11 +117,11 @@ public class AccountFragment extends BaseRealmFragment implements
                 accountList = myRealm.copyFromRealm(resultsAccount);
                 accountListAdapter.updateList(accountList);
 
+
                 updateAccountStatus();
+                populateAccountWithInfo();
             }
         });
-
-
 
 /*
         RealmChangeListener changeListener = new RealmChangeListener() {
@@ -106,6 +137,91 @@ public class AccountFragment extends BaseRealmFragment implements
 
         resultsAccount.addChangeListener(changeListener);
         */
+    }
+
+    /**
+     * Gets called whenever the month updates
+     */
+    private void populateAccountWithInfo(){
+        final Date startMonth = DateUtil.refreshMonth(currentMonth);
+
+        //Need to go a day before as Realm's between date does inclusive on both end
+        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
+
+        Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
+
+        //Reset all values in list
+        for(int i = 0 ; i < accountList.size(); i++){
+            accountList.get(i).setCost(0);
+        }
+
+        resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
+        resultsTransaction.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                resultsTransaction.removeChangeListeners();
+
+                Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
+
+                transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
+
+                aggregateAccountInfo();
+            }
+        });
+    }
+
+    private void aggregateAccountInfo(){
+        Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
+
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("DEBUG", "preparing to aggregate results");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                startTime = System.nanoTime();
+
+                //Go through each transaction and put them into the correct account
+                for(int t = 0; t < transactionMonthList.size(); t++){
+                    for(int c = 0; c < accountList.size(); c++){
+                        if(transactionMonthList.get(t).getAccount().getId().equalsIgnoreCase(accountList.get(c).getId())){
+                            float transactionPrice = transactionMonthList.get(t).getPrice();
+                            float currentAccountPrice = accountList.get(c).getCost();
+                            accountList.get(c).setCost(transactionPrice + currentAccountPrice);
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+
+                for(int i = 0; i < accountList.size(); i++){
+                    Log.d("ZHAN1", "category : "+accountList.get(i).getName()+" -> "+accountList.get(i).getCost());
+                }
+
+                accountListAdapter.updateList(accountList);
+
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+
+                long milli = (duration/1000000);
+                long second = (milli/1000);
+                float minutes = (second / 60.0f);
+                Log.d("DEBUG", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+            }
+        };
+        loader.execute();
     }
 
     private void createPullToAddAccount(){
@@ -264,6 +380,40 @@ public class AccountFragment extends BaseRealmFragment implements
         }
     }
 
+    private void updateMonthInToolbar(int direction, boolean updateAccountInfo){
+        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+
+        if(updateAccountInfo) {
+            populateAccountWithInfo();
+            //categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
+            //categoryGenericFragment.updateMonthCategoryInfo(currentMonth);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnAccountInteractionListener) {
+            mListener = (OnAccountInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnAccountInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -292,6 +442,47 @@ public class AccountFragment extends BaseRealmFragment implements
     @Override
     public void onPullDownAllow(boolean value){
         isPulldownAllow = value;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Etc
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.change_month_year, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.leftChevron:
+                updateMonthInToolbar(-1, true);
+                return true;
+            case R.id.rightChevron:
+                updateMonthInToolbar(1, true);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnAccountInteractionListener {
+        void updateToolbar(String date);
     }
 
 }

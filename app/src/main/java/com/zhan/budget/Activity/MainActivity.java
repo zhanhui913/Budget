@@ -34,7 +34,8 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalendarFragment.OnCalendarInteractionListener,
         CategoryFragment.OnCategoryInteractionListener,
-        MonthReportFragment.OnMonthlyInteractionListener{
+        MonthReportFragment.OnMonthlyInteractionListener,
+        AccountFragment.OnAccountInteractionListener{
 
     Toolbar toolbar;
     DrawerLayout drawer;

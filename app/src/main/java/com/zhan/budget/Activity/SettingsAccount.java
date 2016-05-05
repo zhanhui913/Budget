@@ -63,7 +63,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         accountList = new ArrayList<>();
         accountListView = (ListView) findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(this, accountList);
+        accountListAdapter = new AccountListAdapter(this, accountList, false);
         accountListView.setAdapter(accountListAdapter);
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
