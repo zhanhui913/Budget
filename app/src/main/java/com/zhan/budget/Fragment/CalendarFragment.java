@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,15 +15,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.TransactionInfoActivity;
-import com.zhan.budget.Adapter.TransactionListAdapter;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -82,9 +82,7 @@ public class CalendarFragment extends BaseRealmFragment implements
     private TextView  totalCostForDay, dateTextView;
 
     //Transaction
-    //private ListView transactionListView;
     private RecyclerView transactionListView;
-    //private TransactionListAdapter transactionAdapter;
     private TransactionRecyclerAdapter transactionAdapter;
     private List<Transaction> transactionList;
     private RealmResults<Transaction> resultsTransactionForDay;
@@ -130,10 +128,17 @@ public class CalendarFragment extends BaseRealmFragment implements
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
+        transactionListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         transactionList = new ArrayList<>();
-        //transactionAdapter = new TransactionListAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
+
+        //Add divider
+        transactionListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getContext())
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
 
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
 
@@ -508,7 +513,6 @@ public class CalendarFragment extends BaseRealmFragment implements
      */
     private void updateTransactionList(){
         transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
-        //transactionAdapter.updateRealm(transactionList);
         transactionAdapter.setTransactionList(transactionList);
         updateTransactionStatus();
     }

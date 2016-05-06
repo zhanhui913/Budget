@@ -2,9 +2,14 @@ package com.zhan.budget.Util;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.AttrRes;
+import android.util.Log;
+import android.util.TypedValue;
+
+import com.zhan.budget.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,12 +40,22 @@ public final class Colors {
     }
 
     public static String getHexColorFromAttr(Context context, @AttrRes int attr){
-        int[] attrs = new int[] { attr};
+        /*int[] attrs = new int[] { attr};
         TypedArray ta = context.obtainStyledAttributes(attrs);
         int cc = ((ColorDrawable)ta.getDrawable(0)).getColor();
         ta.recycle();
         return "#"+Integer.toHexString(cc);
+        */
+
+        //2nd way
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(attr, typedValue, true);
+        int color = typedValue.data;
+        return "#"+Integer.toHexString(color);
     }
+
+
 
     public static int getColorFromAttr(Context context, @AttrRes int attr){
         int[] attrs = new int[] { attr};

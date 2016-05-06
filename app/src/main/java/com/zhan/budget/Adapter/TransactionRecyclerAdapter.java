@@ -44,11 +44,10 @@ import java.util.List;
  */
 public class TransactionRecyclerAdapter extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder> {
 
-    private static OnTransactionAdapterInteractionListener mListener;
-
     private Context context;
     private List<Transaction> transactionList;
     private boolean showDate;
+    private static OnTransactionAdapterInteractionListener mListener;
 
     public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         this.context = fragment.getContext();
@@ -64,7 +63,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     }
 
     public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
-        this.context = activity.getBaseContext();
+        this.context = activity;
         this.showDate = showDate;
         this.transactionList = transactionList;
 

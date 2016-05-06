@@ -1,15 +1,17 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zhan.budget.Adapter.TransactionListAdapter;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Realm.Category;
@@ -20,7 +22,6 @@ import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class TransactionsForCategory extends BaseActivity implements
-        TransactionListAdapter.OnTransactionAdapterInteractionListener{
+        TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener{
 
     private Activity instance;
     private Toolbar toolbar;
@@ -39,8 +40,8 @@ public class TransactionsForCategory extends BaseActivity implements
     private ImageView transactionCategoryIcon;
     private TextView transactionCategoryName, transactionCategoryBalance;
 
-    private ListView transactionCategoryListView;
-    private TransactionListAdapter transactionCategoryAdapter;
+    private RecyclerView transactionCategoryListView;
+    private TransactionRecyclerAdapter transactionCategoryAdapter;
     private List<Transaction> transactionCategoryList;
 
     @Override
@@ -58,7 +59,9 @@ public class TransactionsForCategory extends BaseActivity implements
 
         createToolbar();
 
-        transactionCategoryListView = (ListView) findViewById(R.id.transactionCategoryListView);
+        transactionCategoryListView = (RecyclerView) findViewById(R.id.transactionCategoryListView);
+        transactionCategoryListView.setLayoutManager(new LinearLayoutManager(instance.getBaseContext()));
+
         transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
@@ -118,8 +121,14 @@ public class TransactionsForCategory extends BaseActivity implements
                 transactionCategoryList = myRealm.copyFromRealm(resultsInMonth);
                 float total = resultsInMonth.sum("price").floatValue();
 
-                transactionCategoryAdapter = new TransactionListAdapter(instance, transactionCategoryList, true); //display date in each transaction item
+                transactionCategoryAdapter = new TransactionRecyclerAdapter(instance, transactionCategoryList, true); //display date in each transaction item
                 transactionCategoryListView.setAdapter(transactionCategoryAdapter);
+
+                //Add divider
+                transactionCategoryListView.addItemDecoration(
+                        new HorizontalDividerItemDecoration.Builder(instance)
+                                .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                                .build());
 
                 Log.d("ZHAN", "there are " + transactionCategoryList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
