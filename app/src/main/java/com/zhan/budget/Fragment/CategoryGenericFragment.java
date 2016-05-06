@@ -48,8 +48,9 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener {
 
     private static final String TAG = "CategoryEIFragment";
-    private static final String ARG_1 = "displayBudget";
-    private static final String ARG_2 = "budgetType";
+    private static final String ARG_1 = "budgetType";
+    private static final String ARG_2 = "arrangementType";
+
 
     private PtrFrameLayout frame;
     private PlusView header;
@@ -71,23 +72,20 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private Boolean isPulldownAllow = true;
     private ItemTouchHelper mItemTouchHelper;
 
-    private boolean displayBudget;
-    private BudgetType type;
+    private BudgetType budgetType;
+    private CategoryGenericRecyclerAdapter.ARRANGEMENT arrangementType;
 
     public CategoryGenericFragment() {
         // Required empty public constructor
     }
 
-    public static CategoryGenericFragment newInstance(boolean displayBudget, BudgetType type) {
+    public static CategoryGenericFragment newInstance(BudgetType budgetType, CategoryGenericRecyclerAdapter.ARRANGEMENT arrangementType) {
         CategoryGenericFragment fragment = new CategoryGenericFragment();
 
         Bundle args = new Bundle();
-        args.putBoolean(ARG_1, displayBudget);
-        args.putSerializable(ARG_2, type);
+        args.putSerializable(ARG_1, budgetType);
+        args.putSerializable(ARG_2, arrangementType);
         fragment.setArguments(args);
-
-        Log.d(TAG, "1) selected fragment is " + displayBudget);
-
         return fragment;
     }
 
@@ -100,19 +98,19 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
 
-        displayBudget = getArguments().getBoolean(ARG_1);
-        type = (BudgetType) getArguments().getSerializable(ARG_2);
+        budgetType = (BudgetType) getArguments().getSerializable(ARG_1);
+        arrangementType = (CategoryGenericRecyclerAdapter.ARRANGEMENT) getArguments().getSerializable(ARG_2);
 
         currentMonth = new Date();
 
         TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyCategoryText.setText("Pull down to add an "+type.toString()+" category");
+        emptyCategoryText.setText("Pull down to add an "+budgetType.toString()+" category");
 
         transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, displayBudget, new OnStartDragListener() {
+        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, arrangementType, new OnStartDragListener() {
                     @Override
                     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                         //isPulldownAllow = false;
@@ -216,13 +214,13 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private void addNewCategory(){
         Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
         addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, type.toString());
+        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, budgetType.toString());
         startActivityForResult(addNewCategoryIntent, Constants.RETURN_NEW_CATEGORY);
     }
 
     //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
-        resultsCategory = myRealm.where(Category.class).equalTo("type", type.toString()).findAllSortedAsync("index");
+        resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllSortedAsync("index");
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
@@ -233,7 +231,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 categoryRecyclerAdapter.setCategoryList(categoryList);
 
-                if(displayBudget) {
+                if(arrangementType == CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET) {
                     populateCategoryWithInfo();
                 }
             }
@@ -468,7 +466,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         isPulldownAllow = true;
         Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
 
-        resultsCategory = myRealm.where(Category.class).equalTo("type", type.toString()).findAllAsync();
+        resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {

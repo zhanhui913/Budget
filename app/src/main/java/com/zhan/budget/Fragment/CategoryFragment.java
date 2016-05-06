@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.R;
@@ -28,7 +29,7 @@ public class CategoryFragment extends Fragment {
 
     private Date currentMonth;
 
-    private CategoryGenericFragment categoryIncomeFragment, categoryGenericFragment;
+    private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
 
     private View view;
 
@@ -79,13 +80,13 @@ public class CategoryFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        categoryGenericFragment = CategoryGenericFragment.newInstance(true, BudgetType.EXPENSE);
-        categoryIncomeFragment = CategoryGenericFragment.newInstance(true, BudgetType.INCOME);
+        categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET);
+        categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET);
 
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
-        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryGenericFragment, categoryIncomeFragment);
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
         viewPager.setAdapter(adapterViewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -113,7 +114,7 @@ public class CategoryFragment extends Fragment {
 
         if(updateCategoryInfo) {
             categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
-            categoryGenericFragment.updateMonthCategoryInfo(currentMonth);
+            categoryExpenseFragment.updateMonthCategoryInfo(currentMonth);
         }
     }
 

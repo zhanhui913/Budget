@@ -54,7 +54,8 @@ public class OverviewActivity extends BaseActivity {
 
     private List<Transaction> transactionList;
     private List<Category> categoryList;
-    private List<CategoryPercent> categoryPercentList;
+
+    private CategoryPercentListAdapter categoryPercentListAdapter;
 
     @Override
     protected int getActivityLayout(){
@@ -63,14 +64,11 @@ public class OverviewActivity extends BaseActivity {
 
     @Override
     protected void init(){
-        //super.init();
-
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         categoryList = new ArrayList<>();
-        categoryPercentList = new ArrayList<>();
         ListView categoryListView = (ListView) findViewById(R.id.percentCategoryListView);
-        CategoryPercentListAdapter categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryPercentList);
+        categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryList);
         categoryListView.setAdapter(categoryPercentListAdapter);
 
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
@@ -169,7 +167,6 @@ public class OverviewActivity extends BaseActivity {
             @Override
             protected Float doInBackground(Void... voids) {
                 float sumCost = 0;
-                categoryPercentList.clear();
 
                 Log.d("OVERVIEW_ACT", "Transaction size : "+transactionList.size());
 
@@ -228,16 +225,12 @@ public class OverviewActivity extends BaseActivity {
 
                 //Now calculate percentage for each category
                 for(int i = 0; i < categoryList.size(); i++){
-                    CategoryPercent cp = new CategoryPercent();
-                    cp.setCategory(categoryList.get(i));
-
                     BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
                     BigDecimal total = BigDecimal.valueOf(sumCost);
                     BigDecimal hundred = new BigDecimal(100);
                     BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
 
-                    cp.setPercent(percent.multiply(hundred).floatValue());
-                    categoryPercentList.add(cp);
+                    categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
                 }
 
                 return sumCost;
@@ -246,6 +239,9 @@ public class OverviewActivity extends BaseActivity {
             @Override
             protected void onPostExecute(Float result) {
                 super.onPostExecute(result);
+
+                categoryPercentListAdapter.addAll(categoryList);
+
 
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);

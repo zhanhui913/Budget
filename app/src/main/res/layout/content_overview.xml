@@ -66,6 +66,12 @@
         android:drawSelectorOnTop="true"
         android:divider="?attr/themeColorHighlight"
         android:dividerHeight="1dp"/>
+    <!--
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/percentCategoryListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/centerPanel" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"

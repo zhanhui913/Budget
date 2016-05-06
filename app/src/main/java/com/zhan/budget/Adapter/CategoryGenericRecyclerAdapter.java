@@ -39,16 +39,23 @@ import java.util.List;
 public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<CategoryGenericRecyclerAdapter.ViewHolder>
         implements ItemTouchHelperAdapter{
 
+    public enum ARRANGEMENT{
+        BUDGET,
+        MOVE,
+        PERCENT
+    }
+
+    public ARRANGEMENT arrangement;
+
     private Context context;
     private List<Category> categoryList;
-    private boolean displayBudget;
     private static OnCategoryGenericAdapterInteractionListener mListener;
     private static OnStartDragListener mDragStartListener;
 
-    public CategoryGenericRecyclerAdapter(Fragment fragment, List<Category> list, boolean displayBudget, OnStartDragListener startDragListener) {
+    public CategoryGenericRecyclerAdapter(Fragment fragment, List<Category> list, ARRANGEMENT arrangement, OnStartDragListener startDragListener) {
         this.context = fragment.getContext();
         this.categoryList = list;
-        this.displayBudget = displayBudget;
+        this.arrangement = arrangement;
         mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
@@ -83,7 +90,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         viewHolder.budget.setText("Budget : "+CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
-            if(displayBudget) {
+            if(arrangement == ARRANGEMENT.BUDGET) {
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
 
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
@@ -100,24 +107,28 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 }else{ //If exceeded budget
                     viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
                 }
-            }else{
+            }else if(arrangement == ARRANGEMENT.MOVE){
                 viewHolder.cost.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
+            }else if(arrangement == ARRANGEMENT.PERCENT){
+
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
             viewHolder.costTitle.setVisibility(View.GONE);
 
-            if(displayBudget){
+            if(arrangement == ARRANGEMENT.BUDGET){
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
-            }else{
+            }else if(arrangement == ARRANGEMENT.MOVE){
                 viewHolder.cost.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
+            }else if(arrangement == ARRANGEMENT.PERCENT){
+
             }
         }
 

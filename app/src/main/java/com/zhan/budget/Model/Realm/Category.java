@@ -24,6 +24,9 @@ public class Category extends RealmObject{
     private String icon;
     private int index;
 
+    @Ignore
+    private float percent;
+
     public Category(){
 
     }
@@ -90,5 +93,13 @@ public class Category extends RealmObject{
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public float getPercent() {
+        return percent;
+    }
+
+    public void setPercent(float percent) {
+        this.percent = percent;
     }
 }

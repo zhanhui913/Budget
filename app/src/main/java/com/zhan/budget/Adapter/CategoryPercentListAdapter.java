@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Model.CategoryPercent;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by Zhan on 16-02-17.
  */
-public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
+public class CategoryPercentListAdapter extends ArrayAdapter<Category> {
 
     static class ViewHolder {
         public CircularView circularView;
@@ -29,7 +29,7 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
         public TextView cost;
     }
 
-    public CategoryPercentListAdapter(Activity activity, List<CategoryPercent> categoryList) {
+    public CategoryPercentListAdapter(Activity activity, List<Category> categoryList) {
         super(activity, R.layout.item_category_percent_view, categoryList);
     }
 
@@ -56,19 +56,19 @@ public class CategoryPercentListAdapter extends ArrayAdapter<CategoryPercent> {
         }
 
         // getting category data for the row
-        CategoryPercent category = getItem(position);
+        Category category = getItem(position);
 
         //Icon
-        viewHolder.circularView.setCircleColor(category.getCategory().getColor());
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), category.getCategory().getIcon()));
+        viewHolder.circularView.setCircleColor(category.getColor());
+        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(getContext(), category.getIcon()));
         viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
 
-        viewHolder.name.setText(category.getCategory().getName());
+        viewHolder.name.setText(category.getName());
         viewHolder.percent.setText(category.getPercent()+"%");
 
         //Only EXPENSE Category type would be displayed using this layout, so no need to check if
         //its budget type.
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCategory().getCost(), Constants.BUDGET_LOCALE));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
 
         return convertView;
     }

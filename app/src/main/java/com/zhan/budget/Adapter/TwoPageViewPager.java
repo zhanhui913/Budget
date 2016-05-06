@@ -19,16 +19,13 @@ public class TwoPageViewPager extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment f = new Fragment();
         switch(position){
             case 0:
-                f = this.firstPage;
-                break;
+                return this.firstPage;
             case 1:
-                f = this.secondPage;
-                break;
+                return this.secondPage;
         }
-        return f;
+        return new Fragment();
     }
 
     @Override

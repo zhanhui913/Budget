@@ -4,6 +4,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Fragment.CategoryGenericFragment;
 import com.zhan.budget.Model.BudgetType;
@@ -13,7 +14,7 @@ import com.zhan.budget.View.CustomViewPager;
 public class SettingsCategory extends BaseRealmActivity {
 
     private  Toolbar toolbar;
-    private CategoryGenericFragment categoryIncomeFragment, categoryGenericFragment;
+    private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
 
     @Override
     protected int getActivityLayout(){
@@ -52,13 +53,13 @@ public class SettingsCategory extends BaseRealmActivity {
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        categoryGenericFragment = CategoryGenericFragment.newInstance(false, BudgetType.EXPENSE);
-        categoryIncomeFragment = CategoryGenericFragment.newInstance(false, BudgetType.INCOME);
+        categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.MOVE);
+        categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.MOVE);
 
         final CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
-        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), categoryGenericFragment, categoryIncomeFragment);
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
         viewPager.setAdapter(adapterViewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
