@@ -46,7 +46,6 @@ public class SettingsCategory extends BaseRealmActivity {
         });
     }
 
-
     private void createTabs(){
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));

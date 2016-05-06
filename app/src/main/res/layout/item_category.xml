@@ -75,7 +75,6 @@
                 android:text="$25.00"
                 android:textSize="15sp"
                 android:gravity="center_vertical"/>
-
         </LinearLayout>
 
         <LinearLayout
@@ -118,6 +117,7 @@
             android:layout_toRightOf="@+id/categoryIcon"
             android:layout_alignParentBottom="true" />
 
+        <!-- For ARRANGEMENT.MOVE-->
         <ImageView
             android:id="@+id/dragIcon"
             android:layout_width="wrap_content"

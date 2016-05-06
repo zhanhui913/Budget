@@ -1,10 +1,16 @@
 package com.zhan.budget.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -26,6 +34,8 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
+import org.parceler.Parcels;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,11 +44,13 @@ import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import io.realm.CategoryRealmProxy;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class OverviewActivity extends BaseActivity {
+public class OverviewActivity extends BaseActivity implements
+        CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener{
 
     private PercentChartFragment percentChartFragment;
     private BarChartFragment barChartFragment;
@@ -55,7 +67,7 @@ public class OverviewActivity extends BaseActivity {
     private List<Transaction> transactionList;
     private List<Category> categoryList;
 
-    private CategoryPercentListAdapter categoryPercentListAdapter;
+    private CategoryGenericRecyclerAdapter categoryPercentListAdapter;
 
     @Override
     protected int getActivityLayout(){
@@ -67,9 +79,17 @@ public class OverviewActivity extends BaseActivity {
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         categoryList = new ArrayList<>();
-        ListView categoryListView = (ListView) findViewById(R.id.percentCategoryListView);
-        categoryPercentListAdapter = new CategoryPercentListAdapter(this, categoryList);
+        RecyclerView categoryListView = (RecyclerView) findViewById(R.id.percentCategoryListView);
+        categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
+        categoryListView.setLayoutManager(new LinearLayoutManager(this));
+
         categoryListView.setAdapter(categoryPercentListAdapter);
+
+        //Add divider
+        categoryListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(this)
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
 
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
@@ -240,8 +260,7 @@ public class OverviewActivity extends BaseActivity {
             protected void onPostExecute(Float result) {
                 super.onPostExecute(result);
 
-                categoryPercentListAdapter.addAll(categoryList);
-
+                categoryPercentListAdapter.setCategoryList(categoryList);
 
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
@@ -310,6 +329,27 @@ public class OverviewActivity extends BaseActivity {
         ft.replace(R.id.chartContentFrame, fragment);
         ft.commit();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onDeleteCategory(int position){}
+
+    @Override
+    public void onEditCategory(int position){}
+
+    @Override
+    public void onPullDownAllow(boolean value){}
+
+    @Override
+    public void onDoneDrag(){}
+
+    @Override
+    public void onClick(int position){}
 }
 
 

@@ -1,5 +1,6 @@
 package com.zhan.budget.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
@@ -66,6 +67,20 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         }
     }
 
+    public CategoryGenericRecyclerAdapter(Activity activity, List<Category> list, ARRANGEMENT arrangement, OnStartDragListener startDragListener) {
+        this.context = activity;
+        this.categoryList = list;
+        this.arrangement = arrangement;
+        mDragStartListener = startDragListener;
+
+        //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
+        if (activity instanceof OnCategoryGenericAdapterInteractionListener) {
+            mListener = (OnCategoryGenericAdapterInteractionListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString() + " must implement OnCategoryExpenseAdapterInteractionListener.");
+        }
+    }
+
     // Usually involves inflating a layout from XML and returning the holder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -87,7 +102,12 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
 
         viewHolder.name.setText(category.getName());
-        viewHolder.budget.setText("Budget : "+CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+
+        if(arrangement == ARRANGEMENT.BUDGET || arrangement == ARRANGEMENT.MOVE){
+            viewHolder.budget.setText("Budget : "+CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+        }else{
+            viewHolder.budget.setText("Percent : "+category.getPercent()+"%");
+        }
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
             if(arrangement == ARRANGEMENT.BUDGET) {
@@ -114,6 +134,12 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }else if(arrangement == ARRANGEMENT.PERCENT){
 
+                viewHolder.dragIcon.setVisibility(View.GONE);
+                viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.costTitle.setVisibility(View.GONE);
+
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
+
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
@@ -128,7 +154,8 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }else if(arrangement == ARRANGEMENT.PERCENT){
-
+                //Only EXPENSE Category type would be displayed using this layout, so no need to check if
+                //viewHolder.percent.setText(category.getPercent()+"%");
             }
         }
 
@@ -199,7 +226,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         // for any view that will be set as you render a row
         public CircularView circularView;
         public ImageView dragIcon;
-        public TextView name, budget, cost, costTitle;
+        public TextView name, budget, cost, costTitle, percent;
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
@@ -220,6 +247,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             budget = (TextView) itemView.findViewById(R.id.categoryBudget);
             cost = (TextView) itemView.findViewById(R.id.categoryCost);
             costTitle = (TextView) itemView.findViewById(R.id.categoryCostTitle);
+            percent = (TextView) itemView.findViewById(R.id.categoryPercent);
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);
