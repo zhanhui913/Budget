@@ -302,11 +302,11 @@ public class OverviewActivity extends BaseActivity implements
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.pdfMaker:
+            /*case R.id.pdfMaker:
                 Toast.makeText(getApplicationContext(), "click here pdf maker", Toast.LENGTH_SHORT).show();
                 Intent pdfIntent = new Intent(getApplicationContext(), PdfActivity.class);
                 startActivity(pdfIntent);
-                return true;
+                return true;*/
             case R.id.percentChart:
                 Toast.makeText(getApplicationContext(), "click here percent chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(percentChartFragment);
