@@ -50,14 +50,14 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
 
     private Context context;
     private List<Category> categoryList;
-    private static OnCategoryGenericAdapterInteractionListener mListener;
-    private static OnStartDragListener mDragStartListener;
+    private OnCategoryGenericAdapterInteractionListener mListener;
+    private OnStartDragListener mDragStartListener;
 
     public CategoryGenericRecyclerAdapter(Fragment fragment, List<Category> list, ARRANGEMENT arrangement, OnStartDragListener startDragListener) {
         this.context = fragment.getContext();
         this.categoryList = list;
         this.arrangement = arrangement;
-        mDragStartListener = startDragListener;
+        this.mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
         if (fragment instanceof OnCategoryGenericAdapterInteractionListener) {
@@ -71,7 +71,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         this.context = activity;
         this.categoryList = list;
         this.arrangement = arrangement;
-        mDragStartListener = startDragListener;
+        this.mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
         if (activity instanceof OnCategoryGenericAdapterInteractionListener) {
@@ -220,7 +220,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
      * Provide a direct reference to each of the views within a data item.
      * Used to cache the views within the item layout for fast access
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
