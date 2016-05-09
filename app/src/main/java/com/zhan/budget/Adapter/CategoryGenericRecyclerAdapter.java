@@ -143,7 +143,6 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
-            viewHolder.costTitle.setVisibility(View.GONE);
 
             if(arrangement == ARRANGEMENT.BUDGET){
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
@@ -153,6 +152,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.cost.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
+                viewHolder.costTitle.setVisibility(View.GONE);
             }else if(arrangement == ARRANGEMENT.PERCENT){
                 //Only EXPENSE Category type would be displayed using this layout, so no need to check if
                 //viewHolder.percent.setText(category.getPercent()+"%");
