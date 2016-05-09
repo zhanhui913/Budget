@@ -148,7 +148,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
     public void setTransactionList(List<Transaction> list){
         this.transactionList = list;
-        Toast.makeText(context, "there are "+list.size()+" in the list", Toast.LENGTH_LONG).show();
         notifyDataSetChanged();
     }
 
