@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -98,6 +99,8 @@ public class CalendarFragment extends BaseRealmFragment implements
     private ArrayList<Category> categoryList = new ArrayList<>();
     private ArrayList<Account> accountList = new ArrayList<>();
 
+    CircularProgressBar progressBar;
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -141,6 +144,8 @@ public class CalendarFragment extends BaseRealmFragment implements
                         .build());
 
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
+
+        progressBar = (CircularProgressBar) view.findViewById(R.id.transactionProgressbar);
 
         //List all transactions for today
         populateTransactionsForDate(selectedDate);
@@ -491,6 +496,8 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         resumeRealm();
 
+        progressBar.setVisibility(View.VISIBLE);
+
         resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
             @Override
@@ -525,6 +532,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             emptyLayout.setVisibility(View.VISIBLE);
             transactionListView.setVisibility(View.GONE);
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     /**
