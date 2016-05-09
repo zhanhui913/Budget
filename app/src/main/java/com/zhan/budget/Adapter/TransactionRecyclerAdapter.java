@@ -131,6 +131,13 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.date.setVisibility(View.GONE);
         }
 
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getLocation())){
+            viewHolder.location.setVisibility(View.VISIBLE);
+            viewHolder.location.setText(transaction.getLocation());
+        }else{
+            viewHolder.location.setVisibility(View.GONE);
+        }
+
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
     }
 
@@ -160,7 +167,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
-        public TextView name, cost, date;
+        public TextView name, cost, date, location;
 
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, approveBtn;
@@ -176,6 +183,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             name = (TextView) itemView.findViewById(R.id.transactionNote);
             cost = (TextView) itemView.findViewById(R.id.transactionCost);
             date = (TextView) itemView.findViewById(R.id.transactionDate);
+            location = (TextView) itemView.findViewById(R.id.transactionLocation);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeTransaction);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);

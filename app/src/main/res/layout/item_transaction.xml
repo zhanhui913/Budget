@@ -55,21 +55,29 @@
             <TextView
                 android:id="@+id/transactionNote"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:text="Lunch"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true" />
 
+            <TextView
+                android:id="@+id/transactionLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="15sp"
+                android:text="Location" />
+
             <!-- Only visible on TransactionsForCategory -->
             <TextView
                 android:id="@+id/transactionDate"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:text="01-Jan-2016"
-                android:textSize="15sp"
-                android:layout_toRightOf="@+id/categoryIcon"
-                android:layout_below="@+id/transactionNote" />
+                android:textSize="15sp" />
         </LinearLayout>
 
         <TextView
