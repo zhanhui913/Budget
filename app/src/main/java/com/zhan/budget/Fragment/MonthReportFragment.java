@@ -14,6 +14,7 @@ import android.widget.GridView;
 
 import com.zhan.budget.Activity.OverviewActivity;
 import com.zhan.budget.Adapter.MonthReportGridAdapter;
+import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
@@ -82,6 +83,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
 
+        categoryList = new ArrayList<>();
         monthReportList = new ArrayList<>();
         monthReportGridView = (GridView) view.findViewById(R.id.monthReportGridView);
         monthReportGridAdapter = new MonthReportGridAdapter(this, monthReportList);
@@ -90,6 +92,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
         currentYear = DateUtil.refreshYear(new Date());
 
         createMonthCard();
+        getCategoryList();
         updateYearInToolbar(0);
     }
 
@@ -123,6 +126,9 @@ public class MonthReportFragment extends BaseRealmFragment implements
             monthReportList.get(i).setDoneCalculation(false);
             monthReportList.get(i).setCostThisMonth(0);
             monthReportList.get(i).setChangeCost(0);
+            monthReportList.get(i).setFirstCategory(null);
+            monthReportList.get(i).setSecondCategory(null);
+            monthReportList.get(i).setThirdCategory(null);
         }
         monthReportGridAdapter.notifyDataSetChanged();
 
@@ -186,10 +192,11 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
                 //Change the variable to true
                 for(int i = 0; i < monthReportList.size(); i++){
+                    //performTediousCalculation(i);
                     monthReportList.get(i).setDoneCalculation(true);
                 }
 
-                monthReportGridAdapter.notifyDataSetChanged();
+                //monthReportGridAdapter.notifyDataSetChanged();
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -197,6 +204,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 long second = (milli / 1000);
                 float minutes = (second / 60.0f);
                 Log.d("MONTHLY_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+
+                performTediousCalculation(0);
             }
         };
         loader.execute();
@@ -216,117 +225,124 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 myRealm.close();
 
                 //getMonthReport(currentMonth);
-                performAsyncCalculation1();
+                //performAsyncCalculation1();
             }
         });
     }
 
-    /**
-     * Perform tedious calculation asynchronously to avoid blocking main thread
-     */
-    private void performAsyncCalculation1(){
-        final AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
 
-            long startTime, endTime, duration;
+    private void performTediousCalculation(final int indexOfMonth){
+        /*
+        final Date month = DateUtil.refreshMonth(monthReportList.get(indexOfMonth).getMonth());
+        Log.d("WHO", "checking month :"+month);
+        //Need to go a day before as Realm's between date does inclusive on both end
+        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
+        */
+        final Date month = DateUtil.refreshMonth(monthReportList.get(0).getMonth());
+        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(monthReportList.get(11).getMonth()));
 
+
+        final RealmResults<Transaction> newTransactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllSortedAsync("date");
+        newTransactionsResults.addChangeListener(new RealmChangeListener() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("OVERVIEW_ACT", "preparing to aggregate results");
-            }
+            public void onChange() {
+                newTransactionsResults.removeChangeListener(this);
 
+
+
+                Log.d("WHO", indexOfMonth+" ("+month+", "+endMonth+") ->"+newTransactionsResults.size());
+                //ss(indexOfMonth, myRealm.copyFromRealm(newTransactionsResults));
+
+                s1(myRealm.copyFromRealm(newTransactionsResults));
+            }
+        });
+    }
+
+    private void s1(List<Transaction> ttList){
+
+        List<Transaction> janList = new ArrayList<>();
+        List<Transaction> febList = new ArrayList<>();
+        List<Transaction> marList = new ArrayList<>();
+        List<Transaction> aprList = new ArrayList<>();
+        List<Transaction> mayList = new ArrayList<>();
+        List<Transaction> junList = new ArrayList<>();
+        List<Transaction> julList = new ArrayList<>();
+        List<Transaction> augList = new ArrayList<>();
+        List<Transaction> sepList = new ArrayList<>();
+        List<Transaction> octList = new ArrayList<>();
+        List<Transaction> novList = new ArrayList<>();
+        List<Transaction> decList = new ArrayList<>();
+
+        //group all transactions in the year into months
+        for(int i = 0; i < ttList.size(); i++){
+            if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 0){
+                //January
+                janList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 1){
+                //February
+                febList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 2){
+                //March
+                marList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 3){
+                //April
+                aprList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 4){
+                //May
+                mayList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 5){
+                //June
+                junList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 6){
+                //July
+                julList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 7){
+                //August
+                augList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 8){
+                //September
+                sepList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 9){
+                //October
+                octList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 10){
+                //November
+                novList.add(ttList.get(i));
+            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 11){
+                //December
+                decList.add(ttList.get(i));
+            }
+        }
+
+        ss(0, janList);
+        ss(1, febList);
+        ss(2, marList);
+        ss(3, aprList);
+        ss(4, mayList);
+        ss(5, junList);
+        ss(6, julList);
+        ss(7, augList);
+        ss(8, sepList);
+        ss(9, octList);
+        ss(10, novList);
+        ss(11, decList);
+    }
+
+    private void ss(final int month, List<Transaction> ttList){
+        CategoryCalculator cc = new CategoryCalculator(getActivity(), ttList, categoryList, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
-            protected Float doInBackground(Void... voids) {
-                float sumCost = 0;
+            public void onCompleteCalculation(List<Category> catList) {
+                Log.d("WHO", month+" -> COMPLETED, size: "+catList.size());
+                //Log.d("WHO", "top cat : "+catList.get(0).getName()+" with cost : "+catList.get(0).getCost());
 
-                Log.d("OVERVIEW_ACT", "Transaction size : "+transactionList.size());
+                monthReportList.get(month).setFirstCategory(catList.get(0));
+                monthReportList.get(month).setSecondCategory(catList.get(1));
+                monthReportList.get(month).setThirdCategory(catList.get(2));
 
-                startTime = System.nanoTime();
-
-                //Go through each transaction and put them into the correct category
-                for(int t = 0; t < transactionList.size(); t++){
-                    for(int c = 0; c < categoryList.size(); c++){
-                        if(transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                            float transactionPrice = transactionList.get(t).getPrice();
-                            float currentCategoryPrice = categoryList.get(c).getCost();
-                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                        }
-                    }
-                }
-
-                //List of string that is the ID of category in categoryList who's sum for cost is 0
-                // or INCOME type
-                List<Category> zeroSumList = new ArrayList<>();
-
-                //Get position of Category who's sum cost is 0 or INCOME type
-                for(int i = 0; i < categoryList.size(); i++){
-                    if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                        Log.d("PERCENT_VIEW", "Category : " + categoryList.get(i).getName() + " -> with cost " + categoryList.get(i).getCost());
-                        zeroSumList.add(categoryList.get(i));
-                    }
-                }
-                Log.d("PERCENT_VIEW", "BEFORE REMOVING THERE ARE "+categoryList.size());
-
-                for(int i = 0; i < zeroSumList.size(); i++){
-                    Log.d("PERCENT_VIEW", "ZERO SUM LIST : "+zeroSumList.get(i).getName());
-                }
-
-                //Remove those category who's sum for cost is 0 or INCOME type
-                for(int i = 0; i < zeroSumList.size(); i++){
-                    categoryList.remove(zeroSumList.get(i));
-                }
-                Log.d("PERCENT_VIEW", "AFTER REMOVING THERE ARE " + categoryList.size());
-
-                //Go through list cost to get sumCost
-                for(int i = 0; i < categoryList.size(); i++){
-                    sumCost += categoryList.get(i).getCost();
-                }
-
-                //Sort from largest to smallest percentage
-                Collections.sort(categoryList, new Comparator<Category>() {
-                    @Override
-                    public int compare(Category c1, Category c2) {
-                        float cost1 = c1.getCost();
-                        float cost2 = c2.getCost();
-
-                        //ascending order
-                        return ((int) cost1) - ((int) cost2);
-                    }
-                });
-
-                //Now calculate percentage for each category
-                for(int i = 0; i < categoryList.size(); i++){
-                    BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
-                    BigDecimal total = BigDecimal.valueOf(sumCost);
-                    BigDecimal hundred = new BigDecimal(100);
-                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
-
-                    categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
-                }
-
-                return sumCost;
+                monthReportGridAdapter.notifyDataSetChanged();
             }
-
-            @Override
-            protected void onPostExecute(Float result) {
-                super.onPostExecute(result);
-
-
-
-
-                categoryPercentListAdapter.setCategoryList(categoryList);
-
-
-
-                endTime = System.nanoTime();
-                duration = (endTime - startTime);
-                long milli = (duration / 1000000);
-                long second = (milli / 1000);
-                float minutes = (second / 60.0f);
-                Log.d("PERCENT_VIEW", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-            }
-        };
-        loader.execute();
+        });
+        cc.execute();
     }
 
     private void updateYearInToolbar(int direction){

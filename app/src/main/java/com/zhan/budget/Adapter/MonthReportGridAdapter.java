@@ -13,6 +13,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.library.CircularView;
 
 import java.util.List;
 
@@ -31,10 +32,13 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         public TextView costThisMonth;
         public TextView changeCost;
         public CircularProgressBar progressBar;
+
+        public CircularView  category1, category2, category3;
+        public TextView categoryName1, categoryName2, categoryName3;
     }
 
     public MonthReportGridAdapter(Fragment fragment, List<MonthReport> monthReportList) {
-        super(fragment.getActivity(), R.layout.item_month_report, monthReportList);
+        super(fragment.getActivity(), R.layout.item_month_report_extended, monthReportList);
 
         //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
         if(fragment instanceof  OnMonthReportAdapterInteractionListener){
@@ -59,13 +63,17 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder = new ViewHolder();
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_month_report, parent, false);
+            convertView = inflater.inflate(R.layout.item_month_report_extended, parent, false);
 
             viewHolder.background = (CardView) convertView.findViewById(R.id.monthCardView);
             viewHolder.month = (TextView) convertView.findViewById(R.id.monthName);
             viewHolder.costThisMonth = (TextView) convertView.findViewById(R.id.monthTotalCost);
-            viewHolder.changeCost = (TextView) convertView.findViewById(R.id.monthChangeCost);
+            //viewHolder.changeCost = (TextView) convertView.findViewById(R.id.monthChangeCost);
             viewHolder.progressBar = (CircularProgressBar) convertView.findViewById(R.id.monthReportProgressBar);
+
+            viewHolder.categoryName1 = (TextView) convertView.findViewById(R.id.title1);
+            viewHolder.categoryName2 = (TextView) convertView.findViewById(R.id.title2);
+            viewHolder.categoryName3 = (TextView) convertView.findViewById(R.id.title3);
 
             // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(viewHolder);
@@ -79,7 +87,26 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
         viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
         viewHolder.costThisMonth.setText(CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
-        viewHolder.changeCost.setText(CurrencyTextFormatter.formatFloat(monthReport.getChangeCost(), Constants.BUDGET_LOCALE));
+        //viewHolder.changeCost.setText(CurrencyTextFormatter.formatFloat(monthReport.getChangeCost(), Constants.BUDGET_LOCALE));
+
+        if(monthReport.getFirstCategory() != null){
+            viewHolder.categoryName1.setText(monthReport.getFirstCategory().getName());
+        }else{
+            viewHolder.categoryName1.setText("null");
+        }
+
+        if(monthReport.getSecondCategory() != null){
+            viewHolder.categoryName2.setText(monthReport.getSecondCategory().getName());
+        }else{
+            viewHolder.categoryName2.setText("null");
+        }
+
+        if(monthReport.getThirdCategory() != null){
+            viewHolder.categoryName3.setText(monthReport.getThirdCategory().getName());
+        }else{
+            viewHolder.categoryName3.setText("null");
+        }
+
 
         if(monthReport.isDoneCalculation()){
             viewHolder.costThisMonth.setVisibility(View.VISIBLE);
