@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.CategoryPercentListAdapter;
+import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
@@ -174,6 +175,7 @@ public class OverviewActivity extends BaseActivity implements
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(){
+        /*
         final AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
 
             long startTime, endTime, duration;
@@ -282,6 +284,38 @@ public class OverviewActivity extends BaseActivity implements
             }
         };
         loader.execute();
+        */
+
+        Log.d("CAT_CAL", "starting category calculator");
+        CategoryCalculator cc = new CategoryCalculator(this, transactionList, categoryList, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
+            @Override
+            public void onCompleteCalculation(List<Category> catList) {
+                Toast.makeText(getApplicationContext(), "DONE CATEGORY CALCULATION", Toast.LENGTH_LONG).show();
+
+                categoryList = catList;
+
+                float sumCost=0f;
+                for(int i = 0; i < categoryList.size(); i++){
+                    sumCost += categoryList.get(i).getCost();
+                }
+
+                categoryPercentListAdapter.setCategoryList(categoryList);
+
+                //Once the calculation is done, remove it
+                circularProgressBar.setVisibility(View.GONE);
+
+                //Set total cost for month
+                totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
+
+                barChartFragment = BarChartFragment.newInstance(categoryList);
+                percentChartFragment = PercentChartFragment.newInstance(categoryList);
+                pieChartFragment = PieChartFragment.newInstance(categoryList);
+                getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
+
+            }
+        });
+        cc.execute();
+
     }
 
     @Override
@@ -346,7 +380,9 @@ public class OverviewActivity extends BaseActivity implements
     public void onPullDownAllow(boolean value){}
 
     @Override
-    public void onDoneDrag(){}
+    public void onDoneDrag(){
+        //not being used
+    }
 
     @Override
     public void onClick(int position){}

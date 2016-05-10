@@ -59,7 +59,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder = new ViewHolder();
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_month_report_extended, parent, false);
+            convertView = inflater.inflate(R.layout.item_month_report, parent, false);
 
             viewHolder.background = (CardView) convertView.findViewById(R.id.monthCardView);
             viewHolder.month = (TextView) convertView.findViewById(R.id.monthName);
