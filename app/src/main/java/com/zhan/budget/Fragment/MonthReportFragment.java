@@ -9,21 +9,31 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.GridView;
 
 import com.zhan.budget.Activity.OverviewActivity;
 import com.zhan.budget.Adapter.MonthReportGridAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Fragment.Chart.BarChartFragment;
+import com.zhan.budget.Fragment.Chart.PercentChartFragment;
+import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.MonthReport;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -48,6 +58,10 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
     private Date beginYear;
     private Date endYear;
+
+    private List<Category> categoryList;
+    private RealmResults<Category> resultsCategory;
+
 
     public MonthReportFragment() {
         // Required empty public constructor
@@ -183,6 +197,133 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 long second = (milli / 1000);
                 float minutes = (second / 60.0f);
                 Log.d("MONTHLY_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+            }
+        };
+        loader.execute();
+    }
+
+    //Should be called only the first time when the activity is created
+    private void getCategoryList(){
+        final Realm myRealm = Realm.getDefaultInstance();
+        resultsCategory = myRealm.where(Category.class).findAllAsync();
+        resultsCategory.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                resultsCategory.removeChangeListener(this);
+
+                categoryList.clear();
+                categoryList = myRealm.copyFromRealm(resultsCategory);
+                myRealm.close();
+
+                //getMonthReport(currentMonth);
+                performAsyncCalculation1();
+            }
+        });
+    }
+
+    /**
+     * Perform tedious calculation asynchronously to avoid blocking main thread
+     */
+    private void performAsyncCalculation1(){
+        final AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("OVERVIEW_ACT", "preparing to aggregate results");
+            }
+
+            @Override
+            protected Float doInBackground(Void... voids) {
+                float sumCost = 0;
+
+                Log.d("OVERVIEW_ACT", "Transaction size : "+transactionList.size());
+
+                startTime = System.nanoTime();
+
+                //Go through each transaction and put them into the correct category
+                for(int t = 0; t < transactionList.size(); t++){
+                    for(int c = 0; c < categoryList.size(); c++){
+                        if(transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
+                            float transactionPrice = transactionList.get(t).getPrice();
+                            float currentCategoryPrice = categoryList.get(c).getCost();
+                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
+                        }
+                    }
+                }
+
+                //List of string that is the ID of category in categoryList who's sum for cost is 0
+                // or INCOME type
+                List<Category> zeroSumList = new ArrayList<>();
+
+                //Get position of Category who's sum cost is 0 or INCOME type
+                for(int i = 0; i < categoryList.size(); i++){
+                    if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                        Log.d("PERCENT_VIEW", "Category : " + categoryList.get(i).getName() + " -> with cost " + categoryList.get(i).getCost());
+                        zeroSumList.add(categoryList.get(i));
+                    }
+                }
+                Log.d("PERCENT_VIEW", "BEFORE REMOVING THERE ARE "+categoryList.size());
+
+                for(int i = 0; i < zeroSumList.size(); i++){
+                    Log.d("PERCENT_VIEW", "ZERO SUM LIST : "+zeroSumList.get(i).getName());
+                }
+
+                //Remove those category who's sum for cost is 0 or INCOME type
+                for(int i = 0; i < zeroSumList.size(); i++){
+                    categoryList.remove(zeroSumList.get(i));
+                }
+                Log.d("PERCENT_VIEW", "AFTER REMOVING THERE ARE " + categoryList.size());
+
+                //Go through list cost to get sumCost
+                for(int i = 0; i < categoryList.size(); i++){
+                    sumCost += categoryList.get(i).getCost();
+                }
+
+                //Sort from largest to smallest percentage
+                Collections.sort(categoryList, new Comparator<Category>() {
+                    @Override
+                    public int compare(Category c1, Category c2) {
+                        float cost1 = c1.getCost();
+                        float cost2 = c2.getCost();
+
+                        //ascending order
+                        return ((int) cost1) - ((int) cost2);
+                    }
+                });
+
+                //Now calculate percentage for each category
+                for(int i = 0; i < categoryList.size(); i++){
+                    BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
+                    BigDecimal total = BigDecimal.valueOf(sumCost);
+                    BigDecimal hundred = new BigDecimal(100);
+                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
+
+                    categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
+                }
+
+                return sumCost;
+            }
+
+            @Override
+            protected void onPostExecute(Float result) {
+                super.onPostExecute(result);
+
+
+
+
+                categoryPercentListAdapter.setCategoryList(categoryList);
+
+
+
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+                long milli = (duration / 1000000);
+                long second = (milli / 1000);
+                float minutes = (second / 60.0f);
+                Log.d("PERCENT_VIEW", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
         };
         loader.execute();

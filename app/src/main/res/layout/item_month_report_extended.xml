@@ -63,7 +63,8 @@
                 android:id="@+id/topContainer1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp">
 
                 <TextView
                     android:id="@+id/order1"
@@ -80,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@+id/order1"
-                    android:paddingBottom="8dp"/>
+                    android:paddingBottom="8dp" />
 
                 <TextView
                     android:id="@+id/title1"
@@ -89,7 +90,7 @@
                     android:layout_toRightOf="@+id/categoryIcon1"
                     android:layout_below="@+id/order1"
                     android:paddingLeft="16dp"
-                    android:text="Jan"
+                    android:text="Category"
                     android:textSize="30sp"/>
 
                 <TextView
@@ -101,35 +102,111 @@
                     android:paddingLeft="16dp"
                     android:text="$5.00"
                     android:textSize="15sp"/>
-
             </RelativeLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_below="@+id/topContainer1"
+                android:background="?attr/themeColorHighlight"
+                android:layout_marginLeft="@dimen/left_padding_divider"/>
 
             <RelativeLayout
                 android:id="@+id/topContainer2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/order2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2nd"
+                    android:layout_toRightOf="@+id/categoryIcon2"
+                    android:paddingLeft="16dp"
+                    android:textSize="15sp"/>
 
                 <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
                     android:id="@+id/categoryIcon2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:paddingBottom="8dp"/>
+                    android:layout_below="@+id/order2"
+                    android:paddingBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/title2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/categoryIcon2"
+                    android:layout_below="@+id/order2"
+                    android:paddingLeft="16dp"
+                    android:text="Category"
+                    android:textSize="30sp"/>
+
+                <TextView
+                    android:id="@+id/cost2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/categoryIcon2"
+                    android:layout_below="@+id/title2"
+                    android:paddingLeft="16dp"
+                    android:text="$5.00"
+                    android:textSize="15sp"/>
             </RelativeLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_below="@+id/topContainer2"
+                android:background="?attr/themeColorHighlight"
+                android:layout_marginLeft="@dimen/left_padding_divider"/>
 
             <RelativeLayout
                 android:id="@+id/topContainer3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/order3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3rd"
+                    android:layout_toRightOf="@+id/categoryIcon3"
+                    android:paddingLeft="16dp"
+                    android:textSize="15sp"/>
 
                 <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
                     android:id="@+id/categoryIcon3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:paddingBottom="8dp"/>
+                    android:layout_below="@+id/order3"
+                    android:paddingBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/title3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/categoryIcon3"
+                    android:layout_below="@+id/order3"
+                    android:paddingLeft="16dp"
+                    android:text="Category"
+                    android:textSize="30sp"/>
+
+                <TextView
+                    android:id="@+id/cost3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/categoryIcon3"
+                    android:layout_below="@+id/title3"
+                    android:paddingLeft="16dp"
+                    android:text="$5.00"
+                    android:textSize="15sp"/>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

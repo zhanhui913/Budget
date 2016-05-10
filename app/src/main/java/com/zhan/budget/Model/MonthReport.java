@@ -1,5 +1,7 @@
 package com.zhan.budget.Model;
 
+import com.zhan.budget.Model.Realm.Category;
+
 import org.parceler.Parcel;
 
 import java.util.Date;
@@ -12,6 +14,8 @@ public class MonthReport {
     private float changeCost;
 
     private boolean doneCalculation;
+
+    private Category firstCategory, secondCategory, thirdCategory;
 
     public MonthReport(){
 
@@ -51,5 +55,29 @@ public class MonthReport {
 
     public void setDoneCalculation(boolean doneCalculation) {
         this.doneCalculation = doneCalculation;
+    }
+
+    public Category getFirstCategory() {
+        return firstCategory;
+    }
+
+    public void setFirstCategory(Category firstCategory) {
+        this.firstCategory = firstCategory;
+    }
+
+    public Category getSecondCategory() {
+        return secondCategory;
+    }
+
+    public void setSecondCategory(Category secondCategory) {
+        this.secondCategory = secondCategory;
+    }
+
+    public Category getThirdCategory() {
+        return thirdCategory;
+    }
+
+    public void setThirdCategory(Category thirdCategory) {
+        this.thirdCategory = thirdCategory;
     }
 }
