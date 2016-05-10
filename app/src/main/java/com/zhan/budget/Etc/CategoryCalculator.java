@@ -19,33 +19,35 @@ import java.util.List;
 /**
  * Created by Zhan on 16-05-10.
  */
-public class CategoryCalculator extends AsyncTask<Void, Integer, List<Category>> {
+public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
 
     private OnCategoryCalculatorInteractionListener mListener;
 
     private final String TAG = "CAT_CAL";
 
     private Activity activity;
-    private long startTime, endTime, duration;
     private List<Transaction> transactionList;
     private List<Category> categoryList;
+    private Date month;
 
-    public CategoryCalculator(Activity activity, List<Transaction> transactionList, List<Category> categoryList, OnCategoryCalculatorInteractionListener mListener) {
+    public CategoryCalculator(Activity activity, List<Transaction> transactionList, List<Category> categoryList, Date month, OnCategoryCalculatorInteractionListener mListener) {
         // We set the context this way so we don't accidentally leak activities
         this.activity = activity;
         this.transactionList = transactionList;
         this.categoryList = categoryList;
         this.mListener = mListener;
+        this.month = month;
+
+        Log.d(TAG, "1 just after calling category calculator there are "+categoryList.size()+" cat list");
     }
 
-
     @Override
-    protected List<Category> doInBackground(Void... params){
+    protected Void doInBackground(Void... params){
         float sumCost = 0;
 
+        Log.d(TAG, "2 just after calling category calculator there are "+categoryList.size()+" cat list");
         Log.d(TAG, "Transaction size : "+transactionList.size());
-
-        startTime = System.nanoTime();
+        Log.d(TAG, "-----> month : "+this.month);
 
         //Go through each transaction and put them into the correct category
         for(int t = 0; t < transactionList.size(); t++){
@@ -107,15 +109,11 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, List<Category>>
 
             categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
         }
-        return categoryList;
+        return null;
     }
 
     @Override
-    protected void onProgressUpdate(Integer... progress) {
-    }
-
-    @Override
-    protected void onPostExecute(List<Category> categoryList) {
+    protected void onPostExecute(Void  params) {
         if(mListener != null) {
             mListener.onCompleteCalculation(categoryList);
         }
@@ -123,6 +121,6 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, List<Category>>
 
     //Interface needed for caller
     public interface OnCategoryCalculatorInteractionListener {
-        void onCompleteCalculation(List<Category>  categoryList);
+        void onCompleteCalculation(List<Category> categoryList);
     }
 }

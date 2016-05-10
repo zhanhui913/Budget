@@ -222,14 +222,12 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(resultsCategory);
-                myRealm.close();
-
+                //myRealm.close();
                 //getMonthReport(currentMonth);
                 //performAsyncCalculation1();
             }
         });
     }
-
 
     private void performTediousCalculation(final int indexOfMonth){
         /*
@@ -248,8 +246,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
             public void onChange() {
                 newTransactionsResults.removeChangeListener(this);
 
-
-
                 Log.d("WHO", indexOfMonth+" ("+month+", "+endMonth+") ->"+newTransactionsResults.size());
                 //ss(indexOfMonth, myRealm.copyFromRealm(newTransactionsResults));
 
@@ -257,6 +253,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
             }
         });
     }
+
 
     private void s1(List<Transaction> ttList){
 
@@ -329,10 +326,14 @@ public class MonthReportFragment extends BaseRealmFragment implements
     }
 
     private void ss(final int month, List<Transaction> ttList){
-        CategoryCalculator cc = new CategoryCalculator(getActivity(), ttList, categoryList, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
+
+        List<Category> catList = new ArrayList<Category>(categoryList);
+
+        Log.d("CAT_CAL", "before calling categoryCalculator : there are "+catList.size());
+        CategoryCalculator cc = new CategoryCalculator(getActivity(), ttList, catList, monthReportList.get(month).getMonth(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
-                Log.d("WHO", month+" -> COMPLETED, size: "+catList.size());
+                Log.d("WHO", monthReportList.get(month).getMonth()+" -> COMPLETED, size: "+catList.size());
                 //Log.d("WHO", "top cat : "+catList.get(0).getName()+" with cost : "+catList.get(0).getCost());
 
                 monthReportList.get(month).setFirstCategory(catList.get(0));

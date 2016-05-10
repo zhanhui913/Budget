@@ -272,6 +272,19 @@ public class CalendarFragment extends BaseRealmFragment implements
         float minutes = (second / 60.0f);
 
         Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+
+
+        final RealmResults<Transaction> testResults = myRealm.where(Transaction.class).findAllAsync();
+        testResults.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                testResults.removeChangeListener(this);
+
+                Log.d(TAG, "total transactions  created for testing : "+testResults.size() );
+
+            }
+        });
+
     }
 
     /**

@@ -287,7 +287,7 @@ public class OverviewActivity extends BaseActivity implements
         */
 
         Log.d("CAT_CAL", "starting category calculator");
-        CategoryCalculator cc = new CategoryCalculator(this, transactionList, categoryList, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
+        CategoryCalculator cc = new CategoryCalculator(this, transactionList, categoryList, new Date(),new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
                 Toast.makeText(getApplicationContext(), "DONE CATEGORY CALCULATION", Toast.LENGTH_LONG).show();
