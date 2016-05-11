@@ -35,8 +35,8 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         public TextView changeCost;
         public CircularProgressBar progressBar;
 
+        public ViewGroup container1, container2, container3;
         public CircularView  category1, category2, category3;
-
         public TextView categoryName1, categoryName2, categoryName3;
     }
 
@@ -74,6 +74,10 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             //viewHolder.changeCost = (TextView) convertView.findViewById(R.id.monthChangeCost);
             viewHolder.progressBar = (CircularProgressBar) convertView.findViewById(R.id.monthReportProgressBar);
 
+            viewHolder.container1 = (ViewGroup) convertView.findViewById(R.id.topContainer1);
+            viewHolder.container2 = (ViewGroup) convertView.findViewById(R.id.topContainer2);
+            viewHolder.container3 = (ViewGroup) convertView.findViewById(R.id.topContainer3);
+
             viewHolder.categoryName1 = (TextView) convertView.findViewById(R.id.title1);
             viewHolder.categoryName2 = (TextView) convertView.findViewById(R.id.title2);
             viewHolder.categoryName3 = (TextView) convertView.findViewById(R.id.title3);
@@ -97,6 +101,8 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         //viewHolder.changeCost.setText(CurrencyTextFormatter.formatFloat(monthReport.getChangeCost(), Constants.BUDGET_LOCALE));
 
         if(monthReport.getFirstCategory() != null){
+            viewHolder.container1.setVisibility(View.VISIBLE);
+
             viewHolder.categoryName1.setText(monthReport.getFirstCategory().getName());
 
             viewHolder.category1.setStrokeWidthInDP(0);
@@ -106,11 +112,16 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder.category1.setIconResource(CategoryUtil.getIconID(getContext(), monthReport.getFirstCategory().getIcon()));
             viewHolder.category1.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         }else{
+            viewHolder.container1.setVisibility(View.GONE);
+
             viewHolder.categoryName1.setText("null");
             viewHolder.category1.setCircleColor(R.color.black);
+            viewHolder.category1.setIconResource(0);
         }
 
         if(monthReport.getSecondCategory() != null){
+            viewHolder.container2.setVisibility(View.VISIBLE);
+
             viewHolder.categoryName2.setText(monthReport.getSecondCategory().getName());
 
             viewHolder.category2.setStrokeWidthInDP(0);
@@ -120,11 +131,16 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder.category2.setIconResource(CategoryUtil.getIconID(getContext(), monthReport.getSecondCategory().getIcon()));
             viewHolder.category2.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         }else{
+            viewHolder.container2.setVisibility(View.GONE);
+
             viewHolder.categoryName2.setText("null");
             viewHolder.category2.setCircleColor(R.color.black);
+            viewHolder.category2.setIconResource(0);
         }
 
         if(monthReport.getThirdCategory() != null){
+            viewHolder.container3.setVisibility(View.VISIBLE);
+
             viewHolder.categoryName3.setText(monthReport.getThirdCategory().getName());
 
             viewHolder.category3.setStrokeWidthInDP(0);
@@ -134,10 +150,12 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder.category3.setIconResource(CategoryUtil.getIconID(getContext(), monthReport.getThirdCategory().getIcon()));
             viewHolder.category3.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         }else{
+            viewHolder.container3.setVisibility(View.GONE);
+
             viewHolder.categoryName3.setText("null");
             viewHolder.category3.setCircleColor(R.color.black);
+            viewHolder.category3.setIconResource(0);
         }
-
 
         if(monthReport.isDoneCalculation()){
             viewHolder.costThisMonth.setVisibility(View.VISIBLE);
