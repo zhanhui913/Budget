@@ -133,16 +133,16 @@ public class MonthReportFragment extends BaseRealmFragment implements
         monthReportGridAdapter.notifyDataSetChanged();
 
         transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).findAllAsync();
-        transactionsResults.addChangeListener(new RealmChangeListener() {
+        transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                transactionsResults.removeChangeListener(this);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
 
                 if (transactionList != null) {
                     transactionList.clear();
                 }
 
-                transactionList = myRealm.copyFromRealm(transactionsResults);
+                transactionList = myRealm.copyFromRealm(element);
 
                 performAsyncCalculation();
             }
@@ -215,16 +215,12 @@ public class MonthReportFragment extends BaseRealmFragment implements
     private void getCategoryList(){
         final Realm myRealm = Realm.getDefaultInstance();
         resultsCategory = myRealm.where(Category.class).findAllAsync();
-        resultsCategory.addChangeListener(new RealmChangeListener() {
+        resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
-            public void onChange() {
-                resultsCategory.removeChangeListener(this);
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListener(this);
 
-                categoryList.clear();
-                categoryList = myRealm.copyFromRealm(resultsCategory);
-                //myRealm.close();
-                //getMonthReport(currentMonth);
-                //performAsyncCalculation1();
+                categoryList = myRealm.copyFromRealm(element);
             }
         });
     }
@@ -241,22 +237,20 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
 
         final RealmResults<Transaction> newTransactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllSortedAsync("date");
-        newTransactionsResults.addChangeListener(new RealmChangeListener() {
+        newTransactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                newTransactionsResults.removeChangeListener(this);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
 
-                Log.d("WHO", indexOfMonth+" ("+month+", "+endMonth+") ->"+newTransactionsResults.size());
+                Log.d("WHO", indexOfMonth+" ("+month+", "+endMonth+") ->"+element.size());
                 //ss(indexOfMonth, myRealm.copyFromRealm(newTransactionsResults));
 
-                s1(myRealm.copyFromRealm(newTransactionsResults));
+                s1(myRealm.copyFromRealm(element));
             }
         });
     }
 
-
     private void s1(List<Transaction> ttList){
-
         List<Transaction> janList = new ArrayList<>();
         List<Transaction> febList = new ArrayList<>();
         List<Transaction> marList = new ArrayList<>();
@@ -323,27 +317,43 @@ public class MonthReportFragment extends BaseRealmFragment implements
         ss(9, octList);
         ss(10, novList);
         ss(11, decList);
+
     }
 
-    private void ss(final int month, List<Transaction> ttList){
+    private void ss(final int month, final List<Transaction> ttList){
 
-        List<Category> catList = new ArrayList<Category>(categoryList);
-
-        Log.d("CAT_CAL", "before calling categoryCalculator : there are "+catList.size());
-        CategoryCalculator cc = new CategoryCalculator(getActivity(), ttList, catList, monthReportList.get(month).getMonth(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
+        resultsCategory = myRealm.where(Category.class).findAllAsync();
+        resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
-            public void onCompleteCalculation(List<Category> catList) {
-                Log.d("WHO", monthReportList.get(month).getMonth()+" -> COMPLETED, size: "+catList.size());
-                //Log.d("WHO", "top cat : "+catList.get(0).getName()+" with cost : "+catList.get(0).getCost());
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListener(this);
 
-                monthReportList.get(month).setFirstCategory(catList.get(0));
-                monthReportList.get(month).setSecondCategory(catList.get(1));
-                monthReportList.get(month).setThirdCategory(catList.get(2));
+                List<Category> categoryList1 = myRealm.copyFromRealm(element);
 
-                monthReportGridAdapter.notifyDataSetChanged();
+
+                Log.d("CAT_CAL", "before calling categoryCalculator : there are "+categoryList1.size());
+                CategoryCalculator cc = new CategoryCalculator(getActivity(), ttList, categoryList1, monthReportList.get(month).getMonth(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
+                    @Override
+                    public void onCompleteCalculation(List<Category> catList) {
+                        Log.d("CAT_CAL", monthReportList.get(month).getMonth()+" -> COMPLETED, size: "+catList.size());
+                        //Log.d("WHO", "top cat : "+catList.get(0).getName()+" with cost : "+catList.get(0).getCost());
+
+                        monthReportList.get(month).setFirstCategory(catList.get(0));
+                        monthReportList.get(month).setSecondCategory(catList.get(1));
+                        monthReportList.get(month).setThirdCategory(catList.get(2));
+
+                        monthReportGridAdapter.notifyDataSetChanged();
+                    }
+                });
+                cc.execute();
             }
         });
-        cc.execute();
+
+
+
+
+
+
     }
 
     private void updateYearInToolbar(int direction){

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.Util.DateUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,17 +38,11 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
         this.categoryList = categoryList;
         this.mListener = mListener;
         this.month = month;
-
-        Log.d(TAG, "1 just after calling category calculator there are "+categoryList.size()+" cat list");
     }
 
     @Override
     protected Void doInBackground(Void... params){
-        float sumCost = 0;
-
-        Log.d(TAG, "2 just after calling category calculator there are "+categoryList.size()+" cat list");
-        Log.d(TAG, "Transaction size : "+transactionList.size());
-        Log.d(TAG, "-----> month : "+this.month);
+        Log.d(TAG, DateUtil.convertDateToString(this.month)+" has "+transactionList.size()+" transactions");
 
         //Go through each transaction and put them into the correct category
         for(int t = 0; t < transactionList.size(); t++){
@@ -60,6 +55,10 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
             }
         }
 
+        for(int i = 0; i < categoryList.size(); i++){
+            Log.d(TAG, i+" : "+categoryList.get(i).getName());
+        }
+
         //List of string that is the ID of category in categoryList who's sum for cost is 0
         // or INCOME type
         List<Category> zeroSumList = new ArrayList<>();
@@ -67,14 +66,15 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
         //Get position of Category who's sum cost is 0 or INCOME type
         for(int i = 0; i < categoryList.size(); i++){
             if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                Log.d(TAG, "Category : " + categoryList.get(i).getName() + " -> with cost " + categoryList.get(i).getCost());
+                //Log.d(TAG, "Category : " + categoryList.get(i).getName() + " -> with cost " + categoryList.get(i).getCost());
                 zeroSumList.add(categoryList.get(i));
             }
+            Log.d(TAG, "checking "+categoryList.get(i).getName()+", it has cost : "+categoryList.get(i).getCost());
         }
         Log.d(TAG, "BEFORE REMOVING THERE ARE "+categoryList.size());
 
         for(int i = 0; i < zeroSumList.size(); i++){
-            Log.d(TAG, "ZERO SUM LIST : "+zeroSumList.get(i).getName());
+            Log.d(TAG, "ZERO SUM LIST : "+zeroSumList.get(i).getName()+" with "+zeroSumList.get(i).getCost());
         }
 
         //Remove those category who's sum for cost is 0 or INCOME type
@@ -82,11 +82,6 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
             categoryList.remove(zeroSumList.get(i));
         }
         Log.d(TAG, "AFTER REMOVING THERE ARE " + categoryList.size());
-
-        //Go through list cost to get sumCost
-        for(int i = 0; i < categoryList.size(); i++){
-            sumCost += categoryList.get(i).getCost();
-        }
 
         //Sort from largest to smallest percentage
         Collections.sort(categoryList, new Comparator<Category>() {
@@ -100,15 +95,6 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
             }
         });
 
-        //Now calculate percentage for each category
-        for(int i = 0; i < categoryList.size(); i++){
-            BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
-            BigDecimal total = BigDecimal.valueOf(sumCost);
-            BigDecimal hundred = new BigDecimal(100);
-            BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
-
-            categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
-        }
         return null;
     }
 

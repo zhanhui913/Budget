@@ -12,6 +12,8 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.library.CircularView;
 
@@ -34,6 +36,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         public CircularProgressBar progressBar;
 
         public CircularView  category1, category2, category3;
+
         public TextView categoryName1, categoryName2, categoryName3;
     }
 
@@ -75,6 +78,10 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             viewHolder.categoryName2 = (TextView) convertView.findViewById(R.id.title2);
             viewHolder.categoryName3 = (TextView) convertView.findViewById(R.id.title3);
 
+            viewHolder.category1 = (CircularView) convertView.findViewById(R.id.categoryIcon1);
+            viewHolder.category2 = (CircularView) convertView.findViewById(R.id.categoryIcon2);
+            viewHolder.category3 = (CircularView) convertView.findViewById(R.id.categoryIcon3);
+
             // The tag can be any Object, this just happens to be the ViewHolder
             convertView.setTag(viewHolder);
         }else {
@@ -91,20 +98,44 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
 
         if(monthReport.getFirstCategory() != null){
             viewHolder.categoryName1.setText(monthReport.getFirstCategory().getName());
+
+            viewHolder.category1.setStrokeWidthInDP(0);
+            viewHolder.category1.setCircleRadiusInDP(25);
+            viewHolder.category1.setStrokeColor(R.color.transparent);
+            viewHolder.category1.setCircleColor(monthReport.getFirstCategory().getColor());
+            viewHolder.category1.setIconResource(CategoryUtil.getIconID(getContext(), monthReport.getFirstCategory().getIcon()));
+            viewHolder.category1.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         }else{
             viewHolder.categoryName1.setText("null");
+            viewHolder.category1.setCircleColor(R.color.black);
         }
 
         if(monthReport.getSecondCategory() != null){
             viewHolder.categoryName2.setText(monthReport.getSecondCategory().getName());
+
+            viewHolder.category2.setStrokeWidthInDP(0);
+            viewHolder.category2.setCircleRadiusInDP(25);
+            viewHolder.category2.setStrokeColor(R.color.transparent);
+            viewHolder.category2.setCircleColor(monthReport.getSecondCategory().getColor());
+            viewHolder.category2.setIconResource(CategoryUtil.getIconID(getContext(), monthReport.getSecondCategory().getIcon()));
+            viewHolder.category2.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         }else{
             viewHolder.categoryName2.setText("null");
+            viewHolder.category2.setCircleColor(R.color.black);
         }
 
         if(monthReport.getThirdCategory() != null){
             viewHolder.categoryName3.setText(monthReport.getThirdCategory().getName());
+
+            viewHolder.category3.setStrokeWidthInDP(0);
+            viewHolder.category3.setCircleRadiusInDP(25);
+            viewHolder.category3.setStrokeColor(R.color.transparent);
+            viewHolder.category3.setCircleColor(monthReport.getThirdCategory().getColor());
+            viewHolder.category3.setIconResource(CategoryUtil.getIconID(getContext(), monthReport.getThirdCategory().getIcon()));
+            viewHolder.category3.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         }else{
             viewHolder.categoryName3.setText("null");
+            viewHolder.category3.setCircleColor(R.color.black);
         }
 
 

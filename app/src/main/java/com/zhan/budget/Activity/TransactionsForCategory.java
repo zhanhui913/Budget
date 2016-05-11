@@ -109,17 +109,14 @@ public class TransactionsForCategory extends BaseActivity implements
 
         final Realm myRealm = Realm.getDefaultInstance();
 
-        final RealmResults<Transaction> resultsInMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).findAllAsync();
-        resultsInMonth.addChangeListener(new RealmChangeListener() {
+        final RealmResults<Transaction> resultsInMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).findAllSortedAsync("data");
+        resultsInMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                resultsInMonth.removeChangeListener(this);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
 
-                //sort by date
-                resultsInMonth.sort("date");
-
-                transactionCategoryList = myRealm.copyFromRealm(resultsInMonth);
-                float total = resultsInMonth.sum("price").floatValue();
+                transactionCategoryList = myRealm.copyFromRealm(element);
+                float total = element.sum("price").floatValue();
 
                 transactionCategoryAdapter = new TransactionRecyclerAdapter(instance, transactionCategoryList, true); //display date in each transaction item
                 transactionCategoryListView.setAdapter(transactionCategoryAdapter);

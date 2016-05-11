@@ -221,12 +221,12 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(){
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllSortedAsync("index");
-        resultsCategory.addChangeListener(new RealmChangeListener() {
+        resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
-            public void onChange() {
-                resultsCategory.removeChangeListeners();
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListeners();
 
-                categoryList = myRealm.copyFromRealm(resultsCategory);
+                categoryList = myRealm.copyFromRealm(element);
                 updateCategoryStatus();
 
                 categoryRecyclerAdapter.setCategoryList(categoryList);
@@ -247,14 +247,14 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
 
         resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
-        resultsTransaction.addChangeListener(new RealmChangeListener() {
+        resultsTransaction.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                resultsTransaction.removeChangeListeners();
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListeners();
 
-                Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
+                Log.d("REALM", "got this month transaction, " + element.size());
 
-                transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
+                transactionMonthList = myRealm.copyFromRealm(element);
 
                 aggregateCategoryInfo();
             }
@@ -467,28 +467,28 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllAsync();
-        resultsCategory.addChangeListener(new RealmChangeListener() {
+        resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
-            public void onChange() {
-                resultsCategory.removeChangeListeners();
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListeners();
 
                 myRealm.beginTransaction();
 
-                for (int i = 0; i < resultsCategory.size(); i++) {
+                for (int i = 0; i < element.size(); i++) {
                     for (int j = 0; j < categoryRecyclerAdapter.getCategoryList().size(); j++) {
-                        String id1 = resultsCategory.get(i).getId();
-                        String name1 = resultsCategory.get(i).getName();
+                        String id1 = element.get(i).getId();
+                        String name1 = element.get(i).getName();
 
                         String id2 = categoryRecyclerAdapter.getCategoryList().get(j).getId();
                         String name2 = categoryRecyclerAdapter.getCategoryList().get(j).getName();
                         Log.d(TAG, "comparing (" + id1 + "," + name1 + ") with (" + id2 + "," + name2 + ")");
 
-                        if (resultsCategory.get(i).getId().equalsIgnoreCase(categoryRecyclerAdapter.getCategoryList().get(j).getId())) {
+                        if (element.get(i).getId().equalsIgnoreCase(categoryRecyclerAdapter.getCategoryList().get(j).getId())) {
 
-                            Log.d(TAG, resultsCategory.get(i).getName() + " old index is " + resultsCategory.get(i).getIndex());
+                            Log.d(TAG, element.get(i).getName() + " old index is " + element.get(i).getIndex());
                             Log.d(TAG, "assigning new index : " + j + " came from " + categoryRecyclerAdapter.getCategoryList().get(j).getName());
-                            resultsCategory.get(i).setIndex(j);
-                            Log.d(TAG, resultsCategory.get(i).getName() + " new index is now " + resultsCategory.get(i).getIndex());
+                            element.get(i).setIndex(j);
+                            Log.d(TAG, element.get(i).getName() + " new index is now " + element.get(i).getIndex());
 
                             break;
                         }

@@ -111,13 +111,13 @@ public class AccountFragment extends BaseRealmFragment implements
     //Only called one time
     private void populateAccountWithNoInfo(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
-        resultsAccount.addChangeListener(new RealmChangeListener() {
+        resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
-            public void onChange() {
-                resultsAccount.removeChangeListener(this);
+            public void onChange(RealmResults<Account> element) {
+                element.removeChangeListener(this);
 
                 Log.d(TAG, "there's a change in results account ");
-                accountList = myRealm.copyFromRealm(resultsAccount);
+                accountList = myRealm.copyFromRealm(element);
                 accountListAdapter.updateList(accountList);
 
 
@@ -125,21 +125,6 @@ public class AccountFragment extends BaseRealmFragment implements
                 populateAccountWithInfo();
             }
         });
-
-/*
-        RealmChangeListener changeListener = new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                Log.d(TAG, "there's a change in results account ");
-                accountList = myRealm.copyFromRealm(resultsAccount);
-                accountListAdapter.updateList(accountList);
-
-                updateAccountStatus();
-            }
-        };
-
-        resultsAccount.addChangeListener(changeListener);
-        */
     }
 
     /**
@@ -159,14 +144,14 @@ public class AccountFragment extends BaseRealmFragment implements
         }
 
         resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
-        resultsTransaction.addChangeListener(new RealmChangeListener() {
+        resultsTransaction.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                resultsTransaction.removeChangeListeners();
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListeners();
 
-                Log.d("REALM", "got this month transaction, " + resultsTransaction.size());
+                Log.d("REALM", "got this month transaction, " + element.size());
 
-                transactionMonthList = myRealm.copyFromRealm(resultsTransaction);
+                transactionMonthList = myRealm.copyFromRealm(element);
 
                 aggregateAccountInfo();
             }
@@ -470,19 +455,19 @@ public class AccountFragment extends BaseRealmFragment implements
 
 
         final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
-        accounts.addChangeListener(new RealmChangeListener() {
+        accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
-            public void onChange() {
-                accounts.removeChangeListener(this);
+            public void onChange(RealmResults<Account> element) {
+                element.removeChangeListener(this);
 
                 myRealm.beginTransaction();
 
                 //Update in realm
-                for(int i = 0; i < accounts.size(); i++){
-                    if(account.getId().equalsIgnoreCase(accounts.get(i).getId())){
-                        accounts.get(i).setIsDefault(true);
+                for(int i = 0; i < element.size(); i++){
+                    if(account.getId().equalsIgnoreCase(element.get(i).getId())){
+                        element.get(i).setIsDefault(true);
                     }else{
-                        accounts.get(i).setIsDefault(false);
+                        element.get(i).setIsDefault(false);
                     }
                 }
 

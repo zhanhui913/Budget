@@ -275,16 +275,15 @@ public class CalendarFragment extends BaseRealmFragment implements
 
 
         final RealmResults<Transaction> testResults = myRealm.where(Transaction.class).findAllAsync();
-        testResults.addChangeListener(new RealmChangeListener() {
+        testResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                testResults.removeChangeListener(this);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
 
-                Log.d(TAG, "total transactions  created for testing : "+testResults.size() );
+                Log.d(TAG, "total transactions  created for testing : "+element.size() );
 
             }
         });
-
     }
 
     /**
@@ -461,35 +460,32 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         //Option 2 with non completed transactions
         final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
-        scheduledTransactions.addChangeListener(new RealmChangeListener() {
+        scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                scheduledTransactions.removeChangeListener(this);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
 
-                for (int i = 0; i < scheduledTransactions.size(); i++) {
+                for (int i = 0; i < element.size(); i++) {
                     List<BudgetEvent> colorList = new ArrayList<>();
                     try {
 
-                        if (eventMap.containsKey(scheduledTransactions.get(i).getDate())) {
-                            eventMap.get(scheduledTransactions.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
+                        if (eventMap.containsKey(element.get(i).getDate())) {
+                            eventMap.get(element.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
                         } else {
                             colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
-                            eventMap.put(scheduledTransactions.get(i).getDate(), colorList);
+                            eventMap.put(element.get(i).getDate(), colorList);
                         }
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                Log.d("EVENT", "there are " + scheduledTransactions.size() + " items in schedule list");
+                Log.d("EVENT", "there are " + element.size() + " items in schedule list");
                 Log.d("EVENT", "there are " + eventMap.size() + " items in map");
 
                 calendarView.refresh();
             }
         });
-
-
-
     }
 
     /**
@@ -512,14 +508,14 @@ public class CalendarFragment extends BaseRealmFragment implements
         progressBar.setVisibility(View.VISIBLE);
 
         resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
-        resultsTransactionForDay.addChangeListener(new RealmChangeListener() {
+        resultsTransactionForDay.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                resultsTransactionForDay.removeChangeListener(this);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
 
-                Log.d(TAG, "received " + resultsTransactionForDay.size() + " transactions");
+                Log.d(TAG, "received " + element.size() + " transactions");
 
-                float sumFloatValue = resultsTransactionForDay.sum("price").floatValue();
+                float sumFloatValue = element.sum("price").floatValue();
                 totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                 updateTransactionList();

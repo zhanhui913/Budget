@@ -1,26 +1,18 @@
 package com.zhan.budget.Activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
-import com.zhan.budget.Adapter.CategoryPercentListAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -28,24 +20,18 @@ import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
 import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
-import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.CategoryPercent;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
-import org.parceler.Parcels;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import io.realm.CategoryRealmProxy;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -131,13 +117,13 @@ public class OverviewActivity extends BaseActivity implements
     private void getCategoryList(){
         final Realm myRealm = Realm.getDefaultInstance();
         resultsCategory = myRealm.where(Category.class).findAllAsync();
-        resultsCategory.addChangeListener(new RealmChangeListener() {
+        resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
-            public void onChange() {
-                resultsCategory.removeChangeListener(this);
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListener(this);
 
                 categoryList.clear();
-                categoryList = myRealm.copyFromRealm(resultsCategory);
+                categoryList = myRealm.copyFromRealm(element);
                 myRealm.close();
                 getMonthReport(currentMonth);
             }
@@ -155,16 +141,16 @@ public class OverviewActivity extends BaseActivity implements
 
         final Realm myRealm = Realm.getDefaultInstance();
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
-        transactionsResults.addChangeListener(new RealmChangeListener() {
+        transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                transactionsResults.removeChangeListener(this);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
 
                 if (transactionList != null) {
                     transactionList.clear();
                 }
 
-                transactionList = myRealm.copyFromRealm(transactionsResults);
+                transactionList = myRealm.copyFromRealm(element);
                 myRealm.close();
                 performAsyncCalculation();
             }
@@ -294,9 +280,20 @@ public class OverviewActivity extends BaseActivity implements
 
                 categoryList = catList;
 
+                //Calculate total cost
                 float sumCost=0f;
                 for(int i = 0; i < categoryList.size(); i++){
                     sumCost += categoryList.get(i).getCost();
+                }
+
+                //Now calculate percentage for each category
+                for(int i = 0; i < categoryList.size(); i++){
+                    BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
+                    BigDecimal total = BigDecimal.valueOf(sumCost);
+                    BigDecimal hundred = new BigDecimal(100);
+                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
+
+                    categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
                 }
 
                 categoryPercentListAdapter.setCategoryList(categoryList);

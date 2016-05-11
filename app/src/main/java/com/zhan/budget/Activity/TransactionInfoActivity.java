@@ -485,15 +485,15 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //Get list of accounts
         resultsAccount = myRealm.where(Account.class).findAllSortedAsync("isDefault", Sort.DESCENDING);
-        resultsAccount.addChangeListener(new RealmChangeListener() {
+        resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
-            public void onChange() {
-                resultsAccount.removeChangeListener(this);
+            public void onChange(RealmResults<Account> element) {
+                element.removeChangeListener(this);
 
 
-                for (int i = 0; i < resultsAccount.size(); i++) {
-                    Log.d("ZHAP", i+"->"+resultsAccount.get(i).getName());
-                    accountNameList.add(resultsAccount.get(i).getName());
+                for (int i = 0; i < element.size(); i++) {
+                    Log.d("ZHAP", i+"->"+element.get(i).getName());
+                    accountNameList.add(element.get(i).getName());
                 }
 
                 //Swap the default account to be in index 0 (for nameList and realmList)
@@ -510,9 +510,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 int pos = 0; //default is first item to be selected in the spinner
                 if (!isNewTransaction) {
-                    for (int i = 0; i < resultsAccount.size(); i++) {
+                    for (int i = 0; i < element.size(); i++) {
                         if (editTransaction.getAccount() != null) {
-                            if (editTransaction.getAccount().getId().equalsIgnoreCase(resultsAccount.get(i).getId())) {
+                            if (editTransaction.getAccount().getId().equalsIgnoreCase(element.get(i).getId())) {
                                 pos = i;
                                 break;
                             }
@@ -521,7 +521,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 }
 
                 selectedAccountIndexInSpinner = pos;
-                selectedAccount = myRealm.copyFromRealm(resultsAccount.get(pos));
+                selectedAccount = myRealm.copyFromRealm(element.get(pos));
 
                 accountPicker.setValue(pos);
 

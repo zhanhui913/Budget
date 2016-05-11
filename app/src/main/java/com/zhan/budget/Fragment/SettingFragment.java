@@ -255,12 +255,11 @@ public class SettingFragment extends BaseFragment {
 
         final Realm myRealm = Realm.getDefaultInstance();
         final RealmResults<Account> accountResults = myRealm.where(Account.class).findAllAsync();
-
-        accountResults.addChangeListener(new RealmChangeListener() {
+        accountResults.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
-            public void onChange() {
-                accountResults.removeChangeListener(this);
-                openAccountPopupMenu(myRealm.copyFromRealm(accountResults));
+            public void onChange(RealmResults<Account> element) {
+                element.removeChangeListener(this);
+                openAccountPopupMenu(myRealm.copyFromRealm(element));
                 myRealm.close();
             }
         });
@@ -294,21 +293,21 @@ public class SettingFragment extends BaseFragment {
         final Realm myRealm = Realm.getDefaultInstance();
 
         final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
-        accounts.addChangeListener(new RealmChangeListener() {
+        accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
-            public void onChange() {
-                accounts.removeChangeListener(this);
+            public void onChange(RealmResults<Account> element) {
+                element.removeChangeListener(this);
 
                 myRealm.beginTransaction();
 
                 for(int i = 0; i < accounts.size(); i++){
-                    if(defaultAccount.getId().equalsIgnoreCase(accounts.get(i).getId())){
+                    if(defaultAccount.getId().equalsIgnoreCase(element.get(i).getId())){
                         //myRealm.copyToRealmOrUpdate(accounts.get(i).setIsDefault(true));
 
-                        accounts.get(i).setIsDefault(true);
+                        element.get(i).setIsDefault(true);
                     }else{
                         //myRealm.copyToRealmOrUpdate();
-                        accounts.get(i).setIsDefault(false);
+                        element.get(i).setIsDefault(false);
                     }
                 }
 
@@ -412,11 +411,11 @@ public class SettingFragment extends BaseFragment {
         final Realm myRealm = Realm.getDefaultInstance();
         transactionList = new ArrayList<>();
         transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
-        transactionResults.addChangeListener(new RealmChangeListener() {
+        transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange() {
-                transactionResults.removeChangeListener(this);
-                transactionList = myRealm.copyFromRealm(transactionResults);
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+                transactionList = myRealm.copyFromRealm(element);
                 myRealm.close();
                 exportCSV();
             }
