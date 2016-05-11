@@ -40,7 +40,6 @@ import java.util.List;
  * Simple CategoryRecyclerAdapter that implements {@link ItemTouchHelperAdapter} to respond to move
  * from a {@link android.support.v7.widget.helper.ItemTouchHelper}.
  *
- * @author Paul Burke (ipaulpro)
  */
 public class TransactionRecyclerAdapter extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder> {
 

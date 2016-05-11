@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <RelativeLayout style="@style/ItemPaddingStyle"
+            android:id="@+id/locationPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true">
+
+        <TextView
+            android:id="@+id/locationName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Location"/>
+
+        <TextView
+            android:id="@+id/locationAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/locationName"
+            android:textSize="15sp"
+            android:text="5 times"/>
+        </RelativeLayout>
+</RelativeLayout>

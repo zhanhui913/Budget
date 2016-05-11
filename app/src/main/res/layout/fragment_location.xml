@@ -5,7 +5,7 @@
     tools:context="com.zhan.budget.Fragment.LocationFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/locationListView"
+        android:id="@+id/locationListview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
