@@ -57,7 +57,7 @@ public class SettingFragment extends BaseFragment {
     private static final String TAG = "SettingFragment";
 
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn;
-    private TextView themeContent, firstDayContent, defaultAccountContent, backupContent;
+    private TextView themeContent, firstDayContent, backupContent;
 
     private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
 
@@ -88,7 +88,6 @@ public class SettingFragment extends BaseFragment {
         categoryOrderBtn = (ViewGroup) view.findViewById(R.id.categoryOrderBtn);
 
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
-        defaultAccountContent = (TextView) view.findViewById(R.id.defaultAccountContent);
 
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
@@ -314,8 +313,8 @@ public class SettingFragment extends BaseFragment {
                 myRealm.commitTransaction();
                 myRealm.close();
 
-                BudgetPreference.setDefaultAccount(getContext(), defaultAccount.getName());
-                defaultAccountContent.setText(defaultAccount.getName());
+                //BudgetPreference.setDefaultAccount(getContext(), defaultAccount.getName());
+                //defaultAccountContent.setText(defaultAccount.getName());
             }
         });
     }
@@ -541,10 +540,6 @@ public class SettingFragment extends BaseFragment {
                                 .build();
 
                         Realm.deleteRealm(config);
-
-                        //Also reset default account
-                        BudgetPreference.resetDefaultAccount(getContext());
-                        defaultAccountContent.setText("Credit Card");
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

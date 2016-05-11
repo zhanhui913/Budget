@@ -82,24 +82,6 @@ public final class BudgetPreference {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    // Default account functions
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void resetDefaultAccount(Context context){
-        setPreferenceString(context, Constants.DEFAULT_ACCOUNT, "Credit Card");
-    }
-
-    public static void setDefaultAccount(Context context, String value){
-        setPreferenceString(context, Constants.DEFAULT_ACCOUNT, value);
-    }
-
-    public static String getDefaultAccount(Context context){
-        return getPreferenceString(context, Constants.DEFAULT_ACCOUNT, "NA");
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
     // Helper functions
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////

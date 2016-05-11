@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Realm.Account;
@@ -301,12 +302,8 @@ public class AccountFragment extends BaseRealmFragment implements
                         myRealm.copyToRealmOrUpdate(account);
                         myRealm.commitTransaction();
 
-                        //Change name only if edited account is default
-                        if(account.isDefault()) {
-                            BudgetPreference.setDefaultAccount(getContext(), input.getText().toString());
-                        }
-
-                        //accountListAdapter.notifyDataSetChanged();
+                        accountList.get(position).setName(input.getText().toString());
+                        accountListAdapter.updateList(accountList);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -345,7 +342,9 @@ public class AccountFragment extends BaseRealmFragment implements
                         newAccount.setName(input.getText().toString());
                         myRealm.commitTransaction();
 
-                        //accountListAdapter.notifyDataSetChanged();
+                        Account acc = myRealm.copyFromRealm(newAccount);
+                        accountList.add(acc);
+                        accountListAdapter.updateList(accountList);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
