@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -47,10 +49,9 @@ import com.zhan.circleindicator.CircleIndicator;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 
 import io.realm.Realm;
@@ -338,7 +339,8 @@ public class TransactionInfoActivity extends BaseActivity implements
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createLocationDialog();
+                //createLocationDialog();
+                getAllLocations();
             }
         });
 
@@ -584,20 +586,53 @@ public class TransactionInfoActivity extends BaseActivity implements
         input.requestFocus();
     }
 
-    private void createLocationDialog(){
-        // get alertdialog_generic.xml view
+    private void getAllLocations(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).findAllSortedAsync("location");
+        transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+
+                getUniqueList(myRealm.copyFromRealm(element));
+
+                myRealm.close();
+            }
+        });
+    }
+
+    private void getUniqueList(List<Transaction> ttList){
+        HashSet<String> locationHash = new HashSet<>();
+
+        for(int i = 0; i < ttList.size(); i++){
+            locationHash.add(ttList.get(i).getLocation());
+        }
+
+        createLocationDialog(locationHash.toArray(new String[locationHash.size()]));
+    }
+
+    private void createLocationDialog(String[] locationArray){
+        // get alertdialog_generic_autocomplete.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
 
         //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
         //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_autocomplete, null);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
+        final AutoCompleteTextView input = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Add Location");
         input.setHint("Location");
         input.setText(locationString);
+        input.setThreshold(1);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
+
+        input.setAdapter(adapter);
+
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
