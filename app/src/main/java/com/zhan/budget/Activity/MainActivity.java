@@ -21,6 +21,7 @@ import com.zhan.budget.Fragment.AccountFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.InfoFragment;
+import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
@@ -35,7 +36,8 @@ public class MainActivity extends BaseActivity
         CalendarFragment.OnCalendarInteractionListener,
         CategoryFragment.OnCategoryInteractionListener,
         MonthReportFragment.OnMonthlyInteractionListener,
-        AccountFragment.OnAccountInteractionListener{
+        AccountFragment.OnAccountInteractionListener,
+        LocationFragment.OnLocationInteractionListener{
 
     Toolbar toolbar;
     DrawerLayout drawer;
@@ -49,6 +51,7 @@ public class MainActivity extends BaseActivity
     private InfoFragment infoFragment;
     private RateFragment rateFragment;
     private SettingFragment settingFragment;
+    private LocationFragment locationFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,7 @@ public class MainActivity extends BaseActivity
         settingFragment = new SettingFragment();
         infoFragment = new InfoFragment();
         rateFragment = new RateFragment();
+        locationFragment = new LocationFragment();
     }
 
     @Override
@@ -180,6 +184,11 @@ public class MainActivity extends BaseActivity
                         fragment = accountFragment;
                         title = "Account";
                         break;
+                    case R.id.nav_location:
+                        fragment = locationFragment;
+                        title = "Location";
+                        break;
+
                     case R.id.nav_setting:
                         fragment = settingFragment;
                         title = "Setting";
