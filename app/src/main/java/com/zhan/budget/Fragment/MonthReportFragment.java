@@ -338,9 +338,17 @@ public class MonthReportFragment extends BaseRealmFragment implements
                         Log.d("CAT_CAL", monthReportList.get(month).getMonth()+" -> COMPLETED, size: "+catList.size());
                         //Log.d("WHO", "top cat : "+catList.get(0).getName()+" with cost : "+catList.get(0).getCost());
 
-                        monthReportList.get(month).setFirstCategory(catList.get(0));
-                        monthReportList.get(month).setSecondCategory(catList.get(1));
-                        monthReportList.get(month).setThirdCategory(catList.get(2));
+                        if(catList.size() >= 1){
+                            monthReportList.get(month).setFirstCategory(catList.get(0));
+                        }
+
+                        if(catList.size() >= 2){
+                            monthReportList.get(month).setSecondCategory(catList.get(1));
+                        }
+
+                        if(catList.size() >= 3){
+                            monthReportList.get(month).setThirdCategory(catList.get(2));
+                        }
 
                         monthReportGridAdapter.notifyDataSetChanged();
                     }
@@ -348,12 +356,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 cc.execute();
             }
         });
-
-
-
-
-
-
     }
 
     private void updateYearInToolbar(int direction){
