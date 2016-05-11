@@ -504,14 +504,16 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onClick(int position){
-        Toast.makeText(getContext(), "click on category :"+ categoryRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
+        if(arrangementType == CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET) {
+            Toast.makeText(getContext(), "click on category :" + categoryRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
 
-        Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
+            Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
+            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
 
-        Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
+            Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-        startActivity(viewAllTransactionsForCategory);
+            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
+            startActivity(viewAllTransactionsForCategory);
+        }
     }
 }
