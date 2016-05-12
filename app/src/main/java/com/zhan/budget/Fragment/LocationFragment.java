@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
+import com.zhan.budget.Fragment.Chart.BarChartFragment;
+import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -45,6 +47,7 @@ public class LocationFragment extends BaseRealmFragment
     private RecyclerView locationListview;
     private LocationRecyclerAdapter listAdapter;
 
+    private PieChartFragment pieChartFragment;
 
     public LocationFragment() {
         // Required empty public constructor
@@ -81,6 +84,10 @@ public class LocationFragment extends BaseRealmFragment
                 new HorizontalDividerItemDecoration.Builder(getContext())
                         .marginResId(R.dimen.right_padding_divider, R.dimen.right_padding_divider)
                         .build());
+
+        //Setup pie chart
+        pieChartFragment = PieChartFragment.newInstance(locationList);
+        getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         //0 represents no change in month relative to currentMonth variable.
         updateMonthInToolbar(0);
@@ -121,6 +128,8 @@ public class LocationFragment extends BaseRealmFragment
         });
 
         locationAdapter.setLocationList(locationList);
+
+        pieChartFragment.setData(locationList);
     }
 
     private void updateMonthInToolbar(int direction){

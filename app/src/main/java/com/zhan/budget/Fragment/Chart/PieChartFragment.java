@@ -1,21 +1,24 @@
 package com.zhan.budget.Fragment.Chart;
 
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 
 import org.parceler.Parcels;
 
@@ -33,7 +36,7 @@ public class PieChartFragment extends BaseChartFragment {
         // Required empty public constructor
     }
 
-    public static PieChartFragment newInstance(List<Category> categoryList){
+    public static PieChartFragment newInstance(List<?> categoryList){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CHART, Parcels.wrap(categoryList));
@@ -48,15 +51,59 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     @Override
-    public void init(){ Log.d("CHART", "pie chart fragment init");
-
+    public void init(){
+        Log.d("www", "pie chart init");
         pieChart = (PieChart) view.findViewById(R.id.pieChart);
-
-
-        List<Category> catList = Parcels.unwrap(getArguments().getParcelable(ARG_CHART));
-        setData(catList);
     }
 
+    /**
+     * Called when wants to display data
+     * @param list
+     */
+    public void setData(List<?> list){
+        Toast.makeText(getContext(), "pie chart set data ("+list.size()+")", Toast.LENGTH_SHORT).show();
+        pieChart.setUsePercentValues(true);
+        pieChart.setDescription("");
+        pieChart.setExtraOffsets(5, 5, 5, 5);
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+
+        pieChart.setDrawHoleEnabled(false);
+        pieChart.setDrawCenterText(false);
+
+        // enable rotation of the chart by touch
+        pieChart.setRotationEnabled(true);
+        pieChart.setHighlightPerTapEnabled(true);
+
+        pieChart.setDrawSliceText(false);
+
+        // add a selection listener
+        //pieChart.setOnChartValueSelectedListener(this);
+
+        if(list.size() > 0){
+            if(list.get(0) instanceof Category){
+                setUpPieChartForCategory((List<Category>)list);
+            }else if(list.get(0) instanceof Location){
+                setUpPieChartForGeneric((List<Location>)list);
+            }
+        }else{
+            pieChart.clear();
+        }
+
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
+
+        //Remove legend
+        pieChart.getLegend().setEnabled(true);
+
+        Legend l = pieChart.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+    }
+
+/*
+//orig
     public void setData(List<Category> categoryList){
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
@@ -75,7 +122,7 @@ public class PieChartFragment extends BaseChartFragment {
         // add a selection listener
         //pieChart.setOnChartValueSelectedListener(this);
 
-        setData1(categoryList);
+        setUpPieChart(categoryList);
 
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
@@ -83,9 +130,12 @@ public class PieChartFragment extends BaseChartFragment {
         //Remove legend
         pieChart.getLegend().setEnabled(false);
     }
+*/
 
-    private void setData1(List<Category> categoryList) {
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+
+    //orig
+    private void setUpPieChartForCategory(List<Category> categoryList) {
+        ArrayList<Entry> yVals1 = new ArrayList<>();
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
         // xIndex (even if from different DataSets), since no values can be
@@ -94,17 +144,17 @@ public class PieChartFragment extends BaseChartFragment {
             yVals1.add(new Entry(Math.abs(categoryList.get(i).getCost()), i));
         }
 
-        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<String> xVals = new ArrayList<>();
         for (int i = 0; i < categoryList.size(); i++) {
-            xVals.add(i + " string");
+            xVals.add(categoryList.get(i).getName());
         }
 
-        PieDataSet dataSet = new PieDataSet(yVals1, "Election Results");
-        dataSet.setSliceSpace(0f);
+        PieDataSet dataSet = new PieDataSet(yVals1, "");
+        dataSet.setSliceSpace(1f);
         dataSet.setSelectionShift(5f);
 
         // Add colors
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+        ArrayList<Integer> colors = new ArrayList<>();
         for(int i = 0; i < categoryList.size(); i++){
             try {
                 colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), categoryList.get(i).getColor())));
@@ -120,6 +170,51 @@ public class PieChartFragment extends BaseChartFragment {
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(0f);
         data.setValueTextColor(Color.WHITE);
+        pieChart.setData(data);
+
+        // undo all highlights
+        pieChart.highlightValues(null);
+
+        pieChart.invalidate();
+    }
+
+    private void setUpPieChartForGeneric(List<Location> list) {
+        ArrayList<Entry> yVals1 = new ArrayList<>();
+
+        // IMPORTANT: In a PieChart, no values (Entry) should have the same
+        // xIndex (even if from different DataSets), since no values can be
+        // drawn above each other.
+        for (int i = 0; i < list.size(); i++) {
+            yVals1.add(new Entry(Math.abs(list.get(i).getAmount()), i));
+        }
+
+        ArrayList<String> xVals = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            xVals.add(list.get(i).getName());
+        }
+
+        PieDataSet dataSet = new PieDataSet(yVals1, "");
+        dataSet.setSliceSpace(1f);
+        dataSet.setSelectionShift(5f);
+
+        // Add colors
+        ArrayList<Integer> colors = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            try {
+                //Add random color
+                colors.add(ContextCompat.getColor(getContext(), Colors.getRandomColor(getContext())));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        dataSet.setColors(colors);
+        dataSet.setSelectionShift(10f);
+
+        PieData data = new PieData(xVals, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(0f);
+        //data.setValueTextColor(Color.WHITE);
         pieChart.setData(data);
 
         // undo all highlights

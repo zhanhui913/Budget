@@ -1,8 +1,8 @@
 package com.zhan.budget.Model;
 
-/**
- * Created by Zhan on 16-05-11.
- */
+import org.parceler.Parcel;
+
+@Parcel(Parcel.Serialization.BEAN)
 public class Location {
 
     private String name;

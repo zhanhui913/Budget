@@ -9,8 +9,12 @@ import android.support.annotation.AttrRes;
 import android.util.Log;
 import android.util.TypedValue;
 
+import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
+import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.R;
 
+import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,13 +59,24 @@ public final class Colors {
         return "#"+Integer.toHexString(color);
     }
 
-
-
     public static int getColorFromAttr(Context context, @AttrRes int attr){
         int[] attrs = new int[] { attr};
         TypedArray ta = context.obtainStyledAttributes(attrs);
         int cc = ((ColorDrawable)ta.getDrawable(0)).getColor();
         ta.recycle();
         return cc;
+    }
+
+    public static int getRandomColor(Context context){
+        List<CategoryIconColor> catColor = CategoryUtil.getListOfCategoryColors(context);
+
+        String randomColorString = catColor.get(new Random().nextInt(catColor.size())).getColor();
+
+        try {
+            return CategoryUtil.getColorID(context, randomColorString);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
