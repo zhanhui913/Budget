@@ -1,7 +1,6 @@
 package com.zhan.budget.Adapter;
 
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
     private OnMonthReportAdapterInteractionListener mListener;
 
     static class ViewHolder {
-        public CardView background;
+        public ViewGroup background;
         public TextView month;
         public TextView costThisMonth;
         public TextView changeCost;
@@ -68,7 +67,7 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_month_report_extended, parent, false);
 
-            viewHolder.background = (CardView) convertView.findViewById(R.id.monthCardView);
+            viewHolder.background = (ViewGroup) convertView.findViewById(R.id.monthPanel);
             viewHolder.month = (TextView) convertView.findViewById(R.id.monthName);
             viewHolder.costThisMonth = (TextView) convertView.findViewById(R.id.monthTotalCost);
             //viewHolder.changeCost = (TextView) convertView.findViewById(R.id.monthChangeCost);

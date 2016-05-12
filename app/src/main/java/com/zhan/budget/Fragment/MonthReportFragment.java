@@ -5,21 +5,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.GridView;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.OverviewActivity;
-import com.zhan.budget.Adapter.MonthReportGridAdapter;
+import com.zhan.budget.Adapter.MonthReportRecyclerAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Fragment.Chart.BarChartFragment;
-import com.zhan.budget.Fragment.Chart.PercentChartFragment;
-import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.Model.Realm.Category;
@@ -27,10 +24,7 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -42,15 +36,15 @@ import io.realm.RealmResults;
  * A simple {@link Fragment} subclass.
  */
 public class MonthReportFragment extends BaseRealmFragment implements
-        MonthReportGridAdapter.OnMonthReportAdapterInteractionListener{
+        MonthReportRecyclerAdapter.OnMonthReportAdapterInteractionListener{
 
     private static final String TAG = "MonthlyFragment";
 
     private OnMonthlyInteractionListener mListener;
 
     private List<MonthReport> monthReportList;
-    private GridView monthReportGridView;
-    private MonthReportGridAdapter monthReportGridAdapter;
+    private RecyclerView monthReportListview;
+    private MonthReportRecyclerAdapter monthReportRecyclerAdapter;
 
     private RealmResults<Transaction> transactionsResults;
     private List<Transaction> transactionList;
@@ -85,9 +79,18 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
         monthReportList = new ArrayList<>();
-        monthReportGridView = (GridView) view.findViewById(R.id.monthReportGridView);
-        monthReportGridAdapter = new MonthReportGridAdapter(this, monthReportList);
-        monthReportGridView.setAdapter(monthReportGridAdapter);
+        monthReportListview = (RecyclerView) view.findViewById(R.id.monthReportListview);
+        monthReportListview.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        monthReportRecyclerAdapter = new MonthReportRecyclerAdapter(this, monthReportList);
+        monthReportListview.setAdapter(monthReportRecyclerAdapter);
+
+        //Add divider
+        monthReportListview.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getContext())
+                        .marginResId(R.dimen.right_padding_divider, R.dimen.right_padding_divider)
+                        .build());
+
 
         currentYear = DateUtil.refreshYear(new Date());
 
@@ -131,7 +134,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
             monthReportList.get(i).setSecondCategory(null);
             monthReportList.get(i).setThirdCategory(null);
         }
-        monthReportGridAdapter.notifyDataSetChanged();
+        //monthReportGridAdapter.notifyDataSetChanged();
+        monthReportRecyclerAdapter.setMonthReportList(monthReportList);
 
         transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
@@ -198,6 +202,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 }
 
                 //monthReportGridAdapter.notifyDataSetChanged();
+                monthReportRecyclerAdapter.setMonthReportList(monthReportList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -351,7 +356,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
                             monthReportList.get(month).setThirdCategory(catList.get(2));
                         }
 
-                        monthReportGridAdapter.notifyDataSetChanged();
+                        //monthReportGridAdapter.notifyDataSetChanged();
+                        monthReportRecyclerAdapter.setMonthReportList(monthReportList);
                     }
                 });
                 cc.execute();

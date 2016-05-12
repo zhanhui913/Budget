@@ -44,5 +44,5 @@
         android:textSize="20sp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true" />
-
+<!-- NOT BEING USED -->
 </RelativeLayout>
