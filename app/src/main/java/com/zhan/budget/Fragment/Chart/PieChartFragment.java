@@ -55,14 +55,7 @@ public class PieChartFragment extends BaseChartFragment {
     public void init(){
         Log.d("www", "pie chart init");
         pieChart = (PieChart) view.findViewById(R.id.pieChart);
-    }
 
-    /**
-     * Called when wants to display data
-     * @param list
-     */
-    public void setData(List<?> list){
-        Toast.makeText(getContext(), "pie chart set data ("+list.size()+")", Toast.LENGTH_SHORT).show();
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
         pieChart.setExtraOffsets(5, 5, 5, 5);
@@ -77,33 +70,43 @@ public class PieChartFragment extends BaseChartFragment {
 
         pieChart.setDrawSliceText(false);
 
+        //Change color of text info when there are no data
+        pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
+    }
+
+    /**
+     * Called when wants to display data
+     * @param list
+     */
+    public void setData(List<?> list){
+
         // add a selection listener
         //pieChart.setOnChartValueSelectedListener(this);
 
         if(list.size() > 0){
             if(list.get(0) instanceof Category){
                 setUpPieChartForCategory((List<Category>)list);
+
+                //Remove legend
+                pieChart.getLegend().setEnabled(true);
             }else if(list.get(0) instanceof Location){
                 setUpPieChartForGeneric((List<Location>)list);
+
+                //Keep legend
+                pieChart.getLegend().setEnabled(true);
+
+                Legend l = pieChart.getLegend();
+                l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+                l.setXEntrySpace(7f);
+                l.setYEntrySpace(0f);
+                l.setYOffset(0f);
             }
         }else{
             pieChart.clear();
         }
-
-        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
-
-        //Remove legend
-        pieChart.getLegend().setEnabled(true);
-
-        //Change color of text info when there are no data
-        pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-
-        Legend l = pieChart.getLegend();
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(0f);
-        l.setYOffset(0f);
     }
 
 /*
