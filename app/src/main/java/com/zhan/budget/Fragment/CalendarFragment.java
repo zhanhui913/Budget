@@ -471,9 +471,14 @@ public class CalendarFragment extends BaseRealmFragment implements
                     List<BudgetEvent> colorList = new ArrayList<>();
                     try {
 
-                        if (eventMap.containsKey(element.get(i).getDate())) {
+                        /*if (eventMap.containsKey(element.get(i).getDate())) {
                             eventMap.get(element.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
                         } else {
+                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
+                            eventMap.put(element.get(i).getDate(), colorList);
+                        }*/
+                        //Only put 1 indication for the event per day
+                        if(!eventMap.containsKey(element.get(i).getDate())){
                             colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
                             eventMap.put(element.get(i).getDate(), colorList);
                         }
