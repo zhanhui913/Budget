@@ -15,13 +15,13 @@ import com.zhan.budget.R;
 
 import java.util.List;
 
-public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapter.ViewHolder> {
+public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecyclerAdapter.ViewHolder> {
 
     private Context context;
     private List<Location> locationList;
     private OnLocationAdapterInteractionListener mListener;
 
-    public LocationListAdapter(Fragment fragment, List<Location> locationList) {
+    public LocationRecyclerAdapter(Fragment fragment, List<Location> locationList) {
         this.context = fragment.getContext();
         this.locationList = locationList;
 
@@ -33,7 +33,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         }
     }
 
-    public LocationListAdapter(Activity activity, List<Location> locationList){
+    public LocationRecyclerAdapter(Activity activity, List<Location> locationList){
         this.context = activity;
         this.locationList = locationList;
 
@@ -63,7 +63,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
 
         viewHolder.name.setText(location.getName());
         Log.d("whats", location.getName()+"->"+location.getAmount());
-//        viewHolder.amount.setText(location.getAmount());
+        viewHolder.amount.setText(location.getAmount()+ ((location.getAmount() > 1)? " times":" time"));
     }
 
     @Override

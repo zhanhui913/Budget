@@ -7,17 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-import com.zhan.budget.Adapter.LocationListAdapter;
-import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
+import com.zhan.budget.Adapter.LocationRecyclerAdapter;
 import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -26,7 +22,6 @@ import com.zhan.budget.Util.DateUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import io.realm.RealmChangeListener;
@@ -36,16 +31,16 @@ import io.realm.RealmResults;
  * A simple {@link Fragment} subclass.
  */
 public class LocationFragment extends BaseRealmFragment
-        implements LocationListAdapter.OnLocationAdapterInteractionListener{
+        implements LocationRecyclerAdapter.OnLocationAdapterInteractionListener{
     private static final String TAG = "LocationFragment";
 
     private OnLocationInteractionListener mListener;
     private Date currentMonth;
 
     private List<Location> locationList;
-    private LocationListAdapter locationAdapter;
+    private LocationRecyclerAdapter locationAdapter;
     private RecyclerView locationListview;
-    private LocationListAdapter listAdapter;
+    private LocationRecyclerAdapter listAdapter;
 
 
     public LocationFragment() {
@@ -75,7 +70,7 @@ public class LocationFragment extends BaseRealmFragment
         locationListview.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         locationList = new ArrayList<>();
-        locationAdapter = new LocationListAdapter(this, locationList);
+        locationAdapter = new LocationRecyclerAdapter(this, locationList);
         locationListview.setAdapter(locationAdapter);
 
         //Add divider
@@ -86,16 +81,6 @@ public class LocationFragment extends BaseRealmFragment
 
         //0 represents no change in month relative to currentMonth variable.
         updateMonthInToolbar(0);
-
-        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).findAllAsync();
-        transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-
-                countLocationList(myRealm.copyFromRealm(element));
-            }
-        });
     }
 
     private void countLocationList(List<Transaction> ttList){
@@ -108,6 +93,8 @@ public class LocationFragment extends BaseRealmFragment
                 locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
             }
         }
+
+        locationList.clear();
 
         //Go through each hashmap
         for(String key: locationHash.keySet()){
@@ -124,6 +111,23 @@ public class LocationFragment extends BaseRealmFragment
     private void updateMonthInToolbar(int direction){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+
+        fetchNewLocationData(currentMonth);
+    }
+
+    private void fetchNewLocationData(Date month){
+
+        Date endMonth = DateUtil.getLastDateOfMonth(month);
+
+        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
+        transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+
+                countLocationList(myRealm.copyFromRealm(element));
+            }
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
