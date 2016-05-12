@@ -15,11 +15,14 @@ import android.widget.Toast;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
 import com.zhan.budget.Model.Location;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +67,7 @@ public class LocationFragment extends BaseRealmFragment
         Log.d(TAG, "init");
         super.init();
 
-        currentMonth = new Date();
+        currentMonth = DateUtil.refreshMonth(new Date());
 
         locationListview = (RecyclerView) view.findViewById(R.id.locationListview);
         locationListview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -76,7 +79,7 @@ public class LocationFragment extends BaseRealmFragment
         //Add divider
         locationListview.addItemDecoration(
                 new HorizontalDividerItemDecoration.Builder(getContext())
-                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .marginResId(R.dimen.right_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
         //0 represents no change in month relative to currentMonth variable.
@@ -105,6 +108,18 @@ public class LocationFragment extends BaseRealmFragment
             locationList.add(location);
         }
 
+        //Sort from highest to lowest
+        Collections.sort(locationList, new Comparator<Location>() {
+            @Override
+            public int compare(Location l1, Location l2) {
+                int amount1 = l1.getAmount();
+                int amount2 = l2.getAmount();
+
+                //descending order
+                return (amount2 - amount1);
+            }
+        });
+
         locationAdapter.setLocationList(locationList);
     }
 
@@ -116,7 +131,6 @@ public class LocationFragment extends BaseRealmFragment
     }
 
     private void fetchNewLocationData(Date month){
-
         Date endMonth = DateUtil.getLastDateOfMonth(month);
 
         RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
