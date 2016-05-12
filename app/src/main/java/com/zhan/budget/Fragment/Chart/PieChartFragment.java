@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -94,6 +95,9 @@ public class PieChartFragment extends BaseChartFragment {
 
         //Remove legend
         pieChart.getLegend().setEnabled(true);
+
+        //Change color of text info when there are no data
+        pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         Legend l = pieChart.getLegend();
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
