@@ -53,7 +53,6 @@ public class PieChartFragment extends BaseChartFragment {
 
     @Override
     public void init(){
-        Log.d("www", "pie chart init");
         pieChart = (PieChart) view.findViewById(R.id.pieChart);
 
         pieChart.setUsePercentValues(true);
@@ -69,6 +68,9 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setHighlightPerTapEnabled(true);
 
         pieChart.setDrawSliceText(false);
+
+        //Remove legend
+        pieChart.getLegend().setEnabled(false);
 
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
@@ -89,20 +91,8 @@ public class PieChartFragment extends BaseChartFragment {
         if(list.size() > 0){
             if(list.get(0) instanceof Category){
                 setUpPieChartForCategory((List<Category>)list);
-
-                //Remove legend
-                pieChart.getLegend().setEnabled(true);
             }else if(list.get(0) instanceof Location){
                 setUpPieChartForGeneric((List<Location>)list);
-
-                //Keep legend
-                pieChart.getLegend().setEnabled(true);
-
-                Legend l = pieChart.getLegend();
-                l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-                l.setXEntrySpace(7f);
-                l.setYEntrySpace(0f);
-                l.setYOffset(0f);
             }
         }else{
             pieChart.clear();
