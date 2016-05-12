@@ -135,7 +135,8 @@ public class OverviewActivity extends BaseActivity implements
         final Date month = DateUtil.refreshMonth(date);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
+        //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
+        final Date endMonth = DateUtil.getLastDateOfMonth(month);
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 

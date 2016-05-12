@@ -113,6 +113,11 @@ public final class DateUtil {
         return refreshDate(cal.getTime());
     }
 
+    /**
+     * Gives the previous date
+     * @param date
+     * @return date - 1
+     */
     public static Date getPreviousDate(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -270,5 +275,14 @@ public final class DateUtil {
         cal.add(Calendar.YEAR, direction);
 
         return cal.getTime();
+    }
+
+    /**
+     * Gets the last date of the current month
+     * @param date
+     * @return last date of month
+     */
+    public static Date getLastDateOfMonth(Date date){
+        return getPreviousDate(getNextMonth(date));
     }
 }

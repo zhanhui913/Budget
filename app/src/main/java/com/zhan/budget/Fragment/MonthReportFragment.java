@@ -116,7 +116,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
         beginYear = DateUtil.refreshYear(currentYear);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        endYear = DateUtil.getPreviousDate(DateUtil.getNextYear(beginYear));
+        //endYear = DateUtil.getPreviousDate(DateUtil.getNextYear(beginYear));
+        endYear = DateUtil.getLastDateOfMonth(beginYear);
 
         Log.d(TAG, "get report from " + beginYear.toString() + " to " + endYear.toString());
 
@@ -233,8 +234,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
         final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
         */
         final Date month = DateUtil.refreshMonth(monthReportList.get(0).getMonth());
-        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(monthReportList.get(11).getMonth()));
-
+        //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(monthReportList.get(11).getMonth()));
+        final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(11).getMonth()) ;
 
         final RealmResults<Transaction> newTransactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllSortedAsync("date");
         newTransactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
