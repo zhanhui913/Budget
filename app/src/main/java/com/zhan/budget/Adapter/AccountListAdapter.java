@@ -3,6 +3,7 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 
 import java.util.List;
 
@@ -174,8 +176,14 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         viewHolder.defaultAccountIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Snackbar.make(v, "Set "+account.getName()+" as default account", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+                Snackbar snackbar = Snackbar.make(v, "Set "+account.getName()+" as default account", Snackbar.LENGTH_SHORT);
+
+                // Changing message text color
+                View sbView = snackbar.getView();
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(ContextCompat.getColor(getContext(), R.color.day_highlight));
+                snackbar.show();
+
                 mListener.onAccountSetAsDefault(account);
                 return false;
             }
