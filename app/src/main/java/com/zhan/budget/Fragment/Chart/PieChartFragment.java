@@ -208,8 +208,7 @@ public class PieChartFragment extends BaseChartFragment {
         ArrayList<Integer> colors = new ArrayList<>();
         for(int i = 0; i < list.size(); i++){
             try {
-                //Add random color
-                colors.add(ContextCompat.getColor(getContext(), Colors.getRandomColor(getContext())));
+                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getColor())));
             }catch(Exception e){
                 e.printStackTrace();
             }

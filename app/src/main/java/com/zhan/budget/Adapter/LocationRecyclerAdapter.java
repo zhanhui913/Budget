@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.zhan.budget.Model.Location;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
+import com.zhan.library.CircularView;
 
 import java.util.List;
 
@@ -62,8 +65,12 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         Location location = locationList.get(position);
 
         viewHolder.name.setText(location.getName());
-        Log.d("whats", location.getName()+"->"+location.getAmount());
         viewHolder.amount.setText(location.getAmount()+ ((location.getAmount() > 1)? " times":" time"));
+        viewHolder.icon.setStrokeWidthInDP(0);
+        viewHolder.icon.setCircleRadiusInDP(25);
+        viewHolder.icon.setStrokeColor(R.color.transparent);
+        viewHolder.icon.setCircleColor(location.getColor());
+        viewHolder.icon.setIconColor(location.getColor());
     }
 
     @Override
@@ -84,6 +91,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
+        public CircularView icon;
         public TextView name, amount;
         public ViewGroup panel;
 
@@ -94,6 +102,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             // to access the context from any ViewHolder instance.
             super(itemView);
 
+            icon = (CircularView) itemView.findViewById(R.id.locationIcon);
             panel = (ViewGroup) itemView.findViewById(R.id.locationPanel);
             name = (TextView) itemView.findViewById(R.id.locationName);
             amount = (TextView) itemView.findViewById(R.id.locationAmount);

@@ -68,9 +68,7 @@ public final class Colors {
     }
 
     public static int getRandomColor(Context context){
-        List<CategoryIconColor> catColor = CategoryUtil.getListOfCategoryColors(context);
-
-        String randomColorString = catColor.get(new Random().nextInt(catColor.size())).getColor();
+        String randomColorString = getRandomColorString(context);
 
         try {
             return CategoryUtil.getColorID(context, randomColorString);
@@ -78,5 +76,11 @@ public final class Colors {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static String getRandomColorString(Context context){
+        List<CategoryIconColor> catColor = CategoryUtil.getListOfCategoryColors(context);
+
+        return catColor.get(new Random().nextInt(catColor.size())).getColor();
     }
 }

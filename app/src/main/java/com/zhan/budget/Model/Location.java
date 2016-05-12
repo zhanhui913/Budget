@@ -7,6 +7,7 @@ public class Location {
 
     private String name;
     private int amount;
+    private String color;
 
     public Location(){
 
@@ -30,5 +31,13 @@ public class Location {
 
     public void addAmount(int amountToAdd){
         this.amount += amountToAdd;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

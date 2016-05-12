@@ -4,6 +4,7 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
@@ -111,6 +113,9 @@ public class LocationFragment extends BaseRealmFragment
             Location location = new Location();
             location.setName(key);
             location.setAmount(locationHash.get(key));
+
+            //set random color
+            location.setColor(Colors.getRandomColorString(getContext()));
 
             locationList.add(location);
         }
