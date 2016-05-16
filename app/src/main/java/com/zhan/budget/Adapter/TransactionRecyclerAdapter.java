@@ -105,6 +105,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
+            viewHolder.unapproveBtn.setVisibility(View.VISIBLE);
         }else{ //If transaction is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
             viewHolder.circularView.setCircleRadiusInDP(23);
@@ -115,6 +116,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
 
             viewHolder.approveBtn.setVisibility(View.VISIBLE);
+            viewHolder.unapproveBtn.setVisibility(View.GONE);
         }
 
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
@@ -136,6 +138,9 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }else{
             viewHolder.location.setVisibility(View.GONE);
         }
+
+
+
 
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
     }
@@ -168,7 +173,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         public TextView name, cost, date, location;
 
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn, approveBtn;
+        public ImageView deleteBtn, approveBtn, unapproveBtn;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -186,6 +191,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeTransaction);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             approveBtn = (ImageView) itemView.findViewById(R.id.approveBtn);
+            unapproveBtn = (ImageView) itemView.findViewById(R.id.unapproveBtn);
 
             swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
@@ -241,6 +247,14 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 }
             });
 
+            unapproveBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    mListener.onUnapproveTransaction(getLayoutPosition());
+                }
+            });
+
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,6 +276,8 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         void onDeleteTransaction(int position);
 
         void onApproveTransaction(int position);
+
+        void onUnapproveTransaction(int position);
 
         void onPullDownAllow(boolean value);
     }

@@ -9,6 +9,14 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
         <ImageView
+            android:id="@+id/unapproveBtn"
+            android:src="@drawable/svg_ic_clear"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:background="@drawable/budget_green_button"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
+        <ImageView
             android:id="@+id/approveBtn"
             android:src="@drawable/svg_ic_check"
             android:layout_height="match_parent"

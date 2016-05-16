@@ -803,6 +803,17 @@ public class CalendarFragment extends BaseRealmFragment implements
     }
 
     @Override
+    public void onUnapproveTransaction(int position){
+        Toast.makeText(getContext(), "calendar fragment unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
+        myRealm.beginTransaction();
+        resultsTransactionForDay.get(position).setDayType(DayType.SCHEDULED.toString());
+        myRealm.commitTransaction();
+        updateTransactionList();
+
+        updateScheduledTransactionsForDecoration();
+    }
+
+    @Override
     public void onPullDownAllow(boolean value){
         isPulldownAllow = value;
     }
