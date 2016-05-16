@@ -226,7 +226,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         // for any view that will be set as you render a row
         public CircularView circularView;
         public ImageView dragIcon;
-        public TextView name, budget, cost, costTitle, percent;
+        public TextView name, budget, cost, costTitle;
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
@@ -247,7 +247,6 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             budget = (TextView) itemView.findViewById(R.id.categoryBudget);
             cost = (TextView) itemView.findViewById(R.id.categoryCost);
             costTitle = (TextView) itemView.findViewById(R.id.categoryCostTitle);
-            percent = (TextView) itemView.findViewById(R.id.categoryPercent);
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);
