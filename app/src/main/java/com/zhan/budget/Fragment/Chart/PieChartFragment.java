@@ -32,18 +32,23 @@ import java.util.List;
 public class PieChartFragment extends BaseChartFragment {
 
     private PieChart pieChart;
+    protected static final String ARG_CHART_2 = "displayDataImmediately";
 
     public PieChartFragment() {
         // Required empty public constructor
     }
 
-    public static PieChartFragment newInstance(List<?> categoryList){
+    public static PieChartFragment newInstance(List<?> categoryList, boolean initImmediately){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CHART, Parcels.wrap(categoryList));
+        args.putBoolean(ARG_CHART_2, initImmediately);
         pieChartFragment.setArguments(args);
 
         return pieChartFragment;
+    }
+    public static PieChartFragment newInstance(List<?> categoryList){
+        return newInstance(categoryList, false);
     }
 
     @Override
@@ -77,6 +82,10 @@ public class PieChartFragment extends BaseChartFragment {
 
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
+
+        if(getArguments().getBoolean(ARG_CHART_2)) {
+            setData((List<?>) Parcels.unwrap(getArguments().getParcelable(ARG_CHART)));
+        }
     }
 
     /**
@@ -90,48 +99,16 @@ public class PieChartFragment extends BaseChartFragment {
 
         if(list.size() > 0){
             if(list.get(0) instanceof Category){
-                setUpPieChartForCategory((List<Category>)list);
+                displayPieChartForCategory((List<Category>)list);
             }else if(list.get(0) instanceof Location){
-                setUpPieChartForGeneric((List<Location>)list);
+                displayPieChartForGeneric((List<Location>)list);
             }
         }else{
             pieChart.clear();
         }
     }
 
-/*
-//orig
-    public void setData(List<Category> categoryList){
-        pieChart.setUsePercentValues(true);
-        pieChart.setDescription("");
-        pieChart.setExtraOffsets(5, 5, 5, 5);
-        pieChart.setDragDecelerationFrictionCoef(0.95f);
-
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.setDrawCenterText(false);
-
-        // enable rotation of the chart by touch
-        pieChart.setRotationEnabled(true);
-        pieChart.setHighlightPerTapEnabled(true);
-
-        pieChart.setDrawSliceText(false);
-
-        // add a selection listener
-        //pieChart.setOnChartValueSelectedListener(this);
-
-        setUpPieChart(categoryList);
-
-        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
-
-        //Remove legend
-        pieChart.getLegend().setEnabled(false);
-    }
-*/
-
-
-    //orig
-    private void setUpPieChartForCategory(List<Category> categoryList) {
+    private void displayPieChartForCategory(List<Category> categoryList) {
         ArrayList<Entry> yVals1 = new ArrayList<>();
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
@@ -166,7 +143,7 @@ public class PieChartFragment extends BaseChartFragment {
         PieData data = new PieData(xVals, dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(0f);
-        data.setValueTextColor(Color.WHITE);
+        //data.setValueTextColor(Color.WHITE);
         pieChart.setData(data);
 
         // undo all highlights
@@ -175,7 +152,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.invalidate();
     }
 
-    private void setUpPieChartForGeneric(List<Location> list) {
+    private void displayPieChartForGeneric(List<Location> list) {
         ArrayList<Entry> yVals1 = new ArrayList<>();
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
