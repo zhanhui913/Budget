@@ -307,8 +307,8 @@ public class OverviewActivity extends BaseActivity implements
 
                 barChartFragment = BarChartFragment.newInstance(categoryList);
                 percentChartFragment = PercentChartFragment.newInstance(categoryList);
-                pieChartFragment = PieChartFragment.newInstance(categoryList);
-                pieChartFragment.setData(categoryList);
+                //pieChartFragment = PieChartFragment.newInstance(categoryList);
+                //pieChartFragment.setData(categoryList);
                 getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
 
             }

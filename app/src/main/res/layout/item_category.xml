@@ -2,7 +2,7 @@
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeCategory"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="wrap_content"
     android:background="?attr/themeColorBtn">
 
     <!-- Bottom view -->
@@ -47,63 +47,82 @@
             android:layout_centerVertical="true"
             custom:cv_iconColor="?attr/themeColor"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/panel1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/categoryIcon"
-            android:layout_above="@+id/categoryProgress">
+            android:layout_centerVertical="true">
 
-            <TextView
-                android:id="@+id/categoryName"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="Lunch"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical" />
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:orientation="vertical"
+                android:layout_centerVertical="true">
 
-            <TextView
-                android:id="@+id/categoryBudget"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="$25.00"
-                android:textSize="15sp"
-                android:gravity="center_vertical"
-                />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/categoryName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lunch"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical" />
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/categoryBudget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-$2500890.00"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/panel2"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/categoryProgress"
-            android:layout_toRightOf="@+id/panel1">
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/panel1"
+            android:layout_centerVertical="true">
 
-            <TextView
-                android:id="@+id/categoryCost"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:text="$0.00"
-                android:textSize="20sp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|end"/>
 
-            <TextView
-                android:id="@+id/categoryCostTitle"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:text="Current"
-                android:textSize="15sp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|end" />
-        </LinearLayout>
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/categoryCost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="-$0.00"
+                    android:textSize="20sp"
+                    android:gravity="center_vertical|end"/>
+
+                <TextView
+                    android:id="@+id/categoryCostTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Current"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical|end" />
+            </LinearLayout>
+
+            <!-- For ARRANGEMENT.MOVE-->
+            <ImageView
+                android:id="@+id/dragIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/svg_ic_handle"
+                android:layout_alignParentRight="true"
+                android:tint="?attr/themeColorText"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
 
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
             android:id="@+id/categoryProgress"
@@ -116,17 +135,7 @@
             app:rcProgress="5"
             app:rcMax="10"
             android:layout_toRightOf="@+id/categoryIcon"
-            android:layout_alignParentBottom="true" />
-
-        <!-- For ARRANGEMENT.MOVE-->
-        <ImageView
-            android:id="@+id/dragIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/svg_ic_handle"
-            android:layout_alignParentRight="true"
-            android:tint="?attr/themeColorText"
-            android:layout_centerVertical="true" />
-
+            android:layout_alignParentBottom="false"
+            android:layout_below="@+id/panel1" />
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

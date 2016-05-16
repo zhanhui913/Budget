@@ -21,13 +21,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- This keeps the text on the toolbar white color-->
     <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <!-- This keeps the background on the menu popup light theme and thus dark text color -->
     <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppThemeLight.Menu" parent="Widget.AppCompat.PopupMenu.Overflow">
         <item name="android:popupBackground">@color/day</item>
     </style>
+
+
+
 
     <!-- Dark application theme. -->
     <style name="AppThemeDark" parent="Theme.AppCompat">
