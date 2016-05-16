@@ -692,6 +692,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         calendarView.selectDate(newOrEditTransaction.getDate());
         populateTransactionsForDate(newOrEditTransaction.getDate());
         updateTransactionStatus();
+
+        updateScheduledTransactionsForDecoration();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
