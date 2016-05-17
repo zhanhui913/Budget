@@ -199,6 +199,11 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         }
 
+        //Set location adapter with nothing in list
+        //locationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[0]);
+
+        getAllLocations();
+
         createToolbar();
         addListeners();
         createAccountDialog();
@@ -339,8 +344,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         locationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //createLocationDialog();
-                getAllLocations();
+                createLocationDialog();
             }
         });
 
@@ -602,17 +606,20 @@ public class TransactionInfoActivity extends BaseActivity implements
         });
     }
 
-    private void getUniqueList(List<Transaction> ttList){
-        HashSet<String> locationHash = new HashSet<>();
 
+    private HashSet<String> locationHash = new HashSet<>();
+    private void getUniqueList(List<Transaction> ttList){
         for(int i = 0; i < ttList.size(); i++){
             locationHash.add(ttList.get(i).getLocation());
         }
 Toast.makeText(this, "There are "+locationHash.size()+" unique locations", Toast.LENGTH_SHORT).show();
-        createLocationDialog(locationHash.toArray(new String[locationHash.size()]));
+        //createLocationDialog(locationHash.toArray(new String[locationHash.size()]));
     }
 
-    private void createLocationDialog(String[] locationArray){
+    private void createLocationDialog(/*String[] locationArray*/){
+        String[] locationArray = locationHash.toArray(new String[locationHash.size()]);
+        Toast.makeText(this, "There are "+locationArray.length+" unique locations 2", Toast.LENGTH_SHORT).show();
+
         // get alertdialog_generic_autocomplete.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
 
@@ -627,10 +634,8 @@ Toast.makeText(this, "There are "+locationHash.size()+" unique locations", Toast
         input.setHint("Location");
         input.setText(locationString);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
         input.setAdapter(adapter);
-
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
