@@ -48,6 +48,10 @@ public class TransactionFragment extends BaseRealmFragment {
         // Required empty public constructor
     }
 
+    public static TransactionFragment newInstance(String budgetType) {
+        return newInstance(budgetType, "");
+    }
+
     public static TransactionFragment newInstance(String budgetType, String categoryId) {
         TransactionFragment fragment = new TransactionFragment();
 

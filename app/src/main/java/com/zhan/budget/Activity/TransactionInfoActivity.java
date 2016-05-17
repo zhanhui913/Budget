@@ -127,8 +127,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
         }else{
-            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), "");
-            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), "");
+            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
+            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
         }
 
         button1 = (Button)findViewById(R.id.number1);
