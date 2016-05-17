@@ -533,7 +533,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setView(accountDialogView)
-                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         selectedAccountIndexInSpinner = accountPicker.getValue();
                         selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
@@ -568,7 +568,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
                     }
@@ -608,7 +608,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         for(int i = 0; i < ttList.size(); i++){
             locationHash.add(ttList.get(i).getLocation());
         }
-
+Toast.makeText(this, "There are "+locationHash.size()+" unique locations", Toast.LENGTH_SHORT).show();
         createLocationDialog(locationHash.toArray(new String[locationHash.size()]));
     }
 
@@ -626,17 +626,15 @@ public class TransactionInfoActivity extends BaseActivity implements
         title.setText("Add Location");
         input.setHint("Location");
         input.setText(locationString);
-        input.setThreshold(1);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
-
         input.setAdapter(adapter);
 
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = input.getText().toString();
                     }
@@ -687,7 +685,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (quantityNumberPicker.getValue() == 0) {
                             isScheduledTransaction = false;
