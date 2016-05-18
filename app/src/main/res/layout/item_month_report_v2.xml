@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/monthPanel"
+    style="@style/ItemPaddingStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/themeColorBtn"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:id="@+id/leftPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="16dp"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/monthName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="January"
+            android:layout_alignParentTop="true"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/monthTotalCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="55.5"
+            android:layout_below="@+id/monthName"
+            android:layout_alignParentLeft="true" />
+
+        <fr.castorflex.android.circularprogressbar.CircularProgressBar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/monthReportProgressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:indeterminate="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/monthName"
+            app:cpb_color="@color/colorPrimary"
+            app:cpb_rotation_speed="1.0"
+            app:cpb_sweep_speed="1.0"
+            app:cpb_stroke_width="2dp"
+            app:cpb_min_sweep_angle="10"
+            app:cpb_max_sweep_angle="300" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/youSavedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="you saved "
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/leftPanel"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="right" />
+</RelativeLayout>
