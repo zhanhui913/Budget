@@ -293,7 +293,7 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     @Override
-    public void onAccountSetAsDefault(final Account account){
+    public void onAccountSetAsDefault(final String accountID){
         /*myRealm.beginTransaction();
 
         for(int i = 0; i < accountList.size(); i++){
@@ -324,7 +324,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 //Update in realm
                 for(int i = 0; i < element.size(); i++){
-                    if(account.getId().equalsIgnoreCase(element.get(i).getId())){
+                    if(accountID.equalsIgnoreCase(element.get(i).getId())){
                         element.get(i).setIsDefault(true);
                     }else{
                         element.get(i).setIsDefault(false);
@@ -337,7 +337,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 //Update in temp list
                 for(int i = 0; i < accountList.size(); i++){
-                    if(account.getId().equalsIgnoreCase(accountList.get(i).getId())){
+                    if(accountID.equalsIgnoreCase(accountList.get(i).getId())){
                         accountList.get(i).setIsDefault(true);
                     }else{
                         accountList.get(i).setIsDefault(false);

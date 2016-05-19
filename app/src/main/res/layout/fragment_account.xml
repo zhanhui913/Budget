@@ -4,6 +4,15 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.AccountFragment">
 
+    <TextView
+        android:id="@+id/accountDebug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Default Account : "
+        android:gravity="center"
+        android:textStyle="bold" />
+
     <in.srain.cube.views.ptr.PtrFrameLayout
         android:id="@+id/rotate_header_list_view_frame"
         android:layout_width="match_parent"
@@ -20,7 +29,7 @@
                 android:divider="?attr/themeColorHighlight"
                 android:dividerHeight="1dp"
                 android:visibility="visible"
-                android:drawSelectorOnTop="true"/>
+                android:drawSelectorOnTop="true" />
 
             <include layout="@layout/empty_transaction_indicator"
                 android:id="@+id/emptyAccountLayout"

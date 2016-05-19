@@ -54,7 +54,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private PtrFrameLayout frame;
     private PlusView header;
 
-    private TextView emptyAccountText;
+    private TextView emptyAccountText, accountDebug;
 
     private ListView accountListView;
     private AccountListAdapter accountListAdapter;
@@ -99,6 +99,9 @@ public class AccountFragment extends BaseRealmFragment implements
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
         emptyAccountText.setText("Pull down to add an account");
 
+        accountDebug = (TextView) view.findViewById(R.id.accountDebug);
+        accountDebug.setText("DEFAULT ACCOUNT : null");
+
         createPullToAddAccount();
         populateAccountWithNoInfo();
 
@@ -121,9 +124,16 @@ public class AccountFragment extends BaseRealmFragment implements
                 accountList = myRealm.copyFromRealm(element);
                 accountListAdapter.updateList(accountList);
 
-
                 updateAccountStatus();
                 populateAccountWithInfo();
+
+                //debug just to display default account
+                for(int i = 0; i < accountList.size(); i++){
+                    Log.d(TAG, i+") "+accountList.get(i).getName()+" : "+accountList.get(i).isDefault());
+                    if(accountList.get(i).isDefault()){
+                        accountDebug.setText("DEFAULT ACCOUNT : "+accountList.get(i).getName());
+                    }
+                }
             }
         });
     }
@@ -434,27 +444,7 @@ public class AccountFragment extends BaseRealmFragment implements
     }
 
     @Override
-    public void onAccountSetAsDefault(final Account account){
-  /*      myRealm.beginTransaction();
-
-        for(int i = 0; i < accountList.size(); i++){
-            if(account.getId().equalsIgnoreCase(accountList.get(i).getId())){
-                accountList.get(i).setIsDefault(true);
-            }else{
-                accountList.get(i).setIsDefault(false);
-            }
-        }
-
-        myRealm.commitTransaction();
-
-        accountListAdapter.notifyDataSetChanged();
-*/
-
-
-
-
-
-
+    public void onAccountSetAsDefault(final String accountID){
         final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
         accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
@@ -465,7 +455,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 //Update in realm
                 for(int i = 0; i < element.size(); i++){
-                    if(account.getId().equalsIgnoreCase(element.get(i).getId())){
+                    if(accountID.equalsIgnoreCase(element.get(i).getId())){
                         element.get(i).setIsDefault(true);
                     }else{
                         element.get(i).setIsDefault(false);
@@ -473,11 +463,10 @@ public class AccountFragment extends BaseRealmFragment implements
                 }
 
                 myRealm.commitTransaction();
-                //myRealm.close();
 
                 //update in temp list
                 for(int i = 0; i < accountList.size(); i++){
-                    if(account.getId().equalsIgnoreCase(accountList.get(i).getId())){
+                    if(accountID.equalsIgnoreCase(accountList.get(i).getId())){
                         accountList.get(i).setIsDefault(true);
                     }else{
                         accountList.get(i).setIsDefault(false);

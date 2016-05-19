@@ -184,7 +184,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
                 textView.setTextColor(ContextCompat.getColor(getContext(), R.color.day_highlight));
                 snackbar.show();
 
-                mListener.onAccountSetAsDefault(account);
+                mListener.onAccountSetAsDefault(account.getId());
                 return false;
             }
         });
@@ -206,6 +206,6 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
         void onPullDownAllow(boolean value);
 
-        void onAccountSetAsDefault(Account account);
+        void onAccountSetAsDefault(String accountID);
     }
 }
