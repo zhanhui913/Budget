@@ -23,6 +23,7 @@ import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.InfoFragment;
 import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
+import com.zhan.budget.Fragment.MonthReportGenericFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
 import com.zhan.budget.R;
@@ -35,7 +36,7 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalendarFragment.OnCalendarInteractionListener,
         CategoryFragment.OnCategoryInteractionListener,
-        MonthReportFragment.OnMonthlyInteractionListener,
+        MonthReportGenericFragment.OnMonthlyInteractionListener,
         AccountFragment.OnAccountInteractionListener,
         LocationFragment.OnLocationInteractionListener{
 
@@ -46,7 +47,8 @@ public class MainActivity extends BaseActivity
 
     private CalendarFragment calendarFragment;
     private CategoryFragment categoryFragment;
-    private MonthReportFragment monthReportFragment;
+    //private MonthReportFragment monthReportFragment;
+    private MonthReportGenericFragment monthReportFragment;
     private AccountFragment accountFragment;
     private InfoFragment infoFragment;
     private RateFragment rateFragment;
@@ -76,7 +78,8 @@ public class MainActivity extends BaseActivity
     private void createFragments(){
         calendarFragment = new CalendarFragment();
         categoryFragment = new CategoryFragment();
-        monthReportFragment = new MonthReportFragment();
+        //monthReportFragment = new MonthReportFragment();
+        monthReportFragment = MonthReportGenericFragment.newInstance(MonthReportGenericFragment.Quarter.Q1);
         accountFragment = new AccountFragment();
         settingFragment = new SettingFragment();
         infoFragment = new InfoFragment();

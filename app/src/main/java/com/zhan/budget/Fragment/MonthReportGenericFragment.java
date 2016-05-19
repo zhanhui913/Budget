@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.OverviewActivity;
+import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.MonthReportRecyclerAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
@@ -35,10 +36,20 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MonthReportFragment extends BaseRealmFragment implements
+public class MonthReportGenericFragment extends BaseRealmFragment implements
         MonthReportRecyclerAdapter.OnMonthReportAdapterInteractionListener{
 
-    private static final String TAG = "MonthlyFragment";
+    public enum Quarter{
+        Q1,
+        Q2,
+        Q3,
+        Q4
+    }
+
+    private static final String TAG = "MonthReportFragment";
+
+    private Quarter quarter;
+    private static final String ARG_1 = "QuarterType";
 
     private OnMonthlyInteractionListener mListener;
 
@@ -51,21 +62,23 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
     private Date currentYear;
 
-    private Date beginYear;
-    private Date endYear;
+    //private Date beginYear;
+    //private Date endYear;
 
     private List<Category> categoryList;
     private RealmResults<Category> resultsCategory;
 
+    public static MonthReportGenericFragment newInstance(Quarter type) {
+        MonthReportGenericFragment fragment = new MonthReportGenericFragment();
 
-    public MonthReportFragment() {
-        // Required empty public constructor
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_1, type);
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+    public MonthReportGenericFragment() {
+        // Required empty public constructor
     }
 
     @Override
@@ -76,6 +89,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
+
+        quarter = (Quarter) getArguments().getSerializable(ARG_1);
 
         categoryList = new ArrayList<>();
         monthReportList = new ArrayList<>();
@@ -94,21 +109,69 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
         currentYear = DateUtil.refreshYear(new Date());
 
-        createMonthCard();
+        createMonthCard(quarter);
         getCategoryList();
         updateYearInToolbar(0);
     }
 
     /**
-     * Gets called once to initialize the card view for all months
+     * Gets called once to initialize the card view for all months in this quarter
      */
-    private void createMonthCard(){
-        for(int i = 0; i < 12; i++){
+    private void createMonthCard(Quarter type){
+        /*for(int i = 0; i < 12; i++){
+            MonthReport monthReport = new MonthReport();
+            monthReport.setDoneCalculation(false); //default
+            monthReport.setMonth(DateUtil.getMonthWithDirection(currentYear, i));
+            monthReportList.add(monthReport);
+        }*/
+
+        for(int i = getFirstMonthForThisQuarter(type); i <= getLastMonthForThisQuarter(type); i++){
             MonthReport monthReport = new MonthReport();
             monthReport.setDoneCalculation(false); //default
             monthReport.setMonth(DateUtil.getMonthWithDirection(currentYear, i));
             monthReportList.add(monthReport);
         }
+
+    }
+
+    /**
+     * Gets the first month for a specific quarter (starting with 0)
+     * @param type enum Quarter
+     * @return int
+     */
+    private int getFirstMonthForThisQuarter(Quarter type){
+        switch(type){
+            case Q1:
+                return 0;
+            case Q2:
+                return 3;
+            case Q3:
+                return 6;
+            case Q4:
+                return 9;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Gets the last month for a specific quarter
+     * @param type enum Quarter
+     * @return int
+     */
+    private int getLastMonthForThisQuarter(Quarter type){
+        switch(type){
+            case Q1:
+                return 2;
+            case Q2:
+                return 5;
+            case Q3:
+                return 8;
+            case Q4:
+                return 11;
+        }
+
+        return -1;
     }
 
     /**
@@ -116,11 +179,10 @@ public class MonthReportFragment extends BaseRealmFragment implements
      */
     private void getMonthReport(){
         //Refresh these variables
-        beginYear = DateUtil.refreshYear(currentYear);
+        Date beginYear = DateUtil.refreshYear(currentYear);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        //endYear = DateUtil.getPreviousDate(DateUtil.getNextYear(beginYear));
-        endYear = DateUtil.getLastDateOfYear(beginYear);
+        Date endYear = DateUtil.getLastDateOfYear(beginYear);
 
         Log.d(TAG, "get report from " + beginYear.toString() + " to " + endYear.toString());
 
@@ -134,7 +196,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
             monthReportList.get(i).setSecondCategory(null);
             monthReportList.get(i).setThirdCategory(null);
         }
-        //monthReportGridAdapter.notifyDataSetChanged();
         monthReportRecyclerAdapter.setMonthReportList(monthReportList);
 
         transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).findAllAsync();
@@ -211,7 +272,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 float minutes = (second / 60.0f);
                 Log.d("MONTHLY_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
 
-                performTediousCalculation(0);
+                performTediousCalculation();
             }
         };
         loader.execute();
@@ -231,16 +292,12 @@ public class MonthReportFragment extends BaseRealmFragment implements
         });
     }
 
-    private void performTediousCalculation(final int indexOfMonth){
-        /*
-        final Date month = DateUtil.refreshMonth(monthReportList.get(indexOfMonth).getMonth());
-        Log.d("WHO", "checking month :"+month);
-        //Need to go a day before as Realm's between date does inclusive on both end
-        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
-        */
-        final Date month = DateUtil.refreshMonth(monthReportList.get(0).getMonth());
-        //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(monthReportList.get(11).getMonth()));
-        final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(11).getMonth()) ;
+    private void performTediousCalculation(){
+        int firstQuarterMonth = getFirstMonthForThisQuarter(quarter);
+        int lastQuarterMonth = getLastMonthForThisQuarter(quarter);
+
+        final Date month = DateUtil.refreshMonth(monthReportList.get(firstQuarterMonth).getMonth());
+        final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(lastQuarterMonth).getMonth()) ;
 
         final RealmResults<Transaction> newTransactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllSortedAsync("date");
         newTransactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
@@ -248,8 +305,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                Log.d("WHO", indexOfMonth+" ("+month+", "+endMonth+") ->"+element.size());
-                //ss(indexOfMonth, myRealm.copyFromRealm(newTransactionsResults));
+                Log.d("WHO", " ("+month+", "+endMonth+") ->"+element.size());
 
                 s1(myRealm.copyFromRealm(element));
             }
@@ -311,19 +367,23 @@ public class MonthReportFragment extends BaseRealmFragment implements
             }
         }
 
-        ss(0, janList);
-        ss(1, febList);
-        ss(2, marList);
-        ss(3, aprList);
-        ss(4, mayList);
-        ss(5, junList);
-        ss(6, julList);
-        ss(7, augList);
-        ss(8, sepList);
-        ss(9, octList);
-        ss(10, novList);
-        ss(11, decList);
-
+        if(quarter == Quarter.Q1){
+            ss(0, janList);
+            ss(1, febList);
+            ss(2, marList);
+        }else if(quarter == Quarter.Q2){
+            ss(3, aprList);
+            ss(4, mayList);
+            ss(5, junList);
+        }else if(quarter == Quarter.Q3){
+            ss(6, julList);
+            ss(7, augList);
+            ss(8, sepList);
+        }else{
+            ss(9, octList);
+            ss(10, novList);
+            ss(11, decList);
+        }
     }
 
     private void ss(final int month, final List<Transaction> ttList){
@@ -342,7 +402,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                     @Override
                     public void onCompleteCalculation(List<Category> catList) {
                         Log.d("CAT_CAL", monthReportList.get(month).getMonth()+" -> COMPLETED, size: "+catList.size());
-                        //Log.d("WHO", "top cat : "+catList.get(0).getName()+" with cost : "+catList.get(0).getCost());
 
                         if(catList.size() >= 1){
                             monthReportList.get(month).setFirstCategory(catList.get(0));
@@ -389,7 +448,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
     // Etc
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -410,7 +469,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 return super.onOptionsItemSelected(item);
         }
     }
-
+*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Lifecycle
