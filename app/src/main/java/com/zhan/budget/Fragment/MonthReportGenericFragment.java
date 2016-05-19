@@ -51,7 +51,6 @@ public class MonthReportGenericFragment extends BaseRealmFragment implements
     private Quarter quarter;
     private static final String ARG_1 = "QuarterType";
 
-    private OnMonthlyInteractionListener mListener;
 
     private List<MonthReport> monthReportList;
     private RecyclerView monthReportListview;
@@ -83,7 +82,7 @@ public class MonthReportGenericFragment extends BaseRealmFragment implements
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_month_report;
+        return R.layout.fragment_month_report_generic;
     }
 
     @Override
@@ -130,6 +129,7 @@ public class MonthReportGenericFragment extends BaseRealmFragment implements
             monthReport.setDoneCalculation(false); //default
             monthReport.setMonth(DateUtil.getMonthWithDirection(currentYear, i));
             monthReportList.add(monthReport);
+            Log.d("tas", "month : "+monthReport.getMonth());
         }
 
     }
@@ -296,8 +296,8 @@ public class MonthReportGenericFragment extends BaseRealmFragment implements
         int firstQuarterMonth = getFirstMonthForThisQuarter(quarter);
         int lastQuarterMonth = getLastMonthForThisQuarter(quarter);
 
-        final Date month = DateUtil.refreshMonth(monthReportList.get(firstQuarterMonth).getMonth());
-        final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(lastQuarterMonth).getMonth()) ;
+        final Date month = DateUtil.refreshMonth(monthReportList.get(0).getMonth());
+        final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(2).getMonth()) ;
 
         final RealmResults<Transaction> newTransactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllSortedAsync("date");
         newTransactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
@@ -372,17 +372,17 @@ public class MonthReportGenericFragment extends BaseRealmFragment implements
             ss(1, febList);
             ss(2, marList);
         }else if(quarter == Quarter.Q2){
-            ss(3, aprList);
-            ss(4, mayList);
-            ss(5, junList);
+            ss(0, aprList);
+            ss(1, mayList);
+            ss(2, junList);
         }else if(quarter == Quarter.Q3){
-            ss(6, julList);
-            ss(7, augList);
-            ss(8, sepList);
+            ss(0, julList);
+            ss(1, augList);
+            ss(2, sepList);
         }else{
-            ss(9, octList);
-            ss(10, novList);
-            ss(11, decList);
+            ss(0, octList);
+            ss(1, novList);
+            ss(2, decList);
         }
     }
 
@@ -426,7 +426,6 @@ public class MonthReportGenericFragment extends BaseRealmFragment implements
 
     private void updateYearInToolbar(int direction){
         currentYear = DateUtil.getYearWithDirection(currentYear, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat3(currentYear));
         getMonthReport();
     }
 
@@ -476,34 +475,5 @@ public class MonthReportGenericFragment extends BaseRealmFragment implements
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnMonthlyInteractionListener) {
-            mListener = (OnMonthlyInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnMonthlyInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnMonthlyInteractionListener {
-        void updateToolbar(String date);
-    }
 }
