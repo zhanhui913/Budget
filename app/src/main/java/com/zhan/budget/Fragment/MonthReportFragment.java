@@ -119,8 +119,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
         beginYear = DateUtil.refreshYear(currentYear);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        //endYear = DateUtil.getPreviousDate(DateUtil.getNextYear(beginYear));
-        endYear = DateUtil.getLastDateOfMonth(beginYear);
+        endYear = DateUtil.getLastDateOfYear(beginYear);
 
         Log.d(TAG, "get report from " + beginYear.toString() + " to " + endYear.toString());
 

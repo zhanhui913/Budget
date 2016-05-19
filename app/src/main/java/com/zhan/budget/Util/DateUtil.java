@@ -285,4 +285,13 @@ public final class DateUtil {
     public static Date getLastDateOfMonth(Date date){
         return getPreviousDate(getNextMonth(date));
     }
+
+    /**
+     * Gets the last date of the current year
+     * @param date
+     * @return last date of year
+     */
+    public static Date getLastDateOfYear(Date date){
+        return getPreviousDate(getNextYear(date));
+    }
 }
