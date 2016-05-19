@@ -3,6 +3,7 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -258,8 +259,13 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClick(getLayoutPosition());
                     Log.d("ZHAP", "on click : " + getLayoutPosition());
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        circularView.setTransitionName(getCircularTransitionName(getLayoutPosition()));
+                    }
+
+                    mListener.onClick(getLayoutPosition(), circularView);
                 }
             });
 
@@ -290,6 +296,10 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         }
     }
 
+    public String getCircularTransitionName(int position) {
+        return "zhaps" + position;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Interfaces
@@ -305,7 +315,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
 
         void onDoneDrag();
 
-        void onClick(int position);
+        void onClick(int position, CircularView cv);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +19,9 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
@@ -37,6 +40,7 @@ public class TransactionsForCategory extends BaseActivity implements
     private Date currentMonth, beginMonth, endMonth;
     private Category selectedCategory;
 
+    private CircularView transactionCategoryCV;
     private ImageView transactionCategoryIcon;
     private TextView transactionCategoryName, transactionCategoryBalance;
 
@@ -62,9 +66,18 @@ public class TransactionsForCategory extends BaseActivity implements
         transactionCategoryListView = (RecyclerView) findViewById(R.id.transactionCategoryListView);
         transactionCategoryListView.setLayoutManager(new LinearLayoutManager(instance.getBaseContext()));
 
-        transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
+        transactionCategoryCV = (CircularView) findViewById(R.id.transactionCategoryIcon);
+        //transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
+
+        //shared element from previous activity
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //transactionCategoryIcon.setTransitionName(getIntent().getExtras().getString("shared"));
+            transactionCategoryCV.setTransitionName(getIntent().getExtras().getString("shared"));
+        }
+
+
 
         beginMonth = DateUtil.refreshMonth(currentMonth);
 
@@ -72,7 +85,15 @@ public class TransactionsForCategory extends BaseActivity implements
         endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
         endMonth = DateUtil.getLastDateOfMonth(currentMonth);
 
-        transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
+        //transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
+        transactionCategoryCV.setIconResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
+        transactionCategoryCV.setStrokeWidthInDP(0);
+        transactionCategoryCV.setCircleRadiusInDP(20);
+        transactionCategoryCV.setStrokeColor(R.color.transparent);
+        transactionCategoryCV.setCircleColor(selectedCategory.getColor());
+        transactionCategoryCV.setIconResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
+        transactionCategoryCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
+
 
         transactionCategoryName.setText(selectedCategory.getName());
 

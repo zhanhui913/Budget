@@ -24,6 +24,7 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.library.CircularView;
 
 
 import java.math.BigDecimal;
@@ -382,7 +383,7 @@ public class OverviewActivity extends BaseActivity implements
     }
 
     @Override
-    public void onClick(int position){}
+    public void onClick(int position, CircularView cv){}
 }
 
 

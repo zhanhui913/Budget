@@ -1,9 +1,11 @@
 package com.zhan.budget.Fragment;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +31,7 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.PlusView;
+import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
@@ -503,18 +506,30 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         });
     }
 
+    private ActivityOptions options;
+
     @Override
-    public void onClick(int position){
+    public void onClick(int position, CircularView cv){
         if(arrangementType == CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), cv, "zhaps"+position);
+            }
+
             Toast.makeText(getContext(), "click on category :" + categoryRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
 
             Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
             viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
 
             Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
-
             viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-            startActivity(viewAllTransactionsForCategory);
+
+            viewAllTransactionsForCategory.putExtra("shared", "zhaps"+position);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(viewAllTransactionsForCategory, options.toBundle());
+            }else{
+                startActivity(viewAllTransactionsForCategory);
+            }
         }
     }
 }
