@@ -612,13 +612,17 @@ public class TransactionInfoActivity extends BaseActivity implements
         for(int i = 0; i < ttList.size(); i++){
             locationHash.add(ttList.get(i).getLocation());
         }
-Toast.makeText(this, "There are "+locationHash.size()+" unique locations", Toast.LENGTH_SHORT).show();
-        //createLocationDialog(locationHash.toArray(new String[locationHash.size()]));
+        Toast.makeText(this, "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
     }
 
     private void createLocationDialog(/*String[] locationArray*/){
+        //real one
         String[] locationArray = locationHash.toArray(new String[locationHash.size()]);
-        Toast.makeText(this, "There are "+locationArray.length+" unique locations 2", Toast.LENGTH_SHORT).show();
+
+        //testing with fake data instead of real one
+        //String[] locationArray = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
+
+        Toast.makeText(this, "There are "+locationArray.length+" unique locations on click", Toast.LENGTH_SHORT).show();
 
         // get alertdialog_generic_autocomplete.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(instance);
