@@ -34,7 +34,7 @@ public class TransactionsForCategory extends BaseActivity implements
 
     private Activity instance;
     private Toolbar toolbar;
-    private Date currentMonth, beginMonth, endMonth;
+    private Date beginMonth, endMonth;
     private Category selectedCategory;
 
     private ImageView transactionCategoryIcon;
@@ -52,7 +52,7 @@ public class TransactionsForCategory extends BaseActivity implements
     @Override
     protected void init(){
         //Get intents from caller activity
-        currentMonth = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH));
+        beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH)));
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
 
         instance = this;
@@ -66,11 +66,9 @@ public class TransactionsForCategory extends BaseActivity implements
         transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
         transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
 
-        beginMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
-        endMonth = DateUtil.getLastDateOfMonth(currentMonth);
+        endMonth = DateUtil.getLastDateOfMonth(beginMonth);
 
         transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
 
@@ -92,7 +90,7 @@ public class TransactionsForCategory extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(currentMonth));
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(beginMonth));
         }
     }
 
