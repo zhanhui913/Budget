@@ -32,8 +32,6 @@
     </style>
 
 
-
-
     <!-- Dark application theme. -->
     <style name="AppThemeDark" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>

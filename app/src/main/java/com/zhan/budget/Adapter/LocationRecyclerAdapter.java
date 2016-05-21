@@ -110,7 +110,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             panel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClickTransaction(getLayoutPosition());
+                    mListener.onClickLocation(getLayoutPosition());
                 }
             });
         }
@@ -123,6 +123,6 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public interface OnLocationAdapterInteractionListener {
-        void onClickTransaction(int position);
+        void onClickLocation(int position);
     }
 }
