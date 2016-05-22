@@ -1,10 +1,15 @@
 package com.zhan.budget.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +30,8 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
+
+import org.parceler.Parcels;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -315,6 +322,55 @@ public class OverviewActivity extends BaseActivity implements
         cc.execute();
     }
 
+    private void confirmDelete(final int position){
+        // get alertdialog_generic_message.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+
+        title.setText("Confirm Delete");
+        message.setText("Are you sure you want to delete this category?");
+
+        new AlertDialog.Builder(this)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getBaseContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        deleteCategory(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteCategory(int position){
+
+    }
+
+    private void editCategory(int position){
+        Intent editCategoryActivity = new Intent(this, CategoryInfoActivity.class);
+
+        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+
+        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
+        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
+
+        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
+    }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -368,13 +424,19 @@ public class OverviewActivity extends BaseActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onDeleteCategory(int position){}
+    public void onDeleteCategory(int position){
+        confirmDelete(position);
+    }
 
     @Override
-    public void onEditCategory(int position){}
+    public void onEditCategory(int position){
+        editCategory(position);
+    }
 
     @Override
-    public void onPullDownAllow(boolean value){}
+    public void onPullDownAllow(boolean value){
+        //not being used
+    }
 
     @Override
     public void onDoneDrag(){
@@ -382,7 +444,17 @@ public class OverviewActivity extends BaseActivity implements
     }
 
     @Override
-    public void onClick(int position){}
+    public void onClick(int position){
+        Toast.makeText(this, "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+        Intent viewAllTransactionsForCategory = new Intent(this, TransactionsForCategory.class);
+        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
+
+        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+
+        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
+        startActivity(viewAllTransactionsForCategory);
+    }
 }
 
 

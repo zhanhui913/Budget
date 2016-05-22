@@ -329,6 +329,44 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
 
+    private void confirmDelete(final int position){
+        // get alertdialog_generic_message.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
+        //AlertDialog, where it not necessary to know what the parent is.
+        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+
+        title.setText("Confirm Delete");
+        message.setText("Are you sure you want to delete this category?");
+
+        new AlertDialog.Builder(getActivity())
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        deleteCategory(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteCategory(int position){
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -408,39 +446,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         confirmDelete(position);
 
         //Toast.makeText(getContext(), "deleting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-    }
-
-    private void confirmDelete(int position){
-        // get alertdialog_generic_message.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_message, null);
-
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
-
-
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
-
-        new AlertDialog.Builder(getActivity())
-                .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
     }
 
     @Override
