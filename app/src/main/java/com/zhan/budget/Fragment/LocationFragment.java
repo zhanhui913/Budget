@@ -28,6 +28,7 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
 
@@ -106,10 +107,12 @@ public class LocationFragment extends BaseRealmFragment
         HashMap<String, Integer> locationHash = new HashMap<>();
 
         for(int i = 0; i < ttList.size(); i++){
-            if(!locationHash.containsKey(ttList.get(i).getLocation())){
-                locationHash.put(ttList.get(i).getLocation(), 1);
-            }else{
-                locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())) {
+                if (!locationHash.containsKey(ttList.get(i).getLocation())) {
+                    locationHash.put(ttList.get(i).getLocation(), 1);
+                } else {
+                    locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
+                }
             }
         }
 
