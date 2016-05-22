@@ -13,6 +13,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -35,6 +36,8 @@ public class TransactionsForLocation extends BaseRealmActivity implements
     private RecyclerView locationListView;
     private TransactionRecyclerAdapter transactionLocationAdapter;
     private List<Transaction> transactionLocationList;
+    private RealmResults<Transaction> transactionsForLocationForMonth;
+
 
     @Override
     protected int getActivityLayout(){
@@ -43,6 +46,8 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
     @Override
     protected void init(){
+        super.init();
+
         //Get intents from caller activity
         beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_MONTH)));
         location = getIntent().getExtras().getString(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION);
@@ -90,10 +95,10 @@ public class TransactionsForLocation extends BaseRealmActivity implements
     private void  getAllTransactionsWithLocationForMonth(){
         Log.d("DEBUG", "getAllTransactionsWithLocationForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
-        final Realm myRealm = Realm.getDefaultInstance();
+        //final Realm myRealm = Realm.getDefaultInstance();
 
-        final RealmResults<Transaction> resultsInMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("location", location).findAllSortedAsync("date");
-        resultsInMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+        transactionsForLocationForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("location", location).findAllSortedAsync("date");
+        transactionsForLocationForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
@@ -117,9 +122,14 @@ public class TransactionsForLocation extends BaseRealmActivity implements
                 //update balance
                 costTextView.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
 
-                myRealm.close();
+                //myRealm.close();
             }
         });
+    }
+
+    private void updateTransactionList(){
+        transactionLocationList = myRealm.copyFromRealm(transactionsForLocationForMonth);
+        transactionLocationAdapter.setTransactionList(transactionLocationList);
     }
 
     @Override
@@ -140,22 +150,34 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
     @Override
     public void onDeleteTransaction(int position){
-        /*myRealm.beginTransaction();
-        resultsAccount.remove(position);
+        myRealm.beginTransaction();
+        transactionsForLocationForMonth.deleteFromRealm(position);
         myRealm.commitTransaction();
 
-        accountListAdapter.clear();
-        accountListAdapter.addAll(accountList);*/
+        updateTransactionList();
+
         Toast.makeText(getApplicationContext(), "transactionsforlocation delete transaction :" + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onApproveTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForLocationForMonth.get(position).setDayType(DayType.COMPLETED.toString());
+        myRealm.commitTransaction();
+
+        updateTransactionList();
+
         Toast.makeText(getApplicationContext(), "transactionsforlocation approve transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onUnapproveTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForLocationForMonth.get(position).setDayType(DayType.SCHEDULED.toString());
+        myRealm.commitTransaction();
+
+        updateTransactionList();
+
         Toast.makeText(getApplicationContext(), "transactionsforlocation unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 

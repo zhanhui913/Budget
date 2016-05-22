@@ -14,6 +14,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -29,7 +30,7 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class TransactionsForCategory extends BaseActivity implements
+public class TransactionsForCategory extends BaseRealmActivity implements
         TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener{
 
     private Activity instance;
@@ -44,6 +45,9 @@ public class TransactionsForCategory extends BaseActivity implements
     private TransactionRecyclerAdapter transactionCategoryAdapter;
     private List<Transaction> transactionCategoryList;
 
+
+    private RealmResults<Transaction> transactionsForCategoryForMonth;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_transactions_for_category;
@@ -51,6 +55,9 @@ public class TransactionsForCategory extends BaseActivity implements
 
     @Override
     protected void init(){
+        super.init();
+
+
         //Get intents from caller activity
         beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH)));
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
@@ -106,10 +113,10 @@ public class TransactionsForCategory extends BaseActivity implements
     private void getAllTransactionsWithCategoryForMonth(){
         Log.d("DEBUG", "getAllTransactionsWithCategoryForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
-        final Realm myRealm = Realm.getDefaultInstance();
+        //final Realm myRealm = Realm.getDefaultInstance();
 
-        final RealmResults<Transaction> resultsInMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).findAllSortedAsync("date");
-        resultsInMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+        transactionsForCategoryForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).findAllSortedAsync("date");
+        transactionsForCategoryForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
@@ -133,9 +140,14 @@ public class TransactionsForCategory extends BaseActivity implements
                 //update balance
                 transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
 
-                myRealm.close();
+                //myRealm.close();
             }
         });
+    }
+
+    private void updateTransactionList(){
+        transactionCategoryList = myRealm.copyFromRealm(transactionsForCategoryForMonth);
+        transactionCategoryAdapter.setTransactionList(transactionCategoryList);
     }
 
     @Override
@@ -156,22 +168,34 @@ public class TransactionsForCategory extends BaseActivity implements
 
     @Override
     public void onDeleteTransaction(int position){
-        /*myRealm.beginTransaction();
-        resultsAccount.remove(position);
+        myRealm.beginTransaction();
+        transactionsForCategoryForMonth.deleteFromRealm(position);
         myRealm.commitTransaction();
 
-        accountListAdapter.clear();
-        accountListAdapter.addAll(accountList);*/
+        updateTransactionList();
+
         Toast.makeText(getApplicationContext(), "transactionsforcategory delete transaction :" + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onApproveTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForCategoryForMonth.get(position).setDayType(DayType.COMPLETED.toString());
+        myRealm.commitTransaction();
+
+        updateTransactionList();
+
         Toast.makeText(getApplicationContext(), "transactionsforcategory approve transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onUnapproveTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForCategoryForMonth.get(position).setDayType(DayType.SCHEDULED.toString());
+        myRealm.commitTransaction();
+
+        updateTransactionList();
+
         Toast.makeText(getApplicationContext(), "transactionsforcategory unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 

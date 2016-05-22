@@ -15,7 +15,7 @@ public abstract class BaseRealmActivity extends BaseActivity {
 
     protected Realm myRealm;
 
-
+/*
     @Override
     public void onStart(){
         super.onStart();
@@ -41,6 +41,12 @@ public abstract class BaseRealmActivity extends BaseActivity {
     public void onStop(){
         super.onStop();
         Log.d(TAG, "onStop");
+        closeRealm();
+    }*/
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         closeRealm();
     }
 

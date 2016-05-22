@@ -782,7 +782,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.beginTransaction();
         Log.d(TAG, "remove " + position + "-> from result");
         Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
-        resultsTransactionForDay.get(position).deleteFromRealm();
+        resultsTransactionForDay.deleteFromRealm(position);
         myRealm.commitTransaction();
         Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
         updateTransactionList();
