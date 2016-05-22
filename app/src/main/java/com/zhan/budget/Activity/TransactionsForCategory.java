@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -163,7 +165,16 @@ public class TransactionsForCategory extends BaseRealmActivity implements
 
     @Override
     public void onClickTransaction(int position){
+        Intent editTransactionIntent = new Intent(this, TransactionInfoActivity.class);
 
+        //This is edit mode, not a new transaction
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(transactionsForCategoryForMonth.get(position).getDate()));
+
+        Parcelable wrapped = Parcels.wrap(transactionsForCategoryForMonth.get(position));
+        editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
+
+        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
     }
 
     @Override

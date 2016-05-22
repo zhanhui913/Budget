@@ -774,7 +774,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
 
         editTransaction(position);
-        //updateScheduledTransactionsForDecoration();
     }
 
     @Override

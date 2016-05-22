@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +19,8 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+
+import org.parceler.Parcels;
 
 import java.util.Date;
 import java.util.List;
@@ -145,7 +149,16 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
     @Override
     public void onClickTransaction(int position){
+        Intent editTransactionIntent = new Intent(this, TransactionInfoActivity.class);
 
+        //This is edit mode, not a new transaction
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(transactionsForLocationForMonth.get(position).getDate()));
+
+        Parcelable wrapped = Parcels.wrap(transactionsForLocationForMonth.get(position));
+        editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
+
+        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
     }
 
     @Override
