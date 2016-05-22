@@ -109,21 +109,20 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     private void displayPieChartForCategory(List<Category> categoryList) {
-        ArrayList<Entry> yVals1 = new ArrayList<>();
+        ArrayList<String> categoryNames = new ArrayList<>();
+        for (int i = 0; i < categoryList.size(); i++) {
+            categoryNames.add(categoryList.get(i).getName());
+        }
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
         // xIndex (even if from different DataSets), since no values can be
         // drawn above each other.
+        ArrayList<Entry> value = new ArrayList<>();
         for (int i = 0; i < categoryList.size(); i++) {
-            yVals1.add(new Entry(Math.abs(categoryList.get(i).getCost()), i));
+            value.add(new Entry(Math.abs(categoryList.get(i).getCost()), i));
         }
 
-        ArrayList<String> xVals = new ArrayList<>();
-        for (int i = 0; i < categoryList.size(); i++) {
-            xVals.add(categoryList.get(i).getName());
-        }
-
-        PieDataSet dataSet = new PieDataSet(yVals1, "");
+        PieDataSet dataSet = new PieDataSet(value, "");
         dataSet.setSliceSpace(1f);
         dataSet.setSelectionShift(5f);
 
@@ -140,10 +139,9 @@ public class PieChartFragment extends BaseChartFragment {
         dataSet.setColors(colors);
         dataSet.setSelectionShift(10f);
 
-        PieData data = new PieData(xVals, dataSet);
+        PieData data = new PieData(categoryNames, dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(0f);
-        //data.setValueTextColor(Color.WHITE);
         pieChart.setData(data);
 
         // undo all highlights
@@ -153,21 +151,20 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     private void displayPieChartForGeneric(List<Location> list) {
-        ArrayList<Entry> yVals1 = new ArrayList<>();
+        ArrayList<String> locationNames = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            locationNames.add(list.get(i).getName());
+        }
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
         // xIndex (even if from different DataSets), since no values can be
         // drawn above each other.
+        ArrayList<Entry> value = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            yVals1.add(new Entry(Math.abs(list.get(i).getAmount()), i));
+            value.add(new Entry(Math.abs(list.get(i).getAmount()), i));
         }
 
-        ArrayList<String> xVals = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            xVals.add(list.get(i).getName());
-        }
-
-        PieDataSet dataSet = new PieDataSet(yVals1, "");
+        PieDataSet dataSet = new PieDataSet(value, "");
         dataSet.setSliceSpace(1f);
         dataSet.setSelectionShift(5f);
 
@@ -184,10 +181,9 @@ public class PieChartFragment extends BaseChartFragment {
         dataSet.setColors(colors);
         dataSet.setSelectionShift(10f);
 
-        PieData data = new PieData(xVals, dataSet);
+        PieData data = new PieData(locationNames, dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(0f);
-        //data.setValueTextColor(Color.WHITE);
         pieChart.setData(data);
 
         // undo all highlights
