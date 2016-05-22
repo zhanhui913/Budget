@@ -106,6 +106,11 @@ public class TransactionInfoActivity extends BaseActivity implements
     private Boolean isScheduledTransaction = false; //default is false
     private ScheduledTransaction scheduledTransaction;
 
+    private HashSet<String> locationHash = new HashSet<>();
+
+    //had to put this as  global because putting it as final would sometimes not allow me to put the location hash into its adapter
+    private AutoCompleteTextView inputLocation;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_transaction_info;
@@ -606,16 +611,18 @@ public class TransactionInfoActivity extends BaseActivity implements
         });
     }
 
-
-    private HashSet<String> locationHash = new HashSet<>();
     private void getUniqueList(List<Transaction> ttList){
         for(int i = 0; i < ttList.size(); i++){
-            locationHash.add(ttList.get(i).getLocation());
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())){
+                locationHash.add(ttList.get(i).getLocation());
+            }
         }
         Toast.makeText(this, "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
     }
 
-    private void createLocationDialog(/*String[] locationArray*/){
+
+
+    private void createLocationDialog(){
         //real one
         String[] locationArray = locationHash.toArray(new String[locationHash.size()]);
 
@@ -631,21 +638,21 @@ public class TransactionInfoActivity extends BaseActivity implements
         //AlertDialog, where it not necessary to know what the parent is.
         View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_autocomplete, null);
 
-        final AutoCompleteTextView input = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
-
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Add Location");
-        input.setHint("Location");
-        input.setText(locationString);
+
+        inputLocation = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
+        inputLocation.setHint("Location");
+        inputLocation.setText(locationString);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
-        input.setAdapter(adapter);
+        inputLocation.setAdapter(adapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        locationString = input.getText().toString();
+                        locationString = inputLocation.getText().toString();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -658,7 +665,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         noteDialog.show();
 
-        input.requestFocus();
+        inputLocation.requestFocus();
     }
 
     private void createRepeatDialog(){
