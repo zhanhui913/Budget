@@ -91,7 +91,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                         .marginResId(R.dimen.right_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
-
         currentYear = DateUtil.refreshYear(new Date());
 
         createMonthCard();
@@ -128,12 +127,11 @@ public class MonthReportFragment extends BaseRealmFragment implements
             monthReportList.get(i).setMonth(DateUtil.getMonthWithDirection(beginYear, i));
             monthReportList.get(i).setDoneCalculation(false);
             monthReportList.get(i).setCostThisMonth(0);
-            monthReportList.get(i).setChangeCost(0);
+            monthReportList.get(i).setIncomeThisMonth(0);
             monthReportList.get(i).setFirstCategory(null);
             monthReportList.get(i).setSecondCategory(null);
             monthReportList.get(i).setThirdCategory(null);
         }
-        //monthReportGridAdapter.notifyDataSetChanged();
         monthReportRecyclerAdapter.setMonthReportList(monthReportList);
 
         transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).findAllAsync();
@@ -184,6 +182,14 @@ public class MonthReportFragment extends BaseRealmFragment implements
                                 monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
                             }
                         }
+                    }else if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+                        int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
+
+                        for (int a = 0; a < monthReportList.size(); a++) {
+                            if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
+                                monthReportList.get(a).addIncomeThisMonth(transactionList.get(i).getPrice());
+                            }
+                        }
                     }
                 }
 
@@ -200,7 +206,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                     monthReportList.get(i).setDoneCalculation(true);
                 }
 
-                //monthReportGridAdapter.notifyDataSetChanged();
                 monthReportRecyclerAdapter.setMonthReportList(monthReportList);
 
                 endTime = System.nanoTime();
@@ -231,14 +236,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
     }
 
     private void performTediousCalculation(final int indexOfMonth){
-        /*
-        final Date month = DateUtil.refreshMonth(monthReportList.get(indexOfMonth).getMonth());
-        Log.d("WHO", "checking month :"+month);
-        //Need to go a day before as Realm's between date does inclusive on both end
-        final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
-        */
         final Date month = DateUtil.refreshMonth(monthReportList.get(0).getMonth());
-        //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(monthReportList.get(11).getMonth()));
         final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(11).getMonth()) ;
 
         final RealmResults<Transaction> newTransactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllSortedAsync("date");
@@ -248,7 +246,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 element.removeChangeListener(this);
 
                 Log.d("WHO", indexOfMonth+" ("+month+", "+endMonth+") ->"+element.size());
-                //ss(indexOfMonth, myRealm.copyFromRealm(newTransactionsResults));
 
                 s1(myRealm.copyFromRealm(element));
             }
@@ -326,7 +323,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
     }
 
     private void ss(final int month, final List<Transaction> ttList){
-
         resultsCategory = myRealm.where(Category.class).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
@@ -334,7 +330,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 element.removeChangeListener(this);
 
                 List<Category> categoryList1 = myRealm.copyFromRealm(element);
-
 
                 Log.d("CAT_CAL", "before calling categoryCalculator : there are "+categoryList1.size());
                 CategoryCalculator cc = new CategoryCalculator(getActivity(), ttList, categoryList1, monthReportList.get(month).getMonth(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
@@ -355,7 +350,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                             monthReportList.get(month).setThirdCategory(catList.get(2));
                         }
 
-                        //monthReportGridAdapter.notifyDataSetChanged();
                         monthReportRecyclerAdapter.setMonthReportList(monthReportList);
                     }
                 });

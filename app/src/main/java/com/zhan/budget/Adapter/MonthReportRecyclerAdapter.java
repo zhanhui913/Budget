@@ -3,7 +3,9 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +75,22 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
 
         viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
         viewHolder.costThisMonth.setText(CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
-        //viewHolder.changeCost.setText(CurrencyTextFormatter.formatFloat(monthReport.getChangeCost(), Constants.BUDGET_LOCALE));
+
+        float savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
+Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
+
+        Log.d("CHECK", "----- "+monthReport.getMonth()+" -----");
+        Log.d("CHECK", "cost : "+monthReport.getCostThisMonth());
+        Log.d("CHECK", "income : "+monthReport.getIncomeThisMonth());
+        Log.d("CHECK", "----- end -----");
+
+        if(savings >= 0){
+            viewHolder.savings.setTextColor(ContextCompat.getColor(context, R.color.green));
+            viewHolder.savings.setText("You saved "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
+        }else{
+            viewHolder.savings.setTextColor(ContextCompat.getColor(context, R.color.red));
+            viewHolder.savings.setText("You lost "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
+        }
 
         if(monthReport.getFirstCategory() != null){
             viewHolder.container1.setVisibility(View.VISIBLE);
@@ -134,12 +151,13 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
 
         if(monthReport.isDoneCalculation()){
             viewHolder.costThisMonth.setVisibility(View.VISIBLE);
+            viewHolder.savings.setVisibility(View.VISIBLE);
             viewHolder.progressBar.setVisibility(View.GONE);
         }else{
             viewHolder.costThisMonth.setVisibility(View.GONE);
+            viewHolder.savings.setVisibility(View.GONE);
             viewHolder.progressBar.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -163,7 +181,7 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         public ViewGroup background;
         public TextView month;
         public TextView costThisMonth;
-        public TextView changeCost;
+        public TextView savings;
         public CircularProgressBar progressBar;
 
         public ViewGroup container1, container2, container3;
@@ -179,6 +197,7 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
             background = (ViewGroup) itemView.findViewById(R.id.monthPanel);
             month = (TextView) itemView.findViewById(R.id.monthName);
             costThisMonth = (TextView) itemView.findViewById(R.id.monthTotalCost);
+            savings = (TextView) itemView.findViewById(R.id.monthSavings);
             progressBar = (CircularProgressBar) itemView.findViewById(R.id.monthReportProgressBar);
 
             container1 = (ViewGroup) itemView.findViewById(R.id.topContainer1);

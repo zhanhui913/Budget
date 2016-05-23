@@ -11,7 +11,7 @@ public class MonthReport {
 
     private Date month;
     private float costThisMonth;
-    private float changeCost;
+    private float incomeThisMonth;
 
     private boolean doneCalculation;
 
@@ -37,16 +37,20 @@ public class MonthReport {
         this.costThisMonth = costThisMonth;
     }
 
-    public float getChangeCost() {
-        return changeCost;
+    public float getIncomeThisMonth() {
+        return incomeThisMonth;
     }
 
-    public void setChangeCost(float changeCost) {
-        this.changeCost = changeCost;
+    public void setIncomeThisMonth(float changeCost) {
+        this.incomeThisMonth = changeCost;
     }
 
     public void addCostThisMonth(float cost){
         this.costThisMonth += cost;
+    }
+
+    public void addIncomeThisMonth(float income){
+        this.incomeThisMonth += income;
     }
 
     public boolean isDoneCalculation() {
