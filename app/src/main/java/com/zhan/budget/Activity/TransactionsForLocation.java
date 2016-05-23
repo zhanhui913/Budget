@@ -95,6 +95,8 @@ public class TransactionsForLocation extends BaseRealmActivity implements
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -235,6 +237,9 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent();
+
+        setResult(RESULT_OK, intent);
         finish();
     }
 

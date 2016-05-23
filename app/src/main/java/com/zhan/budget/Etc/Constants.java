@@ -51,6 +51,7 @@ public class Constants {
     public static final int RETURN_NEW_CATEGORY = 3;
     public static final int RETURN_EDIT_CATEGORY = 4;
     public static final int RETURN_NEW_OVERVIEW = 5;
+    public static final int RETURN_CHANGE_LOCATION = 6;
 
     public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
     public static final String RESULT_EDIT_TRANSACTION = "Edit Transaction Result";

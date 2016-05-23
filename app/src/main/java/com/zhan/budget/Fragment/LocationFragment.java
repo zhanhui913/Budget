@@ -24,6 +24,7 @@ import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Category;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
@@ -193,6 +194,13 @@ public class LocationFragment extends BaseRealmFragment
         mListener = null;
     }
 
+    /*
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        updateMonthInToolbar(0);
+    }*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -235,7 +243,6 @@ public class LocationFragment extends BaseRealmFragment
         void updateToolbar(String date);
     }
 
-
     @Override
     public void onClickLocation(int index){
         Toast.makeText(getContext(), "click on location :"+index, Toast.LENGTH_SHORT).show();
@@ -243,6 +250,19 @@ public class LocationFragment extends BaseRealmFragment
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_MONTH, DateUtil.convertDateToString(currentMonth));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
-        startActivity(viewAllTransactionsForLocation);
+        startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_CHANGE_LOCATION);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        resumeRealm();
+        Toast.makeText(getContext(), "1 came back from change location  "+data.getExtras(), Toast.LENGTH_SHORT).show();
+
+        if (resultCode == getActivity().RESULT_OK) {
+            if(requestCode == Constants.RETURN_CHANGE_LOCATION){
+                Toast.makeText(getContext(), "2 came back from change location", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
