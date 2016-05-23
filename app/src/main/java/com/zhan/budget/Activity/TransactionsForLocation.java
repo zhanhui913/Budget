@@ -138,7 +138,7 @@ public class TransactionsForLocation extends BaseRealmActivity implements
         transactionLocationAdapter.setTransactionList(transactionLocationList);
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         resumeRealm();
@@ -154,7 +154,7 @@ public class TransactionsForLocation extends BaseRealmActivity implements
                 }
             }
         }
-    }
+    }*/
 
     /**
      * The function that will be called after user either adds or edit a scheduled transaction.
@@ -251,7 +251,7 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
     @Override
     public void onClickTransaction(int position){
-        Intent editTransactionIntent = new Intent(this, TransactionInfoActivity.class);
+        /*Intent editTransactionIntent = new Intent(this, TransactionInfoActivity.class);
 
         //This is edit mode, not a new transaction
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
@@ -260,7 +260,7 @@ public class TransactionsForLocation extends BaseRealmActivity implements
         Parcelable wrapped = Parcels.wrap(transactionsForLocationForMonth.get(position));
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
 
-        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
+        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);*/
     }
 
     @Override

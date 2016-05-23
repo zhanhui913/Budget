@@ -165,7 +165,7 @@ public class TransactionsForCategory extends BaseRealmActivity implements
 
     @Override
     public void onClickTransaction(int position){
-        Intent editTransactionIntent = new Intent(this, TransactionInfoActivity.class);
+       /* Intent editTransactionIntent = new Intent(this, TransactionInfoActivity.class);
 
         //This is edit mode, not a new transaction
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
@@ -174,7 +174,7 @@ public class TransactionsForCategory extends BaseRealmActivity implements
         Parcelable wrapped = Parcels.wrap(transactionsForCategoryForMonth.get(position));
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
 
-        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
+        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);*/
     }
 
     @Override

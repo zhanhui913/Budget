@@ -250,19 +250,19 @@ public class LocationFragment extends BaseRealmFragment
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_MONTH, DateUtil.convertDateToString(currentMonth));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
-        startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_CHANGE_LOCATION);
+        //startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_CHANGE_LOCATION);
+        startActivity(viewAllTransactionsForLocation);
     }
-
+/*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         resumeRealm();
-        Toast.makeText(getContext(), "1 came back from change location  "+data.getExtras(), Toast.LENGTH_SHORT).show();
 
         if (resultCode == getActivity().RESULT_OK) {
             if(requestCode == Constants.RETURN_CHANGE_LOCATION){
-                Toast.makeText(getContext(), "2 came back from change location", Toast.LENGTH_SHORT).show();
+
             }
         }
-    }
+    }*/
 }
