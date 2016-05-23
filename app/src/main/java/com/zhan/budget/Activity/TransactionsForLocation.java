@@ -16,9 +16,12 @@ import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
 
@@ -32,6 +35,7 @@ import io.realm.RealmResults;
 public class TransactionsForLocation extends BaseRealmActivity implements
         TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener{
 
+    private static final String TAG = "TransactionsForLocation";
     private Activity instance;
     private Toolbar toolbar;
     private Date beginMonth, endMonth;
@@ -99,8 +103,6 @@ public class TransactionsForLocation extends BaseRealmActivity implements
     private void  getAllTransactionsWithLocationForMonth(){
         Log.d("DEBUG", "getAllTransactionsWithLocationForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
-        //final Realm myRealm = Realm.getDefaultInstance();
-
         transactionsForLocationForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("location", location).findAllSortedAsync("date");
         transactionsForLocationForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -125,8 +127,6 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
                 //update balance
                 costTextView.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
-
-                //myRealm.close();
             }
         });
     }
@@ -134,6 +134,103 @@ public class TransactionsForLocation extends BaseRealmActivity implements
     private void updateTransactionList(){
         transactionLocationList = myRealm.copyFromRealm(transactionsForLocationForMonth);
         transactionLocationAdapter.setTransactionList(transactionLocationList);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        resumeRealm();
+        if (resultCode == RESULT_OK && data.getExtras() != null) {
+            if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
+                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
+                ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
+
+                addNewOrEditTransaction(tt);
+
+                if(scheduledTransaction != null) {
+                    addScheduleTransaction(scheduledTransaction, tt);
+                }
+            }
+        }
+    }
+
+    /**
+     * The function that will be called after user either adds or edit a scheduled transaction.
+     * @param scheduledTransaction The new scheduled transaction information.
+     * @param transaction The transaction that the scheduled transaction is based on.
+     */
+    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
+        if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
+            myRealm.beginTransaction();
+            scheduledTransaction.setTransaction(transaction);
+            myRealm.copyToRealmOrUpdate(scheduledTransaction);
+            myRealm.commitTransaction();
+
+            Log.d(TAG, "----------- Parceler Result ----------");
+            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
+            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
+            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
+            Log.i(TAG, "----------- Parceler Result ----------");
+
+            transaction.setDayType(DayType.SCHEDULED.toString());
+            Date nextDate = transaction.getDate();
+
+            for(int i = 0; i < 10; i++){
+                myRealm.beginTransaction();
+
+                if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
+                    nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
+                    nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                }else{
+                    nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                    transaction.setId(Util.generateUUID());
+                    transaction.setDate(nextDate);
+                }
+
+                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                myRealm.copyToRealmOrUpdate(transaction);
+                myRealm.commitTransaction();
+            }
+        }
+    }
+
+    /**
+     * The function that will be called after user either adds or edit a transaction.
+     * @param edittedTransaction The editted transaction information.
+     */
+    private void addNewOrEditTransaction(Transaction edittedTransaction){
+        Log.d(TAG, "----------- Parceler Result ----------");
+        Log.d(TAG, "transaction id :"+edittedTransaction.getId());
+        Log.d(TAG, "transaction note :" + edittedTransaction.getNote() + ", cost :" + edittedTransaction.getPrice());
+        Log.d(TAG, "transaction daytype :" + edittedTransaction.getDayType() + ", date :" + edittedTransaction.getDate());
+        Log.d(TAG, "category name :" + edittedTransaction.getCategory().getName() + ", id:" + edittedTransaction.getCategory().getId());
+        Log.d(TAG, "category type :" + edittedTransaction.getCategory().getType());
+        Log.d(TAG, "account id : " + edittedTransaction.getAccount().getId());
+        Log.d(TAG, "account name : " + edittedTransaction.getAccount().getName());
+        Log.i(TAG, "----------- Parceler Result ----------");
+
+        myRealm.beginTransaction();
+        myRealm.copyToRealmOrUpdate(edittedTransaction);
+        myRealm.commitTransaction();
+
+        checkIfLocationIsSame(edittedTransaction);
+    }
+
+    /**
+     * If not the same, remove from list
+     */
+    private void checkIfLocationIsSame(Transaction tt){
+        if(!this.location.equalsIgnoreCase(tt.getLocation())){
+            //Update the list
+            getAllTransactionsWithLocationForMonth();
+        }else{
+            updateTransactionList();
+        }
     }
 
     @Override
@@ -168,8 +265,6 @@ public class TransactionsForLocation extends BaseRealmActivity implements
         myRealm.commitTransaction();
 
         updateTransactionList();
-
-        Toast.makeText(getApplicationContext(), "transactionsforlocation delete transaction :" + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -179,8 +274,6 @@ public class TransactionsForLocation extends BaseRealmActivity implements
         myRealm.commitTransaction();
 
         updateTransactionList();
-
-        Toast.makeText(getApplicationContext(), "transactionsforlocation approve transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -190,8 +283,6 @@ public class TransactionsForLocation extends BaseRealmActivity implements
         myRealm.commitTransaction();
 
         updateTransactionList();
-
-        Toast.makeText(getApplicationContext(), "transactionsforlocation unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 
     @Override

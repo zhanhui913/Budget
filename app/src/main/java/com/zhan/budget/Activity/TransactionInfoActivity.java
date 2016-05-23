@@ -620,8 +620,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         Toast.makeText(this, "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
     }
 
-
-
     private void createLocationDialog(){
         //real one
         String[] locationArray = locationHash.toArray(new String[locationHash.size()]);
