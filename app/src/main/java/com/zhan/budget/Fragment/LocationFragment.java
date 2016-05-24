@@ -16,22 +16,16 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-import com.zhan.budget.Activity.TransactionsForCategory;
 import com.zhan.budget.Activity.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.Location;
-import com.zhan.budget.Model.Realm.Category;
-import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
