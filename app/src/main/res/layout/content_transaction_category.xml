@@ -46,4 +46,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topPanel"/>
+
+    <TextView
+        android:id="@+id/emptyTransactionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topPanel"
+        android:text="There is no transaction for cate"
+        android:gravity="center_vertical|center_horizontal" />
 </RelativeLayout>

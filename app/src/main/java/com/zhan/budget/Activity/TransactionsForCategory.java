@@ -1,8 +1,6 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
@@ -28,7 +25,6 @@ import org.parceler.Parcels;
 import java.util.Date;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -41,7 +37,7 @@ public class TransactionsForCategory extends BaseRealmActivity implements
     private Category selectedCategory;
 
     private ImageView transactionCategoryIcon;
-    private TextView transactionCategoryName, transactionCategoryBalance;
+    private TextView transactionCategoryName, transactionCategoryBalance, emptyListTextView;
 
     private RecyclerView transactionCategoryListView;
     private TransactionRecyclerAdapter transactionCategoryAdapter;
@@ -58,7 +54,6 @@ public class TransactionsForCategory extends BaseRealmActivity implements
     @Override
     protected void init(){
         super.init();
-
 
         //Get intents from caller activity
         beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH)));
@@ -82,6 +77,10 @@ public class TransactionsForCategory extends BaseRealmActivity implements
         transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
 
         transactionCategoryName.setText(selectedCategory.getName());
+
+        emptyListTextView = (TextView) findViewById(R.id.emptyTransactionTextView);
+        emptyListTextView.setText("There is no transaction for "+selectedCategory.getName()+" during "+DateUtil.convertDateToStringFormat2(beginMonth));
+
 
         Log.d("ZHAN", "selected category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());
 
@@ -115,8 +114,6 @@ public class TransactionsForCategory extends BaseRealmActivity implements
     private void getAllTransactionsWithCategoryForMonth(){
         Log.d("DEBUG", "getAllTransactionsWithCategoryForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
-        //final Realm myRealm = Realm.getDefaultInstance();
-
         transactionsForCategoryForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).findAllSortedAsync("date");
         transactionsForCategoryForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -138,11 +135,10 @@ public class TransactionsForCategory extends BaseRealmActivity implements
                 Log.d("ZHAN", "there are " + transactionCategoryList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
 
-
                 //update balance
                 transactionCategoryBalance.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
 
-                //myRealm.close();
+                updateTransactionStatus();
             }
         });
     }
@@ -150,6 +146,18 @@ public class TransactionsForCategory extends BaseRealmActivity implements
     private void updateTransactionList(){
         transactionCategoryList = myRealm.copyFromRealm(transactionsForCategoryForMonth);
         transactionCategoryAdapter.setTransactionList(transactionCategoryList);
+
+        updateTransactionStatus();
+    }
+
+    private void updateTransactionStatus(){
+        if(transactionCategoryList.size() > 0){
+            transactionCategoryListView.setVisibility(View.VISIBLE);
+            emptyListTextView.setVisibility(View.GONE);
+        }else{
+            transactionCategoryListView.setVisibility(View.GONE);
+            emptyListTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -184,8 +192,6 @@ public class TransactionsForCategory extends BaseRealmActivity implements
         myRealm.commitTransaction();
 
         updateTransactionList();
-
-        Toast.makeText(getApplicationContext(), "transactionsforcategory delete transaction :" + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -195,8 +201,6 @@ public class TransactionsForCategory extends BaseRealmActivity implements
         myRealm.commitTransaction();
 
         updateTransactionList();
-
-        Toast.makeText(getApplicationContext(), "transactionsforcategory approve transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -206,8 +210,6 @@ public class TransactionsForCategory extends BaseRealmActivity implements
         myRealm.commitTransaction();
 
         updateTransactionList();
-
-        Toast.makeText(getApplicationContext(), "transactionsforcategory unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
