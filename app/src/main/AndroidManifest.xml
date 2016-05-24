@@ -72,6 +72,10 @@
         <activity
             android:name=".Activity.TransactionsForLocation"
             android:label="@string/title_activity_transactions_for_location"
+            android:theme="@style/AppThemeLight.NoActionBar" />
+        <activity
+            android:name=".Activity.OpenSourceActivity"
+            android:label="@string/title_activity_open_source"
             android:theme="@style/AppThemeLight.NoActionBar"></activity>
     </application>
 

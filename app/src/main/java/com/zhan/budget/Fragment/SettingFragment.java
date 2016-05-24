@@ -21,6 +21,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zhan.budget.Activity.OpenSourceActivity;
 import com.zhan.budget.Activity.SettingsAccount;
 import com.zhan.budget.Activity.SettingsCategory;
 import com.zhan.budget.Etc.Constants;
@@ -59,7 +60,7 @@ public class SettingFragment extends BaseFragment {
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn;
     private TextView themeContent, firstDayContent, backupContent;
 
-    private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
+    private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn, openLicenseBtn;
 
     //
     private static int CURRENT_THEME;
@@ -97,6 +98,7 @@ public class SettingFragment extends BaseFragment {
         emailBtn = (TextView) view.findViewById(R.id.emailBtn);
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
+        openLicenseBtn = (TextView) view.findViewById(R.id.openSourceBtn);
 
         //Set theme
         CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
@@ -209,6 +211,15 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "faq", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        openLicenseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "open source", Toast.LENGTH_SHORT).show();
+                Intent openSource = new Intent(getContext(), OpenSourceActivity.class);
+                startActivity(openSource);
             }
         });
     }

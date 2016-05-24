@@ -221,6 +221,19 @@
             android:background="?attr/themeColorBtn"
             android:text="FAQ"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/themeColorHighlight"/>
+
+        <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/openSourceBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:background="?attr/themeColorBtn"
+            android:text="Open Source Licenses"/>
+
         <TextView
             android:id="@+id/appVersionTextId"
             android:layout_width="match_parent"

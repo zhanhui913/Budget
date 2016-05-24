@@ -22,4 +22,5 @@
     <string name="title_activity_settings_account">Accounts</string>
     <string name="title_activity_settings_category">Categories</string>
     <string name="title_activity_transactions_for_location">TransactionsForLocation</string>
+    <string name="title_activity_open_source">OpenSourceActivity</string>
 </resources>
