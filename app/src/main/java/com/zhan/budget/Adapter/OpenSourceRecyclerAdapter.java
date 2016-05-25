@@ -51,11 +51,12 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
         OpenSource data = openSourceList.get(position);
 
         viewHolder.name.setText(data.getName());
-        viewHolder.icon.setStrokeWidthInDP(0);
-        viewHolder.icon.setCircleRadiusInDP(25);
-        viewHolder.icon.setStrokeColor(R.color.transparent);
+        viewHolder.author.setText(data.getAuthor());
+        //viewHolder.icon.setCircleRadiusInDP(25);
         viewHolder.icon.setCircleColor(data.getColor());
-        viewHolder.icon.setIconColor(data.getColor());
+        viewHolder.icon.setText(""+getFirstCharacterFromString(data.getName()));
+        viewHolder.icon.setTextColor("#ffffffff");
+        viewHolder.icon.setTextSizeInDP(30);
     }
 
     @Override
@@ -68,12 +69,16 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
         notifyDataSetChanged();
     }
 
+    private char getFirstCharacterFromString(String value){
+        return value.toCharArray()[0];
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView icon;
-        public TextView name;
+        public TextView name, author;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -84,6 +89,7 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
 
             icon = (CircularView) itemView.findViewById(R.id.openSourceIcon);
             name = (TextView) itemView.findViewById(R.id.openSourceName);
+            author = (TextView) itemView.findViewById(R.id.openSourceAuthor);
         }
     }
 }

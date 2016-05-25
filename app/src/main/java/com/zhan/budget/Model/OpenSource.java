@@ -5,7 +5,7 @@ package com.zhan.budget.Model;
  */
 public class OpenSource {
 
-    private String name;
+    private String name, author;
     private String color;
 
     public String getName() {
@@ -22,5 +22,13 @@ public class OpenSource {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

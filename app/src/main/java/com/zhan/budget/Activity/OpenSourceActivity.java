@@ -34,9 +34,13 @@ public class OpenSourceActivity extends BaseActivity {
     private void createOpenSourceList(){
         List<OpenSource> openSourceList = new ArrayList<>();
 
-        for(int i = 0; i < 5; i++){
+        String[] titles = new String[]{"CircularView", "FlexibleCalendar", "SwipeLayout", "Ultra-Ptr", "RoundCornerProgressBar", "Parceler", "SmoothProgressBar", "WilliamChart", "MPAndroidChart", "Android-PdfMyXml", "MaterialHelpTutorial", "FlexibleDivider"};
+        String[] authors = new String[]{"zhanhui913", "p_v", "daimajia", "scrain", "akexorcist", "parceler", "castorflex", "diogobernardino", "PhilJay", "se-bastiaan", "riggaroo", "yqritc"};
+
+        for(int i = 0; i < titles.length; i++){
             OpenSource os = new OpenSource();
-            os.setName("Open source "+i);
+            os.setName(titles[i]);
+            os.setAuthor(authors[i]);
             os.setColor(Colors.getRandomColorString(this));
             openSourceList.add(os);
         }

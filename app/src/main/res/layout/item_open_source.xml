@@ -23,6 +23,15 @@
         android:paddingLeft="16dp"
         android:text="Name"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_centerVertical="true" />
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/openSourceAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/openSourceIcon"
+        android:paddingLeft="16dp"
+        android:layout_below="@+id/openSourceName"
+        android:text="Author"
+        android:textSize="15sp" />
 </RelativeLayout>
