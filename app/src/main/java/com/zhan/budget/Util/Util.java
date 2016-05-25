@@ -175,4 +175,9 @@ public final class Util {
         wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.widthPixels;
     }
+
+    public static char getFirstCharacterFromString(String value){
+        return value.toCharArray()[0];
+    }
+
 }

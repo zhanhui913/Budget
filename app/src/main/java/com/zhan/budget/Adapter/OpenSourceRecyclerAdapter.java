@@ -15,6 +15,7 @@ import com.zhan.budget.Model.OpenSource;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
+import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -52,10 +53,9 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
 
         viewHolder.name.setText(data.getName());
         viewHolder.author.setText(data.getAuthor());
-        //viewHolder.icon.setCircleRadiusInDP(25);
         viewHolder.icon.setCircleColor(data.getColor());
-        viewHolder.icon.setText(""+getFirstCharacterFromString(data.getName()));
-        viewHolder.icon.setTextColor("#ffffffff");
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(data.getName()));
+        viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
         viewHolder.icon.setTextSizeInDP(30);
     }
 
@@ -67,10 +67,6 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
     public void setOpenSourceList(List<OpenSource> list){
         this.openSourceList = list;
         notifyDataSetChanged();
-    }
-
-    private char getFirstCharacterFromString(String value){
-        return value.toCharArray()[0];
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

@@ -14,6 +14,7 @@ import com.zhan.budget.Model.Location;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
+import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -66,11 +67,10 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
         viewHolder.name.setText(location.getName());
         viewHolder.amount.setText(location.getAmount()+ ((location.getAmount() > 1)? " times":" time"));
-        viewHolder.icon.setStrokeWidthInDP(0);
-        viewHolder.icon.setCircleRadiusInDP(25);
-        viewHolder.icon.setStrokeColor(R.color.transparent);
         viewHolder.icon.setCircleColor(location.getColor());
-        viewHolder.icon.setIconColor(location.getColor());
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName()));
+        viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        viewHolder.icon.setTextSizeInDP(30);
     }
 
     @Override
