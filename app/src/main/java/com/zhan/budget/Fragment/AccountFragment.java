@@ -16,17 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.AccountListAdapter;
-import com.zhan.budget.Adapter.AccountListAdapter1;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
@@ -40,7 +36,6 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -48,7 +43,7 @@ import io.realm.RealmResults;
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends BaseRealmFragment implements
-        AccountListAdapter1.OnAccountAdapterInteractionListener{
+        AccountListAdapter.OnAccountAdapterInteractionListener{
 
     private static final String TAG = "AccountFragment";
 
@@ -60,10 +55,8 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private TextView emptyAccountText, accountDebug;
 
-    //private ListView accountListView;
-    //private AccountListAdapter accountListAdapter;
     private RecyclerView accountListView;
-    private AccountListAdapter1 accountListAdapter;
+    private AccountListAdapter accountListAdapter;
 
     private RealmResults<Account> resultsAccount;
     private List<Account> accountList;
@@ -97,14 +90,11 @@ public class AccountFragment extends BaseRealmFragment implements
         currentMonth = new Date();
 
         accountList = new ArrayList<>();
-        //accountListView = (ListView) view.findViewById(R.id.accountListView);
-        //accountListAdapter = new AccountListAdapter(this, accountList, true);
-        //accountListView.setAdapter(accountListAdapter);
 
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
         accountListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        accountListAdapter = new AccountListAdapter1(this, accountList, true);
+        accountListAdapter = new AccountListAdapter(this, accountList, true);
         accountListView.setAdapter(accountListAdapter);
 
         //Add divider
@@ -165,7 +155,6 @@ public class AccountFragment extends BaseRealmFragment implements
         //Need to go a day before as Realm's between date does inclusive on both end
         //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
         final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
-
 
         Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
 
@@ -445,7 +434,7 @@ public class AccountFragment extends BaseRealmFragment implements
     @Override
     public void onDeleteAccount(int position){
         myRealm.beginTransaction();
-        resultsAccount.remove(position);
+        resultsAccount.get(position).deleteFromRealm();
         myRealm.commitTransaction();
 
        // accountListAdapter.notifyDataSetChanged();

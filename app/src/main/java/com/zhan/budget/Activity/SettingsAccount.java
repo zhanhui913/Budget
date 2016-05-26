@@ -2,20 +2,20 @@ package com.zhan.budget.Activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
@@ -43,7 +43,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     private TextView emptyAccountText;
 
-    private ListView accountListView;
+    private RecyclerView accountListView;
     private AccountListAdapter accountListAdapter;
 
     private RealmResults<Account> resultsAccount;
@@ -63,9 +63,18 @@ public class SettingsAccount extends BaseRealmActivity implements
         createToolbar();
 
         accountList = new ArrayList<>();
-        accountListView = (ListView) findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(this, accountList, false);
+        accountListView = (RecyclerView)findViewById(R.id.accountListView);
+        accountListView.setLayoutManager(new LinearLayoutManager(this));
+
+        accountListAdapter = new AccountListAdapter(this, accountList, true);
         accountListView.setAdapter(accountListAdapter);
+
+        //Add divider
+        accountListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(this)
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
+
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
@@ -101,7 +110,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 Log.d(TAG, "there's a change in results account ");
                 accountList = myRealm.copyFromRealm(element);
-                accountListAdapter.updateList(accountList);
+                accountListAdapter.setAccountList(accountList);
 
                 updateAccountStatus();
             }
@@ -198,7 +207,7 @@ public class SettingsAccount extends BaseRealmActivity implements
                         myRealm.commitTransaction();
 
                         accountList.get(position).setName(input.getText().toString());
-                        accountListAdapter.updateList(accountList);
+                        accountListAdapter.setAccountList(accountList);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -239,7 +248,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                         Account acc = myRealm.copyFromRealm(newAccount);
                         accountList.add(acc);
-                        accountListAdapter.updateList(accountList);
+                        accountListAdapter.setAccountList(accountList);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -253,7 +262,7 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     private void updateAccountStatus(){
-        if(accountListAdapter.getCount() > 0){
+        if(accountListAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
@@ -276,7 +285,7 @@ public class SettingsAccount extends BaseRealmActivity implements
     @Override
     public void onDeleteAccount(int position){
         myRealm.beginTransaction();
-        resultsAccount.remove(position);
+        resultsAccount.get(position).deleteFromRealm();
         myRealm.commitTransaction();
 
         // accountListAdapter.notifyDataSetChanged();
@@ -294,26 +303,6 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onAccountSetAsDefault(final String accountID){
-        /*myRealm.beginTransaction();
-
-        for(int i = 0; i < accountList.size(); i++){
-            if(account.getId().equalsIgnoreCase(accountList.get(i).getId())){
-                accountList.get(i).setIsDefault(true);
-            }else{
-                accountList.get(i).setIsDefault(false);
-            }
-        }
-
-        myRealm.commitTransaction();
-        myRealm.close();
-
-        //refresh lish
-        accountListAdapter.notifyDataSetChanged();
-        */
-
-
-
-
         final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
         accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
@@ -332,8 +321,6 @@ public class SettingsAccount extends BaseRealmActivity implements
                 }
 
                 myRealm.commitTransaction();
-                //myRealm.close();
-
 
                 //Update in temp list
                 for(int i = 0; i < accountList.size(); i++){
