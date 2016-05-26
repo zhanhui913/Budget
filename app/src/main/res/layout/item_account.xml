@@ -56,24 +56,34 @@
                 android:tint="@color/colorPrimaryDark"/>
         </RelativeLayout>
 
+        <com.zhan.library.CircularView
+            android:id="@+id/accountIcon"
+            style="@style/CircularViewStyle_unselected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+
         <TextView
             android:id="@+id/accountName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="credit card"
-            android:layout_toLeftOf="@+id/indicatorContainer"/>
+            android:paddingLeft="16dp"
+            android:layout_toLeftOf="@+id/indicatorContainer"
+            android:layout_toRightOf="@+id/accountIcon" />
 
         <TextView
             android:id="@+id/accountCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="$25.00"
-            android:layout_alignParentLeft="true"
+            android:paddingLeft="16dp"
             android:layout_below="@+id/accountName"
-            android:layout_toLeftOf="@+id/indicatorContainer"/>
+            android:layout_toLeftOf="@+id/indicatorContainer"
+            android:layout_toRightOf="@+id/accountIcon" />
 
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.AccountListAdapter;
+import com.zhan.budget.Adapter.AccountListAdapter1;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -44,7 +48,7 @@ import io.realm.RealmResults;
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends BaseRealmFragment implements
-        AccountListAdapter.OnAccountAdapterInteractionListener{
+        AccountListAdapter1.OnAccountAdapterInteractionListener{
 
     private static final String TAG = "AccountFragment";
 
@@ -56,8 +60,10 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private TextView emptyAccountText, accountDebug;
 
-    private ListView accountListView;
-    private AccountListAdapter accountListAdapter;
+    //private ListView accountListView;
+    //private AccountListAdapter accountListAdapter;
+    private RecyclerView accountListView;
+    private AccountListAdapter1 accountListAdapter;
 
     private RealmResults<Account> resultsAccount;
     private List<Account> accountList;
@@ -91,9 +97,21 @@ public class AccountFragment extends BaseRealmFragment implements
         currentMonth = new Date();
 
         accountList = new ArrayList<>();
-        accountListView = (ListView) view.findViewById(R.id.accountListView);
-        accountListAdapter = new AccountListAdapter(this, accountList, true);
+        //accountListView = (ListView) view.findViewById(R.id.accountListView);
+        //accountListAdapter = new AccountListAdapter(this, accountList, true);
+        //accountListView.setAdapter(accountListAdapter);
+
+        accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
+        accountListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        accountListAdapter = new AccountListAdapter1(this, accountList, true);
         accountListView.setAdapter(accountListAdapter);
+
+        //Add divider
+        accountListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getContext())
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
@@ -122,7 +140,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 Log.d(TAG, "there's a change in results account ");
                 accountList = myRealm.copyFromRealm(element);
-                accountListAdapter.updateList(accountList);
+                accountListAdapter.setAccountList(accountList);
 
                 updateAccountStatus();
                 populateAccountWithInfo();
@@ -211,7 +229,7 @@ public class AccountFragment extends BaseRealmFragment implements
                     Log.d("ZHAN1", "category : "+accountList.get(i).getName()+" -> "+accountList.get(i).getCost());
                 }
 
-                accountListAdapter.updateList(accountList);
+                accountListAdapter.setAccountList(accountList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -315,7 +333,7 @@ public class AccountFragment extends BaseRealmFragment implements
                         myRealm.commitTransaction();
 
                         accountList.get(position).setName(input.getText().toString());
-                        accountListAdapter.updateList(accountList);
+                        accountListAdapter.setAccountList(accountList);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -356,7 +374,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                         Account acc = myRealm.copyFromRealm(newAccount);
                         accountList.add(acc);
-                        accountListAdapter.updateList(accountList);
+                        accountListAdapter.setAccountList(accountList);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -370,7 +388,7 @@ public class AccountFragment extends BaseRealmFragment implements
     }
 
     private void updateAccountStatus(){
-        if(accountListAdapter.getCount() > 0){
+        if(accountListAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
