@@ -87,7 +87,7 @@ public class LocationFragment extends BaseRealmFragment
         //Add divider
         locationListview.addItemDecoration(
                 new HorizontalDividerItemDecoration.Builder(getContext())
-                        .marginResId(R.dimen.right_padding_divider, R.dimen.right_padding_divider)
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
         //Setup pie chart
