@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -301,7 +302,7 @@ public class AccountFragment extends BaseRealmFragment implements
             }
         });
     }
-
+/*
     private void editAccount(final int position){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
@@ -342,7 +343,7 @@ public class AccountFragment extends BaseRealmFragment implements
                 .create()
                 .show();
     }
-/*
+
     private void addAccount(){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
@@ -386,8 +387,23 @@ public class AccountFragment extends BaseRealmFragment implements
 */
     private void addAccount(){
         Intent addAccountIntent = new Intent(getContext(), AccountInfoActivity.class);
-        addAccountIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
+        addAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, true);
         startActivityForResult(addAccountIntent, Constants.RETURN_NEW_ACCOUNT);
+    }
+
+    private void editAccount(int position){
+        Log.d("ACCOUNT_INFO", "trying to edit account at pos : "+position);
+        Log.d("ACCOUNT_INFO", "accoutn name : " +accountList.get(position).getName());
+        Log.d("ACCOUNT_INFO", "accoutn id : " +accountList.get(position).getId());
+        Log.d("ACCOUNT_INFO", "accoutn color : " +accountList.get(position).getColor());
+
+
+
+        Intent editAccountIntent = new Intent(getContext(), AccountInfoActivity.class);
+        Parcelable wrapped = Parcels.wrap(accountListAdapter.getAccountList().get(position));
+        editAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, false);
+        editAccountIntent.putExtra(Constants.REQUEST_EDIT_ACCOUNT, wrapped);
+        startActivityForResult(editAccountIntent, Constants.RETURN_EDIT_ACCOUNT);
     }
 
     private void updateAccountStatus(){

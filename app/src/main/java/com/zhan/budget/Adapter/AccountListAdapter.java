@@ -74,8 +74,9 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         // getting Account data for the row
         final Account account = accountList.get(position);
 
-        //get random color for account icon
-        viewHolder.icon.setCircleColor(Colors.getRandomColorString(context));
+        viewHolder.name.setText(account.getName());
+
+        viewHolder.icon.setCircleColor(account.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(account.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
         viewHolder.icon.setTextSizeInDP(30);

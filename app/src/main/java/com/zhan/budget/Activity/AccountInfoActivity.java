@@ -57,10 +57,19 @@ public class AccountInfoActivity extends BaseActivity implements
     protected void init(){
         instance = this;
 
-        isNewAccount = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
-Toast.makeText(this, "isNew Account "+isNewAccount, Toast.LENGTH_SHORT).show();
+        isNewAccount = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_ACCOUNT);
+
+        Log.d("ACCOUNT_INFO", "isNewAccount "+isNewAccount);
+
+
         if(!isNewAccount){
-            account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
+            account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_ACCOUNT));
+
+
+            Log.d("ACCOUNT_INFO", "received account name : " +account.getName());
+            Log.d("ACCOUNT_INFO", "received account id : " +account.getId());
+            Log.d("ACCOUNT_INFO", "received account color : " +account.getColor());
+
         }else{
             //Give default account values
             account = new Account();
@@ -147,7 +156,7 @@ Toast.makeText(this, "isNew Account "+isNewAccount, Toast.LENGTH_SHORT).show();
 
         genericTitle.setText("Account Name");
         input.setText(accountNameTextView.getText());
-        input.setHint("Category");
+        input.setHint("Account");
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -187,7 +196,7 @@ Toast.makeText(this, "isNew Account "+isNewAccount, Toast.LENGTH_SHORT).show();
 
 
         title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
+        message.setText("Are you sure you want to delete this account?");
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -231,7 +240,7 @@ Toast.makeText(this, "isNew Account "+isNewAccount, Toast.LENGTH_SHORT).show();
         Log.d("ACCOUNT_INFO_ACTIVITY", "Account name : "+acc.getName());
         Log.d("ACCOUNT_INFO_ACTIVITY", "id : " + acc.getId());
         Log.d("ACCOUNT_INFO_ACTIVITY", "color : " + acc.getColor());
-        Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
+        Log.d("ACCOUNT_INFO_ACTIVITY", "-----Results-----");
 
         Parcelable wrapped = Parcels.wrap(account);
         myRealm.close();
@@ -247,7 +256,7 @@ Toast.makeText(this, "isNew Account "+isNewAccount, Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    private void updateCategoryColor(){
+    private void updateCircularColor(){
         accountCircularView.setCircleColor(selectedColor);
     }
 
@@ -294,8 +303,8 @@ Toast.makeText(this, "isNew Account "+isNewAccount, Toast.LENGTH_SHORT).show();
 
     @Override
     public void onColorCategoryClick(String color){
-        Log.d("CATEGORY_INFO", "click on color : "+color);
+        Log.d("ACCOUNT_INFO", "click on color : "+color);
         selectedColor = color;
-        updateCategoryColor();
+        updateCircularColor();
     }
 }
