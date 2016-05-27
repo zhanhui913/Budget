@@ -122,7 +122,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         notifyDataSetChanged();
     }
 
-    public List<Account> getLocationList(){
+    public List<Account> getAccountList(){
         return this.accountList;
     }
 
