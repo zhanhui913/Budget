@@ -73,6 +73,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private RealmResults<Transaction> resultsTransaction;
     private List<Transaction> transactionMonthList;
 
+    private int accountIndexEdited;//The index of the account that the user just finished edited.
 
     public AccountFragment() {
         // Required empty public constructor
@@ -439,33 +440,25 @@ public class AccountFragment extends BaseRealmFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
+                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
 
                 Log.i("ZHAN", "----------- onActivityResult edit account ----------");
-
-                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
                 Log.d("ZHAN", "account name is "+accountReturned.getName());
                 Log.d("ZHAN", "account color is "+accountReturned.getColor());
                 Log.d("ZHAN", "account id is "+accountReturned.getId());
-
-
                 Log.i("ZHAN", "----------- onActivityResult edit account ----------");
 
-
+                accountList.set(accountIndexEdited, accountReturned);
+                accountListAdapter.setAccountList(accountList);
 
                 updateAccountStatus();
-
-                //categoryList.set(categoryIndexEditted, categoryReturned);
-                //categoryRecyclerAdapter.setCategoryList(categoryList);
             }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
-                Log.i("ZHAN", "----------- onActivityResult new account ----------");
-
-
                 final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+
+                Log.i("ZHAN", "----------- onActivityResult new account ----------");
                 Log.d("ZHAN", "account name is "+accountReturned.getName());
                 Log.d("ZHAN", "account color is "+accountReturned.getColor());
                 Log.d("ZHAN", "account id is "+accountReturned.getId());
-
-
                 Log.i("ZHAN", "----------- onActivityResult new account ----------");
 
                 accountList.add(accountReturned);
@@ -478,7 +471,6 @@ public class AccountFragment extends BaseRealmFragment implements
             }
         }
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -502,6 +494,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onEditAccount(int position){
+        accountIndexEdited = position;
         editAccount(position);
     }
 

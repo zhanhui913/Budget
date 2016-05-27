@@ -60,7 +60,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private CategoryGenericRecyclerAdapter categoryRecyclerAdapter;
     private RecyclerView categoryListView;
 
-    private int categoryIndexEditted;//The index of the category that the user just finished editted.
+    private int categoryIndexEdited;//The index of the category that the user just finished edited.
 
     private Date currentMonth;
 
@@ -372,11 +372,9 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_CATEGORY) {
-
-                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
-
                 final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
 
+                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
                 Log.d("ZHAN", "category name is "+categoryReturned.getName());
                 Log.d("ZHAN", "category color is "+categoryReturned.getColor());
                 Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
@@ -385,17 +383,16 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 Log.i("ZHAN", "----------- onActivityResult edit category ----------");
 
-                Log.i("ZHAN", "eddited index :" + categoryIndexEditted);
+                Log.i("ZHAN", "eddited index :" + categoryIndexEdited);
 
-                categoryList.set(categoryIndexEditted, categoryReturned);
+                categoryList.set(categoryIndexEdited, categoryReturned);
                 categoryRecyclerAdapter.setCategoryList(categoryList);
 
                 updateCategoryStatus();
             }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
-                Log.i("ZHAN", "----------- onActivityResult new category ----------");
-
                 final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_CATEGORY));
 
+                Log.i("ZHAN", "----------- onActivityResult new category ----------");
                 Log.d("ZHAN", "category name is "+categoryReturned.getName());
                 Log.d("ZHAN", "category color is "+categoryReturned.getColor());
                 Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
@@ -452,7 +449,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onEditCategory(int position){
-        categoryIndexEditted = position;
+        categoryIndexEdited = position;
         editCategory(position);
     }
 
