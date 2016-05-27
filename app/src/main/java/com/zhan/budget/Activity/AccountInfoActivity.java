@@ -233,7 +233,7 @@ public class AccountInfoActivity extends BaseActivity implements
         }
 
         acc.setName(accountNameTextView.getText().toString());
-        acc.setColor(selectedColor);
+        acc.setColor(account.getColor());
         myRealm.commitTransaction();
 
         Log.d("ACCOUNT_INFO_ACTIVITY", "-----Results-----");
@@ -241,6 +241,7 @@ public class AccountInfoActivity extends BaseActivity implements
         Log.d("ACCOUNT_INFO_ACTIVITY", "id : " + acc.getId());
         Log.d("ACCOUNT_INFO_ACTIVITY", "color : " + acc.getColor());
         Log.d("ACCOUNT_INFO_ACTIVITY", "-----Results-----");
+        Log.d("ACCOUNT_INFO_ACTIVITY", "collor 2 "+account.getColor());
 
         Parcelable wrapped = Parcels.wrap(account);
         myRealm.close();
@@ -305,6 +306,7 @@ public class AccountInfoActivity extends BaseActivity implements
     public void onColorCategoryClick(String color){
         Log.d("ACCOUNT_INFO", "click on color : "+color);
         selectedColor = color;
+        account.setColor(selectedColor);
         updateCircularColor();
     }
 }
