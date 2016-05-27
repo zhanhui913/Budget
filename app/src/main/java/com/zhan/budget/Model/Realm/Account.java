@@ -17,6 +17,7 @@ public class Account extends RealmObject{
     private String name;
     private boolean isDefault;
     private float cost;
+    private String color;
 
     public Account(){
 
@@ -52,5 +53,13 @@ public class Account extends RealmObject{
 
     public void setCost(float cost) {
         this.cost = cost;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
