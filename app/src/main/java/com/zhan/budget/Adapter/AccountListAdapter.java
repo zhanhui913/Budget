@@ -76,7 +76,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
         //get random color for account icon
         viewHolder.icon.setCircleColor(Colors.getRandomColorString(context));
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(account.getName()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(account.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
         viewHolder.icon.setTextSizeInDP(30);
 

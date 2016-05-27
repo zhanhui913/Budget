@@ -217,6 +217,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             account.setId(Util.generateUUID());
             account.setName(tempAccountList[i]);
             account.setIsDefault((i == 0));
+            account.setColor(Colors.getRandomColorString(getContext()));
             accountList.add(account);
         }
 

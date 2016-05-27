@@ -68,7 +68,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         viewHolder.name.setText(location.getName());
         viewHolder.amount.setText(location.getAmount()+ ((location.getAmount() > 1)? " times":" time"));
         viewHolder.icon.setCircleColor(location.getColor());
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
         viewHolder.icon.setTextSizeInDP(30);
     }

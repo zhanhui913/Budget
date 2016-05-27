@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.zhan.budget.Activity.AccountInfoActivity"
+    tools:showIn="@layout/activity_account_info">
+
+    <RelativeLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/accountCircularView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            custom:cv_iconColor="?attr/themeColor"/>
+
+        <TextView
+            android:id="@+id/accountNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Account Name"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:layout_toRightOf="@+id/accountCircularView"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:gravity="right" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/themeColorText"
+        android:layout_below="@+id/topPanel"/>
+<!--
+    <android.support.v4.view.ViewPager
+        android:id="@+id/colorViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_below="@+id/indicatorPanel"
+        android:layout_above="@+id/centerPanel"/>
+-->
+    <FrameLayout
+        android:id="@+id/colorFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/divider"
+        android:layout_above="@+id/centerPanel"/>
+
+    <LinearLayout
+        android:id="@+id/centerPanel"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/changeNameBtn"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="1dp"
+            android:background="@drawable/budget_green_button"
+            android:src="@drawable/svg_ic_edit" />
+
+        <ImageButton
+            android:id="@+id/deleteAccountBtn"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:background="@drawable/budget_green_button"
+            android:src="@drawable/svg_ic_delete" />
+    </LinearLayout>
+</RelativeLayout>

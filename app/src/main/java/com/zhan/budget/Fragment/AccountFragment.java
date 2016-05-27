@@ -1,8 +1,10 @@
 package com.zhan.budget.Fragment;
 
 import android.app.AlertDialog;
+import android.app.usage.ConfigurationStats;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,13 +21,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Adapter.AccountListAdapter;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -334,7 +341,7 @@ public class AccountFragment extends BaseRealmFragment implements
                 .create()
                 .show();
     }
-
+/*
     private void addAccount(){
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
@@ -374,6 +381,12 @@ public class AccountFragment extends BaseRealmFragment implements
                 })
                 .create()
                 .show();
+    }
+*/
+    private void addAccount(){
+        Intent addAccountIntent = new Intent(getContext(), AccountInfoActivity.class);
+        addAccountIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
+        startActivityForResult(addAccountIntent, Constants.RETURN_NEW_ACCOUNT);
     }
 
     private void updateAccountStatus(){
@@ -419,6 +432,53 @@ public class AccountFragment extends BaseRealmFragment implements
         super.onDetach();
         mListener = null;
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data != null) {
+            if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
+
+                Log.i("ZHAN", "----------- onActivityResult edit account ----------");
+
+                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
+                Log.d("ZHAN", "account name is "+accountReturned.getName());
+                Log.d("ZHAN", "account color is "+accountReturned.getColor());
+                Log.d("ZHAN", "account id is "+accountReturned.getId());
+
+
+                Log.i("ZHAN", "----------- onActivityResult edit account ----------");
+
+
+
+                updateAccountStatus();
+
+                //categoryList.set(categoryIndexEditted, categoryReturned);
+                //categoryRecyclerAdapter.setCategoryList(categoryList);
+            }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
+                Log.i("ZHAN", "----------- onActivityResult new account ----------");
+
+
+                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+                Log.d("ZHAN", "account name is "+accountReturned.getName());
+                Log.d("ZHAN", "account color is "+accountReturned.getColor());
+                Log.d("ZHAN", "account id is "+accountReturned.getId());
+
+
+                Log.i("ZHAN", "----------- onActivityResult new account ----------");
+
+                accountList.add(accountReturned);
+                accountListAdapter.setAccountList(accountList);
+
+                updateAccountStatus();
+
+                //Scroll to the last position
+                accountListView.scrollToPosition(accountListAdapter.getItemCount() - 1);
+            }
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

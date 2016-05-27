@@ -76,6 +76,10 @@
         <activity
             android:name=".Activity.OpenSourceActivity"
             android:label="@string/title_activity_open_source"
+            android:theme="@style/AppThemeLight.NoActionBar" />
+        <activity
+            android:name=".Activity.AccountInfoActivity"
+            android:label="@string/title_activity_account_info"
             android:theme="@style/AppThemeLight.NoActionBar"></activity>
     </application>
 

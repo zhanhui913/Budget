@@ -387,10 +387,10 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 Log.i("ZHAN", "eddited index :" + categoryIndexEditted);
 
-                updateCategoryStatus();
-
                 categoryList.set(categoryIndexEditted, categoryReturned);
                 categoryRecyclerAdapter.setCategoryList(categoryList);
+
+                updateCategoryStatus();
             }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
                 Log.i("ZHAN", "----------- onActivityResult new category ----------");
 
@@ -404,10 +404,12 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 Log.i("ZHAN", "----------- onActivityResult new category ----------");
 
-                updateCategoryStatus();
-
                 categoryList.add(categoryReturned);
                 categoryRecyclerAdapter.setCategoryList(categoryList);
+                updateCategoryStatus();
+
+                //Scroll to the last position
+                categoryListView.scrollToPosition(categoryRecyclerAdapter.getItemCount() - 1);
             }
         }
     }

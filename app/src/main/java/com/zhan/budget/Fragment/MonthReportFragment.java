@@ -374,7 +374,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
     public void onClickMonth(int position){
         Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
         overviewActivity.putExtra(Constants.REQUEST_NEW_OVERVIEW_MONTH, monthReportList.get(position).getMonth());
-        startActivityForResult(overviewActivity, Constants.RETURN_NEW_OVERVIEW);
+        //startActivityForResult(overviewActivity, Constants.RETURN_NEW_OVERVIEW);
+        startActivity(overviewActivity);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

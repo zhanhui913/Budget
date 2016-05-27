@@ -4,6 +4,7 @@ import org.parceler.Parcel;
 
 import io.realm.AccountRealmProxy;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 @Parcel(implementations = {AccountRealmProxy.class},
@@ -16,8 +17,10 @@ public class Account extends RealmObject{
 
     private String name;
     private boolean isDefault;
-    private float cost;
     private String color;
+
+    @Ignore
+    private float cost;
 
     public Account(){
 
