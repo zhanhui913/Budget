@@ -11,10 +11,6 @@
             android:icon="@drawable/svg_ic_menu_category"
             android:title="Category" />
         <item
-            android:id="@+id/nav_overview"
-            android:icon="@drawable/svg_ic_menu_monthly_overview"
-            android:title="Monthly Report" />
-        <item
             android:id="@+id/nav_account"
             android:icon="@drawable/svg_ic_menu_account"
             android:title="Account" />
@@ -22,6 +18,10 @@
             android:id="@+id/nav_location"
             android:icon="@drawable/svg_ic_location"
             android:title="Location" />
+        <item
+            android:id="@+id/nav_overview"
+            android:icon="@drawable/svg_ic_menu_monthly_overview"
+            android:title="Monthly Report" />
     </group>
 
     <group android:id="@+id/nav2" android:checkableBehavior="single">
