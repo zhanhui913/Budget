@@ -550,7 +550,15 @@ public class SettingFragment extends BaseFragment {
                                 .schemaVersion(1)
                                 .build();
 
-                        Realm.deleteRealm(config);
+
+                        //Manually delete realm file
+                        Realm myRealm = Realm.getDefaultInstance();
+                        String path = myRealm.getPath();
+                        myRealm.close();
+                        File file = new File(path);
+                        file.delete();
+
+                        //Realm.deleteRealm(config);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

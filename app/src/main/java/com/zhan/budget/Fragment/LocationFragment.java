@@ -244,7 +244,6 @@ public class LocationFragment extends BaseRealmFragment
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_MONTH, DateUtil.convertDateToString(currentMonth));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
-        //startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_CHANGE_LOCATION);
         startActivity(viewAllTransactionsForLocation);
     }
 /*

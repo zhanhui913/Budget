@@ -111,7 +111,7 @@ public class TransactionsForLocation extends BaseRealmActivity implements
                                 .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                                 .build());
 
-                Log.d("ZHAN", "there are " + transactionLocationList.size() + " transactions in this category " + location + " for this month " + beginMonth + " -> " + endMonth);
+                Log.d("ZHAN", "there are " + transactionLocationList.size() + " transactions in this location " + location + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
 
                 //update balance

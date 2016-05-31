@@ -44,6 +44,9 @@ public class Constants {
     public static final String REQUEST_NEW_OVERVIEW_MONTH = "New Overview Month";
     public static final String REQUEST_ALL_TRANSACTION_FOR_LOCATION_MONTH = "Request all transaction for location month";
     public static final String REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION = "Request all transaction for location location";
+    public static final String REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_MONTH = "Request all transaction for account month";
+    public static final String REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT = "Request all transaction for account account";
+    public static final String REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ID = "Request all transaction for account id";
     public static final String REQUEST_NEW_ACCOUNT = "New Account";
     public static final String REQUEST_EDIT_ACCOUNT = "Edit Account";
 

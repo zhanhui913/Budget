@@ -20,9 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
+import com.zhan.budget.Activity.TransactionsForAccount;
+import com.zhan.budget.Activity.TransactionsForLocation;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
@@ -496,7 +499,13 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickAccount(int position){
+        Toast.makeText(getContext(), "click on account :"+position, Toast.LENGTH_SHORT).show();
 
+        Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
+        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, accountList.get(position).getName());
+        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ID, accountList.get(position).getId());
+        startActivity(viewAllTransactionsForAccount);
     }
 
     @Override

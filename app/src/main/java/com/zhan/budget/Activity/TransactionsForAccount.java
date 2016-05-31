@@ -1,30 +1,174 @@
 package com.zhan.budget.Activity;
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
-import com.zhan.budget.R;
+import android.widget.TextView;
 
-public class TransactionsForAccount extends AppCompatActivity {
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
+import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.R;
+import com.zhan.budget.Util.DateUtil;
+
+import java.util.Date;
+import java.util.List;
+
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+
+public class TransactionsForAccount extends BaseRealmActivity implements
+        TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener{
+
+    private static final String TAG = "TransactionsForAccount";
+    private Activity instance;
+    private Toolbar toolbar;
+    private Date beginMonth, endMonth;
+    private String account, accountId;
+    private TextView accountTextView, costTextView;
+    private RecyclerView accountListView;
+    private TransactionRecyclerAdapter transactionAccountAdapter;
+    private List<Transaction> transactionAccountList;
+    private RealmResults<Transaction> transactionsForAccountForMonth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transactions_for_account);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    protected int getActivityLayout(){
+        return R.layout.activity_transactions_for_account;
+    }
+
+    @Override
+    protected void init(){
+        super.init();
+
+        //Get intents from caller activity
+        beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_MONTH)));
+        account = getIntent().getExtras().getString(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT);
+        accountId = getIntent().getExtras().getString(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ID);
+
+        instance = this;
+
+        endMonth = DateUtil.getLastDateOfMonth(beginMonth);
+
+        accountTextView = (TextView)findViewById(R.id.accountName);
+        costTextView = (TextView)findViewById(R.id.transactionAccountBalance);
+
+        accountListView = (RecyclerView)findViewById(R.id.transactionAccountListView);
+        accountListView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+
+        accountTextView.setText(account);
+
+        createToolbar();
+        addListeners();
+        getAllTransactionsWithAccountForMonth();
+    }
+
+    /**
+     * Create toolbar
+     */
+    private void createToolbar(){
+        //Create the toolbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.svg_ic_nav_back);
         setSupportActionBar(toolbar);
 
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(beginMonth));
+        }
+    }
+
+    private void addListeners(){
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                finish();
             }
         });
     }
 
+    private void  getAllTransactionsWithAccountForMonth(){
+        Log.d("DEBUG", "getAllTransactionsWithAccountForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
+
+        transactionsForAccountForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("account.id", accountId).findAllSortedAsync("date");
+        transactionsForAccountForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+
+                transactionAccountList = myRealm.copyFromRealm(element);
+                float total = element.sum("price").floatValue();
+
+                transactionAccountAdapter = new TransactionRecyclerAdapter(instance, transactionAccountList, true); //display date in each transaction item
+                accountListView.setAdapter(transactionAccountAdapter);
+
+                //Add divider
+                accountListView.addItemDecoration(
+                        new HorizontalDividerItemDecoration.Builder(instance)
+                                .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                                .build());
+
+                Log.d("ZHAN", "there are " + transactionAccountList.size() + " transactions in this account " + account + " for this month " + beginMonth + " -> " + endMonth);
+                Log.d("ZHAN", "total sum is "+total);
+
+                //update balance
+                costTextView.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
+            }
+        });
+    }
+
+    private void updateTransactionList(){
+        transactionAccountList = myRealm.copyFromRealm(transactionsForAccountForMonth);
+        transactionAccountAdapter.setTransactionList(transactionAccountList);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onClickTransaction(int position){}
+
+    @Override
+    public void onDeleteTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForAccountForMonth.deleteFromRealm(position);
+        myRealm.commitTransaction();
+
+        updateTransactionList();
+    }
+
+    @Override
+    public void onApproveTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForAccountForMonth.get(position).setDayType(DayType.COMPLETED.toString());
+        myRealm.commitTransaction();
+
+        updateTransactionList();
+    }
+
+    @Override
+    public void onUnapproveTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForAccountForMonth.get(position).setDayType(DayType.SCHEDULED.toString());
+        myRealm.commitTransaction();
+
+        updateTransactionList();
+    }
+
+    @Override
+    public void onPullDownAllow(boolean value){
+        //no need to implement this as this activity has no pull down to refresh feature
+    }
 }
