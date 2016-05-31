@@ -73,7 +73,7 @@ public class SettingsAccount extends BaseRealmActivity implements
         accountListView = (RecyclerView)findViewById(R.id.accountListView);
         accountListView.setLayoutManager(new LinearLayoutManager(this));
 
-        accountListAdapter = new AccountListAdapter(this, accountList, true);
+        accountListAdapter = new AccountListAdapter(this, accountList, false, true);
         accountListView.setAdapter(accountListAdapter);
 
         //Add divider

@@ -29,13 +29,14 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
     private Context context;
     private List<Account> accountList;
-    private boolean displayCost;
+    private boolean displayCost, allowClickSetDefault;
     private OnAccountAdapterInteractionListener mListener;
 
-    public AccountListAdapter(Fragment fragment, List<Account> accountList, boolean displayCost) {
+    public AccountListAdapter(Fragment fragment, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault) {
         this.context = fragment.getContext();
         this.accountList = accountList;
         this.displayCost = displayCost;
+        this.allowClickSetDefault = allowClickSetDefault;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if (fragment instanceof OnAccountAdapterInteractionListener) {
@@ -45,10 +46,11 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         }
     }
 
-    public AccountListAdapter(Activity activity, List<Account> accountList, boolean displayCost){
+    public AccountListAdapter(Activity activity, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault){
         this.context = activity;
         this.accountList = accountList;
         this.displayCost = displayCost;
+        this.allowClickSetDefault = allowClickSetDefault;
 
         //Any activity or fragment that uses this adapter needs to implement the OnAccountAdapterInteractionListener interface
         if(activity instanceof  OnAccountAdapterInteractionListener){
@@ -87,30 +89,35 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
             viewHolder.cost.setVisibility(View.GONE);
         }
 
-        //Default indicator
-        if(account.isDefault()){
-            viewHolder.defaultAccountIndicatorOn.setVisibility(View.VISIBLE);
-            viewHolder.defaultAccountIndicatorOff.setVisibility(View.INVISIBLE);
-        }else{
-            viewHolder.defaultAccountIndicatorOn.setVisibility(View.INVISIBLE);
-            viewHolder.defaultAccountIndicatorOff.setVisibility(View.VISIBLE);
-        }
-
-        viewHolder.defaultAccountIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Snackbar snackbar = Snackbar.make(v, "Set "+account.getName()+" as default account", Snackbar.LENGTH_SHORT);
-
-                // Changing message text color
-                View sbView = snackbar.getView();
-                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-                textView.setTextColor(ContextCompat.getColor(context, R.color.day_highlight));
-                snackbar.show();
-
-                mListener.onAccountSetAsDefault(account.getId());
-                return false;
+        if(allowClickSetDefault){
+            //Default indicator
+            if(account.isDefault()){
+                viewHolder.defaultAccountIndicatorOn.setVisibility(View.VISIBLE);
+                viewHolder.defaultAccountIndicatorOff.setVisibility(View.INVISIBLE);
+            }else{
+                viewHolder.defaultAccountIndicatorOn.setVisibility(View.INVISIBLE);
+                viewHolder.defaultAccountIndicatorOff.setVisibility(View.VISIBLE);
             }
-        });
+
+            viewHolder.defaultAccountIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Snackbar snackbar = Snackbar.make(v, "Set "+account.getName()+" as default account", Snackbar.LENGTH_SHORT);
+
+                    // Changing message text color
+                    View sbView = snackbar.getView();
+                    TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(ContextCompat.getColor(context, R.color.day_highlight));
+                    snackbar.show();
+
+                    mListener.onAccountSetAsDefault(account.getId());
+                    return false;
+                }
+            });
+        }else{
+            viewHolder.defaultAccountIndicatorOn.setVisibility(View.GONE);
+            viewHolder.defaultAccountIndicatorOff.setVisibility(View.GONE);
+        }
     }
 
     @Override

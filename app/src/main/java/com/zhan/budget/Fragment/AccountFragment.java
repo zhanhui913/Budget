@@ -106,7 +106,7 @@ public class AccountFragment extends BaseRealmFragment implements
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
         accountListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        accountListAdapter = new AccountListAdapter(this, accountList, true);
+        accountListAdapter = new AccountListAdapter(this, accountList, true, false);
         accountListView.setAdapter(accountListAdapter);
 
         //Add divider
