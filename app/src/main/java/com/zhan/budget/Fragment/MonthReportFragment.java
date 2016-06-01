@@ -221,7 +221,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
     //Should be called only the first time when the activity is created
     private void getCategoryList(){
-        final Realm myRealm = Realm.getDefaultInstance();
         resultsCategory = myRealm.where(Category.class).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
