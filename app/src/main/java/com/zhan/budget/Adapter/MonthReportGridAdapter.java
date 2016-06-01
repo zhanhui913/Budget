@@ -113,9 +113,9 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         }else{
             viewHolder.container1.setVisibility(View.GONE);
 
-            viewHolder.categoryName1.setText("null");
+            /*viewHolder.categoryName1.setText("null");
             viewHolder.category1.setCircleColor(R.color.black);
-            viewHolder.category1.setIconResource(0);
+            viewHolder.category1.setIconResource(0);*/
         }
 
         if(monthReport.getSecondCategory() != null){
@@ -132,9 +132,9 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         }else{
             viewHolder.container2.setVisibility(View.GONE);
 
-            viewHolder.categoryName2.setText("null");
+            /*viewHolder.categoryName2.setText("null");
             viewHolder.category2.setCircleColor(R.color.black);
-            viewHolder.category2.setIconResource(0);
+            viewHolder.category2.setIconResource(0);*/
         }
 
         if(monthReport.getThirdCategory() != null){
@@ -151,9 +151,9 @@ public class MonthReportGridAdapter extends ArrayAdapter<MonthReport>{
         }else{
             viewHolder.container3.setVisibility(View.GONE);
 
-            viewHolder.categoryName3.setText("null");
+            /*viewHolder.categoryName3.setText("null");
             viewHolder.category3.setCircleColor(R.color.black);
-            viewHolder.category3.setIconResource(0);
+            viewHolder.category3.setIconResource(0);*/
         }
 
         if(monthReport.isDoneCalculation()){
