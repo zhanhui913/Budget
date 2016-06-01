@@ -2,6 +2,8 @@ package com.zhan.budget.Fragment;
 
 import android.util.Log;
 
+import com.zhan.budget.Util.BudgetPreference;
+
 import io.realm.Realm;
 
 /**
@@ -17,24 +19,11 @@ public abstract class BaseRealmFragment extends BaseFragment {
 
     @Override
     public void onStart(){
+        resumeRealm();
         super.onStart();
         Log.d(TAG, "onStart");
-        resumeRealm();
-    }
-/*
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d(TAG, "onResume");
-        resumeRealm();
     }
 
-    @Override
-    public void onPause(){
-        super.onPause();
-        Log.d(TAG, "onPause");
-        closeRealm();
-    }*/
 
     @Override
     public void onStop(){
@@ -43,20 +32,10 @@ public abstract class BaseRealmFragment extends BaseFragment {
         closeRealm();
     }
 
-    /**
-     * Every fragment has to inflate a layout in the onCreateView method. Added this method to
-     * avoid duplicate all the inflate code in every fragment. You only have to return the layout to
-     * inflate in this method when extends BaseFragment.
-     */
-    protected abstract int getFragmentLayout();
-
-    @Override
-    protected void init(){
-        resumeRealm();
-    }
-
     protected void resumeRealm(){
         myRealm = Realm.getDefaultInstance();
+        BudgetPreference.addRealmCache(getContext());
+
         Log.d(TAG, "----- RESUME REALM -----");
     }
 
@@ -65,6 +44,8 @@ public abstract class BaseRealmFragment extends BaseFragment {
      */
     protected void closeRealm(){
         myRealm.close();
+        BudgetPreference.removeRealmCache(getContext());
+
         Log.d(TAG, "----- CLOSE REALM -----");
     }
 }

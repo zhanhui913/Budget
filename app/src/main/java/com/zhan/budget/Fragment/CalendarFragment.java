@@ -119,8 +119,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     @Override
     protected void init(){ Log.d(TAG, "init");
-        super.init();
-
         isFirstTime();
 
         //By default it will be the current date;
@@ -240,7 +238,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             int rda = random.nextInt(accountList.size());
             int ll = random.nextInt(location.length);
 
-            if(!date.before(new Date())){
+            if(date.before(new Date())){
                 dayType = DayType.COMPLETED.toString();
             }else{
                 dayType = DayType.SCHEDULED.toString();
@@ -511,8 +509,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(beginDate) + " -> " + DateUtil.convertDateToStringFormat5(endDate) + ")");
 
-        resumeRealm();
-
         progressBar.setVisibility(View.VISIBLE);
 
         resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", beginDate).lessThan("date", endDate).findAllAsync();
@@ -591,7 +587,6 @@ public class CalendarFragment extends BaseRealmFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        resumeRealm();
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));

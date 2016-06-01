@@ -50,7 +50,6 @@ public class LocationFragment extends BaseRealmFragment
     private List<Location> locationList;
     private LocationRecyclerAdapter locationAdapter;
     private RecyclerView locationListview;
-    private LocationRecyclerAdapter listAdapter;
 
     private PieChartFragment pieChartFragment;
 
@@ -71,10 +70,7 @@ public class LocationFragment extends BaseRealmFragment
     }
 
     @Override
-    protected void init() {
-        Log.d(TAG, "init");
-        super.init();
-
+    protected void init() {Log.d(TAG, "init");
         currentMonth = DateUtil.refreshMonth(new Date());
 
         locationListview = (RecyclerView) view.findViewById(R.id.locationListview);
@@ -188,14 +184,6 @@ public class LocationFragment extends BaseRealmFragment
         mListener = null;
     }
 
-    /*
-    @Override
-    public void onResume(){
-        super.onResume();
-
-        updateMonthInToolbar(0);
-    }*/
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Etc
@@ -246,16 +234,4 @@ public class LocationFragment extends BaseRealmFragment
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
         startActivity(viewAllTransactionsForLocation);
     }
-/*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        resumeRealm();
-
-        if (resultCode == getActivity().RESULT_OK) {
-            if(requestCode == Constants.RETURN_CHANGE_LOCATION){
-
-            }
-        }
-    }*/
 }

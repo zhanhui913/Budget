@@ -97,8 +97,6 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     protected void init(){ Log.d(TAG, "init");
-        super.init();
-
         currentMonth = new Date();
 
         accountList = new ArrayList<>();
@@ -305,89 +303,7 @@ public class AccountFragment extends BaseRealmFragment implements
             }
         });
     }
-/*
-    private void editAccount(final int position){
-        // get prompts.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
-
-        final Account account = resultsAccount.get(position);
-
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Edit Account");
-
-        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
-        input.setText(account.getName());
-        input.setHint("Account");
-
-        new AlertDialog.Builder(getActivity())
-                .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        myRealm.beginTransaction();
-                        account.setName(input.getText().toString());
-                        myRealm.copyToRealmOrUpdate(account);
-                        myRealm.commitTransaction();
-
-                        accountList.get(position).setName(input.getText().toString());
-                        accountListAdapter.setAccountList(accountList);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    private void addAccount(){
-        // get prompts.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
-
-        final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
-        input.setText("");
-        input.setHint("Account");
-
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Account");
-
-        new AlertDialog.Builder(getActivity())
-                .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        myRealm.beginTransaction();
-                        Account newAccount = myRealm.createObject(Account.class);
-                        newAccount.setId(Util.generateUUID());
-                        newAccount.setName(input.getText().toString());
-                        myRealm.commitTransaction();
-
-                        Account acc = myRealm.copyFromRealm(newAccount);
-                        accountList.add(acc);
-                        accountListAdapter.setAccountList(accountList);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
-    }
-*/
     private void addAccount(){
         Intent addAccountIntent = new Intent(getContext(), AccountInfoActivity.class);
         addAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, true);

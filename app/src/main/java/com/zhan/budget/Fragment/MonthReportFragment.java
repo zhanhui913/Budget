@@ -75,8 +75,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
     @Override
     protected void init(){ Log.d(TAG, "init");
-        super.init();
-
         categoryList = new ArrayList<>();
         monthReportList = new ArrayList<>();
         monthReportListview = (RecyclerView) view.findViewById(R.id.monthReportListview);
