@@ -45,8 +45,9 @@ public class BarChartFragment extends BaseChartFragment{
     }
 
     @Override
-    public void init(){ Log.d("CHART", "bar chart fragment init");
+    public void init(){ Log.d("REALMZ1", "bar chart fragment init");
         barChartView = (BarChartView) view.findViewById(R.id.barChart);
+        barChartView.reset();
         barChartView.setXAxis(false);
         barChartView.setYAxis(false);
         barChartView.setYLabels(AxisController.LabelPosition.NONE);
