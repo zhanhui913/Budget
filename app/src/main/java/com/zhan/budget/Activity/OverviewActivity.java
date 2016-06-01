@@ -107,7 +107,7 @@ public class OverviewActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle("Overview");
+            getSupportActionBar().setTitle("Monthly Expenses");
         }
     }
 
@@ -169,118 +169,6 @@ public class OverviewActivity extends BaseActivity implements
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(){
-        /*
-        final AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
-
-            long startTime, endTime, duration;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("OVERVIEW_ACT", "preparing to aggregate results");
-            }
-
-            @Override
-            protected Float doInBackground(Void... voids) {
-                float sumCost = 0;
-
-                Log.d("OVERVIEW_ACT", "Transaction size : "+transactionList.size());
-
-                startTime = System.nanoTime();
-
-                //Go through each transaction and put them into the correct category
-                for(int t = 0; t < transactionList.size(); t++){
-                    for(int c = 0; c < categoryList.size(); c++){
-                        if(transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                            float transactionPrice = transactionList.get(t).getPrice();
-                            float currentCategoryPrice = categoryList.get(c).getCost();
-                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                        }
-                    }
-                }
-
-                //List of string that is the ID of category in categoryList who's sum for cost is 0
-                // or INCOME type
-                List<Category> zeroSumList = new ArrayList<>();
-
-                //Get position of Category who's sum cost is 0 or INCOME type
-                for(int i = 0; i < categoryList.size(); i++){
-                    if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                        Log.d("PERCENT_VIEW", "Category : " + categoryList.get(i).getName() + " -> with cost " + categoryList.get(i).getCost());
-                        zeroSumList.add(categoryList.get(i));
-                    }
-                }
-                Log.d("PERCENT_VIEW", "BEFORE REMOVING THERE ARE "+categoryList.size());
-
-                for(int i = 0; i < zeroSumList.size(); i++){
-                    Log.d("PERCENT_VIEW", "ZERO SUM LIST : "+zeroSumList.get(i).getName());
-                }
-
-                //Remove those category who's sum for cost is 0 or INCOME type
-                for(int i = 0; i < zeroSumList.size(); i++){
-                    categoryList.remove(zeroSumList.get(i));
-                }
-                Log.d("PERCENT_VIEW", "AFTER REMOVING THERE ARE " + categoryList.size());
-
-                //Go through list cost to get sumCost
-                for(int i = 0; i < categoryList.size(); i++){
-                    sumCost += categoryList.get(i).getCost();
-                }
-
-                //Sort from largest to smallest percentage
-                Collections.sort(categoryList, new Comparator<Category>() {
-                    @Override
-                    public int compare(Category c1, Category c2) {
-                        float cost1 = c1.getCost();
-                        float cost2 = c2.getCost();
-
-                        //ascending order
-                        return ((int) cost1) - ((int) cost2);
-                    }
-                });
-
-                //Now calculate percentage for each category
-                for(int i = 0; i < categoryList.size(); i++){
-                    BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
-                    BigDecimal total = BigDecimal.valueOf(sumCost);
-                    BigDecimal hundred = new BigDecimal(100);
-                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
-
-                    categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
-                }
-
-                return sumCost;
-            }
-
-            @Override
-            protected void onPostExecute(Float result) {
-                super.onPostExecute(result);
-
-                categoryPercentListAdapter.setCategoryList(categoryList);
-
-                //Once the calculation is done, remove it
-                circularProgressBar.setVisibility(View.GONE);
-
-                //Set total cost for month
-                totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
-
-                barChartFragment = BarChartFragment.newInstance(categoryList);
-                percentChartFragment = PercentChartFragment.newInstance(categoryList);
-                pieChartFragment = PieChartFragment.newInstance(categoryList);
-                getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, barChartFragment).commit();
-
-                endTime = System.nanoTime();
-                duration = (endTime - startTime);
-                long milli = (duration / 1000000);
-                long second = (milli / 1000);
-                float minutes = (second / 60.0f);
-                Log.d("PERCENT_VIEW", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-            }
-        };
-        loader.execute();
-        */
-
-        Log.d("CAT_CAL", "starting category calculator");
         CategoryCalculator cc = new CategoryCalculator(this, transactionList, categoryList, new Date(),new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
