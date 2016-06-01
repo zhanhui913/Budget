@@ -756,13 +756,13 @@ public class TransactionInfoActivity extends BaseActivity implements
         }else{
             transaction.setId(Util.generateUUID());
 
-            if(DateUtil.getDaysFromDate(selectedDate) <= DateUtil.getDaysFromDate(new Date())){
+            if(!selectedDate.before(new Date())){
                 transaction.setDayType(DayType.COMPLETED.toString());
             }else{
                 transaction.setDayType(DayType.SCHEDULED.toString());
             }
         }
-Toast.makeText(this, "selectedAccount : "+selectedAccount.getName(), Toast.LENGTH_LONG).show();
+
         transaction.setNote(this.noteString);
         transaction.setLocation(this.locationString);
         transaction.setDate(DateUtil.formatDate(selectedDate));

@@ -240,7 +240,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             int rda = random.nextInt(accountList.size());
             int ll = random.nextInt(location.length);
 
-            if(DateUtil.getDaysFromDate(date) <= DateUtil.getDaysFromDate(new Date())){
+            if(!date.before(new Date())){
                 dayType = DayType.COMPLETED.toString();
             }else{
                 dayType = DayType.SCHEDULED.toString();
@@ -597,9 +597,9 @@ public class CalendarFragment extends BaseRealmFragment implements
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
                 ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
                 //Log.d(TAG, "scheduledTransaction from new :"+scheduledTransaction.getId());
-
+                
                 //Compare with today's date
-                if(DateUtil.getDaysFromDate(tt.getDate()) > DateUtil.getDaysFromDate(new Date())){
+                if(!tt.getDate().before(new Date())){
                     tt.setDayType(DayType.SCHEDULED.toString());
                 }else{
                     tt.setDayType(DayType.COMPLETED.toString());
