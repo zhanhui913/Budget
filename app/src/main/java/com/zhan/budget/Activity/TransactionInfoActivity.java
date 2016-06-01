@@ -492,7 +492,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         accountNameList = new ArrayList<>();
 
-        final Realm myRealm = Realm.getDefaultInstance();
+        final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
 
         //Get list of accounts
         resultsAccount = myRealm.where(Account.class).findAllSortedAsync("isDefault", Sort.DESCENDING);
@@ -536,7 +536,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 accountPicker.setValue(pos);
 
-                myRealm.close();
+                myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
         });
 
@@ -596,7 +596,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void getAllLocations(){
-        final Realm myRealm = Realm.getDefaultInstance();
+        final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
 
         RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).findAllSortedAsync("location");
         transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
@@ -606,7 +606,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 getUniqueList(myRealm.copyFromRealm(element));
 
-                myRealm.close();
+                myRealm.close(); BudgetPreference.addRealmCache(getBaseContext());
             }
         });
     }

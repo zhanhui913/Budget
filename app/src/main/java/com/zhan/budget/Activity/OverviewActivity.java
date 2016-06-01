@@ -28,6 +28,7 @@ import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 
 
@@ -69,7 +70,7 @@ public class OverviewActivity extends BaseActivity implements
     }
 
     @Override
-    protected void init(){
+    protected void init(){ Log.d("REALMZ1", "on init for overview activity");
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         categoryList = new ArrayList<>();
@@ -122,7 +123,7 @@ public class OverviewActivity extends BaseActivity implements
 
     //Should be called only the first time when the activity is created
     private void getCategoryList(){
-        final Realm myRealm = Realm.getDefaultInstance();
+        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(this);
         resultsCategory = myRealm.where(Category.class).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
@@ -131,7 +132,7 @@ public class OverviewActivity extends BaseActivity implements
 
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(element);
-                myRealm.close();
+                myRealm.close();  BudgetPreference.removeRealmCache(getBaseContext());
                 getMonthReport(currentMonth);
             }
         });
@@ -147,7 +148,7 @@ public class OverviewActivity extends BaseActivity implements
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
-        final Realm myRealm = Realm.getDefaultInstance();
+        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(this);
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -159,7 +160,7 @@ public class OverviewActivity extends BaseActivity implements
                 }
 
                 transactionList = myRealm.copyFromRealm(element);
-                myRealm.close();
+                myRealm.close();  BudgetPreference.removeRealmCache(getBaseContext());
                 performAsyncCalculation();
             }
         });

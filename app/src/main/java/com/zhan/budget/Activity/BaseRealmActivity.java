@@ -2,6 +2,8 @@ package com.zhan.budget.Activity;
 
 import android.util.Log;
 
+import com.zhan.budget.Util.BudgetPreference;
+
 import io.realm.Realm;
 
 /**
@@ -22,13 +24,6 @@ public abstract class BaseRealmActivity extends BaseActivity {
     }
 
     /**
-     * Every Activity has to inflate a layout in the onCreate method. Added this method to
-     * avoid duplicate all the inflate code in every activity. You only have to return the layout to
-     * inflate in this method when extends BaseActivity.
-     */
-    protected abstract int getActivityLayout();
-
-    /**
      * Every Activity should override this function as it should be where other initialization
      * occurs once only in the lifecycle.
      * Note: I would put init in the onStart function but it will call multiple times when the user
@@ -41,6 +36,7 @@ public abstract class BaseRealmActivity extends BaseActivity {
 
     protected void resumeRealm(){
         myRealm = Realm.getDefaultInstance();
+        BudgetPreference.addRealmCache(this);
         Log.d(TAG, "resumeRealm");
     }
 
@@ -49,6 +45,7 @@ public abstract class BaseRealmActivity extends BaseActivity {
      */
     protected void closeRealm(){
         myRealm.close();
+        BudgetPreference.removeRealmCache(this);
         Log.d(TAG, "closeRealm");
     }
 }

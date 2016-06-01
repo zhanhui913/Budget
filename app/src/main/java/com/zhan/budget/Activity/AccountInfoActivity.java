@@ -20,6 +20,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
@@ -221,7 +222,7 @@ public class AccountInfoActivity extends BaseActivity implements
 
         Account acc;
 
-        Realm myRealm = Realm.getDefaultInstance();
+        Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
         if(!isNewAccount){
             acc = myRealm.where(Account.class).equalTo("id", account.getId()).findFirst();
             myRealm.beginTransaction();
@@ -244,7 +245,7 @@ public class AccountInfoActivity extends BaseActivity implements
         Log.d("ACCOUNT_INFO_ACTIVITY", "collor 2 "+account.getColor());
 
         Parcelable wrapped = Parcels.wrap(account);
-        myRealm.close();
+        myRealm.close();BudgetPreference.removeRealmCache(this);
 
         if(!isNewAccount){
             intent.putExtra(Constants.RESULT_EDIT_ACCOUNT, wrapped);

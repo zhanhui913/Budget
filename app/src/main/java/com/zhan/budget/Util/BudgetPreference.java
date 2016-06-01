@@ -3,6 +3,7 @@ package com.zhan.budget.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.zhan.budget.Etc.Constants;
 
@@ -15,6 +16,24 @@ public final class BudgetPreference {
 
     private BudgetPreference(){}
 
+//testing for realm cache closing
+
+    public static void resetRealmCache(Context context){
+        setPreferenceInt(context, "RealmCache", 0);
+    }
+
+    public static int getRealmCache(Context context){
+        return getPreferenceInt(context, "RealmCache", 0);
+    }
+
+    public static void addRealmCache(Context context){
+        setPreferenceInt(context, "RealmCache", getRealmCache(context) + 1);
+        Log.d("REALMZ1", "Adding realmCachez to "+getRealmCache(context));
+    }
+    public static void removeRealmCache(Context context){
+        setPreferenceInt(context, "RealmCache", getRealmCache(context) - 1);
+        Log.d("REALMZ1", "removing realmCachez to "+getRealmCache(context));
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

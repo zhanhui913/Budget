@@ -24,6 +24,7 @@ import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
@@ -387,7 +388,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         Category c;
 
-        Realm myRealm = Realm.getDefaultInstance();
+        Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(this);
         if(!isNewCategory){
             c = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
             myRealm.beginTransaction();
@@ -422,7 +423,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         Category carbonCopy = myRealm.copyFromRealm(c);
         carbonCopy.setCost(cost);
         Parcelable wrapped = Parcels.wrap(carbonCopy);
-        myRealm.close();
+        myRealm.close();  BudgetPreference.removeRealmCache(this);
 
         if(!isNewCategory){
             intent.putExtra(Constants.RESULT_EDIT_CATEGORY, wrapped);

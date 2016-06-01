@@ -11,7 +11,7 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.R;
 import com.zhan.budget.View.CustomViewPager;
 
-public class SettingsCategory extends BaseRealmActivity {
+public class SettingsCategory extends BaseActivity {
 
     private  Toolbar toolbar;
     private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
@@ -23,8 +23,6 @@ public class SettingsCategory extends BaseRealmActivity {
 
     @Override
     protected void init(){
-        super.init();
-
         createToolbar();
         createTabs();
     }

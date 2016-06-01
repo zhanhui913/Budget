@@ -26,6 +26,7 @@ import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Util;
 
 import io.realm.Realm;
@@ -56,6 +57,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         initRealm();
+        BudgetPreference.resetRealmCache(this);
         super.onCreate(savedInstanceState);
     }
 
