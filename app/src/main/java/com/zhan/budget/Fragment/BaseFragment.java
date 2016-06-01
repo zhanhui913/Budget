@@ -31,6 +31,7 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated");
+        init();
         instance = this;
     }
 
@@ -49,9 +50,4 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract void init();
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        init();
-    }
 }

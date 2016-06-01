@@ -500,6 +500,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             @Override
             public void onChange(RealmResults<Account> element) {
                 element.removeChangeListener(this);
+                Log.d("REALMZ1", "getAllAccounts closing  realm");
 
 
                 for (int i = 0; i < element.size(); i++) {
@@ -603,10 +604,10 @@ public class TransactionInfoActivity extends BaseActivity implements
             @Override
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
-
+                Log.d("REALMZ1", "getAllLocations closing  realm");
                 getUniqueList(myRealm.copyFromRealm(element));
 
-                myRealm.close(); BudgetPreference.addRealmCache(getBaseContext());
+                myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
         });
     }

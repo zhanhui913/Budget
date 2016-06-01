@@ -96,6 +96,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     @Override
     protected void init(){ Log.d(TAG, "init");
+        super.init();
         budgetType = (BudgetType) getArguments().getSerializable(ARG_1);
         arrangementType = (CategoryGenericRecyclerAdapter.ARRANGEMENT) getArguments().getSerializable(ARG_2);
 

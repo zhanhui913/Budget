@@ -70,6 +70,7 @@ public class TransactionFragment extends BaseRealmFragment {
 
     @Override
     protected void init(){ Log.d(TAG, "init");
+        super.init();
         selectedCategoryId = budgetType = "";
         Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
         categoryList = new ArrayList<>();

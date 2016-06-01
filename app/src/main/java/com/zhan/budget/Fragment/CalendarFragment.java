@@ -119,6 +119,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     @Override
     protected void init(){ Log.d(TAG, "init");
+        super.init();
         isFirstTime();
 
         //By default it will be the current date;
@@ -232,7 +233,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         String dayType;
 
-        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+        /*for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
             Random random = new Random();
             int rd = random.nextInt(categoryList.size());
             int rda = random.nextInt(accountList.size());
@@ -261,7 +262,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 transaction.setPrice(-120.0f + (rd * 0.5f));
                 transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
             }
-        }
+        }*/
 
         myRealm.commitTransaction();
         endTime = System.nanoTime();

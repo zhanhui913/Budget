@@ -30,6 +30,7 @@ public final class BudgetPreference {
         setPreferenceInt(context, "RealmCache", getRealmCache(context) + 1);
         Log.d("REALMZ1", "Adding realmCachez to "+getRealmCache(context));
     }
+
     public static void removeRealmCache(Context context){
         setPreferenceInt(context, "RealmCache", getRealmCache(context) - 1);
         Log.d("REALMZ1", "removing realmCachez to "+getRealmCache(context));

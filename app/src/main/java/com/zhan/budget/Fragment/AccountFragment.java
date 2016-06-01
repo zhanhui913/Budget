@@ -97,6 +97,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     protected void init(){ Log.d(TAG, "init");
+        super.init();
         currentMonth = new Date();
 
         accountList = new ArrayList<>();

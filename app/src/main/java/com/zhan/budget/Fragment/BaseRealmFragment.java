@@ -32,10 +32,15 @@ public abstract class BaseRealmFragment extends BaseFragment {
         closeRealm();
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        closeRealm();
+    }
+
     protected void resumeRealm(){
         myRealm = Realm.getDefaultInstance();
         BudgetPreference.addRealmCache(getContext());
-
         Log.d(TAG, "----- RESUME REALM -----");
     }
 
@@ -45,7 +50,11 @@ public abstract class BaseRealmFragment extends BaseFragment {
     protected void closeRealm(){
         myRealm.close();
         BudgetPreference.removeRealmCache(getContext());
-
         Log.d(TAG, "----- CLOSE REALM -----");
+    }
+
+    @Override
+    protected void init() {
+        resumeRealm();
     }
 }

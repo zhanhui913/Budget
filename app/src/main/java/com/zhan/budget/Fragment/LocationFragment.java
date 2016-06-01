@@ -71,6 +71,7 @@ public class LocationFragment extends BaseRealmFragment
 
     @Override
     protected void init() {Log.d(TAG, "init");
+        super.init();
         currentMonth = DateUtil.refreshMonth(new Date());
 
         locationListview = (RecyclerView) view.findViewById(R.id.locationListview);

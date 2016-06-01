@@ -35,17 +35,21 @@ public abstract class BaseRealmActivity extends BaseActivity {
     }
 
     protected void resumeRealm(){
-        myRealm = Realm.getDefaultInstance();
-        BudgetPreference.addRealmCache(this);
-        Log.d(TAG, "resumeRealm");
+        //if(myRealm == null || myRealm.isClosed()) {
+            myRealm = Realm.getDefaultInstance();
+            BudgetPreference.addRealmCache(this);
+            Log.d(TAG, "resumeRealm");
+        //}
     }
 
     /**
      * Close Realm if possible
      */
     protected void closeRealm(){
-        myRealm.close();
-        BudgetPreference.removeRealmCache(this);
-        Log.d(TAG, "closeRealm");
+        //if(myRealm != null && !myRealm.isClosed()) {
+            myRealm.close();
+            BudgetPreference.removeRealmCache(this);
+            Log.d(TAG, "closeRealm");
+        //}
     }
 }
