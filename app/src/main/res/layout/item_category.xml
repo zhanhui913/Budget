@@ -129,8 +129,6 @@
             android:layout_width="fill_parent"
             android:layout_height="7dp"
             android:paddingLeft="16dp"
-            app:rcBackgroundPadding="1dp"
-            app:rcRadius="5dp"
             app:rcBackgroundColor="?attr/themeColorHighlight"
             app:rcProgress="5"
             app:rcMax="10"
