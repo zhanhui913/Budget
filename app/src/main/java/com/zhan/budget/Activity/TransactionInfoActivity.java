@@ -592,8 +592,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         AlertDialog noteDialog = builder.create();
         noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         noteDialog.show();
-
-        input.requestFocus();
     }
 
     private void getAllLocations(){
@@ -663,8 +661,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         AlertDialog noteDialog = builder.create();
         noteDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         noteDialog.show();
-
-        inputLocation.requestFocus();
     }
 
     private void createRepeatDialog(){

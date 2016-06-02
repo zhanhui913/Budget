@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -96,6 +97,11 @@ public class AccountInfoActivity extends BaseActivity implements
         //default color selected
         selectedColor = account.getColor();
         accountCircularView.setCircleColor(account.getColor());
+        accountCircularView.setTextSizeInDP(30);
+
+        if(!isNewAccount){
+            accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase()));
+        }
 
         getSupportFragmentManager().beginTransaction().add(R.id.colorFragment, colorPickerCategoryFragment).commit();
 
@@ -159,10 +165,9 @@ public class AccountInfoActivity extends BaseActivity implements
         input.setText(accountNameTextView.getText());
         input.setHint("Account");
 
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         accountNameTextView.setText(input.getText().toString());
 
@@ -170,18 +175,17 @@ public class AccountInfoActivity extends BaseActivity implements
 
                         //update the text in the circular view to reflect the new name
                         accountCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
-                        accountCircularView.setTextSizeInDP(30);
-                        accountCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
-                    }
+                        accountCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));                    }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
-                })
-                .create()
-                .show();
+                });
+
+        AlertDialog nameDialog = builder.create();
+        nameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        nameDialog.show();
     }
 
     private void confirmDelete(){

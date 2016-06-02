@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,6 +27,7 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
 import com.zhan.circleindicator.CircleIndicator;
 import com.zhan.library.CircularView;
@@ -185,22 +187,22 @@ public class CategoryInfoActivity extends BaseActivity implements
         input.setText(categoryNameTextView.getText());
         input.setHint("Category");
 
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         categoryNameTextView.setText(input.getText().toString());
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
-                })
-                .create()
-                .show();
+                });
+
+        AlertDialog nameDialog = builder.create();
+        nameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        nameDialog.show();
     }
 
     private void changeBudget(){
