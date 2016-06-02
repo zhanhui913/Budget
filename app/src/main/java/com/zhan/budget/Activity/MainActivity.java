@@ -2,7 +2,6 @@ package com.zhan.budget.Activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -26,11 +25,7 @@ import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Util;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -53,22 +48,6 @@ public class MainActivity extends BaseActivity
     private RateFragment rateFragment;
     private SettingFragment settingFragment;
     private LocationFragment locationFragment;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        initRealm();
-        BudgetPreference.resetRealmCache(this);
-        super.onCreate(savedInstanceState);
-    }
-
-    private void initRealm(){
-        RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .name(Constants.REALM_NAME)
-                .deleteRealmIfMigrationNeeded()
-                .schemaVersion(1)
-                .build();
-        Realm.setDefaultConfiguration(config);
-    }
 
     @Override
     protected int getActivityLayout(){
@@ -101,10 +80,10 @@ public class MainActivity extends BaseActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //code to load my fragment
+        //Load calendarFragment first
         getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
 
-        //set first fragment as default
+        //set first fragment as default in navigation drawer
         navigationView.getMenu().getItem(0).setChecked(true);
     }
 
@@ -144,10 +123,12 @@ public class MainActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        if(drawer  != null){
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -172,25 +153,19 @@ public class MainActivity extends BaseActivity
                 switch (viewId) {
                     case R.id.nav_calendar:
                         fragment = calendarFragment;
-                        title = "";
                         break;
                     case R.id.nav_category:
                         fragment = categoryFragment;
-                        title = "";
                         break;
                     case R.id.nav_overview:
                         fragment = monthReportFragment;
-                        title = "";
                         break;
                     case R.id.nav_account:
                         fragment = accountFragment;
-                        title = "Account";
                         break;
                     case R.id.nav_location:
                         fragment = locationFragment;
-                        title = "Location";
                         break;
-
                     case R.id.nav_setting:
                         fragment = settingFragment;
                         title = "Setting";
