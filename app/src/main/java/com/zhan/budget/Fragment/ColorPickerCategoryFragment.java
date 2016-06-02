@@ -22,12 +22,10 @@ import java.util.List;
  * Activities that contain this fragment must implement the
  * {@link OnColorPickerCategoryFragmentInteractionListener} interface
  * to handle interaction events.
- * Doesnt subclass from BaseFragment as this fragment uses newInstance function.
  */
-public class ColorPickerCategoryFragment extends Fragment {
+public class ColorPickerCategoryFragment extends BaseFragment {
 
     private OnColorPickerCategoryFragmentInteractionListener mListener;
-    private View view;
 
     private static final String ARG_1 = "selectedCategoryColor";
 
@@ -60,21 +58,12 @@ public class ColorPickerCategoryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_color_picker_category, container, false);
-        return view;
-    }
+    protected int getFragmentLayout() {
+    return R.layout.fragment_color_picker_category;
+}
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        init();
-        addListeners();
-    }
-
-    private void init(){
+    protected void init(){
         categoryIconColorList = CategoryUtil.getListOfCategoryColors(getContext());
 
         selectedCategoryColor = getArguments().getString(ARG_1);
@@ -90,6 +79,8 @@ public class ColorPickerCategoryFragment extends Fragment {
         colorCategoryGridView = (GridView) view.findViewById(R.id.colorGrid);
         colorCategoryGridAdapter = new ColorCategoryGridAdapter(getContext(), categoryIconColorList);
         colorCategoryGridView.setAdapter(colorCategoryGridAdapter);
+
+        addListeners();
     }
 
     private void addListeners(){
@@ -107,6 +98,12 @@ public class ColorPickerCategoryFragment extends Fragment {
             }
         });
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onAttach(Context context) {

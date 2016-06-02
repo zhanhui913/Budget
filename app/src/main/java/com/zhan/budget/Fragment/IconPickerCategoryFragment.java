@@ -22,12 +22,10 @@ import java.util.List;
  * Activities that contain this fragment must implement the
  * {@link IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener} interface
  * to handle interaction events.
- * Doesnt subclass from BaseFragment as this fragment uses newInstance function.
  */
-public class IconPickerCategoryFragment extends Fragment {
+public class IconPickerCategoryFragment extends BaseFragment {
 
     private OnIconPickerCategoryFragmentInteractionListener mListener;
-    private View view;
 
     private static final String ARG_1 = "selectedCategoryIcon";
     private static final String ARG_2 = "selectedCategoryColor";
@@ -63,22 +61,12 @@ public class IconPickerCategoryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_icon_picker_category, container, false);
-        return view;
+    protected int getFragmentLayout() {
+        return R.layout.fragment_icon_picker_category;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        init();
-        addListeners();
-    }
-
-    private void init(){
+    protected void init(){
         categoryIconColorList = CategoryUtil.getListOfUniqueIcons(getContext());
 
         selectedCategoryIcon = getArguments().getString(ARG_1);
@@ -95,6 +83,8 @@ public class IconPickerCategoryFragment extends Fragment {
         iconCategoryGridAdapter = new IconCategoryGridAdapter(getContext(), categoryIconColorList, selectedColor);
         iconCategoryGridView.setAdapter(iconCategoryGridAdapter);
         Log.d("ICON_PICKER_CATEGORY", "init");
+
+        addListeners();
     }
 
     private void addListeners(){
@@ -123,6 +113,12 @@ public class IconPickerCategoryFragment extends Fragment {
             Log.d("ICON_PICKER_CATEGORY", "iconCategoryGridAdapter is null");
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onAttach(Context context) {
