@@ -22,6 +22,7 @@ import java.util.List;
  * Activities that contain this fragment must implement the
  * {@link IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener} interface
  * to handle interaction events.
+ * Doesnt subclass from BaseFragment as this fragment uses newInstance function.
  */
 public class IconPickerCategoryFragment extends Fragment {
 

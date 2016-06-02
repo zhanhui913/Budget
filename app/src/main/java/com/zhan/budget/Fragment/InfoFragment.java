@@ -19,8 +19,5 @@ public class InfoFragment extends BaseFragment {
     }
 
     @Override
-    protected void init(){
-
-    }
-
+    protected void init(){}
 }
