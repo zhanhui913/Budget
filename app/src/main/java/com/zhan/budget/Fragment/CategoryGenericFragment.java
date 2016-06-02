@@ -51,7 +51,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private static final String ARG_1 = "budgetType";
     private static final String ARG_2 = "arrangementType";
 
-
+    //Pull down
     private PtrFrameLayout frame;
     private PlusView header;
     private ViewGroup emptyLayout;
@@ -339,7 +339,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-
         title.setText("Confirm Delete");
         message.setText("Are you sure you want to delete this category?");
 
@@ -434,16 +433,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onDeleteCategory(int position){
-        /*myRealm.beginTransaction();
-        resultsAccount.remove(position);
-        myRealm.commitTransaction();
-
-        accountListAdapter.clear();
-        accountListAdapter.addAll(accountList);*/
-
         confirmDelete(position);
-
-        //Toast.makeText(getContext(), "deleting account "+categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

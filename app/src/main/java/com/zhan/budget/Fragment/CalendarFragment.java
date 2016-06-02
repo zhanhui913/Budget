@@ -52,7 +52,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -80,26 +79,22 @@ public class CalendarFragment extends BaseRealmFragment implements
     //Calendar
     private FlexibleCalendarView calendarView;
 
-    private TextView  totalCostForDay, dateTextView;
-
     //Transaction
     private RecyclerView transactionListView;
     private TransactionRecyclerAdapter transactionAdapter;
     private List<Transaction> transactionList;
     private RealmResults<Transaction> resultsTransactionForDay;
 
-    private Date selectedDate;
-
     //Pull down
     private PtrFrameLayout frame;
     private PlusView header;
     private Boolean isPulldownAllow = true;
 
-    //First time usage
-    private ArrayList<Category> categoryList = new ArrayList<>();
-    private ArrayList<Account> accountList = new ArrayList<>();
+    private TextView  totalCostForDay, dateTextView;
+    private CircularProgressBar progressBar;
 
-    CircularProgressBar progressBar;
+    private Date selectedDate;
+    private Map<Date,List<BudgetEvent>> eventMap;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -170,6 +165,10 @@ public class CalendarFragment extends BaseRealmFragment implements
         long startTime,endTime,duration;
         myRealm.beginTransaction();
 
+        //First time usage
+        ArrayList<Category> categoryList = new ArrayList<>();
+        ArrayList<Account> accountList = new ArrayList<>();
+
         String[] tempCategoryNameList = new String[]{"Breakfast", "Lunch", "Dinner", "Snacks", "Drink", "Rent", "Travel", "Car", "Shopping", "Necessity", "Utilities", "Bill", "Groceries"};
         int[] tempCategoryColorList = new int[]{R.color.lemon, R.color.orange, R.color.pumpkin, R.color.alizarin, R.color.cream_can, R.color.midnight_blue, R.color.peter_river, R.color.turquoise, R.color.wisteria, R.color.jordy_blue, R.color.concrete, R.color.emerald, R.color.gossip};
         int[] tempCategoryIconList = new int[]{R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_cafe, R.drawable.c_house, R.drawable.c_airplane, R.drawable.c_car, R.drawable.c_shirt, R.drawable.c_etc, R.drawable.c_utilities, R.drawable.c_bill, R.drawable.c_groceries};
@@ -230,10 +229,10 @@ public class CalendarFragment extends BaseRealmFragment implements
         end.setTime(endDate);
 
         startTime = System.nanoTime();
-
+/*
         String dayType;
 
-        /*for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
             Random random = new Random();
             int rd = random.nextInt(categoryList.size());
             int rda = random.nextInt(accountList.size());
@@ -420,7 +419,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         });
     }
 
-    private Map<Date,List<BudgetEvent>> eventMap;
     private List<BudgetEvent> getEvents(Date date){
         return eventMap.get(date);
     }
@@ -429,38 +427,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         eventMap = new HashMap<>();
         Log.d("EVENT", "there are " + eventMap.size() + " items in map");
 
-        /*
-        final RealmResults<ScheduledTransaction> scheduledTransactions = myRealm.where(ScheduledTransaction.class).findAllAsync();
-        scheduledTransactions.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                scheduledTransactions.removeChangeListener(this);
-
-                for (int i = 0; i < scheduledTransactions.size(); i++) {
-                    List<BudgetEvent> colorList = new ArrayList<>();
-                    try {
-
-                        if (eventMap.containsKey(scheduledTransactions.get(i).getTransaction().getDate())) {
-                            eventMap.get(scheduledTransactions.get(i).getTransaction().getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
-                        } else {
-                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getTransaction().getCategory().getColor())));
-                            eventMap.put(scheduledTransactions.get(i).getTransaction().getDate(), colorList);
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.d("EVENT", "there are " + scheduledTransactions.size() + " items in schedule list");
-                Log.d("EVENT", "there are " + eventMap.size() + " items in map");
-
-                calendarView.refresh();
-            }
-        });
-*/
-
-
-        //Option 2 with non completed transactions
         final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
         scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -470,7 +436,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 for (int i = 0; i < element.size(); i++) {
                     List<BudgetEvent> colorList = new ArrayList<>();
                     try {
-
+                        //Put as many indication per transactions that is SCHEDULED
                         /*if (eventMap.containsKey(element.get(i).getDate())) {
                             eventMap.get(element.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
                         } else {
@@ -482,7 +448,6 @@ public class CalendarFragment extends BaseRealmFragment implements
                             colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
                             eventMap.put(element.get(i).getDate(), colorList);
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -827,5 +792,4 @@ public class CalendarFragment extends BaseRealmFragment implements
     public interface OnCalendarInteractionListener {
         void updateToolbar(String date);
     }
-
 }
