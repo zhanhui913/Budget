@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.zhan.budget.Activity.OpenSourceActivity;
 import com.zhan.budget.Activity.SettingsAccount;
 import com.zhan.budget.Activity.SettingsCategory;
+import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -36,6 +37,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,7 +60,7 @@ public class SettingFragment extends BaseFragment {
     private static final String TAG = "SettingFragment";
 
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn;
-    private TextView themeContent, firstDayContent, backupContent;
+    private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn, openLicenseBtn;
 
@@ -100,6 +102,8 @@ public class SettingFragment extends BaseFragment {
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
         openLicenseBtn = (TextView) view.findViewById(R.id.openSourceBtn);
 
+        versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
+
         //Set theme
         CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
         themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode" : "Day Mode"));
@@ -117,6 +121,9 @@ public class SettingFragment extends BaseFragment {
 
         //Set last backup
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
+
+        //set version number
+        versionNumber.setText("v"+BuildConfig.VERSION_NAME);
 
         addListeners();
     }
@@ -342,7 +349,7 @@ public class SettingFragment extends BaseFragment {
             requestFilePermission();
         }else{
             Toast.makeText(getContext(), "backup successful", Toast.LENGTH_SHORT).show();
-            backUpData();
+            backUpData1();
         }
     }
 
@@ -406,6 +413,57 @@ public class SettingFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+    private File EXPORT_REALM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    private String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
+    private String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
+
+    public void backUpData1(){
+        try{
+            //create a backup file
+            File exportRealmFile = new File(EXPORT_REALM_PATH, EXPORT_REALM_FILE_NAME);
+
+            //If backup file already exist, delete it
+            exportRealmFile.delete();
+
+            //Copy current realm to backup file
+            final Realm myRealm = Realm.getDefaultInstance();
+            myRealm.writeCopyTo(exportRealmFile);
+            myRealm.close();
+
+            String dateString = DateUtil.convertDateToStringFormat7(new Date());
+            updateLastBackupInfo(dateString);
+            BudgetPreference.setLastBackup(getContext(), dateString);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void restore(){
+        String restoreFilePath = EXPORT_REALM_PATH + "/" + EXPORT_REALM_FILE_NAME;
+
+        copyBundleRealmFile(restoreFilePath, IMPORT_REALM_FILE_NAME);
+    }
+
+    private String copyBundleRealmFile(String oldFilePath, String outFileName){
+        try{
+            File file = new File(getContext().getFilesDir(), outFileName);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            FileInputStream inputStream = new FileInputStream(new File(oldFilePath));
+
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while((bytesRead = inputStream.read(buf)) > 0){
+                outputStream.write(buf, 0 , bytesRead);
+            }
+            outputStream.close();
+            return file.getAbsolutePath();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     private void updateLastBackupInfo(String value){
         backupContent.setText("last backup : "+value);
