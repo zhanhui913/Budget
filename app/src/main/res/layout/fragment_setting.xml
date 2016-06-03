@@ -159,6 +159,18 @@
             android:background="?attr/themeColorHighlight"/>
 
         <TextView style="@style/SettingsTextViewButtonStyle"
+            android:id="@+id/restoreBackupBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:text="Restore Backup"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/themeColorHighlight"/>
+
+        <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/resetDataBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

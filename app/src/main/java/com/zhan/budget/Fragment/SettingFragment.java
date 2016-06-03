@@ -62,7 +62,7 @@ public class SettingFragment extends BaseFragment {
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
-    private TextView  resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn, openLicenseBtn;
+    private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn, openLicenseBtn;
 
     //
     private static int CURRENT_THEME;
@@ -95,6 +95,7 @@ public class SettingFragment extends BaseFragment {
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
+        restoreBackupBtn = (TextView)view.findViewById(R.id.restoreBackupBtn);
         resetBtn = (TextView) view.findViewById(R.id.resetDataBtn);
         exportCSVBtn = (TextView) view.findViewById(R.id.exportCSVBtn);
         emailBtn = (TextView) view.findViewById(R.id.emailBtn);
@@ -178,7 +179,14 @@ public class SettingFragment extends BaseFragment {
         backupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPermission();
+                checkPermissionToCreateBackup();
+            }
+        });
+
+        restoreBackupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPermissionToRestoreBackup();
             }
         });
 
@@ -343,13 +351,23 @@ public class SettingFragment extends BaseFragment {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void checkPermission(){
+    private void checkPermissionToCreateBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
             requestFilePermission();
         }else{
             Toast.makeText(getContext(), "backup successful", Toast.LENGTH_SHORT).show();
             backUpData1();
+        }
+    }
+
+    private void checkPermissionToRestoreBackup(){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            //STORAGE permission has not been granted
+            requestFilePermission();
+        }else{
+            Toast.makeText(getContext(), "restore backup successful", Toast.LENGTH_SHORT).show();
+            restore();
         }
     }
 
