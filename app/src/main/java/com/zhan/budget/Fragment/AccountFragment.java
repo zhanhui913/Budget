@@ -1,9 +1,6 @@
 package com.zhan.budget.Fragment;
 
-import android.app.AlertDialog;
-import android.app.usage.ConfigurationStats;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,28 +9,23 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.TransactionsForAccount;
-import com.zhan.budget.Activity.TransactionsForLocation;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
@@ -64,7 +56,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private PtrFrameLayout frame;
     private PlusView header;
 
-    private TextView emptyAccountText, accountDebug;
+    private TextView emptyAccountText;
 
     private RecyclerView accountListView;
     private AccountListAdapter accountListAdapter;
@@ -118,9 +110,6 @@ public class AccountFragment extends BaseRealmFragment implements
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
         emptyAccountText.setText("Pull down to add an account");
 
-        accountDebug = (TextView) view.findViewById(R.id.accountDebug);
-        accountDebug.setText("DEFAULT ACCOUNT : null");
-
         createPullToAddAccount();
         populateAccountWithNoInfo();
 
@@ -145,14 +134,6 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 updateAccountStatus();
                 populateAccountWithInfo();
-
-                //debug just to display default account
-                for(int i = 0; i < accountList.size(); i++){
-                    Log.d(TAG, i+") "+accountList.get(i).getName()+" : "+accountList.get(i).isDefault());
-                    if(accountList.get(i).isDefault()){
-                        accountDebug.setText("DEFAULT ACCOUNT : "+accountList.get(i).getName());
-                    }
-                }
             }
         });
     }

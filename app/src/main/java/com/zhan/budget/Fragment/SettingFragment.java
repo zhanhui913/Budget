@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -366,7 +367,6 @@ public class SettingFragment extends BaseFragment {
             //STORAGE permission has not been granted
             requestFilePermission();
         }else{
-            Toast.makeText(getContext(), "restore backup successful", Toast.LENGTH_SHORT).show();
             restore();
         }
     }
@@ -464,21 +464,29 @@ public class SettingFragment extends BaseFragment {
     }
 
     private String copyBundleRealmFile(String oldFilePath, String outFileName){
-        try{
-            File file = new File(getContext().getFilesDir(), outFileName);
-            FileOutputStream outputStream = new FileOutputStream(file);
-            FileInputStream inputStream = new FileInputStream(new File(oldFilePath));
+        if(new File(oldFilePath).exists()){
+            try{
+                File file = new File(getContext().getFilesDir(), outFileName);
+                FileOutputStream outputStream = new FileOutputStream(file);
+                FileInputStream inputStream = new FileInputStream(new File(oldFilePath));
 
-            byte[] buf = new byte[1024];
-            int bytesRead;
-            while((bytesRead = inputStream.read(buf)) > 0){
-                outputStream.write(buf, 0 , bytesRead);
+                byte[] buf = new byte[1024];
+                int bytesRead;
+                while((bytesRead = inputStream.read(buf)) > 0){
+                    outputStream.write(buf, 0 , bytesRead);
+                }
+                outputStream.close();
+
+                Snackbar.make(getView(), "Restore data successful.", Snackbar.LENGTH_LONG).show();
+
+                return file.getAbsolutePath();
+            }catch(IOException e){
+                e.printStackTrace();
             }
-            outputStream.close();
-            return file.getAbsolutePath();
-        }catch(IOException e){
-            e.printStackTrace();
+        }else{
+            Snackbar.make(getView(), "Restore data failed as backup file doesn't exist.", Snackbar.LENGTH_LONG).show();
         }
+
         return null;
     }
 
