@@ -173,15 +173,6 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //If its edit mode
         if(!isNewTransaction){
-            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
-            priceString = priceString.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","");
-
-            Log.d("DEBUG", "---------->" + priceString);
-            String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
-            transactionCostView.setText(appendString + CurrencyTextFormatter.formatFloat(Math.abs(editTransaction.getPrice()), Constants.BUDGET_LOCALE));
-
-            Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
-
 
             if(editTransaction.getNote() != null){
                 Log.d("DEBUG","@@@@@"+editTransaction.getNote());
@@ -202,6 +193,17 @@ public class TransactionInfoActivity extends BaseActivity implements
                 viewPager.setCurrentItem(1);
                 currentPage = BudgetType.INCOME;
             }
+
+            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
+            priceString = priceString.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","");
+
+
+
+            Log.d("DEBUG", "---------->" + priceString);
+            String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
+            transactionCostView.setText(appendString + CurrencyTextFormatter.formatFloat(Math.abs(editTransaction.getPrice()), Constants.BUDGET_LOCALE));
+
+            Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }
 
         //Set location adapter with nothing in list
