@@ -22,6 +22,7 @@ import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.TransactionsForAccount;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -63,6 +64,8 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private RealmResults<Account> resultsAccount;
     private List<Account> accountList;
+
+    private PieChartFragment pieChartFragment;
 
     private Boolean isPulldownAllow = true;
     private Date currentMonth;
@@ -109,6 +112,11 @@ public class AccountFragment extends BaseRealmFragment implements
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
         emptyAccountText.setText("Pull down to add an account");
+
+
+        //Setup pie chart
+        pieChartFragment = PieChartFragment.newInstance(accountList);
+        getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         createPullToAddAccount();
         populateAccountWithNoInfo();
@@ -211,6 +219,8 @@ public class AccountFragment extends BaseRealmFragment implements
                 }
 
                 accountListAdapter.setAccountList(accountList);
+
+                pieChartFragment.setData(accountList);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);

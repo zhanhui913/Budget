@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.zhan.budget.Model.Location;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -95,7 +96,9 @@ public class PieChartFragment extends BaseChartFragment {
             if(list.get(0) instanceof Category){
                 displayPieChartForCategory((List<Category>)list);
             }else if(list.get(0) instanceof Location){
-                displayPieChartForGeneric((List<Location>)list);
+                displayPieChartForLocation((List<Location>)list);
+            }else  if(list.get(0) instanceof Account){
+                displayPieChartForAccount((List<Account>)list);
             }
         }else{
             pieChart.clear();
@@ -144,7 +147,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.invalidate();
     }
 
-    private void displayPieChartForGeneric(List<Location> list) {
+    private void displayPieChartForLocation(List<Location> list) {
         ArrayList<String> locationNames = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             locationNames.add(list.get(i).getName());
@@ -176,6 +179,48 @@ public class PieChartFragment extends BaseChartFragment {
         dataSet.setSelectionShift(10f);
 
         PieData data = new PieData(locationNames, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(0f);
+        pieChart.setData(data);
+
+        // undo all highlights
+        pieChart.highlightValues(null);
+
+        pieChart.invalidate();
+    }
+
+    private void displayPieChartForAccount(List<Account> list){
+        ArrayList<String> accountNames = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            accountNames.add(list.get(i).getName());
+        }
+
+        // IMPORTANT: In a PieChart, no values (Entry) should have the same
+        // xIndex (even if from different DataSets), since no values can be
+        // drawn above each other.
+        ArrayList<Entry> value = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            value.add(new Entry(Math.abs(list.get(i).getCost()), i));
+        }
+
+        PieDataSet dataSet = new PieDataSet(value, "");
+        dataSet.setSliceSpace(1f);
+        dataSet.setSelectionShift(5f);
+
+        // Add colors
+        ArrayList<Integer> colors = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            try {
+                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getColor())));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        dataSet.setColors(colors);
+        dataSet.setSelectionShift(10f);
+
+        PieData data = new PieData(accountNames, dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(0f);
         pieChart.setData(data);
