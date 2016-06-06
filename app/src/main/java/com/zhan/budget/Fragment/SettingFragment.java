@@ -275,7 +275,7 @@ public class SettingFragment extends BaseFragment {
     // Default Account
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
     private void getAccountList(){
         Toast.makeText(getContext(), "click on default account_popup", Toast.LENGTH_SHORT).show();
 
@@ -345,7 +345,7 @@ public class SettingFragment extends BaseFragment {
             }
         });
     }
-
+*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Backup Data
