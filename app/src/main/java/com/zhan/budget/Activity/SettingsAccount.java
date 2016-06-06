@@ -1,5 +1,6 @@
 package com.zhan.budget.Activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,11 +53,13 @@ public class SettingsAccount extends BaseRealmActivity implements
     private AccountListAdapter accountListAdapter;
 
     private RealmResults<Account> resultsAccount;
-    private List<Account> accountList;
+    //private List<Account> accountList;
 
     private Boolean isPulldownAllow = true;
 
     private int accountIndexEdited;//The index of the account that the user just finished edited.
+
+    private Activity instance;
 
     @Override
     protected int getActivityLayout(){
@@ -67,12 +70,14 @@ public class SettingsAccount extends BaseRealmActivity implements
     protected void init(){
         super.init();
 
+        instance = this;
+
         createToolbar();
 
-        accountList = new ArrayList<>();
+        //accountList = new ArrayList<>();
         accountListView = (RecyclerView)findViewById(R.id.accountListView);
         accountListView.setLayoutManager(new LinearLayoutManager(this));
-
+/*
         accountListAdapter = new AccountListAdapter(this, accountList, false, true);
         accountListView.setAdapter(accountListAdapter);
 
@@ -81,7 +86,7 @@ public class SettingsAccount extends BaseRealmActivity implements
                 new HorizontalDividerItemDecoration.Builder(this)
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
-
+*/
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
@@ -113,11 +118,22 @@ public class SettingsAccount extends BaseRealmActivity implements
         resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
             public void onChange(RealmResults<Account> element) {
-                element.removeChangeListener(this);
+                //element.removeChangeListener(this);
 
                 Log.d(TAG, "there's a change in results account ");
-                accountList = myRealm.copyFromRealm(element);
-                accountListAdapter.setAccountList(accountList);
+                //accountList = myRealm.copyFromRealm(element);
+                //accountListAdapter.setAccountList(accountList);
+
+                accountListAdapter = new AccountListAdapter(instance, resultsAccount, false, true);
+                accountListView.setAdapter(accountListAdapter);
+
+                //Add divider
+                accountListView.addItemDecoration(
+                        new HorizontalDividerItemDecoration.Builder(instance)
+                                .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                                .build());
+
+                accountListAdapter.setAccountList(element);
 
                 updateAccountStatus();
             }
@@ -194,9 +210,9 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     private void editAccount(int position){
         Log.d("ACCOUNT_INFO", "trying to edit account at pos : "+position);
-        Log.d("ACCOUNT_INFO", "accoutn name : " +accountList.get(position).getName());
-        Log.d("ACCOUNT_INFO", "accoutn id : " +accountList.get(position).getId());
-        Log.d("ACCOUNT_INFO", "accoutn color : " +accountList.get(position).getColor());
+        Log.d("ACCOUNT_INFO", "accoutn name : " +resultsAccount.get(position).getName());
+        Log.d("ACCOUNT_INFO", "accoutn id : " +resultsAccount.get(position).getId());
+        Log.d("ACCOUNT_INFO", "accoutn color : " +resultsAccount.get(position).getColor());
 
 
         Intent editAccountIntent = new Intent(this, AccountInfoActivity.class);
@@ -221,7 +237,7 @@ public class SettingsAccount extends BaseRealmActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
-                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
+                 Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
 
                 Log.i("ZHAN", "----------- onActivityResult edit account ----------");
                 Log.d("ZHAN", "account name is "+accountReturned.getName());
@@ -229,12 +245,12 @@ public class SettingsAccount extends BaseRealmActivity implements
                 Log.d("ZHAN", "account id is "+accountReturned.getId());
                 Log.i("ZHAN", "----------- onActivityResult edit account ----------");
 
-                accountList.set(accountIndexEdited, accountReturned);
-                accountListAdapter.setAccountList(accountList);
-
-                updateAccountStatus();
+                //accountList.set(accountIndexEdited, accountReturned);
+                //accountListAdapter.setAccountList(accountList);
+                //updateAccountStatus();
             }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
-                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+                Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+
 
                 Log.i("ZHAN", "----------- onActivityResult new account ----------");
                 Log.d("ZHAN", "account name is "+accountReturned.getName());
@@ -242,15 +258,22 @@ public class SettingsAccount extends BaseRealmActivity implements
                 Log.d("ZHAN", "account id is "+accountReturned.getId());
                 Log.i("ZHAN", "----------- onActivityResult new account ----------");
 
-                accountList.add(accountReturned);
-                accountListAdapter.setAccountList(accountList);
-
-                updateAccountStatus();
+                //accountList.add(accountReturned);
+                //accountListAdapter.setAccountList(accountList);
+                //updateAccountStatus();
 
                 //Scroll to the last position
                 accountListView.scrollToPosition(accountListAdapter.getItemCount() - 1);
             }
         }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        //remove change listener here
+        resultsAccount.removeChangeListeners();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,9 +308,11 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     @Override
-    public void onAccountSetAsDefault(final String accountID){
-        final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
-        accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
+    public void onAccountSetAsDefault(String accountID){
+        //final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
+/*
+        resultsAccount = myRealm.where(Account.class).findAllAsync();
+        resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
             public void onChange(RealmResults<Account> element) {
                 element.removeChangeListener(this);
@@ -316,6 +341,17 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 accountListAdapter.notifyDataSetChanged();
             }
-        });
+        });*/
+
+        myRealm.beginTransaction();
+        for(int a = 0; a < resultsAccount.size(); a++){
+            if(resultsAccount.get(a).getId().equalsIgnoreCase(accountID)){
+                resultsAccount.get(a).setIsDefault(true);
+            }else{
+                resultsAccount.get(a).setIsDefault(false);
+            }
+        }
+        myRealm.commitTransaction();
+        accountListAdapter.notifyDataSetChanged();
     }
 }
