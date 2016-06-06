@@ -234,7 +234,7 @@ public class AccountInfoActivity extends BaseActivity implements
             myRealm.beginTransaction();
             acc = myRealm.createObject(Account.class);
             acc.setId(account.getId());
-            acc.setIsDefault(false);
+            acc.setIsDefault(account.isDefault());
         }
 
         acc.setName(accountNameTextView.getText().toString());
