@@ -20,6 +20,7 @@ public abstract class BaseRealmActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        myRealm.removeAllChangeListeners();
         closeRealm();
     }
 
@@ -35,21 +36,17 @@ public abstract class BaseRealmActivity extends BaseActivity {
     }
 
     protected void resumeRealm(){
-        //if(myRealm == null || myRealm.isClosed()) {
-            myRealm = Realm.getDefaultInstance();
-            BudgetPreference.addRealmCache(this);
-            Log.d(TAG, "resumeRealm");
-        //}
+        myRealm = Realm.getDefaultInstance();
+        BudgetPreference.addRealmCache(this);
+        Log.d(TAG, "resumeRealm");
     }
 
     /**
      * Close Realm if possible
      */
     protected void closeRealm(){
-        //if(myRealm != null && !myRealm.isClosed()) {
-            myRealm.close();
-            BudgetPreference.removeRealmCache(this);
-            Log.d(TAG, "closeRealm");
-        //}
+        myRealm.close();
+        BudgetPreference.removeRealmCache(this);
+        Log.d(TAG, "closeRealm");
     }
 }
