@@ -268,14 +268,6 @@ public class SettingsAccount extends BaseRealmActivity implements
         }
     }
 
-    @Override
-    public void onStop(){
-        super.onStop();
-
-        //remove change listener here
-        resultsAccount.removeChangeListeners();
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
