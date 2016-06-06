@@ -11,9 +11,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.zhan.budget.Model.Location;
-import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.Category;
+import com.zhan.budget.Model.PieDataCostInterface;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 
@@ -34,7 +32,7 @@ public class PieChartFragment extends BaseChartFragment {
         // Required empty public constructor
     }
 
-    public static PieChartFragment newInstance(List<?> categoryList, boolean initImmediately){
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> categoryList, boolean initImmediately){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CHART, Parcels.wrap(categoryList));
@@ -43,7 +41,7 @@ public class PieChartFragment extends BaseChartFragment {
 
         return pieChartFragment;
     }
-    public static PieChartFragment newInstance(List<?> categoryList){
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> categoryList){
         return newInstance(categoryList, false);
     }
 
@@ -80,7 +78,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
 
         if(getArguments().getBoolean(ARG_CHART_2)) {
-            setData((List<?>) Parcels.unwrap(getArguments().getParcelable(ARG_CHART)));
+            setData((List<? extends PieDataCostInterface>) Parcels.unwrap(getArguments().getParcelable(ARG_CHART)));
         }
     }
 
@@ -88,69 +86,21 @@ public class PieChartFragment extends BaseChartFragment {
      * Called when wants to display data
      * @param list
      */
-    public void setData(List<?> list){
+    public void setData(List<? extends PieDataCostInterface> list){
         // add a selection listener
         //pieChart.setOnChartValueSelectedListener(this);
 
         if(list.size() > 0){
-            if(list.get(0) instanceof Category){
-                displayPieChartForCategory((List<Category>)list);
-            }else if(list.get(0) instanceof Location){
-                displayPieChartForLocation((List<Location>)list);
-            }else  if(list.get(0) instanceof Account){
-                displayPieChartForAccount((List<Account>)list);
-            }
+            displayPieChart(list);
         }else{
             pieChart.clear();
         }
     }
 
-    private void displayPieChartForCategory(List<Category> categoryList) {
-        ArrayList<String> categoryNames = new ArrayList<>();
-        for (int i = 0; i < categoryList.size(); i++) {
-            categoryNames.add(categoryList.get(i).getName());
-        }
-
-        // IMPORTANT: In a PieChart, no values (Entry) should have the same
-        // xIndex (even if from different DataSets), since no values can be
-        // drawn above each other.
-        ArrayList<Entry> value = new ArrayList<>();
-        for (int i = 0; i < categoryList.size(); i++) {
-            value.add(new Entry(Math.abs(categoryList.get(i).getCost()), i));
-        }
-
-        PieDataSet dataSet = new PieDataSet(value, "");
-        dataSet.setSliceSpace(1f);
-        dataSet.setSelectionShift(5f);
-
-        // Add colors
-        ArrayList<Integer> colors = new ArrayList<>();
-        for(int i = 0; i < categoryList.size(); i++){
-            try {
-                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), categoryList.get(i).getColor())));
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        dataSet.setColors(colors);
-        dataSet.setSelectionShift(10f);
-
-        PieData data = new PieData(categoryNames, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(0f);
-        pieChart.setData(data);
-
-        // undo all highlights
-        pieChart.highlightValues(null);
-
-        pieChart.invalidate();
-    }
-
-    private void displayPieChartForLocation(List<Location> list) {
-        ArrayList<String> locationNames = new ArrayList<>();
+    private void displayPieChart(List<? extends PieDataCostInterface> list){
+        ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            locationNames.add(list.get(i).getName());
+            names.add(list.get(i).getPieDataName());
         }
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
@@ -158,7 +108,7 @@ public class PieChartFragment extends BaseChartFragment {
         // drawn above each other.
         ArrayList<Entry> value = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            value.add(new Entry(Math.abs(list.get(i).getAmount()), i));
+            value.add(new Entry(Math.abs(list.get(i).getPieDataCost()), i));
         }
 
         PieDataSet dataSet = new PieDataSet(value, "");
@@ -169,7 +119,7 @@ public class PieChartFragment extends BaseChartFragment {
         ArrayList<Integer> colors = new ArrayList<>();
         for(int i = 0; i < list.size(); i++){
             try {
-                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getColor())));
+                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getPieDataColor())));
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -178,7 +128,7 @@ public class PieChartFragment extends BaseChartFragment {
         dataSet.setColors(colors);
         dataSet.setSelectionShift(10f);
 
-        PieData data = new PieData(locationNames, dataSet);
+        PieData data = new PieData(names, dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(0f);
         pieChart.setData(data);
@@ -188,47 +138,4 @@ public class PieChartFragment extends BaseChartFragment {
 
         pieChart.invalidate();
     }
-
-    private void displayPieChartForAccount(List<Account> list){
-        ArrayList<String> accountNames = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            accountNames.add(list.get(i).getName());
-        }
-
-        // IMPORTANT: In a PieChart, no values (Entry) should have the same
-        // xIndex (even if from different DataSets), since no values can be
-        // drawn above each other.
-        ArrayList<Entry> value = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            value.add(new Entry(Math.abs(list.get(i).getCost()), i));
-        }
-
-        PieDataSet dataSet = new PieDataSet(value, "");
-        dataSet.setSliceSpace(1f);
-        dataSet.setSelectionShift(5f);
-
-        // Add colors
-        ArrayList<Integer> colors = new ArrayList<>();
-        for(int i = 0; i < list.size(); i++){
-            try {
-                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getColor())));
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        dataSet.setColors(colors);
-        dataSet.setSelectionShift(10f);
-
-        PieData data = new PieData(accountNames, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(0f);
-        pieChart.setData(data);
-
-        // undo all highlights
-        pieChart.highlightValues(null);
-
-        pieChart.invalidate();
-    }
-
 }

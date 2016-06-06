@@ -3,7 +3,7 @@ package com.zhan.budget.Model;
 import org.parceler.Parcel;
 
 @Parcel(Parcel.Serialization.BEAN)
-public class Location {
+public class Location implements PieDataCostInterface{
 
     private String name;
     private int amount;
@@ -39,5 +39,26 @@ public class Location {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Pie Data Interface
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public float getPieDataCost(){
+        return this.amount;
+    }
+
+    @Override
+    public String getPieDataName(){
+        return this.name;
+    }
+
+    @Override
+    public String getPieDataColor(){
+        return this.color;
     }
 }

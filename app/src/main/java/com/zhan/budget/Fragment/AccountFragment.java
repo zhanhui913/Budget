@@ -113,7 +113,6 @@ public class AccountFragment extends BaseRealmFragment implements
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
         emptyAccountText.setText("Pull down to add an account");
 
-
         //Setup pie chart
         pieChartFragment = PieChartFragment.newInstance(accountList);
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();

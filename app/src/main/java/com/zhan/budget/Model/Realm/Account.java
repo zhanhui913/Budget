@@ -1,5 +1,7 @@
 package com.zhan.budget.Model.Realm;
 
+import com.zhan.budget.Model.PieDataCostInterface;
+
 import org.parceler.Parcel;
 
 import io.realm.AccountRealmProxy;
@@ -10,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 @Parcel(implementations = {AccountRealmProxy.class},
         value = Parcel.Serialization.BEAN,
         analyze = {Account.class})
-public class Account extends RealmObject{
+public class Account extends RealmObject implements PieDataCostInterface{
 
     @PrimaryKey
     private String id;
@@ -64,5 +66,26 @@ public class Account extends RealmObject{
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Pie Data Interface
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public float getPieDataCost(){
+        return this.getCost();
+    }
+
+    @Override
+    public String getPieDataName(){
+        return this.name;
+    }
+
+    @Override
+    public String getPieDataColor(){
+        return this.color;
     }
 }

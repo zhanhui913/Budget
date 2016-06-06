@@ -1,5 +1,7 @@
 package com.zhan.budget.Model.Realm;
 
+import com.zhan.budget.Model.PieDataCostInterface;
+
 import org.parceler.Parcel;
 
 import io.realm.CategoryRealmProxy;
@@ -10,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 @Parcel(implementations = {CategoryRealmProxy.class},
         value = Parcel.Serialization.BEAN,
         analyze = {Category.class})
-public class Category extends RealmObject{
+public class Category extends RealmObject implements PieDataCostInterface{
 
     @PrimaryKey
     private String id;
@@ -102,4 +104,26 @@ public class Category extends RealmObject{
     public void setPercent(float percent) {
         this.percent = percent;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Pie Data Interface
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public float getPieDataCost(){
+        return this.getCost();
+    }
+
+    @Override
+    public String getPieDataName(){
+        return this.name;
+    }
+
+    @Override
+    public String getPieDataColor(){
+        return this.color;
+    }
+
 }
