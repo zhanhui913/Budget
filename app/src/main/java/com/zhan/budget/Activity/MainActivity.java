@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity
     private CategoryFragment categoryFragment;
     private MonthReportFragment monthReportFragment;
     private AccountFragment accountFragment;
-    private InfoFragment infoFragment;
+    //private InfoFragment infoFragment;
     private RateFragment rateFragment;
     private SettingFragment settingFragment;
     private LocationFragment locationFragment;
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
         settingFragment = new SettingFragment();
-        infoFragment = new InfoFragment();
+        //infoFragment = new InfoFragment();
         rateFragment = new RateFragment();
         locationFragment = new LocationFragment();
     }
@@ -175,10 +175,10 @@ public class MainActivity extends BaseActivity
                         fragment = settingFragment;
                         title = "Setting";
                         break;
-                    case R.id.nav_info:
+                    /*case R.id.nav_info:
                         fragment = infoFragment;
                         title = "Info";
-                        break;
+                        break;*/
                     case R.id.nav_rate:
                         fragment = rateFragment;
                         title = "Rate";
