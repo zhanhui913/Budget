@@ -92,12 +92,8 @@ public class PieChartFragment extends BaseChartFragment {
         // add a selection listener
         //pieChart.setOnChartValueSelectedListener(this);
 
-        if(list.size() > 0){
-            if(checkEmptyPieDataCost(list)){
-                displayPieChart(list);
-            }else{
-                pieChart.clear();
-            }
+        if(list.size() > 0 && checkEmptyPieDataCost(list)){
+            displayPieChart(list);
         }else{
             pieChart.clear();
         }
