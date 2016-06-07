@@ -3,6 +3,7 @@ package com.zhan.budget.Fragment.Chart;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -41,6 +42,7 @@ public class PieChartFragment extends BaseChartFragment {
 
         return pieChartFragment;
     }
+
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> categoryList){
         return newInstance(categoryList, false);
     }
@@ -91,10 +93,29 @@ public class PieChartFragment extends BaseChartFragment {
         //pieChart.setOnChartValueSelectedListener(this);
 
         if(list.size() > 0){
-            displayPieChart(list);
+            if(checkEmptyPieDataCost(list)){
+                displayPieChart(list);
+            }else{
+                pieChart.clear();
+            }
         }else{
             pieChart.clear();
         }
+    }
+
+    /**
+     * Even if there are data name (x value), the cost (y value) could be empty and therefore
+     * have nothing in pie chart to draw.
+     * @param list
+     * @return true if there's at least 1 (y value) data.
+     */
+    private boolean checkEmptyPieDataCost(List<? extends PieDataCostInterface> list){
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getPieDataCost() != 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void displayPieChart(List<? extends PieDataCostInterface> list){

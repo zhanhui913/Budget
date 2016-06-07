@@ -344,6 +344,6 @@ public class SettingsAccount extends BaseRealmActivity implements
             }
         }
         myRealm.commitTransaction();
-        accountListAdapter.notifyDataSetChanged();
+        //accountListAdapter.notifyDataSetChanged();
     }
 }

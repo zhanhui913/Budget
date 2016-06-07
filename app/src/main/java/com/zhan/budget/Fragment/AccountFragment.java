@@ -437,6 +437,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onAccountSetAsDefault(final String accountID){
+       /*
         final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
         accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
@@ -468,6 +469,7 @@ public class AccountFragment extends BaseRealmFragment implements
                 accountListAdapter.notifyDataSetChanged();
             }
         });
+        */
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
