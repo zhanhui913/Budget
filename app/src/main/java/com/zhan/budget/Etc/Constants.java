@@ -15,6 +15,7 @@ public class Constants {
 
     //Permissions for Android M
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
 
     //First time
     public static final String FIRST_TIME = "First Time";

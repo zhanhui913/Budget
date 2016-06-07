@@ -15,10 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +25,6 @@ import com.zhan.budget.Activity.SettingsAccount;
 import com.zhan.budget.Activity.SettingsCategory;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -352,26 +349,29 @@ public class SettingFragment extends BaseFragment {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private File EXPORT_REALM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    private final String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
+    private final String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
+
     private void checkPermissionToCreateBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
-            requestFilePermission();
+            requestFilePermissionToWrite();
         }else{
-            Toast.makeText(getContext(), "backup successful", Toast.LENGTH_SHORT).show();
             backUpData1();
         }
     }
 
     private void checkPermissionToRestoreBackup(){
-        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
-            requestFilePermission();
+            requestFilePermissionToRead();
         }else{
             restore();
         }
     }
 
-    public void requestFilePermission(){
+    public void requestFilePermissionToWrite(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
@@ -379,7 +379,6 @@ public class SettingFragment extends BaseFragment {
 
             new AlertDialog.Builder(getContext())
                     .setTitle("Permission denied")
-                    //.setMessage("You need to allow access to storage in order to create a backup of the database.")
                     .setMessage("Without this permission the app is unable to create a backup data.")
                     .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
                         @Override
@@ -392,11 +391,34 @@ public class SettingFragment extends BaseFragment {
                     .show();
 
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
         }
     }
 
+    public void requestFilePermissionToRead(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Permission denied")
+                    .setMessage("Without this permission the app is unable to restore the backup data.")
+                    .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        }
+                    })
+                    .setNegativeButton("Deny", null)
+                    .create()
+                    .show();
+
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        }
+    }
+/*
     public void backUpData(){
         try {
             File sd = Environment.getExternalStorageDirectory();
@@ -431,11 +453,7 @@ public class SettingFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
-    private File EXPORT_REALM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    private String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
-    private String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
-
+*/
     public void backUpData1(){
         try{
             //create a backup file
@@ -445,13 +463,16 @@ public class SettingFragment extends BaseFragment {
             exportRealmFile.delete();
 
             //Copy current realm to backup file
-            final Realm myRealm = Realm.getDefaultInstance();
+            Realm myRealm = Realm.getDefaultInstance();
             myRealm.writeCopyTo(exportRealmFile);
             myRealm.close();
 
             String dateString = DateUtil.convertDateToStringFormat7(new Date());
             updateLastBackupInfo(dateString);
             BudgetPreference.setLastBackup(getContext(), dateString);
+
+            Snackbar.make(getView(), "Backup data successful.", Snackbar.LENGTH_LONG).show();
+
         }catch(IOException e){
             e.printStackTrace();
         }

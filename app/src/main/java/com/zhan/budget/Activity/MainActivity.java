@@ -92,34 +92,36 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        // If request is cancelled, the result arrays are empty.
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            // Permission was granted!
+            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
+                settingFragment.backUpData1();
+            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+                settingFragment.restore();
+            }
+        }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
+            boolean showRationale = true;
 
-                    // permission was granted, yay! Do the storage-related task you need to do.
-                    Toast.makeText(getApplicationContext(), "YAY", Toast.LENGTH_SHORT).show();
-                    settingFragment.backUpData();
-                } else if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
-
-                    boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-                    if(showRationale){
-                        //Permission was denied without checking the check box "Never ask again"
-                        Log.d("SETTINGS", "permission denied without never ask again");
-                        settingFragment.requestFilePermission();
-                    }else{
-                        //Permission was denied while checking the check box "Never ask again"
-                        Log.d("SETTINGS", "permission denied with never ask again");
-                    }
-
-                    // permission denied, boo! Disable the functionality that depends on this permission.
-                    Toast.makeText(getApplicationContext(), "BOO", Toast.LENGTH_SHORT).show();
-                }
+            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
+                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+            if(showRationale){
+                // Permission was denied without checking the check box "Never ask again"
+                Log.d("SETTINGS", "permission denied without never ask again");
+
+                if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
+                    settingFragment.requestFilePermissionToWrite();
+                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+                    settingFragment.requestFilePermissionToRead();
+                }
+            }else{
+                // Permission was denied while checking the check box "Never ask again"
+                Log.d("SETTINGS", "permission denied with never ask again");
+            }
         }
     }
 
