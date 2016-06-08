@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.zhan.budget.Activity.SettingsAccount"
+    tools:context=".Activity.Settings.SettingsAccount"
     tools:showIn="@layout/activity_settings_account">
 
     <in.srain.cube.views.ptr.PtrFrameLayout

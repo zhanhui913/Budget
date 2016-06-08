@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
-import com.zhan.budget.Activity.TransactionsForCategory;
+import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
@@ -502,7 +502,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             Toast.makeText(getContext(), "click on category :" + categoryRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
 
             Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH, DateUtil.convertDateToString(currentMonth));
+            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
 
             Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 

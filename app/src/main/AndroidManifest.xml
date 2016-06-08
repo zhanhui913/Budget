@@ -42,7 +42,7 @@
                 android:value="com.zhan.budget.Activity.MainActivity" />
         </activity>
         <activity
-            android:name=".Activity.TransactionsForCategory"
+            android:name=".Activity.Transactions.TransactionsForCategory"
             android:label="@string/title_activity_transactions_for_category"
             android:parentActivityName=".Activity.MainActivity"
             android:theme="@style/AppThemeLight.NoActionBar">
@@ -63,19 +63,19 @@
             android:label="@string/title_activity_tour"
             android:theme="@style/AppThemeLight.NoActionBar" />
         <activity
-            android:name=".Activity.SettingsAccount"
+            android:name=".Activity.Settings.SettingsAccount"
             android:label="@string/title_activity_settings_account"
             android:theme="@style/AppThemeLight.NoActionBar" />
         <activity
-            android:name=".Activity.SettingsCategory"
+            android:name=".Activity.Settings.SettingsCategory"
             android:label="@string/title_activity_settings_category"
             android:theme="@style/AppThemeLight.NoActionBar" />
         <activity
-            android:name=".Activity.TransactionsForLocation"
+            android:name=".Activity.Transactions.TransactionsForLocation"
             android:label="@string/title_activity_transactions_for_location"
             android:theme="@style/AppThemeLight.NoActionBar" />
         <activity
-            android:name=".Activity.OpenSourceActivity"
+            android:name=".Activity.Settings.OpenSourceActivity"
             android:label="@string/title_activity_open_source"
             android:theme="@style/AppThemeLight.NoActionBar" />
         <activity
@@ -83,7 +83,7 @@
             android:label="@string/title_activity_account_info"
             android:theme="@style/AppThemeLight.NoActionBar" />
         <activity
-            android:name=".Activity.TransactionsForAccount"
+            android:name=".Activity.Transactions.TransactionsForAccount"
             android:label="@string/title_activity_transactions_for_account"
             android:theme="@style/AppThemeLight.NoActionBar"></activity>
     </application>

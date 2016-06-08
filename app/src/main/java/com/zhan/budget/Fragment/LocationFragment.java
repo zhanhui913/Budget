@@ -4,9 +4,7 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-import com.zhan.budget.Activity.TransactionsForLocation;
+import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
@@ -231,7 +229,7 @@ public class LocationFragment extends BaseRealmFragment
         Toast.makeText(getContext(), "click on location :"+index, Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
         startActivity(viewAllTransactionsForLocation);
     }

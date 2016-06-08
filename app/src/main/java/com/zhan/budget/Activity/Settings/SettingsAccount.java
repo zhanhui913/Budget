@@ -1,4 +1,4 @@
-package com.zhan.budget.Activity;
+package com.zhan.budget.Activity.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Activity.AccountInfoActivity;
+import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;

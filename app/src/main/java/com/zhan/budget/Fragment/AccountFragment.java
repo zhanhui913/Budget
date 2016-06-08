@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
-import com.zhan.budget.Activity.TransactionsForAccount;
+import com.zhan.budget.Activity.Transactions.TransactionsForAccount;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
@@ -409,7 +409,7 @@ public class AccountFragment extends BaseRealmFragment implements
         Toast.makeText(getContext(), "click on account :"+position, Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
-        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
 
         Parcelable wrapped = Parcels.wrap(accountList.get(position));
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, wrapped);
