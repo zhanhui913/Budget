@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -17,7 +16,6 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
@@ -36,7 +34,6 @@ public class TransactionsForCategory extends BaseRealmActivity implements
     private Date beginMonth, endMonth;
     private Category selectedCategory;
 
-    private ImageView transactionCategoryIcon;
     private TextView transactionCategoryName, transactionCategoryBalance, emptyListTextView;
 
     private RecyclerView transactionCategoryListView;
@@ -63,23 +60,19 @@ public class TransactionsForCategory extends BaseRealmActivity implements
 
         createToolbar();
 
-        transactionCategoryListView = (RecyclerView) findViewById(R.id.transactionCategoryListView);
-        transactionCategoryListView.setLayoutManager(new LinearLayoutManager(instance.getBaseContext()));
+        transactionCategoryListView = (RecyclerView) findViewById(R.id.transactionListView);
+        transactionCategoryListView.setLayoutManager(new LinearLayoutManager(instance));
 
-        transactionCategoryIcon = (ImageView) findViewById(R.id.transactionCategoryIcon);
-        transactionCategoryName = (TextView) findViewById(R.id.transactionCategoryName);
-        transactionCategoryBalance = (TextView) findViewById(R.id.transactionCategoryBalance);
-
+        transactionCategoryName = (TextView) findViewById(R.id.genericName);
+        transactionCategoryBalance = (TextView) findViewById(R.id.transactionBalance);
 
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);
 
-        transactionCategoryIcon.setImageResource(CategoryUtil.getIconID(this, selectedCategory.getIcon()));
-
         transactionCategoryName.setText(selectedCategory.getName());
 
         emptyListTextView = (TextView) findViewById(R.id.emptyTransactionTextView);
-        emptyListTextView.setText("There is no transaction for "+selectedCategory.getName()+" during "+DateUtil.convertDateToStringFormat2(beginMonth));
+        emptyListTextView.setText("There is no transaction for '"+selectedCategory.getName()+"' during "+DateUtil.convertDateToStringFormat2(beginMonth));
 
 
         Log.d("ZHAN", "selected category => " + selectedCategory.getName() + " -> " + selectedCategory.getId());

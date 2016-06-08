@@ -23,6 +23,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_transaction_category"/>
+    <include layout="@layout/content_transactions_generic"/>
 
 </android.support.design.widget.CoordinatorLayout>

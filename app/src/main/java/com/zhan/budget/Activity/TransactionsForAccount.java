@@ -34,7 +34,7 @@ public class TransactionsForAccount extends BaseRealmActivity implements
     private Toolbar toolbar;
     private Date beginMonth, endMonth;
     private Account account;
-    private TextView accountTextView, costTextView;
+    private TextView accountTextView, costTextView, emptyListTextView;
     private RecyclerView accountListView;
     private TransactionRecyclerAdapter transactionAccountAdapter;
     private List<Transaction> transactionAccountList;
@@ -56,12 +56,16 @@ public class TransactionsForAccount extends BaseRealmActivity implements
 
         instance = this;
 
+        //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);
 
-        accountTextView = (TextView)findViewById(R.id.accountName);
-        costTextView = (TextView)findViewById(R.id.transactionAccountBalance);
+        accountTextView = (TextView)findViewById(R.id.genericName);
+        costTextView = (TextView)findViewById(R.id.transactionBalance);
 
-        accountListView = (RecyclerView)findViewById(R.id.transactionAccountListView);
+        emptyListTextView = (TextView)findViewById(R.id.emptyTransactionTextView);
+        emptyListTextView.setText("There is no transaction for '"+account.getName()+"' during "+DateUtil.convertDateToStringFormat2(beginMonth));
+
+        accountListView = (RecyclerView)findViewById(R.id.transactionListView);
         accountListView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
         accountTextView.setText(account.getName());
@@ -120,6 +124,8 @@ public class TransactionsForAccount extends BaseRealmActivity implements
 
                 //update balance
                 costTextView.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
+
+                updateTransactionStatus();
             }
         });
     }
@@ -127,6 +133,17 @@ public class TransactionsForAccount extends BaseRealmActivity implements
     private void updateTransactionList(){
         transactionAccountList = myRealm.copyFromRealm(transactionsForAccountForMonth);
         transactionAccountAdapter.setTransactionList(transactionAccountList);
+        updateTransactionStatus();
+    }
+
+    private void updateTransactionStatus(){
+        if(transactionAccountList.size() > 0){
+            accountListView.setVisibility(View.VISIBLE);
+            emptyListTextView.setVisibility(View.GONE);
+        }else{
+            accountListView.setVisibility(View.GONE);
+            emptyListTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

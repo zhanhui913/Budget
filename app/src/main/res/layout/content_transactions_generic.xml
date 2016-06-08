@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.zhan.budget.Activity.TransactionsForLocation"
-    tools:showIn="@layout/activity_transactions_for_location">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
         android:id="@+id/topPanel"
@@ -17,15 +14,15 @@
         android:padding="5dp">
 
         <TextView
-            android:id="@+id/locationName"
+            android:id="@+id/genericName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Location"
+            android:text="Generic"
             android:textSize="20sp"
             android:layout_marginLeft="5dp"/>
 
         <TextView
-            android:id="@+id/transactionLocationBalance"
+            android:id="@+id/transactionBalance"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="$0.00"
@@ -35,8 +32,16 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/transactionLocationListView"
+        android:id="@+id/transactionListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topPanel"/>
+
+    <TextView
+        android:id="@+id/emptyTransactionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topPanel"
+        android:text="There is no transaction for ..."
+        android:gravity="center_vertical|center_horizontal" />
 </RelativeLayout>

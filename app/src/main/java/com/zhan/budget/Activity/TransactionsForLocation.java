@@ -31,7 +31,7 @@ public class TransactionsForLocation extends BaseRealmActivity implements
     private Toolbar toolbar;
     private Date beginMonth, endMonth;
     private String location;
-    private TextView locationTextView, costTextView;
+    private TextView locationTextView, costTextView, emptyListTextView;
     private RecyclerView locationListView;
     private TransactionRecyclerAdapter transactionLocationAdapter;
     private List<Transaction> transactionLocationList;
@@ -52,12 +52,16 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
         instance = this;
 
+        //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);
 
-        locationTextView = (TextView)findViewById(R.id.locationName);
-        costTextView = (TextView)findViewById(R.id.transactionLocationBalance);
+        locationTextView = (TextView)findViewById(R.id.genericName);
+        costTextView = (TextView)findViewById(R.id.transactionBalance);
 
-        locationListView = (RecyclerView)findViewById(R.id.transactionLocationListView);
+        emptyListTextView = (TextView)findViewById(R.id.emptyTransactionTextView);
+        emptyListTextView.setText("There is no transaction for '"+location+"' during "+DateUtil.convertDateToStringFormat2(beginMonth));
+
+        locationListView = (RecyclerView)findViewById(R.id.transactionListView);
         locationListView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
         locationTextView.setText(location);
@@ -116,6 +120,8 @@ public class TransactionsForLocation extends BaseRealmActivity implements
 
                 //update balance
                 costTextView.setText(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
+
+                updateTransactionStatus();
             }
         });
     }
@@ -123,6 +129,17 @@ public class TransactionsForLocation extends BaseRealmActivity implements
     private void updateTransactionList(){
         transactionLocationList = myRealm.copyFromRealm(transactionsForLocationForMonth);
         transactionLocationAdapter.setTransactionList(transactionLocationList);
+        updateTransactionStatus();
+    }
+
+    private void updateTransactionStatus(){
+        if(transactionLocationList.size() > 0){
+            locationListView.setVisibility(View.VISIBLE);
+            emptyListTextView.setVisibility(View.GONE);
+        }else{
+            locationListView.setVisibility(View.GONE);
+            emptyListTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
