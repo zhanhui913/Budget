@@ -52,6 +52,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -229,7 +230,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         end.setTime(endDate);
 
         startTime = System.nanoTime();
-/*
+
         String dayType;
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
@@ -261,7 +262,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 transaction.setPrice(-120.0f + (rd * 0.5f));
                 transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
             }
-        }*/
+        }
 
         myRealm.commitTransaction();
         endTime = System.nanoTime();
