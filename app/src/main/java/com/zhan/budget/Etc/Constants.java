@@ -69,4 +69,6 @@ public class Constants {
     public static final String RESULT_SCHEDULE_TRANSACTION = "ScheduledTransaction";
     public static final String RESULT_EDIT_ACCOUNT = "Edit Account Result";
     public static final String RESULT_NEW_ACCOUNT = "New Account Result";
+
+    public static final String CHANGED = "Has Been Changed?";
 }

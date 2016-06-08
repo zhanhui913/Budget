@@ -1,21 +1,27 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+
+import org.parceler.Parcels;
 
 import java.util.Date;
 import java.util.List;
@@ -138,7 +144,29 @@ public class TransactionsForAccount extends BaseRealmActivity implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onClickTransaction(int position){}
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data.getExtras() != null) {
+             if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
+                Toast.makeText(instance, "CAME BACK FROM EDIT", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    @Override
+    public void onClickTransaction(int position){
+        Intent editTransactionIntent = new Intent(instance, TransactionInfoActivity.class);
+
+        //This is edit mode, not a new transaction
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(transactionAccountList.get(position).getDate()));
+
+        Parcelable wrapped = Parcels.wrap(transactionAccountList.get(position));
+        editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
+
+        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
+    }
 
     @Override
     public void onDeleteTransaction(int position){
