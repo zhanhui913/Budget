@@ -139,7 +139,12 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.location.setVisibility(View.GONE);
         }
 
+        viewHolder.account.setText(transaction.getAccount().getName());
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
+
+        if(transaction.getPrice() < 0f){
+            viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+        }
     }
 
     @Override
@@ -167,7 +172,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
-        public TextView name, cost, date, location;
+        public TextView name, cost, date, account, location;
 
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, approveBtn, unapproveBtn;
@@ -183,6 +188,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             name = (TextView) itemView.findViewById(R.id.transactionNote);
             cost = (TextView) itemView.findViewById(R.id.transactionCost);
             date = (TextView) itemView.findViewById(R.id.transactionDate);
+            account = (TextView) itemView.findViewById(R.id.transactionAccount);
             location = (TextView) itemView.findViewById(R.id.transactionLocation);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeTransaction);

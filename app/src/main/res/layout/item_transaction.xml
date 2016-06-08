@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/unapproveBtn"
             android:src="@drawable/svg_ic_clear"
@@ -16,6 +17,7 @@
             android:background="@drawable/budget_green_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
+
         <ImageView
             android:id="@+id/approveBtn"
             android:src="@drawable/svg_ic_check"
@@ -24,6 +26,7 @@
             android:background="@drawable/budget_green_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
+
         <ImageView
             android:id="@+id/deleteBtn"
             android:src="@drawable/svg_ic_delete"
@@ -52,13 +55,14 @@
             android:layout_centerVertical="true" />
 
         <LinearLayout
+            android:id="@+id/leftPanel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_toRightOf="@+id/categoryIcon"
-            android:layout_toLeftOf="@+id/transactionCost"
-            android:paddingLeft="16dp"
-            android:layout_centerVertical="true">
+            android:layout_toLeftOf="@+id/rightPanel"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp">
 
             <TextView
                 android:id="@+id/transactionNote"
@@ -67,8 +71,15 @@
                 android:layout_weight="1"
                 android:text="Lunch"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_centerVertical="true" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/transactionAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="15sp"
+                android:text="Account" />
 
             <TextView
                 android:id="@+id/transactionLocation"
@@ -77,26 +88,34 @@
                 android:layout_weight="1"
                 android:textSize="15sp"
                 android:text="Location" />
-
-            <!-- Only visible on TransactionsForCategory -->
-            <TextView
-                android:id="@+id/transactionDate"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="01-Jan-2016"
-                android:textSize="15sp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rightPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="right">
+
+        <!-- Only visible on TransactionsForCategory, TransactionsForAccount, TransactionsForLocation -->
+        <TextView
+            android:id="@+id/transactionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="01-Jan-2016"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/transactionCost"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="-25.00"
-            android:textSize="20sp"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" />
-
+            android:textSize="20sp" />
+        </LinearLayout>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
