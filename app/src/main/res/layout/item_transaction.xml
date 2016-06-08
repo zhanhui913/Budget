@@ -81,7 +81,7 @@
                 android:textSize="15sp"
                 android:drawableLeft="@drawable/svg_ic_menu_account"
                 android:drawableTint="?attr/themeColorText"
-                android:drawablePaddingLeft="5dp"
+                android:drawablePadding="5dp"
                 android:text="Account"
                 android:gravity="center_vertical" />
 
@@ -92,7 +92,7 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/svg_ic_location"
                 android:drawableTint="?attr/themeColorText"
-                android:drawablePaddingLeft="5dp"
+                android:drawablePadding="5dp"
                 android:textSize="15sp"
                 android:text="Location"
                 android:gravity="center_vertical" />
