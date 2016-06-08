@@ -35,9 +35,9 @@ public class OpenSourceActivity extends BaseActivity {
     private void createOpenSourceList(){
         List<OpenSource> openSourceList = new ArrayList<>();
 
-        String[] titles = new String[]{"CircularView", "FlexibleCalendar", "SwipeLayout", "Ultra-Ptr", "RoundCornerProgressBar", "Parceler", "SmoothProgressBar", "WilliamChart", "MPAndroidChart", "Android-PdfMyXml", "MaterialHelpTutorial", "FlexibleDivider"};
-        String[] authors = new String[]{"zhanhui913", "p_v", "daimajia", "scrain", "akexorcist", "parceler", "castorflex", "diogobernardino", "PhilJay", "se-bastiaan", "riggaroo", "yqritc"};
-        String[] colors = new  String[]{"#FF2980b9", "#970019", "#FF2ecc71", "#FFf5e16e", "#FFc0392b", "#FF2ecc71", "#FFbe90d4", "#FF7f8c8d", "#FFecc62c", "#FF89c4f4", "#FF87d37c", "#FFe76558"};
+        String[] titles = new String[]{"Realm", "CircularView", "FlexibleCalendar", "SwipeLayout", "Ultra-Ptr", "RoundCornerProgressBar", "Parceler", "SmoothProgressBar", "WilliamChart", "MPAndroidChart", "Android-PdfMyXml", "MaterialHelpTutorial", "FlexibleDivider"};
+        String[] authors = new String[]{"realm", "zhanhui913", "p_v", "daimajia", "scrain", "akexorcist", "parceler", "castorflex", "diogobernardino", "PhilJay", "se-bastiaan", "riggaroo", "yqritc"};
+        String[] colors = new  String[]{"#FFf39c12", "#FF2980b9", "#970019", "#FF2ecc71", "#FFf5e16e", "#FFc0392b", "#FF2ecc71", "#FFbe90d4", "#FF7f8c8d", "#FFecc62c", "#FF89c4f4", "#FF87d37c", "#FFe76558"};
 
         for(int i = 0; i < titles.length; i++){
             OpenSource os = new OpenSource();

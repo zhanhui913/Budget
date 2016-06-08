@@ -109,15 +109,15 @@
             android:focusable="true">
 
             <TextView style="@style/SettingsTextViewButtonStyle"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Accounts"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Accounts"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
-                      android:id="@+id/defaultAccountContent"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Manage accounts. Change icons and others."/>
+                android:id="@+id/defaultAccountContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Manage accounts. Change icons and others."/>
         </LinearLayout>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
@@ -238,13 +238,26 @@
             android:layout_height="1dp"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <LinearLayout
             android:id="@+id/openSourceBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
-            android:text="Open Source Licenses"/>
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Open Source Licenses"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/openSourceContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="License details for open source software"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/appVersionTextId"

@@ -57,10 +57,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn, openLicenseBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
-    private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn, openLicenseBtn;
+    private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
 
     //
     private static int CURRENT_THEME;
@@ -99,7 +99,7 @@ public class SettingFragment extends BaseFragment {
         emailBtn = (TextView) view.findViewById(R.id.emailBtn);
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
-        openLicenseBtn = (TextView) view.findViewById(R.id.openSourceBtn);
+        openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
 
