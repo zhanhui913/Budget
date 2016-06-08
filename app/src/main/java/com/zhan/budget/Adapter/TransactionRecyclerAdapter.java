@@ -134,7 +134,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getLocation())){
             viewHolder.location.setVisibility(View.VISIBLE);
-            viewHolder.location.setText("@ "+transaction.getLocation());
+            viewHolder.location.setText(transaction.getLocation());
         }else{
             viewHolder.location.setVisibility(View.GONE);
         }

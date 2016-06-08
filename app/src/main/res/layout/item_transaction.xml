@@ -79,15 +79,23 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:textSize="15sp"
-                android:text="Account" />
+                android:drawableLeft="@drawable/svg_ic_menu_account"
+                android:drawableTint="?attr/themeColorText"
+                android:drawablePadding="10dp"
+                android:text="Account"
+                android:gravity="center_vertical" />
 
             <TextView
                 android:id="@+id/transactionLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:drawableLeft="@drawable/svg_ic_location"
+                android:drawableTint="?attr/themeColorText"
                 android:textSize="15sp"
-                android:text="Location" />
+                android:drawablePadding="10dp"
+                android:text="Location"
+                android:gravity="center_vertical" />
         </LinearLayout>
 
         <LinearLayout
