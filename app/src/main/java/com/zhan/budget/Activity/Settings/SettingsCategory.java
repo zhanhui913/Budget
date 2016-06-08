@@ -1,9 +1,10 @@
-package com.zhan.budget.Activity;
+package com.zhan.budget.Activity.Settings;
 
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.zhan.budget.Activity.BaseActivity;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Fragment.CategoryGenericFragment;

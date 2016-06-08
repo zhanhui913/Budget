@@ -20,9 +20,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zhan.budget.Activity.OpenSourceActivity;
-import com.zhan.budget.Activity.SettingsAccount;
-import com.zhan.budget.Activity.SettingsCategory;
+import com.zhan.budget.Activity.Settings.OpenSourceActivity;
+import com.zhan.budget.Activity.Settings.SettingsAccount;
+import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Transaction;

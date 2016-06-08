@@ -1,4 +1,4 @@
-package com.zhan.budget.Activity;
+package com.zhan.budget.Activity.Settings;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Activity.BaseActivity;
 import com.zhan.budget.Adapter.OpenSourceRecyclerAdapter;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Model.OpenSource;

@@ -40,12 +40,10 @@ public class Constants {
     public static final String REQUEST_NEW_CATEGORY = "New Category";
     public static final String REQUEST_NEW_CATEGORY_TYPE = "New Category Type";
     public static final String REQUEST_EDIT_CATEGORY = "Edit Category";
-    public static final String REQUEST_ALL_TRANSACTION_FOR_CATEGORY_MONTH = "Request all transaction for category month";
-    public static final String REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY = "Request all transaction for category category";
     public static final String REQUEST_NEW_OVERVIEW_MONTH = "New Overview Month";
-    public static final String REQUEST_ALL_TRANSACTION_FOR_LOCATION_MONTH = "Request all transaction for location month";
+    public static final String REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH = "Request all transaction for generic month";
+    public static final String REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY = "Request all transaction for category category";
     public static final String REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION = "Request all transaction for location location";
-    public static final String REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_MONTH = "Request all transaction for account month";
     public static final String REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT = "Request all transaction for account account";
     public static final String REQUEST_NEW_ACCOUNT = "New Account";
     public static final String REQUEST_EDIT_ACCOUNT = "Edit Account";
