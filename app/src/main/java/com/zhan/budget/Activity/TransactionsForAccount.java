@@ -13,9 +13,12 @@ import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+
+import org.parceler.Parcels;
 
 import java.util.Date;
 import java.util.List;
@@ -30,7 +33,7 @@ public class TransactionsForAccount extends BaseRealmActivity implements
     private Activity instance;
     private Toolbar toolbar;
     private Date beginMonth, endMonth;
-    private String account, accountId;
+    private Account account;
     private TextView accountTextView, costTextView;
     private RecyclerView accountListView;
     private TransactionRecyclerAdapter transactionAccountAdapter;
@@ -48,8 +51,8 @@ public class TransactionsForAccount extends BaseRealmActivity implements
 
         //Get intents from caller activity
         beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_MONTH)));
-        account = getIntent().getExtras().getString(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT);
-        accountId = getIntent().getExtras().getString(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ID);
+
+        account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT));
 
         instance = this;
 
@@ -61,7 +64,7 @@ public class TransactionsForAccount extends BaseRealmActivity implements
         accountListView = (RecyclerView)findViewById(R.id.transactionAccountListView);
         accountListView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
-        accountTextView.setText(account);
+        accountTextView.setText(account.getName());
 
         createToolbar();
         addListeners();
@@ -94,7 +97,7 @@ public class TransactionsForAccount extends BaseRealmActivity implements
     private void  getAllTransactionsWithAccountForMonth(){
         Log.d("DEBUG", "getAllTransactionsWithAccountForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
-        transactionsForAccountForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("account.id", accountId).findAllSortedAsync("date");
+        transactionsForAccountForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("account.id", account.getId()).findAllSortedAsync("date");
         transactionsForAccountForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
@@ -112,7 +115,7 @@ public class TransactionsForAccount extends BaseRealmActivity implements
                                 .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                                 .build());
 
-                Log.d("ZHAN", "there are " + transactionAccountList.size() + " transactions in this account " + account + " for this month " + beginMonth + " -> " + endMonth);
+                Log.d("ZHAN", "there are " + transactionAccountList.size() + " transactions in this account " + account.getName() + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
 
                 //update balance

@@ -410,8 +410,9 @@ public class AccountFragment extends BaseRealmFragment implements
 
         Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_MONTH, DateUtil.convertDateToString(currentMonth));
-        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, accountList.get(position).getName());
-        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ID, accountList.get(position).getId());
+
+        Parcelable wrapped = Parcels.wrap(accountList.get(position));
+        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, wrapped);
         startActivity(viewAllTransactionsForAccount);
     }
 
