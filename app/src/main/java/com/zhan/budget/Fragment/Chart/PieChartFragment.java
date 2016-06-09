@@ -130,7 +130,7 @@ public class PieChartFragment extends BaseChartFragment {
 
         PieDataSet dataSet = new PieDataSet(value, "");
         dataSet.setSliceSpace(1f);
-        dataSet.setSelectionShift(5f);
+        dataSet.setSelectionShift(10f);
 
         // Add colors
         ArrayList<Integer> colors = new ArrayList<>();
@@ -143,7 +143,6 @@ public class PieChartFragment extends BaseChartFragment {
         }
 
         dataSet.setColors(colors);
-        dataSet.setSelectionShift(10f);
 
         PieData data = new PieData(names, dataSet);
         data.setValueFormatter(new PercentFormatter());
