@@ -2,29 +2,23 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
-import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -33,7 +27,6 @@ import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -142,8 +135,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         viewHolder.account.setText(transaction.getAccount().getName());
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
 
-        if(transaction.getPrice() < 0f){
+        if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
             viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+        }else{
+            viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
         }
     }
 
