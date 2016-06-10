@@ -71,6 +71,7 @@ public final class CategoryUtil {
 
         if(position != -1){
             TypedArray colors = context.getResources().obtainTypedArray(R.array.category_colors);
+            colors.recycle();
             // get resource ID by index
             return colors.getResourceId(position, 0);
         }
@@ -79,21 +80,23 @@ public final class CategoryUtil {
 
     /**
      * Get first color in R.array.category_colors
-     * @param context
+     * @param context The content
      * @return name of first color in array
      */
     public static String getDefaultCategoryColor(Context context){
         TypedArray colors = context.getResources().obtainTypedArray(R.array.category_colors);
+        colors.recycle();
         return context.getResources().getString(colors.getResourceId(0, 0));
     }
 
     /**
      * Get the first icon in R.array.category_icons
-     * @param context
+     * @param context The content
      * @return name of first icon in array
      */
     public static String getDefaultCategoryIcon(Context context){
         TypedArray icons = context.getResources().obtainTypedArray(R.array.category_icons);
+        icons.recycle();
         return context.getResources().getResourceEntryName(icons.getResourceId(0, 0));
     }
 

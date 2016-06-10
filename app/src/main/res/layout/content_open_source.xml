@@ -16,8 +16,7 @@
         android:layout_weight="1"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_centerHorizontal="true" />
+        android:src="@mipmap/ic_launcher" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/openSourceListView"
