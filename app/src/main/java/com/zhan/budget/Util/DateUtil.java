@@ -86,7 +86,7 @@ public final class DateUtil {
 
     /**
      * Refreshes the date to set the time component of date to 00:00:00
-     * @param date
+     * @param date Current Date
      * @return date with 00:00:00 time component
      */
     public static Date refreshDate(Date date){
@@ -102,7 +102,7 @@ public final class DateUtil {
 
     /**
      * Gives the following date.
-     * @param date
+     * @param date Current Date
      * @return date + 1
      */
     public static Date getNextDate(Date date){
@@ -115,7 +115,7 @@ public final class DateUtil {
 
     /**
      * Gives the previous date
-     * @param date
+     * @param date Current Date
      * @return date - 1
      */
     public static Date getPreviousDate(Date date){
@@ -128,7 +128,7 @@ public final class DateUtil {
 
     /**
      * Refreshes the month to set the time component of date to 00:00:00
-     * @param date
+     * @param date Current Date
      * @return month with 00:00:00 time component and date = 1
      */
     public static Date refreshMonth(Date date){
@@ -143,7 +143,7 @@ public final class DateUtil {
 
     /**
      * Gives the following month.
-     * @param date
+     * @param date Current Date
      * @return date + 1
      */
     public static Date getNextMonth(Date date){
@@ -160,7 +160,7 @@ public final class DateUtil {
 
     /**
      * Refreshes the year to set the time component of date to 00:00:00
-     * @param date
+     * @param date Current Date
      * @return year with 00:00:00 time component and date = 1, month = 1
      */
     public static Date refreshYear(Date date){
@@ -174,7 +174,7 @@ public final class DateUtil {
 
     /**
      * Gives the following year.
-     * @param date
+     * @param date Current Date
      * @return date + 1
      */
     public static Date getNextYear(Date date){
@@ -279,7 +279,7 @@ public final class DateUtil {
 
     /**
      * Gets the last date of the current month
-     * @param date
+     * @param date Current Date
      * @return last date of month
      */
     public static Date getLastDateOfMonth(Date date){
@@ -288,7 +288,7 @@ public final class DateUtil {
 
     /**
      * Gets the last date of the current year
-     * @param date
+     * @param date Current Date
      * @return last date of year
      */
     public static Date getLastDateOfYear(Date date){

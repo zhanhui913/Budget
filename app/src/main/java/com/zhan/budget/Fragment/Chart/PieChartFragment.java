@@ -86,7 +86,7 @@ public class PieChartFragment extends BaseChartFragment {
 
     /**
      * Called when wants to display data
-     * @param list
+     * @param list The list of objects that extends PieDataCostInterface
      */
     public void setData(List<? extends PieDataCostInterface> list){
         // add a selection listener
@@ -102,7 +102,7 @@ public class PieChartFragment extends BaseChartFragment {
     /**
      * Even if there are data name (x value), the cost (y value) could be empty and therefore
      * have nothing in pie chart to draw.
-     * @param list
+     * @param list The list of objects that extends PieDataCostInterface
      * @return true if there's at least 1 (y value) data.
      */
     private boolean checkEmptyPieDataCost(List<? extends PieDataCostInterface> list){

@@ -85,7 +85,7 @@
         <activity
             android:name=".Activity.Transactions.TransactionsForAccount"
             android:label="@string/title_activity_transactions_for_account"
-            android:theme="@style/AppThemeLight.NoActionBar"></activity>
+            android:theme="@style/AppThemeLight.NoActionBar"/>
     </application>
 
 </manifest>

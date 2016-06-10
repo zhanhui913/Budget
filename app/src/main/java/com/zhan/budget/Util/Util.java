@@ -68,7 +68,7 @@ public final class Util {
         String response = "";
 
         try {
-            StringBuffer output = new StringBuffer();
+            StringBuilder output = new StringBuilder();
             String path = Environment.getExternalStorageDirectory().toString() + "/Surveyor/" + fileName;
 
             br = new BufferedReader(new FileReader(path));
