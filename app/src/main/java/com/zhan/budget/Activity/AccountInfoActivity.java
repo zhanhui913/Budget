@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -151,12 +152,7 @@ public class AccountInfoActivity extends BaseActivity implements
     }
 
     private void changeName(){
-        // get prompts.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
 
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
@@ -189,16 +185,10 @@ public class AccountInfoActivity extends BaseActivity implements
     }
 
     private void confirmDelete(){
-        // get prompts.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_message, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
-
 
         title.setText("Confirm Delete");
         message.setText("Are you sure you want to delete this account?");

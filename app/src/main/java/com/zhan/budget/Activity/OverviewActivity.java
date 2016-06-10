@@ -1,5 +1,6 @@
 package com.zhan.budget.Activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,6 +53,7 @@ public class OverviewActivity extends BaseActivity implements
     private BarChartFragment barChartFragment;
     private PieChartFragment pieChartFragment;
 
+    private Activity instance;
     private Toolbar toolbar;
     private Date currentMonth;
     private CircularProgressBar circularProgressBar;
@@ -72,6 +74,8 @@ public class OverviewActivity extends BaseActivity implements
 
     @Override
     protected void init(){ Log.d("REALMZ1", "on init for overview activity");
+        instance = this;
+
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         categoryList = new ArrayList<>();
@@ -212,12 +216,7 @@ public class OverviewActivity extends BaseActivity implements
     }
 
     private void confirmDelete(final int position){
-        // get alertdialog_generic_message.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_message, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
