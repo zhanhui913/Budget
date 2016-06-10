@@ -6,12 +6,9 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.AttrRes;
-import android.util.Log;
 import android.util.TypedValue;
 
-import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Model.CategoryIconColor;
-import com.zhan.budget.R;
 
 import java.util.List;
 import java.util.Random;

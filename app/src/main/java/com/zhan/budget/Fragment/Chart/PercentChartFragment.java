@@ -2,10 +2,7 @@ package com.zhan.budget.Fragment.Chart;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
-import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
