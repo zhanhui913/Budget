@@ -73,29 +73,54 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/transactionAccount"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:textSize="15sp"
-                android:drawableLeft="@drawable/svg_ic_menu_account"
-                android:drawableTint="?attr/themeColorText"
-                android:drawablePadding="5dp"
-                android:text="Account"
-                android:gravity="center_vertical" />
+                android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/transactionLocation"
+                <ImageView
+                    android:id="@+id/accountIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/svg_ic_menu_account"
+                    android:layout_alignParentLeft="true"
+                    android:tint="?attr/themeColorText"/>
+
+                <TextView
+                    android:id="@+id/transactionAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="Account"
+                    android:layout_toRightOf="@+id/accountIcon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/svg_ic_location"
-                android:drawableTint="?attr/themeColorText"
-                android:drawablePadding="5dp"
-                android:textSize="15sp"
-                android:text="Location"
-                android:gravity="center_vertical" />
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/locationIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/svg_ic_location"
+                    android:layout_alignParentLeft="true"
+                    android:tint="?attr/themeColorText"/>
+
+                <TextView
+                    android:id="@+id/transactionLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:text="Location"
+                    android:layout_toRightOf="@+id/locationIcon"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp" />
+            </RelativeLayout>
+
         </LinearLayout>
 
         <LinearLayout
