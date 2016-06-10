@@ -153,9 +153,6 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-            }else if(arrangement == ARRANGEMENT.PERCENT){
-                //Only EXPENSE Category type would be displayed using this layout, so no need to check if
-                //viewHolder.percent.setText(category.getPercent()+"%");
             }
         }
 
