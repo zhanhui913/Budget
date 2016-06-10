@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -368,8 +367,9 @@ public class CalendarFragment extends BaseRealmFragment implements
             public BaseCellView getCellView(int position, View convertView, ViewGroup parent, @BaseCellView.CellType int cellType) {
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, parent, false);
+                   // LayoutInflater inflater = LayoutInflater.from(getActivity());
+                    //cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, parent, false);
+                    cellView = (BaseCellView) View.inflate(getContext(), R.layout.calendar_date_cell_view, null);
                 }
 
                 if (cellType == BaseCellView.TODAY) {
@@ -385,8 +385,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             public BaseCellView getWeekdayCellView(int position, View convertView, ViewGroup parent) {
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    cellView = (RectangleCellView) inflater.inflate(R.layout.calendar_week_cell_view, parent, false);
+                    cellView = (RectangleCellView) View.inflate(getContext(), R.layout.calendar_week_cell_view, null);
                 }
                 return cellView;
             }

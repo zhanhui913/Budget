@@ -395,7 +395,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
 
-        calendarView.setCalendarView(new CalendarView() {
+        calendarView.setCalendarView(new FlexibleCalendarView.CalendarView() {
             @Override
             public BaseCellView getCellView(int position, View convertView, ViewGroup parent, @BaseCellView.CellType int cellType) {
                 BaseCellView cellView = (BaseCellView) convertView;

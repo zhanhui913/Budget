@@ -1,16 +1,11 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -21,48 +16,27 @@ import com.zhan.budget.View.CustomViewPager;
 
 import java.util.Date;
 
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends BaseFragment {
 
     private static final String TAG = "CategoryFragment";
-
     private OnCategoryInteractionListener mListener;
-
     private Date currentMonth;
-
     private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
-
-    private View view;
 
     public CategoryFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
-        view = inflater.inflate(getFragmentLayout(), container, false);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated");
-        init();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    private int getFragmentLayout() {
+    protected int getFragmentLayout() {
         return R.layout.fragment_category;
     }
 
+
+    @Override
     protected void init(){ Log.d(TAG, "init");
+        setHasOptionsMenu(true);
+
         currentMonth = new Date();
 
         createTabs();
