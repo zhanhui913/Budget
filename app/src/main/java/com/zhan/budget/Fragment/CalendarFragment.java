@@ -256,10 +256,14 @@ public class CalendarFragment extends BaseRealmFragment implements
                 Account account = accountList.get(rda);
 
                 Category category = categoryList.get(rd);
+                if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    transaction.setPrice(-120.0f + (rd * 0.5f));
+                }else{
+                    transaction.setPrice(Math.abs(-120.0f + (rd * 0.5f)));
+                }
 
                 transaction.setAccount(account);
                 transaction.setCategory(category);
-                transaction.setPrice(-120.0f + (rd * 0.5f));
                 transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
             }
         }
