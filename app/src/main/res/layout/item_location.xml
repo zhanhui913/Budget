@@ -3,9 +3,7 @@
 	android:id="@+id/locationPanel"
 	style="@style/ItemPaddingStyle"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:background="?attr/themeColorBtn"
-	android:clickable="true">
+	android:layout_height="wrap_content">
 
 	<com.zhan.library.CircularView
 		android:id="@+id/locationIcon"

@@ -1,159 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/monthPanel"
-        style="@style/ItemPaddingStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/themeColorBtn"
-        android:clickable="true">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/monthPanel"
+    style="@style/ItemPaddingStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/leftPanel"
+    <RelativeLayout
+        android:id="@+id/leftPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="16dp"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/monthName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="16dp"
-            android:layout_centerVertical="true">
+            android:text="January"
+            android:layout_alignParentTop="true"
+            android:textSize="30sp" />
 
-            <TextView
-                android:id="@+id/monthName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="January"
-                android:layout_alignParentTop="true"
-                android:textSize="30sp" />
+        <TextView
+            android:id="@+id/monthTotalCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$0.00"
+            android:layout_below="@+id/monthName"
+            android:layout_alignParentLeft="true" />
 
-            <TextView
-                android:id="@+id/monthTotalCost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$0.00"
-                android:layout_below="@+id/monthName"
-                android:layout_alignParentLeft="true" />
+        <TextView
+            android:id="@+id/monthSavings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You saved $0.00"
+            android:layout_below="@+id/monthTotalCost"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true" />
 
-            <TextView
-                android:id="@+id/monthSavings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You saved $0.00"
-                android:layout_below="@+id/monthTotalCost"
-                android:textStyle="bold"
-                android:layout_alignParentLeft="true" />
+        <fr.castorflex.android.circularprogressbar.CircularProgressBar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/monthReportProgressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:indeterminate="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/monthName"
+            app:cpb_color="@color/colorPrimary"
+            app:cpb_rotation_speed="1.0"
+            app:cpb_sweep_speed="1.0"
+            app:cpb_stroke_width="2dp"
+            app:cpb_min_sweep_angle="10"
+            app:cpb_max_sweep_angle="300" />
+    </RelativeLayout>
 
-            <fr.castorflex.android.circularprogressbar.CircularProgressBar
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/monthReportProgressBar"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:indeterminate="true"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/monthName"
-                app:cpb_color="@color/colorPrimary"
-                app:cpb_rotation_speed="1.0"
-                app:cpb_sweep_speed="1.0"
-                app:cpb_stroke_width="2dp"
-                app:cpb_min_sweep_angle="10"
-                app:cpb_max_sweep_angle="300" />
-        </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        android:gravity="right">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/topContainer1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentRight="true"
-            android:gravity="right">
+            android:orientation="vertical"
+            android:paddingRight="8dp">
 
-            <LinearLayout
-                android:id="@+id/topContainer1"
+            <TextView
+                android:id="@+id/order1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingRight="8dp">
+                android:text="1st"
+                android:textSize="15sp"
+                android:layout_gravity="center_horizontal" />
 
-                <TextView
-                    android:id="@+id/order1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1st"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal" />
-
-                <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
-                    android:id="@+id/categoryIcon1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:layout_gravity="center_horizontal" />
-
-                <TextView
-                    android:id="@+id/title1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Category"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/topContainer2"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/categoryIcon1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
+                android:paddingBottom="8dp"
+                android:layout_gravity="center_horizontal" />
 
-                <TextView
-                    android:id="@+id/order2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2nd"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal" />
-
-                <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
-                    android:id="@+id/categoryIcon2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:layout_gravity="center_horizontal" />
-
-                <TextView
-                    android:id="@+id/title2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Category"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/topContainer3"
+            <TextView
+                android:id="@+id/title1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="8dp">
-
-                <TextView
-                    android:id="@+id/order3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3rd"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal" />
-
-                <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
-                    android:id="@+id/categoryIcon3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:layout_gravity="center_horizontal" />
-
-                <TextView
-                    android:id="@+id/title3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Category"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal" />
-            </LinearLayout>
+                android:text="Category"
+                android:textSize="15sp"
+                android:layout_gravity="center_horizontal" />
         </LinearLayout>
-    </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/topContainer2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:id="@+id/order2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2nd"
+                android:textSize="15sp"
+                android:layout_gravity="center_horizontal" />
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/categoryIcon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/title2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textSize="15sp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/topContainer3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="8dp">
+
+            <TextView
+                android:id="@+id/order3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3rd"
+                android:textSize="15sp"
+                android:layout_gravity="center_horizontal" />
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/categoryIcon3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/title3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textSize="15sp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -2,8 +2,7 @@
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeCategory"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/themeColorBtn">
+    android:layout_height="wrap_content">
 
     <!-- Bottom view -->
     <LinearLayout
