@@ -627,12 +627,7 @@ public class SettingFragment extends BaseFragment {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void resetData(){
-        // get alertdialog_generic_message.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_message, null);
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);

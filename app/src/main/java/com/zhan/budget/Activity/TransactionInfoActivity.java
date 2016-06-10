@@ -383,12 +383,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void createDateDialog(){
-        // get alertdialog_date.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(instance);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View dateDialogView = layoutInflater.inflate(R.layout.alertdialog_date, null);
+        View dateDialogView = View.inflate(instance, R.layout.alertdialog_date, null);
 
         monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogMonthTextView);
         final FlexibleCalendarView calendarView = (FlexibleCalendarView) dateDialogView.findViewById(R.id.alertdialogCalendarView);
@@ -406,8 +401,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             public BaseCellView getCellView(int position, View convertView, ViewGroup parent, @BaseCellView.CellType int cellType) {
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(instance);
-                    cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, null);
+                    cellView = (BaseCellView) View.inflate(instance, R.layout.calendar_date_cell_view, null);
                 }
 
                 if (cellType == BaseCellView.TODAY) {
@@ -423,9 +417,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             public BaseCellView getWeekdayCellView(int position, View convertView, ViewGroup parent) {
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(instance);
-                    cellView = (RectangleCellView) inflater.inflate(R.layout.calendar_week_cell_view, null);
-                    //cellView.setTextColor(ContextCompat.getColor(instance, R.color.peter_river));
+                    cellView = (RectangleCellView) View.inflate(instance, R.layout.calendar_week_cell_view, null);
                 }
                 return cellView;
             }
@@ -483,12 +475,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void createAccountDialog(){
-        // get alertdialog_account_transaction.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(instance);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View accountDialogView = layoutInflater.inflate(R.layout.alertdialog_account_transaction, null);
+        View accountDialogView = View.inflate(instance, R.layout.alertdialog_account_transaction, null);
 
         final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.accountNumberPicker);
 
@@ -564,12 +551,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void createNoteDialog(){
-        // get alertdialog_generic.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(instance);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
 
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
@@ -625,17 +607,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         //real one
         String[] locationArray = locationHash.toArray(new String[locationHash.size()]);
 
-        //testing with fake data instead of real one
-        //String[] locationArray = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
-
-        Toast.makeText(this, "There are "+locationArray.length+" unique locations on click", Toast.LENGTH_SHORT).show();
-
-        // get alertdialog_generic_autocomplete.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(instance);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_generic_autocomplete, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_autocomplete, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         title.setText("Add Location");
@@ -666,12 +638,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void createRepeatDialog(){
-        // get alertdialog_repeat.xml view
-        LayoutInflater layoutInflater = LayoutInflater.from(instance);
-
-        //It is ok to put null as the 2nd parameter as this custom layout is being attached to a
-        //AlertDialog, where it not necessary to know what the parent is.
-        View promptView = layoutInflater.inflate(R.layout.alertdialog_repeat, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_repeat, null);
 
         final ExtendedNumberPicker quantityNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.quantityNumberPicker);
         quantityNumberPicker.setMaxValue(50);
