@@ -129,7 +129,7 @@ public class PieChartFragment extends BaseChartFragment {
         }
 
         PieDataSet dataSet = new PieDataSet(value, "");
-        dataSet.setSliceSpace(1f);
+        dataSet.setSliceSpace(0f);
         dataSet.setSelectionShift(10f);
 
         // Add colors
