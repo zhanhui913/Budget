@@ -76,7 +76,7 @@ public class PieChartFragment extends BaseChartFragment {
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-        pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
+        //pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
         //pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
 
         if(getArguments().getBoolean(ARG_CHART_2)) {
@@ -151,6 +151,8 @@ public class PieChartFragment extends BaseChartFragment {
 
         // undo all highlights
         pieChart.highlightValues(null);
+
+        pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
 
         pieChart.invalidate();
     }
