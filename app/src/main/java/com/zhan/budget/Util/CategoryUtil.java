@@ -71,9 +71,13 @@ public final class CategoryUtil {
 
         if(position != -1){
             TypedArray colors = context.getResources().obtainTypedArray(R.array.category_colors);
-            colors.recycle();
-            // get resource ID by index
+            //colors.recycle();
             return colors.getResourceId(position, 0);
+            // get resource ID by index
+
+           /* int ss = colors.getResourceId(position, 0);
+            colors.recycle();
+            return ss;*/
         }
         throw new Exception("Cannot find color value in list of colors for category in array.xml");
     }
@@ -85,8 +89,13 @@ public final class CategoryUtil {
      */
     public static String getDefaultCategoryColor(Context context){
         TypedArray colors = context.getResources().obtainTypedArray(R.array.category_colors);
-        colors.recycle();
+        //colors.recycle();
         return context.getResources().getString(colors.getResourceId(0, 0));
+
+        /*
+        String ss = context.getResources().getString(colors.getResourceId(0, 0));
+        colors.recycle();
+        return ss;*/
     }
 
     /**
@@ -96,8 +105,13 @@ public final class CategoryUtil {
      */
     public static String getDefaultCategoryIcon(Context context){
         TypedArray icons = context.getResources().obtainTypedArray(R.array.category_icons);
-        icons.recycle();
+        //icons.recycle();
         return context.getResources().getResourceEntryName(icons.getResourceId(0, 0));
+
+        /*
+        String ss = context.getResources().getResourceEntryName(icons.getResourceId(0, 0));
+        icons.recycle();
+        return ss;*/
     }
 
 }
