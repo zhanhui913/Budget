@@ -77,7 +77,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
-        pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
+        //pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
 
         if(getArguments().getBoolean(ARG_CHART_2)) {
             setData((List<? extends PieDataCostInterface>) Parcels.unwrap(getArguments().getParcelable(ARG_CHART)));
