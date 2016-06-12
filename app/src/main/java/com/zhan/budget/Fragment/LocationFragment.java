@@ -18,6 +18,7 @@ import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -149,7 +150,7 @@ public class LocationFragment extends BaseRealmFragment
     private void fetchNewLocationData(Date month){
         Date endMonth = DateUtil.getLastDateOfMonth(month);
 
-        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
+        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {

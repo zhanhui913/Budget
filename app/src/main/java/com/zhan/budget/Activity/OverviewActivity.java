@@ -26,6 +26,7 @@ import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
 import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -153,7 +154,7 @@ public class OverviewActivity extends BaseActivity implements
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
         final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(this);
-        transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllAsync();
+        transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
@@ -174,7 +175,7 @@ public class OverviewActivity extends BaseActivity implements
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(){
-        CategoryCalculator cc = new CategoryCalculator(this, transactionList, categoryList, new Date(),new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
+        CategoryCalculator cc = new CategoryCalculator(this, transactionList, categoryList, new Date(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
                 Toast.makeText(getApplicationContext(), "DONE CATEGORY CALCULATION", Toast.LENGTH_LONG).show();
@@ -182,7 +183,7 @@ public class OverviewActivity extends BaseActivity implements
                 categoryList = catList;
 
                 //Calculate total cost
-                float sumCost=0f;
+                float sumCost = 0f;
                 for(int i = 0; i < categoryList.size(); i++){
                     sumCost += categoryList.get(i).getCost();
                 }

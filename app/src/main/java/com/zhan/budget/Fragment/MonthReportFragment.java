@@ -18,6 +18,7 @@ import com.zhan.budget.Adapter.MonthReportRecyclerAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -132,7 +133,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
         }
         monthReportRecyclerAdapter.setMonthReportList(monthReportList);
 
-        transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).findAllAsync();
+        transactionsResults = myRealm.where(Transaction.class).between("date", beginYear, endYear).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
@@ -171,7 +172,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 startTime = System.nanoTime();
 
                 for (int i = 0; i < transactionList.size(); i++) {
-                    //Only add Category of type EXPENSE
                     if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
                         int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
 
@@ -211,7 +211,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 long milli = (duration / 1000000);
                 long second = (milli / 1000);
                 float minutes = (second / 60.0f);
-                Log.d("MONTHLY_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+                Log.d("DEBUG_MONTH", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
 
                 performTediousCalculation(0);
             }

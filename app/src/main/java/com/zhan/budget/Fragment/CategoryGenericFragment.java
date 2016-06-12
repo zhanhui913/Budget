@@ -23,6 +23,7 @@ import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -245,7 +246,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
 
-        resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).findAllAsync();
+        resultsTransaction = myRealm.where(Transaction.class).between("date", startMonth, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         resultsTransaction.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
@@ -279,7 +280,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 startTime = System.nanoTime();
 
-                //Go through each transaction and put them into the correct category
+                //Go through each COMPLETED transaction and put them into the correct category
                 for(int t = 0; t < transactionMonthList.size(); t++){
                     for(int c = 0; c < categoryList.size(); c++){
                         if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
@@ -310,7 +311,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                 long milli = (duration/1000000);
                 long second = (milli/1000);
                 float minutes = (second / 60.0f);
-                Log.d("DEBUG", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+                Log.d("DEBUG_CAT", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
         };
         loader.execute();
