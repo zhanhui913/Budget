@@ -86,8 +86,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         //Icon
         viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
+        viewHolder.account.setText(transaction.getAccount().getName());
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
 
-        //If transaction is COMPLETED
+        //If transaction's dayType is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidthInDP(0);
             viewHolder.circularView.setCircleRadiusInDP(25);
@@ -99,7 +101,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
             viewHolder.unapproveBtn.setVisibility(View.VISIBLE);
-        }else{ //If transaction is SCHEDULED but not COMPLETED
+        }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
             viewHolder.circularView.setCircleRadiusInDP(23);
 
@@ -112,12 +114,14 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.unapproveBtn.setVisibility(View.GONE);
         }
 
+        //If there is no note, use Category's name instead
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
             viewHolder.name.setText(transaction.getNote());
         }else{
             viewHolder.name.setText(transaction.getCategory().getName());
         }
 
+        //If this is used in Calendar Fragment (no need to show date), everywhere else use it
         if(this.showDate){
             viewHolder.date.setVisibility(View.VISIBLE);
             viewHolder.date.setText(DateUtil.convertDateToStringFormat1(transaction.getDate()));
@@ -125,16 +129,17 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.date.setVisibility(View.GONE);
         }
 
+        //If there are no location
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getLocation())){
             viewHolder.location.setVisibility(View.VISIBLE);
+            viewHolder.locationIcon.setVisibility(View.VISIBLE);
             viewHolder.location.setText(transaction.getLocation());
         }else{
             viewHolder.location.setVisibility(View.GONE);
+            viewHolder.locationIcon.setVisibility(View.GONE);
         }
 
-        viewHolder.account.setText(transaction.getAccount().getName());
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
-
+        //Set Transaction's cost color based on Category type
         if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
             viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
         }else{
@@ -170,7 +175,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         public TextView name, cost, date, account, location;
 
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn, approveBtn, unapproveBtn;
+        public ImageView deleteBtn, approveBtn, unapproveBtn, locationIcon;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -185,6 +190,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             date = (TextView) itemView.findViewById(R.id.transactionDate);
             account = (TextView) itemView.findViewById(R.id.transactionAccount);
             location = (TextView) itemView.findViewById(R.id.transactionLocation);
+            locationIcon = (ImageView) itemView.findViewById(R.id.locationIcon);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeTransaction);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
