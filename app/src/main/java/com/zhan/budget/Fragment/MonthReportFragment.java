@@ -213,7 +213,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 float minutes = (second / 60.0f);
                 Log.d("DEBUG_MONTH", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
 
-                performTediousCalculation(0);
+                //performTediousCalculation(0);
             }
         };
         loader.execute();

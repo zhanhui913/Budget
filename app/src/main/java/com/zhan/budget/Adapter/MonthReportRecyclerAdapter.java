@@ -61,7 +61,8 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         // Inflate the custom layout
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month_report_extended, parent, false);
+        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month_report_extended, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month_report_v2, parent, false);
 
         // Return a new holder instance
         return new ViewHolder(view);
@@ -74,24 +75,30 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         MonthReport monthReport = monthReportList.get(position);
 
         viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
-        viewHolder.costThisMonth.setText(CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
+        viewHolder.expenseThisMonth.setText("You spent "+CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
+        viewHolder.incomeThisMonth.setText("You saved "+CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), Constants.BUDGET_LOCALE));
+
+
 
         float savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
-Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
 
+
+        //Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
         Log.d("CHECK", "----- "+monthReport.getMonth()+" -----");
         Log.d("CHECK", "cost : "+monthReport.getCostThisMonth());
         Log.d("CHECK", "income : "+monthReport.getIncomeThisMonth());
         Log.d("CHECK", "----- end -----");
 
-        if(savings >= 0){
-            viewHolder.savings.setTextColor(ContextCompat.getColor(context, R.color.green));
-            viewHolder.savings.setText("You saved "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
-        }else{
-            viewHolder.savings.setTextColor(ContextCompat.getColor(context, R.color.red));
-            viewHolder.savings.setText("You lost "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
-        }
 
+        if(savings >= 0){
+            viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.green));
+        }else{
+            viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.red));
+        }
+        viewHolder.netThisMonth.setText("Net "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
+
+
+        /*
         if(monthReport.getFirstCategory() != null){
             viewHolder.container1.setVisibility(View.VISIBLE);
 
@@ -147,15 +154,17 @@ Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
             viewHolder.categoryName3.setText("null");
             viewHolder.category3.setCircleColor(R.color.black);
             viewHolder.category3.setIconResource(0);
-        }
+        }*/
 
         if(monthReport.isDoneCalculation()){
-            viewHolder.costThisMonth.setVisibility(View.VISIBLE);
-            viewHolder.savings.setVisibility(View.VISIBLE);
+            viewHolder.expenseThisMonth.setVisibility(View.VISIBLE);
+            viewHolder.incomeThisMonth.setVisibility(View.VISIBLE);
+            viewHolder.netThisMonth.setVisibility(View.VISIBLE);
             viewHolder.progressBar.setVisibility(View.GONE);
         }else{
-            viewHolder.costThisMonth.setVisibility(View.GONE);
-            viewHolder.savings.setVisibility(View.GONE);
+            viewHolder.expenseThisMonth.setVisibility(View.GONE);
+            viewHolder.incomeThisMonth.setVisibility(View.GONE);
+            viewHolder.netThisMonth.setVisibility(View.GONE);
             viewHolder.progressBar.setVisibility(View.VISIBLE);
         }
     }
@@ -180,13 +189,15 @@ Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
         // for any view that will be set as you render a row
         public ViewGroup background;
         public TextView month;
-        public TextView costThisMonth;
-        public TextView savings;
+        public TextView expenseThisMonth;
+        public TextView incomeThisMonth;
+        public TextView netThisMonth;
         public CircularProgressBar progressBar;
 
         public ViewGroup container1, container2, container3;
         public CircularView  category1, category2, category3;
         public TextView categoryName1, categoryName2, categoryName3;
+
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(final View itemView){
@@ -196,11 +207,12 @@ Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
 
             background = (ViewGroup) itemView.findViewById(R.id.monthPanel);
             month = (TextView) itemView.findViewById(R.id.monthName);
-            costThisMonth = (TextView) itemView.findViewById(R.id.monthTotalCost);
-            savings = (TextView) itemView.findViewById(R.id.monthSavings);
+            expenseThisMonth = (TextView) itemView.findViewById(R.id.monthExpense);
+            incomeThisMonth = (TextView) itemView.findViewById(R.id.monthIncome);
+            netThisMonth = (TextView) itemView.findViewById(R.id.monthNet);
             progressBar = (CircularProgressBar) itemView.findViewById(R.id.monthReportProgressBar);
 
-            container1 = (ViewGroup) itemView.findViewById(R.id.topContainer1);
+            /*container1 = (ViewGroup) itemView.findViewById(R.id.topContainer1);
             container2 = (ViewGroup) itemView.findViewById(R.id.topContainer2);
             container3 = (ViewGroup) itemView.findViewById(R.id.topContainer3);
 
@@ -211,7 +223,7 @@ Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
             category1 = (CircularView) itemView.findViewById(R.id.categoryIcon1);
             category2 = (CircularView) itemView.findViewById(R.id.categoryIcon2);
             category3 = (CircularView) itemView.findViewById(R.id.categoryIcon3);
-
+            */
             background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
