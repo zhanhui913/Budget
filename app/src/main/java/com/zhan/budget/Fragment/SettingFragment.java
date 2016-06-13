@@ -687,22 +687,80 @@ public class SettingFragment extends BaseFragment {
                 "Title",
                 "Subtitle",
                 R.color.colorPrimary,
-                R.drawable.c_airplane,
-                R.drawable.background);
+                R.drawable.tutorial1);
 
         TutorialItem page2 = new TutorialItem(
                 "Title 2",
                 "Subtitle 2",
-                R.color.midnight_blue,
-                R.drawable.c_android,
-                R.drawable.background);
+                R.color.colorPrimary,
+                R.drawable.tutorial2);
 
+        TutorialItem page3 = new TutorialItem(
+                "Title",
+                "Subtitle",
+                R.color.colorPrimary,
+                R.drawable.tutorial3_0);
 
+        TutorialItem page4 = new TutorialItem(
+                "Title 2",
+                "Subtitle 2",
+                R.color.colorPrimary,
+                R.drawable.tutorial3_1);
+
+        TutorialItem page5 = new TutorialItem(
+                "Title",
+                "Subtitle",
+                R.color.colorPrimary,
+                R.drawable.tutorial3_2);
+
+        TutorialItem page6 = new TutorialItem(
+                "Title 2",
+                "Subtitle 2",
+                R.color.colorPrimary,
+                R.drawable.tutorial4);
+
+        TutorialItem page7 = new TutorialItem(
+                "Title",
+                "Subtitle",
+                R.color.colorPrimary,
+                R.drawable.tutorial5_0);
+
+        TutorialItem page8 = new TutorialItem(
+                "Title 2",
+                "Subtitle 2",
+                R.color.colorPrimary,
+                R.drawable.tutorial5_1);
+
+        TutorialItem page9 = new TutorialItem(
+                "Title",
+                "Subtitle",
+                R.color.colorPrimary,
+                R.drawable.tutorial6);
+
+        TutorialItem page10 = new TutorialItem(
+                "Title 2",
+                "Subtitle 2",
+                R.color.colorPrimary,
+                R.drawable.tutorial7_0);
+
+        TutorialItem page11 = new TutorialItem(
+                "Title",
+                "Subtitle",
+                R.color.colorPrimary,
+                R.drawable.tutorial7_1);
 
         ArrayList<TutorialItem> tourItems = new ArrayList<>();
         tourItems.add(page1);
         tourItems.add(page2);
-
+        tourItems.add(page3);
+        tourItems.add(page4);
+        tourItems.add(page5);
+        tourItems.add(page6);
+        tourItems.add(page7);
+        tourItems.add(page8);
+        tourItems.add(page9);
+        tourItems.add(page10);
+        tourItems.add(page11);
 
         return tourItems;
     }
