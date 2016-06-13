@@ -6,6 +6,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -31,7 +32,7 @@ public class TransactionsForCategory extends BaseTransactions {
     protected void getAllTransactionsForMonth(){
         Log.d("DEBUG", "getAllTransactionsWithCategoryForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
-        transactionsForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).findAllSortedAsync("date");
+        transactionsForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).equalTo("dayType", DayType.COMPLETED.toString()).findAllSortedAsync("date");
         transactionsForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
