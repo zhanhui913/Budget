@@ -118,7 +118,7 @@ public class AccountFragment extends BaseRealmFragment implements
         pieChartFragment = PieChartFragment.newInstance(accountList);
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
-        createPullToAddAccount();
+        //createPullToAddAccount();
         populateAccountWithNoInfo();
 
         //0 represents no change in month relative to currentMonth variable.
@@ -234,6 +234,7 @@ public class AccountFragment extends BaseRealmFragment implements
         loader.execute();
     }
 
+    //Dont allow pull down in this fragment
     private void createPullToAddAccount(){
         frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
 

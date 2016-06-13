@@ -54,8 +54,8 @@ public class CategoryFragment extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET);
-        categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET);
+        categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
+        categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
 
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);

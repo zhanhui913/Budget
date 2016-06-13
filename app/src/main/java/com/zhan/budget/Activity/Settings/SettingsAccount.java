@@ -69,19 +69,8 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         createToolbar();
 
-        //accountList = new ArrayList<>();
         accountListView = (RecyclerView)findViewById(R.id.accountListView);
         accountListView.setLayoutManager(new LinearLayoutManager(this));
-/*
-        accountListAdapter = new AccountListAdapter(this, accountList, false, true);
-        accountListView.setAdapter(accountListAdapter);
-
-        //Add divider
-        accountListView.addItemDecoration(
-                new HorizontalDividerItemDecoration.Builder(this)
-                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
-                        .build());
-*/
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);

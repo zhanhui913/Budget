@@ -50,10 +50,11 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private static final String TAG = "CategoryEIFragment";
     private static final String ARG_1 = "budgetType";
     private static final String ARG_2 = "arrangementType";
+    private static final String ARG_3 = "allowPullDown";
 
     //Pull down
     private PtrFrameLayout frame;
-    private PlusView header;
+    //private PlusView header;
     private ViewGroup emptyLayout;
 
     private List<Category> categoryList;
@@ -69,7 +70,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> resultsTransaction;
 
-    private Boolean isPulldownAllow = true;
+    private Boolean masterAllowPulldown; //whether the user can pull down.
+    private Boolean isPulldownAllow = true; //controls the temp status of pulldown when masterAllowPulldown is true.
     private ItemTouchHelper mItemTouchHelper;
 
     private BudgetType budgetType;
@@ -79,12 +81,14 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         // Required empty public constructor
     }
 
-    public static CategoryGenericFragment newInstance(BudgetType budgetType, CategoryGenericRecyclerAdapter.ARRANGEMENT arrangementType) {
+    public static CategoryGenericFragment newInstance(BudgetType budgetType, CategoryGenericRecyclerAdapter.ARRANGEMENT arrangementType, boolean allowPulldown) {
         CategoryGenericFragment fragment = new CategoryGenericFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(ARG_1, budgetType);
         args.putSerializable(ARG_2, arrangementType);
+        args.putBoolean(ARG_3, allowPulldown);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,6 +103,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         super.init();
         budgetType = (BudgetType) getArguments().getSerializable(ARG_1);
         arrangementType = (CategoryGenericRecyclerAdapter.ARRANGEMENT) getArguments().getSerializable(ARG_2);
+        masterAllowPulldown = getArguments().getBoolean(ARG_3);
 
         currentMonth = new Date();
 
@@ -135,15 +140,17 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         populateCategoryWithNoInfo();
 
-        createPullDownToAddCategory();
+        if(masterAllowPulldown){
+            createPullDownToAddCategory();
+        }
     }
 
     private void createPullDownToAddCategory(){
         frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
 
-        header = new PlusView(getContext());
+        final PlusView headerPlus = new PlusView(getContext());
 
-        frame.setHeaderView(header);
+        frame.setHeaderView(headerPlus);
 
         frame.setPtrHandler(new PtrHandler() {
             @Override
@@ -179,7 +186,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             @Override
             public void onUIRefreshBegin(PtrFrameLayout frame) {
                 Log.d("CALENDAR_FRAGMENT", "onUIRefreshBegin");
-                header.playRotateAnimation();
+                headerPlus.playRotateAnimation();
             }
 
             @Override

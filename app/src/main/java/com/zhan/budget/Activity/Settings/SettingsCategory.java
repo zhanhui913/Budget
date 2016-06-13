@@ -51,8 +51,8 @@ public class SettingsCategory extends BaseActivity {
         tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.MOVE);
-        categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.MOVE);
+        categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.MOVE, true);
+        categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.MOVE, true);
 
         final CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
