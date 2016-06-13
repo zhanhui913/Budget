@@ -8,7 +8,7 @@
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/gray">
+        android:background="?attr/themeColorHighlight">
 
         <FrameLayout
             android:id="@+id/chartContentFrame"
@@ -16,10 +16,16 @@
             android:layout_height="match_parent" />
     </RelativeLayout>
 
+    <include layout="@layout/center_panel"
+        android:id="@+id/centerPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topPanel"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/locationListview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topPanel"/>
+        android:layout_below="@+id/centerPanel"/>
 
 </RelativeLayout>

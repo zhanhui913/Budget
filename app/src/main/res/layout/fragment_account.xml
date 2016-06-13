@@ -9,13 +9,17 @@
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/gray">
+        android:background="?attr/themeColorHighlight">
 
         <FrameLayout
             android:id="@+id/chartContentFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
+
+    <include layout="@layout/center_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <in.srain.cube.views.ptr.PtrFrameLayout
         android:id="@+id/rotate_header_list_view_frame"

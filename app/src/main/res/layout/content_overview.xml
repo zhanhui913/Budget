@@ -12,7 +12,7 @@
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/gray">
+        android:background="?attr/themeColorHighlight">
 
         <FrameLayout
             android:id="@+id/chartContentFrame"
@@ -20,42 +20,11 @@
             android:layout_height="match_parent" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <include layout="@layout/center_panel"
         android:id="@+id/centerPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/themeColorHighlight"
-        android:layout_below="@+id/topPanel"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/dateIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/svg_ic_date"
-            android:tint="?attr/themeColorText"
-            android:layout_alignParentLeft="true" />
-
-        <TextView
-            android:id="@+id/dateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dec 2016"
-            android:textSize="20sp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/dateIcon" />
-
-        <TextView
-            android:id="@+id/totalCostTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="$0.00"
-            android:layout_marginLeft="5dp"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/dateTextView"
-            android:gravity="right" />
-    </RelativeLayout>
+        android:layout_below="@+id/topPanel" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/percentCategoryListView"

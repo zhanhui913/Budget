@@ -1,9 +1,12 @@
 package com.zhan.budget.Fragment.Chart;
 
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -15,6 +18,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.zhan.budget.Model.PieDataCostInterface;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.Util.Colors;
 
 import org.parceler.Parcels;
 
@@ -33,10 +37,10 @@ public class PieChartFragment extends BaseChartFragment {
         // Required empty public constructor
     }
 
-    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> categoryList, boolean initImmediately){
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> transactionList, boolean initImmediately){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_CHART, Parcels.wrap(categoryList));
+        args.putParcelable(ARG_CHART, Parcels.wrap(transactionList));
         args.putBoolean(ARG_CHART_2, initImmediately);
         pieChartFragment.setArguments(args);
 
@@ -61,8 +65,14 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setExtraOffsets(5, 5, 5, 5);
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.setDrawCenterText(false);
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setDrawCenterText(true);
+
+
+        int color = Colors.getColorFromAttr(getContext(), R.attr.themeColorText);
+        pieChart.setCenterTextColor(color);
+        pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.transparent));
+
 
         // enable rotation of the chart by touch
         pieChart.setRotationEnabled(true);
@@ -80,7 +90,12 @@ public class PieChartFragment extends BaseChartFragment {
         //pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
 
         if(getArguments().getBoolean(ARG_CHART_2)) {
-            setData((List<? extends PieDataCostInterface>) Parcels.unwrap(getArguments().getParcelable(ARG_CHART)));
+            List<? extends PieDataCostInterface> ss = (List<? extends PieDataCostInterface>) Parcels.unwrap(getArguments().getParcelable(ARG_CHART));
+            setData(ss);
+
+            if(ss.size() > 0){
+                pieChart.setCenterText(ss.get(0).getClass().getSimpleName());
+            }
         }
     }
 
@@ -153,6 +168,15 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.highlightValues(null);
 
         pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
+
+        if(list.size() > 0){
+            pieChart.setCenterText(list.get(0).getClass().getSimpleName());
+        }
+
+        if(Build.VERSION.SDK_INT >= 21){
+            pieChart.setElevation(20);
+        }
+
 
         pieChart.invalidate();
     }
