@@ -21,7 +21,7 @@ import java.util.List;
  * to handle interaction events.
  */
 public class IconPickerCategoryFragment extends BaseFragment
-    implements IconCategoryRecyclerAdapter.OnCircularViewAdapterInteractionListener{
+    implements IconCategoryRecyclerAdapter.OnCategoryGridAdapterInteractionListener{
 
     private OnIconPickerCategoryFragmentInteractionListener mListener;
 

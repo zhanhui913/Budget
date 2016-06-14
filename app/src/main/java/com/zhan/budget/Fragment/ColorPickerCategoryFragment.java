@@ -21,7 +21,7 @@ import java.util.List;
  * to handle interaction events.
  */
 public class ColorPickerCategoryFragment extends BaseFragment
-        implements ColorCategoryRecyclerAdapter.OnCircularViewAdapterInteractionListener{
+        implements ColorCategoryRecyclerAdapter.OnCategoryGridAdapterInteractionListener{
 
     private OnColorPickerCategoryFragmentInteractionListener mListener;
 
