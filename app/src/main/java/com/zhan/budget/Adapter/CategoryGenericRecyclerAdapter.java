@@ -59,11 +59,11 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         this.arrangement = arrangement;
         this.mDragStartListener = startDragListener;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
+        //Any activity or fragment that uses this adapter needs to implement the OnCategoryGenericAdapterInteractionListener interface
         if (fragment instanceof OnCategoryGenericAdapterInteractionListener) {
             mListener = (OnCategoryGenericAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnCategoryExpenseAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnCategoryGenericAdapterInteractionListener.");
         }
     }
 
@@ -73,11 +73,11 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         this.arrangement = arrangement;
         this.mDragStartListener = startDragListener;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnCategoryExpenseAdapterInteractionListener interface
+        //Any activity or fragment that uses this adapter needs to implement the OnCategoryGenericAdapterInteractionListener interface
         if (activity instanceof OnCategoryGenericAdapterInteractionListener) {
             mListener = (OnCategoryGenericAdapterInteractionListener) activity;
         } else {
-            throw new RuntimeException(activity.toString() + " must implement OnCategoryExpenseAdapterInteractionListener.");
+            throw new RuntimeException(activity.toString() + " must implement OnCategoryGenericAdapterInteractionListener.");
         }
     }
 
