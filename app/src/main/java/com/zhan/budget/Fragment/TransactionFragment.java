@@ -61,7 +61,7 @@ public class TransactionFragment extends BaseRealmFragment implements
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_transaction;
+        return R.layout.fragment_category_grid;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class TransactionFragment extends BaseRealmFragment implements
         selectedCategoryId = budgetType = "";
         Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
         categoryList = new ArrayList<>();
-        categoryGridView = (RecyclerView) view.findViewById(R.id.categoryExpenseAndIncomeGrid);
+        categoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
         categoryGridView.setLayoutManager(new GridLayoutManager(getContext(), 5));
         categoryGridAdapter = new CategoryGridRecyclerAdapter(this, categoryList);
         categoryGridView.setAdapter(categoryGridAdapter);

@@ -57,7 +57,7 @@ public class ColorPickerCategoryFragment extends BaseFragment
 
     @Override
     protected int getFragmentLayout() {
-    return R.layout.fragment_color_picker_category;
+    return R.layout.fragment_category_grid;
 }
 
     @Override
@@ -74,7 +74,7 @@ public class ColorPickerCategoryFragment extends BaseFragment
             }
         }
 
-        colorCategoryGridView = (RecyclerView) view.findViewById(R.id.colorGrid);
+        colorCategoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
         colorCategoryGridView.setLayoutManager(new GridLayoutManager(getContext(), 5));
 
         colorCategoryGridAdapter = new ColorCategoryRecyclerAdapter(this, categoryColorList);

@@ -60,7 +60,7 @@ public class IconPickerCategoryFragment extends BaseFragment
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_icon_picker_category;
+        return R.layout.fragment_category_grid;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class IconPickerCategoryFragment extends BaseFragment
             }
         }
 
-        iconCategoryGridView = (RecyclerView) view.findViewById(R.id.iconGrid);
+        iconCategoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
         iconCategoryGridView.setLayoutManager(new GridLayoutManager(getContext(), 5));
 
         iconCategoryGridAdapter = new IconCategoryRecyclerAdapter(this, categoryIconList, selectedColor);
