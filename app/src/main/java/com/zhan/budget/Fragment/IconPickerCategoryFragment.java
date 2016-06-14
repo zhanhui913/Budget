@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.zhan.budget.Adapter.IconCategoryRecyclerAdapter;
+import com.zhan.budget.Adapter.CategoryGrid.IconCategoryRecyclerAdapter;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;

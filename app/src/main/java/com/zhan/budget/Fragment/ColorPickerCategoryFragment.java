@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.zhan.budget.Adapter.ColorCategoryRecyclerAdapter;
+import com.zhan.budget.Adapter.CategoryGrid.ColorCategoryRecyclerAdapter;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
