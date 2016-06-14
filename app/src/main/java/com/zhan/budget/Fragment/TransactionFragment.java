@@ -2,6 +2,9 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.zhan.budget.Adapter.CategoryGridAdapter;
+import com.zhan.budget.Adapter.CategoryGridRecyclerAdapter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
@@ -25,7 +29,8 @@ import io.realm.RealmResults;
 /**
  * Created by Zhan on 16-03-09.
  */
-public class TransactionFragment extends BaseRealmFragment {
+public class TransactionFragment extends BaseRealmFragment implements
+        CategoryGridRecyclerAdapter.OnCategoryGridAdapterInteractionListener{
 
     private static final String TAG = "TransactionFragment";
 
@@ -36,8 +41,8 @@ public class TransactionFragment extends BaseRealmFragment {
 
     private RealmResults<Category> resultsCategory;
     private List<Category> categoryList;
-    private GridView categoryGridView;
-    private CategoryGridAdapter categoryGridAdapter;
+    private RecyclerView categoryGridView;
+    private CategoryGridRecyclerAdapter categoryGridAdapter;
 
     private Category selectedCategory;
 
@@ -74,9 +79,11 @@ public class TransactionFragment extends BaseRealmFragment {
         selectedCategoryId = budgetType = "";
         Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
         categoryList = new ArrayList<>();
-        categoryGridView = (GridView) view.findViewById(R.id.categoryExpenseAndIncomeGrid);
-        categoryGridAdapter = new CategoryGridAdapter(getContext(), categoryList);
+        categoryGridView = (RecyclerView) view.findViewById(R.id.categoryExpenseAndIncomeGrid);
+        categoryGridView.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        categoryGridAdapter = new CategoryGridRecyclerAdapter(this, categoryList);
         categoryGridView.setAdapter(categoryGridAdapter);
+
 
         if(getArguments() != null) {
             this.budgetType = getArguments().getString(ARG_1);
@@ -95,21 +102,43 @@ public class TransactionFragment extends BaseRealmFragment {
                 element.removeChangeListener(this);
 
                 categoryList = myRealm.copyFromRealm(element);
-                categoryGridAdapter.clear();
-                categoryGridAdapter.addAll(categoryList);
+                //categoryGridAdapter.clear();
+
+                for(int i = 0; i < categoryList.size(); i++){
+                    if(categoryList.get(i).getId().equalsIgnoreCase(selectedCategoryId)){
+                        categoryList.get(i).setSelected(true);
+                    }else{
+                        categoryList.get(i).setSelected(false);
+                    }
+                }
+
+
+                categoryGridAdapter.setCategoryList(categoryList);
 
                 listenToGridView();
             }
         });
     }
 
+    @Override
+    public void onClick(int position){
+        for(int i = 0; i < categoryList.size(); i++){
+            categoryList.get(i).setSelected(false);
+        }
+        categoryList.get(position).setSelected(true);
+
+        categoryGridAdapter.setCategoryList(categoryList);
+    }
+
     private void listenToGridView(){
+        /*
         categoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
 
                     @Override
                     public void onGlobalLayout() {
                         //Default is 0 if selectedCategoryId is not defined.
+
                         int pos = 0;
                         Log.d(TAG, "3 selectedCategoryId : "+selectedCategoryId);
                         for (int i = 0; i < categoryList.size(); i++) {
@@ -129,16 +158,19 @@ public class TransactionFragment extends BaseRealmFragment {
 
                         //Set first category as selected by default
                         ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(pos);
-                        CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
-                        cv.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
+                        if(gridChild != null){
+                            CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
+                            cv.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
+                        }
 
                         // unregister listener (this is important)
                         categoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
-                });
+                });*/
     }
 
     private void addListeners(){
+        /*
         categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -161,7 +193,7 @@ public class TransactionFragment extends BaseRealmFragment {
                 }
 
             }
-        });
+        });*/
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
