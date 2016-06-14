@@ -3,7 +3,6 @@ package com.zhan.budget.Util;
 import android.content.Context;
 import android.content.res.TypedArray;
 
-import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 

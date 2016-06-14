@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.AttrRes;
 import android.util.TypedValue;
 
-import com.zhan.budget.Model.CategoryIconColor;
 import com.zhan.budget.Model.Realm.Category;
 
 import java.util.List;
