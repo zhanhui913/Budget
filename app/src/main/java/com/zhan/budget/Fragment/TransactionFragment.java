@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.zhan.budget.Adapter.CategoryGrid.CategoryGridRecyclerAdapter;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 
@@ -118,6 +119,14 @@ public class TransactionFragment extends BaseRealmFragment implements
         categoryList.get(position).setSelected(true);
 
         categoryGridAdapter.setCategoryList(categoryList);
+
+        selectedCategory = categoryList.get(position);
+
+        if(budgetType.equalsIgnoreCase(BudgetType.INCOME.toString())) {
+            mListener.onCategoryIncomeClick(selectedCategory);
+        }else{
+            mListener.onCategoryExpenseClick(selectedCategory);
+        }
     }
 
     private void listenToGridView(){
