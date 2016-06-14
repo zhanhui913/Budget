@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -17,33 +18,46 @@ import com.zhan.library.CircularView;
 
 import java.util.List;
 
-public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGridRecyclerAdapter.ViewHolder> {
+public class CircularViewRecyclerAdapter extends RecyclerView.Adapter<CircularViewRecyclerAdapter.ViewHolder> {
 
-    private Context context;
-    private List<Category> categoryList;
-    private OnCategoryGridAdapterInteractionListener mListener;
+    public enum ARRANGEMENT{
+        ICON,
+        COLOR,
+        BOTH
+    }
 
-    public CategoryGridRecyclerAdapter(Fragment fragment, List<Category> list) {
+    public ARRANGEMENT arrangement;
+
+    protected Context context;
+    protected List<Category> categoryList;
+    protected OnCircularViewAdapterInteractionListener mListener;
+
+    //Dont use this to instantiate, only created for subclass purposes
+    public CircularViewRecyclerAdapter(){}
+
+    public CircularViewRecyclerAdapter(Fragment fragment, List<Category> list, ARRANGEMENT arrangement) {
         this.context = fragment.getContext();
         this.categoryList = list;
+        this.arrangement = arrangement;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnCategoryGridAdapterInteractionListener interface
-        if (fragment instanceof OnCategoryGridAdapterInteractionListener) {
-            mListener = (OnCategoryGridAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnCircularViewAdapterInteractionListener interface
+        if (fragment instanceof OnCircularViewAdapterInteractionListener) {
+            mListener = (OnCircularViewAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnCategoryGridAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnCircularViewAdapterInteractionListener.");
         }
     }
 
-    public CategoryGridRecyclerAdapter(Activity activity, List<Category> list) {
+    public CircularViewRecyclerAdapter(Activity activity, List<Category> list, ARRANGEMENT arrangement) {
         this.context = activity;
         this.categoryList = list;
+        this.arrangement = arrangement;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnCategoryGridAdapterInteractionListener interface
-        if (activity instanceof OnCategoryGridAdapterInteractionListener) {
-            mListener = (OnCategoryGridAdapterInteractionListener) activity;
+        //Any activity or fragment that uses this adapter needs to implement the OnCircularViewAdapterInteractionListener interface
+        if (activity instanceof OnCircularViewAdapterInteractionListener) {
+            mListener = (OnCircularViewAdapterInteractionListener) activity;
         } else {
-            throw new RuntimeException(activity.toString() + " must implement OnCategoryGridAdapterInteractionListener.");
+            throw new RuntimeException(activity.toString() + " must implement OnCircularViewAdapterInteractionListener.");
         }
     }
 
@@ -63,12 +77,23 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         // getting category data for the row
         final Category category = categoryList.get(position);
 
-        viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
-        viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        if(arrangement == ARRANGEMENT.ICON){
+            //viewHolder.circularView.setCircleColor(this.color);
+            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
+            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+            viewHolder.name.setVisibility(View.GONE);
+        }else if(arrangement == ARRANGEMENT.COLOR){
+            viewHolder.circularView.setCircleColor(category.getColor());
+            viewHolder.name.setVisibility(View.GONE);
+        }else if(arrangement == ARRANGEMENT.BOTH){
+            viewHolder.circularView.setCircleColor(category.getColor());
+            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
+            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
-        // Name
-        viewHolder.name.setText(category.getName());
+            viewHolder.name.setVisibility(View.VISIBLE);
+            viewHolder.name.setText(category.getName());
+        }
+
 
         if(category.isSelected()){
             viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
@@ -123,7 +148,7 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnCategoryGridAdapterInteractionListener {
+    public interface OnCircularViewAdapterInteractionListener {
         void onClick(int position);
     }
 }
