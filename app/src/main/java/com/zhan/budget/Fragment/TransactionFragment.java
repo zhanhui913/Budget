@@ -3,22 +3,12 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
-import com.zhan.budget.Adapter.CategoryGridAdapter;
 import com.zhan.budget.Adapter.CategoryGridRecyclerAdapter;
-import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
-import com.zhan.library.CircularView;
 
 import java.util.ArrayList;
 import java.util.List;
