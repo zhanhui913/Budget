@@ -200,7 +200,11 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             Log.d("DEBUG", "---------->" + priceString);
             String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
-            transactionCostView.setText(appendString + CurrencyTextFormatter.formatFloat(Math.abs(editTransaction.getPrice()), Constants.BUDGET_LOCALE));
+            //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(editTransaction.getPrice()), Constants.BUDGET_LOCALE));
+
+            String ss = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
+
+            transactionCostView.setText(ss);
 
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }
@@ -365,11 +369,14 @@ public class TransactionInfoActivity extends BaseActivity implements
                 switch (position) {
                     case 0:
                         currentPage = BudgetType.EXPENSE;
-                        transactionCostView.setText("-" + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+                        float ss = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
+                        transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(ss, Constants.BUDGET_LOCALE));
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
-                        transactionCostView.setText("+" + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+
+                        float ss1 = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
+                        transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(ss1), Constants.BUDGET_LOCALE));
                         break;
                 }
             }
@@ -693,7 +700,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         priceString += digit;
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
-        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+        transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
     }
 
     private void removeDigit(){
@@ -702,7 +709,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         String appendString = (currentPage == BudgetType.EXPENSE)?"-":"+";
-        transactionCostView.setText(appendString + CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+        transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
     }
 
     @Override
