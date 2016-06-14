@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Zhan on 16-06-14.
  */
-public class IconCategoryRecyclerAdapter extends CircularViewRecyclerAdapter {
+public class IconCategoryRecyclerAdapter extends CategoryGridRecyclerAdapter {
 
     private String color;
 
@@ -22,11 +22,11 @@ public class IconCategoryRecyclerAdapter extends CircularViewRecyclerAdapter {
         this.categoryList = list;
         this.color = color;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnCircularViewAdapterInteractionListener interface
-        if (fragment instanceof OnCircularViewAdapterInteractionListener) {
-            mListener = (OnCircularViewAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnCategoryGridAdapterInteractionListener interface
+        if (fragment instanceof OnCategoryGridAdapterInteractionListener) {
+            mListener = (OnCategoryGridAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnCircularViewAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnCategoryGridAdapterInteractionListener.");
         }
     }
 
@@ -36,7 +36,6 @@ public class IconCategoryRecyclerAdapter extends CircularViewRecyclerAdapter {
         // getting category data for the row
         final Category category = categoryList.get(position);
 
-        //Toast.makeText(context, "COLOR IS "+color, Toast.LENGTH_SHORT).show();
         viewHolder.circularView.setCircleColor(this.color);
         viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
         viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));

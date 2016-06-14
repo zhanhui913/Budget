@@ -12,18 +12,17 @@ import java.util.List;
 /**
  * Created by Zhan on 16-06-14.
  */
-public class ColorCategoryRecyclerAdapter extends CircularViewRecyclerAdapter {
-
+public class ColorCategoryRecyclerAdapter extends CategoryGridRecyclerAdapter {
 
     public ColorCategoryRecyclerAdapter(Fragment fragment, List<Category> list) {
         this.context = fragment.getContext();
         this.categoryList = list;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnCircularViewAdapterInteractionListener interface
-        if (fragment instanceof OnCircularViewAdapterInteractionListener) {
-            mListener = (OnCircularViewAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnCategoryGridAdapterInteractionListener interface
+        if (fragment instanceof OnCategoryGridAdapterInteractionListener) {
+            mListener = (OnCategoryGridAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnCircularViewAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnCategoryGridAdapterInteractionListener.");
         }
     }
 

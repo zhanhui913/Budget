@@ -19,9 +19,12 @@ import java.util.List;
 
 public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGridRecyclerAdapter.ViewHolder> {
 
-    private Context context;
-    private List<Category> categoryList;
-    private OnCategoryGridAdapterInteractionListener mListener;
+    protected Context context;
+    protected List<Category> categoryList;
+    protected OnCategoryGridAdapterInteractionListener mListener;
+
+    //Dont use this to instantiate, only created for subclass purposes
+    public CategoryGridRecyclerAdapter(){}
 
     public CategoryGridRecyclerAdapter(Fragment fragment, List<Category> list) {
         this.context = fragment.getContext();
