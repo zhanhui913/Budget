@@ -44,7 +44,7 @@ public class TransactionsForCategory extends BaseTransactions {
                 transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
-                //Add dividerupdateTransactionStatus
+                //Add divider
                 transactionListView.addItemDecoration(
                         new HorizontalDividerItemDecoration.Builder(instance)
                                 .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
