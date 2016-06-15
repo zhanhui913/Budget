@@ -101,6 +101,13 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
             viewHolder.unapproveBtn.setVisibility(View.VISIBLE);
+
+            //Set Transaction's cost color based on Category type
+            if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+            }else{
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+            }
         }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
             viewHolder.circularView.setCircleRadiusInDP(23);
@@ -112,6 +119,9 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
             viewHolder.approveBtn.setVisibility(View.VISIBLE);
             viewHolder.unapproveBtn.setVisibility(View.GONE);
+
+            //Set Transaction's cost color to be regular text color
+            viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
 
         //If there is no note, use Category's name instead
@@ -137,13 +147,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }else{
             viewHolder.location.setVisibility(View.GONE);
             viewHolder.locationIcon.setVisibility(View.GONE);
-        }
-
-        //Set Transaction's cost color based on Category type
-        if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-            viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
-        }else{
-            viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
         }
     }
 
