@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@drawable/calendar_cell_inset_background"
-    android:textSize="12sp"/>
+    android:textSize="16sp"/>
 
 <!--
     flexible:event_radius="2dp"

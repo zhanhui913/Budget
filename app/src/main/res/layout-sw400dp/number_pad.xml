@@ -8,15 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number1"
             android:text="1"/>
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number2"
             android:text="2"/>
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number3"
             android:text="3"/>
     </LinearLayout>
@@ -25,15 +25,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number4"
             android:text="4"/>
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number5"
             android:text="5"/>
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number6"
             android:text="6"/>
     </LinearLayout>
@@ -42,15 +42,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number7"
             android:text="7"/>
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number8"
             android:text="8"/>
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number9"
             android:text="9"/>
     </LinearLayout>
@@ -59,13 +59,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View style="@style/NumberPadStyle_Small" />
+        <View style="@style/NumberPadStyle" />
 
-        <Button style="@style/NumberPadStyle_Small"
+        <Button style="@style/NumberPadStyle"
             android:id="@+id/number0"
             android:text="0"/>
 
-        <ImageButton style="@style/NumberPadStyle_Small"
+        <ImageButton style="@style/NumberPadStyle"
             android:id="@+id/numberX"
             android:src="@drawable/svg_ic_backspace"
             android:tint="?attr/themeColorText"/>

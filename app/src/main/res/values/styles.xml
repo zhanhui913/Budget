@@ -67,6 +67,16 @@
         <item name="android:layout_margin">1dp</item>
     </style>
 
+    <!-- Number pad's style -->
+    <style name="NumberPadStyle_Small">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_weight">0.3</item>
+        <item name="android:textSize">@dimen/num_pad_small_text_size</item>
+        <item name="android:background">?attr/themeColorBtn</item>
+        <item name="android:layout_margin">1dp</item>
+    </style>
+
     <!-- Circular view's style -->
     <style name="CircularViewStyle_selected">
         <item name="cv_strokePadding">3dp</item>
