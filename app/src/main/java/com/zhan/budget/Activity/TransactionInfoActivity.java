@@ -196,16 +196,10 @@ public class TransactionInfoActivity extends BaseActivity implements
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
             //Remove any extra un-needed signs
-            priceString = priceString.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","");
-
-
+            priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
             Log.d("DEBUG", "---------->" + priceString);
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-
-            //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(editTransaction.getPrice()), Constants.BUDGET_LOCALE));
-
-            //String ss = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
             transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
 

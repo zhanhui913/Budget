@@ -216,7 +216,10 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
-        priceString = "";
+        priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE);
+
+        //Remove any extra un-needed signs
+        priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
         title.setText("Change Budget");
         budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));

@@ -67,4 +67,8 @@ public final class CurrencyTextFormatter {
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
         return currencyFormatter.format(val);
     }
+
+    public static String stripCharacters(String value){
+        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","");
+    }
 }
