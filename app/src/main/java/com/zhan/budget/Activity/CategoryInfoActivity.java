@@ -73,6 +73,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
 
+
         if(!isNewCategory){
             category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
         }else{
@@ -215,7 +216,10 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
-        priceString = "";
+        priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE);
+
+        //Remove any extra un-needed signs
+        priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
         title.setText("Change Budget");
         budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
@@ -331,6 +335,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void addDigitToTextView(TextView textView, int digit){
         Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
         priceString += digit;
+
         textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 
@@ -338,6 +343,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
         }
+
         textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 

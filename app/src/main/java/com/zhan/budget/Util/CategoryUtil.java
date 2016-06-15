@@ -3,7 +3,7 @@ package com.zhan.budget.Util;
 import android.content.Context;
 import android.content.res.TypedArray;
 
-import com.zhan.budget.Model.CategoryIconColor;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 
 import java.util.ArrayList;
@@ -17,18 +17,18 @@ public final class CategoryUtil {
     private CategoryUtil() {
     }//private constructor
 
-    public static List<CategoryIconColor> getListOfUniqueIcons(Context context){
+    public static List<Category> getListOfUniqueIcons(Context context){
         TypedArray icons = context.getResources().obtainTypedArray(R.array.category_icons);
 
-        List<CategoryIconColor> iconList = new ArrayList<>();
+        List<Category> iconList = new ArrayList<>();
         for(int i = 0; i < icons.length(); i++){
             // get resource ID by index
             int s = icons.getResourceId(i, 0);
             //Log.d("ZHAN", i+"->"+s+", name :"+context.getResources().getResourceName(s)+", entry name:"+context.getResources().getResourceEntryName(s)+" -> "+context.getResources().getString(s));
 
-            CategoryIconColor cc = new CategoryIconColor();
+            Category cc = new Category();
             cc.setIcon(context.getResources().getResourceEntryName(s));
-            cc.setIsSelected(false); //default
+            cc.setSelected(false); //default
 
             iconList.add(cc);
         }
@@ -36,18 +36,18 @@ public final class CategoryUtil {
         return iconList;
     }
 
-    public static List<CategoryIconColor> getListOfCategoryColors(Context context){
+    public static List<Category> getListOfCategoryColors(Context context){
         TypedArray colors = context.getResources().obtainTypedArray(R.array.category_colors);
 
-        List<CategoryIconColor> colorList = new ArrayList<>();
+        List<Category> colorList = new ArrayList<>();
         for(int i = 0; i < colors.length(); i++){
             // get resource ID by index
             int s = colors.getResourceId(i, 0);
             //Log.d("CATEGORY_UTIL", i + "->" + s + ", name :" + context.getResources().getResourceName(s) + ", entry name:" + context.getResources().getResourceEntryName(s) + " -> " + context.getResources().getString(s));
 
-            CategoryIconColor cc = new CategoryIconColor();
+            Category cc = new Category();
             cc.setColor(context.getResources().getString(s));
-            cc.setIsSelected(false); //default
+            cc.setSelected(false); //default
             colorList.add(cc);
         }
         colors.recycle();
@@ -59,7 +59,7 @@ public final class CategoryUtil {
     }
 
     public static int getColorID(Context context, String value) throws Exception{
-        List<CategoryIconColor> colorList = getListOfCategoryColors(context);
+        List<Category> colorList = getListOfCategoryColors(context);
 
         int position = -1;
 

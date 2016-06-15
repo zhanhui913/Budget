@@ -3,13 +3,12 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
-import com.zhan.budget.Adapter.IconCategoryGridAdapter;
-import com.zhan.budget.Model.CategoryIconColor;
+import com.zhan.budget.Adapter.CategoryGrid.IconCategoryRecyclerAdapter;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 
@@ -21,16 +20,17 @@ import java.util.List;
  * {@link IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class IconPickerCategoryFragment extends BaseFragment {
+public class IconPickerCategoryFragment extends BaseFragment
+    implements IconCategoryRecyclerAdapter.OnCategoryGridAdapterInteractionListener{
 
     private OnIconPickerCategoryFragmentInteractionListener mListener;
 
     private static final String ARG_1 = "selectedCategoryIcon";
     private static final String ARG_2 = "selectedCategoryColor";
 
-    private List<CategoryIconColor> categoryIconColorList;
-    private GridView iconCategoryGridView;
-    private IconCategoryGridAdapter iconCategoryGridAdapter;
+    private List<Category> categoryIconList;
+    private RecyclerView iconCategoryGridView;
+    private IconCategoryRecyclerAdapter iconCategoryGridAdapter;
 
     private String selectedColor;
     private String selectedCategoryIcon;
@@ -60,45 +60,41 @@ public class IconPickerCategoryFragment extends BaseFragment {
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_icon_picker_category;
+        return R.layout.fragment_category_grid;
     }
 
     @Override
     protected void init(){
-        categoryIconColorList = CategoryUtil.getListOfUniqueIcons(getContext());
+        categoryIconList = CategoryUtil.getListOfUniqueIcons(getContext());
 
         selectedCategoryIcon = getArguments().getString(ARG_1);
         selectedColor = getArguments().getString(ARG_2);
 
-        for(int i = 0; i < categoryIconColorList.size(); i++){
-            if(categoryIconColorList.get(i).getIcon().equalsIgnoreCase(selectedCategoryIcon)){
-                categoryIconColorList.get(i).setIsSelected(true);
+        for(int i = 0; i < categoryIconList.size(); i++){
+            if(categoryIconList.get(i).getIcon().equalsIgnoreCase(selectedCategoryIcon)){
+                categoryIconList.get(i).setSelected(true);
                 break;
             }
         }
 
-        iconCategoryGridView = (GridView) view.findViewById(R.id.iconGrid);
-        iconCategoryGridAdapter = new IconCategoryGridAdapter(getContext(), categoryIconColorList, selectedColor);
+        iconCategoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
+        iconCategoryGridView.setLayoutManager(new GridLayoutManager(getContext(), 5));
+
+        iconCategoryGridAdapter = new IconCategoryRecyclerAdapter(this, categoryIconList, selectedColor);
         iconCategoryGridView.setAdapter(iconCategoryGridAdapter);
         Log.d("ICON_PICKER_CATEGORY", "init");
-
-        addListeners();
     }
 
-    private void addListeners(){
-        iconCategoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for(int i = 0; i < categoryIconColorList.size(); i++){
-                    categoryIconColorList.get(i).setIsSelected(false);
-                }
+    @Override
+    public void onClick(int position){
+        for(int i = 0; i < categoryIconList.size(); i++){
+            categoryIconList.get(i).setSelected(false);
+        }
+        categoryIconList.get(position).setSelected(true);
 
-                categoryIconColorList.get(position).setIsSelected(true);
-                iconCategoryGridAdapter.notifyDataSetChanged();
+        iconCategoryGridAdapter.setCategoryList(categoryIconList);
 
-                mListener.onIconCategoryClick(categoryIconColorList.get(position).getIcon());
-            }
-        });
+        mListener.onIconCategoryClick(categoryIconList.get(position).getIcon());
     }
 
     public void updateColor(String color){

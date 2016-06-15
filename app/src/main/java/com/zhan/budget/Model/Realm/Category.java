@@ -29,6 +29,9 @@ public class Category extends RealmObject implements PieDataCostInterface{
     @Ignore
     private float percent;
 
+    @Ignore
+    private boolean isSelected;
+
     public Category(){
 
     }
@@ -103,6 +106,14 @@ public class Category extends RealmObject implements PieDataCostInterface{
 
     public void setPercent(float percent) {
         this.percent = percent;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
