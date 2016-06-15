@@ -17,7 +17,7 @@ public final class CurrencyTextFormatter {
     public static String formatText(String val, Locale locale){
 
         //special case for the start of a negative number
-        if(val.equals("-")) return val;
+        //if(val.equals("-")) return val;
 
         final double CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(locale).getDefaultFractionDigits());
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
@@ -34,7 +34,7 @@ public final class CurrencyTextFormatter {
              */
             newTextValue = newTextValue / CURRENCY_DECIMAL_DIVISOR;
             val = currencyFormatter.format(newTextValue);
-        }else if(val.equals("")){
+        }else if(val.equals("") || val.equals("-")){
             val = currencyFormatter.format(0);
         }
         /*else {

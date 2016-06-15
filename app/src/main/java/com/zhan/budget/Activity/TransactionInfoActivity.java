@@ -165,7 +165,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
-        priceString = "";
+        priceString = "0";
 
         //Call one time to give priceStringWithDot the correct string format of 0.00
         removeDigit();
@@ -202,6 +202,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             Log.d("DEBUG", "---------->" + priceString);
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
+
             //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(editTransaction.getPrice()), Constants.BUDGET_LOCALE));
 
             //String ss = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
