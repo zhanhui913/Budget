@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryGrid.CategoryGridRecyclerAdapter;
 import com.zhan.budget.Model.BudgetType;
@@ -95,17 +94,19 @@ public class TransactionFragment extends BaseRealmFragment implements
 
                 categoryList = myRealm.copyFromRealm(element);
 
-                //Default is 0 if selectedCategoryId is not defined, which means its adding a new transaction
                 int pos = 0;
-
                 for(int i = 0; i < categoryList.size(); i++){
                     if(categoryList.get(i).getId().equalsIgnoreCase(selectedCategoryId)){
+                        categoryList.get(i).setSelected(true);
                         pos = i;
-                        break;
+                    }else{
+                        categoryList.get(i).setSelected(false);
                     }
                 }
-
                 onClick(pos);
+
+                categoryGridAdapter.setCategoryList(categoryList);
+
                 //listenToGridView();
             }
         });
@@ -117,6 +118,7 @@ public class TransactionFragment extends BaseRealmFragment implements
             categoryList.get(i).setSelected(false);
         }
         categoryList.get(position).setSelected(true);
+
         categoryGridAdapter.setCategoryList(categoryList);
 
         selectedCategory = categoryList.get(position);
