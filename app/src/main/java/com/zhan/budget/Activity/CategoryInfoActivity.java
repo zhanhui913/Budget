@@ -73,6 +73,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
 
+
         if(!isNewCategory){
             category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
         }else{
@@ -331,14 +332,16 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void addDigitToTextView(TextView textView, int digit){
         Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
         priceString += digit;
-        textView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
+
+        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 
     private void removeDigit(TextView textView){
         if (priceString != null && priceString.length() >= 1) {
             priceString = priceString.substring(0, priceString.length() - 1);
         }
-        textView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
+
+        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
     }
 
     private void confirmDelete(){
