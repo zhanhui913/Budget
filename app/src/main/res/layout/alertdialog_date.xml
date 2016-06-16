@@ -21,8 +21,8 @@
         android:id="@+id/alertdialogCalendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="15dp"
+        android:paddingLeft="@dimen/item_padding"
+        android:paddingRight="@dimen/item_padding"
+        android:paddingBottom="@dimen/item_padding"
         flexible:disableAutoDateSelection="true"/>
 </LinearLayout>

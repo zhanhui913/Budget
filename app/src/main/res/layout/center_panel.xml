@@ -12,25 +12,28 @@
         android:layout_height="wrap_content"
         android:src="@drawable/svg_ic_date"
         android:tint="?attr/themeColorText"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Dec 2016"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_title_size"
         android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/dateIcon" />
+        android:layout_toRightOf="@+id/dateIcon"
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/totalCostTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_title_size"
         android:text="$0.00"
         android:layout_marginLeft="5dp"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/dateTextView"
-        android:gravity="right" />
+        android:gravity="right"
+        android:layout_centerVertical="true" />
 </RelativeLayout>

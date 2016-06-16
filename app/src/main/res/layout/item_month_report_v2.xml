@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="January"
-        android:textSize="30sp"
+        android:textSize="@dimen/text_header_size"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true" />
 
@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Expense : $0.00"
+            android:textSize="@dimen/text_content_size"
             android:textStyle="bold"
             android:layout_gravity="right" />
 
@@ -34,6 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Income : $0.00"
+            android:textSize="@dimen/text_content_size"
             android:textStyle="bold"
             android:layout_gravity="right" />
 
@@ -42,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Net : $0.00"
+            android:textSize="@dimen/text_content_size"
             android:textStyle="bold"
             android:layout_gravity="right" />
     </LinearLayout>

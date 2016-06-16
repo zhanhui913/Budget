@@ -13,23 +13,27 @@
 		android:layout_alignParentLeft="true"
 		android:layout_centerVertical="true"/>
 
-	<TextView
-		android:id="@+id/locationName"
+	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:paddingLeft="@dimen/item_left_padding"
 		android:layout_toRightOf="@+id/locationIcon"
-		android:paddingLeft="16dp"
-		android:text="Location"
-		android:textSize="20sp"
-		android:textStyle="bold"/>
+		android:orientation="vertical"
+		android:layout_centerVertical="true">
 
-	<TextView
-		android:id="@+id/locationAmount"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/locationName"
-		android:layout_toRightOf="@+id/locationIcon"
-		android:paddingLeft="16dp"
-		android:text="5 times"
-		android:textSize="15sp"/>
+		<TextView
+			android:id="@+id/locationName"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Location"
+			android:textSize="@dimen/text_title_size"
+			android:textStyle="bold"/>
+
+		<TextView
+			android:id="@+id/locationAmount"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="5 times"
+			android:textSize="@dimen/text_content_size"/>
+	</LinearLayout>
 </RelativeLayout>

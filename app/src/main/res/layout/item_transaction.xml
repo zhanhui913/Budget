@@ -49,9 +49,6 @@
             android:id="@+id/categoryIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentLeft="false"
             android:layout_centerVertical="true" />
 
         <LinearLayout
@@ -62,7 +59,7 @@
             android:layout_toRightOf="@+id/categoryIcon"
             android:layout_toLeftOf="@+id/rightPanel"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp">
+            android:layout_marginLeft="@dimen/item_left_padding">
 
             <TextView
                 android:id="@+id/transactionNote"
@@ -70,7 +67,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="Lunch"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_title_size"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -90,7 +87,7 @@
                     android:id="@+id/transactionAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_content_size"
                     android:text="Account"
                     android:layout_toRightOf="@+id/accountIcon"
                     android:layout_centerVertical="true"
@@ -114,7 +111,7 @@
                     android:id="@+id/transactionLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_content_size"
                     android:text="Location"
                     android:layout_toRightOf="@+id/locationIcon"
                     android:layout_centerVertical="true"
@@ -140,7 +137,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="01-Jan-2016"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_content_size" />
 
         <TextView
             android:id="@+id/transactionCost"
@@ -148,7 +145,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="-25.00"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_title_size" />
         </LinearLayout>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

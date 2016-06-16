@@ -11,6 +11,7 @@
          android:layout_height="wrap_content"
          flexible:disableAutoDateSelection="true"/>
 
+    <!-- should replace this view group with center_panel.xml -->
     <LinearLayout
         android:id="@+id/centerPanel"
         android:layout_width="match_parent"

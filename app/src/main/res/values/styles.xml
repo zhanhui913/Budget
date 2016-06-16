@@ -91,7 +91,7 @@
     <style name="SettingsTextViewButtonStyle">
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">20dp</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/text_title_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingTop">10dp</item>
     </style>
@@ -99,31 +99,31 @@
     <style name="SettingsTextViewContentStyle">
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">35dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/text_content_size</item>
         <item name="android:paddingBottom">10dp</item>
     </style>
 
     <style name="SettingsTextViewHeaderStyle">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/text_content_size</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <!-- Alert dialog's style -->
     <style name="AlertDialogTitleStyle">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">@dimen/text_header_size</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:textColor">@color/day_text</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:padding">@dimen/item_padding</item>
     </style>
 
     <!-- List Adapter's individual item's xml padding -->
     <style name="ItemPaddingStyle">
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">@dimen/item_top_padding</item>
+        <item name="android:paddingBottom">@dimen/item_bottom_padding</item>
+        <item name="android:paddingLeft">@dimen/item_left_padding</item>
+        <item name="android:paddingRight">@dimen/item_right_padding</item>
     </style>
 
 </resources>

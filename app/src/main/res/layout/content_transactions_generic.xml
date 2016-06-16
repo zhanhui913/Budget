@@ -11,23 +11,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="?attr/themeColorHighlight"
-        android:padding="5dp">
+        android:padding="@dimen/item_padding">
 
         <TextView
             android:id="@+id/genericName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Generic"
-            android:textSize="20sp"
-            android:layout_marginLeft="5dp"/>
+            android:textSize="@dimen/text_title_size"
+            android:layout_marginLeft="@dimen/item_left_padding"/>
 
         <TextView
             android:id="@+id/transactionBalance"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="$0.00"
-            android:textSize="20sp"
-            android:layout_marginRight="5dp"
+            android:textSize="@dimen/text_title_size"
+            android:layout_marginRight="@dimen/item_right_padding"
             android:gravity="right" />
     </LinearLayout>
 

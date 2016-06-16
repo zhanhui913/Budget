@@ -68,9 +68,9 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setDrawHoleEnabled(true);
         pieChart.setDrawCenterText(true);
 
-
         int color = Colors.getColorFromAttr(getContext(), R.attr.themeColorText);
         pieChart.setCenterTextColor(color);
+        pieChart.setCenterTextSize(getResources().getDimension(R.dimen.text_content_size));
         pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.transparent));
 
 

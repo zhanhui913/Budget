@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_title_size"
         android:text="Pull down to add a transaction"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"

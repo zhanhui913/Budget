@@ -18,8 +18,8 @@
             android:id="@+id/accountCircularView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginTop="@dimen/item_top_padding"
+            android:layout_marginLeft="@dimen/item_left_padding"
             android:layout_centerVertical="true"
             custom:cv_iconColor="?attr/themeColor"/>
 
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Account Name"
-            android:textSize="25sp"
+            android:textSize="@dimen/text_header_size"
             android:textStyle="bold"
             android:singleLine="true"
             android:layout_toRightOf="@+id/accountCircularView"
@@ -45,15 +45,7 @@
         android:layout_height="1dp"
         android:background="?attr/themeColorText"
         android:layout_below="@+id/topPanel"/>
-<!--
-    <android.support.v4.view.ViewPager
-        android:id="@+id/colorViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="center"
-        android:layout_below="@+id/indicatorPanel"
-        android:layout_above="@+id/centerPanel"/>
--->
+
     <FrameLayout
         android:id="@+id/colorFragment"
         android:layout_width="match_parent"

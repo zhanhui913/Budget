@@ -25,14 +25,14 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
 
     private final String TAG = "CAT_CAL";
 
-    private Activity activity;
+    //private Activity activity;
     private List<Transaction> transactionList;
     private List<Category> categoryList;
     private Date month;
 
     public CategoryCalculator(Activity activity, List<Transaction> transactionList, List<Category> categoryList, Date month, OnCategoryCalculatorInteractionListener mListener) {
         // We set the context this way so we don't accidentally leak activities
-        this.activity = activity;
+        //this.activity = activity;
         this.transactionList = transactionList;
         this.categoryList = categoryList;
         this.mListener = mListener;
@@ -86,11 +86,8 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
         Collections.sort(categoryList, new Comparator<Category>() {
             @Override
             public int compare(Category c1, Category c2) {
-                float cost1 = c1.getCost();
-                float cost2 = c2.getCost();
-
                 //ascending order
-                return ((int) cost1) - ((int) cost2);
+                return ((int) c1.getCost()) - ((int) c2.getCost());
             }
         });
 

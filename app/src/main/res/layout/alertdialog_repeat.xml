@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="15dp">
+        android:padding="@dimen/item_padding">
 
         <!-- set blockDescendants so that it doesn't auto highlight the first option -->
         <com.zhan.budget.View.ExtendedNumberPicker

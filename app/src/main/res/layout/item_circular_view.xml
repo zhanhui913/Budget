@@ -19,6 +19,6 @@
         android:layout_gravity="center"
         android:text="hellos"
         android:singleLine="true"
-        android:textSize="15sp"/>
+        android:textSize="@dimen/text_content_size"/>
 </LinearLayout>
 

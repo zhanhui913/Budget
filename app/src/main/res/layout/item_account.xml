@@ -70,17 +70,17 @@
             android:orientation="vertical"
             android:layout_toLeftOf="@+id/indicatorContainer"
             android:layout_toRightOf="@+id/accountIcon"
-            android:layout_centerVertical="true">
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/item_left_padding">
 
             <TextView
                 android:id="@+id/accountName"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_title_size"
                 android:textStyle="bold"
-                android:text="credit card"
-                android:paddingLeft="16dp" />
+                android:text="credit card" />
 
             <TextView
                 android:id="@+id/accountCost"
@@ -88,7 +88,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:text="$25.00"
-                android:paddingLeft="16dp" />
+                android:textSize="@dimen/text_content_size" />
         </LinearLayout>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

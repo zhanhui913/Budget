@@ -40,9 +40,6 @@
             android:id="@+id/categoryIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentLeft="false"
             android:layout_centerVertical="true"
             custom:cv_iconColor="?attr/themeColor"/>
 
@@ -56,7 +53,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
+                android:paddingLeft="@dimen/item_left_padding"
                 android:orientation="vertical"
                 android:layout_centerVertical="true">
 
@@ -65,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Lunch"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_title_size"
                     android:textStyle="bold"
                     android:gravity="center_vertical" />
 
@@ -74,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-$2500890.00"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_content_size"
                     android:gravity="center_vertical" />
             </LinearLayout>
         </RelativeLayout>
@@ -100,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="-$0.00"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_title_size"
                     android:gravity="center_vertical|end"/>
 
                 <TextView
@@ -108,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Current"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_content_size"
                     android:gravity="center_vertical|end" />
             </LinearLayout>
 
@@ -127,12 +124,11 @@
             android:id="@+id/categoryProgress"
             android:layout_width="fill_parent"
             android:layout_height="7dp"
-            android:paddingLeft="16dp"
+            android:paddingLeft="@dimen/item_left_padding"
             app:rcBackgroundColor="?attr/themeColorHighlight"
             app:rcProgress="5"
             app:rcMax="10"
             android:layout_toRightOf="@+id/categoryIcon"
-            android:layout_alignParentBottom="false"
             android:layout_below="@+id/panel1" />
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
