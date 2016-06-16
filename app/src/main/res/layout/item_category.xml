@@ -126,8 +126,7 @@
             android:layout_height="7dp"
             android:paddingLeft="@dimen/item_left_padding"
             app:rcBackgroundColor="?attr/themeColorHighlight"
-            app:rcProgress="5"
-            app:rcMax="10"
+            app:rcRadius="0dp"
             android:layout_toRightOf="@+id/categoryIcon"
             android:layout_below="@+id/panel1" />
     </RelativeLayout>
