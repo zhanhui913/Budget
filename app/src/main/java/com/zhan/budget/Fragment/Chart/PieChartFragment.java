@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -19,6 +20,7 @@ import com.zhan.budget.Model.PieDataCostInterface;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
+import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
 
@@ -70,7 +72,12 @@ public class PieChartFragment extends BaseChartFragment {
 
         int color = Colors.getColorFromAttr(getContext(), R.attr.themeColorText);
         pieChart.setCenterTextColor(color);
-        pieChart.setCenterTextSize(getResources().getDimension(R.dimen.text_content_size));
+
+        int textSize = (int) (getResources().getDimension(R.dimen.text_content_size) / getResources().getDisplayMetrics().density);
+
+        Toast.makeText(getContext(), "titile size : "+textSize, Toast.LENGTH_SHORT).show();
+
+        pieChart.setCenterTextSize(textSize);
         pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.transparent));
 
 

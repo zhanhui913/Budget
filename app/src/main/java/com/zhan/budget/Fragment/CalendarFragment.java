@@ -90,7 +90,7 @@ public class CalendarFragment extends BaseRealmFragment implements
     private PlusView header;
     private Boolean isPulldownAllow = true;
 
-    private TextView  totalCostForDay, dateTextView;
+    private TextView  totalCostTextView, dateTextView;
     private CircularProgressBar progressBar;
 
     private Date selectedDate;
@@ -121,7 +121,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         selectedDate = new Date();
 
         calendarView = (FlexibleCalendarView) view.findViewById(R.id.calendarView);
-        totalCostForDay = (TextView) view.findViewById(R.id.totalCostForDay);
+        totalCostTextView = (TextView) view.findViewById(R.id.totalCostTextView);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
@@ -490,7 +490,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 Log.d(TAG, "received " + element.size() + " transactions");
 
                 float sumFloatValue = element.sum("price").floatValue();
-                totalCostForDay.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
+                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                 updateTransactionList();
             }

@@ -18,6 +18,7 @@
     <dimen name="right_padding_divider">0dp</dimen>
 
     <dimen name="item_padding">16dp</dimen>
+    <dimen name="item_static_padding">5dp</dimen>
 
     <dimen name="item_top_padding">8dp</dimen>
     <dimen name="item_bottom_padding">8dp</dimen>
@@ -29,4 +30,7 @@
     <dimen name="text_content_size">15sp</dimen>
 
     <dimen name="graph_height">200dp</dimen>
+
+    <!-- Used only for icons in the item_transaction.xml for account and location property-->
+    <dimen name="icon_height">25dp</dimen>
 </resources>

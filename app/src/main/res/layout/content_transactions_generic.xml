@@ -11,15 +11,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="?attr/themeColorHighlight"
-        android:padding="@dimen/item_padding">
+        android:paddingLeft="@dimen/item_padding"
+        android:paddingRight="@dimen/item_padding"
+        android:paddingTop="@dimen/item_static_padding"
+        android:paddingBottom="@dimen/item_static_padding">
 
         <TextView
             android:id="@+id/genericName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Generic"
-            android:textSize="@dimen/text_title_size"
-            android:layout_marginLeft="@dimen/item_left_padding"/>
+            android:textSize="@dimen/text_title_size" />
 
         <TextView
             android:id="@+id/transactionBalance"
@@ -27,7 +29,6 @@
             android:layout_height="wrap_content"
             android:text="$0.00"
             android:textSize="@dimen/text_title_size"
-            android:layout_marginRight="@dimen/item_right_padding"
             android:gravity="right" />
     </LinearLayout>
 

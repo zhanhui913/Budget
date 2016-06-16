@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/themeColorHighlight"
-    android:padding="5dp">
+    android:paddingLeft="@dimen/item_padding"
+    android:paddingRight="@dimen/item_padding"
+    android:paddingTop="@dimen/item_static_padding"
+    android:paddingBottom="@dimen/item_static_padding">
 
     <ImageView
         android:id="@+id/dateIcon"
@@ -21,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="Dec 2016"
         android:textSize="@dimen/text_title_size"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="@dimen/item_static_padding"
         android:layout_toRightOf="@+id/dateIcon"
         android:layout_centerVertical="true" />
 
@@ -31,7 +34,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_title_size"
         android:text="$0.00"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="@dimen/item_static_padding"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/dateTextView"
         android:gravity="right"
