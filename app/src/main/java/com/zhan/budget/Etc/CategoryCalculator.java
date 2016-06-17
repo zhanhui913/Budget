@@ -27,12 +27,14 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
     private List<Transaction> transactionList;
     private List<Category> categoryList;
     private Date month;
+    private BudgetType budgetType;
 
-    public CategoryCalculator(List<Transaction> transactionList, List<Category> categoryList, Date month, OnCategoryCalculatorInteractionListener mListener) {
+    public CategoryCalculator(List<Transaction> transactionList, List<Category> categoryList, Date month, BudgetType budgetType,OnCategoryCalculatorInteractionListener mListener) {
         this.transactionList = transactionList;
         this.categoryList = categoryList;
         this.mListener = mListener;
         this.month = month;
+        this.budgetType = budgetType;
     }
 
     @Override
@@ -54,13 +56,15 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
             Log.d(TAG, i+" : "+categoryList.get(i).getName());
         }
 
-        //List of string that is the ID of category in categoryList who's sum for cost is 0
-        // or INCOME type
+        // List of string that is the ID of category in categoryList who's sum for cost is 0
+        // or belongs to the other category budget type.
+        // Example if the budgetType value is EXPENSE, then all category of type INCOME  should be
+        // included here.
         List<Category> zeroSumList = new ArrayList<>();
 
-        //Get position of Category who's sum cost is 0 or INCOME type
+        //Get position of Category who's sum cost is 0 or belongs to other BudgetType
         for(int i = 0; i < categoryList.size(); i++){
-            if(categoryList.get(i).getCost() == 0f || categoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+            if(categoryList.get(i).getCost() == 0f || !categoryList.get(i).getType().equalsIgnoreCase(budgetType.toString())){
                 //Log.d(TAG, "Category : " + categoryList.get(i).getName() + " -> with cost " + categoryList.get(i).getCost());
                 zeroSumList.add(categoryList.get(i));
             }
@@ -72,7 +76,7 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
             Log.d(TAG, "ZERO SUM LIST : "+zeroSumList.get(i).getName()+" with "+zeroSumList.get(i).getCost());
         }
 
-        //Remove those category who's sum for cost is 0 or INCOME type
+        //Remove those category who's sum for cost is 0 or belongs to other BudgetType
         for(int i = 0; i < zeroSumList.size(); i++){
             categoryList.remove(zeroSumList.get(i));
         }

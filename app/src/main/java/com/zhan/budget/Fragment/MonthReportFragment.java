@@ -231,7 +231,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
             }
         });
     }
-
+/*
     private void performTediousCalculation(final int indexOfMonth){
         final Date month = DateUtil.refreshMonth(monthReportList.get(0).getMonth());
         final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(11).getMonth()) ;
@@ -353,7 +353,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 cc.execute();
             }
         });
-    }
+    }*/
 
     private void updateYearInToolbar(int direction){
         currentYear = DateUtil.getYearWithDirection(currentYear, direction);

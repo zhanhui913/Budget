@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,19 +20,24 @@ import android.widget.Toast;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
+import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Fragment.CategoryGenericFragment;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
 import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
+import com.zhan.budget.Fragment.OverviewGenericFragment;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.View.CustomViewPager;
 
 
 import org.parceler.Parcels;
@@ -47,17 +53,24 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class OverviewActivity extends BaseActivity implements
-        CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener{
+    OverviewGenericFragment.OverviewInteractionListener{
 
+    //Charts
     private PercentChartFragment percentChartFragment;
     private BarChartFragment barChartFragment;
     private PieChartFragment pieChartFragment;
+
+    //Expense Income Fragment to list view
+    private OverviewGenericFragment overviewExpenseFragment, overviewIncomeFragment;
+
 
     private Activity instance;
     private Toolbar toolbar;
     private Date currentMonth;
     private CircularProgressBar circularProgressBar;
     private TextView totalCostForMonth;
+    private CustomViewPager viewPager;
+    private TabLayout tabLayout;
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
@@ -77,7 +90,7 @@ public class OverviewActivity extends BaseActivity implements
         instance = this;
 
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
-
+/*
         categoryList = new ArrayList<>();
         RecyclerView categoryListView = (RecyclerView) findViewById(R.id.percentCategoryListView);
         categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
@@ -90,17 +103,19 @@ public class OverviewActivity extends BaseActivity implements
                 new HorizontalDividerItemDecoration.Builder(this)
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
-
+*/
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
         totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
 
-        circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
+        //circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
 
         createToolbar();
         addListeners();
+        createTabs();
+        createCharts();
 
-        getCategoryList();
+        //getCategoryList();
     }
 
     /**
@@ -113,7 +128,7 @@ public class OverviewActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle("Monthly Expenses");
+            getSupportActionBar().setTitle("Monthly Overview");
         }
     }
 
@@ -126,6 +141,104 @@ public class OverviewActivity extends BaseActivity implements
         });
     }
 
+    private void createTabs(){
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        overviewExpenseFragment = OverviewGenericFragment.newInstance(BudgetType.EXPENSE, currentMonth);
+        overviewIncomeFragment = OverviewGenericFragment.newInstance(BudgetType.INCOME, currentMonth);
+
+        viewPager = (CustomViewPager) findViewById(R.id.viewPager);
+        viewPager.setPagingEnabled(false);
+
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), overviewExpenseFragment, overviewIncomeFragment);
+        viewPager.setAdapter(adapterViewPager);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.d("TAB", "tab got changed to "+tab.getPosition());
+                viewPager.setCurrentItem(tab.getPosition());
+
+                changeTopPanelInfo(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void createCharts(){
+        barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
+        percentChartFragment = PercentChartFragment.newInstance(new ArrayList<Category>());
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>());
+        getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
+    }
+
+    @Override
+    public void onComplete(BudgetType type, List<Category> categoryList, float totalCost){
+        if(type == BudgetType.EXPENSE){
+            totalExpenseCost = totalCost;
+            expenseCategoryList = categoryList;
+        }else{
+            totalIncomeCost = totalCost;
+            incomeCategoryList = categoryList;
+        }
+Log.d("TAB", "on complete "+type);
+        //set default tab to be the EXPENSE (ie position = 0)
+        changeTopPanelInfo(0);
+    }
+
+    private float totalExpenseCost = 0f;
+    private float totalIncomeCost = 0f;
+    private List<Category> expenseCategoryList;
+    private List<Category> incomeCategoryList;
+
+    /**
+     * Change chart and total cost information that is in the top panel
+     * @param position The tab position
+     */
+    private void changeTopPanelInfo(int position){
+        if(position == 0){
+            //Set total cost for month
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, Constants.BUDGET_LOCALE));
+
+            //Update chart
+            /*barChartFragment = BarChartFragment.newInstance(expenseCategoryList);
+            percentChartFragment = PercentChartFragment.newInstance(expenseCategoryList);
+            pieChartFragment = PieChartFragment.newInstance(expenseCategoryList, true);
+            getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();*/
+
+            pieChartFragment.setData(expenseCategoryList);
+
+        }else if(position == 1){
+            //Set total cost for month
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, Constants.BUDGET_LOCALE));
+
+            //Update chart
+            /*barChartFragment = BarChartFragment.newInstance(incomeCategoryList);
+            percentChartFragment = PercentChartFragment.newInstance(incomeCategoryList);
+            pieChartFragment = PieChartFragment.newInstance(incomeCategoryList, true);
+            getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();*/
+
+            pieChartFragment.setData(incomeCategoryList);
+
+        }
+    }
+
+
+
+/*
     //Should be called only the first time when the activity is created
     private void getCategoryList(){
         final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(this);
@@ -169,12 +282,12 @@ public class OverviewActivity extends BaseActivity implements
                 performAsyncCalculation();
             }
         });
-    }
+    }*/
 
     /**
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
-    private void performAsyncCalculation(){
+    /*private void performAsyncCalculation(){
         CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
@@ -258,7 +371,7 @@ public class OverviewActivity extends BaseActivity implements
 
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
-
+*/
     @Override
     public void onBackPressed() {
         finish();
@@ -304,7 +417,7 @@ public class OverviewActivity extends BaseActivity implements
         ft.replace(R.id.chartContentFrame, fragment);
         ft.commit();
     }
-
+/*
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -343,6 +456,7 @@ public class OverviewActivity extends BaseActivity implements
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
         startActivity(viewAllTransactionsForCategory);
     }
+    */
 }
 
 
