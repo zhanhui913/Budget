@@ -190,13 +190,13 @@ public class OverviewActivity extends BaseActivity implements
         if(type == BudgetType.EXPENSE){
             totalExpenseCost = totalCost;
             expenseCategoryList = categoryList;
+
+            //set default tab to be the EXPENSE (ie position = 0)
+            changeTopPanelInfo(0);
         }else{
             totalIncomeCost = totalCost;
             incomeCategoryList = categoryList;
         }
-Log.d("TAB", "on complete "+type);
-        //set default tab to be the EXPENSE (ie position = 0)
-        changeTopPanelInfo(0);
     }
 
     private float totalExpenseCost = 0f;
