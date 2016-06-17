@@ -51,8 +51,7 @@ public final class CurrencyTextFormatter {
         if(val.equals("") && !val.equals("-")){
             newTextValue = 0;
         }else if(val.charAt(0) == '('){
-            val = val.replace("(", "-");
-            val = val.replace(")","");
+            val = val.replace("(", "-").replace(")","");
             newTextValue = Float.valueOf(val);
         }else{
             newTextValue = Float.valueOf(val);

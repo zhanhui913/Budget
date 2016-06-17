@@ -329,7 +329,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 List<Category> categoryList1 = myRealm.copyFromRealm(element);
 
                 Log.d("CAT_CAL", "before calling categoryCalculator : there are "+categoryList1.size());
-                CategoryCalculator cc = new CategoryCalculator(getActivity(), ttList, categoryList1, monthReportList.get(month).getMonth(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
+                CategoryCalculator cc = new CategoryCalculator(ttList, categoryList1, monthReportList.get(month).getMonth(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
                     @Override
                     public void onCompleteCalculation(List<Category> catList) {
                         Log.d("CAT_CAL", monthReportList.get(month).getMonth()+" -> COMPLETED, size: "+catList.size());

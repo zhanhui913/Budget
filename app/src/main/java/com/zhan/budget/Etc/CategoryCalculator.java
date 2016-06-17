@@ -1,6 +1,5 @@
 package com.zhan.budget.Etc;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,14 +24,11 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
 
     private final String TAG = "CAT_CAL";
 
-    //private Activity activity;
     private List<Transaction> transactionList;
     private List<Category> categoryList;
     private Date month;
 
-    public CategoryCalculator(Activity activity, List<Transaction> transactionList, List<Category> categoryList, Date month, OnCategoryCalculatorInteractionListener mListener) {
-        // We set the context this way so we don't accidentally leak activities
-        //this.activity = activity;
+    public CategoryCalculator(List<Transaction> transactionList, List<Category> categoryList, Date month, OnCategoryCalculatorInteractionListener mListener) {
         this.transactionList = transactionList;
         this.categoryList = categoryList;
         this.mListener = mListener;

@@ -84,7 +84,13 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         viewHolder.icon.setTextSizeInDP(30);
 
         if(displayCost){
-            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(account.getCost()), Constants.BUDGET_LOCALE));
+            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(account.getCost(), Constants.BUDGET_LOCALE));
+
+            if(account.getCost() >= 0){
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+            }else{
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+            }
         }else{
             viewHolder.cost.setVisibility(View.GONE);
         }

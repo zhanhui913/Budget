@@ -113,6 +113,12 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             if(arrangement == ARRANGEMENT.BUDGET) {
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
 
+                if(category.getCost() >= 0){
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+                }else{
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+                }
+
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
 
                 //ProgressBar
@@ -138,8 +144,13 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
 
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
 
+                if(category.getCost() >= 0){
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+                }else{
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+                }
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
