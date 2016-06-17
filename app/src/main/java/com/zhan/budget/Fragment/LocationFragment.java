@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -52,6 +53,8 @@ public class LocationFragment extends BaseRealmFragment
 
     private PieChartFragment pieChartFragment;
 
+    private TextView centerPanelLeftTextView, centerPanelRightTextView;
+
     public LocationFragment() {
         // Required empty public constructor
     }
@@ -72,6 +75,9 @@ public class LocationFragment extends BaseRealmFragment
     protected void init() {Log.d(TAG, "init");
         super.init();
         currentMonth = DateUtil.refreshMonth(new Date());
+
+        centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
+        centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         locationListview = (RecyclerView) view.findViewById(R.id.locationListview);
         locationListview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -109,11 +115,15 @@ public class LocationFragment extends BaseRealmFragment
 
         locationList.clear();
 
+        //Keep track of total locations count
+        int totalLocationsCount = 0;
+
         //Go through each hashmap
         for(String key: locationHash.keySet()){
             Location location = new Location();
             location.setName(key);
             location.setAmount(locationHash.get(key));
+            totalLocationsCount += locationHash.get(key);
 
             //set random color
             location.setColor(Colors.getRandomColorString(getContext()));
@@ -125,17 +135,17 @@ public class LocationFragment extends BaseRealmFragment
         Collections.sort(locationList, new Comparator<Location>() {
             @Override
             public int compare(Location l1, Location l2) {
-                int amount1 = l1.getAmount();
-                int amount2 = l2.getAmount();
-
                 //descending order
-                return (amount2 - amount1);
+                return (l2.getAmount() - l1.getAmount());
             }
         });
 
         locationAdapter.setLocationList(locationList);
 
         pieChartFragment.setData(locationList);
+
+        String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
+        centerPanelRightTextView.setText(totalLocationsCount + appendString);
     }
 
     private void updateMonthInToolbar(int direction){
@@ -143,6 +153,8 @@ public class LocationFragment extends BaseRealmFragment
 
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+
+        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
         fetchNewLocationData(currentMonth);
     }

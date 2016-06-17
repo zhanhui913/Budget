@@ -22,6 +22,7 @@ import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForAccount;
 import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
@@ -58,7 +59,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private PtrFrameLayout frame;
     private PlusView header;
 
-    private TextView emptyAccountText;
+    private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyAccountText;
 
     private RecyclerView accountListView;
     private AccountListAdapter accountListAdapter;
@@ -97,6 +98,9 @@ public class AccountFragment extends BaseRealmFragment implements
         currentMonth = new Date();
 
         accountList = new ArrayList<>();
+
+        centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
+        centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
         accountListView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -181,7 +185,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private void aggregateAccountInfo(){
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
 
             long startTime, endTime, duration;
 
@@ -192,9 +196,11 @@ public class AccountFragment extends BaseRealmFragment implements
             }
 
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Float doInBackground(Void... voids) {
 
                 startTime = System.nanoTime();
+
+                float totalCost = 0f;
 
                 //Go through each COMPLETED transaction and put them into the correct account
                 for(int t = 0; t < transactionMonthList.size(); t++){
@@ -203,24 +209,26 @@ public class AccountFragment extends BaseRealmFragment implements
                             float transactionPrice = transactionMonthList.get(t).getPrice();
                             float currentAccountPrice = accountList.get(c).getCost();
                             accountList.get(c).setCost(transactionPrice + currentAccountPrice);
+                            totalCost += transactionPrice;
                         }
                     }
                 }
 
-                return null;
+                return totalCost;
             }
 
             @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
+            protected void onPostExecute(Float result) {
+                super.onPostExecute(result);
 
                 for(int i = 0; i < accountList.size(); i++){
                     Log.d("ZHAN1", "category : "+accountList.get(i).getName()+" -> "+accountList.get(i).getCost());
                 }
 
                 accountListAdapter.setAccountList(accountList);
-
                 pieChartFragment.setData(accountList);
+
+                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -331,6 +339,8 @@ public class AccountFragment extends BaseRealmFragment implements
     private void updateMonthInToolbar(int direction, boolean updateAccountInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+
+        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
         if(updateAccountInfo) {
             populateAccountWithInfo();
