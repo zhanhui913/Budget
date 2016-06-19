@@ -139,18 +139,11 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
             }else if(arrangement == ARRANGEMENT.PERCENT){
-
                 viewHolder.dragIcon.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
-
-                if(category.getCost() >= 0){
-                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
-                }else{
-                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
-                }
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
@@ -161,9 +154,15 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
             }else if(arrangement == ARRANGEMENT.MOVE){
                 viewHolder.cost.setVisibility(View.GONE);
+                viewHolder.costTitle.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.VISIBLE);
+            }else if(arrangement == ARRANGEMENT.PERCENT){
+                viewHolder.dragIcon.setVisibility(View.GONE);
+                viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
             }
         }
 

@@ -64,7 +64,6 @@ public class PieChartFragment extends BaseChartFragment {
 
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
-        pieChart.setExtraOffsets(5, 5, 5, 5);
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
         pieChart.setDrawHoleEnabled(true);
@@ -74,12 +73,8 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setCenterTextColor(color);
 
         int textSize = (int) (getResources().getDimension(R.dimen.text_content_size) / getResources().getDisplayMetrics().density);
-
-        Toast.makeText(getContext(), "titile size : "+textSize, Toast.LENGTH_SHORT).show();
-
         pieChart.setCenterTextSize(textSize);
         pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.transparent));
-
 
         // enable rotation of the chart by touch
         pieChart.setRotationEnabled(true);
@@ -113,11 +108,10 @@ public class PieChartFragment extends BaseChartFragment {
     public void setData(List<? extends PieDataCostInterface> list){
         // add a selection listener
         //pieChart.setOnChartValueSelectedListener(this);
+        pieChart.clear();
 
         if(list.size() > 0 && checkEmptyPieDataCost(list)){
             displayPieChart(list);
-        }else{
-            pieChart.clear();
         }
     }
 
@@ -183,7 +177,6 @@ public class PieChartFragment extends BaseChartFragment {
         if(Build.VERSION.SDK_INT >= 21){
             pieChart.setElevation(20);
         }
-
 
         pieChart.invalidate();
     }

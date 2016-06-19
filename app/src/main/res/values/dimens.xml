@@ -31,4 +31,8 @@
 
     <!-- Used only for icons in the item_transaction.xml for account and location property-->
     <dimen name="icon_height">20dp</dimen>
+
+    <dimen name="tab_height">30dp</dimen>
+
+    <dimen name="test_dimen">10sp</dimen>
 </resources>

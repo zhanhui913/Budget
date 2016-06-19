@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,19 +20,24 @@ import android.widget.Toast;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
+import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Fragment.CategoryGenericFragment;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
 import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
+import com.zhan.budget.Fragment.OverviewGenericFragment;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.View.CustomViewPager;
 
 
 import org.parceler.Parcels;
@@ -47,25 +53,27 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class OverviewActivity extends BaseActivity implements
-        CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener{
+    OverviewGenericFragment.OverviewInteractionListener{
 
+    //Charts
     private PercentChartFragment percentChartFragment;
     private BarChartFragment barChartFragment;
     private PieChartFragment pieChartFragment;
 
+    //Expense Income Fragment to list view
+    private OverviewGenericFragment overviewExpenseFragment, overviewIncomeFragment;
+
     private Activity instance;
     private Toolbar toolbar;
     private Date currentMonth;
-    private CircularProgressBar circularProgressBar;
     private TextView totalCostForMonth;
+    private CustomViewPager viewPager;
+    private TabLayout tabLayout;
 
-    private RealmResults<Category> resultsCategory;
-    private RealmResults<Transaction> transactionsResults;
-
-    private List<Transaction> transactionList;
-    private List<Category> categoryList;
-
-    private CategoryGenericRecyclerAdapter categoryPercentListAdapter;
+    private float totalExpenseCost = 0f;
+    private float totalIncomeCost = 0f;
+    private List<Category> expenseCategoryList;
+    private List<Category> incomeCategoryList;
 
     @Override
     protected int getActivityLayout(){
@@ -78,29 +86,14 @@ public class OverviewActivity extends BaseActivity implements
 
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
-        categoryList = new ArrayList<>();
-        RecyclerView categoryListView = (RecyclerView) findViewById(R.id.percentCategoryListView);
-        categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
-        categoryListView.setLayoutManager(new LinearLayoutManager(this));
-
-        categoryListView.setAdapter(categoryPercentListAdapter);
-
-        //Add divider
-        categoryListView.addItemDecoration(
-                new HorizontalDividerItemDecoration.Builder(this)
-                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
-                        .build());
-
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
         totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
 
-        circularProgressBar = (CircularProgressBar) findViewById(R.id.overviewProgressBar);
-
         createToolbar();
         addListeners();
-
-        getCategoryList();
+        createTabs();
+        createCharts();
     }
 
     /**
@@ -113,7 +106,7 @@ public class OverviewActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle("Monthly Expenses");
+            getSupportActionBar().setTitle("Monthly Overview");
         }
     }
 
@@ -126,137 +119,77 @@ public class OverviewActivity extends BaseActivity implements
         });
     }
 
-    //Should be called only the first time when the activity is created
-    private void getCategoryList(){
-        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(this);
-        resultsCategory = myRealm.where(Category.class).findAllAsync();
-        resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
-            @Override
-            public void onChange(RealmResults<Category> element) {
-                element.removeChangeListener(this);
+    private void createTabs(){
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-                categoryList.clear();
-                categoryList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getBaseContext());
-                getMonthReport(currentMonth);
+        overviewExpenseFragment = OverviewGenericFragment.newInstance(BudgetType.EXPENSE, currentMonth);
+        overviewIncomeFragment = OverviewGenericFragment.newInstance(BudgetType.INCOME, currentMonth);
+
+        viewPager = (CustomViewPager) findViewById(R.id.viewPager);
+        viewPager.setPagingEnabled(false);
+
+        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), overviewExpenseFragment, overviewIncomeFragment);
+        viewPager.setAdapter(adapterViewPager);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+                changeTopPanelInfo(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
     }
 
-    private void getMonthReport(Date date){
-        //Refresh these variables
-        final Date month = DateUtil.refreshMonth(date);
+    private void createCharts(){
+        barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
+        percentChartFragment = PercentChartFragment.newInstance(new ArrayList<Category>());
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>());
+        getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
+    }
 
-        //Need to go a day before as Realm's between date does inclusive on both end
-        //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
-        final Date endMonth = DateUtil.getLastDateOfMonth(month);
+    @Override
+    public void onComplete(BudgetType type, List<Category> categoryList, float totalCost){
+        if(type == BudgetType.EXPENSE){
+            totalExpenseCost = totalCost;
+            expenseCategoryList = categoryList;
 
-        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
-
-        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(this);
-        transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
-        transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-
-                if (transactionList != null) {
-                    transactionList.clear();
-                }
-
-                transactionList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getBaseContext());
-                performAsyncCalculation();
-            }
-        });
+            //set default tab to be the EXPENSE (ie position = 0)
+            //Put this here so that it only gets called once.
+            changeTopPanelInfo(0);
+        }else{
+            totalIncomeCost = totalCost;
+            incomeCategoryList = categoryList;
+        }
     }
 
     /**
-     * Perform tedious calculation asynchronously to avoid blocking main thread
+     * Change chart and total cost information that is in the top panel
+     * @param position The tab position
      */
-    private void performAsyncCalculation(){
-        CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
-            @Override
-            public void onCompleteCalculation(List<Category> catList) {
-                Toast.makeText(getApplicationContext(), "DONE CATEGORY CALCULATION", Toast.LENGTH_LONG).show();
-
-                categoryList = catList;
-
-                //Calculate total cost
-                float sumCost = 0f;
-                for(int i = 0; i < categoryList.size(); i++){
-                    sumCost += categoryList.get(i).getCost();
-                }
-
-                //Now calculate percentage for each category
-                for(int i = 0; i < categoryList.size(); i++){
-                    BigDecimal current = BigDecimal.valueOf(categoryList.get(i).getCost());
-                    BigDecimal total = BigDecimal.valueOf(sumCost);
-                    BigDecimal hundred = new BigDecimal(100);
-                    BigDecimal percent = current.divide(total, 4, BigDecimal.ROUND_HALF_EVEN);
-
-                    categoryList.get(i).setPercent(percent.multiply(hundred).floatValue());
-                }
-
-                categoryPercentListAdapter.setCategoryList(categoryList);
-
-                //Once the calculation is done, remove it
-                circularProgressBar.setVisibility(View.GONE);
-
-                //Set total cost for month
-                totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
-
-                barChartFragment = BarChartFragment.newInstance(categoryList);
-                percentChartFragment = PercentChartFragment.newInstance(categoryList);
-                pieChartFragment = PieChartFragment.newInstance(categoryList, true);
-                getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
-            }
-        });
-        cc.execute();
-    }
-
-    private void confirmDelete(final int position){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
-
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
-
-
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
-
-        new AlertDialog.Builder(this)
-                .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getBaseContext(), "DELETE...", Toast.LENGTH_SHORT).show();
-                        deleteCategory(position);
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    private void deleteCategory(int position){
-
-    }
-
-    private void editCategory(int position){
-        Intent editCategoryActivity = new Intent(this, CategoryInfoActivity.class);
-
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
-
-        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
+    private void changeTopPanelInfo(int position){
+        if(position == 0){
+            //Set total cost for month
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, Constants.BUDGET_LOCALE));
+            pieChartFragment.setData(expenseCategoryList);
+        }else if(position == 1){
+            //Set total cost for month
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, Constants.BUDGET_LOCALE));
+            pieChartFragment.setData(incomeCategoryList);
+        }
     }
 
     @Override
@@ -303,45 +236,6 @@ public class OverviewActivity extends BaseActivity implements
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.chartContentFrame, fragment);
         ft.commit();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Adapter listeners
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onDeleteCategory(int position){
-        confirmDelete(position);
-    }
-
-    @Override
-    public void onEditCategory(int position){
-        editCategory(position);
-    }
-
-    @Override
-    public void onPullDownAllow(boolean value){
-        //not being used
-    }
-
-    @Override
-    public void onDoneDrag(){
-        //not being used
-    }
-
-    @Override
-    public void onClick(int position){
-        Toast.makeText(this, "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-        Intent viewAllTransactionsForCategory = new Intent(this, TransactionsForCategory.class);
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
-
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-        startActivity(viewAllTransactionsForCategory);
     }
 }
 
