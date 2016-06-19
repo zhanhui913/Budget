@@ -1,13 +1,9 @@
 package com.zhan.budget.Fragment.Chart;
 
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.util.TypedValue;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -20,7 +16,6 @@ import com.zhan.budget.Model.PieDataCostInterface;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
-import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
 

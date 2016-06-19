@@ -1,14 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,40 +11,23 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
-import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Fragment.CategoryGenericFragment;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
 import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Fragment.OverviewGenericFragment;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
-import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
 
-
-import org.parceler.Parcels;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 public class OverviewActivity extends BaseActivity implements
     OverviewGenericFragment.OverviewInteractionListener{

@@ -15,8 +15,6 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.library.CircularView;
 

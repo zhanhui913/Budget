@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.OverviewActivity;
 import com.zhan.budget.Adapter.MonthReportRecyclerAdapter;
-import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
