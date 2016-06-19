@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -539,7 +537,7 @@ public class SettingFragment extends BaseFragment {
         sortListType.add(sortCSV.CATEGORY.toString());
         sortListType.add(sortCSV.LOCATION.toString());
 
-        View sortDialogView = View.inflate(getContext(), R.layout.alertdialog_account_transaction, null);
+        View sortDialogView = View.inflate(getContext(), R.layout.alertdialog_number_picker, null);
 
         TextView title = (TextView)sortDialogView.findViewById(R.id.title);
         title.setText("Sort by");
