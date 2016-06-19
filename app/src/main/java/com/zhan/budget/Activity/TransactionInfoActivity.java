@@ -476,7 +476,10 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void createAccountDialog(){
         View accountDialogView = View.inflate(instance, R.layout.alertdialog_account_transaction, null);
 
-        final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.accountNumberPicker);
+        final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
+
+        TextView title = (TextView)accountDialogView.findViewById(R.id.title);
+        title.setText("Select Account");
 
         accountNameList = new ArrayList<>();
 

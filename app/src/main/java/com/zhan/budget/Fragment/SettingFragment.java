@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +25,13 @@ import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.View.ExtendedNumberPicker;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -199,7 +202,8 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "csv", Toast.LENGTH_SHORT).show();
-                getTransactionListForCSV();
+                //getTransactionListForCSV();
+                exportCSVSort();
             }
         });
 
@@ -521,10 +525,76 @@ public class SettingFragment extends BaseFragment {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void getTransactionListForCSV(){
+    private enum sortCSV{
+        DATE,
+        CATEGORY,
+        LOCATION
+    }
+
+    private List<String> sortListType;
+
+    private void exportCSVSort(){
+        sortListType = new ArrayList<>();
+        sortListType.add(sortCSV.DATE.toString());
+        sortListType.add(sortCSV.CATEGORY.toString());
+        sortListType.add(sortCSV.LOCATION.toString());
+
+        View sortDialogView = View.inflate(getContext(), R.layout.alertdialog_account_transaction, null);
+
+        TextView title = (TextView)sortDialogView.findViewById(R.id.title);
+        title.setText("Sort by");
+
+        final ExtendedNumberPicker sortPicker = (ExtendedNumberPicker)sortDialogView.findViewById(R.id.numberPicker);
+
+        sortPicker.setMinValue(0);
+        sortPicker.setMaxValue(sortListType.size() - 1);
+        sortPicker.setDisplayedValues(sortListType.toArray(new String[0]));
+        sortPicker.setWrapSelectorWheel(false);
+        sortPicker.setValue(0); //set default
+
+        AlertDialog.Builder sortAlertDialogBuilder = new AlertDialog.Builder(getContext())
+                .setView(sortDialogView)
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //sortPicker.getValue();
+
+                        Toast.makeText(getContext(), "sort by "+sortListType.get(sortPicker.getValue()).toString(), Toast.LENGTH_SHORT).show();
+
+                        String selectedString = sortListType.get(sortPicker.getValue()).toString();
+
+                        getTransactionListForCSV(selectedString);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Reset the selection back to previous
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog sortDialog = sortAlertDialogBuilder.create();
+        sortDialog.show();
+    }
+
+    private void getTransactionListForCSV(String sortType){
         final Realm myRealm = Realm.getDefaultInstance();
         transactionList = new ArrayList<>();
-        transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
+
+        if(sortType.equalsIgnoreCase(sortCSV.DATE.toString())){
+            //Sort by date
+            transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
+        }else if(sortType.equalsIgnoreCase(sortCSV.CATEGORY.toString())){
+            //Sort by Category and then date
+            String[] cat = new String[]{"category.name","date"};
+            Sort[] catSort = new Sort[]{Sort.ASCENDING, Sort.ASCENDING};
+            transactionResults = myRealm.where(Transaction.class).findAllSortedAsync(cat, catSort);
+        }else if(sortType.equalsIgnoreCase(sortCSV.LOCATION.toString())){
+            //Sort by Location and then date
+            String[] loc = new String[]{"location","date"};
+            Sort[] locSort = new Sort[]{Sort.ASCENDING, Sort.ASCENDING};
+            transactionResults = myRealm.where(Transaction.class).findAllSortedAsync(loc, locSort);
+        }
+
         transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {

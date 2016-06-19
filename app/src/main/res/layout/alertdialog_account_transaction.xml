@@ -12,13 +12,12 @@
         <TextView style="@style/AlertDialogTitleStyle"
             android:id="@+id/title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select Account" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <!-- set blockDescendants so that it doesn't auto highlight the first option -->
     <com.zhan.budget.View.ExtendedNumberPicker
-        android:id="@+id/accountNumberPicker"
+        android:id="@+id/numberPicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
