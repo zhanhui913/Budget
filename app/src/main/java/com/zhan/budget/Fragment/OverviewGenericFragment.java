@@ -1,6 +1,5 @@
 package com.zhan.budget.Fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,7 +19,6 @@ import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
@@ -41,7 +39,6 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-
 public class OverviewGenericFragment extends BaseRealmFragment implements
         CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener{
 
@@ -51,7 +48,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private BudgetType budgetType;
 
     private CircularProgressBar circularProgressBar;
-   // private TextView totalCostForMonth;
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
@@ -85,9 +81,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         currentMonth = (Date) getArguments().getSerializable(ARG_2);
 
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.overviewProgressBar);
-        //totalCostForMonth = (TextView) view.findViewById(R.id.totalCostTextView);
-
-
 
         categoryList = new ArrayList<>();
         RecyclerView categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
@@ -127,7 +120,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         final Date month = DateUtil.refreshMonth(date);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(month));
         final Date endMonth = DateUtil.getLastDateOfMonth(month);
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
@@ -182,21 +174,11 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
 
-                //Set total cost for month
-               //totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(sumCost, Constants.BUDGET_LOCALE));
-/*
-                barChartFragment = BarChartFragment.newInstance(categoryList);
-                percentChartFragment = PercentChartFragment.newInstance(categoryList);
-                pieChartFragment = PieChartFragment.newInstance(categoryList, true);
-                getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
-                */
                 mListener.onComplete(budgetType, categoryList, sumCost);
             }
         });
         cc.execute();
     }
-
-
 
     private void confirmDelete(final int position){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
@@ -265,7 +247,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         mListener = null;
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -305,6 +286,11 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         startActivity(viewAllTransactionsForCategory);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Interfaces
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public interface OverviewInteractionListener {
         void onComplete(BudgetType type ,List<Category> categoryList, float totalCost);
