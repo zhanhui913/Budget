@@ -113,12 +113,6 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             if(arrangement == ARRANGEMENT.BUDGET) {
                 viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
 
-                if(category.getCost() >= 0){
-                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
-                }else{
-                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
-                }
-
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
 
                 //ProgressBar
