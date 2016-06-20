@@ -141,7 +141,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         // for any view that will be set as you render a row
         public TextView name, cost;
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn, editBtn, defaultAccountIndicatorOn, defaultAccountIndicatorOff;
+        public ImageView /*deleteBtn,*/ editBtn, defaultAccountIndicatorOn, defaultAccountIndicatorOff;
         public CircularView icon;
 
         // We also create a constructor that accepts the entire item row
@@ -155,7 +155,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
             name = (TextView) itemView.findViewById(R.id.accountName);
             cost = (TextView) itemView.findViewById(R.id.accountCost);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeAccount);
-            deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
+            //deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
             defaultAccountIndicatorOn = (ImageView) itemView.findViewById(R.id.defaultAccountIndicatorOn);
             defaultAccountIndicatorOff = (ImageView) itemView.findViewById(R.id.defaultAccountIndicatorOff);
@@ -200,14 +200,14 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
                     mListener.onClickAccount(getLayoutPosition());
                 }
             });
-
+/*
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onDeleteAccount(getLayoutPosition());
                 }
             });
-
+*/
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

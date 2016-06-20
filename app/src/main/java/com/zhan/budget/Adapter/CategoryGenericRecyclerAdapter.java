@@ -231,7 +231,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn, editBtn;
+        public ImageView /*deleteBtn, */editBtn;
 
         private Drawable defaultDrawable;
 
@@ -251,7 +251,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);
-            deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
+           //deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
 
             defaultDrawable = itemView.getBackground();
@@ -272,12 +272,12 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 }
             });
 
-            deleteBtn.setOnClickListener(new View.OnClickListener() {
+            /*deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onDeleteCategory(getLayoutPosition());
                 }
-            });
+            });*/
         }
 
         @Override

@@ -16,6 +16,7 @@
             android:background="@drawable/budget_green_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
+        <!--
         <ImageView
             android:id="@+id/deleteBtn"
             android:src="@drawable/svg_ic_delete"
@@ -24,6 +25,7 @@
             android:background="@drawable/budget_red_button"
             android:paddingLeft="25dp"
             android:paddingRight="25dp" />
+        -->
     </LinearLayout>
 
     <!-- Surface View -->
