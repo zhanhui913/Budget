@@ -4,7 +4,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.pdfjet.Text;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseActivity;
 import com.zhan.budget.Adapter.OpenSourceRecyclerAdapter;
@@ -25,6 +28,17 @@ public class OpenSourceActivity extends BaseActivity {
 
     @Override
     protected void init(){
+
+        //Remove date icon and cost text view in the right
+        ImageView dateIcon = (ImageView)findViewById(R.id.dateIcon);
+        TextView totalCost = (TextView)findViewById(R.id.totalCostTextView);
+        dateIcon.setVisibility(View.GONE);
+        totalCost.setVisibility(View.GONE);
+
+        //Set author
+        TextView name = (TextView)findViewById(R.id.dateTextView);
+        name.setText("Author : Zhan H. Yap");
+
         createOpenSourceList();
         createToolbar();
         addListeners();
