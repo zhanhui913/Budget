@@ -2,6 +2,7 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -108,13 +109,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
             viewHolder.defaultAccountIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    Snackbar snackbar = Snackbar.make(v, "Set "+account.getName()+" as default account", Snackbar.LENGTH_SHORT);
-
-                    // Changing message text color
-                    View sbView = snackbar.getView();
-                    TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-                    textView.setTextColor(ContextCompat.getColor(context, R.color.day_highlight));
-                    snackbar.show();
+                    Util.createSnackbar(context, v, "Set "+account.getName()+" as default account");
 
                     mListener.onAccountSetAsDefault(account.getId());
                     return false;

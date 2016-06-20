@@ -4,10 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+
+import com.zhan.budget.R;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -180,4 +186,24 @@ public final class Util {
         return value.toCharArray()[0];
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Snackbar
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void createSnackbar(Context context, View v, String value){
+        Snackbar snackbar = Snackbar.make(v, value, Snackbar.LENGTH_SHORT);
+
+        View sbView = snackbar.getView();
+
+        // Change background color
+        sbView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+        // Changing message text color
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        snackbar.show();
+    }
 }

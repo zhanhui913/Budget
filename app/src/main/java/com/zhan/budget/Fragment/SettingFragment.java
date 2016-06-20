@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -29,6 +28,7 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -470,7 +470,7 @@ public class SettingFragment extends BaseFragment {
             updateLastBackupInfo(dateString);
             BudgetPreference.setLastBackup(getContext(), dateString);
 
-            Snackbar.make(getView(), "Backup data successful.", Snackbar.LENGTH_LONG).show();
+            Util.createSnackbar(getContext(), getView(), "Backup data successful.");
 
         }catch(IOException e){
             e.printStackTrace();
@@ -497,14 +497,14 @@ public class SettingFragment extends BaseFragment {
                 }
                 outputStream.close();
 
-                Snackbar.make(getView(), "Restore data successful.", Snackbar.LENGTH_LONG).show();
+                Util.createSnackbar(getContext(), getView(), "Restore data successful.");
 
                 return file.getAbsolutePath();
             }catch(IOException e){
                 e.printStackTrace();
             }
         }else{
-            Snackbar.make(getView(), "Restore data failed as backup file doesn't exist.", Snackbar.LENGTH_LONG).show();
+            Util.createSnackbar(getContext(), getView(), "Restore data failed as backup file doesn't exist.");
         }
 
         return null;
