@@ -25,7 +25,7 @@
 
     <dimen name="text_header_size">25sp</dimen>
     <dimen name="text_title_size">17sp</dimen>
-    <dimen name="text_content_size">12sp</dimen>
+    <dimen name="text_content_size">14sp</dimen>
 
     <dimen name="graph_height">150dp</dimen>
 
@@ -36,6 +36,8 @@
 
     <!-- Used for left and right padding for circular view for calendar selection -->
     <dimen name="calendar_circle_inset">8dp</dimen>
+
+    <dimen name="progressBar_height">5dp</dimen>
 
     <dimen name="test_dimen">10sp</dimen>
 </resources>
