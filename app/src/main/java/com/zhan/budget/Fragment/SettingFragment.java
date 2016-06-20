@@ -24,12 +24,14 @@ import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.ExtendedNumberPicker;
 
 import java.io.File;
@@ -625,9 +627,13 @@ public class SettingFragment extends BaseFragment {
         Collections.sort(transactionList, new Comparator<Transaction>() {
             @Override
             public int compare(Transaction t1, Transaction t2) {
-                int t = t1.getLocation().compareToIgnoreCase(t2.getLocation());
+                int t = 0;
+                if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(t1.getLocation()) &&
+                        Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(t2.getLocation())){
+                    t = t1.getLocation().compareToIgnoreCase(t2.getLocation());
+                }
 
-                //If Location is the same, then compare by Category
+                //If Location is the same or doesnt exist, then compare by Category
                 if(t == 0){
                     t = t1.getCategory().getName().compareToIgnoreCase(t2.getCategory().getName());
                 }
@@ -738,21 +744,21 @@ public class SettingFragment extends BaseFragment {
 
                     //Write a new transaction object to the csv file
                     for(int i = 0; i < transactionList.size(); i++){
-                        fileWriter.append(transactionList.get(i).getCategory().getType().toString());
+                        fileWriter.append(checkNull(transactionList.get(i).getCategory().getType().toString()));
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(DateUtil.convertDateToStringFormat5(transactionList.get(i).getDate()));
+                        fileWriter.append(checkNull(DateUtil.convertDateToStringFormat5(transactionList.get(i).getDate())));
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(transactionList.get(i).getNote());
+                        fileWriter.append(checkNull(transactionList.get(i).getNote()));
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(transactionList.get(i).getCategory().getName());
+                        fileWriter.append(checkNull(transactionList.get(i).getCategory().getName()));
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(""+transactionList.get(i).getPrice());
+                        fileWriter.append(checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), Constants.BUDGET_LOCALE)));
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(transactionList.get(i).getAccount().getName());
+                        fileWriter.append(checkNull(transactionList.get(i).getAccount().getName()));
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(transactionList.get(i).getLocation());
+                        fileWriter.append(checkNull(transactionList.get(i).getLocation()));
                         fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(transactionList.get(i).getDayType().toString());
+                        fileWriter.append(checkNull(transactionList.get(i).getDayType().toString()));
                         fileWriter.append(NEW_LINE_SEPARATOR);
                     }
                     Log.d("SETTINGS_FRAGMENT", "CSV file was created successfully");
@@ -785,6 +791,15 @@ public class SettingFragment extends BaseFragment {
             }
         };
         loader.execute();
+    }
+
+    /**
+     * If string is null, then return empty string. Otherwise return the string value
+     * @param value The string to check if null or not
+     * @return String value
+     */
+    private static String checkNull(String value){
+        return (Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)) ? value : "" ;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
