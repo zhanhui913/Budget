@@ -576,45 +576,77 @@ public class SettingFragment extends BaseFragment {
     private void getTransactionListForCSV(final String sortType){
         final Realm myRealm = Realm.getDefaultInstance();
         transactionList = new ArrayList<>();
+        transactionResults = myRealm.where(Transaction.class).findAllAsync();
+        transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+                transactionList = myRealm.copyFromRealm(element);
 
-        if(sortType.equalsIgnoreCase(sortCSV.DATE.toString()) || sortType.equalsIgnoreCase(sortCSV.LOCATION.toString())){
-            if(sortType.equalsIgnoreCase(sortCSV.DATE.toString())){
-                //Sort by DATE
-                transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
-            }else{
-                //Sort by LOCATION and then DATE
-                String[] loc = new String[]{"location","date"};
-                Sort[] locSort = new Sort[]{Sort.ASCENDING, Sort.ASCENDING};
-                transactionResults = myRealm.where(Transaction.class).findAllSortedAsync(loc, locSort);
+                if(sortType.equalsIgnoreCase(sortCSV.DATE.toString())){
+                    sortByDate();
+                }else if(sortType.equalsIgnoreCase(sortCSV.CATEGORY.toString())){
+                    sortByCategory();
+                } else if(sortType.equalsIgnoreCase(sortCSV.LOCATION.toString())){
+                    sortByLocation();
+                }else if(sortType.equalsIgnoreCase(sortCSV.ACCOUNT.toString())){
+                    sortByAccount();
+                }
+
+                myRealm.close();
             }
+        });
+    }
 
-            transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-                @Override
-                public void onChange(RealmResults<Transaction> element) {
-                    element.removeChangeListener(this);
-                    transactionList = myRealm.copyFromRealm(element);
-                    myRealm.close();
-                    exportCSV();
+    private void sortByDate(){
+        Collections.sort(transactionList, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                int t = t1.getDate().compareTo(t2.getDate());
+
+                //If Date is the same, then compare by Category
+                if(t == 0){
+                    t = t1.getCategory().getName().compareToIgnoreCase(t2.getCategory().getName());
                 }
-            });
-        }else if(sortType.equalsIgnoreCase(sortCSV.CATEGORY.toString()) || sortType.equalsIgnoreCase(sortCSV.ACCOUNT.toString())){
-            transactionResults = myRealm.where(Transaction.class).findAllAsync();
 
-            transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-                @Override
-                public void onChange(RealmResults<Transaction> element) {
-                    element.removeChangeListener(this);
-                    transactionList = myRealm.copyFromRealm(element);
-
-                    if(sortType.equalsIgnoreCase(sortCSV.CATEGORY.toString())){
-                        sortByCategory();
-                    }else if(sortType.equalsIgnoreCase(sortCSV.ACCOUNT.toString())){
-                        sortByAccount();
-                    }
-                    myRealm.close();
+                //If Category name is the same, then compare by price
+                if(t == 0){
+                    t = (int)t1.getPrice() - (int)t2.getPrice();
                 }
-            });
-        }
+
+                return t;
+            }
+        });
+
+        exportCSV();
+    }
+
+    private void sortByLocation(){
+        Collections.sort(transactionList, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                int t = t1.getLocation().compareToIgnoreCase(t2.getLocation());
+
+                //If Location is the same, then compare by Category
+                if(t == 0){
+                    t = t1.getCategory().getName().compareToIgnoreCase(t2.getCategory().getName());
+                }
+
+                //If Category name is the same, then compare by date
+                if(t == 0){
+                    t = t1.getDate().compareTo(t2.getDate());
+                }
+
+                //If date is the same, then compare by price
+                if(t == 0){
+                    t = (int)t1.getPrice() - (int)t2.getPrice();
+                }
+
+                return t;
+            }
+        });
+
+        exportCSV();
     }
 
     private void sortByCategory(){
@@ -626,6 +658,11 @@ public class SettingFragment extends BaseFragment {
                 //If Category name is the same, then compare by date
                 if(t == 0){
                     t = t1.getDate().compareTo(t2.getDate());
+                }
+
+                //If date is the same, then compare by price
+                if(t == 0){
+                    t = (int)t1.getPrice() - (int)t2.getPrice();
                 }
 
                 return t;
@@ -651,6 +688,11 @@ public class SettingFragment extends BaseFragment {
                     t = t1.getDate().compareTo(t2.getDate());
                 }
 
+                //If date is the same, then compare by price
+                if(t == 0){
+                    t = (int)t1.getPrice() - (int)t2.getPrice();
+                }
+
                 return t;
             }
         });
@@ -664,7 +706,7 @@ public class SettingFragment extends BaseFragment {
         final String NEW_LINE_SEPARATOR = "\n";
 
         //CSV file header
-        final String FILE_HEADER = "Type, Date, Note, Category, Price, Account";
+        final String FILE_HEADER = "Type, Date, Note, Category, Price, Account, Location, Completed?";
 
         File root = Environment.getExternalStorageDirectory();
         final File csvFile = new File(root, Constants.CSV_NAME);
@@ -707,6 +749,10 @@ public class SettingFragment extends BaseFragment {
                         fileWriter.append(""+transactionList.get(i).getPrice());
                         fileWriter.append(COMMA_DELIMITER);
                         fileWriter.append(transactionList.get(i).getAccount().getName());
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(transactionList.get(i).getLocation());
+                        fileWriter.append(COMMA_DELIMITER);
+                        fileWriter.append(transactionList.get(i).getDayType().toString());
                         fileWriter.append(NEW_LINE_SEPARATOR);
                     }
                     Log.d("SETTINGS_FRAGMENT", "CSV file was created successfully");
