@@ -24,6 +24,7 @@ import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -39,6 +40,8 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -512,7 +515,6 @@ public class SettingFragment extends BaseFragment {
         return null;
     }
 
-
     private void updateLastBackupInfo(String value){
         backupContent.setText("last backup : "+value);
     }
@@ -526,6 +528,7 @@ public class SettingFragment extends BaseFragment {
     private enum sortCSV{
         DATE,
         CATEGORY,
+        ACCOUNT,
         LOCATION
     }
 
@@ -535,6 +538,7 @@ public class SettingFragment extends BaseFragment {
         sortListType = new ArrayList<>();
         sortListType.add(sortCSV.DATE.toString());
         sortListType.add(sortCSV.CATEGORY.toString());
+        sortListType.add(sortCSV.ACCOUNT.toString());
         sortListType.add(sortCSV.LOCATION.toString());
 
         View sortDialogView = View.inflate(getContext(), R.layout.alertdialog_number_picker, null);
@@ -552,14 +556,9 @@ public class SettingFragment extends BaseFragment {
 
         AlertDialog.Builder sortAlertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setView(sortDialogView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SELECT", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //sortPicker.getValue();
-
-                        Toast.makeText(getContext(), "sort by "+sortListType.get(sortPicker.getValue()).toString(), Toast.LENGTH_SHORT).show();
-
                         String selectedString = sortListType.get(sortPicker.getValue()).toString();
-
                         getTransactionListForCSV(selectedString);
                     }
                 })
@@ -574,34 +573,89 @@ public class SettingFragment extends BaseFragment {
         sortDialog.show();
     }
 
-    private void getTransactionListForCSV(String sortType){
+    private void getTransactionListForCSV(final String sortType){
         final Realm myRealm = Realm.getDefaultInstance();
         transactionList = new ArrayList<>();
 
-        if(sortType.equalsIgnoreCase(sortCSV.DATE.toString())){
-            //Sort by date
-            transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
-        }else if(sortType.equalsIgnoreCase(sortCSV.CATEGORY.toString())){
-            //Sort by Category and then date
-            String[] cat = new String[]{"category.name","date"};
-            Sort[] catSort = new Sort[]{Sort.ASCENDING, Sort.ASCENDING};
-            transactionResults = myRealm.where(Transaction.class).findAllSortedAsync(cat, catSort);
-        }else if(sortType.equalsIgnoreCase(sortCSV.LOCATION.toString())){
-            //Sort by Location and then date
-            String[] loc = new String[]{"location","date"};
-            Sort[] locSort = new Sort[]{Sort.ASCENDING, Sort.ASCENDING};
-            transactionResults = myRealm.where(Transaction.class).findAllSortedAsync(loc, locSort);
-        }
+        if(sortType.equalsIgnoreCase(sortCSV.DATE.toString()) || sortType.equalsIgnoreCase(sortCSV.LOCATION.toString())){
+            if(sortType.equalsIgnoreCase(sortCSV.DATE.toString())){
+                //Sort by DATE
+                transactionResults = myRealm.where(Transaction.class).findAllSortedAsync("date", Sort.ASCENDING);
+            }else{
+                //Sort by LOCATION and then DATE
+                String[] loc = new String[]{"location","date"};
+                Sort[] locSort = new Sort[]{Sort.ASCENDING, Sort.ASCENDING};
+                transactionResults = myRealm.where(Transaction.class).findAllSortedAsync(loc, locSort);
+            }
 
-        transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+                @Override
+                public void onChange(RealmResults<Transaction> element) {
+                    element.removeChangeListener(this);
+                    transactionList = myRealm.copyFromRealm(element);
+                    myRealm.close();
+                    exportCSV();
+                }
+            });
+        }else if(sortType.equalsIgnoreCase(sortCSV.CATEGORY.toString()) || sortType.equalsIgnoreCase(sortCSV.ACCOUNT.toString())){
+            transactionResults = myRealm.where(Transaction.class).findAllAsync();
+
+            transactionResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+                @Override
+                public void onChange(RealmResults<Transaction> element) {
+                    element.removeChangeListener(this);
+                    transactionList = myRealm.copyFromRealm(element);
+
+                    if(sortType.equalsIgnoreCase(sortCSV.CATEGORY.toString())){
+                        sortByCategory();
+                    }else if(sortType.equalsIgnoreCase(sortCSV.ACCOUNT.toString())){
+                        sortByAccount();
+                    }
+                    myRealm.close();
+                }
+            });
+        }
+    }
+
+    private void sortByCategory(){
+        Collections.sort(transactionList, new Comparator<Transaction>() {
             @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-                transactionList = myRealm.copyFromRealm(element);
-                myRealm.close();
-                exportCSV();
+            public int compare(Transaction t1, Transaction t2) {
+                int t = t1.getCategory().getName().compareToIgnoreCase(t2.getCategory().getName());
+
+                //If Category name is the same, then compare by date
+                if(t == 0){
+                    t = t1.getDate().compareTo(t2.getDate());
+                }
+
+                return t;
             }
         });
+
+        exportCSV();
+    }
+
+    private void sortByAccount(){
+        Collections.sort(transactionList, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction t1, Transaction t2) {
+                int t = t1.getAccount().getName().compareToIgnoreCase(t2.getAccount().getName());
+
+                //If Account name is the same, then compare by Category
+                if(t == 0){
+                    t = t1.getCategory().getName().compareToIgnoreCase(t2.getCategory().getName());
+                }
+
+                //If Category name is the same, then compare by date
+                if(t == 0){
+                    t = t1.getDate().compareTo(t2.getDate());
+                }
+
+                return t;
+            }
+        });
+
+        exportCSV();
     }
 
     private void exportCSV(){
