@@ -166,6 +166,13 @@ public class CategoryInfoActivity extends BaseActivity implements
             }
         });
 
+        categoryNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeName();
+            }
+        });
+
         deleteCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,6 +184,13 @@ public class CategoryInfoActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Change budget Category ", Toast.LENGTH_SHORT).show();
+                changeBudget();
+            }
+        });
+
+        categoryBudgetTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 changeBudget();
             }
         });
