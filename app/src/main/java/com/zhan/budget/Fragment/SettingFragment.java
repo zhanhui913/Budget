@@ -23,6 +23,7 @@ import com.zhan.budget.Activity.Settings.OpenSourceActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.BuildConfig;
+import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Realm.Category;
@@ -707,6 +708,7 @@ public class SettingFragment extends BaseFragment {
     }
 
     private void exportCSV(){
+        /*
         //Delimiter used in CSV file
         final String COMMA_DELIMITER = ",";
         final String NEW_LINE_SEPARATOR = "\n";
@@ -790,17 +792,22 @@ public class SettingFragment extends BaseFragment {
                 Log.d("SETTINGS_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
         };
-        loader.execute();
+        loader.execute();*/
+
+        File root = Environment.getExternalStorageDirectory();
+        final File csvFile = new File(root, Constants.CSV_NAME);
+
+        CSVFormatter csvFormatter = new CSVFormatter(getContext(), transactionList, csvFile);
+        csvFormatter.setCSVInteraction(new CSVFormatter.OnCSVInteractionListener() {
+            @Override
+            public void onCompleteCSV(boolean value) {
+                email(csvFile);
+            }
+        });
+        csvFormatter.execute();
     }
 
-    /**
-     * If string is null, then return empty string. Otherwise return the string value
-     * @param value The string to check if null or not
-     * @return String value
-     */
-    private static String checkNull(String value){
-        return (Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)) ? value : "" ;
-    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

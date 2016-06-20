@@ -150,6 +150,15 @@ public final class Util {
     }
 
     /**
+     * If string is null, then return empty string. Otherwise return the string value
+     * @param value The string to check if null or not
+     * @return String value
+     */
+    public static String checkNull(String value){
+        return (Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)) ? value : "" ;
+    }
+
+    /**
      * Hides the soft keyboard
      */
     public static void hideSoftKeyboard(Activity activity) {
