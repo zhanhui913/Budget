@@ -1,21 +1,17 @@
 package com.zhan.budget.Etc;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
@@ -55,7 +51,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         View promptView = View.inflate(context, R.layout.budget_progress_dialog, null);
 
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
-        genericTitle.setText(" zhan title");
+        genericTitle.setText("CSV");
 
         mDialog = (RoundCornerProgressBar) promptView.findViewById(R.id.progressBar);
         mDialog.setMax(transactionList.size());
