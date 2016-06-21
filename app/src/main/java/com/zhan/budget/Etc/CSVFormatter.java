@@ -48,7 +48,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         this.csvFile = csvFile;
 
         //Option 1
-        View promptView = View.inflate(context, R.layout.budget_progress_dialog, null);
+        View promptView = View.inflate(context, R.layout.alertdialog_progressbar, null);
 
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         genericTitle.setText("CSV");
