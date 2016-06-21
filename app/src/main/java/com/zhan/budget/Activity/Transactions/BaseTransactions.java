@@ -8,9 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -19,6 +21,7 @@ import com.zhan.budget.Util.DateUtil;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public abstract class BaseTransactions extends BaseRealmActivity implements
@@ -63,6 +66,12 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         transactionListView = (RecyclerView) findViewById(R.id.transactionListView);
         transactionListView.setLayoutManager(new LinearLayoutManager(instance));
 
+        //Add divider
+        transactionListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(instance)
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
+
         titleNameTextView = (TextView) findViewById(R.id.genericName);
         titleBalanceTextView = (TextView) findViewById(R.id.transactionBalance);
 
@@ -101,10 +110,23 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     }
 
     protected void updateTransactionList(){
-        transactionList = myRealm.copyFromRealm(transactionsForMonth);
-        transactionAdapter.setTransactionList(transactionList);
+        //Filter out Transactions with SCHEDULED dayType
+        transactionsForMonth.where().equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
 
-        updateTransactionStatus();
+        transactionsForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+
+                transactionList = myRealm.copyFromRealm(transactionsForMonth);
+                transactionAdapter.setTransactionList(transactionList);
+                updateTransactionStatus();
+
+                float total = element.sum("price").floatValue();
+
+                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
+            }
+        });
     }
 
     protected void updateTransactionStatus(){

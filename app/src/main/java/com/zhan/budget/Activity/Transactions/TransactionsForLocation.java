@@ -34,19 +34,13 @@ public class TransactionsForLocation extends BaseTransactions {
         transactionsForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
-                //element.removeChangeListener(this);
+                element.removeChangeListener(this);
 
                 transactionList = myRealm.copyFromRealm(element);
                 float total = element.sum("price").floatValue();
 
                 transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
-
-                //Add divider
-                transactionListView.addItemDecoration(
-                        new HorizontalDividerItemDecoration.Builder(instance)
-                                .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
-                                .build());
 
                 Log.d("ZHAN", "there are " + transactionList.size() + " transactions in this account " + location + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
