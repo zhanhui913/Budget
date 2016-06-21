@@ -37,5 +37,10 @@
     <!-- Use default action bar size that is pre-defined-->
     <dimen name="tab_height">@dimen/abc_action_bar_default_height_material</dimen>
 
+    <!-- Used for left and right padding for circular view for calendar selection -->
+    <dimen name="calendar_circle_inset">10dp</dimen>
+
+    <dimen name="progressBar_height">7dp</dimen>
+
     <dimen name="test_dimen">100sp</dimen>
 </resources>

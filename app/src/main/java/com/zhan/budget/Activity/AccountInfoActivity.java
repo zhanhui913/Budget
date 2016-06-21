@@ -141,6 +141,13 @@ public class AccountInfoActivity extends BaseActivity implements
             }
         });
 
+        accountNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeName();
+            }
+        });
+
         deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

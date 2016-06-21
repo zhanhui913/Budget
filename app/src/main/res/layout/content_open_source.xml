@@ -9,18 +9,27 @@
     tools:context=".Activity.Settings.OpenSourceActivity"
     tools:showIn="@layout/activity_open_source">
 
-    <ImageView
-        android:id="@+id/appIcon"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingTop="@dimen/item_top_padding"
-        android:paddingBottom="@dimen/item_bottom_padding"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_height="@dimen/graph_height"
+        android:background="?attr/themeColorHighlight">
+
+        <ImageView
+            android:id="@+id/appIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <include layout="@layout/center_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/openSourceListView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

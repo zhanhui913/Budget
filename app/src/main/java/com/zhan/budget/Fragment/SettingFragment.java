@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -473,7 +472,7 @@ public class SettingFragment extends BaseFragment {
             updateLastBackupInfo(dateString);
             BudgetPreference.setLastBackup(getContext(), dateString);
 
-            Snackbar.make(getView(), "Backup data successful.", Snackbar.LENGTH_LONG).show();
+            Util.createSnackbar(getContext(), getView(), "Backup data successful.");
 
         }catch(IOException e){
             e.printStackTrace();
@@ -499,14 +498,14 @@ public class SettingFragment extends BaseFragment {
                 }
                 outputStream.close();
 
-                Snackbar.make(getView(), "Restore data successful.", Snackbar.LENGTH_LONG).show();
+                Util.createSnackbar(getContext(), getView(), "Restore data successful.");
 
                 return file.getAbsolutePath();
             }catch(IOException e){
                 e.printStackTrace();
             }
         }else{
-            Snackbar.make(getView(), "Restore data failed as backup file doesn't exist.", Snackbar.LENGTH_LONG).show();
+            Util.createSnackbar(getContext(), getView(), "Restore data failed as backup file doesn't exist.");
         }
 
         return null;
