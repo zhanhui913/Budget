@@ -103,6 +103,31 @@ public class LocationFragment extends BaseRealmFragment
         updateMonthInToolbar(0);
     }
 
+    private void updateMonthInToolbar(int direction){
+        locationListview.smoothScrollToPosition(0);
+
+        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+
+        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+
+        fetchNewLocationData(currentMonth);
+    }
+
+    private void fetchNewLocationData(Date month){
+        Date endMonth = DateUtil.getLastDateOfMonth(month);
+
+        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
+        transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+
+                countLocationList(myRealm.copyFromRealm(element));
+            }
+        });
+    }
+
     private void countLocationList(List<Transaction> ttList){
         HashMap<String, Integer> locationHash = new HashMap<>();
 
@@ -151,31 +176,6 @@ public class LocationFragment extends BaseRealmFragment
         centerPanelRightTextView.setText(totalLocationsCount + appendString);
     }
 
-    private void updateMonthInToolbar(int direction){
-        locationListview.smoothScrollToPosition(0);
-
-        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
-
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
-
-        fetchNewLocationData(currentMonth);
-    }
-
-    private void fetchNewLocationData(Date month){
-        Date endMonth = DateUtil.getLastDateOfMonth(month);
-
-        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
-        transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-
-                countLocationList(myRealm.copyFromRealm(element));
-            }
-        });
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -187,8 +187,8 @@ public class LocationFragment extends BaseRealmFragment
                 Toast.makeText(getContext(), "Location data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
 
                 if(hasChanged){
-                    //If something has been changed, update the list
-                    updateMonthInToolbar(0);
+                    //If something has been changed, update the list and the pie chart
+                    fetchNewLocationData(currentMonth);
                 }
             }
         }

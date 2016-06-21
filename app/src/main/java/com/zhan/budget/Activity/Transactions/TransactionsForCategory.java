@@ -61,9 +61,4 @@ public class TransactionsForCategory extends BaseTransactions {
             }
         });
     }
-
-    @Override
-    protected void changedInList(){
-        Toast.makeText(getBaseContext(), "Change in list in categorys", Toast.LENGTH_SHORT).show();
-    }
 }

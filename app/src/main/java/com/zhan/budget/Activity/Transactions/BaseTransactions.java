@@ -109,6 +109,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         });
     }
 
+    /**
+     * This gets called when a Transaction has been deleted or its dayType changed.
+     */
     protected void updateTransactionList(){
         //Filter out Transactions with SCHEDULED dayType
         transactionsForMonth.where().equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
@@ -161,11 +164,6 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     protected abstract void getAllTransactionsForMonth();
 
-    /**
-     * Called whenever a transaction has been deleted or has its dayType changed.
-     */
-    protected abstract void changedInList();
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -182,7 +180,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     }
 
     @Override
-    public void onClickTransaction(int position){}
+    public void onClickTransaction(int position){
+        //Clicking the Transaction here does nothing
+    }
 
     @Override
     public void onDeleteTransaction(int position){
@@ -190,18 +190,15 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         transactionsForMonth.deleteFromRealm(position);
         myRealm.commitTransaction();
 
-        changedInList();
+        isChanged = true;
 
         updateTransactionList();
     }
 
     @Override
     public void onApproveTransaction(int position){
-        myRealm.beginTransaction();
-        transactionsForMonth.get(position).setDayType(DayType.COMPLETED.toString());
-        myRealm.commitTransaction();
-
-        updateTransactionList();
+        //Not possible to approve a Transaction (ie: going from SCHEDULED to COMPLETED as
+        //we only display COMPLETED Transactions);
     }
 
     @Override
@@ -210,7 +207,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         transactionsForMonth.get(position).setDayType(DayType.SCHEDULED.toString());
         myRealm.commitTransaction();
 
-        changedInList();
+        isChanged = true;
 
         updateTransactionList();
     }

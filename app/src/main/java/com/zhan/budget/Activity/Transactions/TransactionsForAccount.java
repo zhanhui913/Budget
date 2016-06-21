@@ -61,10 +61,4 @@ public class TransactionsForAccount extends BaseTransactions {
             }
         });
     }
-
-    @Override
-    protected void changedInList(){
-        Toast.makeText(getBaseContext(), "Change in list in account", Toast.LENGTH_SHORT).show();
-    }
-
 }

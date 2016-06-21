@@ -52,11 +52,4 @@ public class TransactionsForLocation extends BaseTransactions {
             }
         });
     }
-
-    @Override
-    protected void changedInList(){
-        Toast.makeText(getBaseContext(), "Change in list in location", Toast.LENGTH_SHORT).show();
-        isChanged = true;
-    }
-
 }
