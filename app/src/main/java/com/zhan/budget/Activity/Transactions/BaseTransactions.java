@@ -220,15 +220,4 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         //no need to implement this as this activity has no pull down to refresh feature
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Lifecycle
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        transactionsForMonth.removeChangeListeners();
-    }
 }
