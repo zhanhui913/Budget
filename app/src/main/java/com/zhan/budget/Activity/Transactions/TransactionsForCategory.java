@@ -1,6 +1,7 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
@@ -59,5 +60,10 @@ public class TransactionsForCategory extends BaseTransactions {
                 updateTransactionStatus();
             }
         });
+    }
+
+    @Override
+    protected void changedInList(){
+        Toast.makeText(getBaseContext(), "Change in list in categorys", Toast.LENGTH_SHORT).show();
     }
 }

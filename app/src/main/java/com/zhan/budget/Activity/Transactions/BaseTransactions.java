@@ -1,6 +1,7 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +35,13 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     private Toolbar toolbar;
     private TextView titleNameTextView, titleBalanceTextView, emptyListTextView;
+
+    /**
+     * True if the user changes the status of at least 1 Transaction from COMPLETED
+     * to SCHEDULED or deleted that Transaction.
+     * False otherwise.
+     */
+    protected boolean isChanged = false;
 
     @Override
     protected int getActivityLayout(){
@@ -84,6 +92,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra(Constants.CHANGED, isChanged);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -128,6 +139,11 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     protected abstract void getAllTransactionsForMonth();
 
+    /**
+     * Called whenever a transaction has been deleted or has its dayType changed.
+     */
+    protected abstract void changedInList();
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -136,6 +152,10 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(Constants.CHANGED, isChanged);
+        setResult(RESULT_OK, intent);
+
         finish();
     }
 
@@ -147,6 +167,8 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         myRealm.beginTransaction();
         transactionsForMonth.deleteFromRealm(position);
         myRealm.commitTransaction();
+
+        changedInList();
 
         updateTransactionList();
     }
@@ -166,11 +188,25 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         transactionsForMonth.get(position).setDayType(DayType.SCHEDULED.toString());
         myRealm.commitTransaction();
 
+        changedInList();
+
         updateTransactionList();
     }
 
     @Override
     public void onPullDownAllow(boolean value){
         //no need to implement this as this activity has no pull down to refresh feature
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        transactionsForMonth.removeChangeListeners();
     }
 }

@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.util.Log;
+import android.widget.Toast;
+
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
@@ -58,6 +60,11 @@ public class TransactionsForAccount extends BaseTransactions {
                 updateTransactionStatus();
             }
         });
+    }
+
+    @Override
+    protected void changedInList(){
+        Toast.makeText(getBaseContext(), "Change in list in account", Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -21,11 +21,14 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Location;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -173,6 +176,24 @@ public class LocationFragment extends BaseRealmFragment
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
+            if(requestCode == Constants.RETURN_HAS_CHANGED){
+
+
+                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+                Toast.makeText(getContext(), "Location data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
+
+                if(hasChanged){
+                    //If something has been changed, update the list
+                    updateMonthInToolbar(0);
+                }
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Lifecycle
@@ -244,6 +265,6 @@ public class LocationFragment extends BaseRealmFragment
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
-        startActivity(viewAllTransactionsForLocation);
+        startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_HAS_CHANGED);
     }
 }

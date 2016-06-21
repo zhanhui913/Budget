@@ -2,11 +2,8 @@ package com.zhan.budget.Etc;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
@@ -38,7 +35,7 @@ public class BudgetProgressDialog extends ProgressDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.budget_progress_dialog);
+        setContentView(R.layout.alertdialog_progressbar);
 
         titleTextView = (TextView) findViewById(R.id.genericTitle);
         progressBar = (RoundCornerProgressBar) findViewById(R.id.progressBar);

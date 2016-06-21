@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.util.Log;
+import android.widget.Toast;
+
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
@@ -32,7 +34,7 @@ public class TransactionsForLocation extends BaseTransactions {
         transactionsForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
+                //element.removeChangeListener(this);
 
                 transactionList = myRealm.copyFromRealm(element);
                 float total = element.sum("price").floatValue();
@@ -55,6 +57,12 @@ public class TransactionsForLocation extends BaseTransactions {
                 updateTransactionStatus();
             }
         });
+    }
+
+    @Override
+    protected void changedInList(){
+        Toast.makeText(getBaseContext(), "Change in list in location", Toast.LENGTH_SHORT).show();
+        isChanged = true;
     }
 
 }
