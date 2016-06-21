@@ -2,10 +2,14 @@ package com.zhan.budget.Etc;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.zhan.budget.R;
 
 /**
@@ -13,8 +17,8 @@ import com.zhan.budget.R;
  */
 public class BudgetProgressDialog extends ProgressDialog {
 
-    private ProgressBar progressBar;
-    private TextView title;
+    private RoundCornerProgressBar progressBar;
+    private TextView titleTextView;
 
     public static ProgressDialog ctor(Context context) {
         BudgetProgressDialog dialog = new BudgetProgressDialog(context);
@@ -36,12 +40,14 @@ public class BudgetProgressDialog extends ProgressDialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.budget_progress_dialog);
 
-        title = (TextView) findViewById(R.id.genericTitle);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        titleTextView = (TextView) findViewById(R.id.genericTitle);
+        progressBar = (RoundCornerProgressBar) findViewById(R.id.progressBar);
+        progressBar.setProgressColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     }
 
-    public void setTitle(String value){
-        title.setText(value);
+    @Override
+    public void setTitle(CharSequence title){
+        titleTextView.setText(""+title);
     }
 
     @Override

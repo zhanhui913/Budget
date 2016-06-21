@@ -795,7 +795,11 @@ public class SettingFragment extends BaseFragment {
         csvFormatter.setCSVInteraction(new CSVFormatter.OnCSVInteractionListener() {
             @Override
             public void onCompleteCSV(boolean value) {
-                email(csvFile);
+                if(value){
+                    email(csvFile);
+                }else{
+                    Util.createSnackbar(getContext(), getView(), "CSV creation failed.");
+                }
             }
         });
         csvFormatter.execute();

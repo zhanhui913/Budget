@@ -1,12 +1,21 @@
 package com.zhan.budget.Etc;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
@@ -21,7 +30,11 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
     private Context context;
     private List<Transaction> transactionList;
-    private final ProgressDialog mDialog;
+    //private final ProgressDialog mDialog;
+    private RoundCornerProgressBar mDialog;
+    private AlertDialog alertDialog;
+    private TextView percentTextView, progressTextView;
+
     private OnCSVInteractionListener mListener;
 
     //Delimiter used in CSV file
@@ -38,7 +51,63 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         this.transactionList = transactionList;
         this.csvFile = csvFile;
 
-        mDialog = new ProgressDialog(context);
+        //Option 1
+        View promptView = View.inflate(context, R.layout.budget_progress_dialog, null);
+
+        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
+        genericTitle.setText(" zhan title");
+
+        mDialog = (RoundCornerProgressBar) promptView.findViewById(R.id.progressBar);
+        mDialog.setMax(transactionList.size());
+        mDialog.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+        percentTextView = (TextView)promptView.findViewById(R.id.percentTextView);
+        progressTextView = (TextView)promptView.findViewById(R.id.progressTextView);
+
+        percentTextView.setText("0%");
+        progressTextView.setText("0/"+transactionList.size());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setView(promptView)
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+
+                        CSVFormatter.this.cancel(true);
+
+                        if(mListener != null){
+                            mListener.onCompleteCSV(false);
+                        }
+                    }
+                });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+
+
+
+
+
+
+        //Option 2
+        /*mDialog = new BudgetProgressDialog(context);
+        mDialog.show();
+        mDialog.setTitle("custom title");
+        mDialog.setProgress(0); //start at 0
+        mDialog.setMax(transactionList.size());
+        mDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                CSVFormatter.this.cancel(true);
+
+                if(mListener != null){
+                    mListener.onCompleteCSV(false);
+                }
+            }
+        });*/
+
+        /*
+        //Option 3
         mDialog.setMax(transactionList.size());
         mDialog.setMessage("CSVing....");
         mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -53,8 +122,9 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
                     mListener.onCompleteCSV(false);
                 }
             }
-        });
-        mDialog.show();
+        });*/
+
+       // mDialog.show();
     }
 
     public void setCSVInteraction(OnCSVInteractionListener mListener){
@@ -124,11 +194,13 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
     @Override
     protected void onProgressUpdate(Integer... progress){
         mDialog.setProgress(progress[0]);
+        percentTextView.setText(Math.round((progress[0] / (float)transactionList.size()) * 100)+"%");
+        progressTextView.setText(progress[0]+"/"+transactionList.size());
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        mDialog.dismiss();
+        alertDialog.dismiss();
 
         if(mListener != null){
             mListener.onCompleteCSV(result);
