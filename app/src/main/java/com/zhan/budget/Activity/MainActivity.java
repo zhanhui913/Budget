@@ -97,6 +97,8 @@ public class MainActivity extends BaseActivity
                 settingFragment.backUpData1();
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                 settingFragment.restore();
+            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
+                settingFragment.exportCSVSort();
             }
         }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
             boolean showRationale = true;
@@ -105,6 +107,8 @@ public class MainActivity extends BaseActivity
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
+                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
 
             if(showRationale){
@@ -115,6 +119,8 @@ public class MainActivity extends BaseActivity
                     settingFragment.requestFilePermissionToWrite();
                 }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                     settingFragment.requestFilePermissionToRead();
+                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
+                    settingFragment.requestFilePermissionToWriteCSV();
                 }
             }else{
                 // Permission was denied while checking the check box "Never ask again"

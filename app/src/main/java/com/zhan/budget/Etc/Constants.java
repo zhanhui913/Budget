@@ -16,8 +16,9 @@ public class Constants {
     public static final Locale BUDGET_LOCALE = Locale.CANADA;
 
     //Permissions for Android M
-    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1; //to create realm backup
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2; //to read realm backup
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_CSV = 3; //to create csv
 
     //First time
     public static final String FIRST_TIME = "First Time";

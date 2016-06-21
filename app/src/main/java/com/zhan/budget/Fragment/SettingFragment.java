@@ -201,7 +201,8 @@ public class SettingFragment extends BaseFragment {
             public void onClick(View v) {
                 Toast.makeText(getContext(), "csv", Toast.LENGTH_SHORT).show();
                 //getTransactionListForCSV();
-                exportCSVSort();
+                //exportCSVSort();
+                requestFilePermissionToWriteCSV();
             }
         });
 
@@ -530,7 +531,31 @@ public class SettingFragment extends BaseFragment {
 
     private List<String> sortListType;
 
-    private void exportCSVSort(){
+    public void requestFilePermissionToWriteCSV(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Permission denied")
+                    .setMessage("Without this permission the app is unable to create the CSV.")
+                    .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
+                        }
+                    })
+                    .setNegativeButton("Deny", null)
+                    .create()
+                    .show();
+
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
+        }
+    }
+
+    public void exportCSVSort(){
         sortListType = new ArrayList<>();
         sortListType.add(sortCSV.DATE.toString());
         sortListType.add(sortCSV.CATEGORY.toString());
