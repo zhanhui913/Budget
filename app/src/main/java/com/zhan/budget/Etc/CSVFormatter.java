@@ -4,10 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
-import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
@@ -32,9 +30,6 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
     //CSV file header
     final String FILE_HEADER = "Type, Date, Note, Category, Price, Account, Location, Completed?";
-
-    //File root = Environment.getExternalStorageDirectory();
-    //final File csvFile = new File(root, Constants.CSV_NAME);
 
     private File csvFile;
 

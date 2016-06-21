@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -25,8 +24,6 @@ import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -38,7 +35,6 @@ import com.zhan.budget.View.ExtendedNumberPicker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -52,7 +48,6 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
@@ -356,7 +351,7 @@ public class SettingFragment extends BaseFragment {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private File EXPORT_REALM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    private File DOWNLOAD_DIRECTORY = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
     private final String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
 
@@ -464,7 +459,7 @@ public class SettingFragment extends BaseFragment {
     public void backUpData1(){
         try{
             //create a backup file
-            File exportRealmFile = new File(EXPORT_REALM_PATH, EXPORT_REALM_FILE_NAME);
+            File exportRealmFile = new File(DOWNLOAD_DIRECTORY, EXPORT_REALM_FILE_NAME);
 
             //If backup file already exist, delete it
             exportRealmFile.delete();
@@ -486,8 +481,7 @@ public class SettingFragment extends BaseFragment {
     }
 
     public void restore(){
-        String restoreFilePath = EXPORT_REALM_PATH + "/" + EXPORT_REALM_FILE_NAME;
-
+        String restoreFilePath = DOWNLOAD_DIRECTORY + "/" + EXPORT_REALM_FILE_NAME;
         copyBundleRealmFile(restoreFilePath, IMPORT_REALM_FILE_NAME);
     }
 
@@ -621,7 +615,7 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        exportCSV();
+        exportCSV(sortCSV.DATE);
     }
 
     private void sortByLocation(){
@@ -653,7 +647,7 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        exportCSV();
+        exportCSV(sortCSV.LOCATION);
     }
 
     private void sortByCategory(){
@@ -676,7 +670,7 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        exportCSV();
+        exportCSV(sortCSV.CATEGORY);
     }
 
     private void sortByAccount(){
@@ -704,10 +698,10 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        exportCSV();
+        exportCSV(sortCSV.ACCOUNT);
     }
 
-    private void exportCSV(){
+    private void exportCSV(sortCSV sortType){
         /*
         //Delimiter used in CSV file
         final String COMMA_DELIMITER = ",";
@@ -794,8 +788,9 @@ public class SettingFragment extends BaseFragment {
         };
         loader.execute();*/
 
-        File root = Environment.getExternalStorageDirectory();
-        final File csvFile = new File(root, Constants.CSV_NAME);
+        String csvFileName = Constants.NAME + "_" + sortType.toString() + "_" + (DateUtil.convertDateToStringFormat6(new Date())) + Constants.CSV_END;
+
+        final File csvFile = new File(DOWNLOAD_DIRECTORY, csvFileName);
 
         CSVFormatter csvFormatter = new CSVFormatter(getContext(), transactionList, csvFile);
         csvFormatter.setCSVInteraction(new CSVFormatter.OnCSVInteractionListener() {
@@ -806,8 +801,6 @@ public class SettingFragment extends BaseFragment {
         });
         csvFormatter.execute();
     }
-
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

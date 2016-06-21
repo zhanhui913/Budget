@@ -7,8 +7,10 @@ import java.util.Locale;
  */
 public class Constants {
     public static final String NAME = "Budget";
-    public static final String REALM_NAME = NAME + ".realm";
-    public static final String CSV_NAME = NAME + ".csv";
+    public static final String REALM_END = ".realm";
+    public static final String REALM_NAME = NAME + REALM_END;
+    public static final String CSV_END = ".csv";
+    public static final String CSV_NAME = NAME + CSV_END;
 
     //Locale
     public static final Locale BUDGET_LOCALE = Locale.CANADA;
