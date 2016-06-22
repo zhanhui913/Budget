@@ -149,9 +149,65 @@ public class PieChartFragment extends BaseChartFragment {
      */
     public void updateData(List<? extends PieDataCostInterface> list, boolean animate){
         //Go through each existing entry and update information
-        for(int i = 0; i < dataSet.getEntryCount(); i++){
+  /*      for(int i = 0; i < dataSet.getEntryCount(); i++){
             dataSet.getEntryForXIndex(i).setVal(Math.abs(list.get(i).getPieDataCost()));
+
+            try{
+                int s = ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getPieDataColor()));
+                dataSet.getValueColors().set(i, s);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            //find correct color
+            for(int a = 0; a < list.size(); a++){
+
+
+            }
+
+
         }
+*/
+
+
+        {
+            // IMPORTANT: In a PieChart, no values (Entry) should have the same
+            // xIndex (even if from different DataSets), since no values can be
+            // drawn above each other.
+            ArrayList<Entry> value = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                value.add(new Entry(Math.abs(list.get(i).getPieDataCost()), i));
+            }
+
+            PieDataSet newDataSet = new PieDataSet(value, "");
+            newDataSet.setSliceSpace(0f);
+            newDataSet.setSelectionShift(10f);
+
+            //Comparing colors
+            ArrayList<Integer> newColors =  new ArrayList<>();
+            for(int i = 0; i < list.size(); i++){
+                try {
+                    newColors.add(colors.get(i));
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            newDataSet.setColors(newColors);
+
+
+            // Go through and add changes to dataSet, (cannot just assign dataSet = newDataSet)
+            dataSet = newDataSet;
+
+        }
+
+
+
+
+
+
+
+
 
         // undo all highlights
         pieChart.highlightValues(null);
@@ -169,6 +225,8 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.invalidate(); //refresh
     }
 
+
+    ArrayList<Integer> colors;
     private void displayPieChart(List<? extends PieDataCostInterface> list){
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -188,7 +246,7 @@ public class PieChartFragment extends BaseChartFragment {
         dataSet.setSelectionShift(10f);
 
         // Add colors
-        ArrayList<Integer> colors = new ArrayList<>();
+        colors = new ArrayList<>();
         for(int i = 0; i < list.size(); i++){
             try {
                 colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getPieDataColor())));

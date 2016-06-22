@@ -165,6 +165,9 @@ public class LocationFragment extends BaseRealmFragment
             //set random color
             location.setColor(Colors.getRandomColorString(getContext()));
 
+            //Keep track in locationColorHash
+            locationColorHash.put(location.getName(), location.getColor());
+
             locationList.add(location);
         }
 
@@ -186,6 +189,9 @@ public class LocationFragment extends BaseRealmFragment
         centerPanelRightTextView.setText(totalLocationsCount + appendString);
     }
 
+
+    HashMap<String, String> locationColorHash = new HashMap<>();
+
     /**
      * Updates the location count in the hashmap while keeping the colors the same
      * @param ttList list of transactions
@@ -193,6 +199,7 @@ public class LocationFragment extends BaseRealmFragment
     private void updateLocationList(List<Transaction> ttList){
         HashMap<String, Integer> locationHash1 = new HashMap<>();
 
+        //Aggregate counts
         for(int i = 0; i < ttList.size(); i++){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())) {
                 if (!locationHash1.containsKey(ttList.get(i).getLocation())) {
@@ -202,6 +209,9 @@ public class LocationFragment extends BaseRealmFragment
                 }
             }
         }
+
+        //Remove any locations with 0 count
+
 
         //Keep track of total locations count
         int totalLocationsCount = 0;
