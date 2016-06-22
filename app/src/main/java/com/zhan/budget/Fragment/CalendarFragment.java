@@ -154,7 +154,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         boolean isFirstTime = BudgetPreference.getFirstTime(getContext());
 
         if(isFirstTime){
-            Toast.makeText(getContext(), "first time", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "first time", Toast.LENGTH_SHORT).show();
             createFakeTransactions();
 
             BudgetPreference.setFirstTime(getContext());
@@ -751,14 +751,14 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.commitTransaction();
         Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
         updateTransactionList();
-        Toast.makeText(getContext(), "calendar fragment delete transaction :"+position, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(), "calendar fragment delete transaction :"+position, Toast.LENGTH_SHORT).show();
 
         updateScheduledTransactionsForDecoration();
     }
 
     @Override
     public void onApproveTransaction(int position){
-        Toast.makeText(getContext(), "calendar fragment approve transaction :"+position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "calendar fragment approve transaction :"+position, Toast.LENGTH_SHORT).show();
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.COMPLETED.toString());
         myRealm.commitTransaction();
@@ -769,7 +769,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     @Override
     public void onUnapproveTransaction(int position){
-        Toast.makeText(getContext(), "calendar fragment unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "calendar fragment unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.SCHEDULED.toString());
         myRealm.commitTransaction();

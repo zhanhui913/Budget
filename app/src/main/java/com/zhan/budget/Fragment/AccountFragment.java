@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
@@ -389,7 +388,6 @@ public class AccountFragment extends BaseRealmFragment implements
                 accountListView.scrollToPosition(accountListAdapter.getItemCount() - 1);
             }else if(requestCode == Constants.RETURN_HAS_CHANGED){
                 boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
-                Toast.makeText(getContext(), "account data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
 
                 if(hasChanged){
                     //If something has been changed, update the list
@@ -430,8 +428,6 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickAccount(int position){
-        Toast.makeText(getContext(), "click on account :"+position, Toast.LENGTH_SHORT).show();
-
         Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
 

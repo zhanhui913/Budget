@@ -131,7 +131,7 @@ public class SettingFragment extends BaseFragment {
         themeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "them button click", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "them button click", Toast.LENGTH_SHORT).show();
                 themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode": "Day Mode"));
                 ThemeUtil.changeToTheme(getActivity(), (CURRENT_THEME == ThemeUtil.THEME_DARK ? ThemeUtil.THEME_LIGHT : ThemeUtil.THEME_DARK));
             }
@@ -155,7 +155,7 @@ public class SettingFragment extends BaseFragment {
         categoryOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "change category info", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "change category info", Toast.LENGTH_SHORT).show();
 
                 Intent settingsCategory = new Intent(getContext(), SettingsCategory.class);
                 startActivity(settingsCategory);
@@ -167,7 +167,7 @@ public class SettingFragment extends BaseFragment {
             public void onClick(View v) {
                 //getAccountList();
 
-                Toast.makeText(getContext(), "change account info", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "change account info", Toast.LENGTH_SHORT).show();
 
                 Intent settingsAccount = new Intent(getContext(), SettingsAccount.class);
                 startActivity(settingsAccount);
@@ -191,7 +191,7 @@ public class SettingFragment extends BaseFragment {
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "reset", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "reset", Toast.LENGTH_SHORT).show();
                 resetData();
             }
         });
@@ -199,7 +199,7 @@ public class SettingFragment extends BaseFragment {
         exportCSVBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "csv", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "csv", Toast.LENGTH_SHORT).show();
                 //getTransactionListForCSV();
                 //exportCSVSort();
                 requestFilePermissionToWriteCSV();
@@ -209,7 +209,7 @@ public class SettingFragment extends BaseFragment {
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "email", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "email", Toast.LENGTH_SHORT).show();
                 sendRealmData();
             }
         });
@@ -217,7 +217,7 @@ public class SettingFragment extends BaseFragment {
         tourBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "tour", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "tour", Toast.LENGTH_SHORT).show();
                 loadTutorials();
             }
         });
@@ -225,14 +225,14 @@ public class SettingFragment extends BaseFragment {
         faqBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "faq", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "faq", Toast.LENGTH_SHORT).show();
             }
         });
 
         openLicenseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "open source", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "open source", Toast.LENGTH_SHORT).show();
                 Intent openSource = new Intent(getContext(), OpenSourceActivity.class);
                 startActivity(openSource);
             }
@@ -261,7 +261,9 @@ public class SettingFragment extends BaseFragment {
                     email(exportRealmFile);
                 }else{
                     Log.d("FILE","cannot write file");
-                    Toast.makeText(getContext(), "Fail to retrieve file.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Fail to retrieve file.", Toast.LENGTH_SHORT).show();
+
+                    Util.createSnackbar(getContext(), getView(), "Fail to retrieve file.");
                 }
             }
         } catch (Exception e) {
@@ -850,7 +852,9 @@ public class SettingFragment extends BaseFragment {
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "RESETTING...", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "RESETTING...", Toast.LENGTH_SHORT).show();
+
+                        Util.createSnackbar(getContext(), getView(), "Resetting...");
 
                         BudgetPreference.resetFirstTime(getContext());
 

@@ -193,15 +193,15 @@ public class OverviewActivity extends BaseActivity implements
                 startActivity(pdfIntent);
                 return true;*/
             case R.id.percentChart:
-                Toast.makeText(getApplicationContext(), "click here percent chart", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "click here percent chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(percentChartFragment);
                 return true;
             case R.id.barChart:
-                Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(barChartFragment);
                 return true;
             case R.id.pieChart:
-                Toast.makeText(getApplicationContext(), "click here pie chart", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "click here pie chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(pieChartFragment);
                 return true;
             default:

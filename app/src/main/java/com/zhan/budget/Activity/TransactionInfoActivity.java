@@ -538,7 +538,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         selectedAccountIndexInSpinner = accountPicker.getValue();
                         selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
-                        Toast.makeText(getApplicationContext(), "Selected account is "+selectedAccount.getName(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Selected account is "+selectedAccount.getName(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -602,7 +602,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 locationHash.add(ttList.get(i).getLocation());
             }
         }
-        Toast.makeText(this, "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
     }
 
     private void createLocationDialog(){

@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
@@ -183,7 +182,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         changeBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Change budget Category ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Change budget Category ", Toast.LENGTH_SHORT).show();
                 changeBudget();
             }
         });
@@ -347,7 +346,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     }
 
     private void addDigitToTextView(TextView textView, int digit){
-        Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
         priceString += digit;
 
         textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
@@ -375,7 +374,7 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

@@ -149,7 +149,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), budgetType, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
-                Toast.makeText(getContext(), "DONE CATEGORY CALCULATION", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "DONE CATEGORY CALCULATION", Toast.LENGTH_LONG).show();
 
                 categoryList = catList;
 
@@ -195,7 +195,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                         deleteCategory(position);
                     }
                 })
@@ -275,7 +275,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onClick(int position){
-        Toast.makeText(getContext(), "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));

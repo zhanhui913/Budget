@@ -1,7 +1,5 @@
 package com.zhan.budget.Fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
@@ -335,6 +332,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
 
+    /*
     private void confirmDelete(final int position){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
@@ -361,11 +359,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                 })
                 .create()
                 .show();
-    }
-
-    private void deleteCategory(int position){
-
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -409,7 +403,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                 categoryListView.scrollToPosition(categoryRecyclerAdapter.getItemCount() - 1);
             }else if(requestCode == Constants.RETURN_HAS_CHANGED){
                 boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
-                Toast.makeText(getContext(), "Category data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
 
                 if(hasChanged){
                     //If something has been changed, update the list
@@ -443,7 +436,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onDeleteCategory(int position){
-        confirmDelete(position);
+        //Cant delete category
     }
 
     @Override
@@ -455,7 +448,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     @Override
     public void onPullDownAllow(boolean value){
         isPulldownAllow = value;
-        Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -468,7 +460,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         Log.d(TAG, "new suppose indices in fragment -----------");
 
         isPulldownAllow = true;
-        Toast.makeText(getContext(), "on pull down allow "+isPulldownAllow, Toast.LENGTH_SHORT).show();
 
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
@@ -509,7 +500,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     @Override
     public void onClick(int position){
         if(arrangementType == CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET) {
-            Toast.makeText(getContext(), "click on category :" + categoryRecyclerAdapter.getCategoryList().get(position).getName(), Toast.LENGTH_SHORT).show();
 
             Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
             viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));

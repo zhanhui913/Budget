@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
@@ -21,14 +20,11 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Location;
-import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -244,7 +240,6 @@ public class LocationFragment extends BaseRealmFragment
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_HAS_CHANGED){
                 boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
-                Toast.makeText(getContext(), "Location data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
@@ -320,8 +315,6 @@ public class LocationFragment extends BaseRealmFragment
 
     @Override
     public void onClickLocation(int index){
-        Toast.makeText(getContext(), "click on location :"+index, Toast.LENGTH_SHORT).show();
-
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());

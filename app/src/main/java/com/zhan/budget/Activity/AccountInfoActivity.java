@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
@@ -203,7 +202,7 @@ public class AccountInfoActivity extends BaseActivity implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
