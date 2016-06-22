@@ -132,7 +132,9 @@ public class AccountFragment extends BaseRealmFragment implements
         updateMonthInToolbar(0, false);
     }
 
-    //Only called one time
+    /**
+     * Gets the list of accounts. (called once only)
+     */
     private void populateAccountWithNoInfo(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
         resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
@@ -145,15 +147,15 @@ public class AccountFragment extends BaseRealmFragment implements
                 accountListAdapter.setAccountList(accountList);
 
                 updateAccountStatus();
-                populateAccountWithInfo();
+                populateAccountWithInfo(true);
             }
         });
     }
 
     /**
-     * Gets called whenever the month updates
+     * Resets data for all accounts and start new calculation.
      */
-    private void populateAccountWithInfo(){
+    private void populateAccountWithInfo(final boolean isNew){
         final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
@@ -177,12 +179,12 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 transactionMonthList = myRealm.copyFromRealm(element);
 
-                aggregateAccountInfo();
+                aggregateAccountInfo(isNew);
             }
         });
     }
 
-    private void aggregateAccountInfo(){
+    private void aggregateAccountInfo(final boolean isNew){
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
         AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
@@ -226,7 +228,12 @@ public class AccountFragment extends BaseRealmFragment implements
                 }
 
                 accountListAdapter.setAccountList(accountList);
-                pieChartFragment.setData(accountList);
+
+                if(isNew){
+                    pieChartFragment.setData(accountList);
+                }else{
+                    pieChartFragment.updateData(accountList);
+                }
 
                 centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
 
@@ -343,7 +350,7 @@ public class AccountFragment extends BaseRealmFragment implements
         centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
         if(updateAccountInfo) {
-            populateAccountWithInfo();
+            populateAccountWithInfo(true);
         }
     }
 
@@ -386,7 +393,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 if(hasChanged){
                     //If something has been changed, update the list
-                    updateMonthInToolbar(0, true);
+                    populateAccountWithInfo(false);
                 }
             }
         }

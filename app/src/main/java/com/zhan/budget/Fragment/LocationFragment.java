@@ -111,10 +111,15 @@ public class LocationFragment extends BaseRealmFragment
 
         centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
 
-        fetchNewLocationData(currentMonth);
+        fetchNewLocationData(currentMonth, true);
     }
 
-    private void fetchNewLocationData(Date month){
+    /**
+     * Get new location data that is in the current month
+     * @param month Current month to target
+     * @param isNew True => its new, False => dont change color, just update location count
+     */
+    private void fetchNewLocationData(Date month, final boolean isNew){
         Date endMonth = DateUtil.getLastDateOfMonth(month);
 
         RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
@@ -123,11 +128,19 @@ public class LocationFragment extends BaseRealmFragment
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                countLocationList(myRealm.copyFromRealm(element));
+                if(isNew){
+                    countLocationList(myRealm.copyFromRealm(element));
+                }else{
+                    updateLocationList(myRealm.copyFromRealm(element));
+                }
             }
         });
     }
 
+    /**
+     * Aggregate all transactions with the same location and update its pie chart.
+     * @param ttList list of transactions
+     */
     private void countLocationList(List<Transaction> ttList){
         HashMap<String, Integer> locationHash = new HashMap<>();
 
@@ -170,7 +183,56 @@ public class LocationFragment extends BaseRealmFragment
 
         locationAdapter.setLocationList(locationList);
 
+        //This gives pie chart new location list
         pieChartFragment.setData(locationList);
+
+        String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
+        centerPanelRightTextView.setText(totalLocationsCount + appendString);
+    }
+
+    /**
+     * Updates the location count in the hashmap while keeping the colors the same
+     * @param ttList list of transactions
+     */
+    private void updateLocationList(List<Transaction> ttList){
+        HashMap<String, Integer> locationHash1 = new HashMap<>();
+
+        for(int i = 0; i < ttList.size(); i++){
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())) {
+                if (!locationHash1.containsKey(ttList.get(i).getLocation())) {
+                    locationHash1.put(ttList.get(i).getLocation(), 1);
+                } else {
+                    locationHash1.put(ttList.get(i).getLocation(), locationHash1.get(ttList.get(i).getLocation()) + 1);
+                }
+            }
+        }
+
+        //Keep track of total locations count
+        int totalLocationsCount = 0;
+
+        //go through each location in the list to update its count with the hashmap
+        for(int i = 0; i < locationList.size(); i++){
+            for(String key: locationHash1.keySet()) {
+                if (locationList.get(i).getName().equalsIgnoreCase(key)) {
+                    locationList.get(i).setAmount(locationHash1.get(key));
+                    totalLocationsCount += locationHash1.get(key);
+                }
+            }
+        }
+
+        //Sort from highest to lowest
+        Collections.sort(locationList, new Comparator<Location>() {
+            @Override
+            public int compare(Location l1, Location l2) {
+                //descending order
+                return (l2.getAmount() - l1.getAmount());
+            }
+        });
+
+        locationAdapter.setLocationList(locationList);
+
+        //This updates pie chart with new location list while keeping the colors the same
+        pieChartFragment.updateData(locationList);
 
         String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
         centerPanelRightTextView.setText(totalLocationsCount + appendString);
@@ -186,7 +248,7 @@ public class LocationFragment extends BaseRealmFragment
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
-                    fetchNewLocationData(currentMonth);
+                    fetchNewLocationData(currentMonth, false);
                 }
             }
         }

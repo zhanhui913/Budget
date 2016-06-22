@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -29,6 +30,8 @@ public class PieChartFragment extends BaseChartFragment {
 
     private PieChart pieChart;
     protected static final String ARG_CHART_2 = "displayDataImmediately";
+    protected List<? extends PieDataCostInterface> dataList;
+    protected PieDataSet dataSet;
 
     public PieChartFragment() {
         // Required empty public constructor
@@ -87,11 +90,11 @@ public class PieChartFragment extends BaseChartFragment {
         //pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
 
         if(getArguments().getBoolean(ARG_CHART_2)) {
-            List<? extends PieDataCostInterface> ss = (List<? extends PieDataCostInterface>) Parcels.unwrap(getArguments().getParcelable(ARG_CHART));
-            setData(ss);
+            dataList = Parcels.unwrap(getArguments().getParcelable(ARG_CHART));
+            setData(dataList);
 
-            if(ss.size() > 0){
-                pieChart.setCenterText(ss.get(0).getClass().getSimpleName());
+            if(dataList.size() > 0){
+                pieChart.setCenterText(dataList.get(0).getClass().getSimpleName());
             }
         }
     }
@@ -101,13 +104,19 @@ public class PieChartFragment extends BaseChartFragment {
      * @param list The list of objects that extends PieDataCostInterface
      */
     public void setData(List<? extends PieDataCostInterface> list){
-        // add a selection listener
-        //pieChart.setOnChartValueSelectedListener(this);
+        dataList = list;
         pieChart.clear();
 
-        if(list.size() > 0 && checkEmptyPieDataCost(list)){
-            displayPieChart(list);
+        if(dataList.size() > 0 && checkEmptyPieDataCost(dataList)){
+            displayPieChart(dataList);
         }
+    }
+
+    /**
+     * Returns the list that contains the data.
+     */
+    public List<? extends PieDataCostInterface> getList(){
+        return this.dataList;
     }
 
     /**
@@ -125,6 +134,41 @@ public class PieChartFragment extends BaseChartFragment {
         return false;
     }
 
+    /**
+     * Update data while keeping the colors of each pie the same.
+     * @param list The list of objects that extends PieDataCostInterface
+     */
+    public void updateData(List<? extends PieDataCostInterface> list){
+        updateData(list, false);
+    }
+
+    /**
+     * Update data while keeping the colors of each pie the same.
+     * @param list The list of objects that extends PieDataCostInterface
+     * @param animate Whether or not to animate with new data and change its color
+     */
+    public void updateData(List<? extends PieDataCostInterface> list, boolean animate){
+        //Go through each existing entry and update information
+        for(int i = 0; i < dataSet.getEntryCount(); i++){
+            dataSet.getEntryForXIndex(i).setVal(Math.abs(list.get(i).getPieDataCost()));
+        }
+
+        // undo all highlights
+        pieChart.highlightValues(null);
+
+        if(animate){
+            pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
+        }
+
+        if(Build.VERSION.SDK_INT >= 21){
+            pieChart.setElevation(20);
+        }
+
+        dataSet.notifyDataSetChanged(); //let data know a dataSet changed
+        pieChart.notifyDataSetChanged();// let the chart know it's data changed
+        pieChart.invalidate(); //refresh
+    }
+
     private void displayPieChart(List<? extends PieDataCostInterface> list){
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -139,7 +183,7 @@ public class PieChartFragment extends BaseChartFragment {
             value.add(new Entry(Math.abs(list.get(i).getPieDataCost()), i));
         }
 
-        PieDataSet dataSet = new PieDataSet(value, "");
+        dataSet = new PieDataSet(value, "");
         dataSet.setSliceSpace(0f);
         dataSet.setSelectionShift(10f);
 
