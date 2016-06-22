@@ -1,15 +1,12 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
-import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
 import io.realm.RealmChangeListener;

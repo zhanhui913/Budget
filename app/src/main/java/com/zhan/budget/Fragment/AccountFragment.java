@@ -344,34 +344,8 @@ public class AccountFragment extends BaseRealmFragment implements
 
         if(updateAccountInfo) {
             populateAccountWithInfo();
-            //categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
-            //categoryGenericFragment.updateMonthCategoryInfo(currentMonth);
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Lifecycle
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnAccountInteractionListener) {
-            mListener = (OnAccountInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnAccountInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -406,8 +380,39 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 //Scroll to the last position
                 accountListView.scrollToPosition(accountListAdapter.getItemCount() - 1);
+            }else if(requestCode == Constants.RETURN_HAS_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+                Toast.makeText(getContext(), "account data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
+
+                if(hasChanged){
+                    //If something has been changed, update the list
+                    updateMonthInToolbar(0, true);
+                }
             }
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Lifecycle
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnAccountInteractionListener) {
+            mListener = (OnAccountInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnAccountInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -425,7 +430,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
         Parcelable wrapped = Parcels.wrap(accountList.get(position));
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, wrapped);
-        startActivity(viewAllTransactionsForAccount);
+        startActivityForResult(viewAllTransactionsForAccount, Constants.RETURN_HAS_CHANGED);
     }
 
     @Override

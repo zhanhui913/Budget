@@ -181,8 +181,6 @@ public class LocationFragment extends BaseRealmFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_HAS_CHANGED){
-
-
                 boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
                 Toast.makeText(getContext(), "Location data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
 

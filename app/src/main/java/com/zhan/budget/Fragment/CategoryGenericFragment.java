@@ -407,6 +407,14 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 //Scroll to the last position
                 categoryListView.scrollToPosition(categoryRecyclerAdapter.getItemCount() - 1);
+            }else if(requestCode == Constants.RETURN_HAS_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+                Toast.makeText(getContext(), "Category data has changed ? "+hasChanged, Toast.LENGTH_SHORT).show();
+
+                if(hasChanged){
+                    //If something has been changed, update the list
+                    updateMonthCategoryInfo(currentMonth);
+                }
             }
         }
     }
@@ -509,7 +517,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 
             viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-            startActivity(viewAllTransactionsForCategory);
+            startActivityForResult(viewAllTransactionsForCategory, Constants.RETURN_HAS_CHANGED);
         }
     }
 }

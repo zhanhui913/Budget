@@ -45,12 +45,6 @@ public class TransactionsForAccount extends BaseTransactions {
                 transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
-                //Add divider
-                transactionListView.addItemDecoration(
-                        new HorizontalDividerItemDecoration.Builder(instance)
-                                .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
-                                .build());
-
                 Log.d("ZHAN", "there are " + transactionList.size() + " transactions in this account " + account.getName() + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
 

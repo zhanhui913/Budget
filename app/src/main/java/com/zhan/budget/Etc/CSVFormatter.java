@@ -26,7 +26,6 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
     private Context context;
     private List<Transaction> transactionList;
-    //private final ProgressDialog mDialog;
     private RoundCornerProgressBar mDialog;
     private AlertDialog alertDialog;
     private TextView percentTextView, progressTextView;
@@ -80,30 +79,8 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         alertDialog = builder.create();
         alertDialog.show();
 
-
-
-
-
-
-        //Option 2
-        /*mDialog = new BudgetProgressDialog(context);
-        mDialog.show();
-        mDialog.setTitle("custom title");
-        mDialog.setProgress(0); //start at 0
-        mDialog.setMax(transactionList.size());
-        mDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                CSVFormatter.this.cancel(true);
-
-                if(mListener != null){
-                    mListener.onCompleteCSV(false);
-                }
-            }
-        });*/
-
         /*
-        //Option 3
+        //Option 2
         mDialog.setMax(transactionList.size());
         mDialog.setMessage("CSVing....");
         mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
