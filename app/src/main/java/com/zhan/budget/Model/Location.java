@@ -2,8 +2,17 @@ package com.zhan.budget.Model;
 
 import org.parceler.Parcel;
 
-@Parcel(Parcel.Serialization.BEAN)
-public class Location implements PieDataCostInterface{
+import io.realm.LocationRealmProxy;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+@Parcel(implementations = {LocationRealmProxy.class},
+        value = Parcel.Serialization.BEAN,
+        analyze = {Location.class})
+public class Location extends RealmObject implements PieDataCostInterface{
+
+    @PrimaryKey
+    private String id;
 
     private String name;
     private int amount;
@@ -11,6 +20,14 @@ public class Location implements PieDataCostInterface{
 
     public Location(){
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
