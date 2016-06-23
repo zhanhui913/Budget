@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -148,10 +147,23 @@ public class PieChartFragment extends BaseChartFragment {
      * @param animate Whether or not to animate with new data and change its color
      */
     public void updateData(List<? extends PieDataCostInterface> list, boolean animate){
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
         //Go through each existing entry and update information
         for(int i = 0; i < dataSet.getEntryCount(); i++){
             dataSet.getEntryForXIndex(i).setVal(Math.abs(list.get(i).getPieDataCost()));
+
+            try {
+                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getPieDataColor())));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
+
+        //Update color order (this automatically comes down from highest to lowest)
+        //So i can assume the colors list will be the same as well.
+        dataSet.setColors(colors);
 
         // undo all highlights
         pieChart.highlightValues(null);
