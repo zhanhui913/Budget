@@ -111,6 +111,8 @@ public class TransactionInfoActivity extends BaseActivity implements
     //had to put this as  global because putting it as final would sometimes not allow me to put the location hash into its adapter
     private AutoCompleteTextView inputLocation;
 
+    private boolean newLocation = false;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_transaction_info;
@@ -180,7 +182,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
 
             if(editTransaction.getLocation() != null){
-                location = editTransaction.getLocation();
                 locationString = editTransaction.getLocation().getName();
             }
 
@@ -648,6 +649,17 @@ public class TransactionInfoActivity extends BaseActivity implements
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString();
+
+                        if(editTransaction.getLocation() != null){
+                            if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
+                                newLocation = true;
+                            }
+                        }else{
+                            newLocation = true;
+                        }
+
+
+
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -757,35 +769,38 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         }
 
-
+/*
         //check for changes in location
-        if(!location.getName().equalsIgnoreCase(locationString)){
-            //If not the same, remove old one, then add new one
-            /*
-            LocationRealmManager.removeLocation(getBaseContext(), location.getName(), new LocationRealmManager.LocationRealmManagerInteractionListener() {
-                @Override
-                public void onResult(LocationRealmManager.Status result) {
-                    Toast.makeText(getBaseContext(), "Status of remove location manager : "+result.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
+        if(location.getName() != null){
+            if(!location.getName().equalsIgnoreCase(locationString)){
 
-            LocationRealmManager.addLocation(getBaseContext(), locationString, new LocationRealmManager.LocationRealmManagerInteractionListener() {
-                @Override
-                public void onResult(LocationRealmManager.Status result) {
-                    Toast.makeText(getBaseContext(), "Status of add location manager : "+result.toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            */
 
-            //Need to set location in transaction
-            Location newLocation = new Location();
-            newLocation.setId(Util.generateUUID());
-            newLocation.setName(locationString);
-            newLocation.setColor(Colors.getRandomColorString(getBaseContext()));
+                //Need to set location in transaction
+                Location newLocation = new Location();
+                newLocation.setId(Util.generateUUID());
+                newLocation.setName(locationString);
+                newLocation.setColor(Colors.getRandomColorString(getBaseContext()));
 
-            transaction.setLocation(newLocation);
+                transaction.setLocation(newLocation);
+            }else{
+                transaction.setLocation(location);
+            }
+        }*/
+
+        if(newLocation){
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
+                Location newLocationObject = new Location();
+                newLocationObject.setId(Util.generateUUID());
+                newLocationObject.setName(locationString);
+                newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
+                transaction.setLocation(newLocationObject);
+            }else{
+                transaction.setLocation(null);
+            }
+        }else{
+            transaction.setLocation(editTransaction.getLocation());
         }
-
+        
         transaction.setNote(this.noteString);
         transaction.setDate(DateUtil.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
