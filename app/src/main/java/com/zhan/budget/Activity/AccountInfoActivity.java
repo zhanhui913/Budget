@@ -88,9 +88,11 @@ public class AccountInfoActivity extends BaseActivity implements
         accountNameTextView = (TextView)findViewById(R.id.accountNameTextView);
         accountNameTextView.setText(account.getName());
 
-        if(isNewAccount){
+        /*if(isNewAccount){
             deleteAccountBtn.setVisibility(View.GONE);
-        }
+        }*/
+        deleteAccountBtn.setVisibility(View.GONE);//Cant delete accounts for now
+
 
         //default color selected
         selectedColor = account.getColor();
@@ -147,12 +149,12 @@ public class AccountInfoActivity extends BaseActivity implements
             }
         });
 
-        deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
+        /*deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDelete();
             }
-        });
+        });*/
     }
 
     private void changeName(){
