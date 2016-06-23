@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Activity.Settings.OpenSourceActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
@@ -649,9 +648,9 @@ public class SettingFragment extends BaseFragment {
             @Override
             public int compare(Transaction t1, Transaction t2) {
                 int t = 0;
-                if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(t1.getLocation()) &&
-                        Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(t2.getLocation())){
-                    t = t1.getLocation().compareToIgnoreCase(t2.getLocation());
+                if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(t1.getLocation().getName()) &&
+                        Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(t2.getLocation().getName())){
+                    t = t1.getLocation().getName().compareToIgnoreCase(t2.getLocation().getName());
                 }
 
                 //If Location is the same or doesnt exist, then compare by Category
