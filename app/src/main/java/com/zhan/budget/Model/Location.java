@@ -4,6 +4,7 @@ import org.parceler.Parcel;
 
 import io.realm.LocationRealmProxy;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 @Parcel(implementations = {LocationRealmProxy.class},
@@ -15,8 +16,10 @@ public class Location extends RealmObject implements PieDataCostInterface{
     private String id;
 
     private String name;
-    private int amount;
     private String color;
+
+    @Ignore
+    private int amount;
 
     public Location(){
 
