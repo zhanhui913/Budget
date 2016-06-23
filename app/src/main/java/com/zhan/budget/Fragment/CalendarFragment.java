@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
@@ -28,6 +27,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
@@ -168,11 +168,11 @@ public class CalendarFragment extends BaseRealmFragment implements
         //First time usage
         ArrayList<Category> categoryList = new ArrayList<>();
         ArrayList<Account> accountList = new ArrayList<>();
+        ArrayList<Location> locationList = new ArrayList<>();
 
         String[] tempCategoryNameList = new String[]{"Breakfast", "Lunch", "Dinner", "Snacks", "Drink", "Rent", "Travel", "Car", "Shopping", "Necessity", "Utilities", "Bill", "Groceries"};
         int[] tempCategoryColorList = new int[]{R.color.lemon, R.color.orange, R.color.pumpkin, R.color.alizarin, R.color.cream_can, R.color.midnight_blue, R.color.peter_river, R.color.turquoise, R.color.wisteria, R.color.jordy_blue, R.color.concrete, R.color.emerald, R.color.gossip};
         int[] tempCategoryIconList = new int[]{R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_food, R.drawable.c_cafe, R.drawable.c_house, R.drawable.c_airplane, R.drawable.c_car, R.drawable.c_shirt, R.drawable.c_etc, R.drawable.c_utilities, R.drawable.c_bill, R.drawable.c_groceries};
-        String[] location = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
 
         //create expense category
         for (int i = 0; i < tempCategoryNameList.length; i++) {
@@ -219,6 +219,17 @@ public class CalendarFragment extends BaseRealmFragment implements
             accountList.add(account);
         }
 
+        //Create fake locations
+        String[] locationTempList = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
+        for(int i = 0; i < locationTempList.length; i++){
+            Location location = myRealm.createObject(Location.class);
+            location.setId(Util.generateUUID());
+            location.setName(locationTempList[i]);
+            location.setAmount(0);
+            location.setColor(Colors.getRandomColorString(getContext()));
+            locationList.add(location);
+        }
+
         //Create fake transactions
         Date startDate = DateUtil.convertStringToDate("2016-01-01");
         Date endDate = DateUtil.convertStringToDate("2017-01-01");
@@ -236,7 +247,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             Random random = new Random();
             int rd = random.nextInt(categoryList.size());
             int rda = random.nextInt(accountList.size());
-            int ll = random.nextInt(location.length);
+            int ll = random.nextInt(locationList.size());
 
             if(date.before(new Date())){
                 dayType = DayType.COMPLETED.toString();
@@ -250,7 +261,10 @@ public class CalendarFragment extends BaseRealmFragment implements
                 transaction.setId(Util.generateUUID());
                 transaction.setDate(date);
                 transaction.setDayType(dayType);
-                transaction.setLocation(location[ll]);
+                transaction.setLocation(locationList.get(ll));
+
+
+
 
                 Account account = accountList.get(rda);
 

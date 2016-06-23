@@ -140,10 +140,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }
 
         //If there are no location
-        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getLocation())){
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getLocation().getName())){
             viewHolder.location.setVisibility(View.VISIBLE);
             viewHolder.locationIcon.setVisibility(View.VISIBLE);
-            viewHolder.location.setText(transaction.getLocation());
+            viewHolder.location.setText(transaction.getLocation().getName());
         }else{
             viewHolder.location.setVisibility(View.GONE);
             viewHolder.locationIcon.setVisibility(View.GONE);

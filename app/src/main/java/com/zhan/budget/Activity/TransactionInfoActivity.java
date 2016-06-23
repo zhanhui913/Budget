@@ -31,6 +31,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
@@ -71,6 +72,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private TextView transactionCostView;
 
     private String priceString, noteString, locationString;
+    private Location location;
 
     private TransactionFragment transactionExpenseFragment, transactionIncomeFragment;
 
@@ -178,7 +180,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
 
             if(editTransaction.getLocation() != null){
-                locationString = editTransaction.getLocation();
+                location = editTransaction.getLocation();
+                locationString = editTransaction.getLocation().getName();
             }
 
             //Check which category this transaction belongs to.
@@ -582,7 +585,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private void getAllLocations(){
         final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
-
+/*
         RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).findAllSortedAsync("location");
         transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -593,15 +596,34 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
+        });*/
+
+        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).findAllSortedAsync("name");
+        locationRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
+            @Override
+            public void onChange(RealmResults<Location> element) {
+                element.removeChangeListener(this);
+
+                for(int i = 0; i < element.size(); i++){
+                    locationHash.add(element.get(i).getName());
+                }
+                Toast.makeText(getBaseContext(), "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
+
+
+                myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
+            }
         });
     }
 
     private void getUniqueList(List<Transaction> ttList){
-        for(int i = 0; i < ttList.size(); i++){
+        /*for(int i = 0; i < ttList.size(); i++){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())){
                 locationHash.add(ttList.get(i).getLocation());
             }
         }
+        */
+
+
         //Toast.makeText(this, "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
     }
 
@@ -735,8 +757,36 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         }
 
+
+        //check for changes in location
+        if(!location.getName().equalsIgnoreCase(locationString)){
+            //If not the same, remove old one, then add new one
+            /*
+            LocationRealmManager.removeLocation(getBaseContext(), location.getName(), new LocationRealmManager.LocationRealmManagerInteractionListener() {
+                @Override
+                public void onResult(LocationRealmManager.Status result) {
+                    Toast.makeText(getBaseContext(), "Status of remove location manager : "+result.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            LocationRealmManager.addLocation(getBaseContext(), locationString, new LocationRealmManager.LocationRealmManagerInteractionListener() {
+                @Override
+                public void onResult(LocationRealmManager.Status result) {
+                    Toast.makeText(getBaseContext(), "Status of add location manager : "+result.toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            */
+
+            //Need to set location in transaction
+            Location newLocation = new Location();
+            newLocation.setId(Util.generateUUID());
+            newLocation.setName(locationString);
+            newLocation.setColor(Colors.getRandomColorString(getBaseContext()));
+
+            transaction.setLocation(newLocation);
+        }
+
         transaction.setNote(this.noteString);
-        transaction.setLocation(this.locationString);
         transaction.setDate(DateUtil.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
 

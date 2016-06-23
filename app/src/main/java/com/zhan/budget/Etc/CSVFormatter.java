@@ -141,7 +141,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getLocation()));
+                fileWriter.append(Util.checkNull(transactionList.get(i).getLocation().getName()));
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(transactionList.get(i).getDayType().toString()));
                 fileWriter.append(NEW_LINE_SEPARATOR);

@@ -4,6 +4,7 @@ package com.zhan.budget.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +23,10 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -138,10 +140,10 @@ public class LocationFragment extends BaseRealmFragment
      * @param ttList list of transactions
      */
     private void countLocationList(List<Transaction> ttList){
-        HashMap<String, Integer> locationHash = new HashMap<>();
+        HashMap<Location, Integer> locationHash = new HashMap<>();
 
         for(int i = 0; i < ttList.size(); i++){
-            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())) {
+            if(ttList.get(i).getLocation() != null) {
                 if (!locationHash.containsKey(ttList.get(i).getLocation())) {
                     locationHash.put(ttList.get(i).getLocation(), 1);
                 } else {
@@ -156,17 +158,16 @@ public class LocationFragment extends BaseRealmFragment
         int totalLocationsCount = 0;
 
         //Go through each hashmap
-        for(String key: locationHash.keySet()){
-            Location location = new Location();
-            location.setName(key);
-            location.setAmount(locationHash.get(key));
+        for(Location key: locationHash.keySet()){
+            Location location2 = new Location();
+            location2.setName(key.getName());
+            location2.setAmount(locationHash.get(key));
+            location2.setColor(key.getColor());
+
             totalLocationsCount += locationHash.get(key);
-
-            //set random color
-            location.setColor(Colors.getRandomColorString(getContext()));
-
-            locationList.add(location);
+            locationList.add(location2);
         }
+
 
         //Sort from highest to lowest
         Collections.sort(locationList, new Comparator<Location>() {
@@ -191,10 +192,10 @@ public class LocationFragment extends BaseRealmFragment
      * @param ttList list of transactions
      */
     private void updateLocationList(List<Transaction> ttList){
-        HashMap<String, Integer> locationHash1 = new HashMap<>();
+        HashMap<Location, Integer> locationHash1 = new HashMap<>();
 
         for(int i = 0; i < ttList.size(); i++){
-            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())) {
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation().getName())) {
                 if (!locationHash1.containsKey(ttList.get(i).getLocation())) {
                     locationHash1.put(ttList.get(i).getLocation(), 1);
                 } else {
@@ -208,8 +209,8 @@ public class LocationFragment extends BaseRealmFragment
 
         //go through each location in the list to update its count with the hashmap
         for(int i = 0; i < locationList.size(); i++){
-            for(String key: locationHash1.keySet()) {
-                if (locationList.get(i).getName().equalsIgnoreCase(key)) {
+            for(Location key: locationHash1.keySet()) {
+                if (locationList.get(i).getName().equalsIgnoreCase(key.getName())) {
                     locationList.get(i).setAmount(locationHash1.get(key));
                     totalLocationsCount += locationHash1.get(key);
                 }
@@ -317,7 +318,11 @@ public class LocationFragment extends BaseRealmFragment
     public void onClickLocation(int index){
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
+        //viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
+
+        Parcelable wrapped = Parcels.wrap(locationList.get(index));
+        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, wrapped);
+
         startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_HAS_CHANGED);
     }
 }
