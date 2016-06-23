@@ -104,9 +104,10 @@ public class CategoryInfoActivity extends BaseActivity implements
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
         changeBudgetBtn = (ImageButton) findViewById(R.id.changeBudgetBtn);
 
-        if(isNewCategory){
+        /*if(isNewCategory){
             deleteCategoryBtn.setVisibility(View.GONE);
-        }
+        }*/
+        deleteCategoryBtn.setVisibility(View.GONE); //Cant delete Category for now
 
         //Income category has no need for budget
         if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
@@ -171,14 +172,14 @@ public class CategoryInfoActivity extends BaseActivity implements
                 changeName();
             }
         });
-
+/*
         deleteCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDelete();
             }
         });
-
+*/
         changeBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
