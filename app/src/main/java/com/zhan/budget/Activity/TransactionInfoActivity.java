@@ -111,6 +111,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     //had to put this as  global because putting it as final would sometimes not allow me to put the location hash into its adapter
     private AutoCompleteTextView inputLocation;
 
+    //Switch whenever theres a change in location
     private boolean newLocation = false;
 
     @Override
@@ -657,9 +658,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }else{
                             newLocation = true;
                         }
-
-
-
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -769,24 +767,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         }
 
-/*
-        //check for changes in location
-        if(location.getName() != null){
-            if(!location.getName().equalsIgnoreCase(locationString)){
-
-
-                //Need to set location in transaction
-                Location newLocation = new Location();
-                newLocation.setId(Util.generateUUID());
-                newLocation.setName(locationString);
-                newLocation.setColor(Colors.getRandomColorString(getBaseContext()));
-
-                transaction.setLocation(newLocation);
-            }else{
-                transaction.setLocation(location);
-            }
-        }*/
-
         if(newLocation){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
                 Location newLocationObject = new Location();
@@ -800,7 +780,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }else{
             transaction.setLocation(editTransaction.getLocation());
         }
-        
+
         transaction.setNote(this.noteString);
         transaction.setDate(DateUtil.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
