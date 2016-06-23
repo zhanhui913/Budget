@@ -587,20 +587,10 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private void getAllLocations(){
         final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
-/*
-        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).findAllSortedAsync("location");
-        transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-                Log.d("REALMZ1", "getAllLocations closing  realm");
-                getUniqueList(myRealm.copyFromRealm(element));
 
-                myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
-            }
-        });*/
+        //Toast.makeText(getBaseContext(), "Trying to get all locations", Toast.LENGTH_SHORT).show();
 
-        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).findAllSortedAsync("name");
+        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).findAllAsync();
         locationRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
             @Override
             public void onChange(RealmResults<Location> element) {
@@ -610,7 +600,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                     locationHash.add(element.get(i).getName());
                 }
                 Toast.makeText(getBaseContext(), "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
-
 
                 myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
