@@ -147,23 +147,39 @@ public class PieChartFragment extends BaseChartFragment {
      * @param animate Whether or not to animate with new data and change its color
      */
     public void updateData(List<? extends PieDataCostInterface> list, boolean animate){
+        ArrayList<String> names = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            names.add(list.get(i).getPieDataName());
+        }
 
+        // IMPORTANT: In a PieChart, no values (Entry) should have the same
+        // xIndex (even if from different DataSets), since no values can be
+        // drawn above each other.
+        ArrayList<Entry> value = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            value.add(new Entry(Math.abs(list.get(i).getPieDataCost()), i));
+        }
+
+        dataSet = new PieDataSet(value, "");
+        dataSet.setSliceSpace(0f);
+        dataSet.setSelectionShift(10f);
+
+        // Add colors
         ArrayList<Integer> colors = new ArrayList<>();
-
-        //Go through each existing entry and update information
-        for(int i = 0; i < dataSet.getEntryCount(); i++){
-            dataSet.getEntryForXIndex(i).setVal(Math.abs(list.get(i).getPieDataCost()));
-
+        for (int i = 0; i < list.size(); i++) {
             try {
                 colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getPieDataColor())));
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        //Update color order (this automatically comes down from highest to lowest)
-        //So i can assume the colors list will be the same as well.
         dataSet.setColors(colors);
+
+        PieData data = new PieData(names, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(0f);
+        pieChart.setData(data);
 
         // undo all highlights
         pieChart.highlightValues(null);
@@ -201,10 +217,10 @@ public class PieChartFragment extends BaseChartFragment {
 
         // Add colors
         ArrayList<Integer> colors = new ArrayList<>();
-        for(int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             try {
                 colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getPieDataColor())));
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

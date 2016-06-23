@@ -24,7 +24,6 @@ import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
 
@@ -168,7 +167,6 @@ public class LocationFragment extends BaseRealmFragment
             locationList.add(location2);
         }
 
-
         //Sort from highest to lowest
         Collections.sort(locationList, new Comparator<Location>() {
             @Override
@@ -192,29 +190,32 @@ public class LocationFragment extends BaseRealmFragment
      * @param ttList list of transactions
      */
     private void updateLocationList(List<Transaction> ttList){
-        HashMap<Location, Integer> locationHash1 = new HashMap<>();
+        HashMap<Location, Integer> locationHash = new HashMap<>();
 
         for(int i = 0; i < ttList.size(); i++){
-            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation().getName())) {
-                if (!locationHash1.containsKey(ttList.get(i).getLocation())) {
-                    locationHash1.put(ttList.get(i).getLocation(), 1);
+            if(ttList.get(i).getLocation() != null) {
+                if (!locationHash.containsKey(ttList.get(i).getLocation())) {
+                    locationHash.put(ttList.get(i).getLocation(), 1);
                 } else {
-                    locationHash1.put(ttList.get(i).getLocation(), locationHash1.get(ttList.get(i).getLocation()) + 1);
+                    locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
                 }
             }
         }
 
+        locationList.clear();
+
         //Keep track of total locations count
         int totalLocationsCount = 0;
 
-        //go through each location in the list to update its count with the hashmap
-        for(int i = 0; i < locationList.size(); i++){
-            for(Location key: locationHash1.keySet()) {
-                if (locationList.get(i).getName().equalsIgnoreCase(key.getName())) {
-                    locationList.get(i).setAmount(locationHash1.get(key));
-                    totalLocationsCount += locationHash1.get(key);
-                }
-            }
+        //Go through each hashmap
+        for(Location key: locationHash.keySet()){
+            Location location2 = new Location();
+            location2.setName(key.getName());
+            location2.setAmount(locationHash.get(key));
+            location2.setColor(key.getColor());
+
+            totalLocationsCount += locationHash.get(key);
+            locationList.add(location2);
         }
 
         //Sort from highest to lowest
