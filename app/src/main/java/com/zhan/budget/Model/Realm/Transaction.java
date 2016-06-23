@@ -1,5 +1,7 @@
 package com.zhan.budget.Model.Realm;
 
+import com.zhan.budget.Model.Location;
+
 import org.parceler.Parcel;
 
 import java.util.Date;
@@ -26,7 +28,7 @@ public class Transaction extends RealmObject {
     private Category category;
     private Account account;
     private String dayType;
-    private String location;
+    private Location location;
 
     public Transaction(){
 
@@ -88,11 +90,11 @@ public class Transaction extends RealmObject {
         this.dayType = dayType;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 }
