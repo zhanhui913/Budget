@@ -606,18 +606,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         });
     }
 
-    private void getUniqueList(List<Transaction> ttList){
-        /*for(int i = 0; i < ttList.size(); i++){
-            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(ttList.get(i).getLocation())){
-                locationHash.add(ttList.get(i).getLocation());
-            }
-        }
-        */
-
-
-        //Toast.makeText(this, "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
-    }
-
     private void createLocationDialog(){
         //real one
         String[] locationArray = locationHash.toArray(new String[locationHash.size()]);

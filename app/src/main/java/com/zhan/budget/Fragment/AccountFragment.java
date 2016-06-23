@@ -154,7 +154,7 @@ public class AccountFragment extends BaseRealmFragment implements
     /**
      * Resets data for all accounts and start new calculation.
      */
-    private void populateAccountWithInfo(final boolean isNew){
+    private void populateAccountWithInfo(final boolean animate){
         final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
@@ -178,12 +178,12 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 transactionMonthList = myRealm.copyFromRealm(element);
 
-                aggregateAccountInfo(isNew);
+                aggregateAccountInfo(animate);
             }
         });
     }
 
-    private void aggregateAccountInfo(final boolean isNew){
+    private void aggregateAccountInfo(final boolean animate){
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
         AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
@@ -227,12 +227,14 @@ public class AccountFragment extends BaseRealmFragment implements
                 }
 
                 accountListAdapter.setAccountList(accountList);
-
-                if(isNew){
+                /*
+                if(animate){
                     pieChartFragment.setData(accountList);
                 }else{
                     pieChartFragment.updateData(accountList);
                 }
+                */
+                pieChartFragment.setData(accountList, animate);
 
                 centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
 

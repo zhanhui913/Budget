@@ -99,15 +99,24 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     /**
-     * Called when wants to display data
+     * Called when wants to display data without animating
      * @param list The list of objects that extends PieDataCostInterface
      */
     public void setData(List<? extends PieDataCostInterface> list){
+        setData(list, false);
+    }
+
+    /**
+     * Called when wants to display data
+     * @param list The list of objects that extends PieDataCostInterface
+     * @param animate To animate the graph or not
+     */
+    public void setData(List<? extends PieDataCostInterface> list, boolean animate){
         dataList = list;
         pieChart.clear();
 
         if(dataList.size() > 0 && checkEmptyPieDataCost(dataList)){
-            displayPieChart(dataList);
+            displayPieChart(dataList, animate);
         }
     }
 
@@ -133,20 +142,7 @@ public class PieChartFragment extends BaseChartFragment {
         return false;
     }
 
-    /**
-     * Update data while keeping the colors of each pie the same.
-     * @param list The list of objects that extends PieDataCostInterface
-     */
-    public void updateData(List<? extends PieDataCostInterface> list){
-        updateData(list, false);
-    }
-
-    /**
-     * Update data while keeping the colors of each pie the same.
-     * @param list The list of objects that extends PieDataCostInterface
-     * @param animate Whether or not to animate with new data and change its color
-     */
-    public void updateData(List<? extends PieDataCostInterface> list, boolean animate){
+    private void displayPieChart(List<? extends PieDataCostInterface> list, boolean animate){
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             names.add(list.get(i).getPieDataName());
@@ -187,55 +183,6 @@ public class PieChartFragment extends BaseChartFragment {
         if(animate){
             pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
         }
-
-        if(Build.VERSION.SDK_INT >= 21){
-            pieChart.setElevation(20);
-        }
-
-        dataSet.notifyDataSetChanged(); //let data know a dataSet changed
-        pieChart.notifyDataSetChanged();// let the chart know it's data changed
-        pieChart.invalidate(); //refresh
-    }
-
-    private void displayPieChart(List<? extends PieDataCostInterface> list){
-        ArrayList<String> names = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            names.add(list.get(i).getPieDataName());
-        }
-
-        // IMPORTANT: In a PieChart, no values (Entry) should have the same
-        // xIndex (even if from different DataSets), since no values can be
-        // drawn above each other.
-        ArrayList<Entry> value = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            value.add(new Entry(Math.abs(list.get(i).getPieDataCost()), i));
-        }
-
-        dataSet = new PieDataSet(value, "");
-        dataSet.setSliceSpace(0f);
-        dataSet.setSelectionShift(10f);
-
-        // Add colors
-        ArrayList<Integer> colors = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            try {
-                colors.add(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), list.get(i).getPieDataColor())));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(names, dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(0f);
-        pieChart.setData(data);
-
-        // undo all highlights
-        pieChart.highlightValues(null);
-
-        pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
 
         if(list.size() > 0){
             pieChart.setCenterText(list.get(0).getClass().getSimpleName());

@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
@@ -161,11 +160,11 @@ public class OverviewActivity extends BaseActivity implements
         if(position == 0){
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, Constants.BUDGET_LOCALE));
-            pieChartFragment.setData(expenseCategoryList);
+            pieChartFragment.setData(expenseCategoryList, true);
         }else if(position == 1){
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, Constants.BUDGET_LOCALE));
-            pieChartFragment.setData(incomeCategoryList);
+            pieChartFragment.setData(incomeCategoryList, true);
         }
     }
 

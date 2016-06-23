@@ -114,9 +114,9 @@ public class LocationFragment extends BaseRealmFragment
     /**
      * Get new location data that is in the current month
      * @param month Current month to target
-     * @param isNew True => its new, False => dont change color, just update location count
+     * @param animate whether or not to animate the pie chart
      */
-    private void fetchNewLocationData(Date month, final boolean isNew){
+    private void fetchNewLocationData(Date month, final boolean animate){
         Date endMonth = DateUtil.getLastDateOfMonth(month);
 
         RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
@@ -125,11 +125,12 @@ public class LocationFragment extends BaseRealmFragment
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                if(isNew){
+                countLocationList(myRealm.copyFromRealm(element), animate);
+                /*if(isNew){
                     countLocationList(myRealm.copyFromRealm(element));
                 }else{
                     updateLocationList(myRealm.copyFromRealm(element));
-                }
+                }*/
             }
         });
     }
@@ -138,7 +139,7 @@ public class LocationFragment extends BaseRealmFragment
      * Aggregate all transactions with the same location and update its pie chart.
      * @param ttList list of transactions
      */
-    private void countLocationList(List<Transaction> ttList){
+    private void countLocationList(List<Transaction> ttList, boolean animate){
         HashMap<Location, Integer> locationHash = new HashMap<>();
 
         for(int i = 0; i < ttList.size(); i++){
@@ -179,7 +180,7 @@ public class LocationFragment extends BaseRealmFragment
         locationAdapter.setLocationList(locationList);
 
         //This gives pie chart new location list
-        pieChartFragment.setData(locationList);
+        pieChartFragment.setData(locationList, animate);
 
         String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
         centerPanelRightTextView.setText(totalLocationsCount + appendString);
@@ -230,7 +231,7 @@ public class LocationFragment extends BaseRealmFragment
         locationAdapter.setLocationList(locationList);
 
         //This updates pie chart with new location list while keeping the colors the same
-        pieChartFragment.updateData(locationList);
+        pieChartFragment.setData(locationList);
 
         String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
         centerPanelRightTextView.setText(totalLocationsCount + appendString);
