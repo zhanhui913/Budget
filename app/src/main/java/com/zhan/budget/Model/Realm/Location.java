@@ -15,8 +15,6 @@ import io.realm.annotations.PrimaryKey;
 public class Location extends RealmObject implements PieDataCostInterface {
 
     @PrimaryKey
-    private String id;
-
     private String name;
     private String color;
 
@@ -25,14 +23,6 @@ public class Location extends RealmObject implements PieDataCostInterface {
 
     public Location(){
 
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -91,7 +81,6 @@ public class Location extends RealmObject implements PieDataCostInterface {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean checkEquals(Location other){
-        if(!id.equalsIgnoreCase(other.getId())) return false;
         if(!name.equalsIgnoreCase(other.getName())) return false;
         if(!color.equalsIgnoreCase(other.getColor())) return false;
         return true;
