@@ -88,4 +88,18 @@ public class Account extends RealmObject implements PieDataCostInterface{
     public String getPieDataColor(){
         return this.color;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Realm object check equality in terms of property
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean checkEquals(Account other){
+        if(!id.equalsIgnoreCase(other.getId())) return false;
+        if(!name.equalsIgnoreCase(other.getName())) return false;
+        if(isDefault != other.isDefault()) return false;
+        if(!color.equalsIgnoreCase(other.getColor())) return false;
+        return true;
+    }
 }

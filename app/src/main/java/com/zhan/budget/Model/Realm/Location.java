@@ -1,4 +1,6 @@
-package com.zhan.budget.Model;
+package com.zhan.budget.Model.Realm;
+
+import com.zhan.budget.Model.PieDataCostInterface;
 
 import org.parceler.Parcel;
 
@@ -10,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 @Parcel(implementations = {LocationRealmProxy.class},
         value = Parcel.Serialization.BEAN,
         analyze = {Location.class})
-public class Location extends RealmObject implements PieDataCostInterface{
+public class Location extends RealmObject implements PieDataCostInterface {
 
     @PrimaryKey
     private String id;
@@ -80,5 +82,18 @@ public class Location extends RealmObject implements PieDataCostInterface{
     @Override
     public String getPieDataColor(){
         return this.color;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Realm object check equality in terms of property
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean checkEquals(Location other){
+        if(!id.equalsIgnoreCase(other.getId())) return false;
+        if(!name.equalsIgnoreCase(other.getName())) return false;
+        if(!color.equalsIgnoreCase(other.getColor())) return false;
+        return true;
     }
 }

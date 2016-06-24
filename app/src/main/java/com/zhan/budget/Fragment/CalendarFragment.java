@@ -27,12 +27,11 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Location;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
+import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
-import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
@@ -574,7 +573,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
-                ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
+                /*ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
                 //Log.d(TAG, "scheduledTransaction from new :"+scheduledTransaction.getId());
                 
                 //Compare with today's date
@@ -588,17 +587,23 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 if(scheduledTransaction != null) {
                     addScheduleTransaction(scheduledTransaction, tt);
-                }
+                }*/
+                populateTransactionsForDate(tt.getDate());
+                updateTransactionStatus();
+                updateScheduledTransactionsForDecoration();
             }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
-                ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
+                /*ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
                 //Log.d(TAG, "scheduledTransaction from edit :" + scheduledTransaction.getId());
 
                 addNewOrEditTransaction(tt);
 
                 if(scheduledTransaction != null) {
                     addScheduleTransaction(scheduledTransaction, tt);
-                }
+                }*/
+                populateTransactionsForDate(tt.getDate());
+                updateTransactionStatus();
+                updateScheduledTransactionsForDecoration();
             }
         }
     }
@@ -609,7 +614,7 @@ public class CalendarFragment extends BaseRealmFragment implements
      * @param transaction The transaction that the scheduled transaction is based on.
      */
     private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
-        if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
+        /*if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
             myRealm.beginTransaction();
             scheduledTransaction.setTransaction(transaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
@@ -647,7 +652,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             }
 
             updateScheduledTransactionsForDecoration();
-        }
+        }*/
     }
 
     /**
@@ -655,7 +660,7 @@ public class CalendarFragment extends BaseRealmFragment implements
      * @param newOrEditTransaction The new transaction information.
      */
     private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
-        Log.d(TAG, "----------- Parceler Result ----------");
+        /*Log.d(TAG, "----------- Parceler Result ----------");
         Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
         Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
@@ -674,6 +679,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         updateTransactionStatus();
 
         updateScheduledTransactionsForDecoration();
+        */
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

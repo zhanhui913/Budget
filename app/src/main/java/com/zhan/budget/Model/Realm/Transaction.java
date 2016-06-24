@@ -1,7 +1,5 @@
 package com.zhan.budget.Model.Realm;
 
-import com.zhan.budget.Model.Location;
-
 import org.parceler.Parcel;
 
 import java.util.Date;
@@ -96,5 +94,36 @@ public class Transaction extends RealmObject {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Realm object check equality in terms of property
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean checkEquals(Transaction other){
+        if(!id.equalsIgnoreCase(other.getId())) return false;
+
+
+        if(other.getNote() != null && note != null){
+            if(!note.equalsIgnoreCase(other.getNote())) return false;
+        }else if(other.getNote() == null && note == null){
+            return true;
+        }
+
+        if(date.getTime() != other.getDate().getTime()) return false;
+        if(price != other.getPrice()) return false;
+        if(!dayType.equalsIgnoreCase(other.getDayType())) return false;
+        if(!category.checkEquals(other.getCategory())) return false;
+        if(!account.checkEquals(other.getAccount())) return false;
+
+        if(other.getLocation() != null && location != null){
+            if(!location.checkEquals(other.getLocation())) return false;
+        }else if(other.getLocation() == null || location == null){
+            return false;
+        }
+
+        return true;
     }
 }

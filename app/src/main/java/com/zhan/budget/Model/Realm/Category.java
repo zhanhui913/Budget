@@ -137,4 +137,21 @@ public class Category extends RealmObject implements PieDataCostInterface{
         return this.color;
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Realm object check equality in terms of property
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean checkEquals(Category other){
+        if(!id.equalsIgnoreCase(other.getId())) return false;
+        if(!name.equalsIgnoreCase(other.getName())) return false;
+        if(!type.equalsIgnoreCase(other.getType())) return false;
+        if(budget != other.getBudget()) return false;
+        if(!color.equalsIgnoreCase(other.getColor())) return false;
+        if(!icon.equalsIgnoreCase(other.getIcon())) return false;
+        if(index != other.getIndex()) return false;
+        return true;
+    }
 }

@@ -2,14 +2,17 @@ package com.zhan.budget.Activity.Transactions;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -17,6 +20,8 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+
+import org.parceler.Parcels;
 
 import java.util.Date;
 import java.util.List;
@@ -166,9 +171,28 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    // Adapter listeners
+    // Life cycle methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data.getExtras() != null) {
+             if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
+                 boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+
+                 Toast.makeText(getBaseContext(), "has changed : "+hasChanged, Toast.LENGTH_SHORT).show();
+
+                 if(hasChanged){
+                     //If something has been changed, update the list
+                     getDifferentData();
+                     getAllTransactionsForMonth();
+                     isChanged = true;
+                 }
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -179,9 +203,26 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         finish();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void onClickTransaction(int position){
         //Clicking the Transaction here does nothing
+        Toast.makeText(getBaseContext(), "Click transaction "+transactionList.get(position).getNote(), Toast.LENGTH_SHORT).show();
+
+
+        Intent editTransactionIntent = new Intent(getBaseContext(), TransactionInfoActivity.class);
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(transactionList.get(position).getDate()));
+
+        Parcelable wrapped = Parcels.wrap(transactionList.get(position));
+        editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
+
+        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
     }
 
     @Override
