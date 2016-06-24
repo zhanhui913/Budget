@@ -748,15 +748,17 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         if(newLocation){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
-                //Need to check if new location added already exist in location table
-                if(checkLocationExist(locationString)){
 
-                }else{
-                    Location newLocationObject = new Location();
-                    newLocationObject.setName(locationString);
-                    newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
-                    transaction.setLocation(newLocationObject);
-                }
+                Location newLocationObject = new Location();
+                newLocationObject.setName(locationString);
+                newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
+                transaction.setLocation(newLocationObject);
+
+                Realm myRealm = Realm.getDefaultInstance();
+                myRealm.beginTransaction();
+                myRealm.copyToRealmOrUpdate(newLocationObject);
+                myRealm.commitTransaction();
+                myRealm.close();
             }else{
                 transaction.setLocation(null);
             }
@@ -823,10 +825,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         setResult(RESULT_OK, intent);
 
         finish();
-    }
-
-    private boolean checkLocationExist(String value){
-        return false;
     }
 
     /**
