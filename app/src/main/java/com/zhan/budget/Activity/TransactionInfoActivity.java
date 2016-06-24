@@ -753,7 +753,6 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 }else{
                     Location newLocationObject = new Location();
-                    newLocationObject.setId(Util.generateUUID());
                     newLocationObject.setName(locationString);
                     newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                     transaction.setLocation(newLocationObject);

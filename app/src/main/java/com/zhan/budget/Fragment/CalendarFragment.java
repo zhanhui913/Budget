@@ -221,7 +221,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         String[] locationTempList = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
         for(int i = 0; i < locationTempList.length; i++){
             Location location = myRealm.createObject(Location.class);
-            location.setId(Util.generateUUID());
             location.setName(locationTempList[i]);
             location.setAmount(0);
             location.setColor(Colors.getRandomColorString(getContext()));
