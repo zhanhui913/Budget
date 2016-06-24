@@ -30,7 +30,6 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
-import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -573,113 +572,20 @@ public class CalendarFragment extends BaseRealmFragment implements
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_NEW_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
-                /*ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
-                //Log.d(TAG, "scheduledTransaction from new :"+scheduledTransaction.getId());
-                
-                //Compare with today's date
-                if(!tt.getDate().before(new Date())){
-                    tt.setDayType(DayType.SCHEDULED.toString());
-                }else{
-                    tt.setDayType(DayType.COMPLETED.toString());
-                }
 
-                addNewOrEditTransaction(tt);
-
-                if(scheduledTransaction != null) {
-                    addScheduleTransaction(scheduledTransaction, tt);
-                }*/
                 populateTransactionsForDate(tt.getDate());
                 updateTransactionStatus();
                 updateScheduledTransactionsForDecoration();
+                calendarView.selectDate(tt.getDate());
             }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
-                /*ScheduledTransaction scheduledTransaction = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_SCHEDULE_TRANSACTION));
-                //Log.d(TAG, "scheduledTransaction from edit :" + scheduledTransaction.getId());
 
-                addNewOrEditTransaction(tt);
-
-                if(scheduledTransaction != null) {
-                    addScheduleTransaction(scheduledTransaction, tt);
-                }*/
                 populateTransactionsForDate(tt.getDate());
                 updateTransactionStatus();
                 updateScheduledTransactionsForDecoration();
+                calendarView.selectDate(tt.getDate());
             }
         }
-    }
-
-    /**
-     * The function that will be called after user either adds or edit a scheduled transaction.
-     * @param scheduledTransaction The new scheduled transaction information.
-     * @param transaction The transaction that the scheduled transaction is based on.
-     */
-    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
-        /*if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
-            myRealm.beginTransaction();
-            scheduledTransaction.setTransaction(transaction);
-            myRealm.copyToRealmOrUpdate(scheduledTransaction);
-            myRealm.commitTransaction();
-
-            Log.d(TAG, "----------- Parceler Result ----------");
-            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
-            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
-            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
-            Log.i(TAG, "----------- Parceler Result ----------");
-
-            transaction.setDayType(DayType.SCHEDULED.toString());
-            Date nextDate = transaction.getDate();
-
-            for(int i = 0; i < 10; i++){
-                myRealm.beginTransaction();
-
-                if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
-                    nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
-                    nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                }else{
-                    nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
-                }
-
-                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                myRealm.copyToRealmOrUpdate(transaction);
-                myRealm.commitTransaction();
-            }
-
-            updateScheduledTransactionsForDecoration();
-        }*/
-    }
-
-    /**
-     * The function that will be called after user either adds or edit a transaction.
-     * @param newOrEditTransaction The new transaction information.
-     */
-    private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
-        /*Log.d(TAG, "----------- Parceler Result ----------");
-        Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
-        Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
-        Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
-        Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
-        Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
-        Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
-        Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
-        Log.i(TAG, "----------- Parceler Result ----------");
-
-        myRealm.beginTransaction();
-        myRealm.copyToRealmOrUpdate(newOrEditTransaction);
-        myRealm.commitTransaction();
-
-        calendarView.selectDate(newOrEditTransaction.getDate());
-        populateTransactionsForDate(newOrEditTransaction.getDate());
-        updateTransactionStatus();
-
-        updateScheduledTransactionsForDecoration();
-        */
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -745,7 +651,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickTransaction(int position){
-
         Transaction debugTransaction = transactionList.get(position);
 
         Log.d(TAG, "----------- Click Result ----------");
@@ -757,7 +662,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
         Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
         Log.i(TAG, "----------- Click Result ----------");
-
 
         editTransaction(position);
     }
@@ -771,14 +675,12 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.commitTransaction();
         Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
         updateTransactionList();
-       // Toast.makeText(getContext(), "calendar fragment delete transaction :"+position, Toast.LENGTH_SHORT).show();
 
         updateScheduledTransactionsForDecoration();
     }
 
     @Override
     public void onApproveTransaction(int position){
-        //Toast.makeText(getContext(), "calendar fragment approve transaction :"+position, Toast.LENGTH_SHORT).show();
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.COMPLETED.toString());
         myRealm.commitTransaction();
@@ -789,7 +691,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     @Override
     public void onUnapproveTransaction(int position){
-        //Toast.makeText(getContext(), "calendar fragment unapprove transaction :"+position, Toast.LENGTH_SHORT).show();
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.SCHEDULED.toString());
         myRealm.commitTransaction();

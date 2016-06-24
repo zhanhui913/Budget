@@ -61,6 +61,8 @@ import io.realm.Sort;
 public class TransactionInfoActivity extends BaseActivity implements
         TransactionFragment.OnTransactionFragmentInteractionListener{
 
+    private static final String TAG = "TransactionInfoActivity";
+
     private boolean isNewTransaction = false;
     private Activity instance;
     private Toolbar toolbar;
@@ -72,7 +74,6 @@ public class TransactionInfoActivity extends BaseActivity implements
     private TextView transactionCostView;
 
     private String priceString, noteString, locationString;
-    private Location location;
 
     private TransactionFragment transactionExpenseFragment, transactionIncomeFragment;
 
@@ -815,14 +816,10 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         }
 
-        //////// test
-
-        //Compare with today's date
         addNewOrEditTransaction(transaction);
         if(isScheduledTransaction){
             addScheduleTransaction(scheduledTransaction, transaction);
         }
-        ////////
 
         setResult(RESULT_OK, intent);
 
@@ -832,12 +829,6 @@ public class TransactionInfoActivity extends BaseActivity implements
     private boolean checkLocationExist(String value){
         return false;
     }
-
-    ///////
-    //
-    // test for realm creating transactions here
-    //
-    ///////
 
     /**
      * The function that will be called after user either adds or edit a scheduled transaction.
@@ -883,11 +874,10 @@ public class TransactionInfoActivity extends BaseActivity implements
                 myRealm.commitTransaction();
             }
 
-            //updateScheduledTransactionsForDecoration();
             myRealm.close();
         }
     }
-public static final String TAG = "s";
+
     /**
      * The function that will be called after user either adds or edit a transaction.
      * @param newOrEditTransaction The new transaction information.
@@ -908,16 +898,7 @@ public static final String TAG = "s";
         myRealm.copyToRealmOrUpdate(newOrEditTransaction);
         myRealm.commitTransaction();
         myRealm.close();
-/*
-        calendarView.selectDate(newOrEditTransaction.getDate());
-        populateTransactionsForDate(newOrEditTransaction.getDate());
-        updateTransactionStatus();
-
-        updateScheduledTransactionsForDecoration();
-        */
     }
-
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

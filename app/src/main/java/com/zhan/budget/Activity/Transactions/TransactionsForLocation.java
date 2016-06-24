@@ -21,10 +21,7 @@ public class TransactionsForLocation extends BaseTransactions {
 
     @Override
     protected void getDifferentData(){
-
         location = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION));
-
-        //location = getIntent().getExtras().getString(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION);
         updateTitleName(location.getName());
         updateEmptyListText("There is no transaction for '"+location.getName()+"' during "+DateUtil.convertDateToStringFormat2(beginMonth));
     }
