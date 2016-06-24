@@ -82,6 +82,7 @@
                     android:layout_height="@dimen/icon_height"
                     android:src="@drawable/svg_ic_menu_account"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:tint="?attr/themeColorText"/>
 
                 <TextView
@@ -100,7 +101,7 @@
                     android:layout_width="@dimen/icon_height"
                     android:layout_height="@dimen/icon_height"
                     android:src="@drawable/svg_ic_location"
-                    android:layout_alignParentLeft="false"
+                    android:layout_centerVertical="true"
                     android:tint="?attr/themeColorText"
                     android:layout_toRightOf="@+id/transactionAccount"
                     android:layout_marginLeft="10dp"/>
@@ -113,7 +114,9 @@
                     android:text="Location"
                     android:layout_toRightOf="@+id/locationIcon"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="2dp" />
+                    android:layout_marginLeft="2dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
             </RelativeLayout>
         </LinearLayout>
 
