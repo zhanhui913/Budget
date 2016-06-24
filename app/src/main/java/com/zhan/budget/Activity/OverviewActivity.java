@@ -115,7 +115,7 @@ public class OverviewActivity extends BaseActivity implements
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                changeTopPanelInfo(tab.getPosition());
+                changeTopPanelInfo(tab.getPosition(), true);
             }
 
             @Override
@@ -138,14 +138,14 @@ public class OverviewActivity extends BaseActivity implements
     }
 
     @Override
-    public void onComplete(BudgetType type, List<Category> categoryList, float totalCost){
+    public void onComplete(BudgetType type, List<Category> categoryList, float totalCost, boolean animate){
         if(type == BudgetType.EXPENSE){
             totalExpenseCost = totalCost;
             expenseCategoryList = categoryList;
 
             //set default tab to be the EXPENSE (ie position = 0)
             //Put this here so that it only gets called once.
-            changeTopPanelInfo(0);
+            changeTopPanelInfo(0, animate);
         }else{
             totalIncomeCost = totalCost;
             incomeCategoryList = categoryList;
@@ -155,16 +155,17 @@ public class OverviewActivity extends BaseActivity implements
     /**
      * Change chart and total cost information that is in the top panel
      * @param position The tab position
+     * @param animate To animate the pie chart or not
      */
-    private void changeTopPanelInfo(int position){
+    private void changeTopPanelInfo(int position, boolean animate){
         if(position == 0){
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, Constants.BUDGET_LOCALE));
-            pieChartFragment.setData(expenseCategoryList, true);
+            pieChartFragment.setData(expenseCategoryList, animate);
         }else if(position == 1){
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, Constants.BUDGET_LOCALE));
-            pieChartFragment.setData(incomeCategoryList, true);
+            pieChartFragment.setData(incomeCategoryList, animate);
         }
     }
 

@@ -110,12 +110,12 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(element);
                 myRealm.close();  BudgetPreference.removeRealmCache(getContext());
-                getMonthReport(currentMonth);
+                getMonthReport(currentMonth, true);
             }
         });
     }
 
-    private void getMonthReport(Date date){
+    private void getMonthReport(Date date, final boolean animate){
         //Refresh these variables
         final Date month = DateUtil.refreshMonth(date);
 
@@ -131,13 +131,13 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                if (transactionList != null) {
+                /*if (transactionList != null) {
                     transactionList.clear();
-                }
+                }*/
 
                 transactionList = myRealm.copyFromRealm(element);
                 myRealm.close();  BudgetPreference.removeRealmCache(getContext());
-                performAsyncCalculation();
+                performAsyncCalculation(animate);
             }
         });
     }
@@ -145,7 +145,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     /**
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
-    private void performAsyncCalculation(){
+    private void performAsyncCalculation(final boolean animate){
         CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), budgetType, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
@@ -174,7 +174,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
 
-                mListener.onComplete(budgetType, categoryList, sumCost);
+                mListener.onComplete(budgetType, categoryList, sumCost, animate);
             }
         });
         cc.execute();
@@ -223,6 +223,24 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
+            if(requestCode == Constants.RETURN_HAS_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+
+                if(hasChanged){
+                    //If something has been changed, update the list and the pie chart
+                    Toast.makeText(getContext(), "hanged changed", Toast.LENGTH_SHORT).show();
+
+                    getMonthReport(currentMonth, false);
+                }
+            }
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -283,7 +301,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-        startActivity(viewAllTransactionsForCategory);
+        startActivityForResult(viewAllTransactionsForCategory, Constants.RETURN_HAS_CHANGED);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,6 +311,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public interface OverviewInteractionListener {
-        void onComplete(BudgetType type ,List<Category> categoryList, float totalCost);
+        void onComplete(BudgetType type ,List<Category> categoryList, float totalCost, boolean animate);
     }
 }
