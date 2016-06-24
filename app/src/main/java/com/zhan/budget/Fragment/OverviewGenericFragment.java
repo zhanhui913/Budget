@@ -51,7 +51,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
-    private List<Transaction> transactionList;
+    private List<Transaction> transactionList = new ArrayList<>();
     private List<Category> categoryList;
 
     private CategoryGenericRecyclerAdapter categoryPercentListAdapter;
@@ -131,10 +131,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                /*if (transactionList != null) {
-                    transactionList.clear();
-                }*/
-
+                transactionList.clear();
                 transactionList = myRealm.copyFromRealm(element);
                 myRealm.close();  BudgetPreference.removeRealmCache(getContext());
                 performAsyncCalculation(animate);
@@ -146,11 +143,12 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(final boolean animate){
+
+        resetCategoryValues();
+
         CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), budgetType, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
             @Override
             public void onCompleteCalculation(List<Category> catList) {
-                //Toast.makeText(getContext(), "DONE CATEGORY CALCULATION", Toast.LENGTH_LONG).show();
-
                 categoryList = catList;
 
                 //Calculate total cost
@@ -178,6 +176,13 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
             }
         });
         cc.execute();
+    }
+
+    private void resetCategoryValues(){
+        for(int i = 0; i  < categoryList.size(); i++){
+            categoryList.get(i).setCost(0);
+            categoryList.get(i).setPercent(0);
+        }
     }
 
     private void confirmDelete(final int position){
@@ -235,7 +240,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                     //If something has been changed, update the list and the pie chart
                     Toast.makeText(getContext(), "hanged changed", Toast.LENGTH_SHORT).show();
 
-                    getMonthReport(currentMonth, false);
+                    getMonthReport(currentMonth, true);
                 }
             }
         }
