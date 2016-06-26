@@ -227,13 +227,7 @@ public class AccountFragment extends BaseRealmFragment implements
                 }
 
                 accountListAdapter.setAccountList(accountList);
-                /*
-                if(animate){
-                    pieChartFragment.setData(accountList);
-                }else{
-                    pieChartFragment.updateData(accountList);
-                }
-                */
+
                 pieChartFragment.setData(accountList, animate);
 
                 centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));

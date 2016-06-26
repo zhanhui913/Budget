@@ -17,7 +17,7 @@
             android:layout_height="match_parent" />
     </RelativeLayout>
 
-    <include layout="@layout/center_panel"
+    <include layout="@layout/center_panel_generic"
              android:id="@+id/centerPanel"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"

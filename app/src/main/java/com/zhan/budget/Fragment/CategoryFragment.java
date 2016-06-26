@@ -2,14 +2,18 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
+import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
@@ -28,6 +32,8 @@ public class CategoryFragment extends BaseFragment {
     private Date currentMonth;
     private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
 
+    private TextView leftTextView, rightTextView;
+
     private PieChartFragment pieChartFragment;
 
     public CategoryFragment() {
@@ -39,12 +45,16 @@ public class CategoryFragment extends BaseFragment {
         return R.layout.fragment_category;
     }
 
-
     @Override
     protected void init(){ Log.d(TAG, "init");
         setHasOptionsMenu(true);
 
         currentMonth = new Date();
+
+        leftTextView = (TextView) view.findViewById(R.id.leftTextView);
+        rightTextView = (TextView) view.findViewById(R.id.rightTextView);
+        leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.alizarin));
+        rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.nephritis));
 
         createTabs();
 
@@ -69,6 +79,7 @@ public class CategoryFragment extends BaseFragment {
             public void onComplete(float totalCost) {
                 isCategoryExpenseCalculationComplete = true;
                 totalExpenseCost = totalCost;
+                leftTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
                 updatePieChart();
             }
         });
@@ -78,6 +89,7 @@ public class CategoryFragment extends BaseFragment {
             public void onComplete(float totalCost) {
                 isCategoryIncomeCalculationComplete = true;
                 totalIncomeCost = totalCost;
+                rightTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
                 updatePieChart();
             }
         });
@@ -112,7 +124,6 @@ public class CategoryFragment extends BaseFragment {
     private float totalExpenseCost = 0f;
     private float totalIncomeCost = 0f;
 
-
     private void updatePieChart() {
         //If both EXPENSE and INCOME calculation are completed, do this
         if(isCategoryIncomeCalculationComplete && isCategoryExpenseCalculationComplete){
@@ -134,8 +145,8 @@ public class CategoryFragment extends BaseFragment {
             catIncome.setCost(Math.abs(totalIncomeCost));
             catIncome.setColor(getResources().getString(colorList[1]));
 
-            catList.add(catExpense);
             catList.add(catIncome);
+            catList.add(catExpense);
 
             pieChartFragment = PieChartFragment.newInstance(catList, true, true);
             getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
