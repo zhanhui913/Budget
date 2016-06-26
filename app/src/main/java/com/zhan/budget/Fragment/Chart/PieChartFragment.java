@@ -74,8 +74,9 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setHoleColor(ContextCompat.getColor(getContext(), R.color.transparent));
 
         // enable rotation of the chart by touch
-        pieChart.setRotationEnabled(true);
-        pieChart.setHighlightPerTapEnabled(true);
+        pieChart.setRotationEnabled(false);
+        pieChart.setHighlightPerTapEnabled(false);
+
 
         pieChart.setDrawSliceText(false);
 
