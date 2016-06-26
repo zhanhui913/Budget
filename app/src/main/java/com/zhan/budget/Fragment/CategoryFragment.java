@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -35,6 +34,11 @@ public class CategoryFragment extends BaseFragment {
     private TextView leftTextView, rightTextView;
 
     private PieChartFragment pieChartFragment;
+
+    private boolean isCategoryIncomeCalculationComplete = false;
+    private boolean isCategoryExpenseCalculationComplete = false;
+    private float totalExpenseCost = 0f;
+    private float totalIncomeCost = 0f;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -119,18 +123,12 @@ public class CategoryFragment extends BaseFragment {
         });
     }
 
-    private boolean isCategoryIncomeCalculationComplete = false;
-    private boolean isCategoryExpenseCalculationComplete = false;
-    private float totalExpenseCost = 0f;
-    private float totalIncomeCost = 0f;
-
+    /**
+     * Updates pie chart once both Expense and Income Category has been calculated
+     */
     private void updatePieChart() {
         //If both EXPENSE and INCOME calculation are completed, do this
         if(isCategoryIncomeCalculationComplete && isCategoryExpenseCalculationComplete){
-            Toast.makeText(getContext(), "update pie chart : "+totalExpenseCost+","+totalIncomeCost, Toast.LENGTH_SHORT).show();
-
-            Log.d("abc", "Expense ("+Math.abs(totalExpenseCost)+"), Income ("+Math.abs(totalIncomeCost)+")");
-
             List<Category> catList = new ArrayList<>();
 
             int[] colorList = new int[]{R.color.alizarin, R.color.nephritis};
@@ -212,8 +210,7 @@ public class CategoryFragment extends BaseFragment {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
+    
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
