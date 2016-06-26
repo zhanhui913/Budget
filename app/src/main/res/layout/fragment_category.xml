@@ -5,11 +5,30 @@
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.CategoryFragment">
 
+    <RelativeLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/graph_height"
+        android:background="?attr/themeColorHighlight">
+
+        <FrameLayout
+            android:id="@+id/chartContentFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <include layout="@layout/center_panel"
+             android:id="@+id/centerPanel"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/topPanel" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/tab_height"
         android:background="?attr/colorPrimary"
+        android:layout_below="@id/centerPanel"
         app:elevation="0dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"

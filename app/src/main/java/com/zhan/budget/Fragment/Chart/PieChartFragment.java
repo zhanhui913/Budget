@@ -29,6 +29,8 @@ public class PieChartFragment extends BaseChartFragment {
 
     private PieChart pieChart;
     protected static final String ARG_CHART_2 = "displayDataImmediately";
+    protected static final String ARG_CHART_3 = "animate";
+
     protected List<? extends PieDataCostInterface> dataList;
     protected PieDataSet dataSet;
 
@@ -36,19 +38,25 @@ public class PieChartFragment extends BaseChartFragment {
         // Required empty public constructor
     }
 
-    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> transactionList, boolean initImmediately){
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list){
+        return newInstance(list, false, false);
+    }
+
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately){
+        return newInstance(list, initImmediately, false);
+    }
+
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_CHART, Parcels.wrap(transactionList));
+        args.putParcelable(ARG_CHART, Parcels.wrap(list));
         args.putBoolean(ARG_CHART_2, initImmediately);
+        args.putBoolean(ARG_CHART_3, animate);
         pieChartFragment.setArguments(args);
 
         return pieChartFragment;
     }
 
-    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> categoryList){
-        return newInstance(categoryList, false);
-    }
 
     @Override
     protected int getFragmentLayout() {
@@ -86,12 +94,9 @@ public class PieChartFragment extends BaseChartFragment {
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
-        //pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
-        //pieChart.spin(2000, 0, 360, Easing.EasingOption.EaseInOutQuad);
-
         if(getArguments().getBoolean(ARG_CHART_2)) {
             dataList = Parcels.unwrap(getArguments().getParcelable(ARG_CHART));
-            setData(dataList);
+            setData(dataList, getArguments().getBoolean(ARG_CHART_3));
 
             if(dataList.size() > 0){
                 pieChart.setCenterText(dataList.get(0).getClass().getSimpleName());

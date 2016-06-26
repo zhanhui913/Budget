@@ -6,15 +6,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
+import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CategoryFragment extends BaseFragment {
 
@@ -22,6 +27,8 @@ public class CategoryFragment extends BaseFragment {
     private OnCategoryInteractionListener mListener;
     private Date currentMonth;
     private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
+
+    private PieChartFragment pieChartFragment;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -57,6 +64,24 @@ public class CategoryFragment extends BaseFragment {
         categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
         categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
 
+        categoryExpenseFragment.setInteraction(new CategoryGenericFragment.OnCategoryGenericListener() {
+            @Override
+            public void onComplete(float totalCost) {
+                isCategoryExpenseCalculationComplete = true;
+                totalExpenseCost = totalCost;
+                updatePieChart();
+            }
+        });
+
+        categoryIncomeFragment.setInteraction(new CategoryGenericFragment.OnCategoryGenericListener() {
+            @Override
+            public void onComplete(float totalCost) {
+                isCategoryIncomeCalculationComplete = true;
+                totalIncomeCost = totalCost;
+                updatePieChart();
+            }
+        });
+
         final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
@@ -80,6 +105,41 @@ public class CategoryFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private boolean isCategoryIncomeCalculationComplete = false;
+    private boolean isCategoryExpenseCalculationComplete = false;
+    private float totalExpenseCost = 0f;
+    private float totalIncomeCost = 0f;
+
+
+    private void updatePieChart() {
+        //If both EXPENSE and INCOME calculation are completed, do this
+        if(isCategoryIncomeCalculationComplete && isCategoryExpenseCalculationComplete){
+            Toast.makeText(getContext(), "update pie chart : "+totalExpenseCost+","+totalIncomeCost, Toast.LENGTH_SHORT).show();
+
+            Log.d("abc", "Expense ("+Math.abs(totalExpenseCost)+"), Income ("+Math.abs(totalIncomeCost)+")");
+
+            List<Category> catList = new ArrayList<>();
+
+            int[] colorList = new int[]{R.color.alizarin, R.color.nephritis};
+
+            Category catExpense = new Category();
+            catExpense.setName("Expense");
+            catExpense.setCost(Math.abs(totalExpenseCost));
+            catExpense.setColor(getResources().getString(colorList[0]));
+
+            Category catIncome = new Category();
+            catIncome.setName("Income");
+            catIncome.setCost(Math.abs(totalIncomeCost));
+            catIncome.setColor(getResources().getString(colorList[1]));
+
+            catList.add(catExpense);
+            catList.add(catIncome);
+
+            pieChartFragment = PieChartFragment.newInstance(catList, true, true);
+            getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
+        }
     }
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){

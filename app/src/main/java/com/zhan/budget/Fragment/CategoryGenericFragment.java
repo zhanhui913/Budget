@@ -74,6 +74,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private BudgetType budgetType;
     private CategoryGenericRecyclerAdapter.ARRANGEMENT arrangementType;
 
+    private OnCategoryGenericListener mListener;
+
     public CategoryGenericFragment() {
         // Required empty public constructor
     }
@@ -88,6 +90,10 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setInteraction(OnCategoryGenericListener mListener){
+        this.mListener = mListener;
     }
 
     @Override
@@ -269,7 +275,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         Log.d("DEBUG", "1) There are " + categoryList.size() + " categories");
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
-        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
 
             long startTime, endTime, duration;
 
@@ -280,9 +286,10 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             }
 
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Float doInBackground(Void... voids) {
 
                 startTime = System.nanoTime();
+                float totalCost = 0f;
 
                 //Go through each COMPLETED transaction and put them into the correct category
                 for(int t = 0; t < transactionMonthList.size(); t++){
@@ -291,16 +298,17 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                             float transactionPrice = transactionMonthList.get(t).getPrice();
                             float currentCategoryPrice = categoryList.get(c).getCost();
                             categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
+                            totalCost += categoryList.get(c).getCost();
                         }
                     }
                 }
 
-                return null;
+                return totalCost;
             }
 
             @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
+            protected void onPostExecute(Float result) {
+                super.onPostExecute(result);
 
                 for(int i = 0; i < categoryList.size(); i++){
                     Log.d("ZHAN1", "category : "+categoryList.get(i).getName()+" -> "+categoryList.get(i).getCost());
@@ -308,6 +316,10 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 //categoryAdapter.notifyDataSetChanged();
                 categoryRecyclerAdapter.setCategoryList(categoryList);
+
+                if(mListener != null){
+                    mListener.onComplete(result);
+                }
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -509,5 +521,15 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
             startActivityForResult(viewAllTransactionsForCategory, Constants.RETURN_HAS_CHANGED);
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Interfaces
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public interface OnCategoryGenericListener {
+        void onComplete(float totalCost);
     }
 }
