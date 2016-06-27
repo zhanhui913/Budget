@@ -57,10 +57,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, openLicenseBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, openLicenseBtn, emailBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
-    private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
+    private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, tourBtn, faqBtn;
 
     //
     private static int CURRENT_THEME;
@@ -98,7 +98,7 @@ public class SettingFragment extends BaseFragment {
         restoreBackupBtn = (TextView)view.findViewById(R.id.restoreBackupBtn);
         resetBtn = (TextView) view.findViewById(R.id.resetDataBtn);
         exportCSVBtn = (TextView) view.findViewById(R.id.exportCSVBtn);
-        emailBtn = (TextView) view.findViewById(R.id.emailBtn);
+        emailBtn = (ViewGroup) view.findViewById(R.id.emailBtn);
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
         openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
@@ -133,7 +133,6 @@ public class SettingFragment extends BaseFragment {
         themeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "them button click", Toast.LENGTH_SHORT).show();
                 themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode": "Day Mode"));
                 ThemeUtil.changeToTheme(getActivity(), (CURRENT_THEME == ThemeUtil.THEME_DARK ? ThemeUtil.THEME_LIGHT : ThemeUtil.THEME_DARK));
             }
@@ -157,8 +156,6 @@ public class SettingFragment extends BaseFragment {
         categoryOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "change category info", Toast.LENGTH_SHORT).show();
-
                 Intent settingsCategory = new Intent(getContext(), SettingsCategory.class);
                 startActivity(settingsCategory);
             }
@@ -168,9 +165,6 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 //getAccountList();
-
-                //Toast.makeText(getContext(), "change account info", Toast.LENGTH_SHORT).show();
-
                 Intent settingsAccount = new Intent(getContext(), SettingsAccount.class);
                 startActivity(settingsAccount);
             }
@@ -201,7 +195,6 @@ public class SettingFragment extends BaseFragment {
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "reset", Toast.LENGTH_SHORT).show();
                 resetData();
             }
         });
@@ -209,9 +202,6 @@ public class SettingFragment extends BaseFragment {
         exportCSVBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "csv", Toast.LENGTH_SHORT).show();
-                //getTransactionListForCSV();
-                //exportCSVSort();
                 requestFilePermissionToWriteCSV();
             }
         });
@@ -219,15 +209,13 @@ public class SettingFragment extends BaseFragment {
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "email", Toast.LENGTH_SHORT).show();
-                sendRealmData();
+                email();
             }
         });
 
         tourBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "tour", Toast.LENGTH_SHORT).show();
                 loadTutorials();
             }
         });
@@ -235,19 +223,18 @@ public class SettingFragment extends BaseFragment {
         faqBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "faq", Toast.LENGTH_SHORT).show();
             }
         });
 
         openLicenseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getContext(), "open source", Toast.LENGTH_SHORT).show();
                 Intent openSource = new Intent(getContext(), OpenSourceActivity.class);
                 startActivity(openSource);
             }
         });
     }
+
 
     private void sendRealmData() {
         try {
@@ -268,11 +255,9 @@ public class SettingFragment extends BaseFragment {
                     dst.close();
 
                     File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
-                    email(exportRealmFile);
+                    email(exportRealmFile, "Realm Data", "This is a realm data");
                 }else{
                     Log.d("FILE","cannot write file");
-                    //Toast.makeText(getContext(), "Fail to retrieve file.", Toast.LENGTH_SHORT).show();
-
                     Util.createSnackbar(getContext(), getView(), "Fail to retrieve file.");
                 }
             }
@@ -280,14 +265,6 @@ public class SettingFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Locations
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -380,7 +357,7 @@ public class SettingFragment extends BaseFragment {
             //STORAGE permission has not been granted
             requestFilePermissionToWrite();
         }else{
-            backUpData1();
+            backUpData();
         }
     }
 
@@ -440,43 +417,8 @@ public class SettingFragment extends BaseFragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         }
     }
-/*
+
     public void backUpData(){
-        try {
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
-            Date date = new Date();
-
-            if (sd.canWrite()) {
-                if(createDirectory()){ Log.d("FILE", "can write file");
-                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
-                    String backupDBPath = "Budget/" + Constants.NAME + "_" + DateUtil.convertDateToStringFormat6(date) + ".realm";
-                    File currentDB = new File(data, currentDBPath);
-                    File backupDB = new File(sd, backupDBPath);
-
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-
-                    String dateString = DateUtil.convertDateToStringFormat7(date);
-
-                    Log.d("FILE", "backupFile : "+Environment.getExternalStorageDirectory().toString() + backupDBPath+" -> "+dateString);
-
-                    updateLastBackupInfo(dateString);
-                    BudgetPreference.setLastBackup(getContext(), dateString);
-                }else{
-                    Log.d("FILE","cannot write file");
-                    Toast.makeText(getContext(), "Fail to backup data at "+DateUtil.convertDateToStringFormat7(date), Toast.LENGTH_SHORT).show();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-*/
-    public void backUpData1(){
         try{
             //create a backup file
             File exportRealmFile = new File(DOWNLOAD_DIRECTORY, EXPORT_REALM_FILE_NAME);
@@ -745,93 +687,7 @@ public class SettingFragment extends BaseFragment {
         exportCSV(sortCSV.ACCOUNT);
     }
 
-    private void exportCSV(sortCSV sortType){
-        /*
-        //Delimiter used in CSV file
-        final String COMMA_DELIMITER = ",";
-        final String NEW_LINE_SEPARATOR = "\n";
-
-        //CSV file header
-        final String FILE_HEADER = "Type, Date, Note, Category, Price, Account, Location, Completed?";
-
-        File root = Environment.getExternalStorageDirectory();
-        final File csvFile = new File(root, Constants.CSV_NAME);
-
-        final AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
-
-            long startTime, endTime, duration;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Log.d("SETTINGS_FRAGMENT", "preparing to write " + transactionList.size() + " entries into csv");
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                startTime = System.nanoTime();
-
-                FileWriter fileWriter = null;
-
-                try{
-                    fileWriter = new FileWriter(csvFile);
-
-                    //Write the CSV file header
-                    fileWriter.append(FILE_HEADER);
-
-                    //Add a new line separator after the header
-                    fileWriter.append(NEW_LINE_SEPARATOR);
-
-                    //Write a new transaction object to the csv file
-                    for(int i = 0; i < transactionList.size(); i++){
-                        fileWriter.append(checkNull(transactionList.get(i).getCategory().getType().toString()));
-                        fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(checkNull(DateUtil.convertDateToStringFormat5(transactionList.get(i).getDate())));
-                        fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(checkNull(transactionList.get(i).getNote()));
-                        fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(checkNull(transactionList.get(i).getCategory().getName()));
-                        fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), Constants.BUDGET_LOCALE)));
-                        fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(checkNull(transactionList.get(i).getAccount().getName()));
-                        fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(checkNull(transactionList.get(i).getLocation()));
-                        fileWriter.append(COMMA_DELIMITER);
-                        fileWriter.append(checkNull(transactionList.get(i).getDayType().toString()));
-                        fileWriter.append(NEW_LINE_SEPARATOR);
-                    }
-                    Log.d("SETTINGS_FRAGMENT", "CSV file was created successfully");
-                }catch(Exception e) {
-                    e.printStackTrace();
-                }finally{
-                    try{
-                        fileWriter.flush();
-                        fileWriter.close();
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void voids) {
-                super.onPostExecute(voids);
-
-                email(csvFile);
-
-                endTime = System.nanoTime();
-                duration = (endTime - startTime);
-                long milli = (duration / 1000000);
-                long second = (milli / 1000);
-                float minutes = (second / 60.0f);
-                Log.d("SETTINGS_FRAGMENT", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-            }
-        };
-        loader.execute();*/
-
+    private void exportCSV(final sortCSV sortType){
         String csvFileName = Constants.NAME + "_" + sortType.toString() + "_" + (DateUtil.convertDateToStringFormat6(new Date())) + Constants.CSV_END;
 
         final File csvFile = new File(DOWNLOAD_DIRECTORY, csvFileName);
@@ -841,7 +697,7 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onCompleteCSV(boolean value) {
                 if(value){
-                    email(csvFile);
+                    email(csvFile, "CSV", "This CSV is sorted by "+sortType.toString() );
                 }else{
                     Util.createSnackbar(getContext(), getView(), "CSV creation failed.");
                 }
@@ -870,8 +726,6 @@ public class SettingFragment extends BaseFragment {
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //Toast.makeText(getContext(), "RESETTING...", Toast.LENGTH_SHORT).show();
-
                         Util.createSnackbar(getContext(), getView(), "Resetting...");
 
                         BudgetPreference.resetFirstTime(getContext());
@@ -881,14 +735,6 @@ public class SettingFragment extends BaseFragment {
                                 .deleteRealmIfMigrationNeeded()
                                 .schemaVersion(1)
                                 .build();
-
-
-                        //Manually delete realm file
-                        /*Realm myRealm = Realm.getDefaultInstance();
-                        String path = myRealm.getPath();
-                        myRealm.close();
-                        File file = new File(path);
-                        file.delete();*/
 
                         Realm.deleteRealm(config);
                     }
@@ -1008,19 +854,29 @@ public class SettingFragment extends BaseFragment {
         }
     }
 
-    public void email(File file) {
+    public void email(File file, String subject, String body) {
         // init email intent and add file as attachment
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
-        intent.putExtra(Intent.EXTRA_EMAIL, "YOUR MAIL");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR SUBJECT");
-        intent.putExtra(Intent.EXTRA_TEXT, "YOUR TEXT");
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, body);
         Uri u = Uri.fromFile(file);
         Log.d("REALM", " u : "+u.getPath());
         intent.putExtra(Intent.EXTRA_STREAM, u);
 
         // start email intent
-        startActivity(Intent.createChooser(intent, "YOUR CHOOSER TITLE"));
+        startActivity(Intent.createChooser(intent, "Send email"));
+    }
+
+    public void email(){
+        // init email intent and add file as attachment
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("plain/text");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.target_email)});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+
+        // start email intent
+        startActivity(Intent.createChooser(intent, "Send email"));
     }
 
 }

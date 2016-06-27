@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity
         if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
             // Permission was granted!
             if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                settingFragment.backUpData1();
+                settingFragment.backUpData();
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                 settingFragment.restore();
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
