@@ -94,7 +94,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.getLegend().setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
 
         //Change color of text info when there are no data
-        pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        pieChart.getPaint(Chart.PAINT_INFO).setColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
 
         if(getArguments().getBoolean(ARG_CHART_2)) {
             dataList = Parcels.unwrap(getArguments().getParcelable(ARG_CHART));
