@@ -26,4 +26,5 @@
 	<string name="title_activity_open_source">OpenSourceActivity</string>
 	<string name="title_activity_account_info">AccountInfoActivity</string>
 	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
+	<string name="title_activity_location_info">LocationInfoActivity</string>
 </resources>

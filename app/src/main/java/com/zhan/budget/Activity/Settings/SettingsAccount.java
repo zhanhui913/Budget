@@ -104,10 +104,6 @@ public class SettingsAccount extends BaseRealmActivity implements
             public void onChange(RealmResults<Account> element) {
                 //element.removeChangeListener(this);
 
-                Log.d(TAG, "there's a change in results account ");
-                //accountList = myRealm.copyFromRealm(element);
-                //accountListAdapter.setAccountList(accountList);
-
                 accountListAdapter = new AccountListAdapter(instance, resultsAccount, false, true);
                 accountListView.setAdapter(accountListAdapter);
 
@@ -265,11 +261,10 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onDeleteAccount(int position){
-        myRealm.beginTransaction();
+        /*myRealm.beginTransaction();
         resultsAccount.get(position).deleteFromRealm();
-        myRealm.commitTransaction();
-
-        // accountListAdapter.notifyDataSetChanged();
+        myRealm.commitTransaction();*/
+        //Cant delete account for now
     }
 
     @Override
@@ -285,40 +280,6 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onAccountSetAsDefault(String accountID){
-        //final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
-/*
-        resultsAccount = myRealm.where(Account.class).findAllAsync();
-        resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
-            @Override
-            public void onChange(RealmResults<Account> element) {
-                element.removeChangeListener(this);
-
-                myRealm.beginTransaction();
-
-                //Update in realm
-                for(int i = 0; i < element.size(); i++){
-                    if(accountID.equalsIgnoreCase(element.get(i).getId())){
-                        element.get(i).setIsDefault(true);
-                    }else{
-                        element.get(i).setIsDefault(false);
-                    }
-                }
-
-                myRealm.commitTransaction();
-
-                //Update in temp list
-                for(int i = 0; i < accountList.size(); i++){
-                    if(accountID.equalsIgnoreCase(accountList.get(i).getId())){
-                        accountList.get(i).setIsDefault(true);
-                    }else{
-                        accountList.get(i).setIsDefault(false);
-                    }
-                }
-
-                accountListAdapter.notifyDataSetChanged();
-            }
-        });*/
-
         myRealm.beginTransaction();
         for(int a = 0; a < resultsAccount.size(); a++){
             if(resultsAccount.get(a).getId().equalsIgnoreCase(accountID)){
@@ -328,6 +289,5 @@ public class SettingsAccount extends BaseRealmActivity implements
             }
         }
         myRealm.commitTransaction();
-        //accountListAdapter.notifyDataSetChanged();
     }
 }
