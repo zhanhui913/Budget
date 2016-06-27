@@ -3,6 +3,7 @@
     android:id="@+id/monthPanel"
     style="@style/ItemPaddingStyle"
     android:layout_width="match_parent"
+    android:background="?attr/themeColorBtn"
     android:layout_height="wrap_content">
 
     <TextView
