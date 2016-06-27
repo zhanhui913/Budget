@@ -898,70 +898,64 @@ public class SettingFragment extends BaseFragment {
 
     private ArrayList<TutorialItem> getTourPages(Context context){
         TutorialItem page1 = new TutorialItem(
-                "Title",
-                "Subtitle",
+                "Calendar",
+                "View all transactions for a specific date.",
                 R.color.colorPrimary,
-                R.drawable.tutorial1);
+                R.drawable.screen1);
 
         TutorialItem page2 = new TutorialItem(
-                "Title 2",
-                "Subtitle 2",
+                "Theme",
+                "Change between light and dark mode.",
                 R.color.colorPrimary,
-                R.drawable.tutorial2);
+                R.drawable.screen2);
 
         TutorialItem page3 = new TutorialItem(
-                "Title",
-                "Subtitle",
+                "Approve",
+                "Approve, un-approve, or delete a transaction by swiping left.",
                 R.color.colorPrimary,
-                R.drawable.tutorial3_0);
+                R.drawable.screen3);
 
         TutorialItem page4 = new TutorialItem(
-                "Title 2",
-                "Subtitle 2",
+                "Add new Transaction",
+                "Create or edit a transaction.",
                 R.color.colorPrimary,
-                R.drawable.tutorial3_1);
+                R.drawable.screen4);
 
         TutorialItem page5 = new TutorialItem(
-                "Title",
-                "Subtitle",
+                "Budget",
+                "Compare your current spending with your budget.",
                 R.color.colorPrimary,
-                R.drawable.tutorial3_2);
+                R.drawable.screen5);
 
         TutorialItem page6 = new TutorialItem(
-                "Title 2",
-                "Subtitle 2",
+                "Account",
+                "View how much you spent on all accounts for a month.",
                 R.color.colorPrimary,
-                R.drawable.tutorial4);
+                R.drawable.screen6);
 
         TutorialItem page7 = new TutorialItem(
-                "Title",
-                "Subtitle",
+                "Location",
+                "View all locations that are in the transaction for a month",
                 R.color.colorPrimary,
-                R.drawable.tutorial5_0);
+                R.drawable.screen7);
 
         TutorialItem page8 = new TutorialItem(
-                "Title 2",
-                "Subtitle 2",
+                "Monthly Overview",
+                "View how much you spent and earn each month for the whole year.",
                 R.color.colorPrimary,
-                R.drawable.tutorial5_1);
+                R.drawable.screen8);
 
         TutorialItem page9 = new TutorialItem(
-                "Title",
-                "Subtitle",
+                "Percentage",
+                "View how much you spent on a category relative to other categories.",
                 R.color.colorPrimary,
-                R.drawable.tutorial6);
+                R.drawable.screen9);
 
         TutorialItem page10 = new TutorialItem(
-                "Title 2",
-                "Subtitle 2",
+                "View all",
+                "View all transactions for a specific Account, Category, Location during a month.",
                 R.color.colorPrimary,
-                R.drawable.tutorial7_0);
-
-        TutorialItem page11 = new TutorialItem(
-                "Title",
-                "Subtitle",
-                R.color.colorPrimary,
-                R.drawable.tutorial7_1);
+                R.drawable.screen10);
 
         ArrayList<TutorialItem> tourItems = new ArrayList<>();
         tourItems.add(page1);
@@ -974,7 +968,6 @@ public class SettingFragment extends BaseFragment {
         tourItems.add(page8);
         tourItems.add(page9);
         tourItems.add(page10);
-        tourItems.add(page11);
 
         return tourItems;
     }

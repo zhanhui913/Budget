@@ -627,13 +627,18 @@ public class TransactionInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString();
 
-                        if(editTransaction.getLocation() != null){
-                            if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
+                        if(editTransaction != null){
+                            if(editTransaction.getLocation() != null){
+                                if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
+                                    newLocation = true;
+                                }
+                            }else{
                                 newLocation = true;
                             }
                         }else{
                             newLocation = true;
                         }
+
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
