@@ -120,6 +120,32 @@
                 android:text="Manage accounts. Change icons and others."/>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/themeColorHighlight"/>
+
+        <LinearLayout
+            android:id="@+id/locationBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Locations"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                      android:id="@+id/locationContent"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Manage locations. Change colors."/>
+        </LinearLayout>
+
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.zhan.budget.Activity.Settings.OpenSourceActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
+import com.zhan.budget.Activity.Settings.SettingsLocation;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
@@ -56,7 +57,7 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, backupBtn, openLicenseBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, openLicenseBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, emailBtn, tourBtn, faqBtn;
@@ -88,6 +89,8 @@ public class SettingFragment extends BaseFragment {
         categoryOrderBtn = (ViewGroup) view.findViewById(R.id.categoryOrderBtn);
 
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
+
+        locationBtn = (ViewGroup) view.findViewById(R.id.locationBtn);
 
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
@@ -170,6 +173,14 @@ public class SettingFragment extends BaseFragment {
 
                 Intent settingsAccount = new Intent(getContext(), SettingsAccount.class);
                 startActivity(settingsAccount);
+            }
+        });
+
+        locationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settingsLocation = new Intent(getContext(), SettingsLocation.class);
+                startActivity(settingsLocation);
             }
         });
 
@@ -269,6 +280,14 @@ public class SettingFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Locations
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

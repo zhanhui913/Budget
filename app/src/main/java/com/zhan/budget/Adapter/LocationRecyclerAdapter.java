@@ -23,6 +23,11 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
     private List<Location> locationList;
     private OnLocationAdapterInteractionListener mListener;
 
+    /**
+     * Default is true
+     */
+    private boolean showTimes = true;
+
     public LocationRecyclerAdapter(Fragment fragment, List<Location> locationList) {
         this.context = fragment.getContext();
         this.locationList = locationList;
@@ -44,6 +49,18 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             mListener = (OnLocationAdapterInteractionListener) activity;
         }else {
             throw new RuntimeException(activity.toString() + " must implement OnLocationAdapterInteractionListener.");
+        }
+    }
+
+    public LocationRecyclerAdapter(Context context, List<Location> locationList, boolean showTimes){
+        this.context = context;
+        this.locationList = locationList;
+        this.showTimes = showTimes;
+
+        if(context instanceof OnLocationAdapterInteractionListener){
+            mListener = (OnLocationAdapterInteractionListener) context;
+        }else{
+            throw new RuntimeException(context.toString() + " must implement OnLocationAdapterInteractionListener.");
         }
     }
 
@@ -104,6 +121,10 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             panel = (ViewGroup) itemView.findViewById(R.id.locationPanel);
             name = (TextView) itemView.findViewById(R.id.locationName);
             amount = (TextView) itemView.findViewById(R.id.locationAmount);
+
+            if(!showTimes){
+                amount.setVisibility(View.GONE);
+            }
 
             panel.setOnClickListener(new View.OnClickListener() {
                 @Override
