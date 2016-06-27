@@ -1,13 +1,14 @@
 package com.zhan.budget.Fragment.Chart;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -33,6 +34,8 @@ public class PieChartFragment extends BaseChartFragment {
 
     protected List<? extends PieDataCostInterface> dataList;
     protected PieDataSet dataSet;
+
+    private boolean drawLegend = false;
 
     public PieChartFragment() {
         // Required empty public constructor
@@ -85,11 +88,13 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setRotationEnabled(false);
         pieChart.setHighlightPerTapEnabled(false);
 
-
         pieChart.setDrawSliceText(false);
 
-        //Remove legend
-        pieChart.getLegend().setEnabled(false);
+        pieChart.getLegend().setEnabled(drawLegend);
+        pieChart.getLegend().setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+
+        Toast.makeText(getContext(), "is slice avail? "+pieChart.isDrawSliceTextEnabled(), Toast.LENGTH_SHORT).show();
+
 
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
@@ -194,10 +199,13 @@ public class PieChartFragment extends BaseChartFragment {
             pieChart.setCenterText(list.get(0).getClass().getSimpleName());
         }
 
-        if(Build.VERSION.SDK_INT >= 21){
-            pieChart.setElevation(20);
-        }
-
         pieChart.invalidate();
+    }
+
+    /**
+     * Draw legend to the left of the chart
+     */
+    public void displayLegend(){
+        drawLegend = true;
     }
 }

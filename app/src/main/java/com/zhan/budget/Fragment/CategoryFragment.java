@@ -148,6 +148,8 @@ public class CategoryFragment extends BaseFragment {
 
             pieChartFragment = PieChartFragment.newInstance(catList, true, true);
             getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
+            pieChartFragment.displayLegend();
+
         }
     }
 
