@@ -289,6 +289,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             protected Float doInBackground(Void... voids) {
 
                 startTime = System.nanoTime();
+
+                //Calculates the total cost for all Category with the same BudgetType.
                 float totalCost = 0f;
 
                 //Go through each COMPLETED transaction and put them into the correct category
@@ -298,7 +300,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                             float transactionPrice = transactionMonthList.get(t).getPrice();
                             float currentCategoryPrice = categoryList.get(c).getCost();
                             categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                            totalCost += categoryList.get(c).getCost();
+                            totalCost += transactionPrice;
                         }
                     }
                 }

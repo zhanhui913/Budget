@@ -93,9 +93,6 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.getLegend().setEnabled(drawLegend);
         pieChart.getLegend().setPosition(Legend.LegendPosition.LEFT_OF_CHART);
 
-        Toast.makeText(getContext(), "is slice avail? "+pieChart.isDrawSliceTextEnabled(), Toast.LENGTH_SHORT).show();
-
-
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
