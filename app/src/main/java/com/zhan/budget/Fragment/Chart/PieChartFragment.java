@@ -3,7 +3,6 @@ package com.zhan.budget.Fragment.Chart;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -92,6 +91,7 @@ public class PieChartFragment extends BaseChartFragment {
 
         pieChart.getLegend().setEnabled(drawLegend);
         pieChart.getLegend().setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        pieChart.getLegend().setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
 
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
