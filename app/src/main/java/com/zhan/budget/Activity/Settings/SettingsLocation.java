@@ -120,7 +120,7 @@ public class SettingsLocation extends BaseRealmActivity implements
 
     private void editLocation(int position){
         Intent editLocationIntent = new Intent(this, LocationInfoActivity.class);
-        Parcelable wrapped = Parcels.wrap(locationListAdapter.getLocationList().get(position));
+        Parcelable wrapped = Parcels.wrap(locationList.get(position));
         editLocationIntent.putExtra(Constants.REQUEST_NEW_LOCATION, false);
         editLocationIntent.putExtra(Constants.REQUEST_EDIT_LOCATION, wrapped);
         startActivityForResult(editLocationIntent, Constants.RETURN_EDIT_LOCATION);
@@ -158,10 +158,6 @@ public class SettingsLocation extends BaseRealmActivity implements
                 Log.d(TAG, "location name is "+locationReturned.getName());
                 Log.d(TAG, "location color is "+locationReturned.getColor());
                 Log.i(TAG, "----------- onActivityResult new location ----------");
-
-                //accountList.add(accountReturned);
-                //accountListAdapter.setAccountList(accountList);
-                //updateAccountStatus();
 
                 //Scroll to the last position
                 locationListView.scrollToPosition(locationListAdapter.getItemCount() - 1);

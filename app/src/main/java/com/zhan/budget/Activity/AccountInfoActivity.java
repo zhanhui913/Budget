@@ -65,11 +65,9 @@ public class AccountInfoActivity extends BaseActivity implements
         if(!isNewAccount){
             account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_ACCOUNT));
 
-
             Log.d("ACCOUNT_INFO", "received account name : " +account.getName());
             Log.d("ACCOUNT_INFO", "received account id : " +account.getId());
             Log.d("ACCOUNT_INFO", "received account color : " +account.getColor());
-
         }else{
             //Give default account values
             account = new Account();
@@ -92,7 +90,6 @@ public class AccountInfoActivity extends BaseActivity implements
             deleteAccountBtn.setVisibility(View.GONE);
         }*/
         deleteAccountBtn.setVisibility(View.GONE);//Cant delete accounts for now
-
 
         //default color selected
         selectedColor = account.getColor();

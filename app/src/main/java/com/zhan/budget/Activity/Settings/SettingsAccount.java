@@ -22,6 +22,7 @@ import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
 
+import java.util.List;
 
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -48,7 +49,7 @@ public class SettingsAccount extends BaseRealmActivity implements
     private AccountListAdapter accountListAdapter;
 
     private RealmResults<Account> resultsAccount;
-    //private List<Account> accountList;
+    private List<Account> accountList;
 
     private Boolean isPulldownAllow = true;
 
@@ -102,9 +103,11 @@ public class SettingsAccount extends BaseRealmActivity implements
         resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
             public void onChange(RealmResults<Account> element) {
-                //element.removeChangeListener(this);
+                element.removeChangeListener(this);
 
-                accountListAdapter = new AccountListAdapter(instance, resultsAccount, false, true);
+                accountList = myRealm.copyFromRealm(element);
+
+                accountListAdapter = new AccountListAdapter(instance, accountList, false, true);
                 accountListView.setAdapter(accountListAdapter);
 
                 //Add divider
@@ -113,7 +116,7 @@ public class SettingsAccount extends BaseRealmActivity implements
                                 .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                                 .build());
 
-                accountListAdapter.setAccountList(element);
+                accountListAdapter.setAccountList(accountList);
 
                 updateAccountStatus();
             }
@@ -189,14 +192,13 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     private void editAccount(int position){
-        Log.d("ACCOUNT_INFO", "trying to edit account at pos : "+position);
-        Log.d("ACCOUNT_INFO", "accoutn name : " +resultsAccount.get(position).getName());
-        Log.d("ACCOUNT_INFO", "accoutn id : " +resultsAccount.get(position).getId());
-        Log.d("ACCOUNT_INFO", "accoutn color : " +resultsAccount.get(position).getColor());
-
+        Log.d(TAG, "trying to edit account at pos : "+position);
+        Log.d(TAG, "accoutn name : " +resultsAccount.get(position).getName());
+        Log.d(TAG, "accoutn id : " +resultsAccount.get(position).getId());
+        Log.d(TAG, "accoutn color : " +resultsAccount.get(position).getColor());
 
         Intent editAccountIntent = new Intent(this, AccountInfoActivity.class);
-        Parcelable wrapped = Parcels.wrap(accountListAdapter.getAccountList().get(position));
+        Parcelable wrapped = Parcels.wrap(accountList.get(position));
         editAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, false);
         editAccountIntent.putExtra(Constants.REQUEST_EDIT_ACCOUNT, wrapped);
         startActivityForResult(editAccountIntent, Constants.RETURN_EDIT_ACCOUNT);
@@ -219,28 +221,27 @@ public class SettingsAccount extends BaseRealmActivity implements
             if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
                  Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
 
-                Log.i("ZHAN", "----------- onActivityResult edit account ----------");
-                Log.d("ZHAN", "account name is "+accountReturned.getName());
-                Log.d("ZHAN", "account color is "+accountReturned.getColor());
-                Log.d("ZHAN", "account id is "+accountReturned.getId());
-                Log.i("ZHAN", "----------- onActivityResult edit account ----------");
+                Log.i(TAG, "----------- onActivityResult edit account ----------");
+                Log.d(TAG, "account name is "+accountReturned.getName());
+                Log.d(TAG, "account color is "+accountReturned.getColor());
+                Log.d(TAG, "account id is "+accountReturned.getId());
+                Log.i(TAG, "----------- onActivityResult edit account ----------");
 
-                //accountList.set(accountIndexEdited, accountReturned);
-                //accountListAdapter.setAccountList(accountList);
-                //updateAccountStatus();
+                accountList.set(accountIndexEdited, accountReturned);
+                accountListAdapter.setAccountList(accountList);
+                updateAccountStatus();
+
             }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
                 Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+                Log.i(TAG, "----------- onActivityResult new account ----------");
+                Log.d(TAG, "account name is "+accountReturned.getName());
+                Log.d(TAG, "account color is "+accountReturned.getColor());
+                Log.d(TAG, "account id is "+accountReturned.getId());
+                Log.i(TAG, "----------- onActivityResult new account ----------");
 
-
-                Log.i("ZHAN", "----------- onActivityResult new account ----------");
-                Log.d("ZHAN", "account name is "+accountReturned.getName());
-                Log.d("ZHAN", "account color is "+accountReturned.getColor());
-                Log.d("ZHAN", "account id is "+accountReturned.getId());
-                Log.i("ZHAN", "----------- onActivityResult new account ----------");
-
-                //accountList.add(accountReturned);
-                //accountListAdapter.setAccountList(accountList);
-                //updateAccountStatus();
+                accountList.add(accountReturned);
+                accountListAdapter.setAccountList(accountList);
+                updateAccountStatus();
 
                 //Scroll to the last position
                 accountListView.scrollToPosition(accountListAdapter.getItemCount() - 1);
@@ -256,7 +257,8 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onClickAccount(int position){
-
+        accountIndexEdited = position;
+        editAccount(position);
     }
 
     @Override

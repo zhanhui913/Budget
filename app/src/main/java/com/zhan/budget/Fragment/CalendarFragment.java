@@ -208,12 +208,13 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         //Create default accounts
         String[] tempAccountList = new String[]{"Credit Card","Debit Card", "Cash"};
+        int[] tempAccountColorList = new int[]{R.color.amethyst, R.color.asbestos, R.color.belize_hole};
         for(int i = 0 ; i < tempAccountList.length; i++){
             Account account = myRealm.createObject(Account.class);
             account.setId(Util.generateUUID());
             account.setName(tempAccountList[i]);
             account.setIsDefault((i == 0));
-            account.setColor(Colors.getRandomColorString(getContext()));
+            account.setColor(getResources().getString(tempAccountColorList[i]));
             accountList.add(account);
         }
 
@@ -229,7 +230,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         //Create fake transactions
         Date startDate = DateUtil.convertStringToDate("2016-01-01");
-        Date endDate = DateUtil.convertStringToDate("2017-01-01");
+        Date endDate = DateUtil.convertStringToDate("2016-07-01");
 
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
