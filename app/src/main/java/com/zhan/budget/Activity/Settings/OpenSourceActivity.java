@@ -1,13 +1,15 @@
 package com.zhan.budget.Activity.Settings;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.pdfjet.Text;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseActivity;
 import com.zhan.budget.Adapter.OpenSourceRecyclerAdapter;
@@ -17,9 +19,11 @@ import com.zhan.budget.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenSourceActivity extends BaseActivity {
+public class OpenSourceActivity extends BaseActivity
+        implements OpenSourceRecyclerAdapter.OnOpenSourceInteractionListener{
 
     private Toolbar toolbar;
+    private List<OpenSource> openSourceList;
 
     @Override
     protected int getActivityLayout(){
@@ -45,10 +49,10 @@ public class OpenSourceActivity extends BaseActivity {
     }
 
     private void createOpenSourceList(){
-        List<OpenSource> openSourceList = new ArrayList<>();
+        openSourceList = new ArrayList<>();
 
-        String[] titles = new String[]{"Realm", "CircularView", "FlexibleCalendar", "SwipeLayout", "Ultra-Ptr", "RoundCornerProgressBar", "Parceler", "SmoothProgressBar", "WilliamChart", "MPAndroidChart", "Android-PdfMyXml", "MaterialHelpTutorial", "FlexibleDivider"};
-        String[] authors = new String[]{"realm", "zhanhui913", "p_v", "daimajia", "scrain", "akexorcist", "parceler", "castorflex", "diogobernardino", "PhilJay", "se-bastiaan", "riggaroo", "yqritc"};
+        String[] titles = new String[]{"Realm-Java", "CircularViewAndroid", "FlexibleCalendar", "AndroidSwipeLayout", "Android-Ultra-Pull-To-Refresh", "Android-RoundCornerProgressBar", "Parceler", "SmoothProgressBar", "WilliamChart", "MPAndroidChart", "Android-PdfMyXml", "MaterialIntroTutorial", "RecyclerView-FlexibleDivider"};
+        String[] authors = new String[]{"realm", "zhanhui913", "p-v", "daimajia", "liaohuqiu", "akexorcist", "johncarl81", "castorflex", "diogobernardino", "PhilJay", "se-bastiaan", "riggaroo", "yqritc"};
         String[] colors = new  String[]{"#FFf39c12", "#FF2980b9", "#970019", "#FF2ecc71", "#FFf5e16e", "#FFc0392b", "#FF2ecc71", "#FFbe90d4", "#FF7f8c8d", "#FFecc62c", "#FF89c4f4", "#FF87d37c", "#FFe76558"};
 
         for(int i = 0; i < titles.length; i++){
@@ -93,5 +97,15 @@ public class OpenSourceActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onClick(int position){
+        Toast.makeText(getBaseContext(), "click on "+position, Toast.LENGTH_SHORT).show();
+
+        String url = "https://github.com/" + openSourceList.get(position).getAuthor() + "/" + openSourceList.get(position).getName();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 }

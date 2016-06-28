@@ -21,15 +21,31 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
 
     private Context context;
     private List<OpenSource> openSourceList;
+    private OnOpenSourceInteractionListener mListener;
+
 
     public OpenSourceRecyclerAdapter(Fragment fragment,List<OpenSource> openSourceList) {
         this.context = fragment.getContext();
         this.openSourceList = openSourceList;
+
+        //Any activity or fragment that uses this adapter needs to implement the OnOpenSourceInteractionListener interface
+        if (fragment instanceof OnOpenSourceInteractionListener) {
+            mListener = (OnOpenSourceInteractionListener) fragment;
+        } else {
+            throw new RuntimeException(fragment.toString() + " must implement OnOpenSourceInteractionListener.");
+        }
     }
 
     public OpenSourceRecyclerAdapter(Activity activity, List<OpenSource> openSourceList){
         this.context = activity;
         this.openSourceList = openSourceList;
+
+        //Any activity or fragment that uses this adapter needs to implement the OnOpenSourceInteractionListener interface
+        if (activity instanceof OnOpenSourceInteractionListener) {
+            mListener = (OnOpenSourceInteractionListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString() + " must implement OnOpenSourceInteractionListener.");
+        }
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -83,6 +99,17 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
             icon = (CircularView) itemView.findViewById(R.id.openSourceIcon);
             name = (TextView) itemView.findViewById(R.id.openSourceName);
             author = (TextView) itemView.findViewById(R.id.openSourceAuthor);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClick(getLayoutPosition());
+                }
+            });
         }
+    }
+
+    public interface OnOpenSourceInteractionListener{
+        void onClick(int position);
     }
 }
