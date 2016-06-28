@@ -2,8 +2,6 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -105,16 +103,6 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
                 viewHolder.defaultAccountIndicatorOn.setVisibility(View.INVISIBLE);
                 viewHolder.defaultAccountIndicatorOff.setVisibility(View.VISIBLE);
             }
-
-            viewHolder.defaultAccountIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    Util.createSnackbar(context, v, "Set "+account.getName()+" as default account");
-
-                    mListener.onAccountSetAsDefault(account.getId());
-                    return false;
-                }
-            });
         }else{
             viewHolder.defaultAccountIndicatorOn.setVisibility(View.GONE);
             viewHolder.defaultAccountIndicatorOff.setVisibility(View.GONE);
@@ -214,8 +202,20 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
                     mListener.onEditAccount(getLayoutPosition());
                 }
             });
+
+            if(allowClickSetDefault){
+                defaultAccountIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        mListener.onAccountSetAsDefault(getLayoutPosition());
+                        return false;
+                    }
+                });
+            }
         }
     }
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -232,6 +232,6 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
 
         void onPullDownAllow(boolean value);
 
-        void onAccountSetAsDefault(String accountID);
+        void onAccountSetAsDefault(int position);
     }
 }

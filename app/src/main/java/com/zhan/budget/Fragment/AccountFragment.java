@@ -453,7 +453,7 @@ public class AccountFragment extends BaseRealmFragment implements
     }
 
     @Override
-    public void onAccountSetAsDefault(final String accountID){
+    public void onAccountSetAsDefault(int position){
        /*
         final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
         accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {

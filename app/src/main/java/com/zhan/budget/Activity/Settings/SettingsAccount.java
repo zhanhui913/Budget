@@ -18,6 +18,7 @@ import com.zhan.budget.Adapter.AccountListAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
@@ -281,15 +282,18 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     @Override
-    public void onAccountSetAsDefault(String accountID){
+    public void onAccountSetAsDefault(int position){
         myRealm.beginTransaction();
-        for(int a = 0; a < resultsAccount.size(); a++){
-            if(resultsAccount.get(a).getId().equalsIgnoreCase(accountID)){
-                resultsAccount.get(a).setIsDefault(true);
-            }else{
-                resultsAccount.get(a).setIsDefault(false);
-            }
+        for(int i = 0; i < resultsAccount.size(); i++){
+            resultsAccount.get(i).setIsDefault(false);
         }
+        resultsAccount.get(position).setIsDefault(true);
         myRealm.commitTransaction();
+
+        //Using any subclass of view to get root view
+        Util.createSnackbar(getBaseContext(), emptyAccountText.getRootView(), "Set "+resultsAccount.get(position).getName()+" as default account");
+
+        accountList = myRealm.copyFromRealm(resultsAccount);
+        accountListAdapter.setAccountList(accountList);
     }
 }
