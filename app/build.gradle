@@ -16,6 +16,18 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs{
+        release {
+            try {
+                storeFile file(KEYSTORE_PATH)
+                storePassword KEYSTORE_PASSWORD
+                keyAlias 'Budget'
+                keyPassword KEY_PASSWORD
+            } catch (ex) {
+                throw new InvalidUserDataException("You should define KEYSTORE_PATH, KEYSTORE_PASSWORD, and KEY_PASSWORD in gradle.properties.")
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
