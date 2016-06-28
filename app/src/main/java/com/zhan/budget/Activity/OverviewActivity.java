@@ -131,8 +131,8 @@ public class OverviewActivity extends BaseActivity implements
     }
 
     private void createCharts(){
-        barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
-        percentChartFragment = PercentChartFragment.newInstance(new ArrayList<Category>());
+        //barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
+        //percentChartFragment = PercentChartFragment.newInstance(new ArrayList<Category>());
         pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>());
         getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
     }
@@ -180,9 +180,11 @@ public class OverviewActivity extends BaseActivity implements
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //Remove menu for now
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.overview_chart, menu);
-        return true;
+        //return true;
+        return false;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

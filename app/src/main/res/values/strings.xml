@@ -6,14 +6,12 @@
 
 	<string name="action_settings">Settings</string>
 
+	<!-- Permissions -->
 	<string name="permission_storage_rationale">You need to allow access to storage in order to create a backup database.</string>
 	<string name="permission_denied">Permission denied.</string>
 	<string name="permission_denied_message">Are you sure you want to deny this permission?</string>
 
-	<string name="target_email">zhanapp@gmail.com</string>
-
-	<!-- TODO: Remove or change this placeholder text -->
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<!-- Activity name -->
 	<string name="title_activity_transaction_info">Transaction</string>
 	<string name="title_activity_main2">Main2Activity</string>
 	<string name="title_activity_category_info">CategoryInfo</string>
@@ -30,7 +28,7 @@
 	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
 	<string name="title_activity_location_info">LocationInfoActivity</string>
 
-
+	<!-- Tutorial string -->
 	<string name="tutorial_description_1">View all transactions for a specific date</string>
 	<string name="tutorial_description_2">Change between light and dark mode</string>
 	<string name="tutorial_description_3">Approve, un-approve, or delete a transaction by swiping left</string>
@@ -40,4 +38,7 @@
 	<string name="tutorial_description_7">Enter and track location for your purchases</string>
 	<string name="tutorial_description_8">View how much you spent and earn each month</string>
 	<string name="tutorial_description_9">See what you are spending the most on</string>
+
+	<!-- Etc -->
+	<string name="target_email">zhanapp@gmail.com</string>
 </resources>
