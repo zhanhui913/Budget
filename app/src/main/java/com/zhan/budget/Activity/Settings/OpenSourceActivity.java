@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseActivity;
@@ -101,8 +100,6 @@ public class OpenSourceActivity extends BaseActivity
 
     @Override
     public void onClick(int position){
-        Toast.makeText(getBaseContext(), "click on "+position, Toast.LENGTH_SHORT).show();
-
         String url = "https://github.com/" + openSourceList.get(position).getAuthor() + "/" + openSourceList.get(position).getName();
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
