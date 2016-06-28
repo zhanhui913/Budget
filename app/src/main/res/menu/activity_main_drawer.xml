@@ -32,11 +32,14 @@
         <!--<item
             android:id="@+id/nav_info"
             android:icon="@drawable/svg_ic_menu_info"
-            android:title="Info" />-->
+            android:title="Info" /> -->
+
+        <!-- Remove for now in v1.0.0 -->
+        <!--
         <item
             android:id="@+id/nav_rate"
             android:icon="@drawable/svg_ic_menu_rate"
-            android:title="Rate" />
+            android:title="Rate" />-->
     </group>
 
 </menu>

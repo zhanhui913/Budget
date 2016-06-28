@@ -65,7 +65,9 @@ public class MainActivity extends BaseActivity
         accountFragment = new AccountFragment();
         settingFragment = new SettingFragment();
         //infoFragment = new InfoFragment();
-        rateFragment = new RateFragment();
+
+        // remove for now in v1.0.0
+        //rateFragment = new RateFragment();
         locationFragment = new LocationFragment();
     }
 
@@ -197,11 +199,11 @@ public class MainActivity extends BaseActivity
                     /*case R.id.nav_info:
                         fragment = infoFragment;
                         title = "Info";
-                        break;*/
+                        break;
                     case R.id.nav_rate:
                         fragment = rateFragment;
                         title = "Rate";
-                        break;
+                        break;*/
                 }
 
                 if (fragment != null) {

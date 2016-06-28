@@ -267,17 +267,21 @@
             android:paddingBottom="10dp"
             android:text="Tour"/>
 
+        <!-- remove for now in v1.0.0 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:visibility="gone"
             android:background="?attr/themeColorHighlight"/>
 
+        <!-- remove for now in v1.0.0 -->
         <TextView style="@style/SettingsTextViewButtonStyle"
             android:id="@+id/faqBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
             android:background="?attr/themeColorBtn"
+            android:visibility="gone"
             android:text="FAQ"/>
 
         <View
