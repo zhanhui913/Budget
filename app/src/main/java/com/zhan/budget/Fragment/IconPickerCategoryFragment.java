@@ -11,6 +11,7 @@ import com.zhan.budget.Adapter.CategoryGrid.IconCategoryRecyclerAdapter;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.View.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ import java.util.List;
  */
 public class IconPickerCategoryFragment extends BaseFragment
     implements IconCategoryRecyclerAdapter.OnCategoryGridAdapterInteractionListener{
+
+    private static final int NUM_COLUMNS = 5;
 
     private OnIconPickerCategoryFragmentInteractionListener mListener;
 
@@ -78,7 +81,10 @@ public class IconPickerCategoryFragment extends BaseFragment
         }
 
         iconCategoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
-        iconCategoryGridView.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        iconCategoryGridView.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
+
+        //Add padding
+        iconCategoryGridView.addItemDecoration(new SpacesItemDecoration(getContext(), R.dimen.grid_view_horizontal_offset, R.dimen.grid_view_vertical_offset));
 
         iconCategoryGridAdapter = new IconCategoryRecyclerAdapter(this, categoryIconList, selectedColor);
         iconCategoryGridView.setAdapter(iconCategoryGridAdapter);

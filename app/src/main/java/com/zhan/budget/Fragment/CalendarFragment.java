@@ -379,8 +379,6 @@ public class CalendarFragment extends BaseRealmFragment implements
             public BaseCellView getCellView(int position, View convertView, ViewGroup parent, @BaseCellView.CellType int cellType) {
                 BaseCellView cellView = (BaseCellView) convertView;
                 if (cellView == null) {
-                   // LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    //cellView = (BaseCellView) inflater.inflate(R.layout.calendar_date_cell_view, parent, false);
                     cellView = (BaseCellView) View.inflate(getContext(), R.layout.calendar_date_cell_view, null);
                 }
 

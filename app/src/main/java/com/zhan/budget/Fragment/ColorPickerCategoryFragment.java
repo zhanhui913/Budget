@@ -11,6 +11,7 @@ import com.zhan.budget.Adapter.CategoryGrid.ColorCategoryRecyclerAdapter;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
+import com.zhan.budget.View.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class ColorPickerCategoryFragment extends BaseFragment
 
     private OnColorPickerCategoryFragmentInteractionListener mListener;
 
+    private static final int NUM_COLUMNS = 5;
     private static final String ARG_1 = "selectedCategoryColor";
 
     private RecyclerView colorCategoryGridView;
@@ -75,7 +77,10 @@ public class ColorPickerCategoryFragment extends BaseFragment
         }
 
         colorCategoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
-        colorCategoryGridView.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        colorCategoryGridView.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
+
+        //Add padding
+        colorCategoryGridView.addItemDecoration(new SpacesItemDecoration(getContext(), R.dimen.grid_view_horizontal_offset, R.dimen.grid_view_vertical_offset));
 
         colorCategoryGridAdapter = new ColorCategoryRecyclerAdapter(this, categoryColorList);
         colorCategoryGridView.setAdapter(colorCategoryGridAdapter);
