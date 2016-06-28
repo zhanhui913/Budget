@@ -36,7 +36,7 @@
 	<string name="tutorial_description_3">Approve, un-approve, or delete a transaction by swiping left</string>
 	<string name="tutorial_description_4">Input amount and select category, account, notes, location, etc</string>
 	<string name="tutorial_description_5">Compare your current spending with your budget</string>
-	<string name="tutorial_description_6">View how much you spent on all accounts for a month</string>
+	<string name="tutorial_description_6">View how much you spent on all accounts</string>
 	<string name="tutorial_description_7">Enter and track location for your purchases</string>
 	<string name="tutorial_description_8">View how much you spent and earn each month</string>
 	<string name="tutorial_description_9">See what you are spending the most on</string>
