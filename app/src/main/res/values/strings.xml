@@ -29,4 +29,15 @@
 	<string name="title_activity_account_info">AccountInfoActivity</string>
 	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
 	<string name="title_activity_location_info">LocationInfoActivity</string>
+
+
+	<string name="tutorial_description_1">View all transactions for a specific date</string>
+	<string name="tutorial_description_2">Change between light and dark mode</string>
+	<string name="tutorial_description_3">Approve, un-approve, or delete a transaction by swiping left</string>
+	<string name="tutorial_description_4">Input amount and select category, account, notes, location, etc</string>
+	<string name="tutorial_description_5">Compare your current spending with your budget</string>
+	<string name="tutorial_description_6">View how much you spent on all accounts for a month</string>
+	<string name="tutorial_description_7">Enter and track location for your purchases</string>
+	<string name="tutorial_description_8">View how much you spent and earn each month</string>
+	<string name="tutorial_description_9">See what you're spending the most on</string>
 </resources>

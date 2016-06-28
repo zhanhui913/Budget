@@ -3,7 +3,6 @@ package com.zhan.budget.Fragment;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,6 +27,7 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Tutorial;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.ExtendedNumberPicker;
 
@@ -47,7 +47,6 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import za.co.riggaroo.materialhelptutorial.TutorialItem;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 /**
@@ -757,84 +756,8 @@ public class SettingFragment extends BaseFragment {
 
     private void loadTutorials(){
         Intent mainAct = new Intent(getContext(), MaterialTutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTourPages(getContext()));
+        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(getContext()));
         startActivity(mainAct);
-    }
-
-    private ArrayList<TutorialItem> getTourPages(Context context){
-        TutorialItem page1 = new TutorialItem(
-                "Calendar",
-                "View all transactions for a specific date.",
-                R.color.colorPrimary,
-                R.drawable.screen1);
-
-        TutorialItem page2 = new TutorialItem(
-                "Theme",
-                "Change between light and dark mode.",
-                R.color.colorPrimary,
-                R.drawable.screen2);
-
-        TutorialItem page3 = new TutorialItem(
-                "Approve",
-                "Approve, un-approve, or delete a transaction by swiping left.",
-                R.color.colorPrimary,
-                R.drawable.screen3);
-
-        TutorialItem page4 = new TutorialItem(
-                "Add new Transaction",
-                "Create or edit a transaction.",
-                R.color.colorPrimary,
-                R.drawable.screen4);
-
-        TutorialItem page5 = new TutorialItem(
-                "Budget",
-                "Compare your current spending with your budget.",
-                R.color.colorPrimary,
-                R.drawable.screen5);
-
-        TutorialItem page6 = new TutorialItem(
-                "Account",
-                "View how much you spent on all accounts for a month.",
-                R.color.colorPrimary,
-                R.drawable.screen6);
-
-        TutorialItem page7 = new TutorialItem(
-                "Location",
-                "View all locations that are in the transaction for a month",
-                R.color.colorPrimary,
-                R.drawable.screen7);
-
-        TutorialItem page8 = new TutorialItem(
-                "Monthly Overview",
-                "View how much you spent and earn each month for the whole year.",
-                R.color.colorPrimary,
-                R.drawable.screen8);
-
-        TutorialItem page9 = new TutorialItem(
-                "Percentage",
-                "View how much you spent on a category relative to other categories.",
-                R.color.colorPrimary,
-                R.drawable.screen9);
-
-        TutorialItem page10 = new TutorialItem(
-                "View all",
-                "View all transactions for a specific Account, Category, Location during a month.",
-                R.color.colorPrimary,
-                R.drawable.screen10);
-
-        ArrayList<TutorialItem> tourItems = new ArrayList<>();
-        tourItems.add(page1);
-        tourItems.add(page2);
-        tourItems.add(page3);
-        tourItems.add(page4);
-        tourItems.add(page5);
-        tourItems.add(page6);
-        tourItems.add(page7);
-        tourItems.add(page8);
-        tourItems.add(page9);
-        tourItems.add(page10);
-
-        return tourItems;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
