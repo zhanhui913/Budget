@@ -44,7 +44,7 @@
 
     <!-- Used for grid view offsets -->
     <dimen name="grid_view_vertical_offset">0dp</dimen>
-    <dimen name="grid_view_horizontal_offset">8dp</dimen>
+    <dimen name="grid_view_horizontal_offset">4dp</dimen>
 
     <dimen name="test_dimen">100sp</dimen>
 </resources>
