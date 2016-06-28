@@ -46,5 +46,5 @@
     <dimen name="grid_view_vertical_offset">0dp</dimen>
     <dimen name="grid_view_horizontal_offset">4dp</dimen>
 
-    <dimen name="test_dimen">100sp</dimen>
+    <dimen name="version_number">10sp</dimen>
 </resources>
