@@ -252,7 +252,7 @@
                       android:id="@+id/emailContent"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="feedback for the app."/>
+                      android:text="feedback for the app"/>
         </LinearLayout>
 
         <View
@@ -303,7 +303,7 @@
                 android:id="@+id/openSourceContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="License details for open source software"/>
+                android:text="License details for open source software used"/>
         </LinearLayout>
 
         <TextView

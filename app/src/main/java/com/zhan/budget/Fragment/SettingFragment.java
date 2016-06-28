@@ -758,7 +758,7 @@ public class SettingFragment extends BaseFragment {
     private void loadTutorials(){
         Intent mainAct = new Intent(getContext(), MaterialTutorialActivity.class);
         mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, getTourPages(getContext()));
-        startActivityForResult(mainAct, 3218);
+        startActivity(mainAct);
     }
 
     private ArrayList<TutorialItem> getTourPages(Context context){

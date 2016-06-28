@@ -49,7 +49,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -152,9 +151,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         boolean isFirstTime = BudgetPreference.getFirstTime(getContext());
 
         if(isFirstTime){
-            //Toast.makeText(getContext(), "first time", Toast.LENGTH_SHORT).show();
             createFakeTransactions();
-
             BudgetPreference.setFirstTime(getContext());
         }
     }
@@ -238,7 +235,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         end.setTime(endDate);
 
         startTime = System.nanoTime();
-
+/*
         String dayType;
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
@@ -278,7 +275,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
             }
         }
-
+*/
         myRealm.commitTransaction();
         endTime = System.nanoTime();
 
@@ -298,7 +295,6 @@ public class CalendarFragment extends BaseRealmFragment implements
                 element.removeChangeListener(this);
 
                 Log.d(TAG, "total transactions  created for testing : "+element.size() );
-
             }
         });
     }
