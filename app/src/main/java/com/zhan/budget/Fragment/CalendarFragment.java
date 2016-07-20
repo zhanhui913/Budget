@@ -43,7 +43,6 @@ import com.zhan.budget.View.RectangleCellView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -160,6 +159,9 @@ public class CalendarFragment extends BaseRealmFragment implements
         long startTime,endTime,duration;
         myRealm.beginTransaction();
 
+        startTime = System.nanoTime();
+
+
         //First time usage
         ArrayList<Category> categoryList = new ArrayList<>();
         ArrayList<Account> accountList = new ArrayList<>();
@@ -214,7 +216,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             account.setColor(getResources().getString(tempAccountColorList[i]));
             accountList.add(account);
         }
-
+/*
         //Create fake locations
         String[] locationTempList = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
         for(int i = 0; i < locationTempList.length; i++){
@@ -234,8 +236,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
 
-        startTime = System.nanoTime();
-/*
+
         String dayType;
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
