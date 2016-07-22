@@ -824,6 +824,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         addNewOrEditTransaction(transaction);
         if(isScheduledTransaction){
+
             addScheduleTransaction(scheduledTransaction, transaction);
         }
 
@@ -835,13 +836,19 @@ public class TransactionInfoActivity extends BaseActivity implements
     /**
      * The function that will be called after user either adds or edit a scheduled transaction.
      * @param scheduledTransaction The new scheduled transaction information.
-     * @param transaction The transaction that the scheduled transaction is based on.
+     * @param localTransaction The transaction that the scheduled transaction is based on.
      */
-    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
+    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction localTransaction){
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
+
             Realm myRealm = Realm.getDefaultInstance();
             myRealm.beginTransaction();
-            scheduledTransaction.setTransaction(transaction);
+
+            //Keep copy of these value to add back at the end
+            Date origDate = localTransaction.getDate();
+            String origID = localTransaction.getId();
+
+            scheduledTransaction.setTransaction(localTransaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
             myRealm.commitTransaction();
 
@@ -851,30 +858,39 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
             Log.i(TAG, "----------- Parceler Result ----------");
 
-            transaction.setDayType(DayType.SCHEDULED.toString());
-            Date nextDate = transaction.getDate();
+
+
+            localTransaction.setDayType(DayType.SCHEDULED.toString());
+            Date nextDate = localTransaction.getDate();
 
             for(int i = 0; i < 10; i++){
                 myRealm.beginTransaction();
 
                 if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
                     nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
                 }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
                     nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
                 }else{
                     nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
                 }
 
+
+                localTransaction.setId(Util.generateUUID());
+                localTransaction.setDate(nextDate);
+
+
                 Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                myRealm.copyToRealmOrUpdate(transaction);
+                myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }
+
+            //Put back orig value
+            myRealm.beginTransaction();
+            localTransaction.setId(origID);
+            localTransaction.setDate(origDate);
+            localTransaction.setDayType(DayType.COMPLETED.toString());
+            myRealm.copyToRealmOrUpdate(localTransaction);
+            myRealm.commitTransaction();
 
             myRealm.close();
         }
