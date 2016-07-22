@@ -71,7 +71,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
 
-    private TextView transactionCostView;
+    private TextView transactionCostView, transactionNameTextView;
 
     private String priceString, noteString, locationString;
 
@@ -159,6 +159,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         locationBtn = (ImageButton)findViewById(R.id.addLocationBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
+        transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
@@ -370,12 +371,26 @@ public class TransactionInfoActivity extends BaseActivity implements
                         //float ss = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
                         //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(ss, Constants.BUDGET_LOCALE));
                         transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
+
+                        //If note is empty
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                            transactionNameTextView.setText(selectedExpenseCategory.getName());
+                        }
+
+
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
                         //float ss1 = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
                         //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(ss1), Constants.BUDGET_LOCALE));
                         transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+
+                        //If note is empty
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                            transactionNameTextView.setText(selectedIncomeCategory.getName());
+                        }
+
+
                         break;
                 }
             }
@@ -573,6 +588,18 @@ public class TransactionInfoActivity extends BaseActivity implements
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
+
+                        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                            transactionNameTextView.setText(noteString);
+                        }else{
+                            //set name back on category selected and which page
+                            if(currentPage == BudgetType.EXPENSE){
+                                transactionNameTextView.setText(selectedExpenseCategory.getName());
+                            }else if(currentPage == BudgetType.INCOME){
+                                transactionNameTextView.setText(selectedIncomeCategory.getName());
+                            }
+                        }
+
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -957,12 +984,21 @@ public class TransactionInfoActivity extends BaseActivity implements
     public void onCategoryExpenseClick(Category category){
         selectedExpenseCategory = category;
         Log.d("TRAN", "selected expense category is "+selectedExpenseCategory.getName());
+
+        if(currentPage == BudgetType.EXPENSE && !Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+            transactionNameTextView.setText(category.getName());
+        }
+
     }
 
     @Override
     public void onCategoryIncomeClick(Category category){
         selectedIncomeCategory = category;
         Log.d("TRAN", "selected income category is "+selectedIncomeCategory.getName());
+
+        if(currentPage == BudgetType.INCOME && !Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+            transactionNameTextView.setText(category.getName());
+        }
     }
 
 }
