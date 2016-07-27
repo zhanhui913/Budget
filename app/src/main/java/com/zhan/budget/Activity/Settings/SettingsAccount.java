@@ -290,8 +290,8 @@ public class SettingsAccount extends BaseRealmActivity implements
         resultsAccount.get(position).setIsDefault(true);
         myRealm.commitTransaction();
 
-        //Using any subclass of view to get root view
-        Util.createSnackbar(getBaseContext(), emptyAccountText.getRootView(), "Set "+resultsAccount.get(position).getName()+" as default account");
+        //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
+        Util.createSnackbar(this, (View)emptyAccountText.getParent(), "Set "+resultsAccount.get(position).getName()+" as default account");
 
         accountList = myRealm.copyFromRealm(resultsAccount);
         accountListAdapter.setAccountList(accountList);
