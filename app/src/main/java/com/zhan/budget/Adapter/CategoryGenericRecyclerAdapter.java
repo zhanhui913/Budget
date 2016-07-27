@@ -116,16 +116,21 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
 
                 //ProgressBar
-                viewHolder.progressBar.setVisibility(View.VISIBLE);
-                viewHolder.progressBar.setMax(category.getBudget());
-                viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
+                if(category.getBudget() > 0){
+                    viewHolder.progressBar.setVisibility(View.VISIBLE);
+                    viewHolder.progressBar.setMax(category.getBudget());
+                    viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
 
-                if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
-                    viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
-                    viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.sunflower));
-                }else{ //If exceeded budget
-                    viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
+                    if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
+                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
+                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.sunflower));
+                    }else{ //If exceeded budget
+                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
+                    }
+                }else{
+                    //If there is no budget even though its an expense
+                    viewHolder.progressBar.setVisibility(View.GONE);
                 }
             }else if(arrangement == ARRANGEMENT.MOVE){
                 viewHolder.cost.setVisibility(View.GONE);
