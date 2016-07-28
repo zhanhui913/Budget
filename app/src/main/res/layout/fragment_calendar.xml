@@ -4,12 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-     <com.p_v.flexiblecalendar.FlexibleCalendarView
-         xmlns:flexible="http://schemas.android.com/apk/res-auto"
-         android:id="@+id/calendarView"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         flexible:disableAutoDateSelection="true"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/themeColorHighlight">
+
+        <com.p_v.flexiblecalendar.FlexibleCalendarView
+            xmlns:flexible="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            flexible:disableAutoDateSelection="true"/>
+    </RelativeLayout>
 
     <include layout="@layout/center_panel_date"
         android:layout_width="match_parent"
