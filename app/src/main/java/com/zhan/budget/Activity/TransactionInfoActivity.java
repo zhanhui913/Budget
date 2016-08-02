@@ -182,6 +182,9 @@ public class TransactionInfoActivity extends BaseActivity implements
             if(editTransaction.getNote() != null){
                 Log.d("DEBUG","@@@@@"+editTransaction.getNote());
                 noteString = editTransaction.getNote();
+                transactionNameTextView.setText(noteString);
+            }else{
+                transactionNameTextView.setText(editTransaction.getCategory().getName());
             }
 
             if(editTransaction.getLocation() != null){
