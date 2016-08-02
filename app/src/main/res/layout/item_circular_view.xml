@@ -6,10 +6,13 @@
     android:padding="2dp">
 
     <com.zhan.library.CircularView  style="@style/CircularViewStyle_selected"
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/categoryIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        custom:cv_iconColor="?attr/themeColor"
+        custom:cv_textColor="?attr/themeColor"/>
 
     <TextView
         android:id="@+id/categoryName"

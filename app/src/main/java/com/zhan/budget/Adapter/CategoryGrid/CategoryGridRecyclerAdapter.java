@@ -13,6 +13,7 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
+import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -67,8 +68,14 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         final Category category = categoryList.get(position);
 
         viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
-        viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+
+        if(category.isText()){
+            viewHolder.circularView.setText(Util.getFirstCharacterFromString(category.getName())+"");
+            viewHolder.circularView.setIconResource(0);
+        }else{
+            viewHolder.circularView.setText("");
+            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
+        }
 
         // Name
         viewHolder.name.setText(category.getName());

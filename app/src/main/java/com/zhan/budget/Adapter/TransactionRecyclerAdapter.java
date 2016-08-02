@@ -85,7 +85,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
         //Icon
         viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
         viewHolder.account.setText(transaction.getAccount().getName());
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
 
@@ -95,7 +94,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.circularView.setCircleRadiusInDP(25);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
-            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
+            viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
@@ -113,15 +112,23 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.circularView.setCircleRadiusInDP(23);
 
             viewHolder.circularView.setCircleColor(R.color.transparent);
-            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
             viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
+            viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
 
             viewHolder.approveBtn.setVisibility(View.VISIBLE);
             viewHolder.unapproveBtn.setVisibility(View.GONE);
 
             //Set Transaction's cost color to be regular text color
             viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
+        }
+
+        if(transaction.getCategory().isText()){
+            viewHolder.circularView.setIconResource(0);
+            viewHolder.circularView.setText(Util.getFirstCharacterFromString(transaction.getCategory().getName())+"");
+        }else{
+            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
+            viewHolder.circularView.setText("");
         }
 
         //If there is no note, use Category's name instead

@@ -32,6 +32,8 @@ public class Category extends RealmObject implements PieDataCostInterface{
     @Ignore
     private boolean isSelected;
 
+    private boolean isText;
+
     public Category(){
 
     }
@@ -114,6 +116,14 @@ public class Category extends RealmObject implements PieDataCostInterface{
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public boolean isText() {
+        return isText;
+    }
+
+    public void setText(boolean text) {
+        isText = text;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
