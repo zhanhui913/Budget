@@ -485,7 +485,13 @@ public class CategoryInfoActivity extends BaseActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
             getLatestIndexForCategory();
-            save();
+
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(categoryNameTextView.getText().toString())){
+                save();
+            }else{
+                Util.createSnackbar(getBaseContext(), (View)categoryNameTextView.getParent(), "Please input a valid name for this category");
+            }
+
             return true;
         }
 
