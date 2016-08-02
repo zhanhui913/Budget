@@ -13,9 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
@@ -44,6 +46,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private Toolbar toolbar;
     private TextView categoryNameTextView, categoryBudgetTextView;
     private ImageButton deleteCategoryBtn, changeBudgetBtn, changeNameBtn;
+    private ToggleButton toggleBtn;
 
     private CircularView categoryCircularView;
 
@@ -60,6 +63,9 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     //Selected icon
     private String selectedIcon;
+
+    private int catRes; //The res ID for category icon for circular view use
+    private boolean isCurrentCircularText; //Is the current circular view using text or icon
 
     @Override
     protected int getActivityLayout(){
@@ -82,6 +88,7 @@ public class CategoryInfoActivity extends BaseActivity implements
             category.setColor(CategoryUtil.getDefaultCategoryColor(this));
             category.setIcon(CategoryUtil.getDefaultCategoryIcon(this));
             category.setType(getIntent().getExtras().getString(Constants.REQUEST_NEW_CATEGORY_TYPE));
+            category.setText(false); //default use icon
         }
 
         colorPickerCategoryFragment = ColorPickerCategoryFragment.newInstance(category.getColor());
@@ -104,6 +111,8 @@ public class CategoryInfoActivity extends BaseActivity implements
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
         changeBudgetBtn = (ImageButton) findViewById(R.id.changeBudgetBtn);
 
+        toggleBtn = (ToggleButton) findViewById(R.id.useTextToggle);
+
         /*if(isNewCategory){
             deleteCategoryBtn.setVisibility(View.GONE);
         }*/
@@ -124,13 +133,23 @@ public class CategoryInfoActivity extends BaseActivity implements
         initCategoryCircularView();
         createToolbar();
         addListeners();
+
+        //Check if current category is using text or icon in its circular view
+        if(category.isText()){
+            isCurrentCircularText = true;
+            changeCircularViewToText(categoryNameTextView.getText().toString());
+        }else{
+            isCurrentCircularText = false;
+            changeCircularViewToIcon();
+        }
     }
 
     private void initCategoryCircularView(){
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
         categoryCircularView.setCircleColor(category.getColor());
 
-        categoryCircularView.setIconResource(CategoryUtil.getIconID(this, category.getIcon()));
+        catRes = CategoryUtil.getIconID(this, category.getIcon());
+        categoryCircularView.setIconResource(catRes);
     }
 
     /**
@@ -194,6 +213,20 @@ public class CategoryInfoActivity extends BaseActivity implements
                 changeBudget();
             }
         });
+
+        toggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isCurrentCircularText = isChecked;
+
+                if (isChecked) {
+                    // The toggle is enabled (Use text)
+                    changeCircularViewToText(categoryNameTextView.getText().toString());
+                } else {
+                    // The toggle is disabled (Use icon)
+                    changeCircularViewToIcon();
+                }
+            }
+        });
     }
 
     private void changeName(){
@@ -211,6 +244,10 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         categoryNameTextView.setText(input.getText().toString());
+
+                        if(isCurrentCircularText){ //if the current toggle is text
+                            changeCircularViewToText(input.getText().toString());
+                        }
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -420,6 +457,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         c.setBudget(category.getBudget());
         c.setCost(category.getCost());
         c.setType(category.getType());
+        c.setText(isCurrentCircularText);
         myRealm.commitTransaction();
 
         Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
@@ -454,6 +492,18 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void updateCategoryColor(){
         categoryCircularView.setCircleColor(selectedColor);
         iconPickerCategoryFragment.updateColor(selectedColor);
+    }
+
+    private void changeCircularViewToText(String value){
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)){
+            categoryCircularView.setText(Util.getFirstCharacterFromString(categoryNameTextView.getText().toString())+"");
+        }
+        categoryCircularView.setIconResource(0);
+    }
+
+    private void changeCircularViewToIcon(){
+        categoryCircularView.setText("");
+        categoryCircularView.setIconResource(catRes);
     }
 
     @Override
@@ -515,6 +565,11 @@ public class CategoryInfoActivity extends BaseActivity implements
     public void onIconCategoryClick(String icon){
         Log.d("CATEGORY_INFO", "click on icon : "+icon);
         selectedIcon = icon;
-        categoryCircularView.setIconResource(CategoryUtil.getIconID(this, icon));
+
+        catRes = CategoryUtil.getIconID(this, icon);
+        categoryCircularView.setIconResource(catRes);
     }
+
+
+
 }
