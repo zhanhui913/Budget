@@ -27,7 +27,7 @@
             android:id="@+id/categoryNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="categoryName"
+            android:hint="Category Name"
             android:textSize="@dimen/text_header_size"
             android:textStyle="bold"
             android:singleLine="true"
