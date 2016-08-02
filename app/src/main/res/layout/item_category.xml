@@ -43,7 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            custom:cv_iconColor="?attr/themeColor"/>
+            custom:cv_iconColor="?attr/themeColor"
+            custom:cv_textColor="?attr/themeColor"/>
 
         <RelativeLayout
             android:id="@+id/panel1"

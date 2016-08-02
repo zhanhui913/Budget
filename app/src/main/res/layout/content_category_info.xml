@@ -77,6 +77,17 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
+        <ToggleButton
+            android:id="@+id/useTextToggle"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/toggle_selector"
+            android:layout_marginRight="1dp"
+            android:textColor="@color/white"
+            android:textOff="Use Text"
+            android:textOn="Use Icon"/>
+
         <ImageButton
             android:id="@+id/changeNameBtn"
             android:layout_weight="1"
