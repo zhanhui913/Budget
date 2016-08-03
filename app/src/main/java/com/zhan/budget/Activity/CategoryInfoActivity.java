@@ -202,7 +202,6 @@ public class CategoryInfoActivity extends BaseActivity implements
         changeBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "Change budget Category ", Toast.LENGTH_SHORT).show();
                 changeBudget();
             }
         });
@@ -567,9 +566,8 @@ public class CategoryInfoActivity extends BaseActivity implements
         selectedIcon = icon;
 
         catRes = CategoryUtil.getIconID(this, icon);
-        categoryCircularView.setIconResource(catRes);
+        if(!isCurrentCircularText){
+            categoryCircularView.setIconResource(catRes);
+        }
     }
-
-
-
 }
