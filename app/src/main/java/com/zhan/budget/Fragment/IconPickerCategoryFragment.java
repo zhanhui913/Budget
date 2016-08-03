@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.zhan.budget.Adapter.CategoryGrid.IconCategoryRecyclerAdapter;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -101,6 +102,11 @@ public class IconPickerCategoryFragment extends BaseFragment
         iconCategoryGridAdapter.setCategoryList(categoryIconList);
 
         mListener.onIconCategoryClick(categoryIconList.get(position).getIcon());
+    }
+
+    @Override
+    public void onClickAddNewCategory(BudgetType type){
+        //Do nothing
     }
 
     public void updateColor(String color){
