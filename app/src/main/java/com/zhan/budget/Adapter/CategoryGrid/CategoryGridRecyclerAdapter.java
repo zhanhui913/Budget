@@ -60,7 +60,10 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         Category category = new Category();
         category.setName("");
         category.setIcon("c_add");
-        category.setColor(context.getResources().getString(R.color.colorPrimary));
+
+        int color[] = new int[]{R.color.colorPrimary};
+
+        category.setColor(context.getResources().getString(color[0]));
         category.setType(type.toString());
         category.setIndex(this.categoryList.size());
 
