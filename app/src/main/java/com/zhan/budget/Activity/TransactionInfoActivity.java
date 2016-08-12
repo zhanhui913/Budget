@@ -531,8 +531,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 if (accountNameList.size() > 0) {
                     accountPicker.setMaxValue(accountNameList.size() - 1);
+                    accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
                 }
-                accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
+
                 accountPicker.setWrapSelectorWheel(false);
 
                 int pos = 0; //default is first item to be selected in the spinner
