@@ -18,7 +18,6 @@ public class MyApplication extends Application {
         super.onCreate();
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
-                .deleteRealmIfMigrationNeeded()
                 .schemaVersion(1)
                 .build();
         Realm.setDefaultConfiguration(config);
