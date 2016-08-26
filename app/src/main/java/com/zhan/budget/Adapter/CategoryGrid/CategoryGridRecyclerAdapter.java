@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
+import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
     protected Context context;
     protected List<Category> categoryList;
     protected OnCategoryGridAdapterInteractionListener mListener;
+    private BudgetType type;
 
     //Dont use this to instantiate, only created for subclass purposes
     public CategoryGridRecyclerAdapter(){}
@@ -50,6 +53,36 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         }
     }
 
+    /**
+     * Call this to add 1 last item to the list for users to click to add a category (Expense or Income)
+     */
+    public void addExpenseOrIncome(BudgetType type){
+        Category category = new Category();
+        category.setName("");
+        category.setIcon("c_add");
+
+        int color[] = new int[]{R.color.colorPrimary};
+
+        category.setColor(context.getResources().getString(color[0]));
+        category.setType(type.toString());
+        category.setIndex(this.categoryList.size());
+
+        this.type = type;
+
+/*
+        c.setId(Util.generateUUID());
+        c.setName(tempCategoryIncomeNameList[i]);
+        c.setColor(getResources().getString(tempCategoryIncomeColorList[i]));
+        c.setIcon(getResources().getResourceEntryName(tempCategoryIncomeIconList[i]));
+        c.setBudget(0);
+        c.setType(BudgetType.INCOME.toString());
+        c.setCost(0);
+        c.setIndex(i);*/
+
+
+        this.categoryList.add(category);
+    }
+
     // Usually involves inflating a layout from XML and returning the holder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -67,8 +100,14 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         final Category category = categoryList.get(position);
 
         viewHolder.circularView.setCircleColor(category.getColor());
-        viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
-        viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+
+        if(category.isText()){
+            viewHolder.circularView.setText(Util.getFirstCharacterFromString(category.getName())+"");
+            viewHolder.circularView.setIconResource(0);
+        }else{
+            viewHolder.circularView.setText("");
+            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, category.getIcon()));
+        }
 
         // Name
         viewHolder.name.setText(category.getName());
@@ -114,7 +153,11 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
             circularView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClick(getLayoutPosition());
+                    if(getLayoutPosition() != (getItemCount() - 1)){
+                        mListener.onClick(getLayoutPosition());
+                    }else{
+                        mListener.onClickAddNewCategory(type);
+                    }
                 }
             });
         }
@@ -128,6 +171,8 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
 
     public interface OnCategoryGridAdapterInteractionListener {
         void onClick(int position);
+
+        void onClickAddNewCategory(BudgetType type);
     }
 }
 

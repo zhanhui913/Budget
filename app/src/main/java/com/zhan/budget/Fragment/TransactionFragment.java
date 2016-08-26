@@ -1,12 +1,15 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Adapter.CategoryGrid.CategoryGridRecyclerAdapter;
+import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
@@ -87,10 +90,9 @@ public class TransactionFragment extends BaseRealmFragment implements
         }
 
         populateCategory(budgetType);
-        addListeners();
     }
 
-    private void populateCategory(String budgetType){Log.d(TAG, "2 selectedCategoryId : "+selectedCategoryId);
+    private void populateCategory(final String budgetType){Log.d(TAG, "2 selectedCategoryId : "+selectedCategoryId);
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType).findAllSortedAsync("index");
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
@@ -111,8 +113,7 @@ public class TransactionFragment extends BaseRealmFragment implements
                 onClick(pos);
 
                 categoryGridAdapter.setCategoryList(categoryList);
-
-                //listenToGridView();
+                categoryGridAdapter.addExpenseOrIncome(BudgetType.valueOf(budgetType));
             }
         });
     }
@@ -135,70 +136,24 @@ public class TransactionFragment extends BaseRealmFragment implements
         }
     }
 
-    private void listenToGridView(){
-        /*
-        categoryGridView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
+    @Override
+    public void onClickAddNewCategory(BudgetType type){
+        //Toast.makeText(getContext(), "add new cat "+type.toString(), Toast.LENGTH_SHORT).show();
 
-                    @Override
-                    public void onGlobalLayout() {
-                        //Default is 0 if selectedCategoryId is not defined.
-
-                        int pos = 0;
-                        Log.d(TAG, "3 selectedCategoryId : "+selectedCategoryId);
-                        for (int i = 0; i < categoryList.size(); i++) {
-                            if (selectedCategoryId.equalsIgnoreCase(categoryList.get(i).getId())) {
-                                pos = i;
-                                break;
-                            }
-                        }
-
-                        selectedCategory = categoryList.get(pos);
-
-                        if(budgetType.equalsIgnoreCase(BudgetType.INCOME.toString())) {
-                            mListener.onCategoryIncomeClick(selectedCategory);
-                        }else{
-                            mListener.onCategoryExpenseClick(selectedCategory);
-                        }
-
-                        //Set first category as selected by default
-                        ViewGroup gridChild = (ViewGroup) categoryGridView.getChildAt(pos);
-                        if(gridChild != null){
-                            CircularView cv = (CircularView) gridChild.findViewById(R.id.categoryIcon);
-                            cv.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
-                        }
-
-                        // unregister listener (this is important)
-                        categoryGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                });*/
+        Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
+        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
+        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, type.toString());
+        startActivityForResult(addNewCategoryIntent, Constants.RETURN_NEW_CATEGORY);
     }
 
-    private void addListeners(){
-        /*
-        categoryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                for (int i = 0; i < parent.getChildCount(); i++) {
-                    View childView = parent.getChildAt(i);
-                    CircularView ccv = (CircularView) (childView.findViewById(R.id.categoryIcon));
-                    ccv.setStrokeColor(R.color.transparent);
-
-                    if (i == position) {
-                        ccv.setStrokeColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColorText));
-                    }
-                }
-
-                selectedCategory = categoryList.get(position);
-
-                if(budgetType.equalsIgnoreCase(BudgetType.INCOME.toString())){
-                    mListener.onCategoryIncomeClick(selectedCategory);
-                }else{
-                    mListener.onCategoryExpenseClick(selectedCategory);
-                }
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
+            if(requestCode == Constants.RETURN_NEW_CATEGORY) {
+                populateCategory(budgetType);
             }
-        });*/
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

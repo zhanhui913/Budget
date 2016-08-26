@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.zhan.budget.Adapter.CategoryGrid.ColorCategoryRecyclerAdapter;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -95,6 +96,11 @@ public class ColorPickerCategoryFragment extends BaseFragment
 
         colorCategoryGridAdapter.setCategoryList(categoryColorList);
         mListener.onColorCategoryClick(categoryColorList.get(position).getColor());
+    }
+
+    @Override
+    public void onClickAddNewCategory(BudgetType type){
+        //Do nothing
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

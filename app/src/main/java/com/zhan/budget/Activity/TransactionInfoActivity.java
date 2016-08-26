@@ -71,7 +71,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
 
-    private TextView transactionCostView;
+    private TextView transactionCostView, transactionNameTextView;
 
     private String priceString, noteString, locationString;
 
@@ -159,6 +159,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         locationBtn = (ImageButton)findViewById(R.id.addLocationBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
+        transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
@@ -181,6 +182,9 @@ public class TransactionInfoActivity extends BaseActivity implements
             if(editTransaction.getNote() != null){
                 Log.d("DEBUG","@@@@@"+editTransaction.getNote());
                 noteString = editTransaction.getNote();
+                transactionNameTextView.setText(noteString);
+            }else{
+                transactionNameTextView.setText(editTransaction.getCategory().getName());
             }
 
             if(editTransaction.getLocation() != null){
@@ -370,12 +374,26 @@ public class TransactionInfoActivity extends BaseActivity implements
                         //float ss = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
                         //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(ss, Constants.BUDGET_LOCALE));
                         transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
+
+                        //If note is empty
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                            transactionNameTextView.setText(selectedExpenseCategory.getName());
+                        }
+
+
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
                         //float ss1 = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
                         //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(ss1), Constants.BUDGET_LOCALE));
                         transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+
+                        //If note is empty
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                            transactionNameTextView.setText(selectedIncomeCategory.getName());
+                        }
+
+
                         break;
                 }
             }
@@ -513,8 +531,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 if (accountNameList.size() > 0) {
                     accountPicker.setMaxValue(accountNameList.size() - 1);
+                    accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
                 }
-                accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
+
                 accountPicker.setWrapSelectorWheel(false);
 
                 int pos = 0; //default is first item to be selected in the spinner
@@ -573,6 +592,18 @@ public class TransactionInfoActivity extends BaseActivity implements
                 .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
+
+                        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                            transactionNameTextView.setText(noteString);
+                        }else{
+                            //set name back on category selected and which page
+                            if(currentPage == BudgetType.EXPENSE){
+                                transactionNameTextView.setText(selectedExpenseCategory.getName());
+                            }else if(currentPage == BudgetType.INCOME){
+                                transactionNameTextView.setText(selectedIncomeCategory.getName());
+                            }
+                        }
+
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -824,6 +855,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         addNewOrEditTransaction(transaction);
         if(isScheduledTransaction){
+
             addScheduleTransaction(scheduledTransaction, transaction);
         }
 
@@ -835,13 +867,19 @@ public class TransactionInfoActivity extends BaseActivity implements
     /**
      * The function that will be called after user either adds or edit a scheduled transaction.
      * @param scheduledTransaction The new scheduled transaction information.
-     * @param transaction The transaction that the scheduled transaction is based on.
+     * @param localTransaction The transaction that the scheduled transaction is based on.
      */
-    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction transaction){
+    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction localTransaction){
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
+
             Realm myRealm = Realm.getDefaultInstance();
             myRealm.beginTransaction();
-            scheduledTransaction.setTransaction(transaction);
+
+            //Keep copy of these value to add back at the end
+            Date origDate = localTransaction.getDate();
+            String origID = localTransaction.getId();
+
+            scheduledTransaction.setTransaction(localTransaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
             myRealm.commitTransaction();
 
@@ -851,30 +889,39 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
             Log.i(TAG, "----------- Parceler Result ----------");
 
-            transaction.setDayType(DayType.SCHEDULED.toString());
-            Date nextDate = transaction.getDate();
+
+
+            localTransaction.setDayType(DayType.SCHEDULED.toString());
+            Date nextDate = localTransaction.getDate();
 
             for(int i = 0; i < 10; i++){
                 myRealm.beginTransaction();
 
                 if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
                     nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
                 }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
                     nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
                 }else{
                     nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                    transaction.setId(Util.generateUUID());
-                    transaction.setDate(nextDate);
                 }
 
+
+                localTransaction.setId(Util.generateUUID());
+                localTransaction.setDate(nextDate);
+
+
                 Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
-                myRealm.copyToRealmOrUpdate(transaction);
+                myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }
+
+            //Put back orig value
+            myRealm.beginTransaction();
+            localTransaction.setId(origID);
+            localTransaction.setDate(origDate);
+            localTransaction.setDayType(DayType.COMPLETED.toString());
+            myRealm.copyToRealmOrUpdate(localTransaction);
+            myRealm.commitTransaction();
 
             myRealm.close();
         }
@@ -941,12 +988,21 @@ public class TransactionInfoActivity extends BaseActivity implements
     public void onCategoryExpenseClick(Category category){
         selectedExpenseCategory = category;
         Log.d("TRAN", "selected expense category is "+selectedExpenseCategory.getName());
+
+        if(currentPage == BudgetType.EXPENSE && !Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+            transactionNameTextView.setText(category.getName());
+        }
+
     }
 
     @Override
     public void onCategoryIncomeClick(Category category){
         selectedIncomeCategory = category;
         Log.d("TRAN", "selected income category is "+selectedIncomeCategory.getName());
+
+        if(currentPage == BudgetType.INCOME && !Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+            transactionNameTextView.setText(category.getName());
+        }
     }
 
 }

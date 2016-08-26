@@ -2,6 +2,7 @@ package com.zhan.budget.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -43,7 +44,6 @@ import com.zhan.budget.View.RectangleCellView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -160,6 +160,9 @@ public class CalendarFragment extends BaseRealmFragment implements
         long startTime,endTime,duration;
         myRealm.beginTransaction();
 
+        startTime = System.nanoTime();
+
+
         //First time usage
         ArrayList<Category> categoryList = new ArrayList<>();
         ArrayList<Account> accountList = new ArrayList<>();
@@ -214,7 +217,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             account.setColor(getResources().getString(tempAccountColorList[i]));
             accountList.add(account);
         }
-
+/*
         //Create fake locations
         String[] locationTempList = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
         for(int i = 0; i < locationTempList.length; i++){
@@ -234,8 +237,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
 
-        startTime = System.nanoTime();
-/*
+
         String dayType;
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
@@ -257,9 +259,6 @@ public class CalendarFragment extends BaseRealmFragment implements
                 transaction.setDate(date);
                 transaction.setDayType(dayType);
                 transaction.setLocation(locationList.get(ll));
-
-
-
 
                 Account account = accountList.get(rda);
 
@@ -429,47 +428,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         });
     }
 
-    private List<BudgetEvent> getEvents(Date date){
-        return eventMap.get(date);
-    }
-
-    private void updateScheduledTransactionsForDecoration(){
-        eventMap = new HashMap<>();
-        Log.d("EVENT", "there are " + eventMap.size() + " items in map");
-
-        final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
-        scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-
-                for (int i = 0; i < element.size(); i++) {
-                    List<BudgetEvent> colorList = new ArrayList<>();
-                    try {
-                        //Put as many indication per transactions that is SCHEDULED
-                        /*if (eventMap.containsKey(element.get(i).getDate())) {
-                            eventMap.get(element.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
-                        } else {
-                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
-                            eventMap.put(element.get(i).getDate(), colorList);
-                        }*/
-                        //Only put 1 indication for the event per day
-                        if(!eventMap.containsKey(element.get(i).getDate())){
-                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
-                            eventMap.put(element.get(i).getDate(), colorList);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.d("EVENT", "there are " + element.size() + " items in schedule list");
-                Log.d("EVENT", "there are " + eventMap.size() + " items in map");
-
-                calendarView.refresh();
-            }
-        });
-    }
-
     /**
      * Populate the list of transactions for the specific date.
      * @param date The date to search in db.
@@ -560,25 +518,117 @@ public class CalendarFragment extends BaseRealmFragment implements
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(tempDate));
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_NEW_TRANSACTION){
-                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Decorators
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-                populateTransactionsForDate(tt.getDate());
-                updateTransactionStatus();
-                updateScheduledTransactionsForDecoration();
-                calendarView.selectDate(tt.getDate());
-            }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
-                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
+    private List<BudgetEvent> getEvents(Date date){
+        return eventMap.get(date);
+    }
 
-                populateTransactionsForDate(tt.getDate());
-                updateTransactionStatus();
-                updateScheduledTransactionsForDecoration();
-                calendarView.selectDate(tt.getDate());
+    private void updateScheduledTransactionsForDecoration(){
+        eventMap = new HashMap<>();
+        /*Log.d("EVENT", "there are " + eventMap.size() + " items in map");
+
+        final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
+        scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+
+                for (int i = 0; i < element.size(); i++) {
+                    List<BudgetEvent> colorList = new ArrayList<>();
+                    try {
+                        //Put as many indication per transactions that is SCHEDULED
+                        //if (eventMap.containsKey(element.get(i).getDate())) {
+                        //    eventMap.get(element.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
+                        //} else {
+                        //    colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
+                        //    eventMap.put(element.get(i).getDate(), colorList);
+                        //}
+                        //Only put 1 indication for the event per day
+                        if(!eventMap.containsKey(element.get(i).getDate())){
+                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
+                            eventMap.put(element.get(i).getDate(), colorList);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("EVENT", "there are " + element.size() + " items in schedule list");
+                Log.d("EVENT", "there are " + eventMap.size() + " items in map");
+
+                calendarView.refresh();
             }
+        });*/
+
+
+
+        final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
+        scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(final RealmResults<Transaction> element) {
+                element.removeChangeListener(this);
+
+                Log.d("TIMER", "timer 1");
+                ads(myRealm.copyFromRealm(element));
+                Log.d("TIMER", "timer 2");
+            }
+        });
+    }
+
+    private void ads(final List<Transaction> element){
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d("TIMER", "timer 3");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Log.d("TIMER", "timer 4");
+                for (int i = 0; i < element.size(); i++) {
+                    List<BudgetEvent> colorList = new ArrayList<>();
+                    try {
+                        //Only put 1 indication for the event per day
+                        if(!eventMap.containsKey(element.get(i).getDate())){
+                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), element.get(i).getCategory().getColor())));
+                            eventMap.put(element.get(i).getDate(), colorList);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void voids) {
+                super.onPostExecute(voids);
+                Log.d("TIMER", "timer 5");
+                calendarView.refresh();
+            }
+        };
+        loader.execute();
+    }
+
+    private void addDecorator(Date date, int color){
+        if(!eventMap.containsKey(date)){
+            List<BudgetEvent> colorList = new ArrayList<>();
+            colorList.add(new BudgetEvent(color));
+            eventMap.put(date, colorList);
+            calendarView.refresh();
+        }
+    }
+
+    private void removeDecorator(Date date){
+        if(eventMap.containsKey(date)){
+            eventMap.remove(date);
+            calendarView.refresh();
         }
     }
 
@@ -608,6 +658,28 @@ public class CalendarFragment extends BaseRealmFragment implements
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
+            if(requestCode == Constants.RETURN_NEW_TRANSACTION){
+                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
+
+                populateTransactionsForDate(tt.getDate());
+                updateTransactionStatus();
+                updateScheduledTransactionsForDecoration();
+                calendarView.selectDate(tt.getDate());
+            }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
+                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
+
+                populateTransactionsForDate(tt.getDate());
+                updateTransactionStatus();
+                updateScheduledTransactionsForDecoration();
+                calendarView.selectDate(tt.getDate());
+            }
         }
     }
 

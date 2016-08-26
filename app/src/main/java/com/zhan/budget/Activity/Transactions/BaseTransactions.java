@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
@@ -182,7 +181,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
              if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
                  boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
 
-                 Toast.makeText(getBaseContext(), "has changed : "+hasChanged, Toast.LENGTH_SHORT).show();
+                 //Toast.makeText(getBaseContext(), "has changed : "+hasChanged, Toast.LENGTH_SHORT).show();
 
                  if(hasChanged){
                      //If something has been changed, update the list
@@ -212,7 +211,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     @Override
     public void onClickTransaction(int position){
         //Clicking the Transaction here does nothing
-        Toast.makeText(getBaseContext(), "Click transaction "+transactionList.get(position).getNote(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getBaseContext(), "Click transaction "+transactionList.get(position).getNote(), Toast.LENGTH_SHORT).show();
 
 
         Intent editTransactionIntent = new Intent(getBaseContext(), TransactionInfoActivity.class);
