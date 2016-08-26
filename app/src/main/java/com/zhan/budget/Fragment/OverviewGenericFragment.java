@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
@@ -238,7 +237,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
-                    Toast.makeText(getContext(), "hanged changed", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "hanged changed", Toast.LENGTH_SHORT).show();
 
                     getMonthReport(currentMonth, true);
                 }

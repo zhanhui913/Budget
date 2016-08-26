@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Adapter.CategoryGrid.CategoryGridRecyclerAdapter;
@@ -139,7 +138,7 @@ public class TransactionFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickAddNewCategory(BudgetType type){
-        Toast.makeText(getContext(), "add new cat "+type.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "add new cat "+type.toString(), Toast.LENGTH_SHORT).show();
 
         Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
         addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
