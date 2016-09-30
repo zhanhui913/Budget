@@ -1,6 +1,8 @@
 package com.zhan.budget.Fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
@@ -93,6 +96,9 @@ public class CalendarFragment extends BaseRealmFragment implements
     private Date selectedDate;
     private Map<Date,List<BudgetEvent>> eventMap;
 
+    private LinearLayoutManager linearLayoutManager;
+    private SwipeLayout currentSwipeLayoutTarget;
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -121,8 +127,10 @@ public class CalendarFragment extends BaseRealmFragment implements
         totalCostTextView = (TextView) view.findViewById(R.id.totalCostTextView);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
-        transactionListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        transactionListView.setLayoutManager(linearLayoutManager);
 
         transactionList = new ArrayList<>();
         transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, false); //do not display date in each transaction item
@@ -133,6 +141,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 new HorizontalDividerItemDecoration.Builder(getContext())
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
+
 
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
 
@@ -462,15 +471,27 @@ public class CalendarFragment extends BaseRealmFragment implements
     }
 
     /**
-     * Whenever there is a change in the list resultsTransactionForDay, this function updates
-     * the UI.
+     * Fetch new data from realm for the list of transactions for the day
      */
     private void updateTransactionList(){
         transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
         transactionAdapter.setTransactionList(transactionList);
+
+
+
         updateTransactionStatus();
     }
 
+
+    private void updateTransactionStatusAtPosition(int position, Transaction transaction){
+        transactionList.set(position, transaction);
+
+        updateTransactionStatus();
+    }
+
+    /***
+     * Update the UI based on the count of items in the transaction list
+     */
     private void updateTransactionStatus(){
         if(transactionList.size() > 0){
             emptyLayout.setVisibility(View.GONE);
@@ -632,6 +653,60 @@ public class CalendarFragment extends BaseRealmFragment implements
         }
     }
 
+    private void confirmDeleteTransaction(final int position){
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText("Confirm Delete");
+        message.setText("Are you sure you want to delete this transaction?");
+
+        new AlertDialog.Builder(getActivity())
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteTransaction(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        //updateTransactionList();
+
+                        closeSwipeItem(position);
+
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteTransaction(int position){
+        myRealm.beginTransaction();
+        Log.d(TAG, "remove " + position + "-> from result");
+        Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
+        resultsTransactionForDay.deleteFromRealm(position);
+        myRealm.commitTransaction();
+        Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
+        //updateTransactionList();
+
+
+        updateScheduledTransactionsForDecoration();
+    }
+
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Etc
@@ -734,15 +809,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     @Override
     public void onDeleteTransaction(int position){
-        myRealm.beginTransaction();
-        Log.d(TAG, "remove " + position + "-> from result");
-        Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
-        resultsTransactionForDay.deleteFromRealm(position);
-        myRealm.commitTransaction();
-        Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
-        updateTransactionList();
-
-        updateScheduledTransactionsForDecoration();
+        confirmDeleteTransaction(position);
     }
 
     @Override
