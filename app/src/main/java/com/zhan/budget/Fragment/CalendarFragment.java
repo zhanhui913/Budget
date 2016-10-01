@@ -477,8 +477,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
         transactionAdapter.setTransactionList(transactionList);
 
-
-
         updateTransactionStatus();
     }
 
@@ -653,59 +651,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         }
     }
 
-    private void confirmDeleteTransaction(final int position){
-        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
-
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
-
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this transaction?");
-
-        new AlertDialog.Builder(getActivity())
-                .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        deleteTransaction(position);
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        //updateTransactionList();
-
-                        closeSwipeItem(position);
-
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    private void deleteTransaction(int position){
-        myRealm.beginTransaction();
-        Log.d(TAG, "remove " + position + "-> from result");
-        Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
-        resultsTransactionForDay.deleteFromRealm(position);
-        myRealm.commitTransaction();
-        Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
-        //updateTransactionList();
-
-
-        updateScheduledTransactionsForDecoration();
-    }
-
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -756,6 +701,56 @@ public class CalendarFragment extends BaseRealmFragment implements
                 calendarView.selectDate(tt.getDate());
             }
         }
+    }
+
+    private void confirmDeleteTransaction(final int position){
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText("Confirm Delete");
+        message.setText("Are you sure you want to delete this transaction?");
+
+        new AlertDialog.Builder(getActivity())
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteTransaction(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        closeSwipeItem(position);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteTransaction(int position){
+        myRealm.beginTransaction();
+        Log.d(TAG, "remove " + position + "-> from result");
+        Log.d(TAG, "b4 There are "+resultsTransactionForDay.size()+" transactions today");
+        resultsTransactionForDay.deleteFromRealm(position);
+        myRealm.commitTransaction();
+        Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
+        updateTransactionList();
+
+        updateScheduledTransactionsForDecoration();
+    }
+
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
