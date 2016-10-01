@@ -689,14 +689,12 @@ public class CalendarFragment extends BaseRealmFragment implements
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
 
                 populateTransactionsForDate(tt.getDate());
-                updateTransactionStatus();
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
             }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
 
                 populateTransactionsForDate(tt.getDate());
-                updateTransactionStatus();
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
             }
