@@ -73,7 +73,7 @@ public class TransactionFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
         selectedCategoryId = budgetType = "";
-        Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
+        //Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
         categoryList = new ArrayList<>();
         categoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
         categoryGridView.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
@@ -92,7 +92,7 @@ public class TransactionFragment extends BaseRealmFragment implements
         populateCategory(budgetType);
     }
 
-    private void populateCategory(final String budgetType){Log.d(TAG, "2 selectedCategoryId : "+selectedCategoryId);
+    private void populateCategory(final String budgetType){
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType).findAllSortedAsync("index");
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
@@ -106,11 +106,13 @@ public class TransactionFragment extends BaseRealmFragment implements
                     if(categoryList.get(i).getId().equalsIgnoreCase(selectedCategoryId)){
                         categoryList.get(i).setSelected(true);
                         pos = i;
+                        onClick(pos);
+                        break;
                     }else{
                         categoryList.get(i).setSelected(false);
                     }
                 }
-                onClick(pos);
+                //onClick(pos);
 
                 categoryGridAdapter.setCategoryList(categoryList);
                 categoryGridAdapter.addExpenseOrIncome(BudgetType.valueOf(budgetType));

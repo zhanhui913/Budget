@@ -855,7 +855,6 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         addNewOrEditTransaction(transaction);
         if(isScheduledTransaction){
-
             addScheduleTransaction(scheduledTransaction, transaction);
         }
 
@@ -949,6 +948,30 @@ public class TransactionInfoActivity extends BaseActivity implements
         myRealm.close();
     }
 
+    /**
+     * If there is no Category selected, a dialog will popup to remind the user.
+     */
+    private void notificationForCategory(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText("Category");
+        message.setText("Please make sure you have a category selected");
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Menu
@@ -971,7 +994,12 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            save();
+            if((currentPage == BudgetType.EXPENSE && selectedExpenseCategory != null) || (currentPage == BudgetType.INCOME && selectedIncomeCategory != null)){
+                save();
+            }else{
+                notificationForCategory();
+            }
+
             return true;
         }
 

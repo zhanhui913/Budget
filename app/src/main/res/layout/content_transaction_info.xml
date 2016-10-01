@@ -19,8 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Name"
-            android:textColorHint="@color/asbestos"
+
             android:textSize="@dimen/text_header_size"
             android:textStyle="bold"
             android:gravity="start"
