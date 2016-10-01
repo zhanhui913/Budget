@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -113,10 +114,10 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         toggleBtn = (ToggleButton) findViewById(R.id.useTextToggle);
 
-        /*if(isNewCategory){
+        if(isNewCategory){
             deleteCategoryBtn.setVisibility(View.GONE);
-        }*/
-        deleteCategoryBtn.setVisibility(View.GONE); //Cant delete Category for now
+        }
+        //deleteCategoryBtn.setVisibility(View.GONE); //Cant delete Category for now
 
         //Income category has no need for budget
         if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
@@ -191,14 +192,14 @@ public class CategoryInfoActivity extends BaseActivity implements
                 changeName();
             }
         });
-/*
+
         deleteCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDelete();
             }
         });
-*/
+
         changeBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -411,7 +412,7 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

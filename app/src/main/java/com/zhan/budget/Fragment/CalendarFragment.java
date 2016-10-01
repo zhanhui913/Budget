@@ -127,7 +127,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         totalCostTextView = (TextView) view.findViewById(R.id.totalCostTextView);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getContext());
 
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
         transactionListView.setLayoutManager(linearLayoutManager);
@@ -786,7 +786,7 @@ public class CalendarFragment extends BaseRealmFragment implements
     @Override
     public void onClickTransaction(int position){
         Transaction debugTransaction = transactionList.get(position);
-
+/*
         Log.d(TAG, "----------- Click Result ----------");
         Log.d(TAG, "transaction id :" + debugTransaction.getId());
         Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
@@ -796,6 +796,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
         Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
         Log.i(TAG, "----------- Click Result ----------");
+        */
 
         editTransaction(position);
     }

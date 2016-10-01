@@ -84,7 +84,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         final Transaction transaction = transactionList.get(position);
 
         //Icon
-        viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
         viewHolder.account.setText(transaction.getAccount().getName());
         viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
 
@@ -93,20 +92,30 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.circularView.setStrokeWidthInDP(0);
             viewHolder.circularView.setCircleRadiusInDP(25);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
-            viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
             viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+
+            if(transaction.getCategory() != null){
+                viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
+            }else{
+                viewHolder.circularView.setCircleColor(R.color.colorPrimary);
+            }
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
             viewHolder.unapproveBtn.setVisibility(View.VISIBLE);
 
             //Set Transaction's cost color based on Category type
-            if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+            if(transaction.getCategory() != null){
+                if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+                }else{
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+                }
             }else{
-                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.white));
             }
+
         }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
             viewHolder.circularView.setCircleRadiusInDP(23);
@@ -123,19 +132,31 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
 
-        if(transaction.getCategory().isText()){
-            viewHolder.circularView.setIconResource(0);
-            viewHolder.circularView.setText(Util.getFirstCharacterFromString(transaction.getCategory().getName())+"");
+        if(transaction.getCategory()  != null) {
+            viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
+
+            if (transaction.getCategory().isText()) {
+                viewHolder.circularView.setIconResource(0);
+                viewHolder.circularView.setText(Util.getFirstCharacterFromString(transaction.getCategory().getName()) + "");
+            } else {
+                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
+                viewHolder.circularView.setText("");
+            }
         }else{
-            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
-            viewHolder.circularView.setText("");
+            //If there is no category attached, put a question mark as the icon
+            viewHolder.circularView.setIconResource(0);
+            viewHolder.circularView.setText("?");
         }
 
         //If there is no note, use Category's name instead
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
             viewHolder.name.setText(transaction.getNote());
         }else{
-            viewHolder.name.setText(transaction.getCategory().getName());
+            if(transaction.getCategory() != null){
+                viewHolder.name.setText(transaction.getCategory().getName());
+            }else{
+                viewHolder.name.setText("No Category");
+            }
         }
 
         //If this is used in Calendar Fragment (no need to show date), everywhere else use it
@@ -211,7 +232,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
                     Log.d("TRANSACTION_ADAPTER", "onstartopen");
-
                 }
 
                 @Override

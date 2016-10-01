@@ -133,8 +133,14 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         if(!isNewTransaction) {
-            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
-            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+            if(editTransaction.getCategory() != null){
+                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
+                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+            }else{
+                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
+                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
+            }
+
         }else{
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
@@ -184,7 +190,12 @@ public class TransactionInfoActivity extends BaseActivity implements
                 noteString = editTransaction.getNote();
                 transactionNameTextView.setText(noteString);
             }else{
-                transactionNameTextView.setText(editTransaction.getCategory().getName());
+                if(editTransaction.getCategory() != null){
+                    transactionNameTextView.setText(editTransaction.getCategory().getName());
+                }else{
+                    transactionNameTextView.setText("");
+                }
+
             }
 
             if(editTransaction.getLocation() != null){
@@ -194,13 +205,18 @@ public class TransactionInfoActivity extends BaseActivity implements
             //Check which category this transaction belongs to.
             //If its EXPENSE category, change page to EXPENSE view pager
             //If its INCOME category, change page to INCOME view pager
-            if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                viewPager.setCurrentItem(0);
+            if(editTransaction.getCategory() != null){
+                if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    viewPager.setCurrentItem(0);
+                    currentPage = BudgetType.EXPENSE;
+                }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                    viewPager.setCurrentItem(1);
+                    currentPage = BudgetType.INCOME;
+                }
+            }else{
                 currentPage = BudgetType.EXPENSE;
-            }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                viewPager.setCurrentItem(1);
-                currentPage = BudgetType.INCOME;
             }
+
 
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
@@ -376,7 +392,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
 
                         //If note is empty
-                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedExpenseCategory != null){
                             transactionNameTextView.setText(selectedExpenseCategory.getName());
                         }
 
@@ -389,7 +405,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
 
                         //If note is empty
-                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedIncomeCategory != null){
                             transactionNameTextView.setText(selectedIncomeCategory.getName());
                         }
 

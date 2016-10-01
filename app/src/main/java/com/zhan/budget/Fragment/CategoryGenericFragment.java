@@ -1,9 +1,11 @@
 package com.zhan.budget.Fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -11,7 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
@@ -76,6 +80,9 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     private OnCategoryGenericListener mListener;
 
+    private LinearLayoutManager linearLayoutManager;
+    private SwipeLayout currentSwipeLayoutTarget;
+
     public CategoryGenericFragment() {
         // Required empty public constructor
     }
@@ -125,8 +132,10 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                     }
                 });
 
+        linearLayoutManager = new LinearLayoutManager(getContext());
+
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
-        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        categoryListView.setLayoutManager(linearLayoutManager);
         categoryListView.setAdapter(categoryRecyclerAdapter);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(categoryRecyclerAdapter);
@@ -346,7 +355,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
 
-    /*
+
     private void confirmDelete(final int position){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
@@ -354,14 +363,14 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
+        message.setText("Are you sure you want to delete this category?\nAll transactions with this category will no longer have this category associated to it");
 
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(getContext())
                 .setView(promptView)
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "1 DELETE...", Toast.LENGTH_SHORT).show();
                         deleteCategory(position);
                     }
                 })
@@ -369,11 +378,12 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        closeSwipeItem(position);
                     }
                 })
                 .create()
                 .show();
-    }*/
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -442,6 +452,29 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         }
     }
 
+    private void deleteCategory(int position){
+        Log.d(TAG, "remove " + position + "-> from result");
+        Log.d(TAG, "b4 There are "+resultsCategory.size()+" category");
+        myRealm.beginTransaction();
+        resultsCategory.deleteFromRealm(position);
+        myRealm.commitTransaction();
+        Log.d(TAG, "After There are " + resultsCategory.size() + " category");
+
+
+        categoryList.remove(position);
+        categoryRecyclerAdapter.setCategoryList(categoryList);
+    }
+
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -451,6 +484,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     @Override
     public void onDeleteCategory(int position){
         //Cant delete category
+        confirmDelete(position);
     }
 
     @Override
