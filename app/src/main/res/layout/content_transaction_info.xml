@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
             android:textSize="@dimen/text_header_size"
             android:textStyle="bold"
             android:gravity="start"
@@ -27,7 +26,7 @@
             android:paddingStart="@dimen/item_padding"
             android:paddingTop="@dimen/item_top_padding"
             android:paddingBottom="@dimen/item_bottom_padding"
-            android:singleLine="true"/>
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/transactionCostText"

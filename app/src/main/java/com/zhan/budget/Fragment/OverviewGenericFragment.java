@@ -1,17 +1,19 @@
 package com.zhan.budget.Fragment;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
@@ -23,7 +25,6 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
@@ -34,13 +35,13 @@ import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class OverviewGenericFragment extends BaseRealmFragment implements
         CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener{
 
+    private static final String TAG = "OverviewGenericFragment";
     private static final String ARG_1 = "budgetType";
     private static final String ARG_2 = "currentMonth";
     private Date currentMonth;
@@ -55,6 +56,9 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
     private CategoryGenericRecyclerAdapter categoryPercentListAdapter;
     private OverviewInteractionListener mListener;
+
+    private LinearLayoutManager linearLayoutManager;
+    private SwipeLayout currentSwipeLayoutTarget;
 
     public static OverviewGenericFragment newInstance(BudgetType budgetType, Date currentMonth) {
         OverviewGenericFragment fragment = new OverviewGenericFragment();
@@ -84,8 +88,11 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         categoryList = new ArrayList<>();
         RecyclerView categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
         categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
-        categoryListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+
+        categoryListView.setLayoutManager(linearLayoutManager);
         categoryListView.setAdapter(categoryPercentListAdapter);
 
         //Add divider
@@ -99,8 +106,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
     //Should be called only the first time when the fragment is created
     private void getCategoryList(){
-        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
-        resultsCategory = myRealm.where(Category.class).findAllAsync();
+        //final Realm myRealm = Realm.getDefaultInstance();
+        resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
             public void onChange(RealmResults<Category> element) {
@@ -108,7 +115,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getContext());
+                Log.d("qwer","there are "+categoryList.size()+" category of type : "+budgetType.toString());
+                //myRealm.close();  BudgetPreference.removeRealmCache(getContext());
                 getMonthReport(currentMonth, true);
             }
         });
@@ -123,7 +131,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
-        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
+        //final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -132,7 +140,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 transactionList.clear();
                 transactionList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getContext());
+               // myRealm.close();  BudgetPreference.removeRealmCache(getContext());
                 performAsyncCalculation(animate);
             }
         });
@@ -199,7 +207,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                         deleteCategory(position);
                     }
                 })
@@ -207,6 +214,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        closeSwipeItem(position);
                     }
                 })
                 .create()
@@ -214,7 +222,33 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     }
 
     private void deleteCategory(int position){
+        Log.d(TAG, "view, remove " + position + "-> from result "+categoryList.get(position).getName());
+        Log.d(TAG, "b4 There are "+resultsCategory.size()+" category, trying to remove "+resultsCategory.get(position).getName());
 
+        final RealmResults<Category> categoryToBeRemove = myRealm.where(Category.class).equalTo("id", categoryList.get(position).getId()).findAllAsync();
+        categoryToBeRemove.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+            @Override
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListener(this);
+
+                myRealm.beginTransaction();
+                Log.d(TAG, "removing found category : "+element.get(0).getName());
+
+                //grab the first one as there should only have 1 category due to the ID being unique
+                categoryToBeRemove.deleteFirstFromRealm();
+
+                myRealm.commitTransaction();
+            }
+        });
+
+        //myRealm.commitTransaction();
+        Log.d(TAG, "After There are " + resultsCategory.size() + " category");
+
+        categoryList.remove(position);
+        categoryPercentListAdapter.setCategoryList(categoryList);
+
+        //this recalculates
+        getMonthReport(currentMonth, true);
     }
 
     private void editCategory(int position){
@@ -245,6 +279,15 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         }
     }
 
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

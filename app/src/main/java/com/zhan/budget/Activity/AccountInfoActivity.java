@@ -19,7 +19,6 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
@@ -61,7 +60,6 @@ public class AccountInfoActivity extends BaseActivity implements
 
         Log.d("ACCOUNT_INFO", "isNewAccount "+isNewAccount);
 
-
         if(!isNewAccount){
             account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_ACCOUNT));
 
@@ -86,10 +84,10 @@ public class AccountInfoActivity extends BaseActivity implements
         accountNameTextView = (TextView)findViewById(R.id.accountNameTextView);
         accountNameTextView.setText(account.getName());
 
-        /*if(isNewAccount){
+        if(isNewAccount){
             deleteAccountBtn.setVisibility(View.GONE);
-        }*/
-        deleteAccountBtn.setVisibility(View.GONE);//Cant delete accounts for now
+        }
+        //deleteAccountBtn.setVisibility(View.GONE);//Cant delete accounts for now
 
         //default color selected
         selectedColor = account.getColor();
@@ -146,12 +144,12 @@ public class AccountInfoActivity extends BaseActivity implements
             }
         });
 
-        /*deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
+        deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDelete();
             }
-        });*/
+        });
     }
 
     private void changeName(){
@@ -201,7 +199,17 @@ public class AccountInfoActivity extends BaseActivity implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                       // Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        Realm myRealm = Realm.getDefaultInstance();
+                        Account acc = myRealm.where(Account.class).equalTo("id", account.getId()).findFirst();
+                        myRealm.beginTransaction();
+                        acc.deleteFromRealm();
+                        myRealm.commitTransaction();
+                        myRealm.close();
+
+                        intent.putExtra(Constants.RESULT_DELETE_ACCOUNT, true); //deleting account
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -219,7 +227,7 @@ public class AccountInfoActivity extends BaseActivity implements
 
         Account acc;
 
-        Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
+        Realm myRealm = Realm.getDefaultInstance();
         if(!isNewAccount){
             acc = myRealm.where(Account.class).equalTo("id", account.getId()).findFirst();
             myRealm.beginTransaction();
@@ -242,9 +250,10 @@ public class AccountInfoActivity extends BaseActivity implements
         Log.d("ACCOUNT_INFO_ACTIVITY", "collor 2 "+account.getColor());
 
         Parcelable wrapped = Parcels.wrap(account);
-        myRealm.close();BudgetPreference.removeRealmCache(this);
+        myRealm.close();
 
         if(!isNewAccount){
+            intent.putExtra(Constants.RESULT_DELETE_ACCOUNT, false); //not deleting account
             intent.putExtra(Constants.RESULT_EDIT_ACCOUNT, wrapped);
         }else{
             intent.putExtra(Constants.RESULT_NEW_ACCOUNT, wrapped);

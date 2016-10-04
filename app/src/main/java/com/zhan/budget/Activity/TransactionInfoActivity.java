@@ -133,8 +133,14 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         if(!isNewTransaction) {
-            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
-            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+            if(editTransaction.getCategory() != null){
+                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
+                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+            }else{
+                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
+                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
+            }
+
         }else{
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
@@ -184,7 +190,12 @@ public class TransactionInfoActivity extends BaseActivity implements
                 noteString = editTransaction.getNote();
                 transactionNameTextView.setText(noteString);
             }else{
-                transactionNameTextView.setText(editTransaction.getCategory().getName());
+                if(editTransaction.getCategory() != null){
+                    transactionNameTextView.setText(editTransaction.getCategory().getName());
+                }else{
+                    transactionNameTextView.setText("");
+                }
+
             }
 
             if(editTransaction.getLocation() != null){
@@ -194,13 +205,18 @@ public class TransactionInfoActivity extends BaseActivity implements
             //Check which category this transaction belongs to.
             //If its EXPENSE category, change page to EXPENSE view pager
             //If its INCOME category, change page to INCOME view pager
-            if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                viewPager.setCurrentItem(0);
+            if(editTransaction.getCategory() != null){
+                if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    viewPager.setCurrentItem(0);
+                    currentPage = BudgetType.EXPENSE;
+                }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                    viewPager.setCurrentItem(1);
+                    currentPage = BudgetType.INCOME;
+                }
+            }else{
                 currentPage = BudgetType.EXPENSE;
-            }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                viewPager.setCurrentItem(1);
-                currentPage = BudgetType.INCOME;
             }
+
 
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
@@ -376,7 +392,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
 
                         //If note is empty
-                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedExpenseCategory != null){
                             transactionNameTextView.setText(selectedExpenseCategory.getName());
                         }
 
@@ -389,7 +405,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
 
                         //If note is empty
-                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedIncomeCategory != null){
                             transactionNameTextView.setText(selectedIncomeCategory.getName());
                         }
 
@@ -401,6 +417,13 @@ public class TransactionInfoActivity extends BaseActivity implements
             @Override
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+
+        transactionNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNoteDialog();
             }
         });
     }
@@ -517,7 +540,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 element.removeChangeListener(this);
                 Log.d("REALMZ1", "getAllAccounts closing  realm");
 
-
                 for (int i = 0; i < element.size(); i++) {
                     Log.d("ZHAP", i+"->"+element.get(i).getName());
                     accountNameList.add(element.get(i).getName());
@@ -536,10 +558,13 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 accountPicker.setWrapSelectorWheel(false);
 
+                boolean doesTransactionHaveAccount = false;
+
                 int pos = 0; //default is first item to be selected in the spinner
                 if (!isNewTransaction) {
                     for (int i = 0; i < element.size(); i++) {
                         if (editTransaction.getAccount() != null) {
+                            doesTransactionHaveAccount = true;
                             if (editTransaction.getAccount().getId().equalsIgnoreCase(element.get(i).getId())) {
                                 pos = i;
                                 break;
@@ -549,9 +574,22 @@ public class TransactionInfoActivity extends BaseActivity implements
                 }
 
                 selectedAccountIndexInSpinner = pos;
-                selectedAccount = myRealm.copyFromRealm(element.get(pos));
 
-                accountPicker.setValue(pos);
+                //if there is a default account
+                boolean isThereDefaultAccount = false;
+
+                for(int i = 0; i < resultsAccount.size(); i++){
+                    if(resultsAccount.get(i).isDefault()){
+                        isThereDefaultAccount = true;
+                        break;
+                    }
+                }
+
+                if(isThereDefaultAccount || doesTransactionHaveAccount){
+                    selectedAccount = myRealm.copyFromRealm(element.get(selectedAccountIndexInSpinner));
+                }
+
+                accountPicker.setValue(selectedAccountIndexInSpinner);
 
                 myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
@@ -563,7 +601,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         selectedAccountIndexInSpinner = accountPicker.getValue();
                         selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
-                        //Toast.makeText(getApplicationContext(), "Selected account is "+selectedAccount.getName(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -658,18 +695,13 @@ public class TransactionInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString();
 
-                        if(editTransaction != null){
-                            if(editTransaction.getLocation() != null){
-                                if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
-                                    newLocation = true;
-                                }
-                            }else{
+                        if(editTransaction != null && editTransaction.getLocation() != null){
+                            if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
                                 newLocation = true;
                             }
                         }else{
                             newLocation = true;
                         }
-
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -935,11 +967,21 @@ public class TransactionInfoActivity extends BaseActivity implements
         Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
         Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
-        Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
-        Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
-        Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
-        Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
-        Log.i(TAG, "----------- Parceler Result ----------");
+
+        if(newOrEditTransaction.getCategory() != null){
+            Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
+            Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
+        }else{
+            Log.d(TAG, "category null");
+        }
+
+        if(newOrEditTransaction.getAccount() != null){
+            Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
+            Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
+        }else{
+            Log.d(TAG, "account is null");
+        }
+        Log.d(TAG, "----------- Parceler Result ----------");
 
         Realm myRealm = Realm.getDefaultInstance();
         myRealm.beginTransaction();

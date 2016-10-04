@@ -24,14 +24,14 @@ import com.zhan.library.CircularView;
 
 import java.util.List;
 
-public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.ViewHolder> {
+public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecyclerAdapter.ViewHolder> {
 
     private Context context;
     private List<Account> accountList;
     private boolean displayCost, allowClickSetDefault;
     private OnAccountAdapterInteractionListener mListener;
 
-    public AccountListAdapter(Fragment fragment, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault) {
+    public AccountRecyclerAdapter(Fragment fragment, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault) {
         this.context = fragment.getContext();
         this.accountList = accountList;
         this.displayCost = displayCost;
@@ -45,7 +45,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         }
     }
 
-    public AccountListAdapter(Activity activity, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault){
+    public AccountRecyclerAdapter(Activity activity, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault){
         this.context = activity;
         this.accountList = accountList;
         this.displayCost = displayCost;
@@ -129,7 +129,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         // for any view that will be set as you render a row
         public TextView name, cost;
         public SwipeLayout swipeLayout;
-        public ImageView /*deleteBtn,*/ editBtn, defaultAccountIndicatorOn, defaultAccountIndicatorOff;
+        public ImageView deleteBtn, editBtn, defaultAccountIndicatorOn, defaultAccountIndicatorOff;
         public CircularView icon;
 
         // We also create a constructor that accepts the entire item row
@@ -143,7 +143,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
             name = (TextView) itemView.findViewById(R.id.accountName);
             cost = (TextView) itemView.findViewById(R.id.accountCost);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeAccount);
-            //deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
+            deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
             defaultAccountIndicatorOn = (ImageView) itemView.findViewById(R.id.defaultAccountIndicatorOn);
             defaultAccountIndicatorOff = (ImageView) itemView.findViewById(R.id.defaultAccountIndicatorOff);
@@ -188,14 +188,14 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
                     mListener.onClickAccount(getLayoutPosition());
                 }
             });
-/*
+
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onDeleteAccount(getLayoutPosition());
                 }
             });
-*/
+
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -208,6 +208,14 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         mListener.onAccountSetAsDefault(getLayoutPosition());
+                        return false;
+                    }
+                });
+
+                defaultAccountIndicatorOn.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        mListener.onAccountDeSetFromDefault(getLayoutPosition());
                         return false;
                     }
                 });
@@ -233,5 +241,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         void onPullDownAllow(boolean value);
 
         void onAccountSetAsDefault(int position);
+
+        void onAccountDeSetFromDefault(int position);
     }
 }

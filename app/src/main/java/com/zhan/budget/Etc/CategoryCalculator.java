@@ -44,7 +44,7 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
         //Go through each transaction and put them into the correct category
         for(int t = 0; t < transactionList.size(); t++){
             for(int c = 0; c < categoryList.size(); c++){
-                if(transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
+                if(transactionList.get(t).getCategory() != null && transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
                     float transactionPrice = transactionList.get(t).getPrice();
                     float currentCategoryPrice = categoryList.get(c).getCost();
                     categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);

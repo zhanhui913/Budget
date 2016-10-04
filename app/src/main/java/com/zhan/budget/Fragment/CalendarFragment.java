@@ -462,7 +462,15 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 Log.d(TAG, "received " + element.size() + " transactions");
 
-                float sumFloatValue = element.sum("price").floatValue();
+                //float sumFloatValue = element.sum("price").floatValue();
+
+                float sumFloatValue = 0f;
+                for(int i = 0; i < resultsTransactionForDay.size(); i++){
+                    if(resultsTransactionForDay.get(i).getCategory() != null){
+                        sumFloatValue += resultsTransactionForDay.get(i).getPrice();
+                    }
+                }
+
                 totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                 updateTransactionList();
@@ -791,11 +799,24 @@ public class CalendarFragment extends BaseRealmFragment implements
         Log.d(TAG, "transaction id :" + debugTransaction.getId());
         Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + debugTransaction.getDayType() + ", date :" + debugTransaction.getDate());
-        Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
-        Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
-        Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
-        Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
+
+        if(debugTransaction.getCategory() != null){
+            Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
+            Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
+        }else{
+            Log.d(TAG, "category null");
+        }
+
+        if(debugTransaction.getAccount() != null){
+            Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
+            Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
+        }else{
+            Log.d(TAG, "account null");
+        }
+
         Log.i(TAG, "----------- Click Result ----------");
+
+        closeSwipeItem(position);
 
         editTransaction(position);
     }

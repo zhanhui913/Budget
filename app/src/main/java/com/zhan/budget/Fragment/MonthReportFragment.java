@@ -171,20 +171,22 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 startTime = System.nanoTime();
 
                 for (int i = 0; i < transactionList.size(); i++) {
-                    if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
-                        int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
+                    if(transactionList.get(i).getCategory() != null){
+                        if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
+                            int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
 
-                        for (int a = 0; a < monthReportList.size(); a++) {
-                            if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
-                                monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
+                            for (int a = 0; a < monthReportList.size(); a++) {
+                                if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
+                                    monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
+                                }
                             }
-                        }
-                    }else if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
-                        int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
+                        }else if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+                            int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
 
-                        for (int a = 0; a < monthReportList.size(); a++) {
-                            if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
-                                monthReportList.get(a).addIncomeThisMonth(transactionList.get(i).getPrice());
+                            for (int a = 0; a < monthReportList.size(); a++) {
+                                if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
+                                    monthReportList.get(a).addIncomeThisMonth(transactionList.get(i).getPrice());
+                                }
                             }
                         }
                     }
