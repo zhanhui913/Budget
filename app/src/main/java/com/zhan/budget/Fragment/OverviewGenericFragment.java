@@ -40,6 +40,7 @@ import java.util.List;
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmModel;
 import io.realm.RealmResults;
 
 public class OverviewGenericFragment extends BaseRealmFragment implements
@@ -110,7 +111,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
     //Should be called only the first time when the fragment is created
     private void getCategoryList(){
-        final Realm myRealm = Realm.getDefaultInstance();
+        //final Realm myRealm = Realm.getDefaultInstance();
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
@@ -119,7 +120,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getContext());
+                Log.d("qwer","there are "+categoryList.size()+" category of type : "+budgetType.toString());
+                //myRealm.close();  BudgetPreference.removeRealmCache(getContext());
                 getMonthReport(currentMonth, true);
             }
         });
@@ -134,7 +136,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
         Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
 
-        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
+        //final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -143,7 +145,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 transactionList.clear();
                 transactionList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getContext());
+               // myRealm.close();  BudgetPreference.removeRealmCache(getContext());
                 performAsyncCalculation(animate);
             }
         });
@@ -210,7 +212,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                         deleteCategory(position);
                     }
                 })
@@ -228,11 +229,25 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private void deleteCategory(int position){
         Log.d(TAG, "view, remove " + position + "-> from result "+categoryList.get(position).getName());
         Log.d(TAG, "b4 There are "+resultsCategory.size()+" category, trying to remove "+resultsCategory.get(position).getName());
-        myRealm.beginTransaction();
-        resultsCategory.deleteFromRealm(position);
-        myRealm.commitTransaction();
-        Log.d(TAG, "After There are " + resultsCategory.size() + " category");
 
+        final RealmResults<Category> categoryToBeRemove = myRealm.where(Category.class).equalTo("id", categoryList.get(position).getId()).findAllAsync();
+        categoryToBeRemove.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+            @Override
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListener(this);
+
+                myRealm.beginTransaction();
+                Log.d(TAG, "removing found category : "+element.get(0).getName());
+
+                //grab the first one as there should only have 1 category due to the ID being unique
+                categoryToBeRemove.deleteFirstFromRealm();
+
+                myRealm.commitTransaction();
+            }
+        });
+
+        //myRealm.commitTransaction();
+        Log.d(TAG, "After There are " + resultsCategory.size() + " category");
 
         categoryList.remove(position);
         categoryPercentListAdapter.setCategoryList(categoryList);
