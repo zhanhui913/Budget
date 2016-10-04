@@ -275,18 +275,25 @@ public class SettingsAccount extends BaseRealmActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
-                 Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
 
-                Log.i(TAG, "----------- onActivityResult edit account ----------");
-                Log.d(TAG, "account name is "+accountReturned.getName());
-                Log.d(TAG, "account color is "+accountReturned.getColor());
-                Log.d(TAG, "account id is "+accountReturned.getId());
-                Log.i(TAG, "----------- onActivityResult edit account ----------");
+                boolean deleteAccount = data.getExtras().getBoolean(Constants.RESULT_DELETE_ACCOUNT);
 
-                accountList.set(accountIndexEdited, accountReturned);
+                if(!deleteAccount){
+                    Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
+
+                    Log.i(TAG, "----------- onActivityResult edit account ----------");
+                    Log.d(TAG, "account name is "+accountReturned.getName());
+                    Log.d(TAG, "account color is "+accountReturned.getColor());
+                    Log.d(TAG, "account id is "+accountReturned.getId());
+                    Log.i(TAG, "----------- onActivityResult edit account ----------");
+
+                    accountList.set(accountIndexEdited, accountReturned);
+                }else{
+                    accountList.remove(accountIndexEdited);
+                }
+
                 accountRecyclerAdapter.setAccountList(accountList);
                 updateAccountStatus();
-
             }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
                 Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
                 Log.i(TAG, "----------- onActivityResult new account ----------");

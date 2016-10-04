@@ -69,11 +69,17 @@ public class Constants {
 
     public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
     public static final String RESULT_EDIT_TRANSACTION = "Edit Transaction Result";
+
     public static final String RESULT_NEW_CATEGORY = "New Category Result";
     public static final String RESULT_EDIT_CATEGORY = "Edit Category Result";
+    public static final String RESULT_DELETE_CATEGORY = "Delete Category Result";
+
     public static final String RESULT_SCHEDULE_TRANSACTION = "ScheduledTransaction";
+
     public static final String RESULT_EDIT_ACCOUNT = "Edit Account Result";
     public static final String RESULT_NEW_ACCOUNT = "New Account Result";
+    public static final String RESULT_DELETE_ACCOUNT = "Delete Account Result";
+
     public static final String RESULT_EDIT_LOCATION = "Edit Location Result";
     public static final String RESULT_NEW_LOCATION = "New Location Result";
 

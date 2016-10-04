@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -123,7 +124,9 @@ public class AccountFragment extends BaseRealmFragment implements
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyAccountText.setText("Pull down to add an account");
+        emptyAccountText.setText("There is no account");
+        ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
+        downArrow.setVisibility(View.INVISIBLE);
 
         //Setup pie chart
         pieChartFragment = PieChartFragment.newInstance(accountList);
