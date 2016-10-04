@@ -139,8 +139,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }
 
         if(transaction.getCategory() != null) {
-            viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
-
             if (transaction.getCategory().isText()) {
                 viewHolder.circularView.setIconResource(0);
                 viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(transaction.getCategory().getName().toUpperCase()));
