@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -389,23 +390,32 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_CATEGORY) {
-                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
+/*
+                boolean deleteCategory = data.getExtras().getBoolean(Constants.RESULT_DELETE_CATEGORY);
+                Toast.makeText(getContext(), "deleting cat here", Toast.LENGTH_LONG).show();
+                if(!deleteCategory){
+                    final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
 
-                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
-                Log.d("ZHAN", "category name is "+categoryReturned.getName());
-                Log.d("ZHAN", "category color is "+categoryReturned.getColor());
-                Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
-                Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
-                Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
+                    Log.i("ZHAN", "----------- onActivityResult edit category ----------");
+                    Log.d("ZHAN", "category name is "+categoryReturned.getName());
+                    Log.d("ZHAN", "category color is "+categoryReturned.getColor());
+                    Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
+                    Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
+                    Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
 
-                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
+                    Log.i("ZHAN", "----------- onActivityResult edit category ----------");
 
-                Log.i("ZHAN", "eddited index :" + categoryIndexEdited);
+                    Log.i("ZHAN", "eddited index :" + categoryIndexEdited);
 
-                categoryList.set(categoryIndexEdited, categoryReturned);
+                    categoryList.set(categoryIndexEdited, categoryReturned);
+                }else{
+                    categoryList.remove(categoryIndexEdited);
+                }
+
                 categoryRecyclerAdapter.setCategoryList(categoryList);
-
                 updateCategoryStatus();
+                */
+                populateCategoryWithNoInfo();
             }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
                 final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_CATEGORY));
 

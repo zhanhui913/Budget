@@ -26,6 +26,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -412,7 +413,17 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        Realm myRealm = Realm.getDefaultInstance();
+                        Category cat = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
+                        myRealm.beginTransaction();
+                        cat.deleteFromRealm();
+                        myRealm.commitTransaction();
+                        myRealm.close();
+
+                        intent.putExtra(Constants.RESULT_DELETE_CATEGORY, true); //deleting category
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
