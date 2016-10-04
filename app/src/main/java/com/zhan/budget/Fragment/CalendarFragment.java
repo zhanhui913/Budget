@@ -794,17 +794,28 @@ public class CalendarFragment extends BaseRealmFragment implements
     @Override
     public void onClickTransaction(int position){
         Transaction debugTransaction = transactionList.get(position);
-/*
+
         Log.d(TAG, "----------- Click Result ----------");
         Log.d(TAG, "transaction id :" + debugTransaction.getId());
         Log.d(TAG, "transaction note :" + debugTransaction.getNote() + ", cost :" + debugTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + debugTransaction.getDayType() + ", date :" + debugTransaction.getDate());
-        Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
-        Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
-        Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
-        Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
+
+        if(debugTransaction.getCategory() != null){
+            Log.d(TAG, "category name :" + debugTransaction.getCategory().getName() + ", id:" + debugTransaction.getCategory().getId());
+            Log.d(TAG, "category type :" + debugTransaction.getCategory().getType());
+        }else{
+            Log.d(TAG, "category null");
+        }
+
+        if(debugTransaction.getAccount() != null){
+            Log.d(TAG, "account id : " + debugTransaction.getAccount().getId());
+            Log.d(TAG, "account name : " + debugTransaction.getAccount().getName());
+        }else{
+            Log.d(TAG, "account null");
+        }
+
         Log.i(TAG, "----------- Click Result ----------");
-        */
+
 
         editTransaction(position);
     }

@@ -533,7 +533,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 element.removeChangeListener(this);
                 Log.d("REALMZ1", "getAllAccounts closing  realm");
 
-
                 for (int i = 0; i < element.size(); i++) {
                     Log.d("ZHAP", i+"->"+element.get(i).getName());
                     accountNameList.add(element.get(i).getName());
@@ -552,10 +551,13 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 accountPicker.setWrapSelectorWheel(false);
 
+                boolean doesTransactionHaveAccount = false;
+
                 int pos = 0; //default is first item to be selected in the spinner
                 if (!isNewTransaction) {
                     for (int i = 0; i < element.size(); i++) {
                         if (editTransaction.getAccount() != null) {
+                            doesTransactionHaveAccount = true;
                             if (editTransaction.getAccount().getId().equalsIgnoreCase(element.get(i).getId())) {
                                 pos = i;
                                 break;
@@ -565,9 +567,22 @@ public class TransactionInfoActivity extends BaseActivity implements
                 }
 
                 selectedAccountIndexInSpinner = pos;
-                selectedAccount = myRealm.copyFromRealm(element.get(pos));
 
-                accountPicker.setValue(pos);
+                //if there is a default account
+                boolean isThereDefaultAccount = false;
+
+                for(int i = 0; i < resultsAccount.size(); i++){
+                    if(resultsAccount.get(i).isDefault()){
+                        isThereDefaultAccount = true;
+                        break;
+                    }
+                }
+
+                if(isThereDefaultAccount || doesTransactionHaveAccount){
+                    selectedAccount = myRealm.copyFromRealm(element.get(selectedAccountIndexInSpinner));
+                }
+
+                accountPicker.setValue(selectedAccountIndexInSpinner);
 
                 myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
@@ -579,7 +594,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         selectedAccountIndexInSpinner = accountPicker.getValue();
                         selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
-                        //Toast.makeText(getApplicationContext(), "Selected account is "+selectedAccount.getName(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -674,18 +688,13 @@ public class TransactionInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString();
 
-                        if(editTransaction != null){
-                            if(editTransaction.getLocation() != null){
-                                if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
-                                    newLocation = true;
-                                }
-                            }else{
+                        if(editTransaction != null && editTransaction.getLocation() != null){
+                            if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
                                 newLocation = true;
                             }
                         }else{
                             newLocation = true;
                         }
-
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -861,10 +870,12 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         //Check if any value changed
-        if(editTransaction.checkEquals(transaction)){
-            intent.putExtra(Constants.CHANGED, false);
-        }else{
-            intent.putExtra(Constants.CHANGED, true);
+        if(editTransaction != null){
+            if(editTransaction.checkEquals(transaction)){
+                intent.putExtra(Constants.CHANGED, false);
+            }else{
+                intent.putExtra(Constants.CHANGED, true);
+            }
         }
 
         addNewOrEditTransaction(transaction);
@@ -949,11 +960,21 @@ public class TransactionInfoActivity extends BaseActivity implements
         Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
         Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
-        Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
-        Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
-        Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
-        Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
-        Log.i(TAG, "----------- Parceler Result ----------");
+
+        if(newOrEditTransaction.getCategory() != null){
+            Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
+            Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
+        }else{
+            Log.d(TAG, "category null");
+        }
+
+        if(newOrEditTransaction.getAccount() != null){
+            Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
+            Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
+        }else{
+            Log.d(TAG, "account is null");
+        }
+        Log.d(TAG, "----------- Parceler Result ----------");
 
         Realm myRealm = Realm.getDefaultInstance();
         myRealm.beginTransaction();

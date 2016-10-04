@@ -24,14 +24,14 @@ import com.zhan.library.CircularView;
 
 import java.util.List;
 
-public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.ViewHolder> {
+public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecyclerAdapter.ViewHolder> {
 
     private Context context;
     private List<Account> accountList;
     private boolean displayCost, allowClickSetDefault;
     private OnAccountAdapterInteractionListener mListener;
 
-    public AccountListAdapter(Fragment fragment, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault) {
+    public AccountRecyclerAdapter(Fragment fragment, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault) {
         this.context = fragment.getContext();
         this.accountList = accountList;
         this.displayCost = displayCost;
@@ -45,7 +45,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         }
     }
 
-    public AccountListAdapter(Activity activity, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault){
+    public AccountRecyclerAdapter(Activity activity, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault){
         this.context = activity;
         this.accountList = accountList;
         this.displayCost = displayCost;
@@ -211,6 +211,14 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
                         return false;
                     }
                 });
+
+                defaultAccountIndicatorOn.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        mListener.onAccountDeSetFromDefault(getLayoutPosition());
+                        return false;
+                    }
+                });
             }
         }
     }
@@ -233,5 +241,7 @@ public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.
         void onPullDownAllow(boolean value);
 
         void onAccountSetAsDefault(int position);
+
+        void onAccountDeSetFromDefault(int position);
     }
 }

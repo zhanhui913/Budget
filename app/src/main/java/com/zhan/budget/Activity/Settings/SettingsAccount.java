@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.BaseRealmActivity;
-import com.zhan.budget.Adapter.AccountListAdapter;
+import com.zhan.budget.Adapter.AccountRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
@@ -34,7 +34,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class SettingsAccount extends BaseRealmActivity implements
-        AccountListAdapter.OnAccountAdapterInteractionListener{
+        AccountRecyclerAdapter.OnAccountAdapterInteractionListener{
 
     private  Toolbar toolbar;
 
@@ -47,7 +47,7 @@ public class SettingsAccount extends BaseRealmActivity implements
     private TextView emptyAccountText;
 
     private RecyclerView accountListView;
-    private AccountListAdapter accountListAdapter;
+    private AccountRecyclerAdapter accountRecyclerAdapter;
 
     private RealmResults<Account> resultsAccount;
     private List<Account> accountList;
@@ -108,8 +108,8 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 accountList = myRealm.copyFromRealm(element);
 
-                accountListAdapter = new AccountListAdapter(instance, accountList, false, true);
-                accountListView.setAdapter(accountListAdapter);
+                accountRecyclerAdapter = new AccountRecyclerAdapter(instance, accountList, false, true);
+                accountListView.setAdapter(accountRecyclerAdapter);
 
                 //Add divider
                 accountListView.addItemDecoration(
@@ -117,7 +117,7 @@ public class SettingsAccount extends BaseRealmActivity implements
                                 .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                                 .build());
 
-                accountListAdapter.setAccountList(accountList);
+                accountRecyclerAdapter.setAccountList(accountList);
 
                 updateAccountStatus();
             }
@@ -206,7 +206,7 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     private void updateAccountStatus(){
-        if(accountListAdapter.getItemCount() > 0){
+        if(accountRecyclerAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
@@ -229,7 +229,7 @@ public class SettingsAccount extends BaseRealmActivity implements
                 Log.i(TAG, "----------- onActivityResult edit account ----------");
 
                 accountList.set(accountIndexEdited, accountReturned);
-                accountListAdapter.setAccountList(accountList);
+                accountRecyclerAdapter.setAccountList(accountList);
                 updateAccountStatus();
 
             }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
@@ -241,11 +241,11 @@ public class SettingsAccount extends BaseRealmActivity implements
                 Log.i(TAG, "----------- onActivityResult new account ----------");
 
                 accountList.add(accountReturned);
-                accountListAdapter.setAccountList(accountList);
+                accountRecyclerAdapter.setAccountList(accountList);
                 updateAccountStatus();
 
                 //Scroll to the last position
-                accountListView.scrollToPosition(accountListAdapter.getItemCount() - 1);
+                accountListView.scrollToPosition(accountRecyclerAdapter.getItemCount() - 1);
             }
         }
     }
@@ -288,12 +288,34 @@ public class SettingsAccount extends BaseRealmActivity implements
             resultsAccount.get(i).setIsDefault(false);
         }
         resultsAccount.get(position).setIsDefault(true);
+
         myRealm.commitTransaction();
 
         //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
         Util.createSnackbar(this, (View)emptyAccountText.getParent(), "Set "+resultsAccount.get(position).getName()+" as default account");
 
         accountList = myRealm.copyFromRealm(resultsAccount);
-        accountListAdapter.setAccountList(accountList);
+        accountRecyclerAdapter.setAccountList(accountList);
+    }
+
+    @Override
+    public void onAccountDeSetFromDefault(int position){
+        myRealm.beginTransaction();
+/*        for(int i = 0; i < resultsAccount.size(); i++){
+            resultsAccount.get(i).setIsDefault(false);
+        }
+        resultsAccount.get(position).setIsDefault(true);
+*/
+        resultsAccount.get(position).setIsDefault(false);
+
+
+
+        myRealm.commitTransaction();
+
+        //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
+        Util.createSnackbar(this, (View)emptyAccountText.getParent(), "Remove "+resultsAccount.get(position).getName()+" as default account");
+
+        accountList = myRealm.copyFromRealm(resultsAccount);
+        accountRecyclerAdapter.setAccountList(accountList);
     }
 }
