@@ -414,18 +414,29 @@ public class AccountFragment extends BaseRealmFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
-                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
+/*
+                boolean deleteAccount = data.getExtras().getBoolean(Constants.RESULT_DELETE_ACCOUNT);
 
-                Log.i("ZHAN", "----------- onActivityResult edit account ----------");
-                Log.d("ZHAN", "account name is "+accountReturned.getName());
-                Log.d("ZHAN", "account color is "+accountReturned.getColor());
-                Log.d("ZHAN", "account id is "+accountReturned.getId());
-                Log.i("ZHAN", "----------- onActivityResult edit account ----------");
+                if(!deleteAccount) {
+                    final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
 
-                accountList.set(accountIndexEdited, accountReturned);
+                    Log.i("ZHAN", "----------- onActivityResult edit account ----------");
+                    Log.d("ZHAN", "account name is " + accountReturned.getName());
+                    Log.d("ZHAN", "account color is " + accountReturned.getColor());
+                    Log.d("ZHAN", "account id is " + accountReturned.getId());
+                    Log.i("ZHAN", "----------- onActivityResult edit account ----------");
+
+                    accountList.set(accountIndexEdited, accountReturned);
+                }else{
+                    accountList.remove(accountIndexEdited);
+                }
+
                 accountRecyclerAdapter.setAccountList(accountList);
-
                 updateAccountStatus();
+                */
+
+                //recalculate everything
+                populateAccountWithNoInfo();
             }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
                 final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
 
