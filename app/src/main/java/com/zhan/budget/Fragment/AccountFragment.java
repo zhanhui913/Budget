@@ -1,11 +1,13 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForAccount;
@@ -75,6 +78,9 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private int accountIndexEdited;//The index of the account that the user just finished edited.
 
+    private LinearLayoutManager linearLayoutManager;
+    private SwipeLayout currentSwipeLayoutTarget;
+
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -101,8 +107,10 @@ public class AccountFragment extends BaseRealmFragment implements
         centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
-        accountListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        accountListView.setLayoutManager(linearLayoutManager);
 
         accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, true, false);
         accountListView.setAdapter(accountRecyclerAdapter);
@@ -351,6 +359,53 @@ public class AccountFragment extends BaseRealmFragment implements
         }
     }
 
+    private void confirmDelete(final int position){
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText("Confirm Delete");
+        message.setText("Are you sure you want to delete this Account?\nAll transactions with this account will no longer have this account associated to it");
+
+        new AlertDialog.Builder(getContext())
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteAccount(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        closeSwipeItem(position);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteAccount(int position){
+        myRealm.beginTransaction();
+        resultsAccount.get(position).deleteFromRealm();
+        myRealm.commitTransaction();
+
+        //recalculate everything
+        populateAccountWithNoInfo();
+    }
+
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -426,6 +481,8 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickAccount(int position){
+        closeSwipeItem(position);
+
         Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
 
@@ -436,15 +493,13 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onDeleteAccount(int position){
-        myRealm.beginTransaction();
-        resultsAccount.get(position).deleteFromRealm();
-        myRealm.commitTransaction();
-
-       // accountRecyclerAdapter.notifyDataSetChanged();
+        confirmDelete(position);
     }
 
     @Override
     public void onEditAccount(int position){
+        closeSwipeItem(position);
+
         accountIndexEdited = position;
         editAccount(position);
     }

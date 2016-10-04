@@ -1,8 +1,10 @@
 package com.zhan.budget.Activity.Settings;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.BaseRealmActivity;
@@ -58,6 +61,9 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     private Activity instance;
 
+    private LinearLayoutManager linearLayoutManager;
+    private SwipeLayout currentSwipeLayoutTarget;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_settings_account;
@@ -71,8 +77,10 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         createToolbar();
 
+        linearLayoutManager = new LinearLayoutManager(this);
+
         accountListView = (RecyclerView)findViewById(R.id.accountListView);
-        accountListView.setLayoutManager(new LinearLayoutManager(this));
+        accountListView.setLayoutManager(linearLayoutManager);
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
@@ -215,6 +223,53 @@ public class SettingsAccount extends BaseRealmActivity implements
         }
     }
 
+    private void confirmDelete(final int position){
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText("Confirm Delete");
+        message.setText("Are you sure you want to delete this Account?\nAll transactions with this account will no longer have this account associated to it");
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteAccount(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        closeSwipeItem(position);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteAccount(int position){
+        myRealm.beginTransaction();
+        resultsAccount.get(position).deleteFromRealm();
+        myRealm.commitTransaction();
+
+        //recalculate everything
+        populateAccount();
+    }
+
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -258,20 +313,21 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onClickAccount(int position){
+        closeSwipeItem(position);
+
         accountIndexEdited = position;
         editAccount(position);
     }
 
     @Override
     public void onDeleteAccount(int position){
-        /*myRealm.beginTransaction();
-        resultsAccount.get(position).deleteFromRealm();
-        myRealm.commitTransaction();*/
-        //Cant delete account for now
+        confirmDelete(position);
     }
 
     @Override
     public void onEditAccount(int position){
+        closeSwipeItem(position);
+
         accountIndexEdited = position;
         editAccount(position);
     }

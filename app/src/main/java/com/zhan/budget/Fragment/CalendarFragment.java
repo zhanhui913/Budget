@@ -127,7 +127,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         totalCostTextView = (TextView) view.findViewById(R.id.totalCostTextView);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
 
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
         transactionListView.setLayoutManager(linearLayoutManager);
@@ -816,6 +816,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         Log.i(TAG, "----------- Click Result ----------");
 
+        closeSwipeItem(position);
 
         editTransaction(position);
     }

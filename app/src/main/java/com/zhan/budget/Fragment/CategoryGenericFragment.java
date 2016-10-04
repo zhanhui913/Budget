@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -132,7 +131,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                     }
                 });
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
 
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
         categoryListView.setLayoutManager(linearLayoutManager);
@@ -357,7 +356,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
     }
 
-
     private void confirmDelete(final int position){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
@@ -372,7 +370,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                 .setCancelable(true)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "1 DELETE...", Toast.LENGTH_SHORT).show();
                         deleteCategory(position);
                     }
                 })
@@ -484,12 +481,13 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onDeleteCategory(int position){
-        //Cant delete category
         confirmDelete(position);
     }
 
     @Override
     public void onEditCategory(int position){
+        closeSwipeItem(position);
+
         categoryIndexEdited = position;
         editCategory(position);
     }
@@ -549,6 +547,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     @Override
     public void onClick(int position){
         if(arrangementType == CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET) {
+
+            closeSwipeItem(position);
 
             Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
             viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));

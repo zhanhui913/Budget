@@ -496,7 +496,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     private void changeCircularViewToText(String value){
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)){
-            categoryCircularView.setText(Util.getFirstCharacterFromString(categoryNameTextView.getText().toString())+"");
+            categoryCircularView.setText(""+Util.getFirstCharacterFromString(categoryNameTextView.getText().toString().toUpperCase()));
         }
         categoryCircularView.setIconResource(0);
     }

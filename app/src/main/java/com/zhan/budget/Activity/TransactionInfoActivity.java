@@ -419,6 +419,13 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             }
         });
+
+        transactionNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNoteDialog();
+            }
+        });
     }
 
     private void createDateDialog(){

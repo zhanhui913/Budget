@@ -143,7 +143,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
             if (transaction.getCategory().isText()) {
                 viewHolder.circularView.setIconResource(0);
-                viewHolder.circularView.setText(Util.getFirstCharacterFromString(transaction.getCategory().getName()) + "");
+                viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(transaction.getCategory().getName().toUpperCase()));
             } else {
                 viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
                 viewHolder.circularView.setText("");

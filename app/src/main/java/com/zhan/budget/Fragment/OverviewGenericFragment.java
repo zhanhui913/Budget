@@ -12,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -27,7 +25,6 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
@@ -38,9 +35,7 @@ import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmModel;
 import io.realm.RealmResults;
 
 public class OverviewGenericFragment extends BaseRealmFragment implements
@@ -95,7 +90,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
 
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
 
         categoryListView.setLayoutManager(linearLayoutManager);
         categoryListView.setAdapter(categoryPercentListAdapter);
