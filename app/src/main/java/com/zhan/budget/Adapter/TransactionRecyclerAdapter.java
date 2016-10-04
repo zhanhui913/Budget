@@ -112,8 +112,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 }else{
                     viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
                 }
-            }else{
-                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.white));
             }
 
         }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
@@ -155,7 +153,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             if(transaction.getCategory() != null){
                 viewHolder.name.setText(transaction.getCategory().getName());
             }else{
-                viewHolder.name.setText("No Category");
+                viewHolder.name.setText("");
             }
         }
 

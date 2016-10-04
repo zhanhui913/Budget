@@ -105,7 +105,6 @@ public class Transaction extends RealmObject {
     public boolean checkEquals(Transaction other){
         if(!id.equalsIgnoreCase(other.getId())) return false;
 
-
         if(other.getNote() != null && note != null){
             if(!note.equalsIgnoreCase(other.getNote())) return false;
         }else if(other.getNote() == null && note == null){
@@ -115,8 +114,8 @@ public class Transaction extends RealmObject {
         if(date.getTime() != other.getDate().getTime()) return false;
         if(price != other.getPrice()) return false;
         if(!dayType.equalsIgnoreCase(other.getDayType())) return false;
-        if(!category.checkEquals(other.getCategory())) return false;
-        if(!account.checkEquals(other.getAccount())) return false;
+        if(category != null && other.getCategory() != null && !category.checkEquals(other.getCategory())) return false;
+        if(account != null && other.getAccount() != null && !account.checkEquals(other.getAccount())) return false;
 
         if(other.getLocation() != null && location != null){
             if(!location.checkEquals(other.getLocation())) return false;

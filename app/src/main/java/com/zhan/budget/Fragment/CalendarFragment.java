@@ -462,7 +462,15 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 Log.d(TAG, "received " + element.size() + " transactions");
 
-                float sumFloatValue = element.sum("price").floatValue();
+                //float sumFloatValue = element.sum("price").floatValue();
+
+                float sumFloatValue = 0f;
+                for(int i = 0; i < resultsTransactionForDay.size(); i++){
+                    if(resultsTransactionForDay.get(i).getCategory() != null){
+                        sumFloatValue += resultsTransactionForDay.get(i).getPrice();
+                    }
+                }
+
                 totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
 
                 updateTransactionList();

@@ -861,12 +861,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         //Check if any value changed
-        if(editTransaction != null){
-            if(editTransaction.checkEquals(transaction)){
-                intent.putExtra(Constants.CHANGED, false);
-            }else{
-                intent.putExtra(Constants.CHANGED, true);
-            }
+        if(editTransaction.checkEquals(transaction)){
+            intent.putExtra(Constants.CHANGED, false);
+        }else{
+            intent.putExtra(Constants.CHANGED, true);
         }
 
         addNewOrEditTransaction(transaction);

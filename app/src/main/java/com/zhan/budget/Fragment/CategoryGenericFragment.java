@@ -305,11 +305,13 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                 //Go through each COMPLETED transaction and put them into the correct category
                 for(int t = 0; t < transactionMonthList.size(); t++){
                     for(int c = 0; c < categoryList.size(); c++){
-                        if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                            float transactionPrice = transactionMonthList.get(t).getPrice();
-                            float currentCategoryPrice = categoryList.get(c).getCost();
-                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                            totalCost += transactionPrice;
+                        if(transactionMonthList.get(t).getCategory() != null){
+                            if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
+                                float transactionPrice = transactionMonthList.get(t).getPrice();
+                                float currentCategoryPrice = categoryList.get(c).getCost();
+                                categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
+                                totalCost += transactionPrice;
+                            }
                         }
                     }
                 }
@@ -460,9 +462,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         myRealm.commitTransaction();
         Log.d(TAG, "After There are " + resultsCategory.size() + " category");
 
-
-        categoryList.remove(position);
-        categoryRecyclerAdapter.setCategoryList(categoryList);
+        //recalculate everything
+        populateCategoryWithNoInfo();
     }
 
     private void openSwipeItem(int position){
