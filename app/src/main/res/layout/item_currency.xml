@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeCurrency"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Bottom view -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/editBtn"
+            android:src="@drawable/svg_ic_edit"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:background="@drawable/budget_green_button"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
+
+        <ImageView
+            android:id="@+id/deleteBtn"
+            android:src="@drawable/svg_ic_delete"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:background="@drawable/budget_red_button"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
+    </LinearLayout>
+
+    <!-- Surface view -->
+    <RelativeLayout
+        style="@style/ItemPaddingStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="?attr/themeColorBtn">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/currencySymbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_title_size"
+                android:textStyle="bold"
+                android:text="$" />
+        </RelativeLayout>
+
+        <com.zhan.library.CircularView
+            android:id="@+id/currencyIcon"
+            style="@style/CircularViewStyle_unselected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/indicatorContainer"
+            android:layout_toRightOf="@+id/currencyIcon"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/item_left_padding">
+
+            <TextView
+                android:id="@+id/currencyCountry"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/text_title_size"
+                android:textStyle="bold"
+                android:text="credit card" />
+
+            <TextView
+                android:id="@+id/currencyCode"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="$25.00"
+                android:textSize="@dimen/text_content_size" />
+        </LinearLayout>
+    </RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>

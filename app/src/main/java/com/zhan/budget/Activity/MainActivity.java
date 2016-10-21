@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity
         final ExtendedNumberPicker currencyPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
 
         TextView title = (TextView)accountDialogView.findViewById(R.id.title);
-        title.setText("Select Currency");
+        title.setText("Select BudgetCurrency");
 
 
         currencyList = new String[]{"AUD", "CAD", "USD"};

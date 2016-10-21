@@ -2,7 +2,7 @@ package com.zhan.budget.Model.Realm;
 
 import org.parceler.Parcel;
 
-import io.realm.CurrencyRealmProxy;
+import io.realm.BudgetCurrencyRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -10,20 +10,20 @@ import io.realm.annotations.PrimaryKey;
  * Created by Zhan on 2016-10-11.
  */
 
-@Parcel(implementations = {CurrencyRealmProxy.class},
+@Parcel(implementations = {BudgetCurrencyRealmProxy.class},
         value = Parcel.Serialization.BEAN,
-        analyze = {Currency.class})
-public class Currency extends RealmObject {
+        analyze = {BudgetCurrency.class})
+public class BudgetCurrency extends RealmObject {
 
     @PrimaryKey
     private String id;
 
-    private String name;
+    private String currencyCode;
     private String symbol;
     private String country;
 
 
-    public Currency(){
+    public BudgetCurrency(){
 
     }
 
@@ -35,12 +35,12 @@ public class Currency extends RealmObject {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCurrencyCode() {
+        return currencyCode;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCurrencyCode(String code) {
+        this.currencyCode = code;
     }
 
     public String getSymbol() {
@@ -65,9 +65,9 @@ public class Currency extends RealmObject {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public boolean checkEquals(Currency other){
+    public boolean checkEquals(BudgetCurrency other){
         if(!id.equalsIgnoreCase(other.getId())) return false;
-        if(!name.equalsIgnoreCase(other.getName())) return false;
+        if(!currencyCode.equalsIgnoreCase(other.getCurrencyCode())) return false;
         if(!symbol.equalsIgnoreCase(other.getSymbol())) return false;
         if(!country.equalsIgnoreCase(other.getCountry())) return false;
         return true;

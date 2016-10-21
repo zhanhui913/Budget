@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zhan.budget">
-
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -19,11 +20,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeLight.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
+
+
         </activity>
         <activity
             android:name=".Activity.TransactionInfoActivity"
@@ -97,7 +97,13 @@
         <activity
             android:name=".Activity.SelectCurrencyActivity"
             android:label="@string/title_activity_select_currency"
-            android:theme="@style/AppThemeLight.NoActionBar"></activity>
+            android:theme="@style/AppThemeLight.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
