@@ -18,25 +18,17 @@ import io.realm.annotations.PrimaryKey;
 public class BudgetCurrency extends RealmObject {
 
     @PrimaryKey
-    private String id;
+    private String country;
 
     private String currencyCode;
     private String symbol;
-    private String country;
+
     private boolean isDefault;
     private double rate;
     private Date date;
 
     public BudgetCurrency(){
 
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getCurrencyCode() {
@@ -94,10 +86,11 @@ public class BudgetCurrency extends RealmObject {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean checkEquals(BudgetCurrency other){
-        if(!id.equalsIgnoreCase(other.getId())) return false;
         if(!currencyCode.equalsIgnoreCase(other.getCurrencyCode())) return false;
         if(!symbol.equalsIgnoreCase(other.getSymbol())) return false;
         if(!country.equalsIgnoreCase(other.getCountry())) return false;
+        if(isDefault != (other.isDefault())) return false;
+        if(rate != (other.getRate())) return false;
         return true;
     }
 }

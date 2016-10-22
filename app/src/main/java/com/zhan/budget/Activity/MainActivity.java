@@ -169,12 +169,9 @@ public class MainActivity extends BaseActivity
     }
 
     private void askForCurrencyActivity(){
-        Intent newTransactionIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
-
-        //This is new transaction
-        //newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, true);
-        //newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
-        startActivityForResult(newTransactionIntent, Constants.RETURN_NEW_TRANSACTION);
+        Intent currencyIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
+        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
+        startActivity(currencyIntent);
     }
 
     @Override

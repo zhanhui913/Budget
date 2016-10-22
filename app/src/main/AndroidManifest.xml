@@ -20,10 +20,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeLight.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
-
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activity.TransactionInfoActivity"
@@ -97,13 +98,7 @@
         <activity
             android:name=".Activity.SelectCurrencyActivity"
             android:label="@string/title_activity_select_currency"
-            android:theme="@style/AppThemeLight.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppThemeLight.NoActionBar"></activity>
     </application>
 
 </manifest>

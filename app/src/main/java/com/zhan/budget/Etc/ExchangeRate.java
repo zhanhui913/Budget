@@ -1,7 +1,5 @@
 package com.zhan.budget.Etc;
 
-import android.util.Log;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,7 +18,7 @@ import okhttp3.Response;
  */
 
 public class ExchangeRate {
-    private ExchangeRate.OnCurrencyConverterInteractionListener mListener;
+    private ExchangeRate.OnExchangeRateInteractionListener mListener;
 
     private final String TAG = "CURRENCY";
     private OkHttpClient client = new OkHttpClient();
@@ -33,7 +31,7 @@ public class ExchangeRate {
     private int fromAmountInteger;
     private double fromAmountDouble;
 
-    public ExchangeRate(String fromCurrency, String toCurrency, int fromAmount, OnCurrencyConverterInteractionListener mListener) {
+    public ExchangeRate(String fromCurrency, String toCurrency, int fromAmount, OnExchangeRateInteractionListener mListener) {
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.fromAmountInteger = fromAmount;
@@ -42,7 +40,7 @@ public class ExchangeRate {
         callGoogleFinanceAPI(String.format(Locale.US, URL_INT, fromAmount, fromCurrency, toCurrency));
     }
 
-    public ExchangeRate(String fromCurrency, String toCurrency, double fromAmount, OnCurrencyConverterInteractionListener mListener) {
+    public ExchangeRate(String fromCurrency, String toCurrency, double fromAmount, OnExchangeRateInteractionListener mListener) {
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.fromAmountDouble = fromAmount;
@@ -52,7 +50,6 @@ public class ExchangeRate {
     }
 
     public void callGoogleFinanceAPI(String url){
-        Log.d("CURRENCY", "url : "+url);
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -79,12 +76,11 @@ public class ExchangeRate {
                 Document doc = Jsoup.parse(body);
 
                 Element el = doc.select("#currency_converter_result .bld").first();
-                Log.d("CURRENCY", "dd : "+el.text());
-                String val =  el.text().split("\\s+")[0];
-                Log.d("CURRENCY", val);
-
-                if(mListener != null){
+                if(el != null){
+                    String val =  el.text().split("\\s+")[0];
                     mListener.onCompleteCalculation(Double.parseDouble(val));
+                }else{
+                    mListener.onFailedCalculation();
                 }
             }
         });
@@ -119,7 +115,9 @@ public class ExchangeRate {
     }
 
     //Interface needed for caller
-    public interface OnCurrencyConverterInteractionListener {
+    public interface OnExchangeRateInteractionListener {
         void onCompleteCalculation(double result);
+
+        void onFailedCalculation();
     }
 }

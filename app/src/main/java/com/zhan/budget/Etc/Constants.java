@@ -52,6 +52,7 @@ public class Constants {
     public static final String REQUEST_EDIT_ACCOUNT = "Edit Account";
     public static final String REQUEST_NEW_LOCATION = "New Location";
     public static final String REQUEST_EDIT_LOCATION = "Edit Location";
+    public static final String REQUEST_CURRENCY_IN_SETTINGS = "CurrencyInSettings";
 
     //Return result
     public static final int RETURN_NEW_TRANSACTION = 1;

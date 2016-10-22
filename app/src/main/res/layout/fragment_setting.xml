@@ -146,6 +146,32 @@
                       android:text="Manage locations. Change colors."/>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/themeColorHighlight"/>
+
+        <LinearLayout
+            android:id="@+id/currencyBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView style="@style/SettingsTextViewButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Currency"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/currencyContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Manage currencies."/>
+        </LinearLayout>
+
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
