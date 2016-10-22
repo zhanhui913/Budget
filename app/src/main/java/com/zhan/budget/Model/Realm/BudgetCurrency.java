@@ -2,6 +2,8 @@ package com.zhan.budget.Model.Realm;
 
 import org.parceler.Parcel;
 
+import java.util.Date;
+
 import io.realm.BudgetCurrencyRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -21,7 +23,9 @@ public class BudgetCurrency extends RealmObject {
     private String currencyCode;
     private String symbol;
     private String country;
-
+    private boolean isDefault;
+    private double rate;
+    private Date date;
 
     public BudgetCurrency(){
 
@@ -57,6 +61,30 @@ public class BudgetCurrency extends RealmObject {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
