@@ -19,36 +19,36 @@ import okhttp3.Response;
  * Created by zhanyap on 2016-10-21.
  */
 
-public class CurrencyConverter {
-    private CurrencyConverter.OnCurrencyConverterInteractionListener mListener;
+public class ExchangeRate {
+    private ExchangeRate.OnCurrencyConverterInteractionListener mListener;
 
     private final String TAG = "CURRENCY";
     private OkHttpClient client = new OkHttpClient();
 
-    private String URL_INT = "https://www.google.com/finance/converter?a=%s&from=%s&to=%1$d";
-    private String URL_DOUBLE = "https://www.google.com/finance/converter?a=%s&from=%s&to=%.2f";
+    private String URL_INT = "https://www.google.com/finance/converter?a=%1d&from=%s&to=%s";
+    private String URL_DOUBLE = "https://www.google.com/finance/converter?a=%.2f&from=%s&to=%s";
 
     private String fromCurrency;
     private String toCurrency;
     private int fromAmountInteger;
     private double fromAmountDouble;
 
-    public CurrencyConverter(String fromCurrency, String toCurrency, int fromAmount, OnCurrencyConverterInteractionListener mListener) {
+    public ExchangeRate(String fromCurrency, String toCurrency, int fromAmount, OnCurrencyConverterInteractionListener mListener) {
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.fromAmountInteger = fromAmount;
         this.mListener = mListener;
 
-        callGoogleFinanceAPI(String.format(Locale.US, URL_INT, fromCurrency, toCurrency, fromAmount));
+        callGoogleFinanceAPI(String.format(Locale.US, URL_INT, fromAmount, fromCurrency, toCurrency));
     }
 
-    public CurrencyConverter(String fromCurrency, String toCurrency, double fromAmount, OnCurrencyConverterInteractionListener mListener) {
+    public ExchangeRate(String fromCurrency, String toCurrency, double fromAmount, OnCurrencyConverterInteractionListener mListener) {
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.fromAmountDouble = fromAmount;
         this.mListener = mListener;
 
-        callGoogleFinanceAPI(String.format(Locale.US, URL_DOUBLE, fromCurrency, toCurrency, fromAmount));
+        callGoogleFinanceAPI(String.format(Locale.US, URL_DOUBLE, fromAmount, fromCurrency, toCurrency));
     }
 
     public void callGoogleFinanceAPI(String url){
@@ -78,17 +78,44 @@ public class CurrencyConverter {
                 String body = response.body().string();
                 Document doc = Jsoup.parse(body);
 
-                Element el = doc.select("#currency_converter_result .bld").first(); Log.d("CURRENCY", "dd : "+el.text());
+                Element el = doc.select("#currency_converter_result .bld").first();
+                Log.d("CURRENCY", "dd : "+el.text());
                 String val =  el.text().split("\\s+")[0];
                 Log.d("CURRENCY", val);
-
-                //createToast(fromCurrency, toCurrency, fromAmount, Double.parseDouble(val));
 
                 if(mListener != null){
                     mListener.onCompleteCalculation(Double.parseDouble(val));
                 }
             }
         });
+    }
+
+    public String getFromCurrency() {
+        return fromCurrency;
+    }
+
+    public void setFromCurrency(String fromCurrency) {
+        this.fromCurrency = fromCurrency;
+    }
+
+    public String getToCurrency() {
+        return toCurrency;
+    }
+
+    public void setToCurrency(String toCurrency) {
+        this.toCurrency = toCurrency;
+    }
+
+    public int getFromAmountInteger() {
+        return fromAmountInteger;
+    }
+
+    public void setFromAmountInteger(int fromAmountInteger) {
+        this.fromAmountInteger = fromAmountInteger;
+    }
+
+    public double getFromAmountDouble() {
+        return fromAmountDouble;
     }
 
     //Interface needed for caller

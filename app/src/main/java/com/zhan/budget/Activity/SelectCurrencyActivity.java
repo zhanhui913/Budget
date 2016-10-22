@@ -6,23 +6,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CurrencyRecyclerAdapter;
-import com.zhan.budget.Etc.CurrencyConverter;
+import com.zhan.budget.Etc.ExchangeRate;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,12 +26,8 @@ import java.util.List;
 import java.util.Locale;
 
 import io.realm.Realm;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class SelectCurrencyActivity extends BaseRealmActivity implements
         CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener{
@@ -216,57 +206,16 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
 
         try{
-            //callGoogleFinanceAPI("USD",currencyList.get(position).getCurrencyCode(),1);
-
-            CurrencyConverter currencyConverter = new CurrencyConverter("USD", currencyList.get(position).getCurrencyCode(), 1, new CurrencyConverter.OnCurrencyConverterInteractionListener() {
+            ExchangeRate exchangeRate = new ExchangeRate("USD", currencyList.get(position).getCurrencyCode(), 1000.50, new ExchangeRate.OnCurrencyConverterInteractionListener() {
                 @Override
                 public void onCompleteCalculation(double result) {
                     createToast("USD", currencyList.get(position).getCurrencyCode(), 1, result);
                 }
             });
 
-
-
         }catch(Exception e){
             e.printStackTrace();
         }
-    }
-
-    private void callGoogleFinanceAPI(final String fromCurrency, final String toCurrency, final double fromAmount) throws IOException{
-        String url = "https://www.google.com/finance/converter?a="+fromAmount+"&from="+fromCurrency+"&to="+toCurrency+"";
-        Log.d("CURRENCY", "url : "+url);
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        Call call = client.newCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                /*Headers responseHeaders = response.headers();
-                for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-                    Log.d("CURRENCY",responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                }*/
-
-                //Can only call response.body().string() once
-                String body = response.body().string();
-                Document doc = Jsoup.parse(body);
-
-                Element el = doc.select("#currency_converter_result .bld").first(); Log.d("CURRENCY", "dd : "+el.text());
-                String val =  el.text().split("\\s+")[0];
-                Log.d("CURRENCY", val);
-
-                createToast(fromCurrency, toCurrency, fromAmount, Double.parseDouble(val));
-            }
-        });
     }
 
     private void createToast(final String fromCurrency, final String toCurrency, final double fromAmount, final double toAmount){
