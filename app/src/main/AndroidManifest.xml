@@ -19,11 +19,7 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppThemeLight.NoActionBar"
 			android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
 
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
 		</activity>
 		<activity
 			android:name=".Activity.TransactionInfoActivity"
@@ -94,6 +90,16 @@
 			android:name=".Activity.LocationInfoActivity"
 			android:label="@string/title_activity_location_info"
 			android:theme="@style/AppThemeLight.NoActionBar">
+		</activity>
+		<activity
+			android:name=".Activity.SecurityActivity"
+			android:label="@string/title_activity_security"
+			android:theme="@style/AppThemeLight.NoActionBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
 		</activity>
 	</application>
 

@@ -41,4 +41,5 @@
 
 	<!-- Etc -->
 	<string name="target_email">zhanapp@gmail.com</string>
+	<string name="title_activity_security">SecurityActivity</string>
 </resources>
