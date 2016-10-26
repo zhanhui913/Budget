@@ -3,12 +3,18 @@ package com.zhan.budget.Activity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.zhan.budget.Fragment.Security.FingerprintFragment;
+import com.zhan.budget.Fragment.Security.PatternFragment;
+import com.zhan.budget.Fragment.Security.PinFragment;
 import com.zhan.budget.R;
 
 public class SecurityActivity extends BaseActivity {
 
 
     private Toolbar toolbar;
+    private PinFragment pinFragment;
+    private PatternFragment patternFragment;
+    private FingerprintFragment fingerprintFragment;
 
     @Override
     protected int getActivityLayout(){
@@ -19,6 +25,10 @@ public class SecurityActivity extends BaseActivity {
     protected void init(){
         createToolbar();
         addListeners();
+        createFragments();
+
+        getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, pinFragment).commit();
+
     }
 
     /**
@@ -46,7 +56,9 @@ public class SecurityActivity extends BaseActivity {
                 finish();
             }
         });
+    }
 
-
+    private void createFragments(){
+        pinFragment = new PinFragment();
     }
 }
