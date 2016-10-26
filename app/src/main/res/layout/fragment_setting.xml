@@ -146,6 +146,50 @@
                       android:text="Manage locations. Change colors."/>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/themeColorHighlight"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/securityBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="?attr/themeColorBtn"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_toLeftOf="@+id/securitySwitch">
+
+                <TextView style="@style/SettingsTextViewButtonStyle"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="Security"/>
+
+                <TextView style="@style/SettingsTextViewContentStyle"
+                          android:id="@+id/securityContent"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="Set security to protect your records."/>
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/securitySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+
+
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

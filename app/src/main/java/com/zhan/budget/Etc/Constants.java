@@ -32,6 +32,10 @@ public class Constants {
     //Start day of calendar (Sunday or Monday)
     public static final String START_DAY_CALENDAR = "Start Day of Calendar";
 
+    //Security
+    public static final String SECURITY_EXIST = "Is there security";
+    public static final String SECURITY_MODE = "Security mode";
+
     //Default account
     public static final String DEFAULT_ACCOUNT = "Default Account";
 

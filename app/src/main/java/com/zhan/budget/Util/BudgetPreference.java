@@ -102,6 +102,28 @@ public final class BudgetPreference {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
+    // Security functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void setSecurityExist(Context context, boolean exist){
+        setPreferenceBoolean(context, Constants.SECURITY_EXIST, exist);
+    }
+
+    public static boolean getSecurityExist(Context context){
+        return getPreferenceBoolean(context, Constants.SECURITY_EXIST, false);
+    }
+
+    public static void setSecurityMode(Context context, int mode){
+        setPreferenceInt(context, Constants.SECURITY_MODE, mode);
+    }
+
+    public static int getSecurityMode(Context context){
+        return getPreferenceInt(context, Constants.SECURITY_MODE, 0);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
     // Helper functions
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////

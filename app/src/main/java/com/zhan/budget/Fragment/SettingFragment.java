@@ -13,8 +13,12 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zhan.budget.Activity.SecurityActivity;
 import com.zhan.budget.Activity.Settings.OpenSourceActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
@@ -57,9 +61,11 @@ public class SettingFragment extends BaseFragment {
     private static final String TAG = "SettingFragment";
 
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, openLicenseBtn, emailBtn;
-    private TextView themeContent, firstDayContent, backupContent, versionNumber;
+    private TextView themeContent, firstDayContent, backupContent, securityContent, versionNumber;
 
     private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, tourBtn, faqBtn;
+
+    private Switch securitySwitch;
 
     //
     private static int CURRENT_THEME;
@@ -85,6 +91,8 @@ public class SettingFragment extends BaseFragment {
         firstDayBtn = (ViewGroup) view.findViewById(R.id.firstDayBtn);
         firstDayContent = (TextView) view.findViewById(R.id.firstDayContent);
 
+        securityContent = (TextView) view.findViewById(R.id.securityContent);
+
         categoryOrderBtn = (ViewGroup) view.findViewById(R.id.categoryOrderBtn);
 
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
@@ -101,6 +109,8 @@ public class SettingFragment extends BaseFragment {
         tourBtn = (TextView) view.findViewById(R.id.tourBtn);
         faqBtn = (TextView) view.findViewById(R.id.faqBtn);
         openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
+
+        securitySwitch = (Switch) view.findViewById(R.id.securitySwitch);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
 
@@ -121,6 +131,10 @@ public class SettingFragment extends BaseFragment {
 
         //Set last backup
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
+
+        //Set security exist
+        securitySwitch.setChecked(BudgetPreference.getSecurityExist(getContext()));
+        updateSecurityContent();
 
         //set version number
         versionNumber.setText("v"+BuildConfig.VERSION_NAME);
@@ -232,8 +246,32 @@ public class SettingFragment extends BaseFragment {
                 startActivity(openSource);
             }
         });
+
+        securitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(getContext(), "changed to "+isChecked, Toast.LENGTH_SHORT).show();
+
+                BudgetPreference.setSecurityExist(getContext(), isChecked);
+
+                if(isChecked){
+                    Intent settingsSecurity = new Intent(getContext(), SecurityActivity.class);
+                    startActivity(settingsSecurity);
+                }
+
+                updateSecurityContent();
+            }
+        });
     }
 
+
+    private void updateSecurityContent(){
+        if(BudgetPreference.getSecurityExist(getContext())){
+            securityContent.setText("Security exist");
+        }else{
+            securityContent.setText("Security doesnt exist ");
+        }
+    }
 
     private void sendRealmData() {
         try {
