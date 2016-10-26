@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.view.BaseCellView;
@@ -31,6 +32,7 @@ import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
@@ -48,10 +50,12 @@ import com.zhan.circleindicator.CircleIndicator;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -69,7 +73,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0;
     private ImageButton buttonX;
 
-    private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
+    private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn, changeCurrencyBtn;
 
     private TextView transactionCostView, transactionNameTextView;
 
@@ -163,6 +167,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         dateBtn = (ImageButton)findViewById(R.id.dateBtn);
         repeatBtn = (ImageButton)findViewById(R.id.repeatBtn);
         locationBtn = (ImageButton)findViewById(R.id.addLocationBtn);
+        changeCurrencyBtn = (ImageButton)findViewById(R.id.changeCurrencyBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
         transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
@@ -373,6 +378,13 @@ public class TransactionInfoActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 createLocationDialog();
+            }
+        });
+
+        changeCurrencyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCurrencyListActivity();
             }
         });
 
@@ -768,6 +780,13 @@ public class TransactionInfoActivity extends BaseActivity implements
         noteDialog.show();
     }
 
+    private void openCurrencyListActivity(){
+        Intent currencyIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
+        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
+        currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, false);
+        startActivityForResult(currencyIntent, Constants.RETURN_SELECTED_CURRENCY);
+    }
+
     private void addDigitToTextView(int digit){
         priceString += digit;
 
@@ -1012,6 +1031,28 @@ public class TransactionInfoActivity extends BaseActivity implements
                 })
                 .create()
                 .show();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Etc
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == instance.RESULT_OK && data.getExtras() != null) {
+            if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
+                BudgetCurrency budgetCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CURRENCY));
+
+                Toast.makeText(instance, "selected currency : "+budgetCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
+
+                String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
+                transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, new Locale(budgetCurrency.getLanguage(), budgetCurrency.getCountry())));
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

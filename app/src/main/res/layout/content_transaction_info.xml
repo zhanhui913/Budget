@@ -82,6 +82,14 @@
             android:layout_toRightOf="@+id/dateBtn" />
 
         <ImageButton
+            android:id="@+id/changeCurrencyBtn"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/svg_ic_dollar"
+            android:layout_toLeftOf="@+id/addAccountBtn"
+            android:background="@drawable/budget_green_button"/>
+
+        <ImageButton
             android:id="@+id/addAccountBtn"
             android:layout_width="50dp"
             android:layout_height="match_parent"

@@ -171,6 +171,7 @@ public class MainActivity extends BaseActivity
     private void askForCurrencyActivity(){
         Intent currencyIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
         currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
+        currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, true);
         startActivity(currencyIntent);
     }
 

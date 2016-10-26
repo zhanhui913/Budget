@@ -74,7 +74,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
         final BudgetCurrency budgetCurrency = budgetCurrencyList.get(position);
 
         viewHolder.name.setText(budgetCurrency.getCountry());
-        viewHolder.currencyCode.setText(budgetCurrency.getCurrencyCode());
+        viewHolder.currencyCode.setText(budgetCurrency.getCurrencyCode() + " - "+budgetCurrency.getLanguage());
         viewHolder.symbol.setText(budgetCurrency.getSymbol());
         viewHolder.icon.setCircleColor(R.color.colorPrimary);
 

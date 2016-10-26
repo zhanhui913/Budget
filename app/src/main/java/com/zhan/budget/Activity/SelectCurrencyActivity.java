@@ -1,6 +1,9 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Parcelable;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +24,8 @@ import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,6 +34,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 import io.realm.Realm;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
@@ -38,16 +45,18 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener{
 
     private Toolbar toolbar;
-    private List<BudgetCurrency> currencyList ;
-
-    private CurrencyRecyclerAdapter currencyAdapter;
-    private RecyclerView currencyListView;
-
     private Activity instance;
 
+    private List<BudgetCurrency> currencyList ;
+    private CurrencyRecyclerAdapter currencyAdapter;
+    private RecyclerView currencyListView;
     private HashMap<String, Double> currencyMap;
 
-    private boolean inSettings = true;//by default this activity is in settings.
+    //by default this activity is in settings, when this is called the first time it should be false
+    private boolean inSettings = true;
+
+    //by default this activity is just listing currency
+    private boolean defaultCurrencySelection = false;
 
     @Override
     protected int getActivityLayout(){
@@ -60,6 +69,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
         if(getIntent().getExtras() != null){
             inSettings = (getIntent().getExtras()).getBoolean(Constants.REQUEST_CURRENCY_IN_SETTINGS);
+            defaultCurrencySelection =(getIntent().getExtras()).getBoolean(Constants.REQUEST_DEFAULT_CURRENCY);
         }
 
         createToolbar();
@@ -113,7 +123,11 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         toolbar.setNavigationIcon(R.drawable.svg_ic_clear);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle("Select default currency");
+            if(defaultCurrencySelection){
+                getSupportActionBar().setTitle("Select default currency");
+            }else{
+                getSupportActionBar().setTitle("Select currency");
+            }
         }
     }
 
@@ -127,7 +141,8 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     }
 
     private void createCurrencies(){
-        String[] locales = Locale.getISOCountries();
+        /*String[] locales = Locale.getISOCountries();
+
         myRealm = Realm.getDefaultInstance();
         myRealm.beginTransaction();
         for (String countryCode : locales) {
@@ -152,7 +167,8 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 budgetCurrency.setDefault(false);
                 budgetCurrency.setRate(0f);
                 budgetCurrency.setDate(DateUtil.formatDate(new Date()));
-
+                budgetCurrency.setLanguage(obj.getLanguage());
+                Log.d("LANG", obj.getDisplayCountry()+" -> "+obj.getLanguage()+" - "+obj.getDisplayLanguage());
                 currencyList.add(budgetCurrency);
 
             }catch(RealmPrimaryKeyConstraintException e){
@@ -174,30 +190,110 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
             public int compare(BudgetCurrency c1, BudgetCurrency c2) {
                 return c1.getCountry().compareTo(c2.getCountry()); // Ascending
             }
+        });*/
+
+
+
+        getAvailableCurrencies();
+
+    }
+
+
+    private void getAvailableCurrencies() {
+        Locale[] locales = Locale.getAvailableLocales();
+
+        //
+        // We use TreeMap so that the order of the data in the map sorted
+        // based on the country name.
+        //
+        Map currencies = new TreeMap();
+
+        myRealm = Realm.getDefaultInstance();
+        myRealm.beginTransaction();
+
+
+        for (Locale obj : locales) {
+            try {
+                Log.d("LANG", obj.getDisplayCountry() + " => " + Currency.getInstance(obj).getCurrencyCode());
+
+                Currency c = Currency.getInstance(obj);
+
+                if(c == null){
+                    continue;
+                }
+
+
+                //Keep track of unique currencies
+                if(!currencyMap.containsKey(c.getCurrencyCode())){
+                    currencyMap.put(c.getCurrencyCode(), 1.0);
+                }
+
+
+                try{
+                    BudgetCurrency budgetCurrency = myRealm.createObject(BudgetCurrency.class);
+
+                    budgetCurrency.setCountry(obj.getDisplayCountry());
+                    budgetCurrency.setCurrencyCode(c.getCurrencyCode());
+                    budgetCurrency.setSymbol(c.getSymbol());
+                    budgetCurrency.setDefault(false);
+                    budgetCurrency.setRate(0f);
+                    budgetCurrency.setDate(DateUtil.formatDate(new Date()));
+                    budgetCurrency.setLanguage(obj.getLanguage());
+                    currencyList.add(budgetCurrency);
+
+                }catch(RealmPrimaryKeyConstraintException e){
+                    e.printStackTrace();
+
+                    BudgetCurrency budgetCurrency = myRealm.where(BudgetCurrency.class).equalTo("country", obj.getDisplayCountry()).findFirst();
+                    if(budgetCurrency != null){
+                        currencyList.add(budgetCurrency);
+                    }
+                }
+
+
+
+
+
+                currencies.put(obj.getDisplayCountry(), c.getCurrencyCode());
+            } catch (Exception e) {
+                // when the locale is not supported
+            }
+        }
+        Log.d("CURRENCYX", "size : "+currencyList.size());
+
+        myRealm.commitTransaction();
+
+        //sort
+        Collections.sort(currencyList, new Comparator<BudgetCurrency>() {
+            @Override
+            public int compare(BudgetCurrency c1, BudgetCurrency c2) {
+                return c1.getCountry().compareTo(c2.getCountry()); // Ascending
+            }
         });
     }
 
     @Override
     public void onClickCurrency(final int position){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+        if(defaultCurrencySelection){
+            View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+            TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Currency");
-        message.setText("Are you sure you want to set "+currencyList.get(position).getCurrencyCode()+" as your default currency.");
+            title.setText("Confirm Currency");
+            message.setText("Are you sure you want to set "+currencyList.get(position).getCurrencyCode()+" as your default currency.");
 
-        new AlertDialog.Builder(this)
-                .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+            new AlertDialog.Builder(this)
+                    .setView(promptView)
+                    .setCancelable(true)
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-                        myRealm.beginTransaction();
+                            myRealm.beginTransaction();
 
-                        currencyList.get(position).setDefault(true);
+                            currencyList.get(position).setDefault(true);
 
-                        //find exchange rate for this default compared to the rest of the currencies
+                            //find exchange rate for this default compared to the rest of the currencies
 
                         /*
                         final String defaultCurrencyCode = currencyList.get(position).getCurrencyCode();
@@ -222,18 +318,26 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                         }*/
 
 
-                        myRealm.commitTransaction();
-                        finish();
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
+                            myRealm.commitTransaction();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create()
+                    .show();
+        }else{
+            Intent intent = new Intent();
+
+            Parcelable wrapped = Parcels.wrap(currencyList.get(position));
+            intent.putExtra(Constants.RESULT_EDIT_CURRENCY, wrapped);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override

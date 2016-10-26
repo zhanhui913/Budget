@@ -22,7 +22,7 @@ public class BudgetCurrency extends RealmObject {
 
     private String currencyCode;
     private String symbol;
-
+    private String language;
     private boolean isDefault;
     private double rate;
     private Date date;
@@ -79,6 +79,14 @@ public class BudgetCurrency extends RealmObject {
         this.date = date;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property
@@ -91,6 +99,7 @@ public class BudgetCurrency extends RealmObject {
         if(!country.equalsIgnoreCase(other.getCountry())) return false;
         if(isDefault != (other.isDefault())) return false;
         if(rate != (other.getRate())) return false;
+        if(language != (other.getLanguage())) return false;
         return true;
     }
 }
