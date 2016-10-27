@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Activity.SecurityActivity;
 import com.zhan.budget.Activity.Settings.OpenSourceActivity;
@@ -250,8 +249,6 @@ public class SettingFragment extends BaseFragment {
         securitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(getContext(), "changed to "+isChecked, Toast.LENGTH_SHORT).show();
-
                 BudgetPreference.setSecurityExist(getContext(), isChecked);
 
                 if(isChecked){

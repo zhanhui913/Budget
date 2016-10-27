@@ -1,0 +1,14 @@
+<tabs>
+	<tab
+		id="@+id/tab_pin"
+		icon="@drawable/svg_security_pin"
+		title="Pin" />
+	<tab
+		id="@+id/tab_pattern"
+		icon="@drawable/svg_security_pattern"
+		title="Pattern" />
+	<tab
+		id="@+id/tab_fingerprint"
+		icon="@drawable/svg_security_fingerprint"
+		title="Fingerprint" />
+</tabs>

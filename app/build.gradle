@@ -75,7 +75,7 @@ dependencies {
     compile 'com.yqritc:recyclerview-flexibledivider:1.2.9'
 
     compile 'com.andrognito.pinlockview:pinlockview:1.0.1'
-
+    compile 'com.roughike:bottom-bar:2.0.2'
 
 }
 
