@@ -1,9 +1,9 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.design.internal.ParcelableSparseArray;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -12,12 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.content.DialogInterface;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CurrencyRecyclerAdapter;
-
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
@@ -214,7 +212,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
         for (Locale obj : locales) {
             try {
-                Log.d("LANG", obj.getDisplayCountry() + " => " + Currency.getInstance(obj).getCurrencyCode());
+                //Log.d("LANG", obj.getDisplayCountry() + " => " + Currency.getInstance(obj).getCurrencyCode());
 
                 Currency c = Currency.getInstance(obj);
 
@@ -226,10 +224,14 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 //Keep track of unique currencies
                 if(!currencyMap.containsKey(c.getCurrencyCode())){
                     currencyMap.put(c.getCurrencyCode(), 1.0);
+                }else{
+                    continue;
                 }
 
 
                 try{
+                    Log.d("LANG", obj.getDisplayCountry() + " => " + Currency.getInstance(obj).getCurrencyCode());
+
                     BudgetCurrency budgetCurrency = myRealm.createObject(BudgetCurrency.class);
 
                     budgetCurrency.setCountry(obj.getDisplayCountry());
@@ -270,6 +272,8 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 return c1.getCountry().compareTo(c2.getCountry()); // Ascending
             }
         });
+
+        Log.d("LANG", "size : "+currencyList.size());
     }
 
     @Override
