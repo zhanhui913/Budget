@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CurrencyRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Etc.SAXXMLHandler;
+import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -219,23 +219,16 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
 
         try{
-            InputStream is = getAssets().open("currencies.xml");
+            InputStream iss = getResources().openRawResource(R.raw.currencies);
 
             XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 
-            SAXXMLHandler saxHandler = new SAXXMLHandler();
-            xmlReader.setContentHandler(saxHandler);
-            xmlReader.parse(new InputSource(is));
+            CurrencyXMLHandler currencyXMLHandler = new CurrencyXMLHandler();
+            xmlReader.setContentHandler(currencyXMLHandler);
+            xmlReader.parse(new InputSource(iss));
 
-            currencyList = saxHandler.getEmployees();
-
-            //sort
-            Collections.sort(currencyList, new Comparator<BudgetCurrency>() {
-                @Override
-                public int compare(BudgetCurrency c1, BudgetCurrency c2) {
-                    return c1.getCountry().compareTo(c2.getCountry()); // Ascending
-                }
-            });
+            currencyList = currencyXMLHandler.getCurrencies();
+            currencyAdapter.setBudgetCurrencyList(currencyList);
         }catch(Exception ex){
             ex.printStackTrace();
         }
