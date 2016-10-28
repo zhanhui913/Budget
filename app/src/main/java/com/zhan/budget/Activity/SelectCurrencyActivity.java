@@ -17,13 +17,17 @@ import android.widget.TextView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CurrencyRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.SAXXMLHandler;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,6 +38,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.xml.parsers.SAXParserFactory;
 
 import io.realm.Realm;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
@@ -192,9 +198,52 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
 
 
-        getAvailableCurrencies();
+
+
+
+        //getAvailableCurrencies();
+
+
+
+        readFromCurrencyXML();
 
     }
+
+    private void readFromCurrencyXML(){
+        //XmlResourceParser xrp = getResources().getXml(R.xml.currencies);
+
+
+
+
+
+
+
+        try{
+            InputStream is = getAssets().open("currencies.xml");
+
+            XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+
+            SAXXMLHandler saxHandler = new SAXXMLHandler();
+            xmlReader.setContentHandler(saxHandler);
+            xmlReader.parse(new InputSource(is));
+
+            currencyList = saxHandler.getEmployees();
+
+            //sort
+            Collections.sort(currencyList, new Comparator<BudgetCurrency>() {
+                @Override
+                public int compare(BudgetCurrency c1, BudgetCurrency c2) {
+                    return c1.getCountry().compareTo(c2.getCountry()); // Ascending
+                }
+            });
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+
+
 
 
     private void getAvailableCurrencies() {

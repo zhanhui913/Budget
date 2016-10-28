@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<currencies>
+	<currency><code>AED</code><country>United Arab Emirates Dirham</country><symbol>(AED)</symbol></currency>
+	<currency><code>AFN</code><country>Afghan Afghani</country><symbol>(AFN)</symbol></currency>
+	<currency><code>ALL</code><country>Albanian Lek</country><symbol>(ALL)</symbol></currency>
+	<currency><code>AMD</code><country>Armenian Dram</country><symbol>(AMD)</symbol></currency>
+	<currency><code>ANG</code><country>Netherlands Antillean Guilder</country><symbol>(ANG)</symbol></currency>
+	<currency><code>AOA</code><country>Angolan Kwanza</country><symbol>(AOA)</symbol></currency>
+	<currency><code>ARS</code><country>Argentine Peso</country><symbol>(ARS)</symbol></currency>
+	<currency><code>AUD</code><country>Australian Dollar</country><symbol>(A$)</symbol></currency>
+	<currency><code>AWG</code><country>Aruban Florin</country><symbol>(AWG)</symbol></currency>
+	<currency><code>AZN</code><country>Azerbaijani Manat</country><symbol>(AZN)</symbol></currency>
+	<currency><code>BAM</code><country>Bosnia-Herzegovina Convertible Mark</country><symbol>(BAM)</symbol></currency>
+	<currency><code>BBD</code><country>Barbadian Dollar</country><symbol>(BBD)</symbol></currency>
+	<currency><code>BDT</code><country>Bangladeshi Taka</country><symbol>(BDT)</symbol></currency>
+	<currency><code>BGN</code><country>Bulgarian Lev</country><symbol>(BGN)</symbol></currency>
+	<currency><code>BHD</code><country>Bahraini Dinar</country><symbol>(BHD)</symbol></currency>
+	<currency><code>BIF</code><country>Burundian Franc</country><symbol>(BIF)</symbol></currency>
+	<currency><code>BMD</code><country>Bermudan Dollar</country><symbol>(BMD)</symbol></currency>
+	<currency><code>BND</code><country>Brunei Dollar</country><symbol>(BND)</symbol></currency>
+	<currency><code>BOB</code><country>Bolivian Boliviano</country><symbol>(BOB)</symbol></currency>
+	<currency><code>BRL</code><country>Brazilian Real</country><symbol>(R$)</symbol></currency>
+	<currency><code>BSD</code><country>Bahamian Dollar</country><symbol>(BSD)</symbol></currency>
+	<currency><code>BTC</code><country>Bitcoin</country><symbol>(฿)</symbol></currency>
+	<currency><code>BTN</code><country>Bhutanese Ngultrum</country><symbol>(BTN)</symbol></currency>
+	<currency><code>BWP</code><country>Botswanan Pula</country><symbol>(BWP)</symbol></currency>
+	<currency><code>BYN</code><country>BYN</country><symbol>(BYN)</symbol></currency>
+	<currency><code>BYR</code><country>Belarusian Ruble</country><symbol>(BYR)</symbol></currency>
+	<currency><code>BZD</code><country>Belize Dollar</country><symbol>(BZD)</symbol></currency>
+	<currency><code>CAD</code><country>Canadian Dollar</country><symbol>(CA$)</symbol></currency>
+	<currency><code>CDF</code><country>Congolese Franc</country><symbol>(CDF)</symbol></currency>
+	<currency><code>CHF</code><country>Swiss Franc</country><symbol>(CHF)</symbol></currency>
+	<currency><code>CLF</code><country>Chilean Unit of Account</country><symbol>(UF) (CLF)</symbol></currency>
+	<currency><code>CLP</code><country>Chilean Peso</country><symbol>(CLP)</symbol></currency>
+	<currency><code>CNH</code><country>CNH</country><symbol>(CNH)</symbol></currency>
+	<currency><code>CNY</code><country>Chinese Yuan</country><symbol>(CN¥)</symbol></currency>
+	<currency><code>COP</code><country>Colombian Peso</country><symbol>(COP)</symbol></currency>
+	<currency><code>CRC</code><country>Costa Rican Colón</country><symbol>(CRC)</symbol></currency>
+	<currency><code>CUP</code><country>Cuban Peso</country><symbol>(CUP)</symbol></currency>
+	<currency><code>CVE</code><country>Cape Verdean Escudo</country><symbol>(CVE)</symbol></currency>
+	<currency><code>CZK</code><country>Czech Republic Koruna</country><symbol>(CZK)</symbol></currency>
+	<currency><code>DEM</code><country>German Mark</country><symbol>(DEM)</symbol></currency>
+	<currency><code>DJF</code><country>Djiboutian Franc</country><symbol>(DJF)</symbol></currency>
+	<currency><code>DKK</code><country>Danish Krone</country><symbol>(DKK)</symbol></currency>
+	<currency><code>DOP</code><country>Dominican Peso</country><symbol>(DOP)</symbol></currency>
+	<currency><code>DZD</code><country>Algerian Dinar</country><symbol>(DZD)</symbol></currency>
+	<currency><code>EGP</code><country>Egyptian Pound</country><symbol>(EGP)</symbol></currency>
+	<currency><code>ERN</code><country>Eritrean Nakfa</country><symbol>(ERN)</symbol></currency>
+	<currency><code>ETB</code><country>Ethiopian Birr</country><symbol>(ETB)</symbol></currency>
+	<currency><code>EUR</code><country>Euro</country><symbol>(€)</symbol></currency>
+	<currency><code>FIM</code><country>Finnish Markka</country><symbol>(FIM)</symbol></currency>
+	<currency><code>FJD</code><country>Fijian Dollar</country><symbol>(FJD)</symbol></currency>
+	<currency><code>FKP</code><country>Falkland Islands Pound</country><symbol>(FKP)</symbol></currency>
+	<currency><code>FRF</code><country>French Franc</country><symbol>(FRF)</symbol></currency>
+	<currency><code>GBP</code><country>British Pound</country><symbol>(£)</symbol></currency>
+	<currency><code>GEL</code><country>Georgian Lari</country><symbol>(GEL)</symbol></currency>
+	<currency><code>GHS</code><country>Ghanaian Cedi</country><symbol>(GHS)</symbol></currency>
+	<currency><code>GIP</code><country>Gibraltar Pound</country><symbol>(GIP)</symbol></currency>
+	<currency><code>GMD</code><country>Gambian Dalasi</country><symbol>(GMD)</symbol></currency>
+	<currency><code>GNF</code><country>Guinean Franc</country><symbol>(GNF)</symbol></currency>
+	<currency><code>GTQ</code><country>Guatemalan Quetzal</country><symbol>(GTQ)</symbol></currency>
+	<currency><code>GYD</code><country>Guyanaese Dollar</country><symbol>(GYD)</symbol></currency>
+	<currency><code>HKD</code><country>Hong Kong Dollar</country><symbol>(HK$)</symbol></currency>
+	<currency><code>HNL</code><country>Honduran Lempira</country><symbol>(HNL)</symbol></currency>
+	<currency><code>HRK</code><country>Croatian Kuna</country><symbol>(HRK)</symbol></currency>
+	<currency><code>HTG</code><country>Haitian Gourde</country><symbol>(HTG)</symbol></currency>
+	<currency><code>HUF</code><country>Hungarian Forint</country><symbol>(HUF)</symbol></currency>
+	<currency><code>IDR</code><country>Indonesian Rupiah</country><symbol>(IDR)</symbol></currency>
+	<currency><code>IEP</code><country>Irish Pound</country><symbol>(IEP)</symbol></currency>
+	<currency><code>ILS</code><country>Israeli New Sheqel</country><symbol>(₪)</symbol></currency>
+	<currency><code>INR</code><country>Indian Rupee</country><symbol>(₹)</symbol></currency>
+	<currency><code>IQD</code><country>Iraqi Dinar</country><symbol>(IQD)</symbol></currency>
+	<currency><code>IRR</code><country>Iranian Rial</country><symbol>(IRR)</symbol></currency>
+	<currency><code>ISK</code><country>Icelandic Króna</country><symbol>(ISK)</symbol></currency>
+	<currency><code>ITL</code><country>Italian Lira</country><symbol>(ITL)</symbol></currency>
+	<currency><code>JMD</code><country>Jamaican Dollar</country><symbol>(JMD)</symbol></currency>
+	<currency><code>JOD</code><country>Jordanian Dinar</country><symbol>(JOD)</symbol></currency>
+	<currency><code>JPY</code><country>Japanese Yen</country><symbol>(¥)</symbol></currency>
+	<currency><code>KES</code><country>Kenyan Shilling</country><symbol>(KES)</symbol></currency>
+	<currency><code>KGS</code><country>Kyrgystani Som</country><symbol>(KGS)</symbol></currency>
+	<currency><code>KHR</code><country>Cambodian Riel</country><symbol>(KHR)</symbol></currency>
+	<currency><code>KMF</code><country>Comorian Franc</country><symbol>(KMF)</symbol></currency>
+	<currency><code>KPW</code><country>North Korean Won</country><symbol>(KPW)</symbol></currency>
+	<currency><code>KRW</code><country>South Korean Won</country><symbol>(₩)</symbol></currency>
+	<currency><code>KWD</code><country>Kuwaiti Dinar</country><symbol>(KWD)</symbol></currency>
+	<currency><code>KYD</code><country>Cayman Islands Dollar</country><symbol>(KYD)</symbol></currency>
+	<currency><code>KZT</code><country>Kazakhstani Tenge</country><symbol>(KZT)</symbol></currency>
+	<currency><code>LAK</code><country>Laotian Kip</country><symbol>(LAK)</symbol></currency>
+	<currency><code>LBP</code><country>Lebanese Pound</country><symbol>(LBP)</symbol></currency>
+	<currency><code>LKR</code><country>Sri Lankan Rupee</country><symbol>(LKR)</symbol></currency>
+	<currency><code>LRD</code><country>Liberian Dollar</country><symbol>(LRD)</symbol></currency>
+	<currency><code>LSL</code><country>Lesotho Loti</country><symbol>(LSL)</symbol></currency>
+	<currency><code>LTL</code><country>Lithuanian Litas</country><symbol>(LTL)</symbol></currency>
+	<currency><code>LVL</code><country>Latvian Lats</country><symbol>(LVL)</symbol></currency>
+	<currency><code>LYD</code><country>Libyan Dinar</country><symbol>(LYD)</symbol></currency>
+	<currency><code>MAD</code><country>Moroccan Dirham</country><symbol>(MAD)</symbol></currency>
+	<currency><code>MDL</code><country>Moldovan Leu</country><symbol>(MDL)</symbol></currency>
+	<currency><code>MGA</code><country>Malagasy Ariary</country><symbol>(MGA)</symbol></currency>
+	<currency><code>MKD</code><country>Macedonian Denar</country><symbol>(MKD)</symbol></currency>
+	<currency><code>MMK</code><country>Myanmar Kyat</country><symbol>(MMK)</symbol></currency>
+	<currency><code>MNT</code><country>Mongolian Tugrik</country><symbol>(MNT)</symbol></currency>
+	<currency><code>MOP</code><country>Macanese Pataca</country><symbol>(MOP)</symbol></currency>
+	<currency><code>MRO</code><country>Mauritanian Ouguiya</country><symbol>(MRO)</symbol></currency>
+	<currency><code>MUR</code><country>Mauritian Rupee</country><symbol>(MUR)</symbol></currency>
+	<currency><code>MVR</code><country>Maldivian Rufiyaa</country><symbol>(MVR)</symbol></currency>
+	<currency><code>MWK</code><country>Malawian Kwacha</country><symbol>(MWK)</symbol></currency>
+	<currency><code>MXN</code><country>Mexican Peso</country><symbol>(MX$)</symbol></currency>
+	<currency><code>MYR</code><country>Malaysian Ringgit</country><symbol>(MYR)</symbol></currency>
+	<currency><code>MZN</code><country>Mozambican Metical</country><symbol>(MZN)</symbol></currency>
+	<currency><code>NAD</code><country>Namibian Dollar</country><symbol>(NAD)</symbol></currency>
+	<currency><code>NGN</code><country>Nigerian Naira</country><symbol>(NGN)</symbol></currency>
+	<currency><code>NIO</code><country>Nicaraguan Córdoba</country><symbol>(NIO)</symbol></currency>
+	<currency><code>NOK</code><country>Norwegian Krone</country><symbol>(NOK)</symbol></currency>
+	<currency><code>NPR</code><country>Nepalese Rupee</country><symbol>(NPR)</symbol></currency>
+	<currency><code>NZD</code><country>New Zealand Dollar</country><symbol>(NZ$)</symbol></currency>
+	<currency><code>OMR</code><country>Omani Rial</country><symbol>(OMR)</symbol></currency>
+	<currency><code>PAB</code><country>Panamanian Balboa</country><symbol>(PAB)</symbol></currency>
+	<currency><code>PEN</code><country>Peruvian Nuevo Sol</country><symbol>(PEN)</symbol></currency>
+	<currency><code>PGK</code><country>Papua New Guinean Kina</country><symbol>(PGK)</symbol></currency>
+	<currency><code>PHP</code><country>Philippine Peso</country><symbol>(PHP)</symbol></currency>
+	<currency><code>PKG</code><country>PKG</country><symbol>(PKG)</symbol></currency>
+	<currency><code>PKR</code><country>Pakistani Rupee</country><symbol>(PKR)</symbol></currency>
+	<currency><code>PLN</code><country>Polish Zloty</country><symbol>(PLN)</symbol></currency>
+	<currency><code>PYG</code><country>Paraguayan Guarani</country><symbol>(PYG)</symbol></currency>
+	<currency><code>QAR</code><country>Qatari Rial</country><symbol>(QAR)</symbol></currency>
+	<currency><code>RON</code><country>Romanian Leu</country><symbol>(RON)</symbol></currency>
+	<currency><code>RSD</code><country>Serbian Dinar</country><symbol>(RSD)</symbol></currency>
+	<currency><code>RUB</code><country>Russian Ruble</country><symbol>(RUB)</symbol></currency>
+	<currency><code>RWF</code><country>Rwandan Franc</country><symbol>(RWF)</symbol></currency>
+	<currency><code>SAR</code><country>Saudi Riyal</country><symbol>(SAR)</symbol></currency>
+	<currency><code>SBD</code><country>Solomon Islands Dollar</country><symbol>(SBD)</symbol></currency>
+	<currency><code>SCR</code><country>Seychellois Rupee</country><symbol>(SCR)</symbol></currency>
+	<currency><code>SDG</code><country>Sudanese Pound</country><symbol>(SDG)</symbol></currency>
+	<currency><code>SEK</code><country>Swedish Krona</country><symbol>(SEK)</symbol></currency>
+	<currency><code>SGD</code><country>Singapore Dollar</country><symbol>(SGD)</symbol></currency>
+	<currency><code>SHP</code><country>St. Helena Pound</country><symbol>(SHP)</symbol></currency>
+	<currency><code>SKK</code><country>Slovak Koruna</country><symbol>(SKK)</symbol></currency>
+	<currency><code>SLL</code><country>Sierra Leonean Leone</country><symbol>(SLL)</symbol></currency>
+	<currency><code>SOS</code><country>Somali Shilling</country><symbol>(SOS)</symbol></currency>
+	<currency><code>SRD</code><country>Surinamese Dollar</country><symbol>(SRD)</symbol></currency>
+	<currency><code>STD</code><country>São Tomé &amp; Príncipe Dobra</country><symbol>(STD)</symbol></currency>
+	<currency><code>SVC</code><country>Salvadoran Colón</country><symbol>(SVC)</symbol></currency>
+	<currency><code>SYP</code><country>Syrian Pound</country><symbol>(SYP)</symbol></currency>
+	<currency><code>SZL</code><country>Swazi Lilangeni</country><symbol>(SZL)</symbol></currency>
+	<currency><code>THB</code><country>Thai Baht</country><symbol>(THB)</symbol></currency>
+	<currency><code>TJS</code><country>Tajikistani Somoni</country><symbol>(TJS)</symbol></currency>
+	<currency><code>TMT</code><country>Turkmenistani Manat</country><symbol>(TMT)</symbol></currency>
+	<currency><code>TND</code><country>Tunisian Dinar</country><symbol>(TND)</symbol></currency>
+	<currency><code>TOP</code><country>Tongan Paʻanga</country><symbol>(TOP)</symbol></currency>
+	<currency><code>TRY</code><country>Turkish Lira</country><symbol>(TRY)</symbol></currency>
+	<currency><code>TTD</code><country>Trinidad &amp; Tobago Dollar</country><symbol>(TTD)</symbol></currency>
+	<currency><code>TWD</code><country>New Taiwan Dollar</country><symbol>(NT$)</symbol></currency>
+	<currency><code>TZS</code><country>Tanzanian Shilling</country><symbol>(TZS)</symbol></currency>
+	<currency><code>UAH</code><country>Ukrainian Hryvnia</country><symbol>(UAH)</symbol></currency>
+	<currency><code>UGX</code><country>Ugandan Shilling</country><symbol>(UGX)</symbol></currency>
+	<currency><code>USD</code><country>US Dollar</country><symbol>($)</symbol></currency>
+	<currency><code>UYU</code><country>Uruguayan Peso</country><symbol>(UYU)</symbol></currency>
+	<currency><code>UZS</code><country>Uzbekistani Som</country><symbol>(UZS)</symbol></currency>
+	<currency><code>VEF</code><country>Venezuelan Bolívar</country><symbol>(VEF)</symbol></currency>
+	<currency><code>VND</code><country>Vietnamese Dong</country><symbol>(₫)</symbol></currency>
+	<currency><code>VUV</code><country>Vanuatu Vatu</country><symbol>(VUV)</symbol></currency>
+	<currency><code>WST</code><country>Samoan Tala</country><symbol>(WST)</symbol></currency>
+	<currency><code>XAF</code><country>Central African CFA Franc</country><symbol>(FCFA)</symbol></currency>
+	<currency><code>XCD</code><country>East Caribbean Dollar</country><symbol>(EC$)</symbol></currency>
+	<currency><code>XDR</code><country>Special Drawing Rights</country><symbol>(XDR)</symbol></currency>
+	<currency><code>XOF</code><country>West African CFA Franc</country><symbol>(CFA)</symbol></currency>
+	<currency><code>XPF</code><country>CFP Franc</country><symbol>(CFPF)</symbol></currency>
+	<currency><code>YER</code><country>Yemeni Rial</country><symbol>(YER)</symbol></currency>
+	<currency><code>ZAR</code><country>South African Rand</country><symbol>(ZAR)</symbol></currency>
+	<currency><code>ZMK</code><country>Zambian Kwacha (1968–2012)</country><symbol>(ZMK)</symbol></currency>
+	<currency><code>ZMW</code><country>Zambian Kwacha</country><symbol>(ZMW)</symbol></currency>
+	<currency><code>ZWL</code><country>Zimbabwean Dollar (2009)</country><symbol>(ZWL)</symbol></currency>
+</currencies>
