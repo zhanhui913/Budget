@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CurrencyRecyclerAdapter;
@@ -20,6 +21,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
@@ -42,6 +44,8 @@ import java.util.TreeMap;
 import javax.xml.parsers.SAXParserFactory;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 
@@ -69,6 +73,8 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
     @Override
     protected void init(){
+        super.init();
+
         instance = this;
 
         if(getIntent().getExtras() != null){
@@ -96,7 +102,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
             }
         });
 
-        createCurrencies();
+
 
         currencyAdapter = new CurrencyRecyclerAdapter(this, inSettings, currencyList);
         currencyListView.setAdapter(currencyAdapter);
@@ -106,6 +112,8 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 new HorizontalDividerItemDecoration.Builder(this)
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
+
+        createCurrencies();
 
         /*
         * ask for base currency
@@ -197,27 +205,21 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         });*/
 
 
-
-
-
-
         //getAvailableCurrencies();
 
 
+        boolean isFirstTimeCurrency = BudgetPreference.getFirstTimeCurrency(getApplicationContext());
 
-        readFromCurrencyXML();
+        if(isFirstTimeCurrency){
+            readFromCurrencyXML();
+            BudgetPreference.setFirstTimeCurrency(getApplicationContext());
+        }else{
+            readFromCurrencyRealm();
+        }
 
     }
 
     private void readFromCurrencyXML(){
-        //XmlResourceParser xrp = getResources().getXml(R.xml.currencies);
-
-
-
-
-
-
-
         try{
             InputStream iss = getResources().openRawResource(R.raw.currencies);
 
@@ -227,17 +229,52 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
             xmlReader.setContentHandler(currencyXMLHandler);
             xmlReader.parse(new InputSource(iss));
 
-            currencyList = currencyXMLHandler.getCurrencies();
+            List<BudgetCurrency> tempList = currencyXMLHandler.getCurrencies();
+
+
+            //Add into realm
+            myRealm.beginTransaction();
+            try{
+                for(int i = 0; i < tempList.size(); i++){
+                    BudgetCurrency budgetCurrency = myRealm.createObject(BudgetCurrency.class);
+
+                    budgetCurrency.setCountry(tempList.get(i).getCountry());
+                    budgetCurrency.setCurrencyCode(tempList.get(i).getCurrencyCode());
+                    budgetCurrency.setSymbol(tempList.get(i).getSymbol());
+                    budgetCurrency.setDefault(false);
+                    budgetCurrency.setRate(0f);
+                    budgetCurrency.setDate(DateUtil.formatDate(new Date()));
+                    budgetCurrency.setLanguage(null);
+
+                    currencyList.add(budgetCurrency);
+                }
+
+                Toast.makeText(getApplicationContext(), "Read from xml currency", Toast.LENGTH_SHORT).show();
+            }catch(RealmPrimaryKeyConstraintException e){
+                e.printStackTrace();
+            }
+            myRealm.commitTransaction();
+
             currencyAdapter.setBudgetCurrencyList(currencyList);
         }catch(Exception ex){
             ex.printStackTrace();
         }
-
     }
 
+    private void readFromCurrencyRealm(){
+        RealmResults<BudgetCurrency> results = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
+        results.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
+            @Override
+            public void onChange(RealmResults<BudgetCurrency> element) {
+                element.removeChangeListener(this);
 
+                currencyList = myRealm.copyFromRealm(element);
+                currencyAdapter.setBudgetCurrencyList(currencyList);
+                Toast.makeText(getApplicationContext(), "Read from realm currency", Toast.LENGTH_SHORT).show();
 
-
+            }
+        });
+    }
 
     private void getAvailableCurrencies() {
         Locale[] locales = Locale.getAvailableLocales();

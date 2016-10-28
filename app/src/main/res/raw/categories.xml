@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<categories>
+	<category>
+		<name>Breakfast</name>
+		<type>EXPENSE</type>
+		<color>R.color.lemon</color>
+		<icon>R.drawable.c_food</icon>
+		<index>0</index>
+		<isText>false</isText>
+	</category>
+</categories>

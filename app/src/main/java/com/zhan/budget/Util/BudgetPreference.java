@@ -56,6 +56,24 @@ public final class BudgetPreference {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
+    // First time Currency functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void resetFirstTimeCurrency(Context context){
+        setPreferenceBoolean(context, Constants.FIRST_TIME_CURRENCY, true);
+    }
+
+    public static boolean getFirstTimeCurrency(Context context){
+        return getPreferenceBoolean(context, Constants.FIRST_TIME_CURRENCY, true);
+    }
+
+    public static void setFirstTimeCurrency(Context context){
+        setPreferenceBoolean(context, Constants.FIRST_TIME_CURRENCY, false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
     // Last backup functions
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////

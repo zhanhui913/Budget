@@ -23,6 +23,9 @@ public class Constants {
     //First time
     public static final String FIRST_TIME = "First Time";
 
+    //First time Currency
+    public static final String FIRST_TIME_CURRENCY = "First Time Currency";
+
     //Default theme
     public static final String DEFAULT_THEME = "Default Theme";
 

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
@@ -26,6 +27,7 @@ import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
+import com.zhan.budget.Etc.CategoryXMLHandler;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
@@ -45,13 +47,18 @@ import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
 import org.parceler.Parcels;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.SAXParserFactory;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -162,6 +169,29 @@ public class CalendarFragment extends BaseRealmFragment implements
         if(isFirstTime){
             createFakeTransactions();
             BudgetPreference.setFirstTime(getContext());
+        }
+
+
+        readFromCategoryXML();
+    }
+
+    private void readFromCategoryXML(){
+        try{
+            InputStream iss = getResources().openRawResource(R.raw.categories);
+
+            XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+
+            CategoryXMLHandler categoryXMLHandler = new CategoryXMLHandler();
+            xmlReader.setContentHandler(categoryXMLHandler);
+            xmlReader.parse(new InputSource(iss));
+
+            List<Category> tempList = categoryXMLHandler.getCategories();
+
+            Toast.makeText(getActivity(), "there are "+tempList.size()+" category from xml", Toast.LENGTH_SHORT).show();
+
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
     }
 
