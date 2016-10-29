@@ -13,7 +13,7 @@
 		<type>EXPENSE</type>
 		<color>#FFF39C12</color>
 		<icon>c_food</icon>
-		<index>0</index>
+		<index>1</index>
 		<isText>false</isText>
 	</category>
 	<category>
@@ -21,87 +21,87 @@
 		<type>EXPENSE</type>
 		<color>#FFD35400</color>
 		<icon>c_food</icon>
-		<index>0</index>
+		<index>2</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Snacks</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
+		<color>#FFE74C3C</color>
 		<icon>c_food</icon>
-		<index>0</index>
+		<index>3</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Drink</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FFF5E16E</color>
+		<icon>c_cafe</icon>
+		<index>4</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Rent</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF263A4E</color>
+		<icon>c_house</icon>
+		<index>5</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Travel</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF3498DB</color>
+		<icon>c_airplane</icon>
+		<index>6</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Car</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF1ABC9C</color>
+		<icon>c_car</icon>
+		<index>7</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Shopping</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF8E44AD</color>
+		<icon>c_shirt</icon>
+		<index>8</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Necessity</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF89C4F4</color>
+		<icon>c_etc</icon>
+		<index>9</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Utilities</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF95A5A6</color>
+		<icon>c_utilities</icon>
+		<index>10</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Bill</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF2ECC71</color>
+		<icon>c_bill</icon>
+		<index>11</index>
 		<isText>false</isText>
 	</category>
 	<category>
 		<name>Groceries</name>
 		<type>EXPENSE</type>
-		<color>#FFFFCC00</color>
-		<icon>c_food</icon>
-		<index>0</index>
+		<color>#FF87D37C</color>
+		<icon>c_groceries</icon>
+		<index>12</index>
 		<isText>false</isText>
 	</category>
 </categories>
