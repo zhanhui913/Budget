@@ -3,8 +3,8 @@
 	<category>
 		<name>Breakfast</name>
 		<type>EXPENSE</type>
-		<color>R.color.lemon</color>
-		<icon>R.drawable.c_food</icon>
+		<color>#FFFFCC00</color>
+		<icon>c_food</icon>
 		<index>0</index>
 		<isText>false</isText>
 	</category>
