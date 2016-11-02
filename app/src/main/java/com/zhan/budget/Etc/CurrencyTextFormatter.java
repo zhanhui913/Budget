@@ -40,6 +40,9 @@ public final class CurrencyTextFormatter {
         /*else {
             throw new IllegalArgumentException("Invalid argument in val");
         }*/
+
+        val = val.replace("$","") + "USD";
+
         return val;
     }
 
@@ -62,12 +65,13 @@ public final class CurrencyTextFormatter {
         return newTextValue;
     }
 
+    //Add $ infront of float
     public static String formatFloat(float val, Locale locale){
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
-        return currencyFormatter.format(val);
+        return currencyFormatter.format(val).replace("$","") + "USD";
     }
 
     public static String stripCharacters(String value){
-        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","");
+        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","").replace("USD","");
     }
 }
