@@ -28,6 +28,7 @@
             android:paddingBottom="@dimen/item_bottom_padding"
             android:maxLines="1"/>
 
+        <!-- Set max characters to 15 to prevent currencyTextFormatter from breaking-->
         <TextView
             android:id="@+id/transactionCostText"
             android:layout_width="match_parent"
@@ -41,7 +42,8 @@
             android:paddingEnd="@dimen/item_padding"
             android:paddingTop="@dimen/item_top_padding"
             android:paddingBottom="@dimen/item_bottom_padding"
-            android:singleLine="true"/>
+            android:maxLines="1"
+            android:maxLength="15" />
     </LinearLayout>
 
     <include layout="@layout/transaction_circle_indicator"
