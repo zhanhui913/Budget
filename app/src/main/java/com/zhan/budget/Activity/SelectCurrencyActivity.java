@@ -153,61 +153,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     }
 
     private void createCurrencies(){
-        /*String[] locales = Locale.getISOCountries();
-
-        myRealm = Realm.getDefaultInstance();
-        myRealm.beginTransaction();
-        for (String countryCode : locales) {
-            Locale obj = new Locale("", countryCode);
-            Currency c = Currency.getInstance(obj);
-
-            if(c == null){
-                continue;
-            }
-
-            //Keep track of unique currencies
-            if(!currencyMap.containsKey(c.getCurrencyCode())){
-                currencyMap.put(c.getCurrencyCode(), 1.0);
-            }
-
-            try{
-                BudgetCurrency budgetCurrency = myRealm.createObject(BudgetCurrency.class);
-
-                budgetCurrency.setCountry(obj.getDisplayCountry());
-                budgetCurrency.setCurrencyCode(c.getCurrencyCode());
-                budgetCurrency.setSymbol(c.getSymbol());
-                budgetCurrency.setDefault(false);
-                budgetCurrency.setRate(0f);
-                budgetCurrency.setDate(DateUtil.formatDate(new Date()));
-                budgetCurrency.setLanguage(obj.getLanguage());
-                Log.d("LANG", obj.getDisplayCountry()+" -> "+obj.getLanguage()+" - "+obj.getDisplayLanguage());
-                currencyList.add(budgetCurrency);
-
-            }catch(RealmPrimaryKeyConstraintException e){
-                e.printStackTrace();
-
-
-                BudgetCurrency budgetCurrency = myRealm.where(BudgetCurrency.class).equalTo("country", obj.getDisplayCountry()).findFirst();
-                if(budgetCurrency != null){
-                    currencyList.add(budgetCurrency);
-                    Log.d("CURRENCYX", budgetCurrency.isDefault()+" --- adding "+budgetCurrency.getCountry());
-                }
-            }
-        }Log.d("CURRENCYX", "size : "+currencyList.size());
-        myRealm.commitTransaction();
-
-        //sort
-        Collections.sort(currencyList, new Comparator<BudgetCurrency>() {
-            @Override
-            public int compare(BudgetCurrency c1, BudgetCurrency c2) {
-                return c1.getCountry().compareTo(c2.getCountry()); // Ascending
-            }
-        });*/
-
-
-        //getAvailableCurrencies();
-
-
         boolean isFirstTimeCurrency = BudgetPreference.getFirstTimeCurrency(getApplicationContext());
 
         if(isFirstTimeCurrency){
@@ -238,13 +183,10 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 for(int i = 0; i < tempList.size(); i++){
                     BudgetCurrency budgetCurrency = myRealm.createObject(BudgetCurrency.class);
 
-                    budgetCurrency.setCountry(tempList.get(i).getCountry());
+                    budgetCurrency.setCurrencyName(tempList.get(i).getCurrencyName());
                     budgetCurrency.setCurrencyCode(tempList.get(i).getCurrencyCode());
-                    budgetCurrency.setSymbol(tempList.get(i).getSymbol());
                     budgetCurrency.setDefault(false);
                     budgetCurrency.setRate(0f);
-                    budgetCurrency.setDate(DateUtil.formatDate(new Date()));
-                    budgetCurrency.setLanguage(null);
 
                     currencyList.add(budgetCurrency);
                 }
@@ -274,85 +216,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
             }
         });
-    }
-
-    private void getAvailableCurrencies() {
-        Locale[] locales = Locale.getAvailableLocales();
-
-        //
-        // We use TreeMap so that the order of the data in the map sorted
-        // based on the country name.
-        //
-        Map currencies = new TreeMap();
-
-        myRealm = Realm.getDefaultInstance();
-        myRealm.beginTransaction();
-
-
-        for (Locale obj : locales) {
-            try {
-                //Log.d("LANG", obj.getDisplayCountry() + " => " + Currency.getInstance(obj).getCurrencyCode());
-
-                Currency c = Currency.getInstance(obj);
-
-                if(c == null){
-                    continue;
-                }
-
-
-                //Keep track of unique currencies
-                if(!currencyMap.containsKey(c.getCurrencyCode())){
-                    currencyMap.put(c.getCurrencyCode(), 1.0);
-                }else{
-                    continue;
-                }
-
-
-                try{
-                    Log.d("LANG", obj.getDisplayCountry() + " => " + Currency.getInstance(obj).getCurrencyCode());
-
-                    BudgetCurrency budgetCurrency = myRealm.createObject(BudgetCurrency.class);
-
-                    budgetCurrency.setCountry(obj.getDisplayCountry());
-                    budgetCurrency.setCurrencyCode(c.getCurrencyCode());
-                    budgetCurrency.setSymbol(c.getSymbol());
-                    budgetCurrency.setDefault(false);
-                    budgetCurrency.setRate(0f);
-                    budgetCurrency.setDate(DateUtil.formatDate(new Date()));
-                    budgetCurrency.setLanguage(obj.getLanguage());
-                    currencyList.add(budgetCurrency);
-
-                }catch(RealmPrimaryKeyConstraintException e){
-                    e.printStackTrace();
-
-                    BudgetCurrency budgetCurrency = myRealm.where(BudgetCurrency.class).equalTo("country", obj.getDisplayCountry()).findFirst();
-                    if(budgetCurrency != null){
-                        currencyList.add(budgetCurrency);
-                    }
-                }
-
-
-
-
-
-                currencies.put(obj.getDisplayCountry(), c.getCurrencyCode());
-            } catch (Exception e) {
-                // when the locale is not supported
-            }
-        }
-        Log.d("CURRENCYX", "size : "+currencyList.size());
-
-        myRealm.commitTransaction();
-
-        //sort
-        Collections.sort(currencyList, new Comparator<BudgetCurrency>() {
-            @Override
-            public int compare(BudgetCurrency c1, BudgetCurrency c2) {
-                return c1.getCountry().compareTo(c2.getCountry()); // Ascending
-            }
-        });
-
-        Log.d("LANG", "size : "+currencyList.size());
     }
 
     @Override

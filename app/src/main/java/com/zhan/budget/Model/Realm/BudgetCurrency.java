@@ -17,15 +17,14 @@ import io.realm.annotations.PrimaryKey;
         analyze = {BudgetCurrency.class})
 public class BudgetCurrency extends RealmObject {
 
-    @PrimaryKey
-    private String country;
 
+
+    @PrimaryKey
     private String currencyCode;
-    private String symbol;
-    private String language;
+
+    private String currencyName;
     private boolean isDefault;
     private double rate;
-    private Date date;
 
     public BudgetCurrency(){
 
@@ -39,20 +38,12 @@ public class BudgetCurrency extends RealmObject {
         this.currencyCode = code;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getCurrencyName() {
+        return currencyName;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
     }
 
     public boolean isDefault() {
@@ -71,22 +62,6 @@ public class BudgetCurrency extends RealmObject {
         this.rate = rate;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property
@@ -95,11 +70,9 @@ public class BudgetCurrency extends RealmObject {
 
     public boolean checkEquals(BudgetCurrency other){
         if(!currencyCode.equalsIgnoreCase(other.getCurrencyCode())) return false;
-        if(!symbol.equalsIgnoreCase(other.getSymbol())) return false;
-        if(!country.equalsIgnoreCase(other.getCountry())) return false;
+        if(currencyName.equalsIgnoreCase(other.getCurrencyName())) return false;
         if(isDefault != (other.isDefault())) return false;
         if(rate != (other.getRate())) return false;
-        if(language != (other.getLanguage())) return false;
         return true;
     }
 }

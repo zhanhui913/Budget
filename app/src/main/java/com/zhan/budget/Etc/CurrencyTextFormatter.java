@@ -68,7 +68,8 @@ public final class CurrencyTextFormatter {
     //Add $ infront of float
     public static String formatFloat(float val, Locale locale){
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
-        return currencyFormatter.format(val).replace("$","") + "USD";
+
+                 return currencyFormatter.format(val).replace("$","") + "USD";
     }
 
     public static String stripCharacters(String value){

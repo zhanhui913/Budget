@@ -73,9 +73,8 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
         // getting BudgetCurrency data for the row
         final BudgetCurrency budgetCurrency = budgetCurrencyList.get(position);
 
-        viewHolder.name.setText(budgetCurrency.getCountry());
-        viewHolder.currencyCode.setText(budgetCurrency.getCurrencyCode() + " - "+budgetCurrency.getLanguage());
-        viewHolder.symbol.setText(budgetCurrency.getSymbol());
+        viewHolder.name.setText(budgetCurrency.getCurrencyName());
+        viewHolder.currencyCode.setText(budgetCurrency.getCurrencyCode());
         viewHolder.icon.setCircleColor(R.color.colorPrimary);
 
         if(inSettings){
@@ -91,7 +90,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
             viewHolder.defaultCurrencyIndicatorOff.setVisibility(View.GONE);
         }
 
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(budgetCurrency.getCountry().toUpperCase()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(budgetCurrency.getCurrencyName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
         viewHolder.icon.setTextSizeInDP(30);
     }
@@ -115,7 +114,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public TextView name, currencyCode, symbol;
+        public TextView name, currencyCode;
         public CircularView icon;
         public SwipeLayout swipeLayout;
         public ImageView defaultCurrencyIndicatorOn, defaultCurrencyIndicatorOff;
@@ -131,7 +130,6 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
             icon = (CircularView) itemView.findViewById(R.id.currencyIcon);
             name = (TextView) itemView.findViewById(R.id.currencyCountry);
             currencyCode = (TextView) itemView.findViewById(R.id.currencyCode);
-            symbol = (TextView) itemView.findViewById(R.id.currencySymbol);
             defaultCurrencyIndicatorOn = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicatorOn);
             defaultCurrencyIndicatorOff = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicatorOff);
 

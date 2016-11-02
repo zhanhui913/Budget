@@ -1050,7 +1050,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 Toast.makeText(instance, "selected currency : "+budgetCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
 
                 String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-                transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, new Locale(budgetCurrency.getLanguage(), budgetCurrency.getCountry())));
+                transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
             }
         }
     }

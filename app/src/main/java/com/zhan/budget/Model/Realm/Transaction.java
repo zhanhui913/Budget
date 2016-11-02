@@ -27,6 +27,8 @@ public class Transaction extends RealmObject {
     private Account account;
     private String dayType;
     private Location location;
+    private BudgetCurrency currency;
+
 
     public Transaction(){
 
@@ -96,6 +98,14 @@ public class Transaction extends RealmObject {
         this.location = location;
     }
 
+    public BudgetCurrency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(BudgetCurrency currency) {
+        this.currency = currency;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property
@@ -120,6 +130,12 @@ public class Transaction extends RealmObject {
         if(other.getLocation() != null && location != null){
             if(!location.checkEquals(other.getLocation())) return false;
         }else if(other.getLocation() == null || location == null){
+            return false;
+        }
+
+        if(other.getCurrency() != null && currency != null){
+            if(!currency.checkEquals(other.getCurrency())) return false;
+        }else if(other.getCurrency() == null || currency == null){
             return false;
         }
 

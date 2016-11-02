@@ -20,13 +20,11 @@ public class CurrencyXMLHandler extends DefaultHandler {
 
     private boolean mCurrency = false;
     private boolean mCode = false;
-    private boolean mCountry = false;
-    private boolean mSymbol = false;
+    private boolean mName = false;
 
     private static String CURRENCY = "currency";
     private static String CODE = "code";
-    private static String COUNTRY = "country";
-    private static String SYMBOL = "symbol";
+    private static String NAME = "name";
 
     private StringBuilder textContent;
 
@@ -51,10 +49,8 @@ public class CurrencyXMLHandler extends DefaultHandler {
             mCurrency = true;
         }else if(qName.equalsIgnoreCase(CODE)){
             mCode = true;
-        }else if(qName.equalsIgnoreCase(COUNTRY)){
-            mCountry = true;
-        }else if(qName.equalsIgnoreCase(SYMBOL)){
-            mSymbol = true;
+        }else if(qName.equalsIgnoreCase(NAME)){
+            mName = true;
         }
     }
 
@@ -74,12 +70,9 @@ public class CurrencyXMLHandler extends DefaultHandler {
         } else if (mCode && qName.equalsIgnoreCase(CODE)) {
             tempBudgetCurrency.setCurrencyCode(tempVal);
             mCode = false;
-        } else if (mCountry && qName.equalsIgnoreCase(COUNTRY)) {
-            tempBudgetCurrency.setCountry(tempVal);
-            mCountry = false;
-        }else if (mSymbol && qName.equalsIgnoreCase(SYMBOL)) {
-            tempBudgetCurrency.setSymbol(tempVal);
-            mSymbol = false;
+        } else if (mName && qName.equalsIgnoreCase(NAME)) {
+            tempBudgetCurrency.setCurrencyName(tempVal);
+            mName = false;
         }
     }
 }

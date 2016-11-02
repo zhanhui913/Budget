@@ -1,8 +1,11 @@
 package com.zhan.budget;
 
 import android.app.Application;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Util.BudgetPreference;
 
 import io.realm.DynamicRealm;
@@ -44,6 +47,28 @@ public class MyApplication extends Application {
 
                             oldVersion++;
                         }
+
+
+                        Toast.makeText(MyApplication.this, "a) It looks like you're at version "+oldVersion, Toast.LENGTH_SHORT).show();
+                        Log.d("MY_APP", "old version :"+oldVersion);
+/*
+                        //migrate to version 3
+                        if(oldVersion == 2){
+                             schema.get("Transaction")
+                                     .addField("currency", BudgetCurrency.class)
+                                     .transform(new RealmObjectSchema.Function() {
+                                         @Override
+                                         public void apply(DynamicRealmObject obj) {
+                                             //Sets all empty values to USD
+                                             BudgetCurrency usdCurrency = new BudgetCurrency();
+
+
+                                             obj.set("currency",usdCurrency);
+                                         }
+                                     });
+                             Toast.makeText(MyApplication.this, "b) It looks like you're at version 2", Toast.LENGTH_SHORT).show();
+                             oldVersion++;
+                         }*/
                     }
                 })
                 .build();
