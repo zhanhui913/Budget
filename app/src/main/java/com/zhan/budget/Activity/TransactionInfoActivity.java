@@ -1064,12 +1064,14 @@ public class TransactionInfoActivity extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == instance.RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
-                BudgetCurrency budgetCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CURRENCY));
+                currentCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CURRENCY));
 
-                Toast.makeText(instance, "selected currency : "+budgetCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(instance, "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
 
                 String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
                 transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+
+                transactionCostCurrencyCodeText.setText(currentCurrency.getCurrencyCode());
             }
         }
     }

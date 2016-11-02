@@ -73,7 +73,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
         // getting BudgetCurrency data for the row
         final BudgetCurrency budgetCurrency = budgetCurrencyList.get(position);
 
-        viewHolder.name.setText(budgetCurrency.getCurrencyName());
+        viewHolder.currencyName.setText(budgetCurrency.getCurrencyName());
         viewHolder.currencyCode.setText(budgetCurrency.getCurrencyCode());
         viewHolder.icon.setCircleColor(R.color.colorPrimary);
 
@@ -90,7 +90,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
             viewHolder.defaultCurrencyIndicatorOff.setVisibility(View.GONE);
         }
 
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(budgetCurrency.getCurrencyName().toUpperCase()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(budgetCurrency.getCurrencyCode().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
         viewHolder.icon.setTextSizeInDP(30);
     }
@@ -114,7 +114,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public TextView name, currencyCode;
+        public TextView currencyName, currencyCode;
         public CircularView icon;
         public SwipeLayout swipeLayout;
         public ImageView defaultCurrencyIndicatorOn, defaultCurrencyIndicatorOff;
@@ -128,7 +128,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCurrency);
             icon = (CircularView) itemView.findViewById(R.id.currencyIcon);
-            name = (TextView) itemView.findViewById(R.id.currencyCountry);
+            currencyName = (TextView) itemView.findViewById(R.id.currencyName);
             currencyCode = (TextView) itemView.findViewById(R.id.currencyCode);
             defaultCurrencyIndicatorOn = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicatorOn);
             defaultCurrencyIndicatorOff = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicatorOff);

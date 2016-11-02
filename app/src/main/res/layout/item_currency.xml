@@ -59,19 +59,19 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/symbolContainer"
+            android:id="@+id/codeContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/indicatorContainer"
             android:layout_centerVertical="true">
 
             <TextView
-                android:id="@+id/currencySymbol"
+                android:id="@+id/currencyCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_title_size"
                 android:textStyle="bold"
-                android:text="$" />
+                android:text="USD" />
         </RelativeLayout>
 
         <com.zhan.library.CircularView
@@ -82,32 +82,18 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"/>
 
-        <LinearLayout
-            android:id="@+id/textContainer"
+        <TextView
+            android:id="@+id/currencyName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toLeftOf="@+id/symbolContainer"
+            android:textSize="@dimen/text_title_size"
+            android:textStyle="bold"
             android:layout_toRightOf="@+id/currencyIcon"
             android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/item_left_padding">
+            android:paddingLeft="@dimen/item_left_padding"
+            android:paddingStart="@dimen/item_left_padding"
+            android:layout_toLeftOf="@+id/codeContainer"
+            android:text="Currency Name" />
 
-            <TextView
-                android:id="@+id/currencyCountry"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:textSize="@dimen/text_title_size"
-                android:textStyle="bold"
-                android:text="credit card" />
-
-            <TextView
-                android:id="@+id/currencyCode"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="$25.00"
-                android:textSize="@dimen/text_content_size" />
-        </LinearLayout>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
