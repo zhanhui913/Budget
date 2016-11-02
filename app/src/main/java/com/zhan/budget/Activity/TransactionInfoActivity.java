@@ -75,7 +75,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn, changeCurrencyBtn;
 
-    private TextView transactionCostView, transactionNameTextView;
+    private TextView transactionCostView, transactionNameTextView, transactionCostCurrencyCodeText;
 
     private String priceString, noteString, locationString;
 
@@ -110,6 +110,8 @@ public class TransactionInfoActivity extends BaseActivity implements
     private Transaction editTransaction;
     private Boolean isScheduledTransaction = false; //default is false
     private ScheduledTransaction scheduledTransaction;
+
+    private BudgetCurrency currentCurrency;
 
     private HashSet<String> locationHash = new HashSet<>();
 
@@ -171,6 +173,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
         transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
+        transactionCostCurrencyCodeText = (TextView)findViewById(R.id.transactionCostCurrencyCodeText);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
@@ -241,6 +244,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         addListeners();
         createAccountDialog();
         createDateDialog();
+        getDefaultCurrency();
     }
 
     /**
@@ -778,6 +782,21 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog noteDialog = builder.create();
         noteDialog.show();
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault",true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode("USD");
+            currentCurrency.setCurrencyName("AMERICAN USD");
+        }
+
+        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        transactionCostCurrencyCodeText.setText(currentCurrency.getCurrencyCode());
+        myRealm.close();
     }
 
     private void openCurrencyListActivity(){

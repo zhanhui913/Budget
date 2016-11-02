@@ -8,24 +8,20 @@
     tools:context="com.zhan.budget.Activity.TransactionInfoActivity"
     tools:showIn="@layout/activity_transaction_info">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:padding="@dimen/item_padding">
 
         <TextView
             android:id="@+id/transactionNameText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:textSize="@dimen/text_header_size"
             android:textStyle="bold"
-            android:gravity="start"
-            android:paddingLeft="@dimen/item_padding"
-            android:paddingStart="@dimen/item_padding"
-            android:paddingTop="@dimen/item_top_padding"
-            android:paddingBottom="@dimen/item_bottom_padding"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:maxLines="1"/>
 
         <!-- Set max characters to 15 to prevent currencyTextFormatter from breaking-->
@@ -33,18 +29,26 @@
             android:id="@+id/transactionCostText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="-$0.00"
+            android:text="0.00"
             android:textSize="@dimen/text_header_size"
-            android:textStyle="bold"
             android:gravity="end"
-            android:paddingRight="@dimen/item_padding"
-            android:paddingEnd="@dimen/item_padding"
-            android:paddingTop="@dimen/item_top_padding"
-            android:paddingBottom="@dimen/item_bottom_padding"
+            android:layout_toLeftOf="@+id/transactionCostCurrencyCodeText"
+            android:layout_toRightOf="@+id/transactionNameText"
             android:maxLines="1"
             android:maxLength="15" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/transactionCostCurrencyCodeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="USD"
+            android:textSize="@dimen/text_header_size"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:maxLength="15"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 
     <include layout="@layout/transaction_circle_indicator"
         android:id="@+id/indicatorPanel"
