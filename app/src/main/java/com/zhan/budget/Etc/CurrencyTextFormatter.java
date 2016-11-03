@@ -10,7 +10,7 @@ import java.util.Locale;
 public final class CurrencyTextFormatter {
 
     //Setting a max length because after this length, java represents doubles in scientific notation which breaks the formatter
-    static final int MAX_RAW_INPUT_LENGTH = 15;
+    public static final int MAX_RAW_INPUT_LENGTH = 15;
 
     private CurrencyTextFormatter(){}
 
@@ -23,7 +23,7 @@ public final class CurrencyTextFormatter {
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
 
         //if there's nothing left, that means we were handed an empty string. Also, cap the raw input so the formatter doesn't break.
-        if(!val.equals("") /*&& val.length() < MAX_RAW_INPUT_LENGTH*/ && !val.equals("-")) {
+        if(!val.equals("") && val.length() < MAX_RAW_INPUT_LENGTH && !val.equals("-")) {
             //Convert the string into a double, which will later be passed into the currency formatter
             double newTextValue = Double.valueOf(val);
 

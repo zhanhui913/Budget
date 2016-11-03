@@ -50,12 +50,10 @@ import com.zhan.circleindicator.CircleIndicator;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -807,12 +805,12 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void addDigitToTextView(int digit){
-        priceString += digit;
+        if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH){
+            priceString += digit;
 
-        String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-        //transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
-
-        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+            String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
+            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+        }
     }
 
     private void removeDigit(){

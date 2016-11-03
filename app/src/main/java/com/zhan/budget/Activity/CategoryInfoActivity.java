@@ -26,7 +26,6 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
@@ -391,10 +390,10 @@ public class CategoryInfoActivity extends BaseActivity implements
     }
 
     private void addDigitToTextView(TextView textView, int digit){
-        //Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
-        priceString += digit;
-
-        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+        if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH) {
+            priceString += digit;
+            textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+        }
     }
 
     private void removeDigit(TextView textView){
