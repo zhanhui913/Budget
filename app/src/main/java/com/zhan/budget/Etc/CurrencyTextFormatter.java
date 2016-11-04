@@ -21,7 +21,10 @@ public final class CurrencyTextFormatter {
         //special case for the start of a negative number
         //if(val.equals("-")) return val;
 
-        final double CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(locale).getDefaultFractionDigits());
+        //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
+        //ie: $x.00
+
+        final double CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(Locale.CANADA).getDefaultFractionDigits());
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
 
         //if there's nothing left, that means we were handed an empty string. Also, cap the raw input so the formatter doesn't break.
@@ -70,7 +73,9 @@ public final class CurrencyTextFormatter {
     }
 
     public static String formatFloat(float val, Locale locale){
-        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
+        //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
+        //ie: $x.00
+        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
         return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + "USD";
     }
 

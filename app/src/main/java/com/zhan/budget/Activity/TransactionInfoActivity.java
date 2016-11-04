@@ -223,6 +223,8 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPage = BudgetType.EXPENSE;
             }
 
+            currentCurrency = editTransaction.getCurrency();
+
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
             //Remove any extra un-needed signs
@@ -234,6 +236,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
 
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
+        }else{
+            getDefaultCurrency();
         }
 
         getAllLocations();
@@ -241,12 +245,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         addListeners();
         createAccountDialog();
         createDateDialog();
-
-        if(isNewTransaction){
-            getDefaultCurrency();
-        }else {
-            currentCurrency = editTransaction.getCurrency();
-        }
     }
 
     /**
@@ -879,6 +877,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         transaction.setNote(this.noteString);
         transaction.setDate(DateUtil.formatDate(selectedDate));
         transaction.setAccount(selectedAccount);
+        transaction.setCurrency(currentCurrency);
 
         if(currentPage == BudgetType.EXPENSE){
             transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString));
