@@ -16,7 +16,7 @@ public final class CurrencyTextFormatter {
 
     private CurrencyTextFormatter(){}
 
-    public static String formatText(String val, Locale locale){
+    public static String formatText(String val, BudgetCurrency currency){
 
         //special case for the start of a negative number
         //if(val.equals("-")) return val;
@@ -25,7 +25,7 @@ public final class CurrencyTextFormatter {
         //ie: $x.00
 
         final double CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(Locale.CANADA).getDefaultFractionDigits());
-        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
+        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
 
         //if there's nothing left, that means we were handed an empty string. Also, cap the raw input so the formatter doesn't break.
         if(!val.equals("") && val.length() < MAX_RAW_INPUT_LENGTH && !val.equals("-")) {
@@ -46,7 +46,7 @@ public final class CurrencyTextFormatter {
             throw new IllegalArgumentException("Invalid argument in val");
         }*/
 
-        val = val.replace("$","").replace("(","-").replace(")","") + "USD";
+        val = val.replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
 
         return val;
     }

@@ -389,7 +389,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void addDigitToTextView(TextView textView, int digit){
         if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH) {
             priceString += digit;
-            textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+            textView.setText(CurrencyTextFormatter.formatText(priceString, currentCurrency));
         }
     }
 
@@ -398,7 +398,7 @@ public class CategoryInfoActivity extends BaseActivity implements
             priceString = priceString.substring(0, priceString.length() - 1);
         }
 
-        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+        textView.setText(CurrencyTextFormatter.formatText(priceString, currentCurrency));
     }
 
     private void getDefaultCurrency(){
@@ -419,7 +419,7 @@ public class CategoryInfoActivity extends BaseActivity implements
      * Updates the textview that displays the cost along with the selected currency
      */
     private void updateCost(String val, BudgetCurrency currency){
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatText(val, Constants.BUDGET_LOCALE));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatText(val, currentCurrency));
     }
 
     private void confirmDelete(){

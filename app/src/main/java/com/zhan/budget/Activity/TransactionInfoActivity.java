@@ -183,11 +183,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
-        priceString = "0";
-
-        //Call one time to give priceStringWithDot the correct string format of 0.00
-        removeDigit();
-
         //If its edit mode
         if(!isNewTransaction){
 
@@ -233,11 +228,16 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d("DEBUG", "---------->" + priceString);
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
 
-            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
 
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }else{
             getDefaultCurrency();
+
+            priceString = "0";
+
+            //Call one time to give priceStringWithDot the correct string format of 0.00
+            removeDigit();
         }
 
         getAllLocations();
@@ -405,7 +405,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         currentPage = BudgetType.EXPENSE;
                         //float ss = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
                         //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(ss, Constants.BUDGET_LOCALE));
-                        transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
+                        transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, currentCurrency));
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedExpenseCategory != null){
@@ -418,7 +418,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         currentPage = BudgetType.INCOME;
                         //float ss1 = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
                         //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(ss1), Constants.BUDGET_LOCALE));
-                        transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+                        transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, currentCurrency));
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedIncomeCategory != null){
@@ -811,7 +811,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             priceString += digit;
 
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
         }
     }
 
@@ -823,7 +823,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
         //transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
 
-        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
     }
 
     @Override
@@ -1068,7 +1068,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 Toast.makeText(instance, "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
 
                 String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-                transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+                transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
 
                 transactionCostCurrencyCodeText.setText(currentCurrency.getCurrencyCode());
             }
