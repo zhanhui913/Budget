@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -20,6 +21,7 @@ import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Adapter.AccountRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
@@ -33,6 +35,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -64,6 +67,8 @@ public class SettingsAccount extends BaseRealmActivity implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
+    private BudgetCurrency currentCurrency;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_settings_account;
@@ -86,6 +91,7 @@ public class SettingsAccount extends BaseRealmActivity implements
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
         emptyAccountText.setText("Pull down to add an account");
 
+        getDefaultCurrency();
         createPullToAddAccount();
         populateAccount();
     }
@@ -107,6 +113,20 @@ public class SettingsAccount extends BaseRealmActivity implements
         });
     }
 
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+
+        Toast.makeText(getApplicationContext(), "Settings Account : default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
+    }
+
     private void populateAccount(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
         resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
@@ -116,7 +136,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 accountList = myRealm.copyFromRealm(element);
 
-                accountRecyclerAdapter = new AccountRecyclerAdapter(instance, accountList, false, true);
+                accountRecyclerAdapter = new AccountRecyclerAdapter(instance, accountList, currentCurrency, false, true);
                 accountListView.setAdapter(accountRecyclerAdapter);
 
                 //Add divider

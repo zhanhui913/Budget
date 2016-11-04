@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
@@ -16,6 +17,7 @@ import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -25,6 +27,7 @@ import org.parceler.Parcels;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -39,6 +42,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     protected TransactionRecyclerAdapter transactionAdapter;
     protected List<Transaction> transactionList;
     protected RealmResults<Transaction> transactionsForMonth;
+    protected BudgetCurrency currentCurrency;
 
     private Toolbar toolbar;
     private TextView titleNameTextView, titleBalanceTextView, emptyListTextView;
@@ -85,6 +89,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         getDifferentData();
         getAllTransactionsForMonth();
         addListeners();
+        getDefaultCurrency();
     }
 
     /**
@@ -113,6 +118,20 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         });
     }
 
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+
+        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
+    }
+
     /**
      * This gets called when a Transaction has been deleted or its dayType changed.
      */
@@ -131,7 +150,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
                 float total = element.sum("price").floatValue();
 
-                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
+                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, currentCurrency));
             }
         });
     }

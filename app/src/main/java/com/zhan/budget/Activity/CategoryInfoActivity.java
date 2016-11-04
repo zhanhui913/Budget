@@ -107,8 +107,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         categoryNameTextView = (TextView) findViewById(R.id.categoryNameTextView);
         categoryBudgetTextView = (TextView) findViewById(R.id.categoryBudgetTextView);
 
-        categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
@@ -137,6 +136,9 @@ public class CategoryInfoActivity extends BaseActivity implements
         createToolbar();
         addListeners();
         getDefaultCurrency();
+
+        categoryNameTextView.setText(category.getName());
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
 
         //Check if current category is using text or icon in its circular view
         if(category.isText()){
@@ -270,13 +272,13 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
-        priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE);
+        priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency);
 
         //Remove any extra un-needed signs
         priceString = CurrencyTextFormatter.stripCharacters(priceString, currentCurrency);
 
         title.setText("Change Budget");
-        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -284,7 +286,7 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         category.setBudget(CurrencyTextFormatter.formatCurrency(priceString));
-                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {

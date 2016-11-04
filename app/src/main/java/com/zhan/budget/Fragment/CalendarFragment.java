@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
@@ -32,6 +33,7 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -59,6 +61,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -99,6 +102,8 @@ public class CalendarFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
+    private BudgetCurrency currentCurrency;
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -120,6 +125,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         super.init();
         isFirstTime();
 
+        getDefaultCurrency();
+
         //By default it will be the current date;
         selectedDate = new Date();
 
@@ -133,7 +140,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         transactionListView.setLayoutManager(linearLayoutManager);
 
         transactionList = new ArrayList<>();
-        transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, false); //do not display date in each transaction item
+        transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, currentCurrency, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
         //Add divider
@@ -141,7 +148,6 @@ public class CalendarFragment extends BaseRealmFragment implements
                 new HorizontalDividerItemDecoration.Builder(getContext())
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
-
 
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
 
@@ -437,6 +443,21 @@ public class CalendarFragment extends BaseRealmFragment implements
         });
     }
 
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+
+        Toast.makeText(getContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
+    }
+
+
     /**
      * Populate the list of transactions for the specific date.
      * @param date The date to search in db.
@@ -471,7 +492,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                     }
                 }
 
-                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
+                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, currentCurrency));
 
                 updateTransactionList();
             }

@@ -72,11 +72,11 @@ public final class CurrencyTextFormatter {
         return newTextValue;
     }
 
-    public static String formatFloat(float val, Locale locale){
+    public static String formatFloat(float val, BudgetCurrency currency){
         //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
         //ie: $x.00
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
-        return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + "USD";
+        return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
     }
 
     public static String stripCharacters(String value, BudgetCurrency currency){

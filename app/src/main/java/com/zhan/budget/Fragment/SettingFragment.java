@@ -23,6 +23,7 @@ import com.zhan.budget.Activity.Settings.SettingsLocation;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -61,6 +62,8 @@ public class SettingFragment extends BaseFragment {
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, tourBtn, faqBtn;
+
+    private BudgetCurrency currentCurrency;
 
     //
     private static int CURRENT_THEME;
@@ -129,6 +132,7 @@ public class SettingFragment extends BaseFragment {
         versionNumber.setText("v"+BuildConfig.VERSION_NAME);
 
         addListeners();
+        getDefaultCurrency();
     }
 
     private void addListeners(){
@@ -277,6 +281,20 @@ public class SettingFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+
+        myRealm.close();
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -704,7 +722,7 @@ public class SettingFragment extends BaseFragment {
 
         final File csvFile = new File(DOWNLOAD_DIRECTORY, csvFileName);
 
-        CSVFormatter csvFormatter = new CSVFormatter(getContext(), transactionList, csvFile);
+        CSVFormatter csvFormatter = new CSVFormatter(getContext(), transactionList, currentCurrency, csvFile);
         csvFormatter.setCSVInteraction(new CSVFormatter.OnCSVInteractionListener() {
             @Override
             public void onCompleteCSV(boolean value) {

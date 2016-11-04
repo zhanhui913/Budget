@@ -220,7 +220,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             currentCurrency = editTransaction.getCurrency();
 
-            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
+            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), currentCurrency);
 
             //Remove any extra un-needed signs
             priceString = CurrencyTextFormatter.stripCharacters(priceString, currentCurrency);

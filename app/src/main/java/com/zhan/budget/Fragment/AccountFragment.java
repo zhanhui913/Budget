@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -29,6 +30,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -45,6 +47,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -82,6 +85,8 @@ public class AccountFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
+    private BudgetCurrency currentCurrency;
+
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -108,12 +113,14 @@ public class AccountFragment extends BaseRealmFragment implements
         centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
+        getDefaultCurrency();
+
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
         accountListView.setLayoutManager(linearLayoutManager);
 
-        accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, true, false);
+        accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, currentCurrency, true, false);
         accountListView.setAdapter(accountRecyclerAdapter);
 
         //Add divider
@@ -140,6 +147,21 @@ public class AccountFragment extends BaseRealmFragment implements
         //This may conflict with populateAccountWithNoInfo async where its trying to get the initial
         //accounts
         updateMonthInToolbar(0, false);
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+
+        Toast.makeText(getContext(), "Account fragment, default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+
+        myRealm.close();
     }
 
     /**
@@ -243,7 +265,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 pieChartFragment.setData(accountList, animate);
 
-                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
+                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, currentCurrency));
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);

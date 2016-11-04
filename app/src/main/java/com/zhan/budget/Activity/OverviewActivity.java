@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
@@ -19,6 +20,7 @@ import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Fragment.OverviewGenericFragment;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -27,6 +29,8 @@ import com.zhan.budget.View.CustomViewPager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import io.realm.Realm;
 
 public class OverviewActivity extends BaseActivity implements
     OverviewGenericFragment.OverviewInteractionListener{
@@ -50,6 +54,8 @@ public class OverviewActivity extends BaseActivity implements
     private float totalIncomeCost = 0f;
     private List<Category> expenseCategoryList;
     private List<Category> incomeCategoryList;
+
+    private BudgetCurrency currentCurrency;
 
     @Override
     protected int getActivityLayout(){
@@ -160,13 +166,27 @@ public class OverviewActivity extends BaseActivity implements
     private void changeTopPanelInfo(int position, boolean animate){
         if(position == 0){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, Constants.BUDGET_LOCALE));
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, currentCurrency));
             pieChartFragment.setData(expenseCategoryList, animate);
         }else if(position == 1){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, Constants.BUDGET_LOCALE));
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, currentCurrency));
             pieChartFragment.setData(incomeCategoryList, animate);
         }
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+        myRealm.close();
+        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        //updateCost(category.getBudget(), currentCurrency);
     }
 
     @Override

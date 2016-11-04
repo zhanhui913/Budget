@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -22,6 +23,7 @@ import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -35,6 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -60,6 +63,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
+    private BudgetCurrency currentCurrency;
+
     public static OverviewGenericFragment newInstance(BudgetType budgetType, Date currentMonth) {
         OverviewGenericFragment fragment = new OverviewGenericFragment();
 
@@ -80,6 +85,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     protected void init() {
         super.init();
 
+        getDefaultCurrency();
+
         budgetType = (BudgetType) getArguments().getSerializable(ARG_1);
         currentMonth = (Date) getArguments().getSerializable(ARG_2);
 
@@ -87,7 +94,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
         RecyclerView categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
-        categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
+        categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, currentCurrency, null);
 
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -102,6 +109,20 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                         .build());
 
         getCategoryList();
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+
+        Toast.makeText(getContext(), "overview generic framgnent; default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
     }
 
     //Should be called only the first time when the fragment is created
