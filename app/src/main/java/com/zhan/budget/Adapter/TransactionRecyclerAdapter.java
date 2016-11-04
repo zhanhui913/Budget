@@ -96,7 +96,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.accountIcon.setVisibility(View.GONE);
         }
 
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), currentCurrency));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), transaction.getCurrency()));
 
         //If transaction's dayType is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {

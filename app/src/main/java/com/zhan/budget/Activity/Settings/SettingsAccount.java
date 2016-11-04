@@ -122,6 +122,7 @@ public class SettingsAccount extends BaseRealmActivity implements
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
 
         Toast.makeText(getApplicationContext(), "Settings Account : default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();

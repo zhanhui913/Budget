@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +19,6 @@ import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
-import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
@@ -31,19 +27,11 @@ import org.xml.sax.XMLReader;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Currency;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.xml.parsers.SAXParserFactory;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
@@ -91,16 +79,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         currencyListView = (RecyclerView)findViewById(R.id.currencyListview);
         currencyListView.setLayoutManager(new LinearLayoutManager(this));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Getting currency", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                //getListOfCurrencies();
-
-            }
-        });
 
 
 
@@ -236,6 +214,10 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                         public void onClick(DialogInterface dialog, int id) {
 
                             myRealm.beginTransaction();
+
+                            for(int k = 0; k < currencyList.size(); k++){
+                                currencyList.get(k).setDefault(false);
+                            }
 
                             currencyList.get(position).setDefault(true);
 

@@ -141,6 +141,8 @@ public class CategoryFragment extends BaseFragment {
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
 
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
+
         Toast.makeText(getContext(), "category fragment: default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();
     }

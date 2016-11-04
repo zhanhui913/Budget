@@ -225,7 +225,8 @@ public class SettingFragment extends BaseFragment {
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email();
+                //email();
+                sendRealmData();
             }
         });
 
@@ -291,6 +292,7 @@ public class SettingFragment extends BaseFragment {
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
 
         myRealm.close();
     }
@@ -759,6 +761,7 @@ public class SettingFragment extends BaseFragment {
                         Util.createSnackbar(getContext(), getView(), "Resetting...");
 
                         BudgetPreference.resetFirstTime(getContext());
+                        BudgetPreference.resetFirstTimeCurrency(getContext());
 
                         RealmConfiguration config = new RealmConfiguration.Builder(getContext())
                                 .name(Constants.REALM_NAME)

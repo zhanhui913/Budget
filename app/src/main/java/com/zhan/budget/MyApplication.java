@@ -5,7 +5,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Util.BudgetPreference;
 
 import io.realm.DynamicRealm;
@@ -61,12 +60,14 @@ public class MyApplication extends Application {
                                          public void apply(DynamicRealmObject obj) {
                                              //Sets all empty values to USD
                                              BudgetCurrency usdCurrency = new BudgetCurrency();
-
+                                             usdCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+                                             usdCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+                                             usdCurrency.setDefault(true);
 
                                              obj.set("currency",usdCurrency);
                                          }
                                      });
-                             Toast.makeText(MyApplication.this, "b) It looks like you're at version 2", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(MyApplication.this, "b) It looks like you were at version 2, now at 3", Toast.LENGTH_SHORT).show();
                              oldVersion++;
                          }*/
                     }

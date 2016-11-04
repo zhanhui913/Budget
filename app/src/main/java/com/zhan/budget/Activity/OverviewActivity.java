@@ -184,6 +184,8 @@ public class OverviewActivity extends BaseActivity implements
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
+
         myRealm.close();
         Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         //updateCost(category.getBudget(), currentCurrency);

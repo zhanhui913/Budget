@@ -120,6 +120,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
 
         Toast.makeText(getContext(), "overview generic framgnent; default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();
