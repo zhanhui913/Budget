@@ -223,11 +223,10 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPage = BudgetType.EXPENSE;
             }
 
-
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
             //Remove any extra un-needed signs
-            priceString = CurrencyTextFormatter.stripCharacters(priceString);
+            priceString = CurrencyTextFormatter.stripCharacters(priceString, currentCurrency);
 
             Log.d("DEBUG", "---------->" + priceString);
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
@@ -785,11 +784,11 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault",true).findFirst();
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(currentCurrency == null){
             currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode("USD");
-            currentCurrency.setCurrencyName("AMERICAN USD");
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
 
         Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();

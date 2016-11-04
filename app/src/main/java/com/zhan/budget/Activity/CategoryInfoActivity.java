@@ -274,7 +274,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE);
 
         //Remove any extra un-needed signs
-        priceString = CurrencyTextFormatter.stripCharacters(priceString);
+        priceString = CurrencyTextFormatter.stripCharacters(priceString, currentCurrency);
 
         title.setText("Change Budget");
         budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
@@ -286,8 +286,6 @@ public class CategoryInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
                         categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
-
-
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -407,11 +405,11 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault",true).findFirst();
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(currentCurrency == null){
             currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode("USD");
-            currentCurrency.setCurrencyName("AMERICAN USD");
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
 
         Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();

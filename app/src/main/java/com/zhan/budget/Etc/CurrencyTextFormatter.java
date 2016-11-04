@@ -1,5 +1,7 @@
 package com.zhan.budget.Etc;
 
+import com.zhan.budget.Model.Realm.BudgetCurrency;
+
 import java.text.DecimalFormat;
 import java.util.Currency;
 import java.util.Locale;
@@ -41,7 +43,7 @@ public final class CurrencyTextFormatter {
             throw new IllegalArgumentException("Invalid argument in val");
         }*/
 
-        val = val.replace("$","") + "USD";
+        val = val.replace("$","").replace("(","-").replace(")","") + "USD";
 
         return val;
     }
@@ -65,14 +67,12 @@ public final class CurrencyTextFormatter {
         return newTextValue;
     }
 
-    //Add $ infront of float
     public static String formatFloat(float val, Locale locale){
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
-
-                 return currencyFormatter.format(val).replace("$","") + "USD";
+        return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + "USD";
     }
 
-    public static String stripCharacters(String value){
-        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","").replace("USD","");
+    public static String stripCharacters(String value, BudgetCurrency currency){
+        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","").replace(currency.getCurrencyCode(),"");
     }
 }
