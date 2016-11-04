@@ -48,8 +48,10 @@ public final class CurrencyTextFormatter {
         return val;
     }
 
-    public static float formatCurrency(String val, Locale locale){
-        final float CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(locale).getDefaultFractionDigits());
+    public static float formatCurrency(String val){
+        //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
+        //ie: $x.00
+        final float CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(Locale.CANADA).getDefaultFractionDigits());
 
         float newTextValue;
 

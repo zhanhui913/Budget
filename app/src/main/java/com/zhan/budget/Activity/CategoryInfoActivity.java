@@ -82,7 +82,6 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
 
-
         if(!isNewCategory){
             category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
         }else{
@@ -284,7 +283,7 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setCancelable(true)
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+                        category.setBudget(CurrencyTextFormatter.formatCurrency(priceString));
                         categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
                     }
                 })
@@ -411,15 +410,14 @@ public class CategoryInfoActivity extends BaseActivity implements
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
-
+        myRealm.close();
         Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         //updateCost(category.getBudget(), currentCurrency);
-        myRealm.close();
     }
 
     /**
-     +     * Updates the textview that displays the cost along with the selected currency
-     +     */
+     * Updates the textview that displays the cost along with the selected currency
+     */
     private void updateCost(String val, BudgetCurrency currency){
         categoryBudgetTextView.setText(CurrencyTextFormatter.formatText(val, Constants.BUDGET_LOCALE));
     }

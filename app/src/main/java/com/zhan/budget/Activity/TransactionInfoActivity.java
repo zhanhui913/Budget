@@ -241,7 +241,12 @@ public class TransactionInfoActivity extends BaseActivity implements
         addListeners();
         createAccountDialog();
         createDateDialog();
-        getDefaultCurrency();
+
+        if(isNewTransaction){
+            getDefaultCurrency();
+        }else {
+            currentCurrency = editTransaction.getCurrency();
+        }
     }
 
     /**
@@ -876,10 +881,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){
-            transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+            transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString));
             transaction.setCategory(selectedExpenseCategory);
         }else{
-            transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+            transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString));
             transaction.setCategory(selectedIncomeCategory);
         }
 
@@ -896,8 +901,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d("isScheduledTransaction", "not adding scheduled transaction");
         }
         Parcelable scheduledTransactionWrapped = Parcels.wrap(sT);
-
-        Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
 
         Parcelable wrapped = Parcels.wrap(transaction);
 
