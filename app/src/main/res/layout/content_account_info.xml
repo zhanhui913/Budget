@@ -31,7 +31,7 @@
             android:text="Account Name"
             android:textSize="@dimen/text_header_size"
             android:textStyle="bold"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_toRightOf="@+id/accountCircularView"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
@@ -67,7 +67,6 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="1dp"
             android:background="@drawable/budget_green_button"
             android:src="@drawable/svg_ic_edit" />
 

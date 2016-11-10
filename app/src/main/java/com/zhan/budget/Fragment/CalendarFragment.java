@@ -716,7 +716,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this transaction?");
+        message.setText(R.string.warning_delete_transaction);
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
