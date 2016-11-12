@@ -41,13 +41,13 @@
             android:paddingEnd="@dimen/item_padding"
             android:paddingTop="@dimen/item_top_padding"
             android:paddingBottom="@dimen/item_bottom_padding"
-            android:singleLine="true"/>
+            android:maxLines="1"/>
     </LinearLayout>
 
     <include layout="@layout/transaction_circle_indicator"
         android:id="@+id/indicatorPanel"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/topBar" />
 
     <android.support.v4.view.ViewPager

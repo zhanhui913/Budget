@@ -71,7 +71,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
 
-    private TextView transactionCostView, transactionNameTextView;
+    private TextView transactionCostView, transactionNameTextView, currentPageTextView;
 
     private String priceString, noteString, locationString;
 
@@ -166,9 +166,11 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
         transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
+        currentPageTextView = (TextView)findViewById(R.id.currentPageTitle);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
+        currentPageTextView.setText(currentPage.toString());
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
         adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), transactionExpenseFragment, transactionIncomeFragment);
@@ -217,6 +219,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPage = BudgetType.EXPENSE;
             }
 
+            currentPageTextView.setText(currentPage.toString());
 
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
@@ -396,6 +399,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedExpenseCategory.getName());
                         }
 
+                        currentPageTextView.setText(currentPage.toString());
 
                         break;
                     case 1:
@@ -409,6 +413,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedIncomeCategory.getName());
                         }
 
+                        currentPageTextView.setText(currentPage.toString());
 
                         break;
                 }
