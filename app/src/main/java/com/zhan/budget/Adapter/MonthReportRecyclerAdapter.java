@@ -74,7 +74,7 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
 
         viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
         viewHolder.expenseThisMonth.setText("You spent "+CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
-        viewHolder.incomeThisMonth.setText("You saved "+CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), Constants.BUDGET_LOCALE));
+        viewHolder.incomeThisMonth.setText("You earned "+CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), Constants.BUDGET_LOCALE));
 
 
 
@@ -88,12 +88,12 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         Log.d("CHECK", "----- end -----");
 
 
-        if(savings >= 0){
+        if(savings > 0){
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.green));
-        }else{
+        }else if(savings < 0){
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.red));
         }
-        viewHolder.netThisMonth.setText("Net "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
+        viewHolder.netThisMonth.setText("You saved "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
 
 
         /*
