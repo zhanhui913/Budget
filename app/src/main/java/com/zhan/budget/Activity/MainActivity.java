@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -15,6 +17,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.AccountFragment;
@@ -24,11 +28,20 @@ import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Tutorial;
 import com.zhan.budget.Util.Util;
+import com.zhan.budget.View.ExtendedNumberPicker;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class MainActivity extends BaseActivity
@@ -95,6 +108,7 @@ public class MainActivity extends BaseActivity
         navigationView.getMenu().getItem(0).setChecked(true);
 
         if(BudgetPreference.getFirstTime(getBaseContext())){
+            askForCurrencyActivity();
             loadTutorials();
         }
     }
@@ -103,6 +117,62 @@ public class MainActivity extends BaseActivity
         Intent mainAct = new Intent(getBaseContext(), MaterialTutorialActivity.class);
         mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(getBaseContext()));
         startActivity(mainAct);
+    }
+
+    private int selectedCurrencyIndex = 0;
+    private String selectedCurrency = "";
+    private String[] currencyList;
+    //Alert dialog for currency
+    private AlertDialog currencyDialog;
+
+    private void askForCurrency(){
+        View accountDialogView = View.inflate(this, R.layout.alertdialog_number_picker, null);
+
+        final ExtendedNumberPicker currencyPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
+
+        TextView title = (TextView)accountDialogView.findViewById(R.id.title);
+        title.setText("Select BudgetCurrency");
+
+
+        currencyList = new String[]{"AUD", "CAD", "USD"};
+
+
+        currencyPicker.setMinValue(0);
+        if(currencyList.length > 0){
+            currencyPicker.setMaxValue(currencyList.length - 1);
+            currencyPicker.setDisplayedValues(currencyList);
+            currencyPicker.setWrapSelectorWheel(false);
+            currencyPicker.setValue(selectedCurrencyIndex);
+        }
+
+
+
+        AlertDialog.Builder accountAlertDialogBuilder = new AlertDialog.Builder(this)
+                .setView(accountDialogView)
+                .setCancelable(false)
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        selectedCurrencyIndex = currencyPicker.getValue();
+                        selectedCurrency = currencyList[selectedCurrencyIndex];
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Reset the selection back to previous
+                        currencyPicker.setValue(selectedCurrencyIndex);
+                        dialog.dismiss();
+                    }
+                });
+
+        currencyDialog = accountAlertDialogBuilder.create();
+        currencyDialog.show();
+    }
+
+    private void askForCurrencyActivity(){
+        Intent currencyIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
+        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
+        currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, true);
+        startActivity(currencyIntent);
     }
 
     @Override

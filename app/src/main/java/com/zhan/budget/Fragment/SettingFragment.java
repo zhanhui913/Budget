@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.Settings.OpenSourceActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
@@ -56,7 +57,7 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, openLicenseBtn, emailBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, backupBtn, openLicenseBtn, emailBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, tourBtn, faqBtn;
@@ -90,6 +91,8 @@ public class SettingFragment extends BaseFragment {
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
 
         locationBtn = (ViewGroup) view.findViewById(R.id.locationBtn);
+
+        currencyBtn = (ViewGroup) view.findViewById(R.id.currencyBtn);
 
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
@@ -174,6 +177,16 @@ public class SettingFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent settingsLocation = new Intent(getContext(), SettingsLocation.class);
                 startActivity(settingsLocation);
+            }
+        });
+
+        currencyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settingsCurrency = new Intent(getContext(), SelectCurrencyActivity.class);
+                settingsCurrency.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, true);
+                settingsCurrency.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, true);
+                startActivity(settingsCurrency);
             }
         });
 

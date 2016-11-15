@@ -25,6 +25,8 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.Realm.Account;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -66,6 +68,8 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     private int catRes; //The res ID for category icon for circular view use
     private boolean isCurrentCircularText; //Is the current circular view using text or icon
+
+    private BudgetCurrency currentCurrency;
 
     @Override
     protected int getActivityLayout(){
@@ -134,6 +138,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         initCategoryCircularView();
         createToolbar();
         addListeners();
+        getDefaultCurrency();
 
         //Check if current category is using text or icon in its circular view
         if(category.isText()){
@@ -282,6 +287,8 @@ public class CategoryInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
                         categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+
+
                     }
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -396,6 +403,28 @@ public class CategoryInfoActivity extends BaseActivity implements
         }
 
         textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault",true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode("USD");
+            currentCurrency.setCurrencyName("AMERICAN USD");
+        }
+
+        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        //updateCost(category.getBudget(), currentCurrency);
+        myRealm.close();
+    }
+
+    /**
+     * Updates the textview that displays the cost along with the selected currency
+    */
+    private void updateCost(String val, BudgetCurrency currency){
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatText(val, Constants.BUDGET_LOCALE));
     }
 
     private void confirmDelete(){

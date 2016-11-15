@@ -23,6 +23,9 @@ public class Constants {
     //First time
     public static final String FIRST_TIME = "First Time";
 
+    //First time Currency
+    public static final String FIRST_TIME_CURRENCY = "First Time Currency";
+
     //Default theme
     public static final String DEFAULT_THEME = "Default Theme";
 
@@ -52,6 +55,8 @@ public class Constants {
     public static final String REQUEST_EDIT_ACCOUNT = "Edit Account";
     public static final String REQUEST_NEW_LOCATION = "New Location";
     public static final String REQUEST_EDIT_LOCATION = "Edit Location";
+    public static final String REQUEST_CURRENCY_IN_SETTINGS = "Currency In Settings";
+    public static final String REQUEST_DEFAULT_CURRENCY = "Default Currency";
 
     //Return result
     public static final int RETURN_NEW_TRANSACTION = 1;
@@ -65,7 +70,7 @@ public class Constants {
     public static final int RETURN_NEW_LOCATION = 9;
     public static final int RETURN_EDIT_LOCATION = 10;
     public static final int RETURN_HAS_CHANGED = 11;//Used to determined if transaction list has changed.
-
+    public static final int RETURN_SELECTED_CURRENCY = 12;
 
     public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
     public static final String RESULT_EDIT_TRANSACTION = "Edit Transaction Result";
@@ -83,6 +88,7 @@ public class Constants {
     public static final String RESULT_EDIT_LOCATION = "Edit Location Result";
     public static final String RESULT_NEW_LOCATION = "New Location Result";
 
+    public static final String RESULT_EDIT_CURRENCY = "Edit Currency Result";
 
     public static final String CHANGED = "Has Been Changed?";
 
