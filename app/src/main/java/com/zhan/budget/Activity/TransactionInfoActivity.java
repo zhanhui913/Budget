@@ -797,8 +797,9 @@ public class TransactionInfoActivity extends BaseActivity implements
             currentCurrency = new BudgetCurrency();
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }else{
+            currentCurrency = myRealm.copyFromRealm(currentCurrency);
         }
-        currentCurrency = myRealm.copyFromRealm(currentCurrency);
 
         Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         transactionCostCurrencyCodeText.setText(currentCurrency.getCurrencyCode());

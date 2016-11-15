@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -170,8 +171,9 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             currentCurrency = new BudgetCurrency();
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }else {
+            currentCurrency = myRealm.copyFromRealm(currentCurrency);
         }
-        currentCurrency = myRealm.copyFromRealm(currentCurrency);
 
         Toast.makeText(getContext(), "category generic fragment; default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();

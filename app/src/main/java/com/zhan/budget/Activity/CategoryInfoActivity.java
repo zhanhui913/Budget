@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -411,8 +412,9 @@ public class CategoryInfoActivity extends BaseActivity implements
             currentCurrency = new BudgetCurrency();
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }{
+            currentCurrency = myRealm.copyFromRealm(currentCurrency);
         }
-        currentCurrency = myRealm.copyFromRealm(currentCurrency);
 
         myRealm.close();
         Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();

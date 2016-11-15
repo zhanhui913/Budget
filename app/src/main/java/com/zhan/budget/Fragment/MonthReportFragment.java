@@ -111,8 +111,9 @@ public class MonthReportFragment extends BaseRealmFragment implements
             currentCurrency = new BudgetCurrency();
             currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
             currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }else {
+            currentCurrency = myRealm.copyFromRealm(currentCurrency);
         }
-        currentCurrency = myRealm.copyFromRealm(currentCurrency);
 
         Toast.makeText(getContext(), "month report fragment; default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();
