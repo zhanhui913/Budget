@@ -39,14 +39,14 @@ public class TransactionsForCategory extends BaseTransactions {
                 transactionList = myRealm.copyFromRealm(element);
                 float total = element.sum("price").floatValue();
 
-                transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
+                transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, currentCurrency, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
                 Log.d("ZHAN", "there are " + transactionList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
 
                 //update balance
-                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
+                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, currentCurrency));
 
                 updateTransactionStatus();
             }

@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.library.CircularView;
@@ -29,11 +29,13 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
 
     private Context context;
     private List<MonthReport> monthReportList;
+    private BudgetCurrency currentCurrency;
     private OnMonthReportAdapterInteractionListener mListener;
 
-    public MonthReportRecyclerAdapter(Fragment fragment, List<MonthReport> monthReportList) {
+    public MonthReportRecyclerAdapter(Fragment fragment, List<MonthReport> monthReportList, BudgetCurrency currentCurrency) {
         this.context = fragment.getContext();
         this.monthReportList = monthReportList;
+        this.currentCurrency = currentCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
         if (fragment instanceof OnMonthReportAdapterInteractionListener) {
@@ -46,6 +48,7 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
     public MonthReportRecyclerAdapter(Activity activity, List<MonthReport> monthReportList){
         this.context = activity;
         this.monthReportList = monthReportList;
+        this.currentCurrency = currentCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
         if(activity instanceof  OnMonthReportAdapterInteractionListener){
@@ -76,8 +79,6 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         viewHolder.expenseThisMonth.setText("You spent "+CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
         viewHolder.incomeThisMonth.setText("You earned "+CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), Constants.BUDGET_LOCALE));
 
-
-
         float savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
 
 
@@ -94,7 +95,6 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.red));
         }
         viewHolder.netThisMonth.setText("You saved "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
-
 
         /*
         if(monthReport.getFirstCategory() != null){

@@ -15,10 +15,10 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -39,12 +39,14 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     private Context context;
     private List<Transaction> transactionList;
     private boolean showDate;
+    private BudgetCurrency currentCurrency;
     private static OnTransactionAdapterInteractionListener mListener;
 
-    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
+    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, BudgetCurrency currentCurrency, boolean showDate) {
         this.context = fragment.getContext();
         this.showDate = showDate;
         this.transactionList = transactionList;
+        this.currentCurrency = currentCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnTransactionAdapterInteractionListener) {
@@ -54,10 +56,11 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }
     }
 
-    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
+    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, BudgetCurrency currentCurrency, boolean showDate){
         this.context = activity;
         this.showDate = showDate;
         this.transactionList = transactionList;
+        this.currentCurrency = currentCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if(activity instanceof  OnTransactionAdapterInteractionListener){
@@ -93,7 +96,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.accountIcon.setVisibility(View.GONE);
         }
 
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), transaction.getCurrency()));
 
         //If transaction's dayType is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {

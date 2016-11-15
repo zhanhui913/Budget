@@ -24,6 +24,7 @@ import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -41,6 +42,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -82,6 +84,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
+    private BudgetCurrency currentCurrency;
+
     public CategoryGenericFragment() {
         // Required empty public constructor
     }
@@ -116,6 +120,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         currentMonth = new Date();
 
+        getDefaultCurrency();
+
         TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
         emptyCategoryText.setText("Pull down to add an "+budgetType.toString()+" category");
 
@@ -123,7 +129,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, arrangementType, new OnStartDragListener() {
+        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, arrangementType, currentCurrency, new OnStartDragListener() {
                     @Override
                     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                         //isPulldownAllow = false;
@@ -154,6 +160,21 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         if(masterAllowPulldown){
             createPullDownToAddCategory();
         }
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
+
+        Toast.makeText(getContext(), "category generic fragment; default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
     }
 
     private void createPullDownToAddCategory(){

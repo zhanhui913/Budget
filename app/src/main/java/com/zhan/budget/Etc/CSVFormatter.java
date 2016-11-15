@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -41,9 +42,12 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
     private File csvFile;
 
-    public CSVFormatter(Context context, List<Transaction> transactionList, File csvFile){
+    private BudgetCurrency currency;
+
+    public CSVFormatter(Context context, List<Transaction> transactionList, BudgetCurrency currency, File csvFile){
         this.context = context;
         this.transactionList = transactionList;
+        this.currency = currency;
         this.csvFile = csvFile;
 
         //Option 1
@@ -137,7 +141,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getName()));
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), Constants.BUDGET_LOCALE)));
+                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), currency)));
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));
                 fileWriter.append(COMMA_DELIMITER);

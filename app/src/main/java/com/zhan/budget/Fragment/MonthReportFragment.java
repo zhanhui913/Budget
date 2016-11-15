@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.OverviewActivity;
@@ -19,6 +20,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.MonthReport;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -56,6 +59,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
     private List<Category> categoryList;
     private RealmResults<Category> resultsCategory;
 
+    private BudgetCurrency currentCurrency;
 
     public MonthReportFragment() {
         // Required empty public constructor
@@ -75,12 +79,15 @@ public class MonthReportFragment extends BaseRealmFragment implements
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
+
+        getDefaultCurrency();
+
         categoryList = new ArrayList<>();
         monthReportList = new ArrayList<>();
         monthReportListview = (RecyclerView) view.findViewById(R.id.monthReportListview);
         monthReportListview.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        monthReportRecyclerAdapter = new MonthReportRecyclerAdapter(this, monthReportList);
+        monthReportRecyclerAdapter = new MonthReportRecyclerAdapter(this, monthReportList, currentCurrency);
         monthReportListview.setAdapter(monthReportRecyclerAdapter);
 
         //Add divider
@@ -94,6 +101,21 @@ public class MonthReportFragment extends BaseRealmFragment implements
         createMonthCard();
         getCategoryList();
         updateYearInToolbar(0);
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
+
+        Toast.makeText(getContext(), "month report fragment; default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
     }
 
     /**

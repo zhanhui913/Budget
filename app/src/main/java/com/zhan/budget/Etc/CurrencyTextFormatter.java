@@ -1,5 +1,7 @@
 package com.zhan.budget.Etc;
 
+import com.zhan.budget.Model.Realm.BudgetCurrency;
+
 import java.text.DecimalFormat;
 import java.util.Currency;
 import java.util.Locale;
@@ -10,20 +12,23 @@ import java.util.Locale;
 public final class CurrencyTextFormatter {
 
     //Setting a max length because after this length, java represents doubles in scientific notation which breaks the formatter
-    static final int MAX_RAW_INPUT_LENGTH = 15;
+    public static final int MAX_RAW_INPUT_LENGTH = 15;
 
     private CurrencyTextFormatter(){}
 
-    public static String formatText(String val, Locale locale){
+    public static String formatText(String val, BudgetCurrency currency){
 
         //special case for the start of a negative number
         //if(val.equals("-")) return val;
 
-        final double CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(locale).getDefaultFractionDigits());
-        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
+        //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
+        //ie: $x.00
+
+        final double CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(Locale.CANADA).getDefaultFractionDigits());
+        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
 
         //if there's nothing left, that means we were handed an empty string. Also, cap the raw input so the formatter doesn't break.
-        if(!val.equals("") /*&& val.length() < MAX_RAW_INPUT_LENGTH*/ && !val.equals("-")) {
+        if(!val.equals("") && val.length() < MAX_RAW_INPUT_LENGTH && !val.equals("-")) {
             //Convert the string into a double, which will later be passed into the currency formatter
             double newTextValue = Double.valueOf(val);
 
@@ -41,13 +46,15 @@ public final class CurrencyTextFormatter {
             throw new IllegalArgumentException("Invalid argument in val");
         }*/
 
-        val = val.replace("$","") + "USD";
+        val = val.replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
 
         return val;
     }
 
-    public static float formatCurrency(String val, Locale locale){
-        final float CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(locale).getDefaultFractionDigits());
+    public static float formatCurrency(String val){
+        //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
+        //ie: $x.00
+        final float CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(Locale.CANADA).getDefaultFractionDigits());
 
         float newTextValue;
 
@@ -65,14 +72,14 @@ public final class CurrencyTextFormatter {
         return newTextValue;
     }
 
-    //Add $ infront of float
-    public static String formatFloat(float val, Locale locale){
-        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(locale);
-
-                 return currencyFormatter.format(val).replace("$","") + "USD";
+    public static String formatFloat(float val, BudgetCurrency currency){
+        //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
+        //ie: $x.00
+        DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
+        return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
     }
 
-    public static String stripCharacters(String value){
-        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","").replace("USD","");
+    public static String stripCharacters(String value, BudgetCurrency currency){
+        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","").replace(currency.getCurrencyCode(),"");
     }
 }

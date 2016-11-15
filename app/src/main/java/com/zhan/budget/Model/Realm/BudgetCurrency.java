@@ -2,8 +2,6 @@ package com.zhan.budget.Model.Realm;
 
 import org.parceler.Parcel;
 
-import java.util.Date;
-
 import io.realm.BudgetCurrencyRealmProxy;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -16,8 +14,6 @@ import io.realm.annotations.PrimaryKey;
         value = Parcel.Serialization.BEAN,
         analyze = {BudgetCurrency.class})
 public class BudgetCurrency extends RealmObject {
-
-
 
     @PrimaryKey
     private String currencyCode;

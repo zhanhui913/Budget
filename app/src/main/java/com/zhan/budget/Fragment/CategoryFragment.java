@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -15,6 +16,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -23,6 +25,8 @@ import com.zhan.budget.View.CustomViewPager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import io.realm.Realm;
 
 public class CategoryFragment extends BaseFragment {
 
@@ -34,6 +38,8 @@ public class CategoryFragment extends BaseFragment {
     private TextView leftTextView, rightTextView;
 
     private PieChartFragment pieChartFragment;
+
+    private BudgetCurrency currentCurrency;
 
     private boolean isCategoryIncomeCalculationComplete = false;
     private boolean isCategoryExpenseCalculationComplete = false;
@@ -60,6 +66,8 @@ public class CategoryFragment extends BaseFragment {
         leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.alizarin));
         rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.nephritis));
 
+        getDefaultCurrency();
+
         createTabs();
 
         //0 represents no change in month relative to currentMonth variable.
@@ -83,7 +91,7 @@ public class CategoryFragment extends BaseFragment {
             public void onComplete(float totalCost) {
                 isCategoryExpenseCalculationComplete = true;
                 totalExpenseCost = totalCost;
-                leftTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
+                leftTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, currentCurrency));
                 updatePieChart();
             }
         });
@@ -93,7 +101,7 @@ public class CategoryFragment extends BaseFragment {
             public void onComplete(float totalCost) {
                 isCategoryIncomeCalculationComplete = true;
                 totalIncomeCost = totalCost;
-                rightTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
+                rightTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, currentCurrency));
                 updatePieChart();
             }
         });
@@ -121,6 +129,22 @@ public class CategoryFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }
+
+        currentCurrency = myRealm.copyFromRealm(currentCurrency);
+
+        Toast.makeText(getContext(), "category fragment: default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
     }
 
     /**

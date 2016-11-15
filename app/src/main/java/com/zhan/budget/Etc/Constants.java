@@ -38,6 +38,10 @@ public class Constants {
     //Default account
     public static final String DEFAULT_ACCOUNT = "Default Account";
 
+    //Default currency Code and currency name
+    public static final String DEFAULT_CURRENCY_CODE = "USD";
+    public static final String DEFAULT_CURRENCY_NAME = "US Dollar";
+
     //Activity request
     public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
     public static final String REQUEST_NEW_TRANSACTION_DATE = "New Transaction Date";
