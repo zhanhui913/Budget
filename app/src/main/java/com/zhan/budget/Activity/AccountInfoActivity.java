@@ -86,8 +86,9 @@ public class AccountInfoActivity extends BaseActivity implements
 
         if(isNewAccount){
             deleteAccountBtn.setVisibility(View.GONE);
+        }else{
+            deleteAccountBtn.setVisibility(View.VISIBLE);
         }
-        //deleteAccountBtn.setVisibility(View.GONE);//Cant delete accounts for now
 
         //default color selected
         selectedColor = account.getColor();
@@ -192,7 +193,7 @@ public class AccountInfoActivity extends BaseActivity implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this account?");
+        message.setText(R.string.warning_delete_account);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)

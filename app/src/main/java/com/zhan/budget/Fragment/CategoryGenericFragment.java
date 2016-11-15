@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -385,7 +384,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?\nAll transactions with this category will no longer have this category associated to it");
+        message.setText(R.string.warning_delete_category);
 
         new AlertDialog.Builder(getContext())
                 .setView(promptView)

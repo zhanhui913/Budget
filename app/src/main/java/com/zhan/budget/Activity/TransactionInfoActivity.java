@@ -73,7 +73,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn, changeCurrencyBtn;
 
-    private TextView transactionCostView, transactionNameTextView, transactionCostCurrencyCodeText;
+    private TextView transactionCostView, transactionNameTextView, transactionCostCurrencyCodeText, currentPageTextView;
 
     private String priceString, noteString, locationString;
 
@@ -171,10 +171,12 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
         transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
+        currentPageTextView = (TextView)findViewById(R.id.currentPageTitle);
         transactionCostCurrencyCodeText = (TextView)findViewById(R.id.transactionCostCurrencyCodeText);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
+        currentPageTextView.setText(currentPage.toString());
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
         adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), transactionExpenseFragment, transactionIncomeFragment);
@@ -218,6 +220,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPage = BudgetType.EXPENSE;
             }
 
+            currentPageTextView.setText(currentPage.toString());
             currentCurrency = editTransaction.getCurrency();
 
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), currentCurrency);
@@ -412,6 +415,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedExpenseCategory.getName());
                         }
 
+                        currentPageTextView.setText(currentPage.toString());
 
                         break;
                     case 1:
@@ -425,6 +429,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedIncomeCategory.getName());
                         }
 
+                        currentPageTextView.setText(currentPage.toString());
 
                         break;
                 }
@@ -1038,7 +1043,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText("Category");
-        message.setText("Please make sure you have an "+type.toString().toLowerCase()+" category selected");
+        message.setText("Please make sure you have an "+currentPage.toString()+" category selected");
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)

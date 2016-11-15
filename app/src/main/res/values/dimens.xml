@@ -1,4 +1,20 @@
 <resources>
+<<<<<<< HEAD
+	<!-- Used for devices with width < 400dp -->
+
+	<!-- Default screen margins, per the Android Design guidelines. -->
+	<dimen name="nav_header_vertical_spacing">16dp</dimen>
+	<dimen name="nav_header_height">160dp</dimen>
+	<!-- Default screen margins, per the Android Design guidelines. -->
+	<dimen name="activity_horizontal_margin">16dp</dimen>
+	<dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="fab_margin">16dp</dimen>
+	<dimen name="letter_icon_size">60sp</dimen>
+
+	<dimen name="num_pad_text_size">20sp</dimen>
+
+	<!-- This includes the left and right padding which is 8dp each and the default background size
+=======
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
@@ -11,6 +27,7 @@
     <dimen name="num_pad_text_size">20sp</dimen>
 
     <!-- This includes the left and right padding which is 8dp each and the default background size
+>>>>>>> bug_44_v3
     for circular view which is 50dp-->
     <dimen name="left_padding_divider">66dp</dimen>
     <dimen name="right_padding_divider">0dp</dimen>
@@ -23,9 +40,12 @@
     <dimen name="item_left_padding">8dp</dimen>
     <dimen name="item_right_padding">8dp</dimen>
 
-    <dimen name="text_header_size">25sp</dimen>
-    <dimen name="text_title_size">17sp</dimen>
-    <dimen name="text_content_size">14sp</dimen>
+	<dimen name="item_small_padding">2dp</dimen>
+
+	<dimen name="text_header_size">25sp</dimen>
+	<dimen name="text_title_size">17sp</dimen>
+	<dimen name="text_content_size">14sp</dimen>
+	<dimen name="text_tiny_size">10sp</dimen>
 
     <dimen name="graph_height">150dp</dimen>
 

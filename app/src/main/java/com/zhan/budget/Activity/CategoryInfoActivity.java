@@ -17,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -117,8 +116,9 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         if(isNewCategory){
             deleteCategoryBtn.setVisibility(View.GONE);
+        }else{
+            deleteCategoryBtn.setVisibility(View.VISIBLE);
         }
-        //deleteCategoryBtn.setVisibility(View.GONE); //Cant delete Category for now
 
         //Income category has no need for budget
         if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
@@ -433,7 +433,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
+        message.setText(R.string.warning_delete_category);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
