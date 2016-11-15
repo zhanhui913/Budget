@@ -1,14 +1,18 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
@@ -50,6 +54,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
      */
     protected boolean isChanged = false;
 
+    protected LinearLayoutManager linearLayoutManager;
+    protected SwipeLayout currentSwipeLayoutTarget;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_transactions_for_generic;
@@ -67,8 +74,10 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);
 
+        linearLayoutManager = new LinearLayoutManager(instance);
+
         transactionListView = (RecyclerView) findViewById(R.id.transactionListView);
-        transactionListView.setLayoutManager(new LinearLayoutManager(instance));
+        transactionListView.setLayoutManager(linearLayoutManager);
 
         //Add divider
         transactionListView.addItemDecoration(
@@ -113,6 +122,48 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         });
     }
 
+    private void confirmDeleteTransaction(final int position){
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText("Confirm Delete");
+        message.setText(R.string.warning_delete_transaction);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteTransaction(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        closeSwipeItem(position);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForMonth.deleteFromRealm(position);
+        myRealm.commitTransaction();
+        isChanged = true;
+        updateTransactionList();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Protected functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * This gets called when a Transaction has been deleted or its dayType changed.
      */
@@ -156,6 +207,16 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     protected void updateEmptyListText(String value){
         emptyListTextView.setText(value);
+    }
+
+    protected void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    protected void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,13 +287,16 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     @Override
     public void onDeleteTransaction(int position){
-        myRealm.beginTransaction();
+        /*myRealm.beginTransaction();
         transactionsForMonth.deleteFromRealm(position);
         myRealm.commitTransaction();
 
         isChanged = true;
 
         updateTransactionList();
+*/
+
+        confirmDeleteTransaction(position);
     }
 
     @Override
