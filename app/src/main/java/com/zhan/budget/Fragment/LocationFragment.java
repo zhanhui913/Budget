@@ -182,8 +182,12 @@ public class LocationFragment extends BaseRealmFragment
         //This gives pie chart new location list
         pieChartFragment.setData(locationList, animate);
 
-        String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
-        centerPanelRightTextView.setText(totalLocationsCount + appendString);
+        if(totalLocationsCount == 0){
+            centerPanelRightTextView.setText("NA");
+        }else{
+            String appendString = (totalLocationsCount > 1) ? " times" : " time" ;
+            centerPanelRightTextView.setText(totalLocationsCount + appendString);
+        }
     }
 
     /**
