@@ -42,8 +42,8 @@
 	<!-- Warning -->
 	<string name="warning_delete_transaction">Are you sure you want to delete this transaction?</string>
 	<string name="warning_delete_category">Are you sure you want to delete this category?\nAll transactions with this category will no longer have this category associated to it</string>
-	<string name="warning_delete_account">Are you sure you want to delete this Account?\nAll transactions with this account will no longer have this account associated to it</string>
-
+	<string name="warning_delete_account">Are you sure you want to delete this account?\nAll transactions with this account will no longer have this account associated to it</string>
+	<string name="warning_delete_location">Are you sure you want to delete this location?\nAll transactions with this location will no longer have this location associated to it</string>
 
 	<!-- Etc -->
 	<string name="target_email">zhanapp@gmail.com</string>

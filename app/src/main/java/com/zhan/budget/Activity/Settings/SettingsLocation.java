@@ -141,14 +141,22 @@ public class SettingsLocation extends BaseRealmActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if(requestCode == Constants.RETURN_EDIT_LOCATION) {
-                Location locationReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_LOCATION));
 
-                Log.i(TAG, "----------- onActivityResult edit location ----------");
-                Log.d(TAG, "location name is "+locationReturned.getName());
-                Log.d(TAG, "location color is "+locationReturned.getColor());
-                Log.i(TAG, "----------- onActivityResult edit location ----------");
+                boolean deleteLocation = data.getExtras().getBoolean(Constants.RESULT_DELETE_LOCATION);
 
-                locationList.set(locationIndexEdited, locationReturned);
+                if(!deleteLocation){
+                    Location locationReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_LOCATION));
+
+                    Log.i(TAG, "----------- onActivityResult edit location ----------");
+                    Log.d(TAG, "location name is "+locationReturned.getName());
+                    Log.d(TAG, "location color is "+locationReturned.getColor());
+                    Log.i(TAG, "----------- onActivityResult edit location ----------");
+
+                    locationList.set(locationIndexEdited, locationReturned);
+                }else{
+                    locationList.remove(locationIndexEdited);
+                }
+
                 locationListAdapter.setLocationList(locationList);
                 updateLocationStatus();
             }else if(requestCode == Constants.RETURN_NEW_LOCATION){
