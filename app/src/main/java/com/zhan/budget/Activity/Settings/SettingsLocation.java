@@ -1,8 +1,10 @@
 package com.zhan.budget.Activity.Settings;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Activity.LocationInfoActivity;
@@ -53,6 +56,9 @@ public class SettingsLocation extends BaseRealmActivity implements
 
     private Activity instance;
 
+    private LinearLayoutManager linearLayoutManager;
+    private SwipeLayout currentSwipeLayoutTarget;
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_settings_location;
@@ -66,8 +72,10 @@ public class SettingsLocation extends BaseRealmActivity implements
 
         createToolbar();
 
+        linearLayoutManager = new LinearLayoutManager(this);
+
         locationListView = (RecyclerView)findViewById(R.id.locationListView);
-        locationListView.setLayoutManager(new LinearLayoutManager(this));
+        locationListView.setLayoutManager(linearLayoutManager);
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyLocationText = (TextView) findViewById(R.id.pullDownText);
@@ -136,6 +144,53 @@ public class SettingsLocation extends BaseRealmActivity implements
         }
     }
 
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
+    }
+
+    private void confirmDelete(final int position){
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText("Confirm Delete");
+        message.setText(R.string.warning_delete_location);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        closeSwipeItem(position);
+                        deleteLocation(position);
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        closeSwipeItem(position);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteLocation(int position){
+        myRealm.beginTransaction();
+        resultsLocation.get(position).deleteFromRealm();
+        myRealm.commitTransaction();
+
+        populateLocation();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,6 +236,19 @@ public class SettingsLocation extends BaseRealmActivity implements
 
     @Override
     public void onClickLocation(int position){
+        closeSwipeItem(position);
+        locationIndexEdited = position;
+        editLocation(position);
+    }
+
+    @Override
+    public void onDeleteLocation(int position){
+        confirmDelete(position);
+    }
+
+    @Override
+    public void onEditLocation(int position){
+        closeSwipeItem(position);
         locationIndexEdited = position;
         editLocation(position);
     }
