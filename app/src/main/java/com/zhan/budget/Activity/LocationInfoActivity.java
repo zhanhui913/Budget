@@ -84,10 +84,12 @@ public class LocationInfoActivity extends BaseActivity implements
         locationNameTextView = (TextView)findViewById(R.id.locationNameTextView);
         locationNameTextView.setText(location.getName());
 
-        /*if(isNewAccount){
-            deleteAccountBtn.setVisibility(View.GONE);
-        }*/
-        deleteLocationtBtn.setVisibility(View.GONE);//Cant delete location for now
+        if(isNewLocation){
+            deleteLocationtBtn.setVisibility(View.GONE);
+        }else{
+            deleteLocationtBtn.setVisibility(View.VISIBLE);//Cant delete location for now
+        }
+
 
 
         //default color selected
@@ -145,12 +147,12 @@ public class LocationInfoActivity extends BaseActivity implements
             }
         });
 
-        /*deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
+        deleteLocationtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDelete();
             }
-        });*/
+        });
     }
 
     private void changeName(){
@@ -193,7 +195,7 @@ public class LocationInfoActivity extends BaseActivity implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this location?");
+        message.setText(R.string.warning_delete_location);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -201,6 +203,21 @@ public class LocationInfoActivity extends BaseActivity implements
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent();
+                        Realm myRealm = Realm.getDefaultInstance();
+                        Location loc = myRealm.where(Location.class).equalTo("name", location.getName()).findFirst();
+                        myRealm.beginTransaction();
+                        loc.deleteFromRealm();
+                        myRealm.commitTransaction();
+                        myRealm.close();
+
+                        intent.putExtra(Constants.RESULT_DELETE_LOCATION, true); //deleting location
+                        setResult(RESULT_OK, intent);
+                        finish();
+
+
+
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -240,6 +257,7 @@ public class LocationInfoActivity extends BaseActivity implements
         myRealm.close();BudgetPreference.removeRealmCache(this);
 
         if(!isNewLocation){
+            intent.putExtra(Constants.RESULT_DELETE_LOCATION, false); //not deleting location
             intent.putExtra(Constants.RESULT_EDIT_LOCATION, wrapped);
         }else{
             intent.putExtra(Constants.RESULT_NEW_LOCATION, wrapped);
