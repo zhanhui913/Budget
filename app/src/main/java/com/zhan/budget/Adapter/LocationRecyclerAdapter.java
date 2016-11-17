@@ -152,13 +152,13 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
                 @Override
                 public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
                     Log.d("LocationRecyclerAdapter", "onupdate "+leftOffset+","+topOffset);
-                   // mListener.onPullDownAllow(false);
+                    mListener.onPullDownAllow(false);
                 }
 
                 @Override
                 public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
                     Log.d("LocationRecyclerAdapter", "onhandrelease :"+xvel+","+yvel);
-                    //mListener.onPullDownAllow(true);
+                    mListener.onPullDownAllow(true);
                 }
             });
 
@@ -201,5 +201,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         void onDeleteLocation(int position);
 
         void onEditLocation(int position);
+
+        void onPullDownAllow(boolean value);
     }
 }
