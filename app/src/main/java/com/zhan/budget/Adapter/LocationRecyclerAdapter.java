@@ -124,7 +124,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             icon = (CircularView) itemView.findViewById(R.id.locationIcon);
             name = (TextView) itemView.findViewById(R.id.locationName);
             amount = (TextView) itemView.findViewById(R.id.locationAmount);
-            swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeAccount);
+            swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeLocation);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
 
