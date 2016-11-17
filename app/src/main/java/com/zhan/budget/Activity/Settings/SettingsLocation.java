@@ -27,7 +27,11 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.PtrUIHandler;
+import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -81,6 +85,7 @@ public class SettingsLocation extends BaseRealmActivity implements
         emptyLocationText = (TextView) findViewById(R.id.pullDownText);
         emptyLocationText.setText("Pull down to add a location");
 
+        createPullToAddLocation();
         populateLocation();
     }
 
@@ -124,6 +129,74 @@ public class SettingsLocation extends BaseRealmActivity implements
                 updateLocationStatus();
             }
         });
+    }
+
+    private void createPullToAddLocation(){
+        frame = (PtrFrameLayout) findViewById(R.id.rotate_header_list_view_frame);
+
+        header = new PlusView(this);
+
+        frame.setHeaderView(header);
+
+        frame.setPtrHandler(new PtrHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout insideFrame) {
+                if (isPulldownAllow) {
+                    insideFrame.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            frame.refreshComplete();
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, locationListView, header);
+            }
+        });
+
+        frame.addPtrUIHandler(new PtrUIHandler() {
+
+            @Override
+            public void onUIReset(PtrFrameLayout frame) {
+                Log.d(TAG, "onUIReset");
+            }
+
+            @Override
+            public void onUIRefreshPrepare(PtrFrameLayout frame) {
+                Log.d(TAG, "onUIRefreshPrepare");
+            }
+
+            @Override
+            public void onUIRefreshBegin(PtrFrameLayout frame) {
+                Log.d(TAG, "onUIRefreshBegin");
+                header.playRotateAnimation();
+            }
+
+            @Override
+            public void onUIRefreshComplete(PtrFrameLayout frame) {
+                Log.d(TAG, "onUIRefreshComplete");
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        addLocation();
+                    }
+                }, 250);
+            }
+
+            @Override
+            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+
+            }
+        });
+    }
+
+    private void addLocation(){
+        Intent addLocationIntent = new Intent(this, LocationInfoActivity.class);
+        addLocationIntent.putExtra(Constants.REQUEST_NEW_LOCATION, true);
+        startActivityForResult(addLocationIntent, Constants.RETURN_NEW_LOCATION);
     }
 
     private void editLocation(int position){
@@ -222,6 +295,10 @@ public class SettingsLocation extends BaseRealmActivity implements
                 Log.d(TAG, "location color is "+locationReturned.getColor());
                 Log.i(TAG, "----------- onActivityResult new location ----------");
 
+                locationList.add(locationReturned);
+                locationListAdapter.setLocationList(locationList);
+                updateLocationStatus();
+
                 //Scroll to the last position
                 locationListView.scrollToPosition(locationListAdapter.getItemCount() - 1);
             }
@@ -251,5 +328,10 @@ public class SettingsLocation extends BaseRealmActivity implements
         closeSwipeItem(position);
         locationIndexEdited = position;
         editLocation(position);
+    }
+
+    @Override
+    public void onPullDownAllow(boolean value){
+        isPulldownAllow = value;
     }
 }

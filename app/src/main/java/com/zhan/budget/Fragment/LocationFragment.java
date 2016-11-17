@@ -542,4 +542,10 @@ public class LocationFragment extends BaseRealmFragment
         closeSwipeItem(position);
         editLocation(position);
     }
+
+
+    @Override
+    public void onPullDownAllow(boolean value){
+        //cannot pull down here
+    }
 }
