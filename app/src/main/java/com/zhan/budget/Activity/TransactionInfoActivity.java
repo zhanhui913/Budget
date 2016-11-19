@@ -237,7 +237,8 @@ public class TransactionInfoActivity extends BaseActivity implements
         getAllLocations();
         createToolbar();
         addListeners();
-        createAccountDialog();
+        //createAccountDialog();
+        checkAccountCount();
         createDateDialog();
     }
 
@@ -525,7 +526,124 @@ public class TransactionInfoActivity extends BaseActivity implements
         dateDialog = dateAlertDialogBuilder.create();
     }
 
-    private void createAccountDialog(){
+    private void checkAccountCount(){
+        final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
+
+        //Get list of accounts
+        resultsAccount = myRealm.where(Account.class).findAllSortedAsync("isDefault", Sort.DESCENDING);
+        resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
+            @Override
+            public void onChange(RealmResults<Account> element) {
+                element.removeChangeListener(this);
+                Log.d("REALMZ1", "getAllAccounts closing  realm");
+
+                createAccountDialog(myRealm.copyFromRealm(element));
+            }
+        });
+    }
+
+
+    private void createAccountDialog(List<Account> tempAccountList){
+        AlertDialog.Builder accountAlertDialogBuilder;
+
+        if(tempAccountList.size() > 0){
+            View accountDialogView = View.inflate(instance, R.layout.alertdialog_number_picker, null);
+
+            final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
+
+            TextView title = (TextView)accountDialogView.findViewById(R.id.title);
+            title.setText("Select Account");
+
+            accountNameList = new ArrayList<>();
+
+            for (int i = 0; i < tempAccountList.size(); i++) {
+                Log.d("ZHAP", i+"->"+tempAccountList.get(i).getName());
+                accountNameList.add(tempAccountList.get(i).getName());
+            }
+
+            accountPicker.setMinValue(0);
+            accountPicker.setMaxValue(accountNameList.size() - 1);
+            accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
+
+            accountPicker.setWrapSelectorWheel(false);
+
+            boolean doesTransactionHaveAccount = false;
+
+            int pos = 0; //default is first item to be selected in the spinner
+            if (!isNewTransaction) {
+                for (int i = 0; i < tempAccountList.size(); i++) {
+                    if (editTransaction.getAccount() != null) {
+                        doesTransactionHaveAccount = true;
+                        if (editTransaction.getAccount().getId().equalsIgnoreCase(tempAccountList.get(i).getId())) {
+                            pos = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            selectedAccountIndexInSpinner = pos;
+
+            //if there is a default account
+            boolean isThereDefaultAccount = false;
+
+            for(int i = 0; i < tempAccountList.size(); i++){
+                if(resultsAccount.get(i).isDefault()){
+                    isThereDefaultAccount = true;
+                    break;
+                }
+            }
+
+            if(isThereDefaultAccount || doesTransactionHaveAccount){
+                selectedAccount = tempAccountList.get(selectedAccountIndexInSpinner);
+            }
+
+            accountPicker.setValue(selectedAccountIndexInSpinner);
+
+            accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+                    .setView(accountDialogView)
+                    .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            selectedAccountIndexInSpinner = accountPicker.getValue();
+                            selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //Reset the selection back to previous
+                            accountPicker.setValue(selectedAccountIndexInSpinner);
+                            dialog.dismiss();
+                        }
+                    });
+        }else{
+            View accountDialogView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView)accountDialogView.findViewById(R.id.genericTitle);
+            TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
+
+            title.setText("No Account");
+            message.setText("There is no account available for selection");
+
+            accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+                    .setView(accountDialogView)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        }
+                    });
+        }
+
+        accountDialog = accountAlertDialogBuilder.create();
+    }
+
+
+
+
+
+
+
+    /*
+    private void createAccountDialog(List<Account> tempAccountList){
         View accountDialogView = View.inflate(instance, R.layout.alertdialog_number_picker, null);
 
         final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
@@ -554,9 +672,9 @@ public class TransactionInfoActivity extends BaseActivity implements
                 //Collections.swap(accountNameList, 0, defaultAccountIndex);
                 //Collections.swap(resultsAccount, 0 , defaultAccountIndex);
 
-                accountPicker.setMinValue(0);
 
                 if (accountNameList.size() > 0) {
+                    accountPicker.setMinValue(0);
                     accountPicker.setMaxValue(accountNameList.size() - 1);
                     accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
                 }
@@ -617,7 +735,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 });
 
         accountDialog = accountAlertDialogBuilder.create();
-    }
+    }*/
 
     private void createNoteDialog(){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
