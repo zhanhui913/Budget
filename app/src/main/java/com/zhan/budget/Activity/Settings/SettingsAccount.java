@@ -84,7 +84,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
-        emptyAccountText.setText("Pull down to add an account");
+        emptyAccountText.setText(String.format(getString(R.string.pull_down_add_account)));
 
         createPullToAddAccount();
         populateAccount();

@@ -117,7 +117,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         currentMonth = new Date();
 
         TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyCategoryText.setText("Pull down to add an "+budgetType.toString()+" category");
+        emptyCategoryText.setText(getString(R.string.pull_down_add_category, budgetType.toString()));
 
         transactionMonthList = new ArrayList<>();
 

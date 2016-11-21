@@ -83,7 +83,7 @@ public class SettingsLocation extends BaseRealmActivity implements
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyLocationText = (TextView) findViewById(R.id.pullDownText);
-        emptyLocationText.setText("Pull down to add a location");
+        emptyLocationText.setText(String.format(getString(R.string.pull_down_add_location)));
 
         createPullToAddLocation();
         populateLocation();

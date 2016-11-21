@@ -622,7 +622,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
 
             title.setText("No Account");
-            message.setText("There is no account available for selection");
+            message.setText(getString(R.string.empty_category_selection));
 
             accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                     .setView(accountDialogView)
