@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -52,6 +54,8 @@ public class LocationFragment extends BaseRealmFragment
     private OnLocationInteractionListener mListener;
     private Date currentMonth;
 
+    private ViewGroup emptyLayout;
+
     private RealmResults<Location> resultsLocation;
     private List<Location> locationList;
     private LocationRecyclerAdapter locationAdapter;
@@ -59,7 +63,7 @@ public class LocationFragment extends BaseRealmFragment
 
     private PieChartFragment pieChartFragment;
 
-    private TextView centerPanelLeftTextView, centerPanelRightTextView;
+    private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyLocationText;
 
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
@@ -102,6 +106,13 @@ public class LocationFragment extends BaseRealmFragment
                 new HorizontalDividerItemDecoration.Builder(getContext())
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
+
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
+        emptyLocationText = (TextView) view.findViewById(R.id.pullDownText);
+        emptyLocationText.setText(getString(R.string.empty_location));
+
+        ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
+        downArrow.setVisibility(View.INVISIBLE);
 
         //Setup pie chart
         pieChartFragment = PieChartFragment.newInstance(locationList);
@@ -221,6 +232,18 @@ public class LocationFragment extends BaseRealmFragment
         }else{
             String appendString = (totalLocationsCount > 1) ? " times" : " time" ;
             centerPanelRightTextView.setText(totalLocationsCount + appendString);
+        }
+
+        updateLocationStatus();
+    }
+
+    private void updateLocationStatus(){
+        if(locationAdapter.getItemCount() > 0){
+            emptyLayout.setVisibility(View.GONE);
+            locationListview.setVisibility(View.VISIBLE);
+        }else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            locationListview.setVisibility(View.GONE);
         }
     }
 
@@ -445,6 +468,7 @@ public class LocationFragment extends BaseRealmFragment
 
                     populateLocationWithNoInfo(currentMonth, true);
                 }
+                updateLocationStatus();
             }
         }
     }
