@@ -406,7 +406,8 @@ public class CalendarFragment extends BaseRealmFragment implements
 
             @Override
             public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
-                return String.valueOf(defaultValue.toUpperCase());
+                //return String.valueOf(defaultValue.toUpperCase());
+                return DateUtil.getDayOfWeek(getContext(), dayOfWeek).toUpperCase();
             }
         });
 

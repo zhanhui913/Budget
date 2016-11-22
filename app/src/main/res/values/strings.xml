@@ -48,6 +48,14 @@
 	<!-- Etc -->
 	<string name="target_email">zhanapp@gmail.com</string>
 
+	<string name="Sunday">Sun</string>
+	<string name="Monday">Mon</string>
+	<string name="Tuesday">Tue</string>
+	<string name="Wednesday">Wed</string>
+	<string name="Thursday">Thu</string>
+	<string name="Friday">Fri</string>
+	<string name="Saturday">Sat</string>
+
 	<string name="transaction">Transaction</string>
 	<string name="account">Account</string>
 	<string name="category">Category</string>

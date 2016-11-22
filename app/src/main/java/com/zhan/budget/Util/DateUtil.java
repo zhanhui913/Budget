@@ -1,6 +1,9 @@
 package com.zhan.budget.Util;
 
+import android.content.Context;
+
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -293,5 +296,32 @@ public final class DateUtil {
      */
     public static Date getLastDateOfYear(Date date){
         return getPreviousDate(getNextYear(date));
+    }
+
+    /**
+     * Gets the string value of the day, useful for localization
+     * @param context
+     * @param value
+     * @return
+     */
+    public static String getDayOfWeek(Context context, int value){
+        switch(value){
+            case 1:
+                return context.getString(R.string.Sunday);
+            case 2:
+                return context.getString(R.string.Monday);
+            case 3:
+                return context.getString(R.string.Tuesday);
+            case 4:
+                return context.getString(R.string.Wednesday);
+            case 5:
+                return context.getString(R.string.Thursday);
+            case 6:
+                return context.getString(R.string.Friday);
+            case 7:
+                return context.getString(R.string.Saturday);
+            default:
+                return context.getString(R.string.Sunday);
+        }
     }
 }
