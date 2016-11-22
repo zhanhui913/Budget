@@ -32,7 +32,6 @@ import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
 
@@ -40,11 +39,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.PtrUIHandler;
-import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -59,8 +53,6 @@ public class AccountFragment extends BaseRealmFragment implements
     private OnAccountInteractionListener mListener;
 
     private ViewGroup emptyLayout;
-    private PtrFrameLayout frame;
-    private PlusView header;
 
     private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyAccountText;
 
@@ -72,7 +64,6 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private PieChartFragment pieChartFragment;
 
-    private Boolean isPulldownAllow = true;
     private Date currentMonth;
     private RealmResults<Transaction> resultsTransaction;
     private List<Transaction> transactionMonthList;
@@ -133,7 +124,6 @@ public class AccountFragment extends BaseRealmFragment implements
         pieChartFragment = PieChartFragment.newInstance(accountList);
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
-        //createPullToAddAccount();
         populateAccountWithNoInfo();
 
         //0 represents no change in month relative to currentMonth variable.
@@ -256,75 +246,6 @@ public class AccountFragment extends BaseRealmFragment implements
             }
         };
         loader.execute();
-    }
-
-    //Dont allow pull down in this fragment
-    private void createPullToAddAccount(){
-        frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
-
-        header = new PlusView(getContext());
-
-        frame.setHeaderView(header);
-
-        frame.setPtrHandler(new PtrHandler() {
-            @Override
-            public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if (isPulldownAllow) {
-                    insideFrame.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            frame.refreshComplete();
-                        }
-                    }, 500);
-                }
-            }
-
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
-            }
-        });
-
-        frame.addPtrUIHandler(new PtrUIHandler() {
-
-            @Override
-            public void onUIReset(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIReset");
-            }
-
-            @Override
-            public void onUIRefreshPrepare(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIRefreshPrepare");
-            }
-
-            @Override
-            public void onUIRefreshBegin(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIRefreshBegin");
-                header.playRotateAnimation();
-            }
-
-            @Override
-            public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIRefreshComplete");
-                frame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        addAccount();
-                    }
-                }, 250);
-            }
-
-            @Override
-            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
-
-            }
-        });
-    }
-
-    private void addAccount(){
-        Intent addAccountIntent = new Intent(getContext(), AccountInfoActivity.class);
-        addAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, true);
-        startActivityForResult(addAccountIntent, Constants.RETURN_NEW_ACCOUNT);
     }
 
     private void editAccount(int position){
@@ -521,7 +442,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onPullDownAllow(boolean value){
-        isPulldownAllow = value;
+        //cannot pull down
     }
 
     @Override
