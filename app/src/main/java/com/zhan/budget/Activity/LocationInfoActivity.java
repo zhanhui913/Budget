@@ -167,7 +167,7 @@ public class LocationInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         locationNameTextView.setText(input.getText().toString());
 
@@ -177,7 +177,7 @@ public class LocationInfoActivity extends BaseActivity implements
                         locationCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
                         locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));                    }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -200,7 +200,7 @@ public class LocationInfoActivity extends BaseActivity implements
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
 
@@ -220,7 +220,7 @@ public class LocationInfoActivity extends BaseActivity implements
 
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

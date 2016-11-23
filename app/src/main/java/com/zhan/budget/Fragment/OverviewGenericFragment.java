@@ -205,12 +205,12 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         new AlertDialog.Builder(getContext())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteCategory(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

@@ -64,7 +64,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setView(promptView)
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(context.getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
 

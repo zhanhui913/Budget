@@ -510,12 +510,12 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder dateAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setView(dateDialogView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         selectedDate = tempDate;
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         tempDate = selectedDate;
                         dialog.dismiss();
@@ -602,13 +602,13 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                     .setView(accountDialogView)
-                    .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             selectedAccountIndexInSpinner = accountPicker.getValue();
                             selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
                         }
                     })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             //Reset the selection back to previous
                             accountPicker.setValue(selectedAccountIndexInSpinner);
@@ -626,7 +626,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                     .setView(accountDialogView)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                         }
@@ -749,7 +749,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
 
@@ -766,7 +766,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -814,7 +814,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString();
 
@@ -827,7 +827,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -866,7 +866,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (quantityNumberPicker.getValue() == 0) {
                             isScheduledTransaction = false;
@@ -881,7 +881,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -1127,8 +1127,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

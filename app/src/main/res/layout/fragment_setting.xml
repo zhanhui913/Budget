@@ -38,7 +38,7 @@
                 android:id="@+id/themeContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="day mode"/>
+                android:text="@string/setting_content_theme_day"/>
         </LinearLayout>
 
         <View
@@ -64,7 +64,7 @@
                 android:id="@+id/firstDayContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="sunday"/>
+                android:text="@string/setting_content_day_sun"/>
         </LinearLayout>
 
         <View
