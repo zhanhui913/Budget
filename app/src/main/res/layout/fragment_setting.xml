@@ -13,9 +13,7 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="GENERAL" />
+            android:text="@string/setting_header_general" />
 
         <View
             android:layout_width="match_parent"
@@ -34,7 +32,7 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Current Theme"/>
+                android:text="@string/setting_title_theme"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/themeContent"
@@ -60,7 +58,7 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="First day of the week"/>
+                android:text="@string/setting_title_day"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/firstDayContent"
@@ -86,12 +84,12 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Categories"/>
+                android:text="@string/setting_title_category"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manage categories. Change icon, color, and others."/>
+                android:text="@string/setting_content_category"/>
         </LinearLayout>
 
         <View
@@ -111,13 +109,13 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Accounts"/>
+                android:text="@string/setting_title_account"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/defaultAccountContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manage accounts. Change icons and others."/>
+                android:text="@string/setting_content_account"/>
         </LinearLayout>
 
         <View
@@ -137,21 +135,19 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="Locations"/>
+                      android:text="@string/setting_title_location"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                       android:id="@+id/locationContent"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="Manage locations. Change colors."/>
+                      android:text="@string/setting_content_location"/>
         </LinearLayout>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="DATA"/>
+            android:text="@string/setting_header_data"/>
 
         <View
             android:layout_width="match_parent"
@@ -170,13 +166,13 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Backup data"/>
+                android:text="@string/setting_title_backup_data"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/backupContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="last backup Feb 2, 2016"/>
+                android:text="@string/setting_content_backup_data"/>
         </LinearLayout>
 
         <View
@@ -189,7 +185,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:text="Restore data"/>
+            android:text="@string/setting_title_restore_data"/>
 
         <View
             android:layout_width="match_parent"
@@ -201,7 +197,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:text="Reset data"/>
+            android:text="@string/setting_title_reset_data"/>
 
         <View
             android:layout_width="match_parent"
@@ -213,14 +209,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:text="Export data to CSV"/>
+            android:text="@string/setting_title_export_data"/>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="FEEDBACK"/>
+            android:text="@string/setting_header_feedback"/>
 
         <View
             android:layout_width="match_parent"
@@ -246,13 +240,13 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="Email me"/>
+                      android:text="@string/setting_title_email"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                       android:id="@+id/emailContent"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="feedback for the app"/>
+                      android:text="@string/setting_content_email"/>
         </LinearLayout>
 
         <View
@@ -265,7 +259,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:text="Tour"/>
+            android:text="@string/setting_title_tour"/>
 
         <!-- remove for now in v1.0.0 -->
         <View
@@ -282,7 +276,7 @@
             android:paddingBottom="10dp"
             android:background="?attr/themeColorBtn"
             android:visibility="gone"
-            android:text="FAQ"/>
+            android:text="@string/setting_title_faq"/>
 
         <View
             android:layout_width="match_parent"
@@ -301,13 +295,13 @@
             <TextView style="@style/SettingsTextViewButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Open Source Licenses"/>
+                android:text="@string/setting_title_open_source"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/openSourceContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="License details for open source software used"/>
+                android:text="@string/setting_content_open_source"/>
         </LinearLayout>
 
         <TextView

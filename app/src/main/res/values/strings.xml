@@ -88,7 +88,7 @@
 
 	<!-- Settings Fragment -->
 	<string name="setting_header_general">General</string>
-	<string name="setting_header_date">Data</string>
+	<string name="setting_header_data">Data</string>
 	<string name="setting_header_feedback">Feedback</string>
 
 	<!-- GENERAL -->
@@ -116,6 +116,7 @@
 	<string name="setting_title_email">Email me</string>
 	<string name="setting_content_email">feedback for the app</string>
 	<string name="setting_title_tour">Tour</string>
+	<string name="setting_title_faq">FAQ</string>
 	<string name="setting_title_open_source">Open Source Licenses</string>
 	<string name="setting_content_open_source">License details for open source software used</string>
 </resources>
