@@ -47,9 +47,9 @@
 
 	<!-- Warning -->
 	<string name="warning_delete_transaction">Delete this transaction?</string>
-	<string name="warning_delete_category">Are you sure you want to delete this category?\nAll transactions with this category will no longer have this category associated to it</string>
-	<string name="warning_delete_account">Are you sure you want to delete this account?\nAll transactions with this account will no longer have this account associated to it</string>
-	<string name="warning_delete_location">Are you sure you want to delete this location?\nAll transactions with this location will no longer have this location associated to it</string>
+	<string name="warning_delete_category">All transactions with this category will no longer have this category associated to it once deleted</string>
+	<string name="warning_delete_account">All transactions with this account will no longer have this account associated to it once deleted</string>
+	<string name="warning_delete_location">All transactions with this location will no longer have this location associated to it once deleted</string>
 
 	<!-- Fragments in navigation drawer -->
 	<string name="nav_calendar">Calendar</string>
@@ -133,10 +133,12 @@
 	<string name="setting_content_open_source">License details for open source software used</string>
 
 	<!-- Dialogs -->
+	<string name="dialog_title_delete">Delete</string>
 	<string name="dialog_button_ok">OK</string>
 	<string name="dialog_button_select">SELECT</string>
 	<string name="dialog_button_delete">DELETE</string>
 	<string name="dialog_button_save">SAVE</string>
 	<string name="dialog_button_reset">RESET</string>
 	<string name="dialog_button_cancel">CANCEL</string>
+
 </resources>

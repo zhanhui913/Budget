@@ -290,8 +290,8 @@ public class AccountFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this Account?\nAll transactions with this account will no longer have this account associated to it");
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(getString(R.string.warning_delete_account));
 
         new AlertDialog.Builder(getContext())
                 .setView(promptView)

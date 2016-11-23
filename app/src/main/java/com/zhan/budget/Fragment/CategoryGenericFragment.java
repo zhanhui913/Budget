@@ -362,7 +362,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_category);
 
         new AlertDialog.Builder(getContext())
