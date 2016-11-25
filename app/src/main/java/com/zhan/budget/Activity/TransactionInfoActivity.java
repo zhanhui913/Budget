@@ -1123,7 +1123,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(getString(R.string.category));
-        message.setText("Please make sure you have an "+currentPage.toString()+" category selected");
+        message.setText(String.format(getString(R.string.category_selected_warning), currentPage.toString()));
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)

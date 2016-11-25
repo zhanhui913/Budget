@@ -141,7 +141,6 @@
 	<string name="setting_title_export_data">Export data to CSV</string>
 	<string name="setting_content_export_data_sort">Sort by</string>
 
-
 	<!-- FEEDBACK -->
 	<string name="setting_title_email">Email me</string>
 	<string name="setting_content_email">feedback for the app</string>
@@ -159,4 +158,6 @@
 	<string name="dialog_button_reset">RESET</string>
 	<string name="dialog_button_cancel">CANCEL</string>
 
+	<!-- ETC -->
+	<string name="category_selected_warning">Make sure a %s category is selected</string>
 </resources>
