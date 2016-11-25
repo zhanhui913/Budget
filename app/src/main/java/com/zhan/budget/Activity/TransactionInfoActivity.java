@@ -253,9 +253,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(!isNewTransaction){
-                getSupportActionBar().setTitle("Edit Transaction");
+                getSupportActionBar().setTitle(getString(R.string.edit_transaction));
             }else{
-                getSupportActionBar().setTitle("Add Transaction");
+                getSupportActionBar().setTitle(getString(R.string.add_transaction));
             }
         }
     }
@@ -552,7 +552,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
 
             TextView title = (TextView)accountDialogView.findViewById(R.id.title);
-            title.setText("Select Account");
+            title.setText(getString(R.string.account));
 
             accountNameList = new ArrayList<>();
 
@@ -621,7 +621,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             TextView title = (TextView)accountDialogView.findViewById(R.id.genericTitle);
             TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
 
-            title.setText("No Account");
+            title.setText(getString(R.string.account));
             message.setText(getString(R.string.empty_category_selection));
 
             accountAlertDialogBuilder = new AlertDialog.Builder(instance)
@@ -743,8 +743,8 @@ public class TransactionInfoActivity extends BaseActivity implements
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Note");
-        input.setHint("Note");
+        title.setText(getString(R.string.add_note));
+        input.setHint(getString(R.string.note));
         input.setText(noteString);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
@@ -803,10 +803,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_autocomplete, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Location");
+        title.setText(getString(R.string.add_location));
 
         inputLocation = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
-        inputLocation.setHint("Location");
+        inputLocation.setHint(getString(R.string.location));
         inputLocation.setText(locationString);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
@@ -849,7 +849,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         final ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
 
         //Initializing a new string array with elements
-        final String[] values= {"days", "weeks", "months"};
+        final String[] values= {getString(R.string.days), getString(R.string.weeks), getString(R.string.months)};
 
         //Populate NumberPicker values from String array values
         //Set the minimum value of NumberPicker
@@ -1122,7 +1122,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Category");
+        title.setText(getString(R.string.category));
         message.setText("Please make sure you have an "+currentPage.toString()+" category selected");
 
         new AlertDialog.Builder(instance)

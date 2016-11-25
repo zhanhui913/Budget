@@ -77,6 +77,20 @@
 	<string name="category_expense">Expense</string>
 	<string name="category_income">Income</string>
 	<string name="location">Location</string>
+	<string name="note">Note</string>
+
+	<!-- Title when adding/editting item-->
+	<string name="add_transaction">Add transaction</string>
+	<string name="add_category_expense">Add expense category</string>
+	<string name="add_category_income">Add income category</string>
+	<string name="add_account">Add account</string>
+	<string name="add_location">Add location</string>
+	<string name="add_note">Add note</string>
+	<string name="edit_transaction">Edit transaction</string>
+	<string name="edit_category_expense">Edit expense category</string>
+	<string name="edit_category_income">Edit income category</string>
+	<string name="edit_account">Edit account</string>
+	<string name="edit_location">Edit location</string>
 
 	<string name="pull_down_add_transaction">Z Pull down to add a transaction</string>
 	<string name="pull_down_add_category">Z Pull down to add an %s category</string>
@@ -87,6 +101,10 @@
 	<string name="empty_category">There is no %s category</string>
 	<string name="empty_account">There is no account</string>
 	<string name="empty_location">There is no location</string>
+
+	<string name="days">days</string>>
+	<string name="weeks">weeks</string>>
+	<string name="months">months</string>>
 
 	<!-- Monthly Report Fragment -->
 	<string name="you_spent">You spent %s</string>
