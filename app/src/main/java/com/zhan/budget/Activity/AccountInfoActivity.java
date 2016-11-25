@@ -159,7 +159,7 @@ public class AccountInfoActivity extends BaseActivity implements
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText(getString(R.string.account));
+        genericTitle.setText(getString(R.string.name));
         input.setText(accountNameTextView.getText());
         input.setHint(getString(R.string.account));
 

@@ -164,9 +164,9 @@ public class CategoryInfoActivity extends BaseActivity implements
         
         if(getSupportActionBar() != null){
             if(isNewCategory){
-                getSupportActionBar().setTitle("Add Category");
+                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.add_category_expense) : getString(R.string.add_category_income));
             }else{
-                getSupportActionBar().setTitle("Edit Category");
+                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.edit_category_expense) : getString(R.string.edit_category_income));
             }
         }
     }
@@ -235,9 +235,9 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Category Name");
+        genericTitle.setText(getString(R.string.name));
         input.setText(categoryNameTextView.getText());
-        input.setHint("Category");
+        input.setHint(getString(R.string.category));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(promptView)
@@ -272,7 +272,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         //Remove any extra un-needed signs
         priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
-        title.setText("Change Budget");
+        title.setText(getString(R.string.budget));
         budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         new AlertDialog.Builder(this)
@@ -549,7 +549,7 @@ public class CategoryInfoActivity extends BaseActivity implements
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(categoryNameTextView.getText().toString())){
                 save();
             }else{
-                Util.createSnackbar(getBaseContext(), (View)categoryNameTextView.getParent(), "Please input a valid name for this category");
+                Util.createSnackbar(getBaseContext(), (View)categoryNameTextView.getParent(), getString(R.string.category_valid_name_warning));
             }
 
             return true;

@@ -118,9 +118,9 @@ public class LocationInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(isNewLocation){
-                getSupportActionBar().setTitle("Add Location");
+                getSupportActionBar().setTitle(getString(R.string.add_location));
             }else{
-                getSupportActionBar().setTitle("Edit Location");
+                getSupportActionBar().setTitle(getString(R.string.edit_location));
             }
         }
     }
@@ -161,9 +161,9 @@ public class LocationInfoActivity extends BaseActivity implements
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Location Name");
+        genericTitle.setText(getString(R.string.name));
         input.setText(locationNameTextView.getText());
-        input.setHint("Location");
+        input.setHint(getString(R.string.location));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
