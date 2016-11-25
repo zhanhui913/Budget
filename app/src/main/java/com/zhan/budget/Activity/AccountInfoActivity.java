@@ -116,9 +116,9 @@ public class AccountInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(isNewAccount){
-                getSupportActionBar().setTitle("Add Account");
+                getSupportActionBar().setTitle(getString(R.string.add_account));
             }else{
-                getSupportActionBar().setTitle("Edit Account");
+                getSupportActionBar().setTitle(getString(R.string.edit_account));
             }
         }
     }
@@ -159,9 +159,9 @@ public class AccountInfoActivity extends BaseActivity implements
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Account Name");
+        genericTitle.setText(getString(R.string.account));
         input.setText(accountNameTextView.getText());
-        input.setHint("Account");
+        input.setHint(getString(R.string.account));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
