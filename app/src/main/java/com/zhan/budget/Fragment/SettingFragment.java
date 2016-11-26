@@ -455,7 +455,7 @@ public class SettingFragment extends BaseFragment {
                 .setView(sortDialogView)
                 .setPositiveButton(getString(R.string.dialog_button_select), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String selectedString = sortListType.get(sortPicker.getValue()).toString();
+                        String selectedString = sortListType.get(sortPicker.getValue());
                         getTransactionListForCSV(selectedString);
                     }
                 })
@@ -632,15 +632,15 @@ public class SettingFragment extends BaseFragment {
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Reset");
-        message.setText("Resetting data will remove all data you've entered, are you sure you want to reset?");
+        title.setText(R.string.reset);
+        message.setText(R.string.reset_data_message);
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton(getString(R.string.dialog_button_reset), new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_reset, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Util.createSnackbar(getContext(), getView(), "Resetting...");
+                        Util.createSnackbar(getContext(), getView(), getString(R.string.resetting));
 
                         BudgetPreference.resetFirstTime(getContext());
 
@@ -653,7 +653,7 @@ public class SettingFragment extends BaseFragment {
                         Realm.deleteRealm(config);
                     }
                 })
-                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -703,7 +703,7 @@ public class SettingFragment extends BaseFragment {
         intent.putExtra(Intent.EXTRA_STREAM, u);
 
         // start email intent
-        startActivity(Intent.createChooser(intent, "Send email"));
+        startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
     }
 
     public void email(){
@@ -711,10 +711,10 @@ public class SettingFragment extends BaseFragment {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.target_email)});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_email_title));
 
         // start email intent
-        startActivity(Intent.createChooser(intent, "Send email"));
+        startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
     }
 
 }

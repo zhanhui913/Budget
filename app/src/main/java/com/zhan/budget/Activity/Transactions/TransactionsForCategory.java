@@ -16,8 +16,6 @@ import org.parceler.Parcels;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-import static com.zhan.budget.R.string.account;
-
 public class TransactionsForCategory extends BaseTransactions {
 
     private Category selectedCategory;
@@ -26,7 +24,6 @@ public class TransactionsForCategory extends BaseTransactions {
     protected void getDifferentData(){
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
         updateTitleName(selectedCategory.getName());
-        //updateEmptyListText("There is no transaction for '"+selectedCategory.getName()+"' during "+DateUtil.convertDateToStringFormat2(beginMonth));
         updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), selectedCategory.getName(), DateUtil.convertDateToStringFormat2(beginMonth)));
     }
 

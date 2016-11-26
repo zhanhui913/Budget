@@ -16,8 +16,6 @@ import org.parceler.Parcels;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-import static com.zhan.budget.R.string.account;
-
 public class TransactionsForLocation extends BaseTransactions {
 
     private Location location;
@@ -26,7 +24,6 @@ public class TransactionsForLocation extends BaseTransactions {
     protected void getDifferentData(){
         location = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION));
         updateTitleName(location.getName());
-        //updateEmptyListText("There is no transaction for '"+location.getName()+"' during "+DateUtil.convertDateToStringFormat2(beginMonth));
         updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), location.getName(), DateUtil.convertDateToStringFormat2(beginMonth)));
     }
 

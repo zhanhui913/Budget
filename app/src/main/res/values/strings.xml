@@ -99,8 +99,8 @@
 	<string name="empty_category">There is no %s category</string>
 	<string name="empty_account">There is no account</string>
 	<string name="empty_location">There is no location</string>
+	<string formatted="false" name="empty_transaction_custom_date">There is no transaction for \'%s\' during %s</string>
 
-	<string name="empty_transaction_custom_date">There is no transaction for %s during %s</string>
 
 	<!-- Monthly Report Fragment -->
 	<string name="you_spent">You spent %s</string>
@@ -129,7 +129,7 @@
 	<!-- DATA -->
 	<string name="setting_title_backup_data">Backup data</string>
 	<string name="setting_content_backup_data_successful">Backup data successful</string>
-	<string name="setting_content_backup_data">last backup : %s</string>
+	<string formatted="false" name="setting_content_backup_data">last backup : %s</string>
 	<string name="setting_title_restore_data">Restore data</string>
 	<string name="setting_content_restore_data_successful">Restore data successful</string>
 	<string name="setting_content_restore_data_failed">Restore data failed as backup file doesn\'t exist</string>
@@ -163,4 +163,9 @@
 	<string name="name">Name</string>
 	<string name="author">Author : Zhan H. Yap</string>
 	<string name="target_email">zhanapp@gmail.com</string>
+	<string name="reset">Reset</string>
+	<string name="reset_data_message">Resetting data will remove all data you\'ve entered</string>
+	<string name="resetting">Resetting</string>
+	<string name="send_email">Send email</string>
+	<string name="feedback_email_title">Feedback</string>
 </resources>
