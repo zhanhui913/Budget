@@ -23,6 +23,7 @@ public class OpenSourceActivity extends BaseActivity
 
     private Toolbar toolbar;
     private List<OpenSource> openSourceList;
+    private String gitUrl = "https://github.com/%s/%s";
 
     @Override
     protected int getActivityLayout(){
@@ -106,9 +107,8 @@ public class OpenSourceActivity extends BaseActivity
 
     @Override
     public void onClick(int position){
-        String url = "https://github.com/" + openSourceList.get(position).getAuthor() + "/" + openSourceList.get(position).getName();
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
+        i.setData(Uri.parse(String.format(gitUrl, openSourceList.get(position).getAuthor(), openSourceList.get(position).getName())));
         startActivity(i);
     }
 }
