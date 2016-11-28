@@ -68,6 +68,19 @@
 	<string name="Friday">Fri</string>
 	<string name="Saturday">Sat</string>
 
+	<string name="month_jan">January</string>
+	<string name="month_feb">February</string>
+	<string name="month_mar">March</string>
+	<string name="month_apr">April</string>
+	<string name="month_may">May</string>
+	<string name="month_jun">June</string>
+	<string name="month_jul">July</string>
+	<string name="month_aug">August</string>
+	<string name="month_sep">September</string>
+	<string name="month_oct">October</string>
+	<string name="month_nov">November</string>
+	<string name="month_dev">December</string>
+
 	<string name="transaction">Transaction</string>
 	<string name="account">Account</string>
 	<string name="category">Category</string>
@@ -147,12 +160,33 @@
 
 	<!-- Dialogs -->
 	<string name="dialog_title_delete">Delete</string>
+	<string name="dialog_title_repeat">Repeat</string>
+	<string name="dialog_title_csv">CSV</string>
+	<string name="dialog_title_title">Title</string>
+
 	<string name="dialog_button_ok">OK</string>
 	<string name="dialog_button_select">SELECT</string>
 	<string name="dialog_button_delete">DELETE</string>
 	<string name="dialog_button_save">SAVE</string>
 	<string name="dialog_button_reset">RESET</string>
 	<string name="dialog_button_cancel">CANCEL</string>
+
+	<string name="dialog_content_name">Name</string>
+	<string name="dialog_content_hint">Hint</string>
+	<string formatted="false" name="dialog_progress_percent">%d\%</string>
+	<string formatted="false" name="dialog_progress_total">%d/%d</string>
+
+	<!-- Num pad -->
+	<string name="num_pad_1">1</string>
+	<string name="num_pad_2">2</string>
+	<string name="num_pad_3">3</string>
+	<string name="num_pad_4">4</string>
+	<string name="num_pad_5">5</string>
+	<string name="num_pad_6">6</string>
+	<string name="num_pad_7">7</string>
+	<string name="num_pad_8">8</string>
+	<string name="num_pad_9">9</string>
+	<string name="num_pad_0">0</string>
 
 	<!-- ETC -->
 	<string name="category_selected_warning">Make sure a %s category is selected</string>
@@ -168,4 +202,11 @@
 	<string name="resetting">Resetting</string>
 	<string name="send_email">Send email</string>
 	<string name="feedback_email_title">Feedback</string>
+	<string name="chevron_left">Left</string>
+	<string name="chevron_right">Right</string>
+	<string name="form_btn_save">Save</string>
+	<string name="csv">CSV</string>
+	<string formatted="false" name="csv_success">CSV sorted by %s</string>
+	<string name="csv_failed">CSV creation failed</string>
+
 </resources>

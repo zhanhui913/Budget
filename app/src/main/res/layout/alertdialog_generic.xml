@@ -14,7 +14,7 @@
             android:id="@+id/genericTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account Name" />
+            android:text="@string/dialog_content_name" />
     </LinearLayout>
 
     <EditText
@@ -22,5 +22,5 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/item_padding"
-        android:hint="Generic Hint"/>
+        android:hint="@string/dialog_content_hint"/>
 </LinearLayout>

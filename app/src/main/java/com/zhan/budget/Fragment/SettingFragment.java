@@ -611,9 +611,9 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onCompleteCSV(boolean value) {
                 if(value){
-                    email(csvFile, "CSV", "This CSV is sorted by "+sortType.toString() );
+                    email(csvFile, getString(R.string.csv), String.format(getString(R.string.csv_success), sortType.toString()));
                 }else{
-                    Util.createSnackbar(getContext(), getView(), "CSV creation failed.");
+                    Util.createSnackbar(getContext(), getView(), getString(R.string.csv_failed));
                 }
             }
         });
