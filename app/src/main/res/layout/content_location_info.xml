@@ -31,13 +31,13 @@
 			android:text="Location Name"
 			android:textSize="@dimen/text_header_size"
 			android:textStyle="bold"
-			android:singleLine="true"
-			android:layout_toRightOf="@+id/accountCircularView"
+			android:maxLines="1"
+			android:layout_toRightOf="@+id/locationCircularView"
 			android:layout_centerVertical="true"
 			android:layout_marginLeft="10dp"
 			android:layout_marginRight="10dp"
 			android:layout_alignParentRight="true"
-			android:gravity="right" />
+			android:gravity="end" />
 	</RelativeLayout>
 
 	<View
