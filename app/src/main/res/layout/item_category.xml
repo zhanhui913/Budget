@@ -50,35 +50,30 @@
             android:id="@+id/panel1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_marginStart="@dimen/item_left_padding"
             android:layout_toRightOf="@+id/categoryIcon"
             android:layout_toEndOf="@+id/categoryIcon"
             android:layout_centerVertical="true">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/categoryName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/item_left_padding"
-                android:paddingStart="@dimen/item_left_padding"
-                android:orientation="vertical"
-                android:layout_centerVertical="true">
+                android:text="@string/category"
+                android:textSize="@dimen/text_title_size"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
+                android:gravity="center_vertical" />
 
-                <TextView
-                    android:id="@+id/categoryName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/category"
-                    android:textSize="@dimen/text_title_size"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical" />
-
-                <TextView
-                    android:id="@+id/categoryBudget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cost"
-                    android:textSize="@dimen/text_content_size"
-                    android:gravity="center_vertical" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/categoryBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cost"
+                android:textSize="@dimen/text_content_size"
+                android:layout_below="@+id/categoryName"
+                android:gravity="center_vertical" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -130,8 +125,8 @@
             android:id="@+id/categoryProgress"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/progressBar_height"
-            android:paddingLeft="@dimen/item_left_padding"
-            android:paddingStart="@dimen/item_left_padding"
+            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_marginStart="@dimen/item_left_padding"
             app:rcBackgroundColor="?attr/themeColorHighlight"
             app:rcRadius="0dp"
             android:layout_toRightOf="@+id/categoryIcon"
