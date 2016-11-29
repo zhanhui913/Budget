@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true">
 
             <ImageView
@@ -63,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"/>
 
         <LinearLayout
@@ -70,9 +72,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_toLeftOf="@+id/indicatorContainer"
+            android:layout_toStartOf="@+id/indicatorContainer"
             android:layout_toRightOf="@+id/accountIcon"
+            android:layout_toEndOf="@+id/accountIcon"
             android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/item_left_padding">
+            android:paddingLeft="@dimen/item_left_padding"
+            android:paddingStart="@dimen/item_left_padding"
+            >
 
             <TextView
                 android:id="@+id/accountName"
@@ -81,14 +87,14 @@
                 android:layout_weight="1"
                 android:textSize="@dimen/text_title_size"
                 android:textStyle="bold"
-                android:text="credit card" />
+                android:text="@string/account" />
 
             <TextView
                 android:id="@+id/accountCost"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="$25.00"
+                android:text="@string/cost"
                 android:textSize="@dimen/text_content_size" />
         </LinearLayout>
     </RelativeLayout>
