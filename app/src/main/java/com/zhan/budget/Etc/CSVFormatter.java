@@ -130,7 +130,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
             //Write a new transaction object to the csv file
             for(int i = 0; i < transactionList.size(); i++){
                 if(transactionList.get(i).getCategory() != null){
-                    fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getType().toString()));
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getType()));
                 }
                 fileWriter.append(COMMA_DELIMITER);
                 if(transactionList.get(i).getDate() != null){
