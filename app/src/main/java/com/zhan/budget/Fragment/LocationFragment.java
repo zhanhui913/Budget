@@ -228,10 +228,13 @@ public class LocationFragment extends BaseRealmFragment
         pieChartFragment.setData(locationList, animate);
 
         if(totalLocationsCount == 0){
-            centerPanelRightTextView.setText("NA");
+            centerPanelRightTextView.setText(R.string.na);
         }else{
-            String appendString = (totalLocationsCount > 1) ? " times" : " time" ;
-            centerPanelRightTextView.setText(totalLocationsCount + appendString);
+            if(totalLocationsCount > 1){
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
+            }else{
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
+            }
         }
 
         updateLocationStatus();
@@ -330,10 +333,13 @@ public class LocationFragment extends BaseRealmFragment
         pieChartFragment.setData(locationList, animate);
 
         if(totalLocationsCount == 0){
-            centerPanelRightTextView.setText("NA");
+            centerPanelRightTextView.setText(R.string.na);
         }else{
-            String appendString = (totalLocationsCount > 1) ? " times" : " time" ;
-            centerPanelRightTextView.setText(totalLocationsCount + appendString);
+            if(totalLocationsCount > 1){
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
+            }else{
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
+            }
         }
     }
 
@@ -384,8 +390,11 @@ public class LocationFragment extends BaseRealmFragment
         //This updates pie chart with new location list while keeping the colors the same
         pieChartFragment.setData(locationList);
 
-        String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
-        centerPanelRightTextView.setText(totalLocationsCount + appendString);
+        if(totalLocationsCount > 1){
+            centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
+        }else{
+            centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
+        }
     }
 
     /////////

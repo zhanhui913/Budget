@@ -116,7 +116,7 @@ public class SettingFragment extends BaseFragment {
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
 
         //set version number
-        versionNumber.setText("v"+BuildConfig.VERSION_NAME);
+        versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
 
         addListeners();
     }

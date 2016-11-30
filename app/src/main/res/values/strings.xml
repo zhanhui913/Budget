@@ -173,7 +173,7 @@
 
 	<string name="dialog_content_name">Name</string>
 	<string name="dialog_content_hint">Hint</string>
-	<string formatted="false" name="dialog_progress_percent">%d\%</string>
+	<string formatted="false" name="dialog_progress_percent">%d%%</string>
 	<string formatted="false" name="dialog_progress_total">%d/%d</string>
 
 	<!-- Num pad -->
@@ -212,7 +212,12 @@
 	<string name="use_icon">Use Icon</string>
 	<string name="cost">$0.00</string>
 	<string name="current">Current</string>
+	<string formatted="false" name="location_time">%d time</string>
 	<string formatted="false" name="location_times">%d times</string>
+	<string formatted="false" name="category_budget">Budget : %s</string>
+	<string formatted="false" name="category_percent">Percent : %.2f%%</string>
+	<string name="na">NA</string>
+	<string formatted="false" name="version">v%s</string>
 
 	<!-- Middle section -->
 	<string name="middle_section_name">Name</string>
