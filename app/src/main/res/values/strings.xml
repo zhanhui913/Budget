@@ -103,10 +103,10 @@
 	<string name="edit_account">Edit account</string>
 	<string name="edit_location">Edit location</string>
 
-	<string name="pull_down_add_transaction">Z Pull down to add a transaction</string>
-	<string name="pull_down_add_category">Z Pull down to add an %s category</string>
-	<string name="pull_down_add_account">Z Pull down to add an account</string>
-	<string name="pull_down_add_location">Z Pull down to add a location</string>
+	<string name="pull_down_add_transaction">Pull down to add a transaction</string>
+	<string formatted="false" name="pull_down_add_category">Pull down to add an %s category</string>
+	<string name="pull_down_add_account">Pull down to add an account</string>
+	<string name="pull_down_add_location">Pull down to add a location</string>
 
 	<string name="empty_category_selection">There is no account available for selection</string>
 	<string name="empty_category">There is no %s category</string>
