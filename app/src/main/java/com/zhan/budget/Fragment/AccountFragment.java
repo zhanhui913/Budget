@@ -123,7 +123,7 @@ public class AccountFragment extends BaseRealmFragment implements
         downArrow.setVisibility(View.INVISIBLE);
 
         //Setup pie chart
-        pieChartFragment = PieChartFragment.newInstance(accountList);
+        pieChartFragment = PieChartFragment.newInstance(accountList, false, false, getString(R.string.account));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         populateAccountWithNoInfo();

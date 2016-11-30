@@ -196,7 +196,7 @@
 	<string name="months">ES months</string>
 	<string name="name">ES Name</string>
 	<string name="author">ES Author : Zhan H. Yap</string>
-	<string name="target_email">ES zhanapp@gmail.com</string>
+	<string name="target_email">zhanapp@gmail.com</string>
 	<string name="reset">ES Reset</string>
 	<string name="reset_data_message">ES Resetting data will remove all data you\'ve entered</string>
 	<string name="resetting">ES Resetting</string>

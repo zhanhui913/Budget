@@ -146,7 +146,7 @@ public class CategoryFragment extends BaseFragment {
             catList.add(catIncome);
             catList.add(catExpense);
 
-            pieChartFragment = PieChartFragment.newInstance(catList, true, true);
+            pieChartFragment = PieChartFragment.newInstance(catList, true, true, getString(R.string.category));
             getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
             pieChartFragment.displayLegend();
 

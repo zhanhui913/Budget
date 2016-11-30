@@ -115,7 +115,7 @@ public class LocationFragment extends BaseRealmFragment
         downArrow.setVisibility(View.INVISIBLE);
 
         //Setup pie chart
-        pieChartFragment = PieChartFragment.newInstance(locationList);
+        pieChartFragment = PieChartFragment.newInstance(locationList, false, false, getString(R.string.location));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         //0 represents no change in month relative to currentMonth variable.
