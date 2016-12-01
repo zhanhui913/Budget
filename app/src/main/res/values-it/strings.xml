@@ -1,50 +1,234 @@
 <resources>
 	<string name="app_name">Budget</string>
 
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
+	<string name="navigation_drawer_open">IT Open navigation drawer</string>
+	<string name="navigation_drawer_close">IT Close navigation drawer</string>
 
-	<string name="action_settings">Settings</string>
+	<string name="action_settings">IT Settings</string>
 
 	<!-- Permissions -->
-	<string name="permission_storage_rationale">You need to allow access to storage in order to create a backup database.</string>
-	<string name="permission_denied">Permission denied.</string>
-	<string name="permission_denied_message">Are you sure you want to deny this permission?</string>
+	<string name="permission_rationale_storage">IT You need to allow access to storage in order to create a backup database.</string>
+	<string name="permission_denied">IT Permission denied.</string>
+	<string name="permission_denied_message">IT Are you sure you want to deny this permission?</string>
+	<string name="permission_retry">IT Re-try</string>
+	<string name="permission_deny">IT Deny</string>
+	<string name="permission_rationale_write_backup_data">IT Without this permission the app is unable to create a backup data</string>
+	<string name="permission_rationale_read_backup_data">IT Without this permission the app is unable to restore the backup data</string>
+	<string name="permission_rationale_write_csv">IT Without this permission the app is unable to create the CSV</string>
+
 
 	<!-- Activity name -->
-	<string name="title_activity_transaction_info">Transaction</string>
-	<string name="title_activity_main2">Main2Activity</string>
-	<string name="title_activity_category_info">CategoryInfo</string>
-	<string name="title_activity_transactions_for_category">TransactionsForCategory</string>
-	<string name="title_activity_overview">OverviewActivity</string>
-	<string name="title_activity_pdf">PdfActivity</string>
-	<string name="title_activity_tour">Tour</string>
-	<string name="title_activity_settings_account">Accounts</string>
-	<string name="title_activity_settings_category">Categories</string>
-	<string name="title_activity_settings_location">Locations</string>
-	<string name="title_activity_transactions_for_location">TransactionsForLocation</string>
-	<string name="title_activity_open_source">OpenSourceActivity</string>
-	<string name="title_activity_account_info">AccountInfoActivity</string>
-	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
-	<string name="title_activity_location_info">LocationInfoActivity</string>
+	<string name="title_activity_transaction_info">IT Transaction</string>
+	<string name="title_activity_main2">IT Main2Activity</string>
+	<string name="title_activity_category_info">IT CategoryInfo</string>
+	<string name="title_activity_transactions_for_category">IT TransactionsForCategory</string>
+	<string name="title_activity_overview">IT OverviewActivity</string>
+	<string name="title_activity_pdf">IT PdfActivity</string>
+	<string name="title_activity_tour">IT Tour</string>
+	<string name="title_activity_settings_account">IT Accounts</string>
+	<string name="title_activity_settings_category">IT Categories</string>
+	<string name="title_activity_settings_location">IT Locations</string>
+	<string name="title_activity_transactions_for_location">IT TransactionsForLocation</string>
+	<string name="title_activity_open_source">IT OpenSourceActivity</string>
+	<string name="title_activity_account_info">IT AccountInfoActivity</string>
+	<string name="title_activity_transactions_for_account">IT TransactionsForAccount</string>
+	<string name="title_activity_location_info">IT LocationInfoActivity</string>
 
 	<!-- Tutorial string -->
-	<string name="tutorial_description_1">View all transactions for a specific date</string>
-	<string name="tutorial_description_2">Change between light and dark mode</string>
-	<string name="tutorial_description_3">Approve, un-approve, or delete a transaction by swiping left</string>
-	<string name="tutorial_description_4">Input amount and select category, account, notes, location, etc</string>
-	<string name="tutorial_description_5">Compare your current spending with your budget</string>
-	<string name="tutorial_description_6">View how much you spent on all accounts</string>
-	<string name="tutorial_description_7">Enter and track location for your purchases</string>
-	<string name="tutorial_description_8">View how much you spent and earn each month</string>
-	<string name="tutorial_description_9">See what you are spending the most on</string>
+	<string name="tutorial_description_1">IT View all transactions for a specific date</string>
+	<string name="tutorial_description_2">IT Change between light and dark mode</string>
+	<string name="tutorial_description_3">IT Approve, un-approve, or delete a transaction by swiping left</string>
+	<string name="tutorial_description_4">IT Input amount and select category, account, notes, location, etc</string>
+	<string name="tutorial_description_5">IT Compare your current spending with your budget</string>
+	<string name="tutorial_description_6">IT View how much you spent on all accounts</string>
+	<string name="tutorial_description_7">IT Enter and track location for your purchases</string>
+	<string name="tutorial_description_8">IT View how much you spent and earn each month</string>
+	<string name="tutorial_description_9">IT See what you are spending the most on</string>
 
 	<!-- Warning -->
-	<string name="warning_delete_transaction">Are you sure you want to delete this transaction?</string>
-	<string name="warning_delete_category">Are you sure you want to delete this category?\nAll transactions with this category will no longer have this category associated to it</string>
-	<string name="warning_delete_account">Are you sure you want to delete this account?\nAll transactions with this account will no longer have this account associated to it</string>
-	<string name="warning_delete_location">Are you sure you want to delete this location?\nAll transactions with this location will no longer have this location associated to it</string>
+	<string name="warning_delete_transaction">IT Delete this transaction?</string>
+	<string name="warning_delete_category">IT All transactions with this category will no longer have this category associated to it once deleted</string>
+	<string name="warning_delete_account">IT All transactions with this account will no longer have this account associated to it once deleted</string>
+	<string name="warning_delete_location">IT All transactions with this location will no longer have this location associated to it once deleted</string>
 
-	<!-- Etc -->
+	<!-- Fragments in navigation drawer -->
+	<string name="nav_calendar">IT Calendar</string>
+	<string name="nav_category">IT Category</string>
+	<string name="nav_account">IT Account</string>
+	<string name="nav_location">IT Location</string>
+	<string name="nav_report">IT Monthly Report</string>
+	<string name="nav_setting">IT Settings</string>
+
+	<!-- Calendar View -->
+	<string name="Sunday">IT Sun</string>
+	<string name="Monday">IT Mon</string>
+	<string name="Tuesday">IT Tue</string>
+	<string name="Wednesday">IT Wed</string>
+	<string name="Thursday">IT Thu</string>
+	<string name="Friday">IT Fri</string>
+	<string name="Saturday">IT Sat</string>
+
+	<string name="month_jan">IT January</string>
+	<string name="month_feb">IT February</string>
+	<string name="month_mar">IT March</string>
+	<string name="month_apr">IT April</string>
+	<string name="month_may">IT May</string>
+	<string name="month_jun">IT June</string>
+	<string name="month_jul">IT July</string>
+	<string name="month_aug">IT August</string>
+	<string name="month_sep">IT September</string>
+	<string name="month_oct">IT October</string>
+	<string name="month_nov">IT November</string>
+	<string name="month_dev">IT December</string>
+
+	<string name="transaction">IT Transaction</string>
+	<string name="account">IT Account</string>
+	<string name="category">IT Category</string>
+	<string name="category_expense">IT Expense</string>
+	<string name="category_income">IT Income</string>
+	<string name="location">IT Location</string>
+	<string name="note">IT Note</string>
+	<string name="budget">IT Budget</string>
+
+	<!-- Title when adding/editting item-->
+	<string name="add_transaction">IT Add transaction</string>
+	<string name="add_category_expense">IT Add expense category</string>
+	<string name="add_category_income">IT Add income category</string>
+	<string name="add_account">IT Add account</string>
+	<string name="add_location">IT Add location</string>
+	<string name="add_note">IT Add note</string>
+	<string name="edit_transaction">IT Edit transaction</string>
+	<string name="edit_category_expense">IT Edit expense category</string>
+	<string name="edit_category_income">IT Edit income category</string>
+	<string name="edit_account">IT Edit account</string>
+	<string name="edit_location">IT Edit location</string>
+
+	<string name="pull_down_add_transaction">IT Pull down to add a transaction</string>
+	<string formatted="false" name="pull_down_add_category">IT Pull down to add an %s category</string>
+	<string name="pull_down_add_account">IT Pull down to add an account</string>
+	<string name="pull_down_add_location">IT Pull down to add a location</string>
+
+	<string name="empty_category_selection">IT There is no account available for selection</string>
+	<string name="empty_category">IT There is no %s category</string>
+	<string name="empty_account">IT There is no account</string>
+	<string name="empty_location">IT There is no location</string>
+	<string formatted="false" name="empty_transaction_custom_date">IT There is no transaction for \'%s\' during %s</string>
+
+
+	<!-- Monthly Report Fragment -->
+	<string name="you_spent">IT You spent %s</string>
+	<string name="you_earned">IT You earned %s</string>
+	<string name="you_saved">IT You saved %s</string>
+
+	<!-- Settings Fragment -->
+	<string name="setting_header_general">IT General</string>
+	<string name="setting_header_data">IT Data</string>
+	<string name="setting_header_feedback">IT Feedback</string>
+
+	<!-- GENERAL -->
+	<string name="setting_title_theme">IT Current Theme</string>
+	<string name="setting_content_theme_day">IT Day Mode</string>
+	<string name="setting_content_theme_night">IT Night Mode</string>
+	<string name="setting_title_day">IT First day of the week</string>
+	<string name="setting_content_day_sun">IT Sunday</string>
+	<string name="setting_content_day_mon">IT Monday</string>
+	<string name="setting_title_category">IT Categories</string>
+	<string name="setting_content_category">IT Manage categories. Change icon, color, and others</string>
+	<string name="setting_title_account">IT Accounts</string>
+	<string name="setting_content_account">IT Manage accounts. Change icons and others</string>
+	<string name="setting_title_location">IT Locations</string>
+	<string name="setting_content_location">IT Manage Locations. Change colors</string>
+
+	<!-- DATA -->
+	<string name="setting_title_backup_data">IT Backup data</string>
+	<string name="setting_content_backup_data_successful">IT Backup data successful</string>
+	<string formatted="false" name="setting_content_backup_data">IT last backup : %s</string>
+	<string name="setting_title_restore_data">IT Restore data</string>
+	<string name="setting_content_restore_data_successful">IT Restore data successful</string>
+	<string name="setting_content_restore_data_failed">IT Restore data failed as backup file doesn\'t exist</string>
+	<string name="setting_title_reset_data">IT Reset data</string>
+	<string name="setting_title_export_data">IT Export data to CSV</string>
+	<string name="setting_content_export_data_sort">IT Sort by</string>
+	<string name="csv_sort_by_date">Date</string>
+	<string name="csv_sort_by_category">Category</string>
+	<string name="csv_sort_by_account">Account</string>
+	<string name="csv_sort_by_location">Location</string>
+
+	<!-- FEEDBACK -->
+	<string name="setting_title_email">IT Email me</string>
+	<string name="setting_content_email">IT feedback for the app</string>
+	<string name="setting_title_tour">IT Tour</string>
+	<string name="setting_title_faq">IT FAQ</string>
+	<string name="setting_title_open_source">IT Open Source Licenses</string>
+	<string name="setting_content_open_source">IT License details for open source software used</string>
+
+	<!-- Dialogs -->
+	<string name="dialog_title_delete">IT Delete</string>
+	<string name="dialog_title_repeat">IT Repeat</string>
+	<string name="dialog_title_csv">IT CSV</string>
+	<string name="dialog_title_title">IT Title</string>
+
+	<string name="dialog_button_ok">IT OK</string>
+	<string name="dialog_button_select">IT SELECT</string>
+	<string name="dialog_button_delete">IT DELETE</string>
+	<string name="dialog_button_save">IT SAVE</string>
+	<string name="dialog_button_reset">IT RESET</string>
+	<string name="dialog_button_cancel">IT CANCEL</string>
+
+	<string name="dialog_content_name">IT Name</string>
+	<string name="dialog_content_hint">IT Hint</string>
+	<string formatted="false" name="dialog_progress_percent">IT %d%%</string>
+	<string formatted="false" name="dialog_progress_total">IT %d/%d</string>
+
+	<!-- Num pad -->
+	<string name="num_pad_1">IT 1</string>
+	<string name="num_pad_2">IT 2</string>
+	<string name="num_pad_3">IT 3</string>
+	<string name="num_pad_4">IT 4</string>
+	<string name="num_pad_5">IT 5</string>
+	<string name="num_pad_6">IT 6</string>
+	<string name="num_pad_7">IT 7</string>
+	<string name="num_pad_8">IT 8</string>
+	<string name="num_pad_9">IT 9</string>
+	<string name="num_pad_0">IT 0</string>
+
+	<!-- ETC -->
+	<string name="category_selected_warning">IT Make sure a %s category is selected</string>
+	<string name="category_valid_name_warning">IT Please input a valid name for this category</string>
+	<string name="days">IT days</string>
+	<string name="weeks">IT weeks</string>
+	<string name="months">IT months</string>
+	<string name="name">IT Name</string>
+	<string name="author">IT Author : Zhan H. Yap</string>
 	<string name="target_email">zhanapp@gmail.com</string>
+	<string name="reset">IT Reset</string>
+	<string name="reset_data_message">IT Resetting data will remove all data you\'ve entered</string>
+	<string name="resetting">IT Resetting</string>
+	<string name="send_email">IT Send email</string>
+	<string name="feedback_email_title">IT Feedback</string>
+	<string name="chevron_left">IT Left</string>
+	<string name="chevron_right">IT Right</string>
+	<string name="form_btn_save">IT Save</string>
+	<string name="csv">IT CSV</string>
+	<string formatted="false" name="csv_success">IT CSV sorted by %s</string>
+	<string name="csv_failed">IT CSV creation failed</string>
+	<string name="use_text">IT Use Text</string>
+	<string name="use_icon">IT Use Icon</string>
+	<string name="cost">IT $0.00</string>
+	<string name="current">IT Current</string>
+	<string formatted="false" name="location_time">IT %d time</string>
+	<string formatted="false" name="location_times">IT %d times</string>
+	<string formatted="false" name="category_budget">IT Budget : %s</string>
+	<string formatted="false" name="category_percent">IT Percent : %.2f%%</string>
+	<string name="na">IT NA</string>
+	<string formatted="false" name="version">IT v%s</string>
+
+	<!-- Middle section -->
+	<string name="middle_section_name">IT Name</string>
+	<string name="middle_section_right">IT Right</string>
+
+	<!-- Open Source -->
+	<string name="open_source_project_name">IT Name</string>
+	<string name="open_source_project_author">IT Author</string>
+
 </resources>

@@ -1,50 +1,234 @@
 <resources>
 	<string name="app_name">Budget</string>
 
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
+	<string name="navigation_drawer_open">DE Open navigation drawer</string>
+	<string name="navigation_drawer_close">DE Close navigation drawer</string>
 
-	<string name="action_settings">Settings</string>
+	<string name="action_settings">DE Settings</string>
 
 	<!-- Permissions -->
-	<string name="permission_storage_rationale">You need to allow access to storage in order to create a backup database.</string>
-	<string name="permission_denied">Permission denied.</string>
-	<string name="permission_denied_message">Are you sure you want to deny this permission?</string>
+	<string name="permission_rationale_storage">DE You need to allow access to storage in order to create a backup database.</string>
+	<string name="permission_denied">DE Permission denied.</string>
+	<string name="permission_denied_message">DE Are you sure you want to deny this permission?</string>
+	<string name="permission_retry">DE Re-try</string>
+	<string name="permission_deny">DE Deny</string>
+	<string name="permission_rationale_write_backup_data">DE Without this permission the app is unable to create a backup data</string>
+	<string name="permission_rationale_read_backup_data">DE Without this permission the app is unable to restore the backup data</string>
+	<string name="permission_rationale_write_csv">DE Without this permission the app is unable to create the CSV</string>
+
 
 	<!-- Activity name -->
-	<string name="title_activity_transaction_info">Transaction</string>
-	<string name="title_activity_main2">Main2Activity</string>
-	<string name="title_activity_category_info">CategoryInfo</string>
-	<string name="title_activity_transactions_for_category">TransactionsForCategory</string>
-	<string name="title_activity_overview">OverviewActivity</string>
-	<string name="title_activity_pdf">PdfActivity</string>
-	<string name="title_activity_tour">Tour</string>
-	<string name="title_activity_settings_account">Accounts</string>
-	<string name="title_activity_settings_category">Categories</string>
-	<string name="title_activity_settings_location">Locations</string>
-	<string name="title_activity_transactions_for_location">TransactionsForLocation</string>
-	<string name="title_activity_open_source">OpenSourceActivity</string>
-	<string name="title_activity_account_info">AccountInfoActivity</string>
-	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
-	<string name="title_activity_location_info">LocationInfoActivity</string>
+	<string name="title_activity_transaction_info">DE Transaction</string>
+	<string name="title_activity_main2">DE Main2Activity</string>
+	<string name="title_activity_category_info">DE CategoryInfo</string>
+	<string name="title_activity_transactions_for_category">DE TransactionsForCategory</string>
+	<string name="title_activity_overview">DE OverviewActivity</string>
+	<string name="title_activity_pdf">DE PdfActivity</string>
+	<string name="title_activity_tour">DE Tour</string>
+	<string name="title_activity_settings_account">DE Accounts</string>
+	<string name="title_activity_settings_category">DE Categories</string>
+	<string name="title_activity_settings_location">DE Locations</string>
+	<string name="title_activity_transactions_for_location">DE TransactionsForLocation</string>
+	<string name="title_activity_open_source">DE OpenSourceActivity</string>
+	<string name="title_activity_account_info">DE AccountInfoActivity</string>
+	<string name="title_activity_transactions_for_account">DE TransactionsForAccount</string>
+	<string name="title_activity_location_info">DE LocationInfoActivity</string>
 
 	<!-- Tutorial string -->
-	<string name="tutorial_description_1">View all transactions for a specific date</string>
-	<string name="tutorial_description_2">Change between light and dark mode</string>
-	<string name="tutorial_description_3">Approve, un-approve, or delete a transaction by swiping left</string>
-	<string name="tutorial_description_4">Input amount and select category, account, notes, location, etc</string>
-	<string name="tutorial_description_5">Compare your current spending with your budget</string>
-	<string name="tutorial_description_6">View how much you spent on all accounts</string>
-	<string name="tutorial_description_7">Enter and track location for your purchases</string>
-	<string name="tutorial_description_8">View how much you spent and earn each month</string>
-	<string name="tutorial_description_9">See what you are spending the most on</string>
+	<string name="tutorial_description_1">DE View all transactions for a specific date</string>
+	<string name="tutorial_description_2">DE Change between light and dark mode</string>
+	<string name="tutorial_description_3">DE Approve, un-approve, or delete a transaction by swiping left</string>
+	<string name="tutorial_description_4">DE Input amount and select category, account, notes, location, etc</string>
+	<string name="tutorial_description_5">DE Compare your current spending with your budget</string>
+	<string name="tutorial_description_6">DE View how much you spent on all accounts</string>
+	<string name="tutorial_description_7">DE Enter and track location for your purchases</string>
+	<string name="tutorial_description_8">DE View how much you spent and earn each month</string>
+	<string name="tutorial_description_9">DE See what you are spending the most on</string>
 
 	<!-- Warning -->
-	<string name="warning_delete_transaction">Are you sure you want to delete this transaction?</string>
-	<string name="warning_delete_category">Are you sure you want to delete this category?\nAll transactions with this category will no longer have this category associated to it</string>
-	<string name="warning_delete_account">Are you sure you want to delete this account?\nAll transactions with this account will no longer have this account associated to it</string>
-	<string name="warning_delete_location">Are you sure you want to delete this location?\nAll transactions with this location will no longer have this location associated to it</string>
+	<string name="warning_delete_transaction">DE Delete this transaction?</string>
+	<string name="warning_delete_category">DE All transactions with this category will no longer have this category associated to it once deleted</string>
+	<string name="warning_delete_account">DE All transactions with this account will no longer have this account associated to it once deleted</string>
+	<string name="warning_delete_location">DE All transactions with this location will no longer have this location associated to it once deleted</string>
 
-	<!-- Etc -->
+	<!-- Fragments in navigation drawer -->
+	<string name="nav_calendar">DE Calendar</string>
+	<string name="nav_category">DE Category</string>
+	<string name="nav_account">DE Account</string>
+	<string name="nav_location">DE Location</string>
+	<string name="nav_report">DE Monthly Report</string>
+	<string name="nav_setting">DE Settings</string>
+
+	<!-- Calendar View -->
+	<string name="Sunday">DE Sun</string>
+	<string name="Monday">DE Mon</string>
+	<string name="Tuesday">DE Tue</string>
+	<string name="Wednesday">DE Wed</string>
+	<string name="Thursday">DE Thu</string>
+	<string name="Friday">DE Fri</string>
+	<string name="Saturday">DE Sat</string>
+
+	<string name="month_jan">DE January</string>
+	<string name="month_feb">DE February</string>
+	<string name="month_mar">DE March</string>
+	<string name="month_apr">DE April</string>
+	<string name="month_may">DE May</string>
+	<string name="month_jun">DE June</string>
+	<string name="month_jul">DE July</string>
+	<string name="month_aug">DE August</string>
+	<string name="month_sep">DE September</string>
+	<string name="month_oct">DE October</string>
+	<string name="month_nov">DE November</string>
+	<string name="month_dev">DE December</string>
+
+	<string name="transaction">DE Transaction</string>
+	<string name="account">DE Account</string>
+	<string name="category">DE Category</string>
+	<string name="category_expense">DE Expense</string>
+	<string name="category_income">DE Income</string>
+	<string name="location">DE Location</string>
+	<string name="note">DE Note</string>
+	<string name="budget">DE Budget</string>
+
+	<!-- Title when adding/editting item-->
+	<string name="add_transaction">DE Add transaction</string>
+	<string name="add_category_expense">DE Add expense category</string>
+	<string name="add_category_income">DE Add income category</string>
+	<string name="add_account">DE Add account</string>
+	<string name="add_location">DE Add location</string>
+	<string name="add_note">DE Add note</string>
+	<string name="edit_transaction">DE Edit transaction</string>
+	<string name="edit_category_expense">DE Edit expense category</string>
+	<string name="edit_category_income">DE Edit income category</string>
+	<string name="edit_account">DE Edit account</string>
+	<string name="edit_location">DE Edit location</string>
+
+	<string name="pull_down_add_transaction">DE Pull down to add a transaction</string>
+	<string formatted="false" name="pull_down_add_category">DE Pull down to add an %s category</string>
+	<string name="pull_down_add_account">DE Pull down to add an account</string>
+	<string name="pull_down_add_location">DE Pull down to add a location</string>
+
+	<string name="empty_category_selection">DE There is no account available for selection</string>
+	<string name="empty_category">DE There is no %s category</string>
+	<string name="empty_account">DE There is no account</string>
+	<string name="empty_location">DE There is no location</string>
+	<string formatted="false" name="empty_transaction_custom_date">DE There is no transaction for \'%s\' during %s</string>
+
+
+	<!-- Monthly Report Fragment -->
+	<string name="you_spent">DE You spent %s</string>
+	<string name="you_earned">DE You earned %s</string>
+	<string name="you_saved">DE You saved %s</string>
+
+	<!-- Settings Fragment -->
+	<string name="setting_header_general">DE General</string>
+	<string name="setting_header_data">DE Data</string>
+	<string name="setting_header_feedback">DE Feedback</string>
+
+	<!-- GENERAL -->
+	<string name="setting_title_theme">DE Current Theme</string>
+	<string name="setting_content_theme_day">DE Day Mode</string>
+	<string name="setting_content_theme_night">DE Night Mode</string>
+	<string name="setting_title_day">DE First day of the week</string>
+	<string name="setting_content_day_sun">DE Sunday</string>
+	<string name="setting_content_day_mon">DE Monday</string>
+	<string name="setting_title_category">DE Categories</string>
+	<string name="setting_content_category">DE Manage categories. Change icon, color, and others</string>
+	<string name="setting_title_account">DE Accounts</string>
+	<string name="setting_content_account">DE Manage accounts. Change icons and others</string>
+	<string name="setting_title_location">DE Locations</string>
+	<string name="setting_content_location">DE Manage Locations. Change colors</string>
+
+	<!-- DATA -->
+	<string name="setting_title_backup_data">DE Backup data</string>
+	<string name="setting_content_backup_data_successful">DE Backup data successful</string>
+	<string formatted="false" name="setting_content_backup_data">DE last backup : %s</string>
+	<string name="setting_title_restore_data">DE Restore data</string>
+	<string name="setting_content_restore_data_successful">DE Restore data successful</string>
+	<string name="setting_content_restore_data_failed">DE Restore data failed as backup file doesn\'t exist</string>
+	<string name="setting_title_reset_data">DE Reset data</string>
+	<string name="setting_title_export_data">DE Export data to CSV</string>
+	<string name="setting_content_export_data_sort">DE Sort by</string>
+	<string name="csv_sort_by_date">Date</string>
+	<string name="csv_sort_by_category">Category</string>
+	<string name="csv_sort_by_account">Account</string>
+	<string name="csv_sort_by_location">Location</string>
+
+	<!-- FEEDBACK -->
+	<string name="setting_title_email">DE Email me</string>
+	<string name="setting_content_email">DE feedback for the app</string>
+	<string name="setting_title_tour">DE Tour</string>
+	<string name="setting_title_faq">DE FAQ</string>
+	<string name="setting_title_open_source">DE Open Source Licenses</string>
+	<string name="setting_content_open_source">DE License details for open source software used</string>
+
+	<!-- Dialogs -->
+	<string name="dialog_title_delete">DE Delete</string>
+	<string name="dialog_title_repeat">DE Repeat</string>
+	<string name="dialog_title_csv">DE CSV</string>
+	<string name="dialog_title_title">DE Title</string>
+
+	<string name="dialog_button_ok">DE OK</string>
+	<string name="dialog_button_select">DE SELECT</string>
+	<string name="dialog_button_delete">DE DELETE</string>
+	<string name="dialog_button_save">DE SAVE</string>
+	<string name="dialog_button_reset">DE RESET</string>
+	<string name="dialog_button_cancel">DE CANCEL</string>
+
+	<string name="dialog_content_name">DE Name</string>
+	<string name="dialog_content_hint">DE Hint</string>
+	<string formatted="false" name="dialog_progress_percent">DE %d%%</string>
+	<string formatted="false" name="dialog_progress_total">DE %d/%d</string>
+
+	<!-- Num pad -->
+	<string name="num_pad_1">DE 1</string>
+	<string name="num_pad_2">DE 2</string>
+	<string name="num_pad_3">DE 3</string>
+	<string name="num_pad_4">DE 4</string>
+	<string name="num_pad_5">DE 5</string>
+	<string name="num_pad_6">DE 6</string>
+	<string name="num_pad_7">DE 7</string>
+	<string name="num_pad_8">DE 8</string>
+	<string name="num_pad_9">DE 9</string>
+	<string name="num_pad_0">DE 0</string>
+
+	<!-- ETC -->
+	<string name="category_selected_warning">DE Make sure a %s category is selected</string>
+	<string name="category_valid_name_warning">DE Please input a valid name for this category</string>
+	<string name="days">DE days</string>
+	<string name="weeks">DE weeks</string>
+	<string name="months">DE months</string>
+	<string name="name">DE Name</string>
+	<string name="author">DE Author : Zhan H. Yap</string>
 	<string name="target_email">zhanapp@gmail.com</string>
+	<string name="reset">DE Reset</string>
+	<string name="reset_data_message">DE Resetting data will remove all data you\'ve entered</string>
+	<string name="resetting">DE Resetting</string>
+	<string name="send_email">DE Send email</string>
+	<string name="feedback_email_title">DE Feedback</string>
+	<string name="chevron_left">DE Left</string>
+	<string name="chevron_right">DE Right</string>
+	<string name="form_btn_save">DE Save</string>
+	<string name="csv">DE CSV</string>
+	<string formatted="false" name="csv_success">DE CSV sorted by %s</string>
+	<string name="csv_failed">DE CSV creation failed</string>
+	<string name="use_text">DE Use Text</string>
+	<string name="use_icon">DE Use Icon</string>
+	<string name="cost">DE $0.00</string>
+	<string name="current">DE Current</string>
+	<string formatted="false" name="location_time">DE %d time</string>
+	<string formatted="false" name="location_times">DE %d times</string>
+	<string formatted="false" name="category_budget">DE Budget : %s</string>
+	<string formatted="false" name="category_percent">DE Percent : %.2f%%</string>
+	<string name="na">DE NA</string>
+	<string formatted="false" name="version">DE v%s</string>
+
+	<!-- Middle section -->
+	<string name="middle_section_name">DE Name</string>
+	<string name="middle_section_right">DE Right</string>
+
+	<!-- Open Source -->
+	<string name="open_source_project_name">DE Name</string>
+	<string name="open_source_project_author">DE Author</string>
+
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">ES Budget</string>
+	<string name="app_name">Budget</string>
 
 	<string name="navigation_drawer_open">ES Open navigation drawer</string>
 	<string name="navigation_drawer_close">ES Close navigation drawer</string>
@@ -149,10 +149,10 @@
 	<string name="setting_title_reset_data">ES Reset data</string>
 	<string name="setting_title_export_data">ES Export data to CSV</string>
 	<string name="setting_content_export_data_sort">ES Sort by</string>
-	<String name="csv_sort_by_date">Date</String>
-	<String name="csv_sort_by_category">Category</String>
-	<String name="csv_sort_by_account">Account</String>
-	<String name="csv_sort_by_location">Location</String>
+	<string name="csv_sort_by_date">Date</string>
+	<string name="csv_sort_by_category">Category</string>
+	<string name="csv_sort_by_account">Account</string>
+	<string name="csv_sort_by_location">Location</string>
 
 	<!-- FEEDBACK -->
 	<string name="setting_title_email">ES Email me</string>
