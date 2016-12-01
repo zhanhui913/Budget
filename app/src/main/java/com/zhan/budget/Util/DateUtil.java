@@ -3,8 +3,8 @@ package com.zhan.budget.Util;
 import android.content.Context;
 
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.R;
 
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -307,21 +307,21 @@ public final class DateUtil {
     public static String getDayOfWeek(Context context, int value){
         switch(value){
             case 1:
-                return context.getString(R.string.Sunday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[1];
             case 2:
-                return context.getString(R.string.Monday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[2];
             case 3:
-                return context.getString(R.string.Tuesday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[3];
             case 4:
-                return context.getString(R.string.Wednesday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[4];
             case 5:
-                return context.getString(R.string.Thursday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[5];
             case 6:
-                return context.getString(R.string.Friday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[6];
             case 7:
-                return context.getString(R.string.Saturday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[7];
             default:
-                return context.getString(R.string.Sunday);
+                return DateFormatSymbols.getInstance().getShortWeekdays()[1];
         }
     }
 }

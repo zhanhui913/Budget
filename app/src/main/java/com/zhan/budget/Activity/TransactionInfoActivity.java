@@ -476,7 +476,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             @Override
             public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
-                return String.valueOf(defaultValue.toUpperCase());
+                //return String.valueOf(defaultValue.toUpperCase());
+                return DateUtil.getDayOfWeek(getApplicationContext(), dayOfWeek).toUpperCase();
             }
         });
 
