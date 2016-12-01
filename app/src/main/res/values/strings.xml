@@ -59,15 +59,6 @@
 	<string name="nav_report">Monthly Report</string>
 	<string name="nav_setting">Settings</string>
 
-	<!-- Calendar View -->
-	<string name="Sunday">Sun</string>
-	<string name="Monday">Mon</string>
-	<string name="Tuesday">Tue</string>
-	<string name="Wednesday">Wed</string>
-	<string name="Thursday">Thu</string>
-	<string name="Friday">Fri</string>
-	<string name="Saturday">Sat</string>
-
 	<string name="month_jan">January</string>
 	<string name="month_feb">February</string>
 	<string name="month_mar">March</string>

@@ -59,15 +59,6 @@
 	<string name="nav_report">FR Monthly Report</string>
 	<string name="nav_setting">FR Settings</string>
 
-	<!-- Calendar View -->
-	<string name="Sunday">FR Sun</string>
-	<string name="Monday">FR Mon</string>
-	<string name="Tuesday">FR Tue</string>
-	<string name="Wednesday">FR Wed</string>
-	<string name="Thursday">FR Thu</string>
-	<string name="Friday">FR Fri</string>
-	<string name="Saturday">FR Sat</string>
-
 	<string name="month_jan">FR January</string>
 	<string name="month_feb">FR February</string>
 	<string name="month_mar">FR March</string>

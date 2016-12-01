@@ -166,7 +166,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         //If this is used in Calendar Fragment (no need to show date), everywhere else use it
         if(this.showDate){
             viewHolder.date.setVisibility(View.VISIBLE);
-            viewHolder.date.setText(DateUtil.convertDateToStringFormat1(transaction.getDate()));
+            viewHolder.date.setText(DateUtil.convertDateToStringFormat1(context, transaction.getDate()));
         }else{
             viewHolder.date.setVisibility(View.GONE);
         }

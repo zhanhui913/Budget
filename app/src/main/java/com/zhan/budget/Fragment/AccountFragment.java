@@ -284,9 +284,9 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private void updateMonthInToolbar(int direction, boolean updateAccountInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         if(updateAccountInfo) {
             populateAccountWithInfo(true);
@@ -429,7 +429,7 @@ public class AccountFragment extends BaseRealmFragment implements
         closeSwipeItem(position);
 
         Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
-        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
         Parcelable wrapped = Parcels.wrap(accountList.get(position));
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, wrapped);

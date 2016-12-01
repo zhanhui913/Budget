@@ -59,15 +59,6 @@
 	<string name="nav_report">DE Monthly Report</string>
 	<string name="nav_setting">DE Settings</string>
 
-	<!-- Calendar View -->
-	<string name="Sunday">DE Sun</string>
-	<string name="Monday">DE Mon</string>
-	<string name="Tuesday">DE Tue</string>
-	<string name="Wednesday">DE Wed</string>
-	<string name="Thursday">DE Thu</string>
-	<string name="Friday">DE Fri</string>
-	<string name="Saturday">DE Sat</string>
-
 	<string name="month_jan">DE January</string>
 	<string name="month_feb">DE February</string>
 	<string name="month_mar">DE March</string>

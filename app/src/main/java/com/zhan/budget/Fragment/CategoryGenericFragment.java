@@ -560,7 +560,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             closeSwipeItem(position);
 
             Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
             Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 

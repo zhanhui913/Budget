@@ -346,7 +346,7 @@ public class SettingFragment extends BaseFragment {
             myRealm.writeCopyTo(exportRealmFile);
             myRealm.close();
 
-            String dateString = DateUtil.convertDateToStringFormat7(new Date());
+            String dateString = DateUtil.convertDateToStringFormat7(getContext(), new Date());
             updateLastBackupInfo(dateString);
             BudgetPreference.setLastBackup(getContext(), dateString);
 
@@ -602,7 +602,7 @@ public class SettingFragment extends BaseFragment {
     }
 
     private void exportCSV(final sortCSV sortType){
-        String csvFileName = Constants.NAME + "_" + sortType.toString() + "_" + (DateUtil.convertDateToStringFormat6(new Date())) + Constants.CSV_END;
+        String csvFileName = Constants.NAME + "_" + sortType.toString() + "_" + (DateUtil.convertDateToStringFormat6(getContext(), new Date())) + Constants.CSV_END;
 
         final File csvFile = new File(DOWNLOAD_DIRECTORY, csvFileName);
 

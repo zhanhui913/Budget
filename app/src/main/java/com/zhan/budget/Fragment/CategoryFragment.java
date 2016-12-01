@@ -155,7 +155,7 @@ public class CategoryFragment extends BaseFragment {
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         if(updateCategoryInfo) {
             categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);

@@ -126,7 +126,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //Get intents from caller activity
         isNewTransaction = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
-        selectedDate = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
+        selectedDate = DateUtil.convertStringToDate(getApplicationContext(), (getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
 
         if(!isNewTransaction){
             editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
@@ -446,7 +446,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         tempDate = selectedDate;
 
-        monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
+        monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, date).getTime()));
 
         calendarView.setCalendarView(new FlexibleCalendarView.CalendarView() {
             @Override
@@ -477,7 +477,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             @Override
             public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
                 //return String.valueOf(defaultValue.toUpperCase());
-                return DateUtil.getDayOfWeek(getApplicationContext(), dayOfWeek).toUpperCase();
+                return DateUtil.getDayOfWeek(dayOfWeek).toUpperCase();
             }
         });
 
@@ -488,7 +488,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, 1).getTime()));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, 1).getTime()));
             }
         });
 
@@ -503,7 +503,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(selectedDate));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), selectedDate));
                 calendarView.selectDate(selectedDate);
                 calendarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -961,7 +961,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         transaction.setNote(this.noteString);
-        transaction.setDate(DateUtil.formatDate(selectedDate));
+        transaction.setDate(DateUtil.formatDate(getApplicationContext(), selectedDate));
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){
@@ -1065,7 +1065,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 localTransaction.setDate(nextDate);
 
 
-                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
                 myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }

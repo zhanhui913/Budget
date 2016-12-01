@@ -24,7 +24,7 @@ public class TransactionsForCategory extends BaseTransactions {
     protected void getDifferentData(){
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
         updateTitleName(selectedCategory.getName());
-        updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), selectedCategory.getName(), DateUtil.convertDateToStringFormat2(beginMonth)));
+        updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), selectedCategory.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
     }
 
     @Override

@@ -129,7 +129,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getLastDateOfMonth(month);
 
-        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
+        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(getContext(), month) + "-> "+DateUtil.convertDateToStringFormat1(getContext(), endMonth)+")");
 
         //final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
@@ -342,7 +342,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         //Toast.makeText(getContext(), "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
         Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 

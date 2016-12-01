@@ -134,7 +134,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
                 }
                 fileWriter.append(COMMA_DELIMITER);
                 if(transactionList.get(i).getDate() != null){
-                    fileWriter.append(Util.checkNull(DateUtil.convertDateToStringFormat5(transactionList.get(i).getDate())));
+                    fileWriter.append(Util.checkNull(DateUtil.convertDateToStringFormat5(context, transactionList.get(i).getDate())));
                 }
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(transactionList.get(i).getNote()));

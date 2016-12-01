@@ -59,15 +59,6 @@
 	<string name="nav_report">ES Monthly Report</string>
 	<string name="nav_setting">ES Settings</string>
 
-	<!-- Calendar View -->
-	<string name="Sunday">ES Sun</string>
-	<string name="Monday">ES Mon</string>
-	<string name="Tuesday">ES Tue</string>
-	<string name="Wednesday">ES Wed</string>
-	<string name="Thursday">ES Thu</string>
-	<string name="Friday">ES Fri</string>
-	<string name="Saturday">ES Sat</string>
-
 	<string name="month_jan">ES January</string>
 	<string name="month_feb">ES February</string>
 	<string name="month_mar">ES March</string>

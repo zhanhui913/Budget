@@ -2,8 +2,6 @@ package com.zhan.budget.Util;
 
 import android.content.Context;
 
-import com.zhan.budget.Etc.Constants;
-
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,8 +15,8 @@ import java.util.GregorianCalendar;
 public final class DateUtil {
     private DateUtil(){}
 
-    public static Date convertStringToDate(String stringDate){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
+    public static Date convertStringToDate(Context context, String stringDate){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
         Date date = null;
         try{
             date = formatter.parse(stringDate);
@@ -28,15 +26,15 @@ public final class DateUtil {
         return date;
     }
 
-    public static String convertDateToString(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
+    public static String convertDateToString(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static Date formatDate(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
+    public static Date formatDate(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
 
-        String dateString = convertDateToString(date);
+        String dateString = convertDateToString(context, date);
         Date newDate = null;
 
         try{
@@ -47,43 +45,43 @@ public final class DateUtil {
         return newDate;
     }
 
-    public static String convertDateToStringFormat1(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat1(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat2(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat2(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat3(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat3(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat4(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat4(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat5(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat5(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat6(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM_d_yyyy_hh_mm_a", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat6(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM_d_yyyy_hh_mm_a", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat7(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat7(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertLongToStringFormat(long value){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", Constants.BUDGET_LOCALE);
+    public static String convertLongToStringFormat(Context context, long value){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", context.getResources().getConfiguration().locale);
         return formatter.format(value);
     }
 
@@ -300,11 +298,10 @@ public final class DateUtil {
 
     /**
      * Gets the string value of the day, useful for localization
-     * @param context
      * @param value
      * @return
      */
-    public static String getDayOfWeek(Context context, int value){
+    public static String getDayOfWeek(int value){
         switch(value){
             case 1:
                 return DateFormatSymbols.getInstance().getShortWeekdays()[1];

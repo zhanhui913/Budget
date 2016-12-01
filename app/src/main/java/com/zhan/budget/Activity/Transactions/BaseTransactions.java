@@ -68,7 +68,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         instance = this;
 
         //Get intents from caller activity
-        beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH)));
+        beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate(getApplicationContext(), (getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH)));
 
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);
@@ -105,7 +105,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(beginMonth));
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth));
         }
     }
 
@@ -276,7 +276,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
         Intent editTransactionIntent = new Intent(getBaseContext(), TransactionInfoActivity.class);
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(transactionList.get(position).getDate()));
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getApplicationContext(), transactionList.get(position).getDate()));
 
         Parcelable wrapped = Parcels.wrap(transactionList.get(position));
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);

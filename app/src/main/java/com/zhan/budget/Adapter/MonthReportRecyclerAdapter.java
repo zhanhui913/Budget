@@ -72,7 +72,7 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         // getting MonthReport data for the row
         MonthReport monthReport = monthReportList.get(position);
 
-        viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
+        viewHolder.month.setText(DateUtil.convertDateToStringFormat4(context, monthReport.getMonth()));
         //viewHolder.expenseThisMonth.setText("You spent "+CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
         //viewHolder.incomeThisMonth.setText("You earned "+CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), Constants.BUDGET_LOCALE));
 

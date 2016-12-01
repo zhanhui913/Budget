@@ -59,15 +59,6 @@
 	<string name="nav_report">RU Monthly Report</string>
 	<string name="nav_setting">RU Settings</string>
 
-	<!-- Calendar View -->
-	<string name="Sunday">RU Sun</string>
-	<string name="Monday">RU Mon</string>
-	<string name="Tuesday">RU Tue</string>
-	<string name="Wednesday">RU Wed</string>
-	<string name="Thursday">RU Thu</string>
-	<string name="Friday">RU Fri</string>
-	<string name="Saturday">RU Sat</string>
-
 	<string name="month_jan">RU January</string>
 	<string name="month_feb">RU February</string>
 	<string name="month_mar">RU March</string>

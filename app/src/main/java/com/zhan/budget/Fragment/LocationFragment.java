@@ -126,9 +126,9 @@ public class LocationFragment extends BaseRealmFragment
         locationListview.smoothScrollToPosition(0);
 
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         //fetchNewLocationData(currentMonth, true);
 
@@ -557,7 +557,7 @@ public class LocationFragment extends BaseRealmFragment
         closeSwipeItem(position);
 
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
         Parcelable wrapped = Parcels.wrap(locationList.get(position));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, wrapped);
