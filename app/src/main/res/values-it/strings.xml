@@ -50,9 +50,9 @@
 	<string name="warning_delete_category">IT All transactions with this category will no longer have this category associated to it once deleted</string>
 	<string name="warning_delete_account">IT All transactions with this account will no longer have this account associated to it once deleted</string>
 	<string name="warning_delete_location">IT All transactions with this location will no longer have this location associated to it once deleted</string>
-	<string name="warning_category_valid_name">IT Category must have a name</string>
-	<string name="warning_account_valid_name">IT Account must have a name</string>
-	<string name="warning_location_valid_name">IT Location must have a name</string>
+	<string name="warning_category_valid_name">IT Category must have a valid name</string>
+	<string name="warning_account_valid_name">IT Account must have a valid name</string>
+	<string name="warning_location_valid_name">IT Location must have a valid name</string>
 
 	<!-- Fragments in navigation drawer -->
 	<string name="nav_calendar">IT Calendar</string>
