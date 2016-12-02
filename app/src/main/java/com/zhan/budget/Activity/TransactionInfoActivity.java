@@ -408,7 +408,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedExpenseCategory.getName());
                         }
 
-                        currentPageTextView.setText(currentPage.toString());
+                        currentPageTextView.setText(R.string.category_expense);
 
                         break;
                     case 1:
@@ -422,7 +422,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedIncomeCategory.getName());
                         }
 
-                        currentPageTextView.setText(currentPage.toString());
+                        currentPageTextView.setText(R.string.category_income);
 
                         break;
                 }
