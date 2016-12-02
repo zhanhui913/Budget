@@ -10,7 +10,9 @@
 	<dimen name="fab_margin">16dp</dimen>
 	<dimen name="letter_icon_size">60sp</dimen>
 
+	<!-- Num pad -->
 	<dimen name="num_pad_text_size">20sp</dimen>
+	<dimen name="num_pad_height">35dp</dimen>
 
 	<!-- This includes the left and right padding which is 8dp each and the default background size
     for circular view which is 50dp-->
