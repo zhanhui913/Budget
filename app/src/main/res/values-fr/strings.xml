@@ -102,7 +102,7 @@
 	<string name="pull_down_add_account">FR Pull down to add an account</string>
 	<string name="pull_down_add_location">FR Pull down to add a location</string>
 
-	<string name="empty_category_selection">FR There is no account available for selection</string>
+	<string name="empty_account_selection">FR There is no account available for selection</string>
 	<string name="empty_category">FR There is no %s category</string>
 	<string name="empty_account">FR There is no account</string>
 	<string name="empty_location">FR There is no location</string>

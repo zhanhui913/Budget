@@ -117,7 +117,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyAccountText.setText(getString(R.string.empty_account));
+        emptyAccountText.setText(R.string.empty_account);
 
         ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
         downArrow.setVisibility(View.INVISIBLE);

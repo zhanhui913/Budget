@@ -623,7 +623,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
 
             title.setText(getString(R.string.account));
-            message.setText(getString(R.string.empty_category_selection));
+            message.setText(getString(R.string.empty_account_selection));
 
             accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                     .setView(accountDialogView)
