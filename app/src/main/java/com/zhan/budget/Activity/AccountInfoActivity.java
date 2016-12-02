@@ -269,6 +269,29 @@ public class AccountInfoActivity extends BaseActivity implements
         accountCircularView.setCircleColor(selectedColor);
     }
 
+    /**
+     * If there is no Account name, a dialog will popup to remind the user.
+     */
+    private void notificationForAccount(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.account);
+        message.setText(R.string.warning_account_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -297,8 +320,15 @@ public class AccountInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            save();
+
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(account.getName())){
+                save();
+            }else{
+                notificationForAccount();
+
+            }
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);

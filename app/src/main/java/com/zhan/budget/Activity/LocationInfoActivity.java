@@ -230,6 +230,29 @@ public class LocationInfoActivity extends BaseActivity implements
                 .show();
     }
 
+    /**
+     * If there is no location name, a dialog will popup to remind the user.
+     */
+    private void notificationForLocation(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.location);
+        message.setText(R.string.warning_location_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     private void save(){
         Intent intent = new Intent();
 
@@ -300,7 +323,12 @@ public class LocationInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            save();
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(location.getName())){
+                save();
+            }else{
+                notificationForLocation();
+            }
+
             return true;
         }
 

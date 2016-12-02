@@ -546,7 +546,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         if (id == R.id.formSaveBtn) {
             getLatestIndexForCategory();
 
-            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(categoryNameTextView.getText().toString())){
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(category.getName())){
                 save();
             }else{
                 Util.createSnackbar(getBaseContext(), (View)categoryNameTextView.getParent(), getString(R.string.category_valid_name_warning));

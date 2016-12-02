@@ -192,9 +192,13 @@ public final class Util {
     }
 
     public static char getFirstCharacterFromString(String value){
-        return value.toCharArray()[0];
+        //return value.toCharArray()[0];
+        if(value.equalsIgnoreCase("")){
+            return Character.MIN_VALUE;
+        }else{
+            return value.toCharArray()[0];
+        }
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
