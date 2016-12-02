@@ -440,9 +440,15 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void getLatestIndexForCategory(){ Log.d("ZHAP", "trying to get latest index for new category for type :"+category.getType());
         Realm myRealm = Realm.getDefaultInstance();
         RealmResults<Category> categoryRealmResults = myRealm.where(Category.class).equalTo("type", category.getType()).findAllSorted("index");
-        Log.d("ZHAP", "size :"+categoryRealmResults.size());
-        Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
-        nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+
+        if(categoryRealmResults.size() > 0){
+            Log.d("ZHAP", "size :"+categoryRealmResults.size());
+            Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
+            nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+        }else{
+            nextIndexCategory = 0;
+        }
+
         myRealm.close();
     }
 
@@ -567,9 +573,8 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            getLatestIndexForCategory();
-
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(category.getName())){
+                getLatestIndexForCategory();
                 save();
             }else{
                 notificationForCategory();
