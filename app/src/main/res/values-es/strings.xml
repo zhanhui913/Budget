@@ -227,4 +227,5 @@
 	<string name="open_source_project_name">ES Name</string>
 	<string name="open_source_project_author">ES Author</string>
 
+	<string name="monthly_overview">ES Monthly Overview</string>
 </resources>

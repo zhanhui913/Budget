@@ -82,7 +82,7 @@ public class OverviewActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle("Monthly Overview");
+            getSupportActionBar().setTitle(R.string.monthly_overview);
         }
     }
 
@@ -97,8 +97,8 @@ public class OverviewActivity extends BaseActivity implements
 
     private void createTabs(){
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.category_expense));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.category_income));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         overviewExpenseFragment = OverviewGenericFragment.newInstance(BudgetType.EXPENSE, currentMonth);
