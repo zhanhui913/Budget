@@ -184,16 +184,16 @@
 	<string formatted="false" name="dialog_progress_total">DE %d/%d</string>
 
 	<!-- Num pad -->
-	<string name="num_pad_1">DE 1</string>
-	<string name="num_pad_2">DE 2</string>
-	<string name="num_pad_3">DE 3</string>
-	<string name="num_pad_4">DE 4</string>
-	<string name="num_pad_5">DE 5</string>
-	<string name="num_pad_6">DE 6</string>
-	<string name="num_pad_7">DE 7</string>
-	<string name="num_pad_8">DE 8</string>
-	<string name="num_pad_9">DE 9</string>
-	<string name="num_pad_0">DE 0</string>
+	<string name="num_pad_1">1</string>
+	<string name="num_pad_2">2</string>
+	<string name="num_pad_3">3</string>
+	<string name="num_pad_4">4</string>
+	<string name="num_pad_5">5</string>
+	<string name="num_pad_6">6</string>
+	<string name="num_pad_7">7</string>
+	<string name="num_pad_8">8</string>
+	<string name="num_pad_9">9</string>
+	<string name="num_pad_0">0</string>
 
 	<!-- ETC -->
 	<string name="category_selected_warning">DE Make sure a %s category is selected</string>

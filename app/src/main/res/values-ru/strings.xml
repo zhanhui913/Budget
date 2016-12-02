@@ -180,16 +180,16 @@
 	<string formatted="false" name="dialog_progress_total">RU %d/%d</string>
 
 	<!-- Num pad -->
-	<string name="num_pad_1">RU 1</string>
-	<string name="num_pad_2">RU 2</string>
-	<string name="num_pad_3">RU 3</string>
-	<string name="num_pad_4">RU 4</string>
-	<string name="num_pad_5">RU 5</string>
-	<string name="num_pad_6">RU 6</string>
-	<string name="num_pad_7">RU 7</string>
-	<string name="num_pad_8">RU 8</string>
-	<string name="num_pad_9">RU 9</string>
-	<string name="num_pad_0">RU 0</string>
+	<string name="num_pad_1">1</string>
+	<string name="num_pad_2">2</string>
+	<string name="num_pad_3">3</string>
+	<string name="num_pad_4">4</string>
+	<string name="num_pad_5">5</string>
+	<string name="num_pad_6">6</string>
+	<string name="num_pad_7">7</string>
+	<string name="num_pad_8">8</string>
+	<string name="num_pad_9">9</string>
+	<string name="num_pad_0">0</string>
 
 	<!-- ETC -->
 	<string name="category_selected_warning">RU Make sure a %s category is selected</string>
