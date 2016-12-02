@@ -170,7 +170,11 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //default first page
         currentPage = BudgetType.EXPENSE;
-        currentPageTextView.setText(currentPage.toString());
+        if(currentPage == BudgetType.EXPENSE){
+            currentPageTextView.setText(R.string.category_expense);
+        }else{
+            currentPageTextView.setText(R.string.category_income);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
         adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), transactionExpenseFragment, transactionIncomeFragment);
@@ -219,7 +223,11 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPage = BudgetType.EXPENSE;
             }
 
-            currentPageTextView.setText(currentPage.toString());
+            if(currentPage == BudgetType.EXPENSE){
+                currentPageTextView.setText(R.string.category_expense);
+            }else{
+                currentPageTextView.setText(R.string.category_income);
+            }
 
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
