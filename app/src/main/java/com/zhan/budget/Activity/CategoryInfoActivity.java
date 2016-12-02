@@ -244,6 +244,7 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         categoryNameTextView.setText(input.getText().toString());
+                        category.setName(input.getText().toString());
 
                         if(isCurrentCircularText){ //if the current toggle is text
                             changeCircularViewToText(input.getText().toString());
@@ -516,11 +517,33 @@ public class CategoryInfoActivity extends BaseActivity implements
         categoryCircularView.setIconResource(catRes);
     }
 
+    /**
+     * If there is no Category name, a dialog will popup to remind the user.
+     */
+    private void notificationForCategory(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.category);
+        message.setText(R.string.warning_category_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -549,7 +572,7 @@ public class CategoryInfoActivity extends BaseActivity implements
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(category.getName())){
                 save();
             }else{
-                Util.createSnackbar(getBaseContext(), (View)categoryNameTextView.getParent(), getString(R.string.category_valid_name_warning));
+                notificationForCategory();
             }
 
             return true;
