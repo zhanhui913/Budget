@@ -88,11 +88,27 @@ public class MainActivity extends BaseActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
 
-        //Load calendarFragment first
-        getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
+        if(getIntent().getExtras() != null){
+            //This will be true if its coming from Settings (ie: called from SettingsFragment during a change theme)
+            boolean isFromSettings = (getIntent().getExtras()).getBoolean(Constants.REQUEST_CHANGE_THEME);
 
-        //set first fragment as default in navigation drawer
-        navigationView.getMenu().getItem(0).setChecked(true);
+            if(isFromSettings){
+                getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, settingFragment).commit();
+
+                //set 5th fragment (Settings) in navigation drawer
+                navigationView.getMenu().getItem(5).setChecked(true);
+            }else{
+                getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
+
+                //set 1st fragment (Calendar) in navigation drawer
+                navigationView.getMenu().getItem(0).setChecked(true);
+            }
+        }else{
+            getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
+
+            //set 1st fragment (Calendar) in navigation drawer
+            navigationView.getMenu().getItem(0).setChecked(true);
+        }
 
         if(BudgetPreference.getFirstTime(getBaseContext())){
             loadTutorials();
