@@ -109,16 +109,6 @@ public class MainActivity extends BaseActivity
             //set 1st fragment (Calendar) in navigation drawer
             navigationView.getMenu().getItem(0).setChecked(true);
         }
-
-        if(BudgetPreference.getFirstTime(getBaseContext())){
-            loadTutorials();
-        }
-    }
-
-    private void loadTutorials(){
-        Intent mainAct = new Intent(getBaseContext(), MaterialTutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(getBaseContext()));
-        startActivity(mainAct);
     }
 
     @Override
