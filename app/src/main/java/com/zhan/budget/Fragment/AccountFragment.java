@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.PlusView;
 
@@ -244,6 +246,13 @@ public class AccountFragment extends BaseRealmFragment implements
                 pieChartFragment.setData(accountList, animate);
 
                 centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, Constants.BUDGET_LOCALE));
+                if(result > 0){
+                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                }else if(result < 0){
+                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                }else{
+                    centerPanelRightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+                }
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);

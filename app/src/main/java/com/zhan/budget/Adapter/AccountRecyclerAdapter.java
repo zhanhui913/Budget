@@ -85,10 +85,12 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
         if(displayCost){
             viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(account.getCost(), Constants.BUDGET_LOCALE));
 
-            if(account.getCost() >= 0){
+            if(account.getCost() > 0){
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
-            }else{
+            }else if(account.getCost() < 0){
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+            }else{
+                viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
             }
         }else{
             viewHolder.cost.setVisibility(View.GONE);
