@@ -212,6 +212,8 @@
 	<string formatted="false" name="category_percent">RU Percent : %.2f%%</string>
 	<string name="na">RU NA</string>
 	<string formatted="false" name="version">RU v%s</string>
+	<string name="color">RU Color</string>
+	<string name="icon">RU Icon</string>
 
 	<!-- Middle section -->
 	<string name="middle_section_name">RU Name</string>

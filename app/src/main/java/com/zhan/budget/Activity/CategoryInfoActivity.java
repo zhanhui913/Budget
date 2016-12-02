@@ -44,10 +44,10 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     private Activity instance;
     private Toolbar toolbar;
-    private TextView categoryNameTextView, categoryBudgetTextView;
+    private TextView currentPageTextView, categoryNameTextView, categoryBudgetTextView;
     private ImageButton deleteCategoryBtn, changeBudgetBtn, changeNameBtn;
     private ToggleButton toggleBtn;
-
+    private ViewPager viewPager;
     private CircularView categoryCircularView;
 
     private Category category;
@@ -94,15 +94,19 @@ public class CategoryInfoActivity extends BaseActivity implements
         colorPickerCategoryFragment = ColorPickerCategoryFragment.newInstance(category.getColor());
         iconPickerCategoryFragment = IconPickerCategoryFragment.newInstance(category.getIcon(), category.getColor());
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
+        viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
         TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), colorPickerCategoryFragment, iconPickerCategoryFragment);
         viewPager.setAdapter(adapterViewPager);
 
         CircleIndicator circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
+        currentPageTextView = (TextView)findViewById(R.id.currentPageTitle);
         categoryNameTextView = (TextView) findViewById(R.id.categoryNameTextView);
         categoryBudgetTextView = (TextView) findViewById(R.id.categoryBudgetTextView);
+
+        //default first page
+        currentPageTextView.setText(R.string.color);
 
         categoryNameTextView.setText(category.getName());
         categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
@@ -225,6 +229,30 @@ public class CategoryInfoActivity extends BaseActivity implements
                     // The toggle is disabled (Use icon)
                     changeCircularViewToIcon();
                 }
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        currentPageTextView.setText(R.string.color);
+                        break;
+                    case 1:
+                        currentPageTextView.setText(R.string.icon);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }

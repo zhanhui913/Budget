@@ -212,6 +212,8 @@
 	<string formatted="false" name="category_percent">Percent : %.2f%%</string>
 	<string name="na">NA</string>
 	<string formatted="false" name="version">v%s</string>
+	<string name="color">Color</string>
+	<string name="icon">Icon</string>
 
 	<!-- Middle section -->
 	<string name="middle_section_name">Name</string>
