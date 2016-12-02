@@ -5,30 +5,30 @@
         <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/svg_ic_menu_calendar"
-            android:title="Calendar" />
+            android:title="@string/nav_calendar" />
         <item
             android:id="@+id/nav_category"
             android:icon="@drawable/svg_ic_menu_category"
-            android:title="Category" />
+            android:title="@string/nav_category" />
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/svg_ic_menu_account"
-            android:title="Account" />
+            android:title="@string/nav_account" />
         <item
             android:id="@+id/nav_location"
             android:icon="@drawable/svg_ic_location"
-            android:title="Location" />
+            android:title="@string/nav_location" />
         <item
             android:id="@+id/nav_overview"
             android:icon="@drawable/svg_ic_menu_monthly_overview"
-            android:title="Monthly Report" />
+            android:title="@string/nav_report" />
     </group>
 
     <group android:id="@+id/nav2" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/svg_ic_settings"
-            android:title="Setting" />
+            android:title="@string/nav_setting" />
         <!--<item
             android:id="@+id/nav_info"
             android:icon="@drawable/svg_ic_menu_info"

@@ -1,0 +1,224 @@
+<resources>
+	<string name="app_name">Budget</string>
+
+	<string name="navigation_drawer_open">RU Open navigation drawer</string>
+	<string name="navigation_drawer_close">RU Close navigation drawer</string>
+
+	<string name="action_settings">RU Settings</string>
+
+	<!-- Permissions -->
+	<string name="permission_rationale_storage">RU You need to allow access to storage in order to create a backup database.</string>
+	<string name="permission_denied">RU Permission denied.</string>
+	<string name="permission_denied_message">RU Are you sure you want to deny this permission?</string>
+	<string name="permission_retry">RU Re-try</string>
+	<string name="permission_deny">RU Deny</string>
+	<string name="permission_rationale_write_backup_data">RU Without this permission the app is unable to create a backup data</string>
+	<string name="permission_rationale_read_backup_data">RU Without this permission the app is unable to restore the backup data</string>
+	<string name="permission_rationale_write_csv">RU Without this permission the app is unable to create the CSV</string>
+
+
+	<!-- Activity name -->
+	<string name="title_activity_transaction_info">RU Transaction</string>
+	<string name="title_activity_main2">RU Main2Activity</string>
+	<string name="title_activity_category_info">RU CategoryInfo</string>
+	<string name="title_activity_transactions_for_category">RU TransactionsForCategory</string>
+	<string name="title_activity_overview">RU OverviewActivity</string>
+	<string name="title_activity_pdf">RU PdfActivity</string>
+	<string name="title_activity_tour">RU Tour</string>
+	<string name="title_activity_settings_account">RU Accounts</string>
+	<string name="title_activity_settings_category">RU Categories</string>
+	<string name="title_activity_settings_location">RU Locations</string>
+	<string name="title_activity_transactions_for_location">RU TransactionsForLocation</string>
+	<string name="title_activity_open_source">RU OpenSourceActivity</string>
+	<string name="title_activity_account_info">RU AccountInfoActivity</string>
+	<string name="title_activity_transactions_for_account">RU TransactionsForAccount</string>
+	<string name="title_activity_location_info">RU LocationInfoActivity</string>
+
+	<!-- Tutorial string -->
+	<string name="tutorial_description_1">RU View all transactions for a specific date</string>
+	<string name="tutorial_description_2">RU Change between light and dark mode</string>
+	<string name="tutorial_description_3">RU Approve, un-approve, or delete a transaction by swiping left</string>
+	<string name="tutorial_description_4">RU Input amount and select category, account, notes, location, etc</string>
+	<string name="tutorial_description_5">RU Compare your current spending with your budget</string>
+	<string name="tutorial_description_6">RU View how much you spent on all accounts</string>
+	<string name="tutorial_description_7">RU Enter and track location for your purchases</string>
+	<string name="tutorial_description_8">RU View how much you spent and earn each month</string>
+	<string name="tutorial_description_9">RU See what you are spending the most on</string>
+
+	<!-- Warning -->
+	<string name="warning_delete_transaction">RU Delete this transaction?</string>
+	<string name="warning_delete_category">RU All transactions with this category will no longer have this category associated to it once deleted</string>
+	<string name="warning_delete_account">RU All transactions with this account will no longer have this account associated to it once deleted</string>
+	<string name="warning_delete_location">RU All transactions with this location will no longer have this location associated to it once deleted</string>
+	<string name="warning_category_valid_name">RU Category must have a valid name</string>
+	<string name="warning_account_valid_name">RU Account must have a valid name</string>
+	<string name="warning_location_valid_name">RU Location must have a valid name</string>
+
+	<!-- Fragments in navigation drawer -->
+	<string name="nav_calendar">RU Calendar</string>
+	<string name="nav_category">RU Category</string>
+	<string name="nav_account">RU Account</string>
+	<string name="nav_location">RU Location</string>
+	<string name="nav_report">RU Monthly Report</string>
+	<string name="nav_setting">RU Settings</string>
+
+	<string name="month_jan">RU January</string>
+	<string name="month_feb">RU February</string>
+	<string name="month_mar">RU March</string>
+	<string name="month_apr">RU April</string>
+	<string name="month_may">RU May</string>
+	<string name="month_jun">RU June</string>
+	<string name="month_jul">RU July</string>
+	<string name="month_aug">RU August</string>
+	<string name="month_sep">RU September</string>
+	<string name="month_oct">RU October</string>
+	<string name="month_nov">RU November</string>
+	<string name="month_dev">RU December</string>
+
+	<string name="transaction">RU Transaction</string>
+	<string name="account">RU Account</string>
+	<string name="category">RU Category</string>
+	<string name="category_expense">RU Expense</string>
+	<string name="category_income">RU Income</string>
+	<string name="location">RU Location</string>
+	<string name="note">RU Note</string>
+	<string name="budget">RU Budget</string>
+
+	<!-- Title when adding/editting item-->
+	<string name="add_transaction">RU Add transaction</string>
+	<string name="add_category_expense">RU Add expense category</string>
+	<string name="add_category_income">RU Add income category</string>
+	<string name="add_account">RU Add account</string>
+	<string name="add_location">RU Add location</string>
+	<string name="add_note">RU Add note</string>
+	<string name="edit_transaction">RU Edit transaction</string>
+	<string name="edit_category_expense">RU Edit expense category</string>
+	<string name="edit_category_income">RU Edit income category</string>
+	<string name="edit_account">RU Edit account</string>
+	<string name="edit_location">RU Edit location</string>
+
+	<string name="pull_down_add_transaction">RU Pull down to add a transaction</string>
+	<string formatted="false" name="pull_down_add_category">RU Pull down to add an %s category</string>
+	<string name="pull_down_add_account">RU Pull down to add an account</string>
+	<string name="pull_down_add_location">RU Pull down to add a location</string>
+
+	<string name="empty_account_selection">RU There is no account available for selection</string>
+	<string name="empty_category">RU There is no %s category</string>
+	<string name="empty_account">RU There is no account</string>
+	<string name="empty_location">RU There is no location</string>
+	<string formatted="false" name="empty_transaction_custom_date">RU There is no transaction for \'%s\' during %s</string>
+
+
+	<!-- Monthly Report Fragment -->
+	<string name="you_spent">RU You spent %s</string>
+	<string name="you_earned">RU You earned %s</string>
+	<string name="you_saved">RU You saved %s</string>
+
+	<!-- Settings Fragment -->
+	<string name="setting_header_general">RU General</string>
+	<string name="setting_header_data">RU Data</string>
+	<string name="setting_header_feedback">RU Feedback</string>
+
+	<!-- GENERAL -->
+	<string name="setting_title_theme">RU Current Theme</string>
+	<string name="setting_content_theme_day">RU Day Mode</string>
+	<string name="setting_content_theme_night">RU Night Mode</string>
+	<string name="setting_title_day">RU First day of the week</string>
+	<string name="setting_content_day_sun">RU Sunday</string>
+	<string name="setting_content_day_mon">RU Monday</string>
+	<string name="setting_title_category">RU Categories</string>
+	<string name="setting_content_category">RU Manage categories. Change icon, color, and others</string>
+	<string name="setting_title_account">RU Accounts</string>
+	<string name="setting_content_account">RU Manage accounts. Change icons and others</string>
+	<string name="setting_title_location">RU Locations</string>
+	<string name="setting_content_location">RU Manage Locations. Change colors</string>
+
+	<!-- DATA -->
+	<string name="setting_title_backup_data">RU Backup data</string>
+	<string name="setting_content_backup_data_successful">RU Backup data successful</string>
+	<string formatted="false" name="setting_content_backup_data">RU last backup : %s</string>
+	<string name="setting_title_restore_data">RU Restore data</string>
+	<string name="setting_content_restore_data_successful">RU Restore data successful</string>
+	<string name="setting_content_restore_data_failed">RU Restore data failed as backup file doesn\'t exist</string>
+	<string name="setting_title_reset_data">RU Reset data</string>
+	<string name="setting_title_export_data">RU Export data to CSV</string>
+	<string name="setting_content_export_data_sort">RU Sort by</string>
+
+	<!-- FEEDBACK -->
+	<string name="setting_title_email">RU Email me</string>
+	<string name="setting_content_email">RU feedback for the app</string>
+	<string name="setting_title_tour">RU Tour</string>
+	<string name="setting_title_faq">RU FAQ</string>
+	<string name="setting_title_open_source">RU Open Source Licenses</string>
+	<string name="setting_content_open_source">RU License details for open source software used</string>
+
+	<!-- Dialogs -->
+	<string name="dialog_title_delete">RU Delete</string>
+	<string name="dialog_title_repeat">RU Repeat</string>
+	<string name="dialog_title_csv">RU CSV</string>
+	<string name="dialog_title_title">RU Title</string>
+
+	<string name="dialog_button_ok">RU OK</string>
+	<string name="dialog_button_select">RU SELECT</string>
+	<string name="dialog_button_delete">RU DELETE</string>
+	<string name="dialog_button_save">RU SAVE</string>
+	<string name="dialog_button_reset">RU RESET</string>
+	<string name="dialog_button_cancel">RU CANCEL</string>
+
+	<string name="dialog_content_name">RU Name</string>
+	<string name="dialog_content_hint">RU Hint</string>
+	<string formatted="false" name="dialog_progress_percent">RU %d%%</string>
+	<string formatted="false" name="dialog_progress_total">RU %d/%d</string>
+
+	<!-- Num pad -->
+	<string name="num_pad_1">RU 1</string>
+	<string name="num_pad_2">RU 2</string>
+	<string name="num_pad_3">RU 3</string>
+	<string name="num_pad_4">RU 4</string>
+	<string name="num_pad_5">RU 5</string>
+	<string name="num_pad_6">RU 6</string>
+	<string name="num_pad_7">RU 7</string>
+	<string name="num_pad_8">RU 8</string>
+	<string name="num_pad_9">RU 9</string>
+	<string name="num_pad_0">RU 0</string>
+
+	<!-- ETC -->
+	<string name="category_selected_warning">RU Make sure a %s category is selected</string>
+	<string name="category_valid_name_warning">RU Please input a valid name for this category</string>
+	<string name="days">RU days</string>
+	<string name="weeks">RU weeks</string>
+	<string name="months">RU months</string>
+	<string name="name">RU Name</string>
+	<string name="author">RU Author : Zhan H. Yap</string>
+	<string name="target_email">RU zhanapp@gmail.com</string>
+	<string name="reset">RU Reset</string>
+	<string name="reset_data_message">RU Resetting data will remove all data you\'ve entered</string>
+	<string name="resetting">RU Resetting</string>
+	<string name="send_email">RU Send email</string>
+	<string name="feedback_email_title">RU Feedback</string>
+	<string name="chevron_left">RU Left</string>
+	<string name="chevron_right">RU Right</string>
+	<string name="form_btn_save">RU Save</string>
+	<string name="csv">RU CSV</string>
+	<string formatted="false" name="csv_success">RU CSV sorted by %s</string>
+	<string name="csv_failed">RU CSV creation failed</string>
+	<string name="use_text">RU Use Text</string>
+	<string name="use_icon">RU Use Icon</string>
+	<string name="cost">RU $0.00</string>
+	<string name="current">RU Current</string>
+	<string formatted="false" name="location_time">RU %d time</string>
+	<string formatted="false" name="location_times">RU %d times</string>
+	<string formatted="false" name="category_budget">RU Budget : %s</string>
+	<string formatted="false" name="category_percent">RU Percent : %.2f%%</string>
+	<string name="na">RU NA</string>
+	<string formatted="false" name="version">RU v%s</string>
+
+	<!-- Middle section -->
+	<string name="middle_section_name">RU Name</string>
+	<string name="middle_section_right">RU Right</string>
+
+	<!-- Open Source -->
+	<string name="open_source_project_name">RU Name</string>
+	<string name="open_source_project_author">RU Author</string>
+
+</resources>

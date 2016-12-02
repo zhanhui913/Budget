@@ -118,9 +118,9 @@ public class LocationInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(isNewLocation){
-                getSupportActionBar().setTitle("Add Location");
+                getSupportActionBar().setTitle(getString(R.string.add_location));
             }else{
-                getSupportActionBar().setTitle("Edit Location");
+                getSupportActionBar().setTitle(getString(R.string.edit_location));
             }
         }
     }
@@ -161,13 +161,13 @@ public class LocationInfoActivity extends BaseActivity implements
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Location Name");
+        genericTitle.setText(getString(R.string.name));
         input.setText(locationNameTextView.getText());
-        input.setHint("Location");
+        input.setHint(getString(R.string.location));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         locationNameTextView.setText(input.getText().toString());
 
@@ -177,7 +177,7 @@ public class LocationInfoActivity extends BaseActivity implements
                         locationCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
                         locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));                    }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -194,13 +194,13 @@ public class LocationInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_location);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
 
@@ -220,9 +220,32 @@ public class LocationInfoActivity extends BaseActivity implements
 
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    /**
+     * If there is no location name, a dialog will popup to remind the user.
+     */
+    private void notificationForLocation(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.location);
+        message.setText(R.string.warning_location_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 })
@@ -300,7 +323,12 @@ public class LocationInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            save();
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(location.getName())){
+                save();
+            }else{
+                notificationForLocation();
+            }
+
             return true;
         }
 

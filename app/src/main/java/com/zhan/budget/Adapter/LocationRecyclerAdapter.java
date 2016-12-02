@@ -84,7 +84,11 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         Location location = locationList.get(position);
 
         viewHolder.name.setText(location.getName());
-        viewHolder.amount.setText(location.getAmount()+ ((location.getAmount() > 1)? " times":" time"));
+        if(location.getAmount() > 1){
+            viewHolder.amount.setText(String.format(context.getString(R.string.location_times), location.getAmount()));
+        }else{
+            viewHolder.amount.setText(String.format(context.getString(R.string.location_time), location.getAmount()));
+        }
         viewHolder.icon.setCircleColor(location.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));

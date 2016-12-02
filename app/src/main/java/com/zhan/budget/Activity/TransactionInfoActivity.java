@@ -126,7 +126,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //Get intents from caller activity
         isNewTransaction = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
-        selectedDate = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
+        selectedDate = DateUtil.convertStringToDate(getApplicationContext(), (getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
 
         if(!isNewTransaction){
             editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
@@ -253,9 +253,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(!isNewTransaction){
-                getSupportActionBar().setTitle("Edit Transaction");
+                getSupportActionBar().setTitle(getString(R.string.edit_transaction));
             }else{
-                getSupportActionBar().setTitle("Add Transaction");
+                getSupportActionBar().setTitle(getString(R.string.add_transaction));
             }
         }
     }
@@ -446,7 +446,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         tempDate = selectedDate;
 
-        monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
+        monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, date).getTime()));
 
         calendarView.setCalendarView(new FlexibleCalendarView.CalendarView() {
             @Override
@@ -476,7 +476,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             @Override
             public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
-                return String.valueOf(defaultValue.toUpperCase());
+                //return String.valueOf(defaultValue.toUpperCase());
+                return DateUtil.getDayOfWeek(dayOfWeek).toUpperCase();
             }
         });
 
@@ -487,7 +488,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, 1).getTime()));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, 1).getTime()));
             }
         });
 
@@ -502,7 +503,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(selectedDate));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), selectedDate));
                 calendarView.selectDate(selectedDate);
                 calendarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -510,12 +511,12 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder dateAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setView(dateDialogView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         selectedDate = tempDate;
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         tempDate = selectedDate;
                         dialog.dismiss();
@@ -552,7 +553,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
 
             TextView title = (TextView)accountDialogView.findViewById(R.id.title);
-            title.setText("Select Account");
+            title.setText(getString(R.string.account));
 
             accountNameList = new ArrayList<>();
 
@@ -602,13 +603,13 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                     .setView(accountDialogView)
-                    .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             selectedAccountIndexInSpinner = accountPicker.getValue();
                             selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
                         }
                     })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             //Reset the selection back to previous
                             accountPicker.setValue(selectedAccountIndexInSpinner);
@@ -621,12 +622,12 @@ public class TransactionInfoActivity extends BaseActivity implements
             TextView title = (TextView)accountDialogView.findViewById(R.id.genericTitle);
             TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
 
-            title.setText("No Account");
-            message.setText("There is no account available for selection");
+            title.setText(getString(R.string.account));
+            message.setText(getString(R.string.empty_account_selection));
 
             accountAlertDialogBuilder = new AlertDialog.Builder(instance)
                     .setView(accountDialogView)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                         }
@@ -743,13 +744,13 @@ public class TransactionInfoActivity extends BaseActivity implements
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Note");
-        input.setHint("Note");
+        title.setText(getString(R.string.add_note));
+        input.setHint(getString(R.string.note));
         input.setText(noteString);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
 
@@ -766,7 +767,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -803,10 +804,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_autocomplete, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Location");
+        title.setText(getString(R.string.add_location));
 
         inputLocation = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
-        inputLocation.setHint("Location");
+        inputLocation.setHint(getString(R.string.location));
         inputLocation.setText(locationString);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
@@ -814,7 +815,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString();
 
@@ -827,7 +828,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -849,7 +850,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         final ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
 
         //Initializing a new string array with elements
-        final String[] values= {"days", "weeks", "months"};
+        final String[] values= {getString(R.string.days), getString(R.string.weeks), getString(R.string.months)};
 
         //Populate NumberPicker values from String array values
         //Set the minimum value of NumberPicker
@@ -866,7 +867,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (quantityNumberPicker.getValue() == 0) {
                             isScheduledTransaction = false;
@@ -881,7 +882,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -960,7 +961,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         transaction.setNote(this.noteString);
-        transaction.setDate(DateUtil.formatDate(selectedDate));
+        transaction.setDate(DateUtil.formatDate(getApplicationContext(), selectedDate));
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){
@@ -1064,7 +1065,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 localTransaction.setDate(nextDate);
 
 
-                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
                 myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }
@@ -1122,13 +1123,12 @@ public class TransactionInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Category");
-        message.setText("Please make sure you have an "+currentPage.toString()+" category selected");
+        title.setText(getString(R.string.category));
+        message.setText(String.format(getString(R.string.category_selected_warning), currentPage.toString()));
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

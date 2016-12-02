@@ -71,8 +71,8 @@ public class CategoryFragment extends BaseFragment {
 
     private void createTabs(){
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.category_expense)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.category_income)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
@@ -146,7 +146,7 @@ public class CategoryFragment extends BaseFragment {
             catList.add(catIncome);
             catList.add(catExpense);
 
-            pieChartFragment = PieChartFragment.newInstance(catList, true, true);
+            pieChartFragment = PieChartFragment.newInstance(catList, true, true, getString(R.string.category));
             getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
             pieChartFragment.displayLegend();
 
@@ -155,7 +155,7 @@ public class CategoryFragment extends BaseFragment {
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         if(updateCategoryInfo) {
             categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);

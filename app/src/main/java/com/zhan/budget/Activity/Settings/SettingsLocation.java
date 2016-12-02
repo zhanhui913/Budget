@@ -83,7 +83,7 @@ public class SettingsLocation extends BaseRealmActivity implements
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyLocationText = (TextView) findViewById(R.id.pullDownText);
-        emptyLocationText.setText("Pull down to add a location");
+        emptyLocationText.setText(R.string.pull_down_add_location);
 
         createPullToAddLocation();
         populateLocation();
@@ -233,19 +233,19 @@ public class SettingsLocation extends BaseRealmActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_location);
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         closeSwipeItem(position);
                         deleteLocation(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

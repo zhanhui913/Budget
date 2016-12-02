@@ -8,6 +8,7 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
@@ -23,7 +24,7 @@ public class TransactionsForCategory extends BaseTransactions {
     protected void getDifferentData(){
         selectedCategory = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY));
         updateTitleName(selectedCategory.getName());
-        updateEmptyListText("There is no transaction for '"+selectedCategory.getName()+"' during "+DateUtil.convertDateToStringFormat2(beginMonth));
+        updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), selectedCategory.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
     }
 
     @Override

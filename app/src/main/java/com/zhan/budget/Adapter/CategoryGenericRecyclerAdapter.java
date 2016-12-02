@@ -112,9 +112,9 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         viewHolder.name.setText(category.getName());
 
         if(arrangement == ARRANGEMENT.BUDGET || arrangement == ARRANGEMENT.MOVE){
-            viewHolder.budget.setText("Budget : "+CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+            viewHolder.budget.setText(String.format(context.getString(R.string.category_budget), CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE)));
         }else{
-            viewHolder.budget.setText("Percent : "+category.getPercent()+"%");
+            viewHolder.budget.setText(String.format(context.getString(R.string.category_percent), category.getPercent()));
         }
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {

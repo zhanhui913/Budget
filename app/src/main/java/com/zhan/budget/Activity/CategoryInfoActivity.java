@@ -164,9 +164,9 @@ public class CategoryInfoActivity extends BaseActivity implements
         
         if(getSupportActionBar() != null){
             if(isNewCategory){
-                getSupportActionBar().setTitle("Add Category");
+                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.add_category_expense) : getString(R.string.add_category_income));
             }else{
-                getSupportActionBar().setTitle("Edit Category");
+                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.edit_category_expense) : getString(R.string.edit_category_income));
             }
         }
     }
@@ -235,22 +235,23 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Category Name");
+        genericTitle.setText(getString(R.string.name));
         input.setText(categoryNameTextView.getText());
-        input.setHint("Category");
+        input.setHint(getString(R.string.category));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         categoryNameTextView.setText(input.getText().toString());
+                        category.setName(input.getText().toString());
 
                         if(isCurrentCircularText){ //if the current toggle is text
                             changeCircularViewToText(input.getText().toString());
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -272,19 +273,19 @@ public class CategoryInfoActivity extends BaseActivity implements
         //Remove any extra un-needed signs
         priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
-        title.setText("Change Budget");
+        title.setText(getString(R.string.budget));
         budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
                         categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -404,13 +405,13 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_category);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
                         Realm myRealm = Realm.getDefaultInstance();
@@ -425,7 +426,7 @@ public class CategoryInfoActivity extends BaseActivity implements
                         finish();
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -439,9 +440,15 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void getLatestIndexForCategory(){ Log.d("ZHAP", "trying to get latest index for new category for type :"+category.getType());
         Realm myRealm = Realm.getDefaultInstance();
         RealmResults<Category> categoryRealmResults = myRealm.where(Category.class).equalTo("type", category.getType()).findAllSorted("index");
-        Log.d("ZHAP", "size :"+categoryRealmResults.size());
-        Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
-        nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+
+        if(categoryRealmResults.size() > 0){
+            Log.d("ZHAP", "size :"+categoryRealmResults.size());
+            Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
+            nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+        }else{
+            nextIndexCategory = 0;
+        }
+
         myRealm.close();
     }
 
@@ -516,11 +523,33 @@ public class CategoryInfoActivity extends BaseActivity implements
         categoryCircularView.setIconResource(catRes);
     }
 
+    /**
+     * If there is no Category name, a dialog will popup to remind the user.
+     */
+    private void notificationForCategory(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.category);
+        message.setText(R.string.warning_category_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -544,12 +573,11 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            getLatestIndexForCategory();
-
-            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(categoryNameTextView.getText().toString())){
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(category.getName())){
+                getLatestIndexForCategory();
                 save();
             }else{
-                Util.createSnackbar(getBaseContext(), (View)categoryNameTextView.getParent(), "Please input a valid name for this category");
+                notificationForCategory();
             }
 
             return true;

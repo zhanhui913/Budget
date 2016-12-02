@@ -34,7 +34,6 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
-import com.zhan.budget.View.PlusView;
 
 import org.parceler.Parcels;
 
@@ -42,11 +41,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.PtrUIHandler;
-import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -61,8 +55,6 @@ public class AccountFragment extends BaseRealmFragment implements
     private OnAccountInteractionListener mListener;
 
     private ViewGroup emptyLayout;
-    private PtrFrameLayout frame;
-    private PlusView header;
 
     private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyAccountText;
 
@@ -74,7 +66,6 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private PieChartFragment pieChartFragment;
 
-    private Boolean isPulldownAllow = true;
     private Date currentMonth;
     private RealmResults<Transaction> resultsTransaction;
     private List<Transaction> transactionMonthList;
@@ -126,15 +117,15 @@ public class AccountFragment extends BaseRealmFragment implements
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyAccountText.setText("There is no account");
+        emptyAccountText.setText(R.string.empty_account);
+
         ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
         downArrow.setVisibility(View.INVISIBLE);
 
         //Setup pie chart
-        pieChartFragment = PieChartFragment.newInstance(accountList);
+        pieChartFragment = PieChartFragment.newInstance(accountList, false, false, getString(R.string.account));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
-        //createPullToAddAccount();
         populateAccountWithNoInfo();
 
         //0 represents no change in month relative to currentMonth variable.
@@ -266,75 +257,6 @@ public class AccountFragment extends BaseRealmFragment implements
         loader.execute();
     }
 
-    //Dont allow pull down in this fragment
-    private void createPullToAddAccount(){
-        frame = (PtrFrameLayout) view.findViewById(R.id.rotate_header_list_view_frame);
-
-        header = new PlusView(getContext());
-
-        frame.setHeaderView(header);
-
-        frame.setPtrHandler(new PtrHandler() {
-            @Override
-            public void onRefreshBegin(PtrFrameLayout insideFrame) {
-                if (isPulldownAllow) {
-                    insideFrame.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            frame.refreshComplete();
-                        }
-                    }, 500);
-                }
-            }
-
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return isPulldownAllow && PtrDefaultHandler.checkContentCanBePulledDown(frame, accountListView, header);
-            }
-        });
-
-        frame.addPtrUIHandler(new PtrUIHandler() {
-
-            @Override
-            public void onUIReset(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIReset");
-            }
-
-            @Override
-            public void onUIRefreshPrepare(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIRefreshPrepare");
-            }
-
-            @Override
-            public void onUIRefreshBegin(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIRefreshBegin");
-                header.playRotateAnimation();
-            }
-
-            @Override
-            public void onUIRefreshComplete(PtrFrameLayout frame) {
-                Log.d(TAG, "onUIRefreshComplete");
-                frame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        addAccount();
-                    }
-                }, 250);
-            }
-
-            @Override
-            public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
-
-            }
-        });
-    }
-
-    private void addAccount(){
-        Intent addAccountIntent = new Intent(getContext(), AccountInfoActivity.class);
-        addAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, true);
-        startActivityForResult(addAccountIntent, Constants.RETURN_NEW_ACCOUNT);
-    }
-
     private void editAccount(int position){
         Log.d("ACCOUNT_INFO", "trying to edit account at pos : "+position);
         Log.d("ACCOUNT_INFO", "accoutn name : " +accountList.get(position).getName());
@@ -362,9 +284,9 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private void updateMonthInToolbar(int direction, boolean updateAccountInfo){
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         if(updateAccountInfo) {
             populateAccountWithInfo(true);
@@ -377,18 +299,18 @@ public class AccountFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this Account?\nAll transactions with this account will no longer have this account associated to it");
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(getString(R.string.warning_delete_account));
 
         new AlertDialog.Builder(getContext())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteAccount(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -507,7 +429,7 @@ public class AccountFragment extends BaseRealmFragment implements
         closeSwipeItem(position);
 
         Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
-        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
         Parcelable wrapped = Parcels.wrap(accountList.get(position));
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, wrapped);
@@ -529,7 +451,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
     @Override
     public void onPullDownAllow(boolean value){
-        isPulldownAllow = value;
+        //cannot pull down
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -56,6 +57,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private PtrFrameLayout frame;
     //private PlusView header;
     private ViewGroup emptyLayout;
+    private TextView emptyCategoryText;
 
     private List<Category> categoryList;
     private CategoryGenericRecyclerAdapter categoryRecyclerAdapter;
@@ -116,9 +118,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         currentMonth = new Date();
 
-        TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyCategoryText.setText("Pull down to add an "+budgetType.toString()+" category");
-
         transactionMonthList = new ArrayList<>();
 
         categoryList = new ArrayList<>();
@@ -148,11 +147,27 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                         .build());
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
+        emptyCategoryText = (TextView)view.findViewById(R.id.pullDownText);
 
         populateCategoryWithNoInfo();
 
         if(masterAllowPulldown){
+            if(budgetType == BudgetType.EXPENSE){
+                emptyCategoryText.setText(getString(R.string.pull_down_add_category, getString(R.string.category_expense)));
+            }else {
+                emptyCategoryText.setText(getString(R.string.pull_down_add_category, getString(R.string.category_income)));
+            }
+
             createPullDownToAddCategory();
+        }else{
+            if(budgetType == BudgetType.EXPENSE){
+                emptyCategoryText.setText(String.format(getString(R.string.empty_category), getString(R.string.category_expense)));
+            }else{
+                emptyCategoryText.setText(String.format(getString(R.string.empty_category), getString(R.string.category_income)));
+            }
+
+            ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
+            downArrow.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -362,18 +377,18 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_category);
 
         new AlertDialog.Builder(getContext())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteCategory(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -560,7 +575,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             closeSwipeItem(position);
 
             Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
             Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
 

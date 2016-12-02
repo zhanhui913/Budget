@@ -1,0 +1,228 @@
+<resources>
+	<string name="app_name">Budget</string>
+
+	<string name="navigation_drawer_open">FR Open navigation drawer</string>
+	<string name="navigation_drawer_close">FR Close navigation drawer</string>
+
+	<string name="action_settings">FR Settings</string>
+
+	<!-- Permissions -->
+	<string name="permission_rationale_storage">FR You need to allow access to storage in order to create a backup database.</string>
+	<string name="permission_denied">FR Permission denied.</string>
+	<string name="permission_denied_message">FR Are you sure you want to deny this permission?</string>
+	<string name="permission_retry">FR Re-try</string>
+	<string name="permission_deny">FR Deny</string>
+	<string name="permission_rationale_write_backup_data">FR Without this permission the app is unable to create a backup data</string>
+	<string name="permission_rationale_read_backup_data">FR Without this permission the app is unable to restore the backup data</string>
+	<string name="permission_rationale_write_csv">FR Without this permission the app is unable to create the CSV</string>
+
+
+	<!-- Activity name -->
+	<string name="title_activity_transaction_info">FR Transaction</string>
+	<string name="title_activity_main2">FR Main2Activity</string>
+	<string name="title_activity_category_info">FR CategoryInfo</string>
+	<string name="title_activity_transactions_for_category">FR TransactionsForCategory</string>
+	<string name="title_activity_overview">FR OverviewActivity</string>
+	<string name="title_activity_pdf">FR PdfActivity</string>
+	<string name="title_activity_tour">FR Tour</string>
+	<string name="title_activity_settings_account">FR Accounts</string>
+	<string name="title_activity_settings_category">FR Categories</string>
+	<string name="title_activity_settings_location">FR Locations</string>
+	<string name="title_activity_transactions_for_location">FR TransactionsForLocation</string>
+	<string name="title_activity_open_source">FR OpenSourceActivity</string>
+	<string name="title_activity_account_info">FR AccountInfoActivity</string>
+	<string name="title_activity_transactions_for_account">FR TransactionsForAccount</string>
+	<string name="title_activity_location_info">FR LocationInfoActivity</string>
+
+	<!-- Tutorial string -->
+	<string name="tutorial_description_1">FR View all transactions for a specific date</string>
+	<string name="tutorial_description_2">FR Change between light and dark mode</string>
+	<string name="tutorial_description_3">FR Approve, un-approve, or delete a transaction by swiping left</string>
+	<string name="tutorial_description_4">FR Input amount and select category, account, notes, location, etc</string>
+	<string name="tutorial_description_5">FR Compare your current spending with your budget</string>
+	<string name="tutorial_description_6">FR View how much you spent on all accounts</string>
+	<string name="tutorial_description_7">FR Enter and track location for your purchases</string>
+	<string name="tutorial_description_8">FR View how much you spent and earn each month</string>
+	<string name="tutorial_description_9">FR See what you are spending the most on</string>
+
+	<!-- Warning -->
+	<string name="warning_delete_transaction">FR Delete this transaction?</string>
+	<string name="warning_delete_category">FR All transactions with this category will no longer have this category associated to it once deleted</string>
+	<string name="warning_delete_account">FR All transactions with this account will no longer have this account associated to it once deleted</string>
+	<string name="warning_delete_location">FR All transactions with this location will no longer have this location associated to it once deleted</string>
+	<string name="warning_category_valid_name">FR Category must have a valid name</string>
+	<string name="warning_account_valid_name">FR Account must have a valid name</string>
+	<string name="warning_location_valid_name">FR Location must have a valid name</string>
+
+	<!-- Fragments in navigation drawer -->
+	<string name="nav_calendar">FR Calendar</string>
+	<string name="nav_category">FR Category</string>
+	<string name="nav_account">FR Account</string>
+	<string name="nav_location">FR Location</string>
+	<string name="nav_report">FR Monthly Report</string>
+	<string name="nav_setting">FR Settings</string>
+
+	<string name="month_jan">FR January</string>
+	<string name="month_feb">FR February</string>
+	<string name="month_mar">FR March</string>
+	<string name="month_apr">FR April</string>
+	<string name="month_may">FR May</string>
+	<string name="month_jun">FR June</string>
+	<string name="month_jul">FR July</string>
+	<string name="month_aug">FR August</string>
+	<string name="month_sep">FR September</string>
+	<string name="month_oct">FR October</string>
+	<string name="month_nov">FR November</string>
+	<string name="month_dev">FR December</string>
+
+	<string name="transaction">FR Transaction</string>
+	<string name="account">FR Account</string>
+	<string name="category">FR Category</string>
+	<string name="category_expense">FR Expense</string>
+	<string name="category_income">FR Income</string>
+	<string name="location">FR Location</string>
+	<string name="note">FR Note</string>
+	<string name="budget">FR Budget</string>
+
+	<!-- Title when adding/editting item-->
+	<string name="add_transaction">FR Add transaction</string>
+	<string name="add_category_expense">FR Add expense category</string>
+	<string name="add_category_income">FR Add income category</string>
+	<string name="add_account">FR Add account</string>
+	<string name="add_location">FR Add location</string>
+	<string name="add_note">FR Add note</string>
+	<string name="edit_transaction">FR Edit transaction</string>
+	<string name="edit_category_expense">FR Edit expense category</string>
+	<string name="edit_category_income">FR Edit income category</string>
+	<string name="edit_account">FR Edit account</string>
+	<string name="edit_location">FR Edit location</string>
+
+	<string name="pull_down_add_transaction">FR Pull down to add a transaction</string>
+	<string formatted="false" name="pull_down_add_category">FR Pull down to add an %s category</string>
+	<string name="pull_down_add_account">FR Pull down to add an account</string>
+	<string name="pull_down_add_location">FR Pull down to add a location</string>
+
+	<string name="empty_account_selection">FR There is no account available for selection</string>
+	<string name="empty_category">FR There is no %s category</string>
+	<string name="empty_account">FR There is no account</string>
+	<string name="empty_location">FR There is no location</string>
+	<string formatted="false" name="empty_transaction_custom_date">FR There is no transaction for \'%s\' during %s</string>
+
+
+	<!-- Monthly Report Fragment -->
+	<string name="you_spent">FR You spent %s</string>
+	<string name="you_earned">FR You earned %s</string>
+	<string name="you_saved">FR You saved %s</string>
+
+	<!-- Settings Fragment -->
+	<string name="setting_header_general">FR General</string>
+	<string name="setting_header_data">FR Data</string>
+	<string name="setting_header_feedback">FR Feedback</string>
+
+	<!-- GENERAL -->
+	<string name="setting_title_theme">FR Current Theme</string>
+	<string name="setting_content_theme_day">FR Day Mode</string>
+	<string name="setting_content_theme_night">FR Night Mode</string>
+	<string name="setting_title_day">FR First day of the week</string>
+	<string name="setting_content_day_sun">FR Sunday</string>
+	<string name="setting_content_day_mon">FR Monday</string>
+	<string name="setting_title_category">FR Categories</string>
+	<string name="setting_content_category">FR Manage categories. Change icon, color, and others</string>
+	<string name="setting_title_account">FR Accounts</string>
+	<string name="setting_content_account">FR Manage accounts. Change icons and others</string>
+	<string name="setting_title_location">FR Locations</string>
+	<string name="setting_content_location">FR Manage Locations. Change colors</string>
+
+	<!-- DATA -->
+	<string name="setting_title_backup_data">FR Backup data</string>
+	<string name="setting_content_backup_data_successful">FR Backup data successful</string>
+	<string formatted="false" name="setting_content_backup_data">FR last backup : %s</string>
+	<string name="setting_title_restore_data">FR Restore data</string>
+	<string name="setting_content_restore_data_successful">FR Restore data successful</string>
+	<string name="setting_content_restore_data_failed">FR Restore data failed as backup file doesn\'t exist</string>
+	<string name="setting_title_reset_data">FR Reset data</string>
+	<string name="setting_title_export_data">FR Export data to CSV</string>
+	<string name="setting_content_export_data_sort">FR Sort by</string>
+	<string name="csv_sort_by_date">Date</string>
+	<string name="csv_sort_by_category">Category</string>
+	<string name="csv_sort_by_account">Account</string>
+	<string name="csv_sort_by_location">Location</string>
+
+	<!-- FEEDBACK -->
+	<string name="setting_title_email">FR Email me</string>
+	<string name="setting_content_email">FR feedback for the app</string>
+	<string name="setting_title_tour">FR Tour</string>
+	<string name="setting_title_faq">FR FAQ</string>
+	<string name="setting_title_open_source">FR Open Source Licenses</string>
+	<string name="setting_content_open_source">FR License details for open source software used</string>
+
+	<!-- Dialogs -->
+	<string name="dialog_title_delete">FR Delete</string>
+	<string name="dialog_title_repeat">FR Repeat</string>
+	<string name="dialog_title_csv">FR CSV</string>
+	<string name="dialog_title_title">FR Title</string>
+
+	<string name="dialog_button_ok">FR OK</string>
+	<string name="dialog_button_select">FR SELECT</string>
+	<string name="dialog_button_delete">FR DELETE</string>
+	<string name="dialog_button_save">FR SAVE</string>
+	<string name="dialog_button_reset">FR RESET</string>
+	<string name="dialog_button_cancel">FR CANCEL</string>
+
+	<string name="dialog_content_name">FR Name</string>
+	<string name="dialog_content_hint">FR Hint</string>
+	<string formatted="false" name="dialog_progress_percent">FR %d%%</string>
+	<string formatted="false" name="dialog_progress_total">FR %d/%d</string>
+
+	<!-- Num pad -->
+	<string name="num_pad_1">FR 1</string>
+	<string name="num_pad_2">FR 2</string>
+	<string name="num_pad_3">FR 3</string>
+	<string name="num_pad_4">FR 4</string>
+	<string name="num_pad_5">FR 5</string>
+	<string name="num_pad_6">FR 6</string>
+	<string name="num_pad_7">FR 7</string>
+	<string name="num_pad_8">FR 8</string>
+	<string name="num_pad_9">FR 9</string>
+	<string name="num_pad_0">FR 0</string>
+
+	<!-- ETC -->
+	<string name="category_selected_warning">FR Make sure a %s category is selected</string>
+	<string name="category_valid_name_warning">FR Please input a valid name for this category</string>
+	<string name="days">FR days</string>
+	<string name="weeks">FR weeks</string>
+	<string name="months">FR months</string>
+	<string name="name">FR Name</string>
+	<string name="author">FR Author : Zhan H. Yap</string>
+	<string name="target_email">zhanapp@gmail.com</string>
+	<string name="reset">FR Reset</string>
+	<string name="reset_data_message">FR Resetting data will remove all data you\'ve entered</string>
+	<string name="resetting">FR Resetting</string>
+	<string name="send_email">FR Send email</string>
+	<string name="feedback_email_title">FR Feedback</string>
+	<string name="chevron_left">FR Left</string>
+	<string name="chevron_right">FR Right</string>
+	<string name="form_btn_save">FR Save</string>
+	<string name="csv">FR CSV</string>
+	<string formatted="false" name="csv_success">FR CSV sorted by %s</string>
+	<string name="csv_failed">FR CSV creation failed</string>
+	<string name="use_text">FR Use Text</string>
+	<string name="use_icon">FR Use Icon</string>
+	<string name="cost">FR $0.00</string>
+	<string name="current">FR Current</string>
+	<string formatted="false" name="location_time">FR %d time</string>
+	<string formatted="false" name="location_times">FR %d times</string>
+	<string formatted="false" name="category_budget">FR Budget : %s</string>
+	<string formatted="false" name="category_percent">FR Percent : %.2f%%</string>
+	<string name="na">FR NA</string>
+	<string formatted="false" name="version">FR v%s</string>
+
+	<!-- Middle section -->
+	<string name="middle_section_name">FR Name</string>
+	<string name="middle_section_right">FR Right</string>
+
+	<!-- Open Source -->
+	<string name="open_source_project_name">FR Name</string>
+	<string name="open_source_project_author">FR Author</string>
+
+</resources>

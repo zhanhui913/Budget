@@ -40,13 +40,16 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
 			android:layout_centerVertical="true"/>
 
 		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:paddingLeft="@dimen/item_left_padding"
+			android:paddingStart="@dimen/item_left_padding"
 			android:layout_toRightOf="@+id/locationIcon"
+			android:layout_toEndOf="@+id/locationIcon"
 			android:orientation="vertical"
 			android:layout_centerVertical="true">
 
@@ -54,7 +57,7 @@
 				android:id="@+id/locationName"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Location"
+				android:text="@string/location"
 				android:textSize="@dimen/text_title_size"
 				android:textStyle="bold"/>
 
@@ -62,7 +65,7 @@
 				android:id="@+id/locationAmount"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="5 times"
+				android:text="@string/location_times"
 				android:textSize="@dimen/text_content_size"/>
 		</LinearLayout>
 	</RelativeLayout>

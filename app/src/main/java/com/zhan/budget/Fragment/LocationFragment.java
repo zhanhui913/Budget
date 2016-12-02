@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -52,6 +54,8 @@ public class LocationFragment extends BaseRealmFragment
     private OnLocationInteractionListener mListener;
     private Date currentMonth;
 
+    private ViewGroup emptyLayout;
+
     private RealmResults<Location> resultsLocation;
     private List<Location> locationList;
     private LocationRecyclerAdapter locationAdapter;
@@ -59,7 +63,7 @@ public class LocationFragment extends BaseRealmFragment
 
     private PieChartFragment pieChartFragment;
 
-    private TextView centerPanelLeftTextView, centerPanelRightTextView;
+    private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyLocationText;
 
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
@@ -103,8 +107,15 @@ public class LocationFragment extends BaseRealmFragment
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
+        emptyLocationText = (TextView) view.findViewById(R.id.pullDownText);
+        emptyLocationText.setText(getString(R.string.empty_location));
+
+        ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
+        downArrow.setVisibility(View.INVISIBLE);
+
         //Setup pie chart
-        pieChartFragment = PieChartFragment.newInstance(locationList);
+        pieChartFragment = PieChartFragment.newInstance(locationList, false, false, getString(R.string.location));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         //0 represents no change in month relative to currentMonth variable.
@@ -115,9 +126,9 @@ public class LocationFragment extends BaseRealmFragment
         locationListview.smoothScrollToPosition(0);
 
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         //fetchNewLocationData(currentMonth, true);
 
@@ -217,10 +228,25 @@ public class LocationFragment extends BaseRealmFragment
         pieChartFragment.setData(locationList, animate);
 
         if(totalLocationsCount == 0){
-            centerPanelRightTextView.setText("NA");
+            centerPanelRightTextView.setText(R.string.na);
         }else{
-            String appendString = (totalLocationsCount > 1) ? " times" : " time" ;
-            centerPanelRightTextView.setText(totalLocationsCount + appendString);
+            if(totalLocationsCount > 1){
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
+            }else{
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
+            }
+        }
+
+        updateLocationStatus();
+    }
+
+    private void updateLocationStatus(){
+        if(locationAdapter.getItemCount() > 0){
+            emptyLayout.setVisibility(View.GONE);
+            locationListview.setVisibility(View.VISIBLE);
+        }else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            locationListview.setVisibility(View.GONE);
         }
     }
 
@@ -307,10 +333,13 @@ public class LocationFragment extends BaseRealmFragment
         pieChartFragment.setData(locationList, animate);
 
         if(totalLocationsCount == 0){
-            centerPanelRightTextView.setText("NA");
+            centerPanelRightTextView.setText(R.string.na);
         }else{
-            String appendString = (totalLocationsCount > 1) ? " times" : " time" ;
-            centerPanelRightTextView.setText(totalLocationsCount + appendString);
+            if(totalLocationsCount > 1){
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
+            }else{
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
+            }
         }
     }
 
@@ -361,8 +390,11 @@ public class LocationFragment extends BaseRealmFragment
         //This updates pie chart with new location list while keeping the colors the same
         pieChartFragment.setData(locationList);
 
-        String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
-        centerPanelRightTextView.setText(totalLocationsCount + appendString);
+        if(totalLocationsCount > 1){
+            centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
+        }else{
+            centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
+        }
     }
 
     /////////
@@ -387,18 +419,18 @@ public class LocationFragment extends BaseRealmFragment
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_location);
 
         new AlertDialog.Builder(getContext())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteLocation(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -445,6 +477,7 @@ public class LocationFragment extends BaseRealmFragment
 
                     populateLocationWithNoInfo(currentMonth, true);
                 }
+                updateLocationStatus();
             }
         }
     }
@@ -524,7 +557,7 @@ public class LocationFragment extends BaseRealmFragment
         closeSwipeItem(position);
 
         Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
         Parcelable wrapped = Parcels.wrap(locationList.get(position));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, wrapped);

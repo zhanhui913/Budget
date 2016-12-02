@@ -63,7 +63,7 @@ public class OverviewActivity extends BaseActivity implements
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
-        dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+        dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
         totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
 
         createToolbar();
@@ -133,7 +133,7 @@ public class OverviewActivity extends BaseActivity implements
     private void createCharts(){
         //barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
         //percentChartFragment = PercentChartFragment.newInstance(new ArrayList<Category>());
-        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>());
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), false, false, getString(R.string.category));
         getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
     }
 
