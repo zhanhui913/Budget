@@ -35,6 +35,15 @@
 	<string name="title_activity_location_info">IT LocationInfoActivity</string>
 
 	<!-- Tutorial string -->
+	<string name="tutorial_title_1">IT Calendar</string>
+	<string name="tutorial_title_2">IT Theme</string>
+	<string name="tutorial_title_3">IT Approve</string>
+	<string name="tutorial_title_4">IT Add new Transaction</string>
+	<string name="tutorial_title_5">IT Budget</string>
+	<string name="tutorial_title_6">IT Account</string>
+	<string name="tutorial_title_7">IT Location</string>
+	<string name="tutorial_title_8">IT Monthly Overview</string>
+	<string name="tutorial_title_9">IT Percentage</string>
 	<string name="tutorial_description_1">IT View all transactions for a specific date</string>
 	<string name="tutorial_description_2">IT Change between light and dark mode</string>
 	<string name="tutorial_description_3">IT Approve, un-approve, or delete a transaction by swiping left</string>

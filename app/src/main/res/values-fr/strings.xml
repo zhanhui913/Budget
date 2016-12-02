@@ -35,6 +35,15 @@
 	<string name="title_activity_location_info">FR LocationInfoActivity</string>
 
 	<!-- Tutorial string -->
+	<string name="tutorial_title_1">FR Calendar</string>
+	<string name="tutorial_title_2">FR Theme</string>
+	<string name="tutorial_title_3">FR Approve</string>
+	<string name="tutorial_title_4">FR Add new Transaction</string>
+	<string name="tutorial_title_5">FR Budget</string>
+	<string name="tutorial_title_6">FR Account</string>
+	<string name="tutorial_title_7">FR Location</string>
+	<string name="tutorial_title_8">FR Monthly Overview</string>
+	<string name="tutorial_title_9">FR Percentage</string>
 	<string name="tutorial_description_1">FR View all transactions for a specific date</string>
 	<string name="tutorial_description_2">FR Change between light and dark mode</string>
 	<string name="tutorial_description_3">FR Approve, un-approve, or delete a transaction by swiping left</string>

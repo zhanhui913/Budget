@@ -35,6 +35,15 @@
 	<string name="title_activity_location_info">DE LocationInfoActivity</string>
 
 	<!-- Tutorial string -->
+	<string name="tutorial_title_1">DE Calendar</string>
+	<string name="tutorial_title_2">DE Theme</string>
+	<string name="tutorial_title_3">DE Approve</string>
+	<string name="tutorial_title_4">DE Add new Transaction</string>
+	<string name="tutorial_title_5">DE Budget</string>
+	<string name="tutorial_title_6">DE Account</string>
+	<string name="tutorial_title_7">DE Location</string>
+	<string name="tutorial_title_8">DE Monthly Overview</string>
+	<string name="tutorial_title_9">DE Percentage</string>
 	<string name="tutorial_description_1">DE View all transactions for a specific date</string>
 	<string name="tutorial_description_2">DE Change between light and dark mode</string>
 	<string name="tutorial_description_3">DE Approve, un-approve, or delete a transaction by swiping left</string>
