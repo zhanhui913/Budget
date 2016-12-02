@@ -224,7 +224,7 @@
 	<string formatted="false" name="category_budget">IT Budget : %s</string>
 	<string formatted="false" name="category_percent">IT Percent : %.2f%%</string>
 	<string name="na">IT NA</string>
-	<string formatted="false" name="version">IT v%s</string>
+	<string formatted="false" name="version">v%s</string>
 	<string name="color">IT Color</string>
 	<string name="icon">IT Icon</string>
 
