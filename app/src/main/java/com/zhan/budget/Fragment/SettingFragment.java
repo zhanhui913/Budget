@@ -61,8 +61,8 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
     
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, openSourceCV;
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, openLicenseBtn, emailBtn, tutorialBtn, faqBtn;
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, securityCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, openSourceCV;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, securityBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, openLicenseBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     private Switch securitySwitch;
@@ -93,7 +93,9 @@ public class SettingFragment extends BaseFragment {
         firstDayBtn = (ViewGroup) view.findViewById(R.id.firstDayBtn);
         firstDayContent = (TextView) view.findViewById(R.id.firstDayContent);
 
-        securityContent = (TextView) view.findViewById(R.id.securityContent);
+        securityCV = (CircularView) view.findViewById(R.id.securityCV);
+        //securityBtn = (ViewGroup) view.findViewById(R.id.securityContent);
+        securitySwitch = (Switch) view.findViewById(R.id.securitySwitch);
 
         categoryCV = (CircularView) view.findViewById(R.id.categoryOrderCV);
         categoryOrderBtn = (ViewGroup) view.findViewById(R.id.categoryOrderBtn);
@@ -128,8 +130,6 @@ public class SettingFragment extends BaseFragment {
 
         openSourceCV = (CircularView) view.findViewById(R.id.openSourceCV);
         openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
-
-        securitySwitch = (Switch) view.findViewById(R.id.securitySwitch);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
 
@@ -174,7 +174,10 @@ public class SettingFragment extends BaseFragment {
         backupCV.setIconResource(R.drawable.svg_ic_backup);
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
 
-        //Set security exist
+        //Set security
+        securityCV.setCircleColor(R.color.alizarin);
+        securityCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        securityCV.setIconResource(R.drawable.svg_ic_lock);
         securitySwitch.setChecked(BudgetPreference.getSecurityExist(getContext()));
         updateSecurityContent();
 
@@ -335,11 +338,11 @@ public class SettingFragment extends BaseFragment {
     }
 
     private void updateSecurityContent(){
-        if(BudgetPreference.getSecurityExist(getContext())){
+        /*if(BudgetPreference.getSecurityExist(getContext())){
             securityContent.setText("Security exist");
         }else{
             securityContent.setText("Security doesnt exist ");
-        }
+        }*/
     }
 
     private void sendRealmData() {

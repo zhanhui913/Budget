@@ -207,34 +207,39 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <RelativeLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/securityBtn"
+            android:layout_height="wrap_content"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/securityCV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="?attr/themeColorBtn"
+                android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_toLeftOf="@+id/securitySwitch">
+                android:layout_alignParentLeft="true" />
 
-                <TextView style="@style/SettingsTextViewButtonStyle"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:text="Security"/>
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/securityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/securityCV"
+                android:text="@string/setting_title_security"/>
 
-                <TextView style="@style/SettingsTextViewContentStyle"
-                          android:id="@+id/securityContent"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:text="Set security to protect your records."/>
-            </LinearLayout>
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/securityContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/securityCV"
+                android:layout_toLeftOf="@+id/securitySwitch"
+                android:layout_below="@+id/securityTitle"
+                android:text="@string/setting_content_security"/>
 
             <Switch
                 android:id="@+id/securitySwitch"
@@ -242,11 +247,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"/>
-
+                android:layout_alignParentEnd="true"
+                android:paddingLeft="@dimen/item_left_padding"/>
         </RelativeLayout>
-
-
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"

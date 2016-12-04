@@ -13,6 +13,8 @@ import com.zhan.budget.Fragment.Security.PinFragment;
 import com.zhan.budget.Model.SecurityType;
 import com.zhan.budget.R;
 
+import static com.zhan.budget.R.styleable.BottomBar;
+
 public class SecurityActivity extends BaseActivity {
 
 
