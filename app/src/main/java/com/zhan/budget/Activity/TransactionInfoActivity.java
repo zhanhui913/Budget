@@ -71,7 +71,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
 
-    private TextView transactionCostView, transactionNameTextView;
+    private TextView transactionCostView, transactionNameTextView, currentPageTextView;
 
     private String priceString, noteString, locationString;
 
@@ -126,7 +126,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //Get intents from caller activity
         isNewTransaction = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
-        selectedDate = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
+        selectedDate = DateUtil.convertStringToDate(getApplicationContext(), (getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
 
         if(!isNewTransaction){
             editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
@@ -166,9 +166,15 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
         transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
+        currentPageTextView = (TextView)findViewById(R.id.currentPageTitle);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
+        if(currentPage == BudgetType.EXPENSE){
+            currentPageTextView.setText(R.string.category_expense);
+        }else{
+            currentPageTextView.setText(R.string.category_income);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
         adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), transactionExpenseFragment, transactionIncomeFragment);
@@ -217,6 +223,11 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPage = BudgetType.EXPENSE;
             }
 
+            if(currentPage == BudgetType.EXPENSE){
+                currentPageTextView.setText(R.string.category_expense);
+            }else{
+                currentPageTextView.setText(R.string.category_income);
+            }
 
             priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
 
@@ -234,7 +245,8 @@ public class TransactionInfoActivity extends BaseActivity implements
         getAllLocations();
         createToolbar();
         addListeners();
-        createAccountDialog();
+        //createAccountDialog();
+        checkAccountCount();
         createDateDialog();
     }
 
@@ -249,9 +261,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(!isNewTransaction){
-                getSupportActionBar().setTitle("Edit Transaction");
+                getSupportActionBar().setTitle(getString(R.string.edit_transaction));
             }else{
-                getSupportActionBar().setTitle("Add Transaction");
+                getSupportActionBar().setTitle(getString(R.string.add_transaction));
             }
         }
     }
@@ -396,6 +408,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedExpenseCategory.getName());
                         }
 
+                        currentPageTextView.setText(R.string.category_expense);
 
                         break;
                     case 1:
@@ -409,6 +422,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                             transactionNameTextView.setText(selectedIncomeCategory.getName());
                         }
 
+                        currentPageTextView.setText(R.string.category_income);
 
                         break;
                 }
@@ -440,7 +454,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         tempDate = selectedDate;
 
-        monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
+        monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, date).getTime()));
 
         calendarView.setCalendarView(new FlexibleCalendarView.CalendarView() {
             @Override
@@ -470,7 +484,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             @Override
             public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
-                return String.valueOf(defaultValue.toUpperCase());
+                //return String.valueOf(defaultValue.toUpperCase());
+                return DateUtil.getDayOfWeek(dayOfWeek).toUpperCase();
             }
         });
 
@@ -481,7 +496,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, 1).getTime()));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, 1).getTime()));
             }
         });
 
@@ -496,7 +511,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(selectedDate));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), selectedDate));
                 calendarView.selectDate(selectedDate);
                 calendarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -504,12 +519,12 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder dateAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setView(dateDialogView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         selectedDate = tempDate;
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         tempDate = selectedDate;
                         dialog.dismiss();
@@ -520,7 +535,124 @@ public class TransactionInfoActivity extends BaseActivity implements
         dateDialog = dateAlertDialogBuilder.create();
     }
 
-    private void createAccountDialog(){
+    private void checkAccountCount(){
+        final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
+
+        //Get list of accounts
+        resultsAccount = myRealm.where(Account.class).findAllSortedAsync("isDefault", Sort.DESCENDING);
+        resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
+            @Override
+            public void onChange(RealmResults<Account> element) {
+                element.removeChangeListener(this);
+                Log.d("REALMZ1", "getAllAccounts closing  realm");
+
+                createAccountDialog(myRealm.copyFromRealm(element));
+            }
+        });
+    }
+
+
+    private void createAccountDialog(List<Account> tempAccountList){
+        AlertDialog.Builder accountAlertDialogBuilder;
+
+        if(tempAccountList.size() > 0){
+            View accountDialogView = View.inflate(instance, R.layout.alertdialog_number_picker, null);
+
+            final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
+
+            TextView title = (TextView)accountDialogView.findViewById(R.id.title);
+            title.setText(getString(R.string.account));
+
+            accountNameList = new ArrayList<>();
+
+            for (int i = 0; i < tempAccountList.size(); i++) {
+                Log.d("ZHAP", i+"->"+tempAccountList.get(i).getName());
+                accountNameList.add(tempAccountList.get(i).getName());
+            }
+
+            accountPicker.setMinValue(0);
+            accountPicker.setMaxValue(accountNameList.size() - 1);
+            accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
+
+            accountPicker.setWrapSelectorWheel(false);
+
+            boolean doesTransactionHaveAccount = false;
+
+            int pos = 0; //default is first item to be selected in the spinner
+            if (!isNewTransaction) {
+                for (int i = 0; i < tempAccountList.size(); i++) {
+                    if (editTransaction.getAccount() != null) {
+                        doesTransactionHaveAccount = true;
+                        if (editTransaction.getAccount().getId().equalsIgnoreCase(tempAccountList.get(i).getId())) {
+                            pos = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            selectedAccountIndexInSpinner = pos;
+
+            //if there is a default account
+            boolean isThereDefaultAccount = false;
+
+            for(int i = 0; i < tempAccountList.size(); i++){
+                if(resultsAccount.get(i).isDefault()){
+                    isThereDefaultAccount = true;
+                    break;
+                }
+            }
+
+            if(isThereDefaultAccount || doesTransactionHaveAccount){
+                selectedAccount = tempAccountList.get(selectedAccountIndexInSpinner);
+            }
+
+            accountPicker.setValue(selectedAccountIndexInSpinner);
+
+            accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+                    .setView(accountDialogView)
+                    .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            selectedAccountIndexInSpinner = accountPicker.getValue();
+                            selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //Reset the selection back to previous
+                            accountPicker.setValue(selectedAccountIndexInSpinner);
+                            dialog.dismiss();
+                        }
+                    });
+        }else{
+            View accountDialogView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView)accountDialogView.findViewById(R.id.genericTitle);
+            TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
+
+            title.setText(getString(R.string.account));
+            message.setText(getString(R.string.empty_account_selection));
+
+            accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+                    .setView(accountDialogView)
+                    .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        }
+                    });
+        }
+
+        accountDialog = accountAlertDialogBuilder.create();
+    }
+
+
+
+
+
+
+
+    /*
+    private void createAccountDialog(List<Account> tempAccountList){
         View accountDialogView = View.inflate(instance, R.layout.alertdialog_number_picker, null);
 
         final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
@@ -549,9 +681,9 @@ public class TransactionInfoActivity extends BaseActivity implements
                 //Collections.swap(accountNameList, 0, defaultAccountIndex);
                 //Collections.swap(resultsAccount, 0 , defaultAccountIndex);
 
-                accountPicker.setMinValue(0);
 
                 if (accountNameList.size() > 0) {
+                    accountPicker.setMinValue(0);
                     accountPicker.setMaxValue(accountNameList.size() - 1);
                     accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
                 }
@@ -612,7 +744,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 });
 
         accountDialog = accountAlertDialogBuilder.create();
-    }
+    }*/
 
     private void createNoteDialog(){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
@@ -620,13 +752,13 @@ public class TransactionInfoActivity extends BaseActivity implements
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Note");
-        input.setHint("Note");
+        title.setText(getString(R.string.add_note));
+        input.setHint(getString(R.string.note));
         input.setText(noteString);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
 
@@ -643,7 +775,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -680,10 +812,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_autocomplete, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Location");
+        title.setText(getString(R.string.add_location));
 
         inputLocation = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
-        inputLocation.setHint("Location");
+        inputLocation.setHint(getString(R.string.location));
         inputLocation.setText(locationString);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
@@ -691,7 +823,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString();
 
@@ -704,7 +836,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -726,7 +858,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         final ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
 
         //Initializing a new string array with elements
-        final String[] values= {"days", "weeks", "months"};
+        final String[] values= {getString(R.string.days), getString(R.string.weeks), getString(R.string.months)};
 
         //Populate NumberPicker values from String array values
         //Set the minimum value of NumberPicker
@@ -743,7 +875,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (quantityNumberPicker.getValue() == 0) {
                             isScheduledTransaction = false;
@@ -758,7 +890,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -837,7 +969,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         transaction.setNote(this.noteString);
-        transaction.setDate(DateUtil.formatDate(selectedDate));
+        transaction.setDate(DateUtil.formatDate(getApplicationContext(), selectedDate));
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){
@@ -941,7 +1073,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 localTransaction.setDate(nextDate);
 
 
-                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
                 myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }
@@ -999,13 +1131,12 @@ public class TransactionInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Category");
-        message.setText("Please make sure you have a category selected");
+        title.setText(getString(R.string.category));
+        message.setText(String.format(getString(R.string.category_selected_warning), currentPage.toString()));
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

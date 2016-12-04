@@ -23,6 +23,7 @@ public class OpenSourceActivity extends BaseActivity
 
     private Toolbar toolbar;
     private List<OpenSource> openSourceList;
+    private String gitUrl = "https://github.com/%s/%s";
 
     @Override
     protected int getActivityLayout(){
@@ -35,12 +36,18 @@ public class OpenSourceActivity extends BaseActivity
         //Remove date icon and cost text view in the right
         ImageView dateIcon = (ImageView)findViewById(R.id.dateIcon);
         TextView totalCost = (TextView)findViewById(R.id.totalCostTextView);
-        dateIcon.setVisibility(View.GONE);
-        totalCost.setVisibility(View.GONE);
+        if(dateIcon != null){
+            dateIcon.setVisibility(View.GONE);
+        }
+        if(totalCost != null){
+            totalCost.setVisibility(View.GONE);
+        }
 
         //Set author
         TextView name = (TextView)findViewById(R.id.dateTextView);
-        name.setText("Author : Zhan H. Yap");
+        if(name != null){
+            name.setText(getString(R.string.author));
+        }
 
         createOpenSourceList();
         createToolbar();
@@ -85,7 +92,7 @@ public class OpenSourceActivity extends BaseActivity
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle("Budget");
+            getSupportActionBar().setTitle(getString(R.string.app_name));
         }
     }
 
@@ -100,9 +107,8 @@ public class OpenSourceActivity extends BaseActivity
 
     @Override
     public void onClick(int position){
-        String url = "https://github.com/" + openSourceList.get(position).getAuthor() + "/" + openSourceList.get(position).getName();
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
+        i.setData(Uri.parse(String.format(gitUrl, openSourceList.get(position).getAuthor(), openSourceList.get(position).getName())));
         startActivity(i);
     }
 }

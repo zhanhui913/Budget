@@ -40,6 +40,8 @@ public class Constants {
     public static final String DEFAULT_ACCOUNT = "Default Account";
 
     //Activity request
+    public static final String REQUEST_CHANGE_THEME = "Change Theme";
+
     public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
     public static final String REQUEST_NEW_TRANSACTION_DATE = "New Transaction Date";
     public static final String REQUEST_EDIT_TRANSACTION = "Edit Transaction";
@@ -86,6 +88,7 @@ public class Constants {
 
     public static final String RESULT_EDIT_LOCATION = "Edit Location Result";
     public static final String RESULT_NEW_LOCATION = "New Location Result";
+    public static final String RESULT_DELETE_LOCATION = "Delete Location Result";
 
 
     public static final String CHANGED = "Has Been Changed?";

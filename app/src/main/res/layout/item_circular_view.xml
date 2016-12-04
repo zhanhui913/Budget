@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
-        android:text="hellos"
-        android:singleLine="true"
+        android:text="@string/category"
+        android:maxLines="1"
         android:textSize="@dimen/text_content_size"/>
 </LinearLayout>
 
