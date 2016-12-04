@@ -5,13 +5,13 @@
     android:layout_height="wrap_content"
     android:background="?attr/themeColorBtn">
 
-    <com.zhan.library.CircularView
+    <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
         android:id="@+id/openSourceIcon"
-        style="@style/CircularViewStyle_unselected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

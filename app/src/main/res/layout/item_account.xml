@@ -58,9 +58,8 @@
                 android:tint="@color/colorPrimaryDark"/>
         </RelativeLayout>
 
-        <com.zhan.library.CircularView
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
             android:id="@+id/accountIcon"
-            style="@style/CircularViewStyle_unselected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -77,8 +76,7 @@
             android:layout_toEndOf="@+id/accountIcon"
             android:layout_centerVertical="true"
             android:paddingLeft="@dimen/item_left_padding"
-            android:paddingStart="@dimen/item_left_padding"
-            >
+            android:paddingStart="@dimen/item_left_padding">
 
             <TextView
                 android:id="@+id/accountName"

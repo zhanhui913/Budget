@@ -98,7 +98,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         //If transaction's dayType is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidthInDP(0);
-            viewHolder.circularView.setCircleRadiusInDP(25);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
@@ -124,8 +123,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
         }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
-            viewHolder.circularView.setCircleRadiusInDP(23);
-
             viewHolder.circularView.setCircleColor(R.color.transparent);
             viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
