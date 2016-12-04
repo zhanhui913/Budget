@@ -1,5 +1,6 @@
 package com.zhan.budget.Activity.Transactions;
 
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
@@ -9,6 +10,7 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
@@ -48,6 +50,14 @@ public class TransactionsForAccount extends BaseTransactions {
 
                 //update balance
                 updateTitleBalance(CurrencyTextFormatter.formatFloat(total, Constants.BUDGET_LOCALE));
+
+                if(total > 0){
+                    titleBalanceTextView.setTextColor(ContextCompat.getColor(instance, R.color.green));
+                }else if(total < 0){
+                    titleBalanceTextView.setTextColor(ContextCompat.getColor(instance, R.color.red));
+                }else{
+                    titleBalanceTextView.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+                }
 
                 updateTransactionStatus();
             }

@@ -44,7 +44,8 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     protected RealmResults<Transaction> transactionsForMonth;
 
     private Toolbar toolbar;
-    private TextView titleNameTextView, titleBalanceTextView, emptyListTextView;
+    private TextView titleNameTextView, emptyListTextView;
+    protected TextView titleBalanceTextView;
 
     /**
      * True if the user changes the status of at least 1 Transaction from COMPLETED
