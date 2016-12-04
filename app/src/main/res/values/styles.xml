@@ -88,20 +88,19 @@
 	</style>
 
 	<!--Setting's style -->
-	<style name="SettingsTextViewButtonStyle">
+	<style name="SettingsTextViewTitleStyle">
 		<item name="android:gravity">center_vertical</item>
-		<item name="android:paddingLeft">20dp</item>
+		<item name="android:layout_marginLeft">@dimen/item_left_padding</item>
 		<item name="android:textSize">@dimen/text_title_size</item>
 		<item name="android:textStyle">bold</item>
-		<item name="android:paddingTop">10dp</item>
 		<item name="android:background">?attr/themeColorBtn</item>
 	</style>
 
 	<style name="SettingsTextViewContentStyle">
 		<item name="android:gravity">center_vertical</item>
-		<item name="android:paddingLeft">35dp</item>
+		<item name="android:paddingLeft">@dimen/item_left_padding</item>
+		<item name="android:layout_marginLeft">@dimen/item_left_padding</item>
 		<item name="android:textSize">@dimen/text_content_size</item>
-		<item name="android:paddingBottom">10dp</item>
 	</style>
 
 	<style name="SettingsTextViewHeaderStyle">
@@ -109,6 +108,7 @@
 		<item name="android:layout_marginTop">@dimen/item_top_padding</item>
 		<item name="android:layout_marginBottom">@dimen/item_bottom_padding</item>
 		<item name="android:textColor">@color/colorPrimaryDark</item>
+		<item name="android:paddingLeft">@dimen/item_left_padding</item>
 		<item name="android:textStyle">bold</item>
 		<item name="android:textAllCaps">true</item>
 	</style>

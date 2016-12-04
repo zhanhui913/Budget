@@ -25,11 +25,13 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Tutorial;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.ExtendedNumberPicker;
+import com.zhan.library.CircularView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,10 +58,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, openLicenseBtn, emailBtn;
-    private TextView themeContent, firstDayContent, backupContent, versionNumber;
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, openSourceCV;
 
-    private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, tourBtn, faqBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, openLicenseBtn, emailBtn, tutorialBtn, faqBtn;
+    private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     //
     private static int CURRENT_THEME;
@@ -79,41 +81,120 @@ public class SettingFragment extends BaseFragment {
 
     @Override
     protected void init(){
+        themeCV = (CircularView) view.findViewById(R.id.themeCV);
         themeBtn = (ViewGroup) view.findViewById(R.id.themeBtn);
         themeContent = (TextView) view.findViewById(R.id.themeContent);
 
+        firstDayCV = (CircularView) view.findViewById(R.id.firstDayCV);
         firstDayBtn = (ViewGroup) view.findViewById(R.id.firstDayBtn);
         firstDayContent = (TextView) view.findViewById(R.id.firstDayContent);
 
+        categoryCV = (CircularView) view.findViewById(R.id.categoryOrderCV);
         categoryOrderBtn = (ViewGroup) view.findViewById(R.id.categoryOrderBtn);
 
+        accountCV = (CircularView) view.findViewById(R.id.defaultAccountCV);
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
 
+        locationCV = (CircularView) view.findViewById(R.id.locationCV);
         locationBtn = (ViewGroup) view.findViewById(R.id.locationBtn);
 
+        backupCV = (CircularView) view.findViewById(R.id.backupCV);
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
-        restoreBackupBtn = (TextView)view.findViewById(R.id.restoreBackupBtn);
-        resetBtn = (TextView) view.findViewById(R.id.resetDataBtn);
-        exportCSVBtn = (TextView) view.findViewById(R.id.exportCSVBtn);
+        restoreBackupCV = (CircularView) view.findViewById(R.id.restoreBackupCV);
+        restoreBackupBtn = (ViewGroup)view.findViewById(R.id.restoreBackupBtn);
+
+        resetCV = (CircularView) view.findViewById(R.id.resetDataCV);
+        resetBtn = (ViewGroup) view.findViewById(R.id.resetDataBtn);
+
+        exportCSVCV = (CircularView) view.findViewById(R.id.exportCSVCV);
+        exportCSVBtn = (ViewGroup) view.findViewById(R.id.exportCSVBtn);
+
+        emailCV = (CircularView) view.findViewById(R.id.emailCV);
         emailBtn = (ViewGroup) view.findViewById(R.id.emailBtn);
-        tourBtn = (TextView) view.findViewById(R.id.tourBtn);
-        faqBtn = (TextView) view.findViewById(R.id.faqBtn);
+
+        tutorialCV = (CircularView) view.findViewById(R.id.tutorialCV);
+        tutorialBtn = (ViewGroup) view.findViewById(R.id.tutorialBtn);
+
+        faqCV = (CircularView) view.findViewById(R.id.faqCV);
+        faqBtn = (ViewGroup) view.findViewById(R.id.faqBtn);
+
+        openSourceCV = (CircularView) view.findViewById(R.id.openSourceCV);
         openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
 
+        ///////////////////////////////////
+        //
+        // Setting up
+        //
+        ///////////////////////////////////
+
         //Set theme
         CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
         themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? getString(R.string.setting_content_theme_night) : getString(R.string.setting_content_theme_day)));
+        themeCV.setCircleColor(R.color.colorPrimary);
+        themeCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        themeCV.setIconResource(R.drawable.c_theme_light_dark);
 
         //Set start day
         int startDay = BudgetPreference.getStartDay(getContext());
         firstDayContent.setText(startDay == Calendar.SUNDAY ? getString(R.string.setting_content_day_sun) : getString(R.string.setting_content_day_mon));
+        firstDayCV.setCircleColor(R.color.lightPurple);
+        firstDayCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        firstDayCV.setIconResource(R.drawable.svg_ic_menu_calendar);
+
+        //Set category
+        categoryCV.setCircleColor(R.color.peter_river);
+        categoryCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        categoryCV.setIconResource(R.drawable.svg_ic_menu_category);
+
+        //Set account
+        accountCV.setCircleColor(R.color.light_cyan);
+        accountCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        accountCV.setIconResource(R.drawable.svg_ic_menu_account);
+
+        //Set location
+        locationCV.setCircleColor(R.color.carrot);
+        locationCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        locationCV.setIconResource(R.drawable.svg_ic_location);
 
         //Set last backup
+        backupCV.setCircleColor(R.color.sunflower);
+        backupCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        backupCV.setIconResource(R.drawable.svg_ic_backup);
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
+
+        //Set restore
+        restoreBackupCV.setCircleColor(R.color.asbestos);
+        restoreBackupCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        restoreBackupCV.setIconResource(R.drawable.svg_ic_restore);
+
+        //Set reset
+        resetCV.setCircleColor(R.color.emerald);
+        resetCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        resetCV.setIconResource(R.drawable.svg_ic_location);
+
+        //Set export CSV
+        exportCSVCV.setCircleColor(R.color.wet_asphalt);
+        exportCSVCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        exportCSVCV.setIconResource(R.drawable.c_export);
+
+        //Set email
+        emailCV.setCircleColor(R.color.wisteria);
+        emailCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        emailCV.setIconResource(R.drawable.svg_ic_email);
+
+        //Set tutorial
+        tutorialCV.setCircleColor(R.color.pink);
+        tutorialCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        tutorialCV.setIconResource(R.drawable.svg_ic_tutorial);
+
+        //Set open source
+        openSourceCV.setCircleColor(R.color.jordy_blue);
+        openSourceCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        openSourceCV.setIconResource(R.drawable.svg_ic_code);
 
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
@@ -205,7 +286,7 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        tourBtn.setOnClickListener(new View.OnClickListener() {
+        tutorialBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadTutorials();
