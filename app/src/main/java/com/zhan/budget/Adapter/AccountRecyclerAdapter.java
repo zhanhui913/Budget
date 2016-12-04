@@ -80,7 +80,6 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
         viewHolder.icon.setCircleColor(account.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(account.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-        viewHolder.icon.setTextSizeInDP(30);
 
         if(displayCost){
             viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(account.getCost(), Constants.BUDGET_LOCALE));

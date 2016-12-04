@@ -92,7 +92,6 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         viewHolder.icon.setCircleColor(location.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-        viewHolder.icon.setTextSizeInDP(30);
     }
 
     @Override

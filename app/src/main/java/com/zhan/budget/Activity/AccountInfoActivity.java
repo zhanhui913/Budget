@@ -93,7 +93,6 @@ public class AccountInfoActivity extends BaseActivity implements
         //default color selected
         selectedColor = account.getColor();
         accountCircularView.setCircleColor(account.getColor());
-        accountCircularView.setTextSizeInDP(30);
 
         if(!isNewAccount){
             accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase()));

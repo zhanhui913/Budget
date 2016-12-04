@@ -90,12 +90,9 @@ public class LocationInfoActivity extends BaseActivity implements
             deleteLocationtBtn.setVisibility(View.VISIBLE);//Cant delete location for now
         }
 
-
-
         //default color selected
         selectedColor = location.getColor();
         locationCircularView.setCircleColor(location.getColor());
-        locationCircularView.setTextSizeInDP(30);
 
         if(!isNewLocation){
             locationCircularView.setText(""+Util.getFirstCharacterFromString(location.getName().toUpperCase()));
