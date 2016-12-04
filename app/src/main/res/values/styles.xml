@@ -69,12 +69,12 @@
 
 	<!-- Circular view's style -->
 	<style name="CircularViewStyle">
-		<item name="cv_iconTopPadding">12dp</item>
-		<item name="cv_iconBottomPadding">12dp</item>
-		<item name="cv_iconLeftPadding">12dp</item>
-		<item name="cv_iconRightPadding">12dp</item>
+		<item name="cv_iconTopPadding">8dp</item>
+		<item name="cv_iconBottomPadding">8dp</item>
+		<item name="cv_iconLeftPadding">8dp</item>
+		<item name="cv_iconRightPadding">8dp</item>
 		<item name="cv_bgRadius">20dp</item>
-		<item name="cv_textSize">15sp</item>
+		<item name="cv_textSize">20sp</item>
 	</style>
 
 	<style name="CircularViewStyle_selected" parent="CircularViewStyle">
