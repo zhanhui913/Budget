@@ -58,9 +58,9 @@
 	</style>
 
 	<!-- Number pad's style -->
-	<style name="NumberPadStyle">
+	<style name="NumberPadStyle" parent="Widget.AppCompat.Button.Borderless">
 		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_height">35dp</item>
+		<item name="android:layout_height">@dimen/num_pad_height</item>
 		<item name="android:layout_weight">0.3</item>
 		<item name="android:textSize">@dimen/num_pad_text_size</item>
 		<item name="android:background">?attr/themeColorBtn</item>
@@ -68,46 +68,49 @@
 	</style>
 
 	<!-- Circular view's style -->
-	<style name="CircularViewStyle_selected">
+	<style name="CircularViewStyle">
+		<item name="cv_iconTopPadding">8dp</item>
+		<item name="cv_iconBottomPadding">8dp</item>
+		<item name="cv_iconLeftPadding">8dp</item>
+		<item name="cv_iconRightPadding">8dp</item>
+		<item name="cv_bgRadius">20dp</item>
+		<item name="cv_textSize">20sp</item>
+	</style>
+
+	<style name="CircularViewStyle_selected" parent="CircularViewStyle">
 		<item name="cv_strokePadding">3dp</item>
 		<item name="cv_strokeWidth">1dp</item>
 		<item name="cv_strokeColor">@color/transparent</item>
-		<item name="cv_iconTopPadding">12dp</item>
-		<item name="cv_iconBottomPadding">12dp</item>
-		<item name="cv_iconLeftPadding">12dp</item>
-		<item name="cv_iconRightPadding">12dp</item>
-		<item name="cv_bgRadius">25dp</item>
 	</style>
 
-	<style name="CircularViewStyle_unselected">
-		<item name="cv_iconTopPadding">12dp</item>
-		<item name="cv_iconBottomPadding">12dp</item>
-		<item name="cv_iconLeftPadding">12dp</item>
-		<item name="cv_iconRightPadding">12dp</item>
-		<item name="cv_bgRadius">25dp</item>
+	<style name="CircularViewStyle_unselected" parent="CircularViewStyle">
+		<item name="cv_strokePadding">0dp</item>
+		<item name="cv_strokeWidth">0dp</item>
 	</style>
 
 	<!--Setting's style -->
-	<style name="SettingsTextViewButtonStyle">
+	<style name="SettingsTextViewHeaderStyle">
+		<item name="android:textSize">@dimen/text_content_size</item>
+		<item name="android:layout_marginTop">@dimen/item_top_padding</item>
+		<item name="android:layout_marginBottom">@dimen/item_bottom_padding</item>
+		<item name="android:textColor">@color/colorPrimaryDark</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textAllCaps">true</item>
+	</style>
+
+	<style name="SettingsTextViewTitleStyle">
 		<item name="android:gravity">center_vertical</item>
-		<item name="android:paddingLeft">20dp</item>
+		<item name="android:layout_marginLeft">@dimen/item_left_padding</item>
 		<item name="android:textSize">@dimen/text_title_size</item>
 		<item name="android:textStyle">bold</item>
-		<item name="android:paddingTop">10dp</item>
 		<item name="android:background">?attr/themeColorBtn</item>
 	</style>
 
 	<style name="SettingsTextViewContentStyle">
 		<item name="android:gravity">center_vertical</item>
-		<item name="android:paddingLeft">35dp</item>
+		<item name="android:paddingLeft">@dimen/item_left_padding</item>
+		<item name="android:layout_marginLeft">@dimen/item_left_padding</item>
 		<item name="android:textSize">@dimen/text_content_size</item>
-		<item name="android:paddingBottom">10dp</item>
-	</style>
-
-	<style name="SettingsTextViewHeaderStyle">
-		<item name="android:textSize">@dimen/text_content_size</item>
-		<item name="android:layout_marginTop">@dimen/item_top_padding</item>
-		<item name="android:layout_marginBottom">@dimen/item_bottom_padding</item>
 	</style>
 
 	<!-- Alert dialog's style -->

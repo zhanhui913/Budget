@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
@@ -41,7 +44,8 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     protected RealmResults<Transaction> transactionsForMonth;
 
     private Toolbar toolbar;
-    private TextView titleNameTextView, titleBalanceTextView, emptyListTextView;
+    private TextView titleNameTextView, emptyListTextView;
+    protected TextView titleBalanceTextView;
 
     /**
      * True if the user changes the status of at least 1 Transaction from COMPLETED
@@ -49,6 +53,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
      * False otherwise.
      */
     protected boolean isChanged = false;
+
+    protected LinearLayoutManager linearLayoutManager;
+    protected SwipeLayout currentSwipeLayoutTarget;
 
     @Override
     protected int getActivityLayout(){
@@ -62,13 +69,15 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         instance = this;
 
         //Get intents from caller activity
-        beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH)));
+        beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate(getApplicationContext(), (getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH)));
 
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);
 
+        linearLayoutManager = new LinearLayoutManager(instance);
+
         transactionListView = (RecyclerView) findViewById(R.id.transactionListView);
-        transactionListView.setLayoutManager(new LinearLayoutManager(instance));
+        transactionListView.setLayoutManager(linearLayoutManager);
 
         //Add divider
         transactionListView.addItemDecoration(
@@ -97,7 +106,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(beginMonth));
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth));
         }
     }
 
@@ -112,6 +121,48 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
             }
         });
     }
+
+    private void confirmDeleteTransaction(final int position){
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(R.string.warning_delete_transaction);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setCancelable(true)
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteTransaction(position);
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        closeSwipeItem(position);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteTransaction(int position){
+        myRealm.beginTransaction();
+        transactionsForMonth.deleteFromRealm(position);
+        myRealm.commitTransaction();
+        isChanged = true;
+        updateTransactionList();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Protected functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * This gets called when a Transaction has been deleted or its dayType changed.
@@ -156,6 +207,16 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     protected void updateEmptyListText(String value){
         emptyListTextView.setText(value);
+    }
+
+    protected void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    protected void closeSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.close();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +277,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
         Intent editTransactionIntent = new Intent(getBaseContext(), TransactionInfoActivity.class);
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(transactionList.get(position).getDate()));
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getApplicationContext(), transactionList.get(position).getDate()));
 
         Parcelable wrapped = Parcels.wrap(transactionList.get(position));
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
@@ -226,13 +287,16 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     @Override
     public void onDeleteTransaction(int position){
-        myRealm.beginTransaction();
+        /*myRealm.beginTransaction();
         transactionsForMonth.deleteFromRealm(position);
         myRealm.commitTransaction();
 
         isChanged = true;
 
         updateTransactionList();
+*/
+
+        confirmDeleteTransaction(position);
     }
 
     @Override

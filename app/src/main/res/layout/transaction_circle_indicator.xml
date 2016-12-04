@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:CircleIndicator="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/leftDivider"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_weight="0.45"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/indicator"
         android:background="?attr/themeColorText"
-        android:layout_gravity="center_vertical" />
+        android:layout_centerVertical="true" />
 
     <com.zhan.circleindicator.CircleIndicator
         android:id="@+id/indicator"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="0.1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         CircleIndicator:ci_background="?attr/themeColorText"
         CircleIndicator:ci_selected_background="@color/colorPrimary"
         CircleIndicator:ci_mode="outside"
         CircleIndicator:ci_gravity="center"
         CircleIndicator:ci_radius="3dp"
         CircleIndicator:ci_margin="5dp"
-        android:layout_gravity="center_vertical" />
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/item_small_padding"
+        android:layout_marginLeft="@dimen/item_small_padding"
+        android:layout_below="@+id/currentPageTitle"/>
 
     <View
         android:id="@+id/rightDivider"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_weight="0.45"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/indicator"
         android:background="?attr/themeColorText"
-        android:layout_gravity="center_vertical" />
+        android:layout_centerVertical="true" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/currentPageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_tiny_size"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

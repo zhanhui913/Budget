@@ -13,7 +13,7 @@
             android:id="@+id/alertdialogMonthTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Jan 2016" />
+            android:text="@string/month_jan"/>
     </LinearLayout>
 
     <com.p_v.flexiblecalendar.FlexibleCalendarView

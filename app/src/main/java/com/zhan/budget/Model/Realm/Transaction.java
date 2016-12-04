@@ -107,8 +107,6 @@ public class Transaction extends RealmObject {
 
         if(other.getNote() != null && note != null){
             if(!note.equalsIgnoreCase(other.getNote())) return false;
-        }else if(other.getNote() == null && note == null){
-            return true;
         }
 
         if(date.getTime() != other.getDate().getTime()) return false;
@@ -119,8 +117,6 @@ public class Transaction extends RealmObject {
 
         if(other.getLocation() != null && location != null){
             if(!location.checkEquals(other.getLocation())) return false;
-        }else if(other.getLocation() == null || location == null){
-            return false;
         }
 
         return true;

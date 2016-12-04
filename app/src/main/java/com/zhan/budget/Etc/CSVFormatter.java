@@ -50,7 +50,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         View promptView = View.inflate(context, R.layout.alertdialog_progressbar, null);
 
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
-        genericTitle.setText("CSV");
+        genericTitle.setText(R.string.dialog_title_csv);
 
         mDialog = (RoundCornerProgressBar) promptView.findViewById(R.id.progressBar);
         mDialog.setMax(transactionList.size());
@@ -59,12 +59,12 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         percentTextView = (TextView)promptView.findViewById(R.id.percentTextView);
         progressTextView = (TextView)promptView.findViewById(R.id.progressTextView);
 
-        percentTextView.setText("0%");
-        progressTextView.setText("0/"+transactionList.size());
+        percentTextView.setText(String.format(context.getString(R.string.dialog_progress_percent), 0));
+        progressTextView.setText(String.format(context.getString(R.string.dialog_progress_total), 0, transactionList.size()));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setView(promptView)
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(context.getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
 
@@ -129,21 +129,31 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
             //Write a new transaction object to the csv file
             for(int i = 0; i < transactionList.size(); i++){
-                fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getType().toString()));
+                if(transactionList.get(i).getCategory() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getType()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(DateUtil.convertDateToStringFormat5(transactionList.get(i).getDate())));
+                if(transactionList.get(i).getDate() != null){
+                    fileWriter.append(Util.checkNull(DateUtil.convertDateToStringFormat5(context, transactionList.get(i).getDate())));
+                }
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(transactionList.get(i).getNote()));
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getName()));
+                if(transactionList.get(i).getCategory() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getName()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), Constants.BUDGET_LOCALE)));
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));
+                if(transactionList.get(i).getAccount() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getLocation().getName()));
+                if(transactionList.get(i).getLocation() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getLocation().getName()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getDayType().toString()));
+                fileWriter.append(Util.checkNull(transactionList.get(i).getDayType()));
                 fileWriter.append(NEW_LINE_SEPARATOR);
 
                 publishProgress(i);
@@ -167,8 +177,8 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
     @Override
     protected void onProgressUpdate(Integer... progress){
         mDialog.setProgress(progress[0]);
-        percentTextView.setText(Math.round((progress[0] / (float)transactionList.size()) * 100)+"%");
-        progressTextView.setText(progress[0]+"/"+transactionList.size());
+        percentTextView.setText(String.format(context.getString(R.string.dialog_progress_percent), Math.round((progress[0] / (float)transactionList.size()) * 100)));
+        progressTextView.setText(String.format(context.getString(R.string.dialog_progress_total), progress[0], transactionList.size()));
     }
 
     @Override

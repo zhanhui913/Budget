@@ -18,55 +18,55 @@ public final class Tutorial {
 
     public static ArrayList<TutorialItem> getTutorialPages(Context context){
         TutorialItem page1 = new TutorialItem(
-                "Calendar",
+                context.getResources().getString(R.string.tutorial_title_1),
                 context.getResources().getString(R.string.tutorial_description_1),
                 R.color.colorPrimary,
                 R.drawable.screen1);
 
         TutorialItem page2 = new TutorialItem(
-                "Theme",
+                context.getResources().getString(R.string.tutorial_title_2),
                 context.getResources().getString(R.string.tutorial_description_2),
                 R.color.colorPrimary,
                 R.drawable.screen2);
 
         TutorialItem page3 = new TutorialItem(
-                "Approve",
+                context.getResources().getString(R.string.tutorial_title_3),
                 context.getResources().getString(R.string.tutorial_description_3),
                 R.color.colorPrimary,
                 R.drawable.screen3);
 
         TutorialItem page4 = new TutorialItem(
-                "Add new Transaction",
+                context.getResources().getString(R.string.tutorial_title_4),
                 context.getResources().getString(R.string.tutorial_description_4),
                 R.color.colorPrimary,
                 R.drawable.screen4);
 
         TutorialItem page5 = new TutorialItem(
-                "Budget",
+                context.getResources().getString(R.string.tutorial_title_5),
                 context.getResources().getString(R.string.tutorial_description_5),
                 R.color.colorPrimary,
                 R.drawable.screen5);
 
         TutorialItem page6 = new TutorialItem(
-                "Account",
+                context.getResources().getString(R.string.tutorial_title_6),
                 context.getResources().getString(R.string.tutorial_description_6),
                 R.color.colorPrimary,
                 R.drawable.screen6);
 
         TutorialItem page7 = new TutorialItem(
-                "Location",
+                context.getResources().getString(R.string.tutorial_title_7),
                 context.getResources().getString(R.string.tutorial_description_7),
                 R.color.colorPrimary,
                 R.drawable.screen7);
 
         TutorialItem page8 = new TutorialItem(
-                "Monthly Overview",
+                context.getResources().getString(R.string.tutorial_title_8),
                 context.getResources().getString(R.string.tutorial_description_8),
                 R.color.colorPrimary,
                 R.drawable.screen8);
 
         TutorialItem page9 = new TutorialItem(
-                "Percentage",
+                context.getResources().getString(R.string.tutorial_title_9),
                 context.getResources().getString(R.string.tutorial_description_9),
                 R.color.colorPrimary,
                 R.drawable.screen9);
