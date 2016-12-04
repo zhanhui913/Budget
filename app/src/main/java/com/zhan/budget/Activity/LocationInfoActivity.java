@@ -168,7 +168,7 @@ public class LocationInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         locationNameTextView.setText(input.getText().toString());
 
-                        //location.setName(input.getText().toString());
+                        location.setName(input.getText().toString());
 
                         //update the text in the circular view to reflect the new name
                         locationCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
