@@ -449,7 +449,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         final Date endDate = DateUtil.getNextDate(date);
 
         //Update date text view in center panel
-        //dateTextView.setText(DateUtil.convertDateToStringFormat1(beginDate));
         dateTextView.setText(DateUtil.convertDateToStringFormat1(getContext(), beginDate));
 
         Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(getContext(), beginDate) + " -> " + DateUtil.convertDateToStringFormat5(getContext(), endDate) + ")");
@@ -466,7 +465,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 float sumFloatValue = 0f;
                 for(int i = 0; i < resultsTransactionForDay.size(); i++){
-                    if(resultsTransactionForDay.get(i).getCategory() != null){
+                    if(resultsTransactionForDay.get(i).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString()) && resultsTransactionForDay.get(i).getCategory() != null){
                         sumFloatValue += resultsTransactionForDay.get(i).getPrice();
                     }
                 }
@@ -841,8 +840,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.COMPLETED.toString());
         myRealm.commitTransaction();
-        updateTransactionList();
 
+        populateTransactionsForDate(selectedDate);
         updateScheduledTransactionsForDecoration();
     }
 
@@ -851,8 +850,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.SCHEDULED.toString());
         myRealm.commitTransaction();
-        updateTransactionList();
 
+        populateTransactionsForDate(selectedDate);
         updateScheduledTransactionsForDecoration();
     }
 
