@@ -12,12 +12,13 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:text="@string/setting_header_general" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
 
         <RelativeLayout style="@style/ItemPaddingStyle"
@@ -206,12 +207,13 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:text="@string/setting_header_data"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
 
         <RelativeLayout style="@style/ItemPaddingStyle"
@@ -344,12 +346,13 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:text="@string/setting_header_feedback"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
 
         <RelativeLayout style="@style/ItemPaddingStyle"
