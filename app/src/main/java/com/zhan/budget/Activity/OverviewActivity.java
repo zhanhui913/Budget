@@ -3,6 +3,7 @@ package com.zhan.budget.Activity;
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import com.zhan.budget.Fragment.OverviewGenericFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
 
@@ -162,10 +164,22 @@ public class OverviewActivity extends BaseActivity implements
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, Constants.BUDGET_LOCALE));
             pieChartFragment.setData(expenseCategoryList, animate);
+
+            if(totalExpenseCost < 0){
+                totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.red));
+            }else{
+                totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+            }
         }else if(position == 1){
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, Constants.BUDGET_LOCALE));
             pieChartFragment.setData(incomeCategoryList, animate);
+
+            if(totalIncomeCost > 0){
+                totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.green));
+            }else{
+                totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+            }
         }
     }
 

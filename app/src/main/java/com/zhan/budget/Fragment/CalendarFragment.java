@@ -464,8 +464,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 Log.d(TAG, "received " + element.size() + " transactions");
 
-                //float sumFloatValue = element.sum("price").floatValue();
-
                 float sumFloatValue = 0f;
                 for(int i = 0; i < resultsTransactionForDay.size(); i++){
                     if(resultsTransactionForDay.get(i).getCategory() != null){
@@ -474,6 +472,14 @@ public class CalendarFragment extends BaseRealmFragment implements
                 }
 
                 totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, Constants.BUDGET_LOCALE));
+
+                if(sumFloatValue > 0){
+                    totalCostTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                }else if(sumFloatValue < 0){
+                    totalCostTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                }else{
+                    totalCostTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+                }
 
                 updateTransactionList();
             }

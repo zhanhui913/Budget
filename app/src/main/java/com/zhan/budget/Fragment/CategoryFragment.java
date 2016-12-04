@@ -17,6 +17,7 @@ import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
 
@@ -57,8 +58,6 @@ public class CategoryFragment extends BaseFragment {
 
         leftTextView = (TextView) view.findViewById(R.id.leftTextView);
         rightTextView = (TextView) view.findViewById(R.id.rightTextView);
-        leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.alizarin));
-        rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.nephritis));
 
         createTabs();
 
@@ -84,6 +83,13 @@ public class CategoryFragment extends BaseFragment {
                 isCategoryExpenseCalculationComplete = true;
                 totalExpenseCost = totalCost;
                 leftTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
+
+                if(totalExpenseCost < 0){
+                    leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                }else{
+                    leftTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+                }
+
                 updatePieChart();
             }
         });
@@ -94,6 +100,13 @@ public class CategoryFragment extends BaseFragment {
                 isCategoryIncomeCalculationComplete = true;
                 totalIncomeCost = totalCost;
                 rightTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
+
+                if(totalIncomeCost > 0){
+                    rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                }else{
+                    rightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+                }
+
                 updatePieChart();
             }
         });
