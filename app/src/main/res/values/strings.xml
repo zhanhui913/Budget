@@ -152,6 +152,9 @@
 	<string name="setting_title_reset_data">Reset data</string>
 	<string name="setting_title_export_data">Export data to CSV</string>
 	<string name="setting_content_export_data_sort">Sort by</string>
+	<string name="realm_data">Realm Data</string>
+	<string name="realm_message">This is the realm data</string>
+	<string name="realm_message_failed">Failed to retrieve realm file</string>
 
 	<!-- FEEDBACK -->
 	<string name="setting_title_email">Email me</string>
