@@ -143,7 +143,8 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
                     fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getName()));
                 }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), Constants.BUDGET_LOCALE)));
+                //Need to remove commas from $1,000 for example
+                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), Constants.BUDGET_LOCALE)).replace(",",""));
                 fileWriter.append(COMMA_DELIMITER);
                 if(transactionList.get(i).getAccount() != null){
                     fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));
