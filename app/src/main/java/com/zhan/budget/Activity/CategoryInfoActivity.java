@@ -112,7 +112,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         currentPageTextView.setText(R.string.color);
 
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);

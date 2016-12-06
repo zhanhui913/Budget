@@ -142,6 +142,8 @@
 	<string name="setting_content_account">Manage accounts. Change icons and others</string>
 	<string name="setting_title_location">Locations</string>
 	<string name="setting_content_location">Manage Locations. Change colors</string>
+	<string name="setting_title_currency">Currency</string>
+	<string name="setting_content_currency">Manage currencies</string>
 
 	<!-- DATA -->
 	<string name="setting_title_backup_data">Backup data</string>

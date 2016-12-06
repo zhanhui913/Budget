@@ -61,7 +61,7 @@ public class SettingFragment extends BaseFragment {
     private static final String TAG = "SettingFragment";
 
 
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, openSourceCV;
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, currencyCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, openSourceCV;
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, openLicenseBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
@@ -102,6 +102,7 @@ public class SettingFragment extends BaseFragment {
         locationCV = (CircularView) view.findViewById(R.id.locationCV);
         locationBtn = (ViewGroup) view.findViewById(R.id.locationBtn);
 
+        currencyCV = (CircularView) view.findViewById(R.id.currencyCV);
         currencyBtn = (ViewGroup) view.findViewById(R.id.currencyBtn);
 
         backupCV = (CircularView) view.findViewById(R.id.backupCV);
@@ -165,6 +166,11 @@ public class SettingFragment extends BaseFragment {
         locationCV.setCircleColor(R.color.carrot);
         locationCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         locationCV.setIconResource(R.drawable.svg_ic_location);
+
+        //Set currency
+        currencyCV.setCircleColor(R.color.cream_can);
+        currencyCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        currencyCV.setIconResource(R.drawable.svg_ic_backup);
 
         //Set last backup
         backupCV.setCircleColor(R.color.sunflower);
