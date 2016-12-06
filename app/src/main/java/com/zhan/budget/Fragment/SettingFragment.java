@@ -306,6 +306,14 @@ public class SettingFragment extends BaseFragment {
                 startActivity(openSource);
             }
         });
+
+        versionNumber.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                sendRealmData();
+                return false;
+            }
+        });
     }
 
     private void sendRealmData() {
@@ -327,10 +335,10 @@ public class SettingFragment extends BaseFragment {
                     dst.close();
 
                     File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
-                    email(exportRealmFile, "Realm Data", "This is a realm data");
+                    email(exportRealmFile, getString(R.string.realm_data), getString(R.string.realm_message));
                 }else{
                     Log.d("FILE","cannot write file");
-                    Util.createSnackbar(getContext(), getView(), "Fail to retrieve file.");
+                    Util.createSnackbar(getContext(), getView(), getString(R.string.realm_message_failed));
                 }
             }
         } catch (Exception e) {
@@ -432,7 +440,6 @@ public class SettingFragment extends BaseFragment {
             BudgetPreference.setLastBackup(getContext(), dateString);
 
             Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_backup_data_successful));
-
         }catch(IOException e){
             e.printStackTrace();
         }
