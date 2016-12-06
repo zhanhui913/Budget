@@ -89,7 +89,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
-        emptyAccountText.setText("Pull down to add an account");
+        emptyAccountText.setText(getString(R.string.pull_down_add_account));
 
         getDefaultCurrency();
         createPullToAddAccount();
@@ -251,18 +251,18 @@ public class SettingsAccount extends BaseRealmActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_account);
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteAccount(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

@@ -10,15 +10,15 @@
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number1"
-            android:text="1"/>
+            android:text="@string/num_pad_1"/>
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number2"
-            android:text="2"/>
+            android:text="@string/num_pad_2"/>
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number3"
-            android:text="3"/>
+            android:text="@string/num_pad_3"/>
     </LinearLayout>
 
     <LinearLayout
@@ -27,15 +27,15 @@
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number4"
-            android:text="4"/>
+            android:text="@string/num_pad_4"/>
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number5"
-            android:text="5"/>
+            android:text="@string/num_pad_5"/>
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number6"
-            android:text="6"/>
+            android:text="@string/num_pad_6"/>
     </LinearLayout>
 
     <LinearLayout
@@ -44,15 +44,15 @@
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number7"
-            android:text="7"/>
+            android:text="@string/num_pad_7"/>
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number8"
-            android:text="8"/>
+            android:text="@string/num_pad_8"/>
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number9"
-            android:text="9"/>
+            android:text="@string/num_pad_9"/>
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +63,7 @@
 
         <Button style="@style/NumberPadStyle"
             android:id="@+id/number0"
-            android:text="0"/>
+            android:text="@string/num_pad_0"/>
 
         <ImageButton style="@style/NumberPadStyle"
             android:id="@+id/numberX"

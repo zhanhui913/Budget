@@ -5,7 +5,7 @@
     tools:context="com.zhan.budget.Activity.TransactionInfoActivity">
 
     <item android:id="@+id/formSaveBtn"
-        android:title="save"
+        android:title="@string/form_btn_save"
         app:showAsAction="always"/>
 
 </menu>

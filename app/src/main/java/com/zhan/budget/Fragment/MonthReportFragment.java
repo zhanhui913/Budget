@@ -381,7 +381,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
     private void updateYearInToolbar(int direction){
         currentYear = DateUtil.getYearWithDirection(currentYear, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat3(currentYear));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat3(getContext(), currentYear));
         getMonthReport();
     }
 

@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
@@ -81,11 +84,14 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         Location location = locationList.get(position);
 
         viewHolder.name.setText(location.getName());
-        viewHolder.amount.setText(location.getAmount()+ ((location.getAmount() > 1)? " times":" time"));
+        if(location.getAmount() > 1){
+            viewHolder.amount.setText(String.format(context.getString(R.string.location_times), location.getAmount()));
+        }else{
+            viewHolder.amount.setText(String.format(context.getString(R.string.location_time), location.getAmount()));
+        }
         viewHolder.icon.setCircleColor(location.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-        viewHolder.icon.setTextSizeInDP(30);
     }
 
     @Override
@@ -108,7 +114,8 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         // for any view that will be set as you render a row
         public CircularView icon;
         public TextView name, amount;
-        public ViewGroup panel;
+        public SwipeLayout swipeLayout;
+        public ImageView deleteBtn, editBtn;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -118,20 +125,70 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             super(itemView);
 
             icon = (CircularView) itemView.findViewById(R.id.locationIcon);
-            panel = (ViewGroup) itemView.findViewById(R.id.locationPanel);
             name = (TextView) itemView.findViewById(R.id.locationName);
             amount = (TextView) itemView.findViewById(R.id.locationAmount);
+            swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeLocation);
+            deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
+            editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
 
-            if(!showTimes){
-                amount.setVisibility(View.GONE);
-            }
+            swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+                @Override
+                public void onStartOpen(SwipeLayout layout) {
+                    Log.d("LocationRecyclerAdapter", "onstartopen");
+                }
 
-            panel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onOpen(SwipeLayout layout) {
+                    Log.d("AccountFragment 1", "on open");
+                }
+
+                @Override
+                public void onStartClose(SwipeLayout layout) {
+                    Log.d("LocationRecyclerAdapter", "onstartclose");
+                }
+
+                @Override
+                public void onClose(SwipeLayout layout) {
+                    Log.d("AccountFragment 1", "onclose");
+                }
+
+                @Override
+                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+                    Log.d("LocationRecyclerAdapter", "onupdate "+leftOffset+","+topOffset);
+                    mListener.onPullDownAllow(false);
+                }
+
+                @Override
+                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+                    Log.d("LocationRecyclerAdapter", "onhandrelease :"+xvel+","+yvel);
+                    mListener.onPullDownAllow(true);
+                }
+            });
+
+            swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onClickLocation(getLayoutPosition());
                 }
             });
+
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onDeleteLocation(getLayoutPosition());
+                }
+            });
+
+            editBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onEditLocation(getLayoutPosition());
+                }
+            });
+
+            if(!showTimes){
+                amount.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -143,5 +200,11 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
     public interface OnLocationAdapterInteractionListener {
         void onClickLocation(int position);
+
+        void onDeleteLocation(int position);
+
+        void onEditLocation(int position);
+
+        void onPullDownAllow(boolean value);
     }
 }

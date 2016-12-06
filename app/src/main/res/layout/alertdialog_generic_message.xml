@@ -14,12 +14,13 @@
             android:id="@+id/genericTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account Name" />
+            android:text="@string/dialog_content_name" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/genericMessage"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/item_padding"/>
+        android:layout_margin="@dimen/item_padding"
+        android:text="@string/dialog_content_hint"/>
 </LinearLayout>

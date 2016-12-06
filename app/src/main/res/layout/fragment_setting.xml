@@ -7,144 +7,202 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_padding"
         android:orientation="vertical">
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="GENERAL" />
+            android:layout_marginLeft="@dimen/left_padding_divider"
+            android:text="@string/setting_header_general" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/themeBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/themeCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/themeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Current Theme"/>
+                android:layout_toRightOf="@+id/themeCV"
+                android:text="@string/setting_title_theme"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/themeContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="day mode"/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/themeCV"
+                android:layout_below="@+id/themeTitle"
+                android:text="@string/setting_content_theme_day"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/firstDayBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/firstDayCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/firstDayTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="First day of the week"/>
+                android:text="@string/setting_title_day"
+                android:layout_toRightOf="@+id/firstDayCV"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/firstDayContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="sunday"/>
-        </LinearLayout>
+                android:text="@string/setting_content_day_sun"
+                android:layout_toRightOf="@+id/firstDayCV"
+                android:layout_below="@+id/firstDayTitle"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/categoryOrderBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/categoryOrderCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/categoryOrderTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Categories"/>
+                android:layout_toRightOf="@+id/categoryOrderCV"
+                android:text="@string/setting_title_category"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manage categories. Change icon, color, and others."/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/categoryOrderCV"
+                android:layout_below="@+id/categoryOrderTitle"
+                android:text="@string/setting_content_category"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/defaultAccountBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/defaultAccountCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/defaultAccountTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Accounts"/>
+                android:layout_toRightOf="@+id/defaultAccountCV"
+                android:text="@string/setting_title_account"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/defaultAccountContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manage accounts. Change icons and others."/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/defaultAccountCV"
+                android:layout_below="@+id/defaultAccountTitle"
+                android:text="@string/setting_content_account"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/locationBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Locations"/>
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/locationCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/locationTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/locationCV"
+                android:text="@string/setting_title_location"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
-                      android:id="@+id/locationContent"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Manage locations. Change colors."/>
-        </LinearLayout>
+                android:id="@+id/locationContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/locationCV"
+                android:layout_below="@+id/locationTitle"
+                android:text="@string/setting_content_location"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
@@ -175,166 +233,289 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="DATA"/>
+            android:layout_marginLeft="@dimen/left_padding_divider"
+            android:text="@string/setting_header_data"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/backupBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/backupCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/backupTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Backup data"/>
+                android:layout_toRightOf="@+id/backupCV"
+                android:text="@string/setting_title_backup_data"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/backupContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="last backup Feb 2, 2016"/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/backupCV"
+                android:layout_below="@+id/backupTitle"
+                android:text="@string/setting_content_backup_data"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/restoreBackupBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Restore data"/>
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/restoreBackupCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/restoreBackupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/restoreBackupCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_restore_data"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/resetDataBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Reset data"/>
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/resetDataCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/resetDataTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/resetDataCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_reset_data"/>
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/exportCSVBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Export data to CSV"/>
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/exportCSVCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/exportCSVTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/exportCSVCV"
+                android:text="@string/setting_title_export_data"/>
+
+        </RelativeLayout>
 
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="FEEDBACK"/>
+            android:layout_marginLeft="@dimen/left_padding_divider"
+            android:text="@string/setting_header_feedback"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
-<!--
-        <TextView style="@style/SettingsTextViewButtonStyle"
+
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/emailBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Email me"/>
--->
-        <LinearLayout
-            android:id="@+id/emailBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Email me"/>
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/emailCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/emailTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/emailCV"
+                android:text="@string/setting_title_email"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
-                      android:id="@+id/emailContent"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="feedback for the app"/>
-        </LinearLayout>
+                android:id="@+id/emailContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/emailTitle"
+                android:layout_toRightOf="@+id/emailCV"
+                android:text="@string/setting_content_email"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
-            android:id="@+id/tourBtn"
+        <RelativeLayout style="@style/ItemPaddingStyle"
+            android:id="@+id/tutorialBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Tour"/>
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/tutorialCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/tourTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tutorialCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_tour"/>
+        </RelativeLayout>
 
         <!-- remove for now in v1.0.0 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:visibility="gone"
             android:background="?attr/themeColorHighlight"/>
 
         <!-- remove for now in v1.0.0 -->
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <RelativeLayout  style="@style/ItemPaddingStyle"
             android:id="@+id/faqBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:background="?attr/themeColorBtn"
-            android:visibility="gone"
-            android:text="FAQ"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/faqCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/faqTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/faqCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_faq"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout  style="@style/ItemPaddingStyle"
             android:id="@+id/openSourceBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/openSourceCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/openSourceTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Open Source Licenses"/>
+                android:layout_toRightOf="@+id/openSourceCV"
+                android:text="@string/setting_title_open_source"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/openSourceContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="License details for open source software used"/>
-        </LinearLayout>
+                android:layout_below="@+id/openSourceTitle"
+                android:layout_toRightOf="@+id/openSourceCV"
+                android:text="@string/setting_content_open_source"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/appVersionTextId"

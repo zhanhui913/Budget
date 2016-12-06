@@ -6,7 +6,6 @@ import android.util.Log;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
-import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +38,7 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... params){
-        Log.d(TAG, DateUtil.convertDateToString(this.month)+" has "+transactionList.size()+" transactions");
+        //Log.d(TAG, DateUtil.convertDateToString(context, this.month)+" has "+transactionList.size()+" transactions");
 
         //Go through each transaction and put them into the correct category
         for(int t = 0; t < transactionList.size(); t++){

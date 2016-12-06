@@ -152,7 +152,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getLastDateOfMonth(month);
 
-        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
+        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(getContext(), month) + "-> "+DateUtil.convertDateToStringFormat1(getContext(), endMonth)+")");
 
         //final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
@@ -221,19 +221,18 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(getString(R.string.warning_delete_category));
 
         new AlertDialog.Builder(getContext())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteCategory(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -366,7 +365,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         //Toast.makeText(getContext(), "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
 
         Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
+        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
 
         Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 

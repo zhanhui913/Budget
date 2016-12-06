@@ -69,7 +69,6 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
         viewHolder.icon.setCircleColor(data.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(data.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-        viewHolder.icon.setTextSizeInDP(30);
     }
 
     @Override
