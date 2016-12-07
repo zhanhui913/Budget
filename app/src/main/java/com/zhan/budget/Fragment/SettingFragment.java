@@ -170,7 +170,7 @@ public class SettingFragment extends BaseFragment {
         //Set currency
         currencyCV.setCircleColor(R.color.cream_can);
         currencyCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        currencyCV.setIconResource(R.drawable.svg_ic_backup);
+        currencyCV.setIconResource(R.drawable.svg_ic_dollar);
 
         //Set last backup
         backupCV.setCircleColor(R.color.sunflower);
