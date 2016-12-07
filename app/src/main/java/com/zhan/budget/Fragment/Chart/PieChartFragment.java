@@ -30,6 +30,7 @@ public class PieChartFragment extends BaseChartFragment {
     private PieChart pieChart;
     protected static final String ARG_CHART_2 = "displayDataImmediately";
     protected static final String ARG_CHART_3 = "animate";
+    protected static final String ARG_CHART_4 = "name";
 
     protected List<? extends PieDataCostInterface> dataList;
     protected PieDataSet dataSet;
@@ -41,24 +42,28 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list){
-        return newInstance(list, false, false);
+        return newInstance(list, false, false, "");
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately){
-        return newInstance(list, initImmediately, false);
+        return newInstance(list, initImmediately, false, "");
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate){
+        return newInstance(list, initImmediately, animate, "");
+    }
+
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate, String name){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CHART, Parcels.wrap(list));
         args.putBoolean(ARG_CHART_2, initImmediately);
         args.putBoolean(ARG_CHART_3, animate);
+        args.putString(ARG_CHART_4, name);
         pieChartFragment.setArguments(args);
 
         return pieChartFragment;
     }
-
 
     @Override
     protected int getFragmentLayout() {
@@ -101,7 +106,11 @@ public class PieChartFragment extends BaseChartFragment {
             setData(dataList, getArguments().getBoolean(ARG_CHART_3));
 
             if(dataList.size() > 0){
-                pieChart.setCenterText(dataList.get(0).getClass().getSimpleName());
+                if(getArguments().getString(ARG_CHART_4).equalsIgnoreCase("")){
+                    pieChart.setCenterText(getString(R.string.na));
+                }else{
+                    pieChart.setCenterText(getArguments().getString(ARG_CHART_4));
+                }
             }
         }
     }
@@ -193,7 +202,11 @@ public class PieChartFragment extends BaseChartFragment {
         }
 
         if(list.size() > 0){
-            pieChart.setCenterText(list.get(0).getClass().getSimpleName());
+            if(getArguments().getString(ARG_CHART_4).equalsIgnoreCase("")){
+                pieChart.setCenterText(getString(R.string.na));
+            }else{
+                pieChart.setCenterText(getArguments().getString(ARG_CHART_4));
+            }
         }
 
         pieChart.invalidate();

@@ -57,32 +57,34 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_toRightOf="@+id/categoryIcon"
+            android:layout_toEndOf="@+id/categoryIcon"
             android:layout_toLeftOf="@+id/rightPanel"
+            android:layout_toStartOf="@+id/rightPanel"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/item_left_padding">
+            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_marginStart="@dimen/item_left_padding">
 
             <TextView
                 android:id="@+id/transactionNote"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Lunch"
+                android:text="@string/note"
                 android:textSize="@dimen/text_title_size"
                 android:textStyle="bold"
                 android:maxLines="1"
                 android:ellipsize="end"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/accountIcon"
                     android:layout_width="@dimen/icon_height"
                     android:layout_height="@dimen/icon_height"
                     android:src="@drawable/svg_ic_menu_account"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
                     android:tint="?attr/themeColorText"/>
 
                 <TextView
@@ -90,34 +92,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_content_size"
-                    android:text="Account"
-                    android:layout_toRightOf="@+id/accountIcon"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="2dp" />
-
+                    android:text="@string/account"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
+                    android:ellipsize="end"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"/>
 
                 <ImageView
                     android:id="@+id/locationIcon"
                     android:layout_width="@dimen/icon_height"
                     android:layout_height="@dimen/icon_height"
                     android:src="@drawable/svg_ic_location"
-                    android:layout_centerVertical="true"
-                    android:tint="?attr/themeColorText"
-                    android:layout_toRightOf="@+id/transactionAccount"
-                    android:layout_marginLeft="10dp"/>
+                    android:tint="?attr/themeColorText" />
 
                 <TextView
                     android:id="@+id/transactionLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_content_size"
-                    android:text="Location"
-                    android:layout_toRightOf="@+id/locationIcon"
-                    android:layout_centerVertical="true"
+                    android:text="@string/location"
                     android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:maxLines="1"
-                    android:ellipsize="end"/>
-            </RelativeLayout>
+                    android:ellipsize="end"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -126,9 +127,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:gravity="right">
+            android:gravity="end">
 
         <!-- Only visible on TransactionsForCategory, TransactionsForAccount, TransactionsForLocation -->
         <TextView
@@ -136,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="01-Jan-2016"
+            android:text="@string/month_jan"
             android:textSize="@dimen/text_content_size" />
 
         <TextView
@@ -144,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="-25.00"
+            android:text="@string/cost"
             android:textSize="@dimen/text_title_size" />
         </LinearLayout>
     </RelativeLayout>

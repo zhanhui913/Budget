@@ -3,6 +3,7 @@ package com.zhan.budget.Activity;
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
 
@@ -69,7 +71,7 @@ public class OverviewActivity extends BaseActivity implements
         currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
 
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
-        dateTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
+        dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
         totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
 
         createToolbar();
@@ -88,7 +90,7 @@ public class OverviewActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle("Monthly Overview");
+            getSupportActionBar().setTitle(R.string.monthly_overview);
         }
     }
 
@@ -103,8 +105,8 @@ public class OverviewActivity extends BaseActivity implements
 
     private void createTabs(){
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.category_expense));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.category_income));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         overviewExpenseFragment = OverviewGenericFragment.newInstance(BudgetType.EXPENSE, currentMonth);
@@ -139,7 +141,7 @@ public class OverviewActivity extends BaseActivity implements
     private void createCharts(){
         //barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
         //percentChartFragment = PercentChartFragment.newInstance(new ArrayList<Category>());
-        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>());
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), false, false, getString(R.string.category));
         getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
     }
 
@@ -168,10 +170,22 @@ public class OverviewActivity extends BaseActivity implements
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, currentCurrency));
             pieChartFragment.setData(expenseCategoryList, animate);
+
+            if(totalExpenseCost < 0){
+                totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.red));
+            }else{
+                totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+            }
         }else if(position == 1){
             //Set total cost for month
             totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, currentCurrency));
             pieChartFragment.setData(incomeCategoryList, animate);
+
+            if(totalIncomeCost > 0){
+                totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.green));
+            }else{
+                totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+            }
         }
     }
 

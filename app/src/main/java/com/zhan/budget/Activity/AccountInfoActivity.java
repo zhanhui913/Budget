@@ -93,7 +93,6 @@ public class AccountInfoActivity extends BaseActivity implements
         //default color selected
         selectedColor = account.getColor();
         accountCircularView.setCircleColor(account.getColor());
-        accountCircularView.setTextSizeInDP(30);
 
         if(!isNewAccount){
             accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase()));
@@ -116,9 +115,9 @@ public class AccountInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(isNewAccount){
-                getSupportActionBar().setTitle("Add Account");
+                getSupportActionBar().setTitle(getString(R.string.add_account));
             }else{
-                getSupportActionBar().setTitle("Edit Account");
+                getSupportActionBar().setTitle(getString(R.string.edit_account));
             }
         }
     }
@@ -159,13 +158,13 @@ public class AccountInfoActivity extends BaseActivity implements
         TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Account Name");
+        genericTitle.setText(getString(R.string.name));
         input.setText(accountNameTextView.getText());
-        input.setHint("Account");
+        input.setHint(getString(R.string.account));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         accountNameTextView.setText(input.getText().toString());
 
@@ -175,7 +174,7 @@ public class AccountInfoActivity extends BaseActivity implements
                         accountCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
                         accountCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));                    }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -192,13 +191,13 @@ public class AccountInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_account);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
                         Realm myRealm = Realm.getDefaultInstance();
@@ -213,7 +212,7 @@ public class AccountInfoActivity extends BaseActivity implements
                         finish();
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -269,6 +268,29 @@ public class AccountInfoActivity extends BaseActivity implements
         accountCircularView.setCircleColor(selectedColor);
     }
 
+    /**
+     * If there is no Account name, a dialog will popup to remind the user.
+     */
+    private void notificationForAccount(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.account);
+        message.setText(R.string.warning_account_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -297,8 +319,15 @@ public class AccountInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            save();
+
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(account.getName())){
+                save();
+            }else{
+                notificationForAccount();
+
+            }
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -76,12 +76,11 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         // getting MonthReport data for the row
         MonthReport monthReport = monthReportList.get(position);
 
-        viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
-        viewHolder.expenseThisMonth.setText("You spent "+CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), currentCurrency));
-        viewHolder.incomeThisMonth.setText("You earned "+CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), currentCurrency));
+        viewHolder.month.setText(DateUtil.convertDateToStringFormat4(context, monthReport.getMonth()));
+        viewHolder.expenseThisMonth.setText(String.format(context.getString(R.string.you_spent), CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), currentCurrency)));
+        viewHolder.incomeThisMonth.setText(String.format(context.getString(R.string.you_earned), CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), currentCurrency)));
 
         float savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
-
 
         //Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
         Log.d("CHECK", "----- "+monthReport.getMonth()+" -----");
@@ -89,13 +88,13 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         Log.d("CHECK", "income : "+monthReport.getIncomeThisMonth());
         Log.d("CHECK", "----- end -----");
 
-
         if(savings > 0){
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.green));
         }else if(savings < 0){
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.red));
         }
-        viewHolder.netThisMonth.setText("You saved "+CurrencyTextFormatter.formatFloat(savings, currentCurrency));
+
+        viewHolder.netThisMonth.setText(String.format(context.getString(R.string.you_saved), CurrencyTextFormatter.formatFloat(savings, currentCurrency)));
 
         /*
         if(monthReport.getFirstCategory() != null){

@@ -412,7 +412,8 @@ public class CalendarFragment extends BaseRealmFragment implements
 
             @Override
             public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
-                return String.valueOf(defaultValue.toUpperCase());
+                //return String.valueOf(defaultValue.toUpperCase());
+                return DateUtil.getDayOfWeek(dayOfWeek).toUpperCase();
             }
         });
 
@@ -471,9 +472,9 @@ public class CalendarFragment extends BaseRealmFragment implements
         final Date endDate = DateUtil.getNextDate(date);
 
         //Update date text view in center panel
-        dateTextView.setText(DateUtil.convertDateToStringFormat1(beginDate));
+        dateTextView.setText(DateUtil.convertDateToStringFormat1(getContext(), beginDate));
 
-        Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(beginDate) + " -> " + DateUtil.convertDateToStringFormat5(endDate) + ")");
+        Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(getContext(), beginDate) + " -> " + DateUtil.convertDateToStringFormat5(getContext(), endDate) + ")");
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -485,16 +486,22 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 Log.d(TAG, "received " + element.size() + " transactions");
 
-                //float sumFloatValue = element.sum("price").floatValue();
-
                 float sumFloatValue = 0f;
                 for(int i = 0; i < resultsTransactionForDay.size(); i++){
-                    if(resultsTransactionForDay.get(i).getCategory() != null){
+                    if(resultsTransactionForDay.get(i).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString()) && resultsTransactionForDay.get(i).getCategory() != null){
                         sumFloatValue += resultsTransactionForDay.get(i).getPrice();
                     }
                 }
 
                 totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, currentCurrency));
+
+                if(sumFloatValue > 0){
+                    totalCostTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+                }else if(sumFloatValue < 0){
+                    totalCostTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+                }else{
+                    totalCostTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+                }
 
                 updateTransactionList();
             }
@@ -540,7 +547,8 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         //This is new transaction
         newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, true);
-        newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
+        //newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
+        newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getContext(), selectedDate));
         startActivityForResult(newTransactionIntent, Constants.RETURN_NEW_TRANSACTION);
     }
 
@@ -552,7 +560,8 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         //This is edit mode, not a new transaction
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
+        //editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
+        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getContext(), selectedDate));
 
         Parcelable wrapped = Parcels.wrap(transactionList.get(position));
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
@@ -565,7 +574,8 @@ public class CalendarFragment extends BaseRealmFragment implements
      */
     private void updateMonthInToolbar(){
         Date tempDate = new GregorianCalendar(calendarView.getCurrentYear(), calendarView.getCurrentMonth(), 1).getTime();
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(tempDate));
+        //mListener.updateToolbar(DateUtil.convertDateToStringFormat2(tempDate));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), tempDate));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -738,18 +748,18 @@ public class CalendarFragment extends BaseRealmFragment implements
         TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
+        title.setText(getString(R.string.dialog_title_delete));
         message.setText(R.string.warning_delete_transaction);
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
                 .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteTransaction(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -853,8 +863,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.COMPLETED.toString());
         myRealm.commitTransaction();
-        updateTransactionList();
 
+        populateTransactionsForDate(selectedDate);
         updateScheduledTransactionsForDecoration();
     }
 
@@ -863,8 +873,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.beginTransaction();
         resultsTransactionForDay.get(position).setDayType(DayType.SCHEDULED.toString());
         myRealm.commitTransaction();
-        updateTransactionList();
 
+        populateTransactionsForDate(selectedDate);
         updateScheduledTransactionsForDecoration();
     }
 

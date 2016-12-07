@@ -10,13 +10,14 @@
 	<dimen name="fab_margin">16dp</dimen>
 	<dimen name="letter_icon_size">60sp</dimen>
 
+	<!-- Num pad -->
 	<dimen name="num_pad_text_size">20sp</dimen>
+	<dimen name="num_pad_height">35dp</dimen>
 
 	<!-- This includes the left and right padding which is 8dp each and the default background size
-
-    for circular view which is 50dp-->
-    <dimen name="left_padding_divider">66dp</dimen>
-    <dimen name="right_padding_divider">0dp</dimen>
+    for circular view which is (20 for cv_bgRadius * 2 = 40)40dp-->
+	<dimen name="left_padding_divider">56dp</dimen>
+	<dimen name="right_padding_divider">0dp</dimen>
 
     <dimen name="item_padding">8dp</dimen>
     <dimen name="item_static_padding">5dp</dimen>

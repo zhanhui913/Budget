@@ -47,8 +47,8 @@ public class SettingsCategory extends BaseActivity {
 
     private void createTabs(){
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.category_expense));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.category_income));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.MOVE, true);
