@@ -71,19 +71,6 @@
 	<string name="nav_report">Monthly Report</string>
 	<string name="nav_setting">Settings</string>
 
-	<string name="month_jan">January</string>
-	<string name="month_feb">February</string>
-	<string name="month_mar">March</string>
-	<string name="month_apr">April</string>
-	<string name="month_may">May</string>
-	<string name="month_jun">June</string>
-	<string name="month_jul">July</string>
-	<string name="month_aug">August</string>
-	<string name="month_sep">September</string>
-	<string name="month_oct">October</string>
-	<string name="month_nov">November</string>
-	<string name="month_dev">December</string>
-
 	<string name="transaction">Transaction</string>
 	<string name="account">Account</string>
 	<string name="category">Category</string>
@@ -92,6 +79,7 @@
 	<string name="location">Location</string>
 	<string name="note">Note</string>
 	<string name="budget">Budget</string>
+	<string name="month">Month</string>
 
 	<!-- Title when adding/editting item-->
 	<string name="add_transaction">Add transaction</string>
