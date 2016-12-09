@@ -58,9 +58,9 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, aboutCV;
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, emailBtn, tutorialBtn, faqBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     //
@@ -110,6 +110,9 @@ public class SettingFragment extends BaseFragment {
 
         exportCSVCV = (CircularView) view.findViewById(R.id.exportCSVCV);
         exportCSVBtn = (ViewGroup) view.findViewById(R.id.exportCSVBtn);
+
+        ratingsCV = (CircularView) view.findViewById(R.id.ratingCV);
+        ratingsBtn = (ViewGroup) view.findViewById(R.id.ratingBtn);
 
         emailCV = (CircularView) view.findViewById(R.id.emailCV);
         emailBtn = (ViewGroup) view.findViewById(R.id.emailBtn);
@@ -180,6 +183,11 @@ public class SettingFragment extends BaseFragment {
         exportCSVCV.setCircleColor(R.color.wet_asphalt);
         exportCSVCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         exportCSVCV.setIconResource(R.drawable.c_export);
+
+        //Set ratings
+        ratingsCV.setCircleColor(R.color.light_cyan);
+        ratingsCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        ratingsCV.setIconResource(R.drawable.svg_ic_star);
 
         //Set email
         emailCV.setCircleColor(R.color.wisteria);
@@ -276,6 +284,13 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 requestFilePermissionToWriteCSV();
+            }
+        });
+
+        ratingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rate();
             }
         });
 
@@ -749,6 +764,16 @@ public class SettingFragment extends BaseFragment {
                 })
                 .create()
                 .show();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Rate
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void rate(){
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -148,6 +148,8 @@
 	<string name="realm_message_failed">Failed to retrieve realm file</string>
 
 	<!-- FEEDBACK -->
+	<string name="setting_title_rating">Say thanks</string>
+	<string name="setting_content_rating">If you are enjoying Budget please leave a comment on the Play Store</string>
 	<string name="setting_title_email">Email me</string>
 	<string name="setting_content_email">feedback for the app</string>
 	<string name="setting_title_tour">Tour</string>
