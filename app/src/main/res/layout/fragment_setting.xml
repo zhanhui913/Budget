@@ -481,7 +481,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/aboutCV"
                 android:layout_centerVertical="true"
-                android:text="@string/setting_title_open_source"/>
+                android:text="@string/setting_title_about"/>
         </RelativeLayout>
 <!--
         <View

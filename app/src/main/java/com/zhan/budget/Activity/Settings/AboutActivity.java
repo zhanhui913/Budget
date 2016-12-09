@@ -1,10 +1,6 @@
 package com.zhan.budget.Activity.Settings;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +34,7 @@ public class AboutActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(getString(R.string.app_name));
+            getSupportActionBar().setTitle(R.string.setting_title_about);
         }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -53,33 +49,41 @@ public class AboutActivity extends BaseActivity {
         ViewGroup openSourceBtn = (ViewGroup) findViewById(R.id.openSourceBtn);
         CircularView openSourceCV = (CircularView) findViewById(R.id.openSourceCV);
 
-        openSourceCV.setCircleColor(R.color.jordy_blue);
-        openSourceCV.setIconColor(Colors.getHexColorFromAttr(getApplicationContext(), R.attr.themeColor));
-        openSourceCV.setIconResource(R.drawable.svg_ic_code);
+        if(openSourceCV != null){
+            openSourceCV.setCircleColor(R.color.jordy_blue);
+            openSourceCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
+            openSourceCV.setIconResource(R.drawable.svg_ic_code);
+        }
 
-        openSourceBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent openSource = new Intent(getApplicationContext(), OpenSourceActivity.class);
-                startActivity(openSource);
-            }
-        });
+        if(openSourceBtn != null) {
+            openSourceBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent openSource = new Intent(getApplicationContext(), OpenSourceActivity.class);
+                    startActivity(openSource);
+                }
+            });
+        }
     }
 
     private void createTranslation(){
         ViewGroup translationBtn = (ViewGroup) findViewById(R.id.translationBtn);
         CircularView translationCV = (CircularView) findViewById(R.id.translationCV);
 
-        translationCV.setCircleColor(R.color.carrot);
-        translationCV.setIconColor(Colors.getHexColorFromAttr(getApplicationContext(), R.attr.themeColor));
-        translationCV.setIconResource(R.drawable.svg_ic_code);
+        if(translationCV != null){
+            translationCV.setCircleColor(R.color.carrot);
+            translationCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
+            translationCV.setIconResource(R.drawable.svg_ic_code);
+        }
 
-        translationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Intent about = new Intent(getApplicationContext(), AboutActivity.class);
-                //startActivity(about);
-            }
-        });
+        if(translationBtn != null){
+            translationBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent translation = new Intent(getApplicationContext(), TranslationActivity.class);
+                    startActivity(translation);
+                }
+            });
+        }
     }
 }

@@ -1,18 +1,18 @@
 <resources>
 
-	<style name="AppThemeLight.NoActionBar">
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
-		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
-		<item name="android:statusBarColor">@android:color/transparent</item>
-		<item name="android:actionOverflowMenuStyle">@style/AppThemeLight.Menu</item>
-	</style>
+    <style name="AppThemeLight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:actionOverflowMenuStyle">@style/AppThemeLight.Menu</item>
+    </style>
 
-	<style name="AppThemeDark.NoActionBar">
-		<item name="windowActionBar">false</item>
-		<item name="windowNoTitle">true</item>
-		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
-		<item name="android:statusBarColor">@android:color/transparent</item>
-		<item name="android:actionOverflowMenuStyle">@style/AppThemeDark.Menu</item>
-	</style>
+    <style name="AppThemeDark.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:actionOverflowMenuStyle">@style/AppThemeDark.Menu</item>
+    </style>
 </resources>

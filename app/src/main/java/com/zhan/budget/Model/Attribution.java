@@ -7,7 +7,6 @@ public class Attribution {
 
     private String name, author;
     private String color;
-    private boolean isOpenSource;
 
     public Attribution(){}
 
@@ -33,13 +32,5 @@ public class Attribution {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public boolean isOpenSource() {
-        return isOpenSource;
-    }
-
-    public void setOpenSource(boolean openSource) {
-        isOpenSource = openSource;
     }
 }

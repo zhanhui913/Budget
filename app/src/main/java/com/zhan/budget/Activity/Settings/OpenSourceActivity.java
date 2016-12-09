@@ -6,8 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseActivity;
@@ -22,7 +20,7 @@ public class OpenSourceActivity extends BaseActivity
         implements AttributionRecyclerAdapter.OnOpenSourceInteractionListener{
 
     private Toolbar toolbar;
-    private List<Attribution> attributionList;
+    private List<Attribution> openSourceList;
     private String gitUrl = "https://github.com/%s/%s";
 
     @Override
@@ -32,30 +30,13 @@ public class OpenSourceActivity extends BaseActivity
 
     @Override
     protected void init(){
-
-        //Remove date icon and cost text view in the right
-        ImageView dateIcon = (ImageView)findViewById(R.id.dateIcon);
-        TextView totalCost = (TextView)findViewById(R.id.totalCostTextView);
-        if(dateIcon != null){
-            dateIcon.setVisibility(View.GONE);
-        }
-        if(totalCost != null){
-            totalCost.setVisibility(View.GONE);
-        }
-
-        //Set author
-        TextView name = (TextView)findViewById(R.id.dateTextView);
-        if(name != null){
-            name.setText(getString(R.string.author));
-        }
-
         createOpenSourceList();
         createToolbar();
         addListeners();
     }
 
     private void createOpenSourceList(){
-        attributionList = new ArrayList<>();
+        openSourceList = new ArrayList<>();
 
         String[] titles = new String[]{"Realm-Java", "CircularViewAndroid", "FlexibleCalendar", "AndroidSwipeLayout", "Android-Ultra-Pull-To-Refresh", "Android-RoundCornerProgressBar", "Parceler", "SmoothProgressBar", "WilliamChart", "MPAndroidChart", "Android-PdfMyXml", "MaterialIntroTutorial", "RecyclerView-FlexibleDivider"};
         String[] authors = new String[]{"realm", "zhanhui913", "p-v", "daimajia", "liaohuqiu", "akexorcist", "johncarl81", "castorflex", "diogobernardino", "PhilJay", "se-bastiaan", "riggaroo", "yqritc"};
@@ -66,27 +47,13 @@ public class OpenSourceActivity extends BaseActivity
             os.setName(titles[i]);
             os.setAuthor(authors[i]);
             os.setColor(colors[i]);
-            os.setOpenSource(true);
-            attributionList.add(os);
-        }
-
-        String[] translationLanguage = new String[]{"English", "Spanish", "French"};
-        String[] translationAuthor = new String[]{"Zhan H. Yap", "Fernando de la Cruz Soto", "TAIWO Azeez Abiodun"};
-        String[] translationColors = new String[]{"#FF2980b9", "#FFc0392b", "#FF7f8c8d"};
-
-        for(int i = 0; i < translationLanguage.length; i++){
-            Attribution translation = new Attribution();
-            translation.setName(translationLanguage[i]);
-            translation.setAuthor(translationAuthor[i]);
-            translation.setColor(translationColors[i]);
-            translation.setOpenSource(false);
-            attributionList.add(translation);
+            openSourceList.add(os);
         }
 
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.openSourceListView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        AttributionRecyclerAdapter adapter = new AttributionRecyclerAdapter(this, attributionList);
+        AttributionRecyclerAdapter adapter = new AttributionRecyclerAdapter(this, openSourceList);
         recyclerView.setAdapter(adapter);
 
         //Add divider
@@ -106,7 +73,7 @@ public class OpenSourceActivity extends BaseActivity
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(getString(R.string.app_name));
+            getSupportActionBar().setTitle(R.string.setting_title_open_source);
         }
     }
 
@@ -122,7 +89,7 @@ public class OpenSourceActivity extends BaseActivity
     @Override
     public void onClick(int position){
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(String.format(gitUrl, attributionList.get(position).getAuthor(), attributionList.get(position).getName())));
+        i.setData(Uri.parse(String.format(gitUrl, openSourceList.get(position).getAuthor(), openSourceList.get(position).getName())));
         startActivity(i);
     }
 }

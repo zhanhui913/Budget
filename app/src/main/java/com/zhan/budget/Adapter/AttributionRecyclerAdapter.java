@@ -69,11 +69,6 @@ public class AttributionRecyclerAdapter extends RecyclerView.Adapter<Attribution
         viewHolder.icon.setCircleColor(data.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(data.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-
-        //Used for translation section
-        if(!data.isOpenSource()){
-
-        }
     }
 
     @Override

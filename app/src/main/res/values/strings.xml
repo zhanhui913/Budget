@@ -34,6 +34,7 @@
 	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
 	<string name="title_activity_location_info">LocationInfoActivity</string>
 	<string name="title_activity_about">AboutActivity</string>
+	<string name="title_activity_translation">TranslationActivity</string>
 
 	<!-- Tutorial string -->
 	<string name="tutorial_title_1">Calendar</string>
@@ -154,6 +155,8 @@
 	<string name="setting_content_open_source">License details for open source software used</string>
 	<string name="setting_title_translation">Translations</string>
 	<string name="setting_content_translation">List of people who helped localize the app</string>
+	<string name="setting_title_about">About</string>
+
 
 	<!-- Dialogs -->
 	<string name="dialog_title_delete">Delete</string>
@@ -222,9 +225,10 @@
 	<string name="middle_section_name">Name</string>
 	<string name="middle_section_right">Right</string>
 
-	<!-- Open Source -->
+	<!--Attribution -->
 	<string name="open_source_project_name">Name</string>
 	<string name="open_source_project_author">Author</string>
 
 	<string name="monthly_overview">Monthly Overview</string>
+
 </resources>
