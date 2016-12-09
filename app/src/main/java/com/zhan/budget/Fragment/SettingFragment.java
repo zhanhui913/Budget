@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zhan.budget.Activity.Settings.AboutActivity;
 import com.zhan.budget.Activity.Settings.OpenSourceActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
@@ -58,9 +59,9 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, openSourceCV;
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, aboutCV;
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, openLicenseBtn, emailBtn, tutorialBtn, faqBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     //
@@ -120,8 +121,8 @@ public class SettingFragment extends BaseFragment {
         faqCV = (CircularView) view.findViewById(R.id.faqCV);
         faqBtn = (ViewGroup) view.findViewById(R.id.faqBtn);
 
-        openSourceCV = (CircularView) view.findViewById(R.id.openSourceCV);
-        openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
+        aboutCV = (CircularView) view.findViewById(R.id.aboutCV);
+        aboutBtn = (ViewGroup) view.findViewById(R.id.aboutBtn);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
 
@@ -191,10 +192,10 @@ public class SettingFragment extends BaseFragment {
         tutorialCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         tutorialCV.setIconResource(R.drawable.svg_ic_tutorial);
 
-        //Set open source
-        openSourceCV.setCircleColor(R.color.jordy_blue);
-        openSourceCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        openSourceCV.setIconResource(R.drawable.svg_ic_code);
+        //Set about
+        aboutCV.setCircleColor(R.color.jordy_blue);
+        aboutCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        aboutCV.setIconResource(R.drawable.svg_ic_code);
 
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
@@ -299,11 +300,11 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        openLicenseBtn.setOnClickListener(new View.OnClickListener() {
+        aboutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openSource = new Intent(getContext(), OpenSourceActivity.class);
-                startActivity(openSource);
+                Intent about = new Intent(getContext(), AboutActivity.class);
+                startActivity(about);
             }
         });
 

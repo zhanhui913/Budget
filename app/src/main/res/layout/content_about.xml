@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_about"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.zhan.budget.Activity.Settings.AboutActivity"
+    tools:showIn="@layout/activity_about">
+
+    <RelativeLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/graph_height"
+        android:background="?attr/themeColorHighlight"
+        android:padding="@dimen/item_padding">
+
+        <ImageView
+            android:id="@+id/appIcon"
+            android:layout_width="@dimen/graph_height"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/appIcon"
+            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_alignParentTop="true"
+            android:text="@string/budget"
+            android:textSize="@dimen/text_header_size"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/versionNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/appName"
+            android:layout_toRightOf="@+id/appIcon"
+            android:layout_marginLeft="@dimen/item_left_padding"
+            android:textSize="@dimen/text_content_size"
+            android:text="@string/version"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout  style="@style/ItemPaddingStyle"
+        android:id="@+id/openSourceBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/themeColorBtn"
+        android:clickable="true"
+        android:focusable="true">
+
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+            android:id="@+id/openSourceCV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" />
+
+        <TextView style="@style/SettingsTextViewTitleStyle"
+            android:id="@+id/openSourceTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/openSourceCV"
+            android:text="@string/setting_title_open_source"/>
+
+        <TextView style="@style/SettingsTextViewContentStyle"
+            android:id="@+id/openSourceContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/openSourceTitle"
+            android:layout_toRightOf="@+id/openSourceCV"
+            android:text="@string/setting_content_open_source"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/left_padding_divider"
+        android:background="?attr/themeColorHighlight"/>
+
+    <RelativeLayout  style="@style/ItemPaddingStyle"
+        android:id="@+id/developerBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/themeColorBtn"
+        android:clickable="true"
+        android:focusable="true">
+
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+            android:id="@+id/developerCV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" />
+
+        <TextView style="@style/SettingsTextViewTitleStyle"
+            android:id="@+id/developerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/developerCV"
+            android:text="@string/setting_title_developer"/>
+
+        <TextView style="@style/SettingsTextViewContentStyle"
+            android:id="@+id/developerContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/developerTitle"
+            android:layout_toRightOf="@+id/developerCV"
+            android:text="@string/setting_content_developer"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/left_padding_divider"
+        android:background="?attr/themeColorHighlight"/>
+
+    <RelativeLayout  style="@style/ItemPaddingStyle"
+        android:id="@+id/translationBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/themeColorBtn"
+        android:clickable="true"
+        android:focusable="true">
+
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+            android:id="@+id/translationCV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" />
+
+        <TextView style="@style/SettingsTextViewTitleStyle"
+            android:id="@+id/translationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/translationCV"
+            android:text="@string/setting_title_translation"/>
+
+        <TextView style="@style/SettingsTextViewContentStyle"
+            android:id="@+id/translationContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/translationTitle"
+            android:layout_toRightOf="@+id/translationCV"
+            android:text="@string/setting_content_translation"/>
+    </RelativeLayout>
+
+</LinearLayout>
