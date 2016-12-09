@@ -772,8 +772,16 @@ public class SettingFragment extends BaseFragment {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void rate(){
+    private static String APP_STORE = "market://details?id=com.zhan.budget";
 
+    private void rate(){
+        try {
+            Intent rate = new Intent(Intent.ACTION_VIEW);
+            rate.setData(Uri.parse(APP_STORE));
+            startActivity(rate);
+        }catch(Exception e){
+            Util.createSnackbar(getContext(), view, getString(R.string.ratings_failed));
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

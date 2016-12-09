@@ -225,6 +225,7 @@
 	<string name="version" formatted="false">v%s</string>
 	<string name="color">Color</string>
 	<string name="icon">Icon</string>
+	<string name="ratings_failed">There seems to be some issues connecting to the Play Store</string>
 
 	<!-- Middle section -->
 	<string name="middle_section_name">Name</string>
