@@ -79,7 +79,7 @@ public class AboutActivity extends BaseActivity {
         if(developerCV != null){
             developerCV.setCircleColor(R.color.nephritis);
             developerCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
-            developerCV.setIconResource(R.drawable.svg_ic_code);
+            developerCV.setIconResource(R.drawable.svg_ic_dev);
         }
 
         if(developerBtn != null) {
@@ -100,7 +100,7 @@ public class AboutActivity extends BaseActivity {
         if(translationCV != null){
             translationCV.setCircleColor(R.color.pomegranate);
             translationCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
-            translationCV.setIconResource(R.drawable.svg_ic_code);
+            translationCV.setIconResource(R.drawable.svg_ic_flag);
         }
 
         if(translationBtn != null){

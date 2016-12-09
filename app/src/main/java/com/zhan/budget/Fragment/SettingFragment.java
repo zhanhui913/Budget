@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zhan.budget.Activity.Settings.AboutActivity;
-import com.zhan.budget.Activity.Settings.OpenSourceActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.Activity.Settings.SettingsLocation;
@@ -190,12 +189,12 @@ public class SettingFragment extends BaseFragment {
         //Set tutorial
         tutorialCV.setCircleColor(R.color.pink);
         tutorialCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        tutorialCV.setIconResource(R.drawable.svg_ic_tutorial);
+        tutorialCV.setIconResource(R.drawable.c_help);
 
         //Set about
         aboutCV.setCircleColor(R.color.jordy_blue);
         aboutCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        aboutCV.setIconResource(R.drawable.svg_ic_code);
+        aboutCV.setIconResource(R.drawable.c_info);
 
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
