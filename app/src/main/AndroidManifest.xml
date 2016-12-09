@@ -75,7 +75,7 @@
         <activity
             android:name=".Activity.Settings.TranslationActivity"
             android:label="@string/title_activity_translation"
-            android:theme="@style/AppThemeLight.NoActionBar"/>
+            android:theme="@style/AppThemeLight.NoActionBar" />
         <activity
             android:name=".Activity.Transactions.TransactionsForCategory"
             android:label="@string/title_activity_transactions_for_category"
@@ -92,6 +92,10 @@
             android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
             android:label="@string/title_activity_tour"
             android:theme="@style/AppThemeLight.NoActionBar" />
+        <activity
+            android:name=".Activity.Settings.DeveloperActivity"
+            android:label="@string/title_activity_developer"
+            android:theme="@style/AppThemeLight.NoActionBar"></activity>
     </application>
 
 </manifest>

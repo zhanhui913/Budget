@@ -52,7 +52,7 @@ public class AttributionRecyclerAdapter extends RecyclerView.Adapter<Attribution
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         // Inflate the custom layout
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_open_source, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_attribution, parent, false);
 
         // Return a new holder instance
         return new ViewHolder(view);
@@ -95,9 +95,9 @@ public class AttributionRecyclerAdapter extends RecyclerView.Adapter<Attribution
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            icon = (CircularView) itemView.findViewById(R.id.openSourceIcon);
-            name = (TextView) itemView.findViewById(R.id.openSourceName);
-            author = (TextView) itemView.findViewById(R.id.openSourceAuthor);
+            icon = (CircularView) itemView.findViewById(R.id.attributionCV);
+            name = (TextView) itemView.findViewById(R.id.attributionTitle);
+            author = (TextView) itemView.findViewById(R.id.attributionContent);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

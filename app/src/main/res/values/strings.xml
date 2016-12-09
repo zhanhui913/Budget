@@ -35,6 +35,7 @@
 	<string name="title_activity_location_info">LocationInfoActivity</string>
 	<string name="title_activity_about">AboutActivity</string>
 	<string name="title_activity_translation">TranslationActivity</string>
+	<string name="title_activity_developer">DeveloperActivity</string>
 
 	<!-- Tutorial string -->
 	<string name="tutorial_title_1">Calendar</string>
@@ -156,6 +157,8 @@
 	<string name="setting_title_translation">Translations</string>
 	<string name="setting_content_translation">List of people who helped localize the app</string>
 	<string name="setting_title_about">About</string>
+	<string name="setting_title_developer">Team</string>
+	<string name="setting_content_developer">People who made this happen</string>
 
 
 	<!-- Dialogs -->
@@ -229,6 +232,9 @@
 	<string name="open_source_project_name">Name</string>
 	<string name="open_source_project_author">Author</string>
 
+
+
 	<string name="monthly_overview">Monthly Overview</string>
+
 
 </resources>
