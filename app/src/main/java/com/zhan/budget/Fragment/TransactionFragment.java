@@ -28,7 +28,6 @@ public class TransactionFragment extends BaseRealmFragment implements
         CategoryGridRecyclerAdapter.OnCategoryGridAdapterInteractionListener{
 
     private static final String TAG = "TransactionFragment";
-    private static final int NUM_COLUMNS = 5;
 
     private static final String ARG_1 = "selectedCategoryBudgetType";
     private static final String ARG_2 = "selectedCategoryId";
@@ -75,8 +74,9 @@ public class TransactionFragment extends BaseRealmFragment implements
         selectedCategoryId = budgetType = "";
         //Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
         categoryList = new ArrayList<>();
+
         categoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
-        categoryGridView.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
+        categoryGridView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.num_columns)));
 
         //Add padding
         categoryGridView.addItemDecoration(new SpacesItemDecoration(getContext(), R.dimen.grid_view_horizontal_offset, R.dimen.grid_view_vertical_offset));
