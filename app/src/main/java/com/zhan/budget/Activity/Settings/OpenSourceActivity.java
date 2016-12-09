@@ -11,18 +11,18 @@ import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseActivity;
-import com.zhan.budget.Adapter.OpenSourceRecyclerAdapter;
-import com.zhan.budget.Model.OpenSource;
+import com.zhan.budget.Adapter.AttributionRecyclerAdapter;
+import com.zhan.budget.Model.Attribution;
 import com.zhan.budget.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OpenSourceActivity extends BaseActivity
-        implements OpenSourceRecyclerAdapter.OnOpenSourceInteractionListener{
+        implements AttributionRecyclerAdapter.OnOpenSourceInteractionListener{
 
     private Toolbar toolbar;
-    private List<OpenSource> openSourceList;
+    private List<Attribution> attributionList;
     private String gitUrl = "https://github.com/%s/%s";
 
     @Override
@@ -55,24 +55,38 @@ public class OpenSourceActivity extends BaseActivity
     }
 
     private void createOpenSourceList(){
-        openSourceList = new ArrayList<>();
+        attributionList = new ArrayList<>();
 
         String[] titles = new String[]{"Realm-Java", "CircularViewAndroid", "FlexibleCalendar", "AndroidSwipeLayout", "Android-Ultra-Pull-To-Refresh", "Android-RoundCornerProgressBar", "Parceler", "SmoothProgressBar", "WilliamChart", "MPAndroidChart", "Android-PdfMyXml", "MaterialIntroTutorial", "RecyclerView-FlexibleDivider"};
         String[] authors = new String[]{"realm", "zhanhui913", "p-v", "daimajia", "liaohuqiu", "akexorcist", "johncarl81", "castorflex", "diogobernardino", "PhilJay", "se-bastiaan", "riggaroo", "yqritc"};
         String[] colors = new  String[]{"#FFf39c12", "#FF2980b9", "#970019", "#FF2ecc71", "#FFf5e16e", "#FFc0392b", "#FF2ecc71", "#FFbe90d4", "#FF7f8c8d", "#FFecc62c", "#FF89c4f4", "#FF87d37c", "#FFe76558"};
 
         for(int i = 0; i < titles.length; i++){
-            OpenSource os = new OpenSource();
+            Attribution os = new Attribution();
             os.setName(titles[i]);
             os.setAuthor(authors[i]);
             os.setColor(colors[i]);
-            openSourceList.add(os);
+            os.setOpenSource(true);
+            attributionList.add(os);
+        }
+
+        String[] translationLanguage = new String[]{"English", "Spanish", "French"};
+        String[] translationAuthor = new String[]{"Zhan H. Yap", "Fernando de la Cruz Soto", "TAIWO Azeez Abiodun"};
+        String[] translationColors = new String[]{"#FF2980b9", "#FFc0392b", "#FF7f8c8d"};
+
+        for(int i = 0; i < translationLanguage.length; i++){
+            Attribution translation = new Attribution();
+            translation.setName(translationLanguage[i]);
+            translation.setAuthor(translationAuthor[i]);
+            translation.setColor(translationColors[i]);
+            translation.setOpenSource(false);
+            attributionList.add(translation);
         }
 
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.openSourceListView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        OpenSourceRecyclerAdapter adapter = new OpenSourceRecyclerAdapter(this, openSourceList);
+        AttributionRecyclerAdapter adapter = new AttributionRecyclerAdapter(this, attributionList);
         recyclerView.setAdapter(adapter);
 
         //Add divider
@@ -108,7 +122,7 @@ public class OpenSourceActivity extends BaseActivity
     @Override
     public void onClick(int position){
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(String.format(gitUrl, openSourceList.get(position).getAuthor(), openSourceList.get(position).getName())));
+        i.setData(Uri.parse(String.format(gitUrl, attributionList.get(position).getAuthor(), attributionList.get(position).getName())));
         startActivity(i);
     }
 }

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zhan.budget.Model.OpenSource;
+import com.zhan.budget.Model.Attribution;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
@@ -17,16 +17,16 @@ import com.zhan.library.CircularView;
 
 import java.util.List;
 
-public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRecyclerAdapter.ViewHolder> {
+public class AttributionRecyclerAdapter extends RecyclerView.Adapter<AttributionRecyclerAdapter.ViewHolder> {
 
     private Context context;
-    private List<OpenSource> openSourceList;
+    private List<Attribution> attributionList;
     private OnOpenSourceInteractionListener mListener;
 
 
-    public OpenSourceRecyclerAdapter(Fragment fragment,List<OpenSource> openSourceList) {
+    public AttributionRecyclerAdapter(Fragment fragment, List<Attribution> attributionList) {
         this.context = fragment.getContext();
-        this.openSourceList = openSourceList;
+        this.attributionList = attributionList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnOpenSourceInteractionListener interface
         if (fragment instanceof OnOpenSourceInteractionListener) {
@@ -36,9 +36,9 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
         }
     }
 
-    public OpenSourceRecyclerAdapter(Activity activity, List<OpenSource> openSourceList){
+    public AttributionRecyclerAdapter(Activity activity, List<Attribution> attributionList){
         this.context = activity;
-        this.openSourceList = openSourceList;
+        this.attributionList = attributionList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnOpenSourceInteractionListener interface
         if (activity instanceof OnOpenSourceInteractionListener) {
@@ -62,22 +62,27 @@ public class OpenSourceRecyclerAdapter extends RecyclerView.Adapter<OpenSourceRe
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         // getting Location data for the row
-        OpenSource data = openSourceList.get(position);
+        Attribution data = attributionList.get(position);
 
         viewHolder.name.setText(data.getName());
         viewHolder.author.setText(data.getAuthor());
         viewHolder.icon.setCircleColor(data.getColor());
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(data.getName().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+
+        //Used for translation section
+        if(!data.isOpenSource()){
+
+        }
     }
 
     @Override
     public int getItemCount() {
-        return this.openSourceList.size();
+        return this.attributionList.size();
     }
 
-    public void setOpenSourceList(List<OpenSource> list){
-        this.openSourceList = list;
+    public void setAttributionList(List<Attribution> list){
+        this.attributionList = list;
         notifyDataSetChanged();
     }
 

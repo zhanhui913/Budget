@@ -3,10 +3,13 @@ package com.zhan.budget.Model;
 /**
  * Created by Zhan on 16-05-24.
  */
-public class OpenSource {
+public class Attribution {
 
     private String name, author;
     private String color;
+    private boolean isOpenSource;
+
+    public Attribution(){}
 
     public String getName() {
         return name;
@@ -30,5 +33,13 @@ public class OpenSource {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public boolean isOpenSource() {
+        return isOpenSource;
+    }
+
+    public void setOpenSource(boolean openSource) {
+        isOpenSource = openSource;
     }
 }
