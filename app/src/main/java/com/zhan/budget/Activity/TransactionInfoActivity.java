@@ -551,7 +551,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         });
     }
 
-
     private void createAccountDialog(List<Account> tempAccountList){
         AlertDialog.Builder accountAlertDialogBuilder;
 
@@ -644,12 +643,6 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         accountDialog = accountAlertDialogBuilder.create();
     }
-
-
-
-
-
-
 
     /*
     private void createAccountDialog(List<Account> tempAccountList){
@@ -901,12 +894,15 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void addDigitToTextView(int digit){
-        priceString += digit;
+        if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH){
+            priceString += digit;
 
-        String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-        //transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+            String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
 
-        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+        }else {
+            Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.price_too_long));
+        }
     }
 
     private void removeDigit(){
