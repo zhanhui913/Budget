@@ -21,8 +21,10 @@
             android:hint="@string/note"
             android:textStyle="bold"
             android:layout_alignParentLeft="true"
-            android:paddingLeft="@dimen/item_padding"
-            android:paddingStart="@dimen/item_padding"
+            android:paddingLeft="@dimen/item_left_padding"
+            android:paddingStart="@dimen/item_left_padding"
+            android:paddingRight="@dimen/item_right_padding"
+            android:paddingEnd="@dimen/item_right_padding"
             android:paddingTop="@dimen/item_top_padding"
             android:paddingBottom="@dimen/item_bottom_padding"
             android:maxLines="1"/>
@@ -37,8 +39,8 @@
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/transactionNameText"
             android:gravity="end"
-            android:paddingRight="@dimen/item_padding"
-            android:paddingEnd="@dimen/item_padding"
+            android:paddingRight="@dimen/item_right_padding"
+            android:paddingEnd="@dimen/item_right_padding"
             android:paddingTop="@dimen/item_top_padding"
             android:paddingBottom="@dimen/item_bottom_padding"
             android:maxLines="1"/>
