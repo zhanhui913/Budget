@@ -10,7 +10,7 @@ import java.util.Locale;
 public final class CurrencyTextFormatter {
 
     //Setting a max length because after this length, java represents doubles in scientific notation which breaks the formatter
-    static final int MAX_RAW_INPUT_LENGTH = 15;
+    public static final int MAX_RAW_INPUT_LENGTH = 15;
 
     private CurrencyTextFormatter(){}
 
