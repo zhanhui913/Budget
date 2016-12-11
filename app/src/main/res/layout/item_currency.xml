@@ -74,9 +74,8 @@
                 android:text="USD" />
         </RelativeLayout>
 
-        <com.zhan.library.CircularView
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
             android:id="@+id/currencyIcon"
-            style="@style/CircularViewStyle_unselected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

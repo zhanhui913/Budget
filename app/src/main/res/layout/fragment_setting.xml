@@ -393,6 +393,45 @@
             android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
 
+
+        <RelativeLayout style="@style/ItemPaddingStyle"
+            android:id="@+id/ratingBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+                android:id="@+id/ratingCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/ratingTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/ratingCV"
+                android:text="@string/setting_title_rating"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/ratingContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ratingTitle"
+                android:layout_toRightOf="@+id/ratingCV"
+                android:text="@string/setting_content_rating"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
+            android:background="?attr/themeColorHighlight"/>
+
         <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/emailBtn"
             android:layout_width="match_parent"
@@ -498,7 +537,7 @@
             android:background="?attr/themeColorHighlight"/>
 
         <RelativeLayout  style="@style/ItemPaddingStyle"
-            android:id="@+id/openSourceBtn"
+            android:id="@+id/aboutBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/themeColorBtn"
@@ -506,7 +545,7 @@
             android:focusable="true">
 
             <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
-                android:id="@+id/openSourceCV"
+                android:id="@+id/aboutCV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -517,16 +556,9 @@
                 android:id="@+id/openSourceTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/openSourceCV"
-                android:text="@string/setting_title_open_source"/>
-
-            <TextView style="@style/SettingsTextViewContentStyle"
-                android:id="@+id/openSourceContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/openSourceTitle"
-                android:layout_toRightOf="@+id/openSourceCV"
-                android:text="@string/setting_content_open_source"/>
+                android:layout_toRightOf="@+id/aboutCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_about"/>
         </RelativeLayout>
 
         <TextView

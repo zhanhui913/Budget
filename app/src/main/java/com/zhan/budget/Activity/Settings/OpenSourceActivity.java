@@ -6,23 +6,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseActivity;
-import com.zhan.budget.Adapter.OpenSourceRecyclerAdapter;
-import com.zhan.budget.Model.OpenSource;
+import com.zhan.budget.Adapter.AttributionRecyclerAdapter;
+import com.zhan.budget.Model.Attribution;
 import com.zhan.budget.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OpenSourceActivity extends BaseActivity
-        implements OpenSourceRecyclerAdapter.OnOpenSourceInteractionListener{
+        implements AttributionRecyclerAdapter.OnOpenSourceInteractionListener{
 
     private Toolbar toolbar;
-    private List<OpenSource> openSourceList;
+    private List<Attribution> openSourceList;
     private String gitUrl = "https://github.com/%s/%s";
 
     @Override
@@ -32,23 +30,6 @@ public class OpenSourceActivity extends BaseActivity
 
     @Override
     protected void init(){
-
-        //Remove date icon and cost text view in the right
-        ImageView dateIcon = (ImageView)findViewById(R.id.dateIcon);
-        TextView totalCost = (TextView)findViewById(R.id.totalCostTextView);
-        if(dateIcon != null){
-            dateIcon.setVisibility(View.GONE);
-        }
-        if(totalCost != null){
-            totalCost.setVisibility(View.GONE);
-        }
-
-        //Set author
-        TextView name = (TextView)findViewById(R.id.dateTextView);
-        if(name != null){
-            name.setText(getString(R.string.author));
-        }
-
         createOpenSourceList();
         createToolbar();
         addListeners();
@@ -62,7 +43,7 @@ public class OpenSourceActivity extends BaseActivity
         String[] colors = new  String[]{"#FFf39c12", "#FF2980b9", "#970019", "#FF2ecc71", "#FFf5e16e", "#FFc0392b", "#FF2ecc71", "#FFbe90d4", "#FF7f8c8d", "#FFecc62c", "#FF89c4f4", "#FF87d37c", "#FFe76558"};
 
         for(int i = 0; i < titles.length; i++){
-            OpenSource os = new OpenSource();
+            Attribution os = new Attribution();
             os.setName(titles[i]);
             os.setAuthor(authors[i]);
             os.setColor(colors[i]);
@@ -72,7 +53,7 @@ public class OpenSourceActivity extends BaseActivity
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.openSourceListView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        OpenSourceRecyclerAdapter adapter = new OpenSourceRecyclerAdapter(this, openSourceList);
+        AttributionRecyclerAdapter adapter = new AttributionRecyclerAdapter(this, openSourceList);
         recyclerView.setAdapter(adapter);
 
         //Add divider
@@ -92,7 +73,7 @@ public class OpenSourceActivity extends BaseActivity
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null){
-            getSupportActionBar().setTitle(getString(R.string.app_name));
+            getSupportActionBar().setTitle(R.string.setting_title_open_source);
         }
     }
 

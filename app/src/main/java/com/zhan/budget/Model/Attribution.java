@@ -3,10 +3,12 @@ package com.zhan.budget.Model;
 /**
  * Created by Zhan on 16-05-24.
  */
-public class OpenSource {
+public class Attribution {
 
     private String name, author;
     private String color;
+
+    public Attribution(){}
 
     public String getName() {
         return name;

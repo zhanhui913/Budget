@@ -80,6 +80,8 @@ public class CategoryInfoActivity extends BaseActivity implements
     protected void init(){
         instance = this;
 
+        getDefaultCurrency();
+
         isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
 
         if(!isNewCategory){
@@ -141,7 +143,6 @@ public class CategoryInfoActivity extends BaseActivity implements
         initCategoryCircularView();
         createToolbar();
         addListeners();
-        getDefaultCurrency();
 
         categoryNameTextView.setText(category.getName());
         categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
