@@ -82,4 +82,15 @@ public final class CurrencyTextFormatter {
     public static String stripCharacters(String value, BudgetCurrency currency){
         return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","").replace(currency.getCurrencyCode(),"");
     }
+
+    /**
+     * Converts amount of provided currency to defaults currency
+     * @param amount Amount
+     * @param currency The source of the currency
+     * @return The amount after converting to default currency
+     */
+    public static float convertCurrency(float amount, BudgetCurrency currency){
+        //return (float)currency.getRate() * amount;
+        return 0.5f * amount;
+    }
 }

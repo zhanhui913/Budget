@@ -427,6 +427,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                         currentPageTextView.setText(R.string.category_expense);
 
+                        updateConversion();
+
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
@@ -440,6 +442,8 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
 
                         currentPageTextView.setText(R.string.category_income);
+
+                        updateConversion();
 
                         break;
                 }
@@ -940,6 +944,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
             transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
+
+            updateConversion();
         }else {
             Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.price_too_long));
         }
@@ -951,9 +957,20 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-        //transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
-
         transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
+
+        updateConversion();
+    }
+
+    private void updateConversion(){
+        float f = CurrencyTextFormatter.formatCurrency(priceString);
+
+        float  afterConversion = CurrencyTextFormatter.convertCurrency(f, currentCurrency);
+
+        Toast.makeText(instance, "--> "+afterConversion, Toast.LENGTH_SHORT).show();
+
+        afterConversion = (currentPage == BudgetType.EXPENSE) ? -afterConversion : afterConversion;
+        transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, currentCurrency));
     }
 
     @Override
@@ -1179,7 +1196,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 .create()
                 .show();
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //

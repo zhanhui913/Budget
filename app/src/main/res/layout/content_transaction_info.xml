@@ -12,7 +12,9 @@
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_padding">
+        android:paddingLeft="@dimen/item_left_padding"
+        android:paddingRight="@dimen/item_right_padding"
+        android:paddingTop="@dimen/item_top_padding">
 
         <TextView
             android:id="@+id/transactionNameText"
@@ -34,20 +36,20 @@
             android:text="@string/cost"
             android:textSize="@dimen/text_header_size"
             android:gravity="end"
-            android:layout_toLeftOf="@+id/transactionCostCurrencyCodeText"
             android:layout_toRightOf="@+id/transactionNameText"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:maxLines="1"/>
 
         <TextView
             android:id="@+id/transactionCostCurrencyCodeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="USD"
-            android:textSize="@dimen/text_header_size"
-            android:textStyle="bold"
+            android:text="@string/cost"
+            android:textSize="@dimen/text_content_size"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:gravity="end"
+            android:layout_below="@+id/transactionCostText"
             android:maxLines="1"/>
     </RelativeLayout>
 
