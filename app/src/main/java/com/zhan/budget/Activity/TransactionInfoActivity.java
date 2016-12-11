@@ -242,6 +242,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
 
+            updateConversion();
+
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }else{
             getDefaultCurrency();
@@ -1212,7 +1214,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
                 transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
 
-                transactionCostCurrencyCodeText.setText(currentCurrency.getCurrencyCode());
+                updateConversion();
             }
         }
     }
