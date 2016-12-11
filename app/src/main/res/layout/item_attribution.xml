@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ItemPaddingStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/themeColorBtn"
+    android:clickable="true"
+    android:focusable="true">
+
+    <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+        android:id="@+id/attributionCV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView style="@style/SettingsTextViewTitleStyle"
+        android:id="@+id/attributionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/attributionCV"
+        android:text="@string/open_source_project_name"/>
+
+    <TextView style="@style/SettingsTextViewContentStyle"
+        android:id="@+id/attributionContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/attributionTitle"
+        android:layout_toRightOf="@+id/attributionCV"
+        android:text="@string/open_source_project_author"/>
+</RelativeLayout>

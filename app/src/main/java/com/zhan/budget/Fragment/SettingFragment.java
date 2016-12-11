@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.zhan.budget.Activity.SecurityActivity;
 import com.zhan.budget.Activity.Settings.OpenSourceActivity;
+import com.zhan.budget.Activity.Settings.AboutActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.Activity.Settings.SettingsLocation;
@@ -60,9 +61,10 @@ import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
-    
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, securityCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, emailCV, tutorialCV, faqCV, openSourceCV;
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, securityBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, openLicenseBtn, emailBtn, tutorialBtn, faqBtn;
+
+
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, securityCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, securityBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
 
     private Switch securitySwitch;
@@ -119,6 +121,9 @@ public class SettingFragment extends BaseFragment {
         exportCSVCV = (CircularView) view.findViewById(R.id.exportCSVCV);
         exportCSVBtn = (ViewGroup) view.findViewById(R.id.exportCSVBtn);
 
+        ratingsCV = (CircularView) view.findViewById(R.id.ratingCV);
+        ratingsBtn = (ViewGroup) view.findViewById(R.id.ratingBtn);
+
         emailCV = (CircularView) view.findViewById(R.id.emailCV);
         emailBtn = (ViewGroup) view.findViewById(R.id.emailBtn);
 
@@ -128,8 +133,8 @@ public class SettingFragment extends BaseFragment {
         faqCV = (CircularView) view.findViewById(R.id.faqCV);
         faqBtn = (ViewGroup) view.findViewById(R.id.faqBtn);
 
-        openSourceCV = (CircularView) view.findViewById(R.id.openSourceCV);
-        openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
+        aboutCV = (CircularView) view.findViewById(R.id.aboutCV);
+        aboutBtn = (ViewGroup) view.findViewById(R.id.aboutBtn);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
 
@@ -196,6 +201,11 @@ public class SettingFragment extends BaseFragment {
         exportCSVCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         exportCSVCV.setIconResource(R.drawable.c_export);
 
+        //Set ratings
+        ratingsCV.setCircleColor(R.color.light_cyan);
+        ratingsCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        ratingsCV.setIconResource(R.drawable.svg_ic_star);
+
         //Set email
         emailCV.setCircleColor(R.color.wisteria);
         emailCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
@@ -204,12 +214,12 @@ public class SettingFragment extends BaseFragment {
         //Set tutorial
         tutorialCV.setCircleColor(R.color.pink);
         tutorialCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        tutorialCV.setIconResource(R.drawable.svg_ic_tutorial);
+        tutorialCV.setIconResource(R.drawable.c_help);
 
-        //Set open source
-        openSourceCV.setCircleColor(R.color.jordy_blue);
-        openSourceCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        openSourceCV.setIconResource(R.drawable.svg_ic_code);
+        //Set about
+        aboutCV.setCircleColor(R.color.jordy_blue);
+        aboutCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        aboutCV.setIconResource(R.drawable.c_info);
 
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
@@ -294,6 +304,13 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
+        ratingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rate();
+            }
+        });
+
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -314,11 +331,11 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        openLicenseBtn.setOnClickListener(new View.OnClickListener() {
+        aboutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openSource = new Intent(getContext(), OpenSourceActivity.class);
-                startActivity(openSource);
+                Intent about = new Intent(getContext(), AboutActivity.class);
+                startActivity(about);
             }
         });
 
@@ -786,6 +803,24 @@ public class SettingFragment extends BaseFragment {
                 })
                 .create()
                 .show();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Rate
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static String APP_STORE = "market://details?id=com.zhan.budget";
+
+    private void rate(){
+        try {
+            Intent rate = new Intent(Intent.ACTION_VIEW);
+            rate.setData(Uri.parse(APP_STORE));
+            startActivity(rate);
+        }catch(Exception e){
+            Util.createSnackbar(getContext(), view, getString(R.string.ratings_failed));
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

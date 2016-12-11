@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activity.Settings.OpenSourceActivity"
-    tools:showIn="@layout/activity_open_source">
+    tools:context=".Activity.Settings.DeveloperActivity"
+    tools:showIn="@layout/activity_developer">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/openSourceListView"
+        android:id="@+id/developerListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

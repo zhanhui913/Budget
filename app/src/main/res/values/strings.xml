@@ -34,6 +34,9 @@
 	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
 	<string name="title_activity_location_info">LocationInfoActivity</string>
 	<string name="title_activity_security">SecurityActivity</string>
+	<string name="title_activity_about">AboutActivity</string>
+	<string name="title_activity_translation">TranslationActivity</string>
+	<string name="title_activity_developer">DeveloperActivity</string>
 
 	<!-- Tutorial string -->
 	<string name="tutorial_title_1">Calendar</string>
@@ -72,19 +75,6 @@
 	<string name="nav_report">Monthly Report</string>
 	<string name="nav_setting">Settings</string>
 
-	<string name="month_jan">January</string>
-	<string name="month_feb">February</string>
-	<string name="month_mar">March</string>
-	<string name="month_apr">April</string>
-	<string name="month_may">May</string>
-	<string name="month_jun">June</string>
-	<string name="month_jul">July</string>
-	<string name="month_aug">August</string>
-	<string name="month_sep">September</string>
-	<string name="month_oct">October</string>
-	<string name="month_nov">November</string>
-	<string name="month_dev">December</string>
-
 	<string name="transaction">Transaction</string>
 	<string name="account">Account</string>
 	<string name="category">Category</string>
@@ -93,6 +83,7 @@
 	<string name="location">Location</string>
 	<string name="note">Note</string>
 	<string name="budget">Budget</string>
+	<string name="month">Month</string>
 
 	<!-- Title when adding/editting item-->
 	<string name="add_transaction">Add transaction</string>
@@ -108,7 +99,7 @@
 	<string name="edit_location">Edit location</string>
 
 	<string name="pull_down_add_transaction">Pull down to add a transaction</string>
-	<string formatted="false" name="pull_down_add_category">Pull down to add an %s category</string>
+	<string name="pull_down_add_category" formatted="false">Pull down to add an %s category</string>
 	<string name="pull_down_add_account">Pull down to add an account</string>
 	<string name="pull_down_add_location">Pull down to add a location</string>
 
@@ -116,7 +107,7 @@
 	<string name="empty_category">There is no %s category</string>
 	<string name="empty_account">There is no account</string>
 	<string name="empty_location">There is no location</string>
-	<string formatted="false" name="empty_transaction_custom_date">There is no transaction for \'%s\' during %s</string>
+	<string name="empty_transaction_custom_date" formatted="false">There is no transaction for \'%s\' during %s</string>
 
 
 	<!-- Monthly Report Fragment -->
@@ -148,7 +139,7 @@
 	<!-- DATA -->
 	<string name="setting_title_backup_data">Backup data</string>
 	<string name="setting_content_backup_data_successful">Backup data successful</string>
-	<string formatted="false" name="setting_content_backup_data">last backup : %s</string>
+	<string name="setting_content_backup_data" formatted="false">last backup : %s</string>
 	<string name="setting_title_restore_data">Restore data</string>
 	<string name="setting_content_restore_data_successful">Restore data successful</string>
 	<string name="setting_content_restore_data_failed">Restore data failed as backup file doesn\'t exist</string>
@@ -160,12 +151,20 @@
 	<string name="realm_message_failed">Failed to retrieve realm file</string>
 
 	<!-- FEEDBACK -->
+	<string name="setting_title_rating">Say thanks</string>
+	<string name="setting_content_rating">If you are enjoying Budget please leave a comment on the Play Store</string>
 	<string name="setting_title_email">Email me</string>
 	<string name="setting_content_email">feedback for the app</string>
 	<string name="setting_title_tour">Tour</string>
 	<string name="setting_title_faq">FAQ</string>
 	<string name="setting_title_open_source">Open Source Licenses</string>
 	<string name="setting_content_open_source">License details for open source software used</string>
+	<string name="setting_title_translation">Translations</string>
+	<string name="setting_content_translation">List of people who helped localize the app</string>
+	<string name="setting_title_about">About</string>
+	<string name="setting_title_developer">Team</string>
+	<string name="setting_content_developer">People who made this happen</string>
+
 
 	<!-- Dialogs -->
 	<string name="dialog_title_delete">Delete</string>
@@ -182,8 +181,8 @@
 
 	<string name="dialog_content_name">Name</string>
 	<string name="dialog_content_hint">Hint</string>
-	<string formatted="false" name="dialog_progress_percent">%d%%</string>
-	<string formatted="false" name="dialog_progress_total">%d/%d</string>
+	<string name="dialog_progress_percent" formatted="false">%d%%</string>
+	<string name="dialog_progress_total" formatted="false">%d/%d</string>
 
 	<!-- Num pad -->
 	<string name="num_pad_1">1</string>
@@ -215,28 +214,34 @@
 	<string name="chevron_right">Right</string>
 	<string name="form_btn_save">Save</string>
 	<string name="csv">CSV</string>
-	<string formatted="false" name="csv_success">CSV sorted by %s</string>
+	<string name="csv_success" formatted="false">CSV sorted by %s</string>
 	<string name="csv_failed">CSV creation failed</string>
 	<string name="use_text">Use Text</string>
 	<string name="use_icon">Use Icon</string>
 	<string name="cost">$0.00</string>
 	<string name="current">Current</string>
-	<string formatted="false" name="location_time">%d time</string>
-	<string formatted="false" name="location_times">%d times</string>
-	<string formatted="false" name="category_budget">Budget : %s</string>
-	<string formatted="false" name="category_percent">Percent : %.2f%%</string>
+	<string name="location_time" formatted="false">%d time</string>
+	<string name="location_times" formatted="false">%d times</string>
+	<string name="category_budget" formatted="false">Budget : %s</string>
+	<string name="category_percent" formatted="false">Percent : %.2f%%</string>
 	<string name="na">NA</string>
-	<string formatted="false" name="version">v%s</string>
+	<string name="version" formatted="false">v%s</string>
 	<string name="color">Color</string>
 	<string name="icon">Icon</string>
+	<string name="ratings_failed">There seems to be some issues connecting to the Play Store</string>
+	<string name="price_too_long">The max is 15 digits</string>
 
 	<!-- Middle section -->
 	<string name="middle_section_name">Name</string>
 	<string name="middle_section_right">Right</string>
 
-	<!-- Open Source -->
+	<!--Attribution -->
 	<string name="open_source_project_name">Name</string>
 	<string name="open_source_project_author">Author</string>
 
+
+
 	<string name="monthly_overview">Monthly Overview</string>
+
+
 </resources>
