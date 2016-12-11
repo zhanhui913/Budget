@@ -933,7 +933,6 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private void openCurrencyListActivity(){
         Intent currencyIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
-        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
         currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, false);
         startActivityForResult(currencyIntent, Constants.RETURN_SELECTED_CURRENCY);
     }
@@ -966,8 +965,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         float f = CurrencyTextFormatter.formatCurrency(priceString);
 
         float  afterConversion = CurrencyTextFormatter.convertCurrency(f, currentCurrency);
-
-        Toast.makeText(instance, "--> "+afterConversion, Toast.LENGTH_SHORT).show();
 
         afterConversion = (currentPage == BudgetType.EXPENSE) ? -afterConversion : afterConversion;
         transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, currentCurrency));
@@ -1208,7 +1205,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == instance.RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
-                currentCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CURRENCY));
+                currentCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY));
 
                 Toast.makeText(instance, "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
 

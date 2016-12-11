@@ -28,21 +28,10 @@ import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.Fragment.SettingFragment;
-import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
-import com.zhan.budget.Util.Tutorial;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.ExtendedNumberPicker;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
-import io.realm.Sort;
-import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,

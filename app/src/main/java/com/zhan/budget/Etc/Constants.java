@@ -95,7 +95,7 @@ public class Constants {
     public static final String RESULT_NEW_LOCATION = "New Location Result";
     public static final String RESULT_DELETE_LOCATION = "Delete Location Result";
 
-    public static final String RESULT_EDIT_CURRENCY = "Edit Currency Result";
+    public static final String RESULT_CURRENCY = "Return Currency Result";
 
     public static final String CHANGED = "Has Been Changed?";
 

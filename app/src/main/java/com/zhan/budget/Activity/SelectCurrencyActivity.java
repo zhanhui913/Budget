@@ -32,6 +32,7 @@ import java.util.List;
 
 import javax.xml.parsers.SAXParserFactory;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
@@ -48,11 +49,19 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     private RecyclerView currencyListView;
     private HashMap<String, Double> currencyMap;
 
+    private RealmResults<BudgetCurrency> resultsCurrency;
+
+
     //by default this activity is in settings, when this is called the first time it should be false
+
+    /**
+     * If true, this was called in SettingsFragment (Will allow user to see which currency is default).
+     * If false, this was called in first time (Will allow user to click on a currency to select as default).
+     */
     private boolean inSettings = true;
 
-    //by default this activity is just listing currency
-    private boolean defaultCurrencySelection = false;
+
+    private boolean returnDefaultCurrency = true;
 
     @Override
     protected int getActivityLayout(){
@@ -67,7 +76,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
         if(getIntent().getExtras() != null){
             inSettings = (getIntent().getExtras()).getBoolean(Constants.REQUEST_CURRENCY_IN_SETTINGS);
-            defaultCurrencySelection =(getIntent().getExtras()).getBoolean(Constants.REQUEST_DEFAULT_CURRENCY);
+            returnDefaultCurrency = (getIntent().getExtras()).getBoolean(Constants.REQUEST_DEFAULT_CURRENCY);
         }
 
         createToolbar();
@@ -78,9 +87,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
         currencyListView = (RecyclerView)findViewById(R.id.currencyListview);
         currencyListView.setLayoutManager(new LinearLayoutManager(this));
-
-
-
 
         currencyAdapter = new CurrencyRecyclerAdapter(this, inSettings, currencyList);
         currencyListView.setAdapter(currencyAdapter);
@@ -113,8 +119,12 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         toolbar.setNavigationIcon(R.drawable.svg_ic_clear);
 
         if(getSupportActionBar() != null){
-            if(defaultCurrencySelection){
-                getSupportActionBar().setTitle("Select default currency");
+            if(returnDefaultCurrency){
+                if(!inSettings){
+                    getSupportActionBar().setTitle("Select default currency");
+                }else{
+                    getSupportActionBar().setTitle("Select default currency in settings");
+                }
             }else{
                 getSupportActionBar().setTitle("Select currency");
             }
@@ -133,13 +143,71 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     private void createCurrencies(){
         boolean isFirstTimeCurrency = BudgetPreference.getFirstTimeCurrency(getApplicationContext());
 
+        //Check for number of rows in BudgetCurrency to determine if there is any data at all
+        resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
+        resultsCurrency.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
+            @Override
+            public void onChange(RealmResults<BudgetCurrency> element) {
+                element.removeChangeListener(this);
+
+                Toast.makeText(instance, "there are "+element.size()+" in list", Toast.LENGTH_SHORT).show();
+
+                // If there are for some reason fewer currencies in Realm than in XML.
+                // Delete all entries in the realm first, then recreate it
+                if(element.size() < getNumOfCurrenciesInXML()){
+                    deleteAllCurrenciesInRealm();
+                    readFromCurrencyXML();
+                }else{
+                    readFromCurrencyRealm();
+                }
+            }
+        });
+
+/*
         if(isFirstTimeCurrency){
             readFromCurrencyXML();
             BudgetPreference.setFirstTimeCurrency(getApplicationContext());
         }else{
             readFromCurrencyRealm();
-        }
+        }*/
 
+    }
+
+    /**
+     * Reads the currencies.xml file and returns the number of currencies
+     * @return The number of currencies in list
+     */
+    private int getNumOfCurrenciesInXML(){
+        try {
+            InputStream iss = getResources().openRawResource(R.raw.currencies);
+
+            XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+
+            CurrencyXMLHandler currencyXMLHandler = new CurrencyXMLHandler();
+            xmlReader.setContentHandler(currencyXMLHandler);
+            xmlReader.parse(new InputSource(iss));
+
+            return currencyXMLHandler.getCurrencies().size();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Delete all entries in BudgetCurrency table
+     */
+    private void deleteAllCurrenciesInRealm(){
+        resultsCurrency = myRealm.where(BudgetCurrency.class).findAll();
+
+        // All changes to data must happen in a transaction
+        myRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                // Delete all matches
+                resultsCurrency.deleteAllFromRealm();
+            }
+        });
     }
 
     private void readFromCurrencyXML(){
@@ -182,8 +250,8 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     }
 
     private void readFromCurrencyRealm(){
-        RealmResults<BudgetCurrency> results = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
-        results.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
+        resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
+        resultsCurrency.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
             @Override
             public void onChange(RealmResults<BudgetCurrency> element) {
                 element.removeChangeListener(this);
@@ -198,30 +266,32 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
     @Override
     public void onClickCurrency(final int position){
-        if(defaultCurrencySelection){
-            View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+        if(returnDefaultCurrency){
+            if(!inSettings){
+                //getSupportActionBar().setTitle("Select default currency");
+                View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-            TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+                TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+                TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-            title.setText("Confirm Currency");
-            message.setText("Are you sure you want to set "+currencyList.get(position).getCurrencyCode()+" as your default currency.");
+                title.setText("Confirm Currency");
+                message.setText("Are you sure you want to set "+currencyList.get(position).getCurrencyCode()+" as your default currency.");
 
-            new AlertDialog.Builder(this)
-                    .setView(promptView)
-                    .setCancelable(true)
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+                new AlertDialog.Builder(this)
+                        .setView(promptView)
+                        .setCancelable(true)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                            myRealm.beginTransaction();
+                                myRealm.beginTransaction();
 
-                            for(int k = 0; k < currencyList.size(); k++){
-                                currencyList.get(k).setDefault(false);
-                            }
+                                for(int k = 0; k < currencyList.size(); k++){
+                                    currencyList.get(k).setDefault(false);
+                                }
 
-                            currencyList.get(position).setDefault(true);
+                                currencyList.get(position).setDefault(true);
 
-                            //find exchange rate for this default compared to the rest of the currencies
+                                //find exchange rate for this default compared to the rest of the currencies
 
                         /*
                         final String defaultCurrencyCode = currencyList.get(position).getCurrencyCode();
@@ -246,23 +316,25 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                         }*/
 
 
-                            myRealm.commitTransaction();
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .create()
-                    .show();
+                                myRealm.commitTransaction();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
         }else{
+            //getSupportActionBar().setTitle("Select currency");
             Intent intent = new Intent();
 
             Parcelable wrapped = Parcels.wrap(currencyList.get(position));
-            intent.putExtra(Constants.RESULT_EDIT_CURRENCY, wrapped);
+            intent.putExtra(Constants.RESULT_CURRENCY, wrapped);
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -270,30 +342,40 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
     @Override
     public void onCurrencySetAsDefault(int position){
-        myRealm.beginTransaction();
-        for(int i = 0; i < currencyList.size(); i++){
-            currencyList.get(i).setDefault(false);
+        if(returnDefaultCurrency){
+            if(inSettings){
+                myRealm.beginTransaction();
+                for(int i = 0; i < currencyList.size(); i++){
+                    resultsCurrency.get(i).setDefault(false);
+                }
+                resultsCurrency.get(position).setDefault(true);
+                myRealm.commitTransaction();
+
+                currencyList = myRealm.copyFromRealm(resultsCurrency);
+
+                //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
+                Util.createSnackbar(this, (View)currencyListView.getParent(), "Set "+currencyList.get(position).getCurrencyCode()+" as default currency");
+
+                currencyAdapter.setBudgetCurrencyList(currencyList);
+            }
         }
-        currencyList.get(position).setDefault(true);
-        myRealm.commitTransaction();
-
-        //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
-        Util.createSnackbar(this, (View)currencyListView.getParent(), "Set "+currencyList.get(position).getCurrencyCode()+" as default currency");
-
-        //currencyList = myRealm.copyFromRealm(currencyAdapter);
-        currencyAdapter.setBudgetCurrencyList(currencyList);
     }
 
     @Override
     public void onCurrencyDeSetFromDefault(int position){
-        myRealm.beginTransaction();
-        currencyList.get(position).setDefault(false);
-        myRealm.commitTransaction();
+        if(returnDefaultCurrency){
+            if(inSettings) {
+                myRealm.beginTransaction();
+                resultsCurrency.get(position).setDefault(false);
+                myRealm.commitTransaction();
 
-        //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
-        Util.createSnackbar(this, (View)currencyListView.getParent(), "Remove "+currencyList.get(position).getCurrencyCode()+" as default currency");
+                currencyList = myRealm.copyFromRealm(resultsCurrency);
 
-        //currencyList = myRealm.copyFromRealm(resultsAccount);
-        currencyAdapter.setBudgetCurrencyList(currencyList);
+                //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
+                Util.createSnackbar(this, (View) currencyListView.getParent(), "Remove " + currencyList.get(position).getCurrencyCode() + " as default currency");
+
+                currencyAdapter.setBudgetCurrencyList(currencyList);
+            }
+        }
     }
 }
