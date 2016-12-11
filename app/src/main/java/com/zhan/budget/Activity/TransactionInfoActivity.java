@@ -935,6 +935,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private void openCurrencyListActivity(){
         Intent currencyIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
+        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
         currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, false);
         startActivityForResult(currencyIntent, Constants.RETURN_SELECTED_CURRENCY);
     }
