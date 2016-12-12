@@ -25,6 +25,7 @@ import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
@@ -125,7 +126,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         super.init();
         isFirstTime();
 
-        getDefaultCurrency();
+        checkForCurrency();
 
         //By default it will be the current date;
         selectedDate = new Date();
@@ -301,7 +302,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         Log.d("REALM", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
 
-
+/*
         final RealmResults<Transaction> testResults = myRealm.where(Transaction.class).findAllAsync();
         testResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -311,6 +312,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 Log.d(TAG, "total transactions  created for testing : "+element.size() );
             }
         });
+        */
     }
 
     /**
@@ -444,23 +446,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         });
     }
 
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
-        }else{
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
-        }
-
-        Toast.makeText(getContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        myRealm.close();
-    }
-
-
     /**
      * Populate the list of transactions for the specific date.
      * @param date The date to search in db.
@@ -560,7 +545,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         //This is edit mode, not a new transaction
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-        //editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getContext(), selectedDate));
 
         Parcelable wrapped = Parcels.wrap(transactionList.get(position));
@@ -692,6 +676,57 @@ public class CalendarFragment extends BaseRealmFragment implements
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Budget Currency
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Checks if BudgetCurrency table is filled, if not it will request the user to select a default
+     * budgetCurrency
+     */
+    private void checkForCurrency(){
+        //Check for number of rows in BudgetCurrency to determine if there is any data at all
+        RealmResults<BudgetCurrency> resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
+        resultsCurrency.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
+            @Override
+            public void onChange(RealmResults<BudgetCurrency> element) {
+                element.removeChangeListener(this);
+
+                Toast.makeText(getContext(), "there are "+element.size()+" in list", Toast.LENGTH_SHORT).show();
+
+                if(element.size() <= 0){
+                    askForCurrencyActivity();
+                }else{
+                    getDefaultCurrency();
+                }
+            }
+        });
+    }
+
+    private void askForCurrencyActivity(){
+        Intent currencyIntent = new Intent(getContext(), SelectCurrencyActivity.class);
+        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
+        currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, true);
+        startActivityForResult(currencyIntent, Constants.RETURN_SELECTED_CURRENCY);
+    }
+
+    private void getDefaultCurrency(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(currentCurrency == null){
+            currentCurrency = new BudgetCurrency();
+            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        }else{
+            currentCurrency = myRealm.copyFromRealm(currentCurrency);
+        }
+
+        Toast.makeText(getContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        myRealm.close();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -738,6 +773,11 @@ public class CalendarFragment extends BaseRealmFragment implements
                 populateTransactionsForDate(tt.getDate());
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
+            }else if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
+                currentCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY));
+
+                Toast.makeText(getContext(), "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
+                populateTransactionsForDate(selectedDate);
             }
         }
     }

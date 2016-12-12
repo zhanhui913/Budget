@@ -1,5 +1,7 @@
 package com.zhan.budget.Etc;
 
+import android.util.Log;
+
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 
 import java.text.DecimalFormat;
@@ -46,9 +48,13 @@ public final class CurrencyTextFormatter {
             throw new IllegalArgumentException("Invalid argument in val");
         }*/
 
-        val = val.replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
-
-        return val;
+        if(currency != null){
+            val = val.replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
+            return val;
+        }else{
+            Log.e("CurrencyTextFormatter", "Currency is null");
+            return "Currency is null";
+        }
     }
 
     public static float formatCurrency(String val){
@@ -76,11 +82,21 @@ public final class CurrencyTextFormatter {
         //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
         //ie: $x.00
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
-        return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
+        if(currency != null){
+            return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
+        }else {
+            Log.e("CurrencyTextFormatter", "Currency is null");
+            return "Currency is null";
+        }
     }
 
     public static String stripCharacters(String value, BudgetCurrency currency){
-        return value.replace("$","").replace("-","").replace("+","").replace(".","").replace(",","").replace("(","").replace(")","").replace(currency.getCurrencyCode(),"");
+        if(currency != null) {
+            return value.replace("$", "").replace("-", "").replace("+", "").replace(".", "").replace(",", "").replace("(", "").replace(")", "").replace(currency.getCurrencyCode(), "");
+        }else{
+            Log.e("CurrencyTextFormatter", "Currency is null");
+            return "Currency is null";
+        }
     }
 
     /**

@@ -19,7 +19,6 @@ import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Etc.MassExchangeRate;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Util;
 
 import org.parceler.Parcels;
@@ -141,8 +140,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     }
 
     private void createCurrencies(){
-        boolean isFirstTimeCurrency = BudgetPreference.getFirstTimeCurrency(getApplicationContext());
-
         //Check for number of rows in BudgetCurrency to determine if there is any data at all
         resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
         resultsCurrency.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
@@ -162,15 +159,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 }
             }
         });
-
-/*
-        if(isFirstTimeCurrency){
-            readFromCurrencyXML();
-            BudgetPreference.setFirstTimeCurrency(getApplicationContext());
-        }else{
-            readFromCurrencyRealm();
-        }*/
-
     }
 
     /**
@@ -264,7 +252,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         });
     }
 
-    private void convertDefaultCurrency(int position){
+    private void convertDefaultCurrency(final int position){
       /*  final String defaultCurrencyCode = currencyList.get(position).getCurrencyCode();
 
         for(int i = 0; i < currencyList.size(); i++){
@@ -298,10 +286,18 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
 
         //option 2 (async option)
-        MassExchangeRate massExchangeRate = new MassExchangeRate(instance, currencyList.get(position), currencyList, new MassExchangeRate.OnMassExchangeRateInteractionListener() {
+        List<BudgetCurrency> tempCurrencyList = myRealm.copyFromRealm(currencyList);
+
+        MassExchangeRate massExchangeRate = new MassExchangeRate(instance, tempCurrencyList.get(position), tempCurrencyList, new MassExchangeRate.OnMassExchangeRateInteractionListener() {
             @Override
             public void onCompleteAllCurrencyCalculation() {
                 Toast.makeText(getApplicationContext(), "MASS CALCULATION COMPLETED",Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent();
+                Parcelable wrapped = Parcels.wrap(currencyList.get(position));
+                intent.putExtra(Constants.RESULT_CURRENCY, wrapped);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
         massExchangeRate.execute();
@@ -317,7 +313,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     public void onClickCurrency(final int position){
         if(returnDefaultCurrency){
             if(!inSettings){
-                //Coming from MainActivity
+                //Coming from CalendarFragment
                 View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
                 TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
@@ -336,11 +332,9 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                                     currencyList.get(k).setDefault(false);
                                 }
                                 currencyList.get(position).setDefault(true);
+                                myRealm.commitTransaction();
 
                                 convertDefaultCurrency(position);
-
-                                myRealm.commitTransaction();
-                                finish();
                             }
                         })
                         .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
