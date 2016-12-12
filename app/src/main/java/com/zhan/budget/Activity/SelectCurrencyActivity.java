@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +16,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CurrencyRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyXMLHandler;
-import com.zhan.budget.Etc.ExchangeRate;
+import com.zhan.budget.Etc.MassExchangeRate;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -30,9 +29,7 @@ import org.xml.sax.XMLReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.SAXParserFactory;
 
@@ -268,7 +265,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     }
 
     private void convertDefaultCurrency(int position){
-        final String defaultCurrencyCode = currencyList.get(position).getCurrencyCode();
+      /*  final String defaultCurrencyCode = currencyList.get(position).getCurrencyCode();
 
         for(int i = 0; i < currencyList.size(); i++){
             currencyMap.put(currencyList.get(i).getCurrencyCode(), 0d);
@@ -293,6 +290,21 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 }
             });
         }
+*/
+
+
+
+
+
+
+        //option 2 (async option)
+        MassExchangeRate massExchangeRate = new MassExchangeRate(instance, currencyList.get(position), currencyList, new MassExchangeRate.OnMassExchangeRateInteractionListener() {
+            @Override
+            public void onCompleteAllCurrencyCalculation() {
+                Toast.makeText(getApplicationContext(), "MASS CALCULATION COMPLETED",Toast.LENGTH_SHORT).show();
+            }
+        });
+        massExchangeRate.execute();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -305,7 +317,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     public void onClickCurrency(final int position){
         if(returnDefaultCurrency){
             if(!inSettings){
-                //getSupportActionBar().setTitle("Select default currency");
+                //Coming from MainActivity
                 View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
                 TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
@@ -325,30 +337,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                                 }
                                 currencyList.get(position).setDefault(true);
 
-                                //find exchange rate for this default compared to the rest of the currencies
-
-/*
-                        final String defaultCurrencyCode = currencyList.get(position).getCurrencyCode();
-
-                        //option 2
-                        Iterator iterator = currencyMap.entrySet().iterator();
-                        while(iterator.hasNext()) {
-                             Map.Entry pair = (Map.Entry)iterator.next();
-                            final String toCurrency = pair.getKey().toString();
-
-                            ExchangeRate exchangeRate = new ExchangeRate(defaultCurrencyCode, toCurrency, 1, new ExchangeRate.OnExchangeRateInteractionListener() {
-                                @Override
-                                public void onCompleteCalculation(double result) {
-                                    Log.d("EXCHANGE", 1+defaultCurrencyCode+" = "+result+toCurrency);
-                                }
-
-                                @Override
-                                public void onFailedCalculation(){
-                                    Log.d("EXCHANGE", 1+defaultCurrencyCode+" = "+ toCurrency+" -----------  FAILED");
-                                }
-                            });
-                        }
-*/
                                 convertDefaultCurrency(position);
 
                                 myRealm.commitTransaction();
@@ -364,8 +352,9 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                         .create()
                         .show();
             }
+            //Not handling SettingsFragment
         }else{
-            //getSupportActionBar().setTitle("Select currency");
+            //Coming from TransactionInfoActivity
             Intent intent = new Intent();
 
             Parcelable wrapped = Parcels.wrap(currencyList.get(position));
