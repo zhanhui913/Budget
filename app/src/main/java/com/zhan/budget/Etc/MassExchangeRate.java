@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Zhan on 2016-12-11.
  */
 
-public class MassExchangeRate extends AsyncTask<Void, Integer, Boolean> {
+public class MassExchangeRate extends AsyncTask<Void, Integer, Void> {
 
     private OnMassExchangeRateInteractionListener mListener;
 
@@ -25,8 +25,9 @@ public class MassExchangeRate extends AsyncTask<Void, Integer, Boolean> {
     private String fromCurrency;
     private int numFiles;
     private int index;
-
     private List<BudgetCurrency> currencyList;
+
+    private int numProcessed;//number of exchange rate calculation that has been completed
 
     public void OnMassExchangeRateInteraction(OnMassExchangeRateInteractionListener listener){
         mListener = listener;
@@ -38,7 +39,7 @@ public class MassExchangeRate extends AsyncTask<Void, Integer, Boolean> {
         this.currencyList = currencyList;
         this.numFiles = currencyList.size();
         this.mListener = mListener;
-
+        this.numProcessed = 0;
 
         mDialog = new ProgressDialog(context);
         mDialog.setMax(100);
@@ -50,63 +51,62 @@ public class MassExchangeRate extends AsyncTask<Void, Integer, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Void... params){
+    protected Void doInBackground(Void... params){
         try {
-            String toCurrency;
+
             for(int i = 0; i < currencyList.size(); i++){
                 index = i;
-                toCurrency = currencyList.get(i).getCurrencyCode();
+                final String toCurrency = currencyList.get(index).getCurrencyCode();
 
-                Log.d("MassExchangeRate", "starting calculation for "+toCurrency);
-
-                new ExchangeRate(fromCurrency, toCurrency, 1, new ExchangeRate.OnExchangeRateInteractionListener() {
+                new ExchangeRate(fromCurrency, toCurrency, 1, index, new ExchangeRate.OnExchangeRateInteractionListener() {
                     @Override
-                    public void onCompleteCalculation(double result) {
-                        currencyList.get(index).setRate(result);
+                    public void onCompleteCalculation(int position, double result) {
+                        //Log.d("EXCHANGE", "1 "+fromCurrency+" -> "+result+" "+toCurrency);
+                        currencyList.get(position).setRate(result);
+                        Log.d("EXCHANGE", currencyList.get(position).getCurrencyCode()+" -----> "+currencyList.get(position).getRate());
                         publishProgress(index);
                     }
 
                     @Override
-                    public void onFailedCalculation() {
-                        currencyList.get(index).setRate(0f);
+                    public void onFailedCalculation(int position) {
+                        currencyList.get(position).setRate(0f);
                         publishProgress(index);
                     }
                 });
             }
 
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+
+        return null;
     }
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
         int percent = (int)(100.0 * (((double)progress[0] + 1) / (numFiles + 0.5)));
         mDialog.setProgress(percent);
+        numProcessed++;
+
+        if(numProcessed == numFiles){
+            onPostExecute(null);
+        }
     }
 
     @Override
-    protected void onPostExecute(Boolean result) {
-        mDialog.dismiss();
-        if (result) {
-            showToast("Packaging successful.");
-        } else {
-            showToast("Packaging failed, try again.");
-        }
+    protected void onPostExecute(Void params) {
+        if(numProcessed == numFiles){
+            mDialog.dismiss();
+            Log.d("EXCHANGE", "=========== DONE ===========");
 
-        if(mListener != null) {
-            mListener.onCompleteAllCurrencyCalculation();
+            if(mListener != null) {
+                mListener.onCompleteAllCurrencyCalculation(currencyList);
+            }
         }
-    }
-
-    private void showToast(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
     //Interface needed for caller
     public interface OnMassExchangeRateInteractionListener {
-        void onCompleteAllCurrencyCalculation();
+        void onCompleteAllCurrencyCalculation(List<BudgetCurrency> results);
     }
 }

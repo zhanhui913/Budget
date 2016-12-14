@@ -30,20 +30,23 @@ public class ExchangeRate {
     private String toCurrency;
     private int fromAmountInteger;
     private double fromAmountDouble;
+    private int index;
 
-    public ExchangeRate(String fromCurrency, String toCurrency, int fromAmount, OnExchangeRateInteractionListener mListener) {
+    public ExchangeRate(String fromCurrency, String toCurrency, int fromAmount, int index, OnExchangeRateInteractionListener mListener) {
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.fromAmountInteger = fromAmount;
+        this.index = index;
         this.mListener = mListener;
 
         callGoogleFinanceAPI(String.format(Locale.US, URL_INT, fromAmount, fromCurrency, toCurrency));
     }
 
-    public ExchangeRate(String fromCurrency, String toCurrency, double fromAmount, OnExchangeRateInteractionListener mListener) {
+    public ExchangeRate(String fromCurrency, String toCurrency, double fromAmount, int index, OnExchangeRateInteractionListener mListener) {
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.fromAmountDouble = fromAmount;
+        this.index = index;
         this.mListener = mListener;
 
         callGoogleFinanceAPI(String.format(Locale.US, URL_DOUBLE, fromAmount, fromCurrency, toCurrency));
@@ -78,9 +81,9 @@ public class ExchangeRate {
                 Element el = doc.select("#currency_converter_result .bld").first();
                 if(el != null){
                     String val =  el.text().split("\\s+")[0];
-                    mListener.onCompleteCalculation(Double.parseDouble(val));
+                    mListener.onCompleteCalculation(index, Double.parseDouble(val));
                 }else{
-                    mListener.onFailedCalculation();
+                    mListener.onFailedCalculation(index);
                 }
             }
         });
@@ -116,8 +119,8 @@ public class ExchangeRate {
 
     //Interface needed for caller
     public interface OnExchangeRateInteractionListener {
-        void onCompleteCalculation(double result);
+        void onCompleteCalculation(int position, double result);
 
-        void onFailedCalculation();
+        void onFailedCalculation(int position);
     }
 }

@@ -253,16 +253,34 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         });
     }
 
-    private void convertDefaultCurrency(final int position){
+    /**
+     * Perform mass exchange rate conversion between Currency and all others
+     * @param currency Selected Currency
+     */
+    private void convertDefaultCurrency(final BudgetCurrency currency){
         List<BudgetCurrency>  tempCurrencyList = myRealm.copyFromRealm(resultsCurrency);
 
-        MassExchangeRate massExchangeRate = new MassExchangeRate(instance, tempCurrencyList.get(position), tempCurrencyList, new MassExchangeRate.OnMassExchangeRateInteractionListener() {
+        MassExchangeRate massExchangeRate = new MassExchangeRate(instance, currency, tempCurrencyList, new MassExchangeRate.OnMassExchangeRateInteractionListener() {
             @Override
-            public void onCompleteAllCurrencyCalculation() {
+            public void onCompleteAllCurrencyCalculation(List<BudgetCurrency> results) {
                 Toast.makeText(getApplicationContext(), "MASS CALCULATION COMPLETED",Toast.LENGTH_SHORT).show();
 
+                //update results in Realm
+                myRealm.beginTransaction();
+
+                for(int i = 0; i < results.size(); i++){
+                    for(int k = 0; k < resultsCurrency.size(); k++){
+                        if(results.get(i).getCurrencyCode().equalsIgnoreCase(resultsCurrency.get(k).getCurrencyCode())){
+                            resultsCurrency.get(k).setRate(results.get(i).getRate());
+                        }
+                    }
+                }
+
+                myRealm.commitTransaction();
+
+
                 Intent intent = new Intent();
-                Parcelable wrapped = Parcels.wrap(currencyList.get(position));
+                Parcelable wrapped = Parcels.wrap(currency);
                 intent.putExtra(Constants.RESULT_CURRENCY, wrapped);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -304,7 +322,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
                             myRealm.commitTransaction();
 
-                            convertDefaultCurrency(position);
+                            convertDefaultCurrency(resultsCurrency.get(position));
                         }
                     })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
