@@ -22,6 +22,7 @@
         android:layout_gravity="center"
         android:text="@string/category"
         android:maxLines="1"
+        android:ellipsize="end"
         android:textSize="@dimen/text_content_size"/>
 </LinearLayout>
 

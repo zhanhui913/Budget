@@ -3,6 +3,7 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -77,8 +78,10 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
         if(budgetCurrency.isDefault()){
             viewHolder.defaultCurrencyIndicator.setVisibility(View.VISIBLE);
+            viewHolder.currencyName.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         }else{
             viewHolder.defaultCurrencyIndicator.setVisibility(View.GONE);
+            viewHolder.currencyName.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
     }
 
@@ -95,7 +98,6 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
     public List<BudgetCurrency> getBudgetCurrencyList(){
         return this.budgetCurrencyList;
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 

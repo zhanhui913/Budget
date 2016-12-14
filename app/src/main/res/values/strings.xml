@@ -248,6 +248,7 @@
 	<!-- Currency -->
 	<string name="def_currency">Default Currency</string>
 	<string name="dialog_currency_title">Set Exchange Rate</string>
+	<string name="currency_select">You selected</string>
 	<string name="currency_current_exchange_rate">Current exchange rate is</string>
 
 

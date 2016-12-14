@@ -109,6 +109,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private Boolean isScheduledTransaction = false; //default is false
     private ScheduledTransaction scheduledTransaction;
 
+    private BudgetCurrency defaultCurrency;
     private BudgetCurrency currentCurrency;
 
     private HashSet<String> locationHash = new HashSet<>();
@@ -224,6 +225,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPage = BudgetType.EXPENSE;
             }
 
+            getDefaultCurrency();
             currentCurrency = editTransaction.getCurrency();
             
             if(currentPage == BudgetType.EXPENSE){
@@ -247,6 +249,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }else{
             getDefaultCurrency();
+
+            currentCurrency = defaultCurrency;
 
             priceString = "0";
 
@@ -919,17 +923,15 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
-        }else{
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
+        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(defaultCurrency == null){
+            defaultCurrency = new BudgetCurrency();
+            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }
 
-        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        transactionCostCurrencyCodeText.setText(currentCurrency.getCurrencyCode());
+        Toast.makeText(getApplicationContext(), "default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        transactionCostCurrencyCodeText.setText(defaultCurrency.getCurrencyCode());
         myRealm.close();
     }
 
@@ -970,13 +972,21 @@ public class TransactionInfoActivity extends BaseActivity implements
         float  afterConversion = CurrencyTextFormatter.convertCurrency(f, currentCurrency);
 
         afterConversion = (currentPage == BudgetType.EXPENSE) ? -afterConversion : afterConversion;
-        transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, currentCurrency));
+        transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, defaultCurrency));
     }
 
-    private void createExchangeDialog(){
+    private void createExchangeDialog(BudgetCurrency selectedBudgetCurrency){
         View promptView = View.inflate(instance, R.layout.alertdialog_currency_rate, null);
 
+        TextView selectedBudgetCurrencyHeader = (TextView) promptView.findViewById(R.id.selectedBudgetCurrencyHeader);
+        TextView selectedBudgetCurrencyContent = (TextView) promptView.findViewById(R.id.selectedBudgetCurrencyContent);
+        TextView defaultBudgetCurrency = (TextView) promptView.findViewById(R.id.defaultBudgetCurrency);
         final EditText input = (EditText) promptView.findViewById(R.id.exchangeRateEditText);
+
+
+        selectedBudgetCurrencyHeader.setText(selectedBudgetCurrency.getCurrencyCode());
+        selectedBudgetCurrencyContent.setText(selectedBudgetCurrency.getCurrencyCode());
+        defaultBudgetCurrency.setText(defaultCurrency.getCurrencyCode());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
@@ -1238,7 +1248,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
                 transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
 
-                createExchangeDialog();
+                createExchangeDialog(currentCurrency);
 
                 updateConversion();
             }
