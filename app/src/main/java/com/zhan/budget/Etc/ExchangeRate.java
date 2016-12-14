@@ -1,5 +1,7 @@
 package com.zhan.budget.Etc;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -39,7 +41,14 @@ public class ExchangeRate {
         this.index = index;
         this.mListener = mListener;
 
-        callGoogleFinanceAPI(String.format(Locale.US, URL_INT, fromAmount, fromCurrency, toCurrency));
+        //If converting to same currency, just return 1.
+        if(fromCurrency.equalsIgnoreCase(toCurrency)){
+            Log.d("EXCHANGE", "1) "+fromCurrency+" -> "+toCurrency+", "+1d);
+
+            mListener.onCompleteCalculation(index, 1d);
+        }else{
+            callGoogleFinanceAPI(String.format(Locale.US, URL_INT, fromAmount, fromCurrency, toCurrency));
+        }
     }
 
     public ExchangeRate(String fromCurrency, String toCurrency, double fromAmount, int index, OnExchangeRateInteractionListener mListener) {
@@ -49,7 +58,14 @@ public class ExchangeRate {
         this.index = index;
         this.mListener = mListener;
 
-        callGoogleFinanceAPI(String.format(Locale.US, URL_DOUBLE, fromAmount, fromCurrency, toCurrency));
+        //If converting to same currency, just return 1.
+        if(fromCurrency.equalsIgnoreCase(toCurrency)){
+            Log.d("EXCHANGE", "1) "+fromCurrency+" -> "+toCurrency+", "+1d);
+
+            mListener.onCompleteCalculation(index, 1d);
+        }else{
+            callGoogleFinanceAPI(String.format(Locale.US, URL_DOUBLE, fromAmount, fromCurrency, toCurrency));
+        }
     }
 
     public void callGoogleFinanceAPI(String url){
