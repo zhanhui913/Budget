@@ -973,6 +973,29 @@ public class TransactionInfoActivity extends BaseActivity implements
         transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, currentCurrency));
     }
 
+    private void createExchangeDialog(){
+        View promptView = View.inflate(instance, R.layout.alertdialog_currency_rate, null);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.exchangeRateEditText);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_continue), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog exchangeDialog = builder.create();
+        exchangeDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        exchangeDialog.show();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -1214,6 +1237,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
                 transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
+
+                createExchangeDialog();
 
                 updateConversion();
             }

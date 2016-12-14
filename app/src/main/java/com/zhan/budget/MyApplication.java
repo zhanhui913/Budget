@@ -52,6 +52,10 @@ public class MyApplication extends Application {
                         Log.d("MY_APP", "old version :"+oldVersion);
 /*
                         //migrate to version 3
+
+                        //need to go through all transaction and apply selected default budget currency (if selected from here)
+                        //maybe ask default currency from here
+
                         if(oldVersion == 2){
                              schema.get("Transaction")
                                      .addField("currency", BudgetCurrency.class)

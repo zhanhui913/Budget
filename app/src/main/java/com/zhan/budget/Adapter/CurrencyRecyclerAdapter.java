@@ -27,13 +27,11 @@ import java.util.List;
 public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecyclerAdapter.ViewHolder> {
 
     private Context context;
-    private boolean inSettings;
     private List<BudgetCurrency> budgetCurrencyList;
     private OnCurrencyAdapterInteractionListener mListener;
 
-    public CurrencyRecyclerAdapter(Fragment fragment, boolean inSettings, List<BudgetCurrency> budgetCurrencyList) {
+    public CurrencyRecyclerAdapter(Fragment fragment, List<BudgetCurrency> budgetCurrencyList) {
         this.context = fragment.getContext();
-        this.inSettings = inSettings;
         this.budgetCurrencyList = budgetCurrencyList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCurrencyAdapterInteractionListener interface
@@ -44,9 +42,8 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
         }
     }
 
-    public CurrencyRecyclerAdapter(Activity activity, boolean inSettings, List<BudgetCurrency> budgetCurrencyList){
+    public CurrencyRecyclerAdapter(Activity activity, List<BudgetCurrency> budgetCurrencyList){
         this.context = activity;
-        this.inSettings = inSettings;
         this.budgetCurrencyList = budgetCurrencyList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCurrencyAdapterInteractionListener interface
@@ -73,26 +70,16 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
         // getting BudgetCurrency data for the row
         final BudgetCurrency budgetCurrency = budgetCurrencyList.get(position);
 
-        viewHolder.currencyName.setText(budgetCurrency.getCurrencyName());
-        viewHolder.currencyCode.setText(budgetCurrency.getCurrencyCode());
+        viewHolder.currencyName.setText(budgetCurrency.getCurrencyName() + " (" + budgetCurrency.getCurrencyCode() + ")");
         viewHolder.icon.setCircleColor(R.color.colorPrimary);
-
-        if(inSettings){
-            if(budgetCurrency.isDefault()){
-                viewHolder.defaultCurrencyIndicatorOn.setVisibility(View.VISIBLE);
-                viewHolder.defaultCurrencyIndicatorOff.setVisibility(View.INVISIBLE);
-            }else{
-                viewHolder.defaultCurrencyIndicatorOn.setVisibility(View.INVISIBLE);
-                viewHolder.defaultCurrencyIndicatorOff.setVisibility(View.VISIBLE);
-            }
-        }else{
-            viewHolder.defaultCurrencyIndicatorOn.setVisibility(View.GONE);
-            viewHolder.defaultCurrencyIndicatorOff.setVisibility(View.GONE);
-        }
-
         viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(budgetCurrency.getCurrencyCode().toUpperCase()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-        viewHolder.icon.setTextSizeInDP(30);
+
+        if(budgetCurrency.isDefault()){
+            viewHolder.defaultCurrencyIndicator.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.defaultCurrencyIndicator.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -114,10 +101,10 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public TextView currencyName, currencyCode;
+        public TextView currencyName;
         public CircularView icon;
         public SwipeLayout swipeLayout;
-        public ImageView defaultCurrencyIndicatorOn, defaultCurrencyIndicatorOff;
+        public ImageView defaultCurrencyIndicator;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -129,34 +116,14 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCurrency);
             icon = (CircularView) itemView.findViewById(R.id.currencyIcon);
             currencyName = (TextView) itemView.findViewById(R.id.currencyName);
-            currencyCode = (TextView) itemView.findViewById(R.id.currencyCode);
-            defaultCurrencyIndicatorOn = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicatorOn);
-            defaultCurrencyIndicatorOff = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicatorOff);
+            defaultCurrencyIndicator = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicator);
 
-            if(inSettings){
-                defaultCurrencyIndicatorOff.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        mListener.onCurrencySetAsDefault(getLayoutPosition());
-                        return false;
-                    }
-                });
-
-                defaultCurrencyIndicatorOn.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        mListener.onCurrencyDeSetFromDefault(getLayoutPosition());
-                        return false;
-                    }
-                });
-            }else{
-                swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+            swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onClickCurrency(getLayoutPosition());
                     }
                 });
-            }
         }
     }
 
@@ -168,9 +135,5 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
     public interface OnCurrencyAdapterInteractionListener {
         void onClickCurrency(int position);
-
-        void onCurrencySetAsDefault(int position);
-
-        void onCurrencyDeSetFromDefault(int position);
     }
 }

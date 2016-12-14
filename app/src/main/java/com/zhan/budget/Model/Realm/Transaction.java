@@ -29,6 +29,9 @@ public class Transaction extends RealmObject {
     private Location location;
     private BudgetCurrency currency;
 
+    //exchange rate for currency at the time (Cannot rely on BudgetCurrency's rate as that property is the current one)
+    //This will be 1.0f if the default budget currency is the same as this currency
+    private double rate;
 
     public Transaction(){
 
@@ -106,6 +109,14 @@ public class Transaction extends RealmObject {
         this.currency = currency;
     }
 
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property
@@ -134,6 +145,8 @@ public class Transaction extends RealmObject {
         }else if(other.getCurrency() == null || currency == null){
             return false;
         }
+
+        if(rate != other.getRate()) return false;
 
         return true;
     }

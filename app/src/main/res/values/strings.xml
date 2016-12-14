@@ -176,6 +176,7 @@
 	<string name="dialog_button_select">SELECT</string>
 	<string name="dialog_button_delete">DELETE</string>
 	<string name="dialog_button_save">SAVE</string>
+	<string name="dialog_button_continue">CONTINUE</string>
 	<string name="dialog_button_reset">RESET</string>
 	<string name="dialog_button_cancel">CANCEL</string>
 
@@ -231,6 +232,7 @@
 	<string name="ratings_failed">There seems to be some issues connecting to the Play Store</string>
 	<string name="price_too_long">The max is 15 digits</string>
 
+
 	<!-- Middle section -->
 	<string name="middle_section_name">Name</string>
 	<string name="middle_section_right">Right</string>
@@ -242,6 +244,11 @@
 
 
 	<string name="monthly_overview">Monthly Overview</string>
+
+	<!-- Currency -->
+	<string name="def_currency">Default Currency</string>
+	<string name="dialog_currency_title">Set Exchange Rate</string>
+	<string name="currency_current_exchange_rate">Current exchange rate is</string>
 
 
 </resources>
