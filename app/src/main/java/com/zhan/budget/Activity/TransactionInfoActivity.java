@@ -983,6 +983,9 @@ public class TransactionInfoActivity extends BaseActivity implements
         TextView defaultBudgetCurrency = (TextView) promptView.findViewById(R.id.defaultBudgetCurrency);
         final EditText input = (EditText) promptView.findViewById(R.id.exchangeRateEditText);
 
+        double inverseRate = 1 / selectedBudgetCurrency.getRate();
+
+        input.setText(Double.toString(inverseRate));
 
         selectedBudgetCurrencyHeader.setText(selectedBudgetCurrency.getCurrencyCode());
         selectedBudgetCurrencyContent.setText(selectedBudgetCurrency.getCurrencyCode());
