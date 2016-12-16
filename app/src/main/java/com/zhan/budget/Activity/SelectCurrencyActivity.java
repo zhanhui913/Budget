@@ -9,8 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,9 +19,6 @@ import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Etc.MassExchangeRate;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
-import com.zhan.budget.Util.Util;
-import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 import org.xml.sax.InputSource;
