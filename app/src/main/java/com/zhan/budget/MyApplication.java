@@ -20,9 +20,24 @@ import io.realm.RealmSchema;
  */
 public class MyApplication extends Application {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    private native String invokeNativeFunction();
+
     @Override
     public void onCreate(){
         super.onCreate();
+        byte[] key = new byte[64];
+
+        try{
+            key = invokeNativeFunction().getBytes("UTF-8");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
                 .schemaVersion(2)
@@ -47,9 +62,9 @@ public class MyApplication extends Application {
                             oldVersion++;
                         }
 
-
                         Toast.makeText(MyApplication.this, "a) It looks like you're at version "+oldVersion, Toast.LENGTH_SHORT).show();
                         Log.d("MY_APP", "old version :"+oldVersion);
+
 /*
                         //migrate to version 3
 
@@ -76,6 +91,7 @@ public class MyApplication extends Application {
                          }*/
                     }
                 })
+                .encryptionKey(key)
                 .build();
         Realm.setDefaultConfiguration(config);
 

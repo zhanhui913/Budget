@@ -1,0 +1,3 @@
+/Users/zhanyap/AndroidStudioProjects/Budget/app/.externalNativeBuild/cmake/dev/armeabi/CMakeFiles/edit_cache.dir
+/Users/zhanyap/AndroidStudioProjects/Budget/app/.externalNativeBuild/cmake/dev/armeabi/CMakeFiles/rebuild_cache.dir
+/Users/zhanyap/AndroidStudioProjects/Budget/app/.externalNativeBuild/cmake/dev/armeabi/CMakeFiles/native-lib.dir
