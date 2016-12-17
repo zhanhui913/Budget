@@ -14,8 +14,8 @@
 	<string name="permission_deny">Deny</string>
 	<string name="permission_rationale_write_backup_data">Without this permission the app is unable to create a backup data</string>
 	<string name="permission_rationale_read_backup_data">Without this permission the app is unable to restore the backup data</string>
+	<string name="permission_rationale_access_data">Without this permission the app is unable to access the data file</string>
 	<string name="permission_rationale_write_csv">Without this permission the app is unable to create the CSV</string>
-
 
 	<!-- Activity name -->
 	<string name="title_activity_transaction_info">Transaction</string>

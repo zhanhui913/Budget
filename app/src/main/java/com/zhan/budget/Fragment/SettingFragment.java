@@ -142,14 +142,14 @@ public class SettingFragment extends BaseFragment {
 
         //Set theme
         CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
-        themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? getString(R.string.setting_content_theme_night) : getString(R.string.setting_content_theme_day)));
+        themeContent.setText(CURRENT_THEME == ThemeUtil.THEME_DARK ? R.string.setting_content_theme_night : R.string.setting_content_theme_day);
         themeCV.setCircleColor(R.color.colorPrimary);
         themeCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         themeCV.setIconResource(R.drawable.c_theme_light_dark);
 
         //Set start day
         int startDay = BudgetPreference.getStartDay(getContext());
-        firstDayContent.setText(startDay == Calendar.SUNDAY ? getString(R.string.setting_content_day_sun) : getString(R.string.setting_content_day_mon));
+        firstDayContent.setText(startDay == Calendar.SUNDAY ? R.string.setting_content_day_sun : R.string.setting_content_day_mon);
         firstDayCV.setCircleColor(R.color.lightPurple);
         firstDayCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         firstDayCV.setIconResource(R.drawable.svg_ic_menu_calendar);
@@ -226,7 +226,7 @@ public class SettingFragment extends BaseFragment {
         themeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? getString(R.string.setting_content_theme_night) : getString(R.string.setting_content_theme_day)));
+                themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? R.string.setting_content_theme_night : R.string.setting_content_theme_day));
                 ThemeUtil.changeToTheme(getActivity(), (CURRENT_THEME == ThemeUtil.THEME_DARK ? ThemeUtil.THEME_LIGHT : ThemeUtil.THEME_DARK));
             }
         });
@@ -237,10 +237,10 @@ public class SettingFragment extends BaseFragment {
                 int startDay = BudgetPreference.getStartDay(getContext());
 
                 if(startDay == Calendar.SUNDAY){
-                    firstDayContent.setText(getString(R.string.setting_content_day_mon));
+                    firstDayContent.setText(R.string.setting_content_day_mon);
                     BudgetPreference.setMondayStartDay(getContext());
                 }else{
-                    firstDayContent.setText(getString(R.string.setting_content_day_sun));
+                    firstDayContent.setText(R.string.setting_content_day_sun);
                     BudgetPreference.setSundayStartDay(getContext());
                 }
             }
@@ -319,8 +319,7 @@ public class SettingFragment extends BaseFragment {
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //email();
-                sendRealmData();
+                email();
             }
         });
 
@@ -348,41 +347,13 @@ public class SettingFragment extends BaseFragment {
         versionNumber.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                sendRealmData();
+                checkPermissionToAccessRealm();
                 return false;
             }
         });
     }
 
-    private void sendRealmData() {
-        try {
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
 
-            if (sd.canWrite()) {
-                if(createDirectory()){ Log.d("FILE", "can write file");
-                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
-                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
-                    File currentDB = new File(data, currentDBPath);
-                    File backupDB = new File(sd, backupDBPath);
-
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-
-                    File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
-                    email(exportRealmFile, getString(R.string.realm_data), getString(R.string.realm_message));
-                }else{
-                    Log.d("FILE","cannot write file");
-                    Util.createSnackbar(getContext(), getView(), getString(R.string.realm_message_failed));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
@@ -435,15 +406,15 @@ public class SettingFragment extends BaseFragment {
             // For example if the user has previously denied the permission.
 
             new AlertDialog.Builder(getContext())
-                    .setTitle(getString(R.string.permission_denied))
-                    .setMessage(getString(R.string.permission_rationale_write_backup_data))
-                    .setPositiveButton(getString(R.string.permission_retry), new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.permission_denied)
+                    .setMessage(R.string.permission_rationale_write_backup_data)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
                         }
                     })
-                    .setNegativeButton(getString(R.string.permission_deny), null)
+                    .setNegativeButton(R.string.permission_deny, null)
                     .create()
                     .show();
 
@@ -557,15 +528,15 @@ public class SettingFragment extends BaseFragment {
             // For example if the user has previously denied the permission.
 
             new AlertDialog.Builder(getContext())
-                    .setTitle(getString(R.string.permission_denied))
-                    .setMessage(getString(R.string.permission_rationale_write_csv))
-                    .setPositiveButton(getString(R.string.permission_retry), new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.permission_denied)
+                    .setMessage(R.string.permission_rationale_write_csv)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
                         }
                     })
-                    .setNegativeButton(getString(R.string.permission_deny), null)
+                    .setNegativeButton(R.string.permission_deny, null)
                     .create()
                     .show();
         }else {
@@ -583,7 +554,7 @@ public class SettingFragment extends BaseFragment {
         View sortDialogView = View.inflate(getContext(), R.layout.alertdialog_number_picker, null);
 
         TextView title = (TextView)sortDialogView.findViewById(R.id.title);
-        title.setText(getString(R.string.setting_content_export_data_sort));
+        title.setText(R.string.setting_content_export_data_sort);
 
         final ExtendedNumberPicker sortPicker = (ExtendedNumberPicker)sortDialogView.findViewById(R.id.numberPicker);
 
@@ -595,13 +566,13 @@ public class SettingFragment extends BaseFragment {
 
         AlertDialog.Builder sortAlertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setView(sortDialogView)
-                .setPositiveButton(getString(R.string.dialog_button_select), new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_select, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String selectedString = sortListType.get(sortPicker.getValue());
                         getTransactionListForCSV(selectedString);
                     }
                 })
-                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //Reset the selection back to previous
                         dialog.dismiss();
@@ -834,6 +805,75 @@ public class SettingFragment extends BaseFragment {
         Intent mainAct = new Intent(getContext(), MaterialTutorialActivity.class);
         mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(getContext()));
         startActivity(mainAct);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Send Realm data
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void checkPermissionToAccessRealm(){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            //STORAGE permission has not been granted
+            requestFilePermissionToAccess();
+        }else{
+            sendRealmData();
+        }
+    }
+
+    public void requestFilePermissionToAccess(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.permission_denied)
+                    .setMessage(R.string.permission_rationale_access_data)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
+                        }
+                    })
+                    .setNegativeButton(R.string.permission_deny, null)
+                    .create()
+                    .show();
+
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
+        }
+    }
+
+    public void sendRealmData() {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                if(createDirectory()){ Log.d("FILE", "can write file");
+                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
+                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
+                    File currentDB = new File(data, currentDBPath);
+                    File backupDB = new File(sd, backupDBPath);
+
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+
+                    File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
+                    email(exportRealmFile, getString(R.string.realm_data), getString(R.string.realm_message));
+                }else{
+                    Log.d("FILE","cannot write file");
+                    Util.createSnackbar(getContext(), getView(), getString(R.string.realm_message_failed));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
