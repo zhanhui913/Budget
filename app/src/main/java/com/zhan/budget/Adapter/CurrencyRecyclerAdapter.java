@@ -121,11 +121,11 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
             defaultCurrencyIndicator = (ImageView) itemView.findViewById(R.id.defaultCurrencyIndicator);
 
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mListener.onClickCurrency(getLayoutPosition());
-                    }
-                });
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickCurrency(getLayoutPosition());
+                }
+            });
         }
     }
 

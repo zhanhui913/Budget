@@ -966,6 +966,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         updateConversion();
     }
 
+    /**
+     * Updates the secondary cost that represents the conversion rate of the selected currency and
+     * the default currency
+     */
     private void updateConversion(){
         float f = CurrencyTextFormatter.formatCurrency(priceString);
 
@@ -975,7 +979,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, defaultCurrency));
     }
 
-    private void createExchangeDialog(BudgetCurrency selectedBudgetCurrency){
+    private void createExchangeDialog(final BudgetCurrency selectedBudgetCurrency){
         View promptView = View.inflate(instance, R.layout.alertdialog_currency_rate, null);
 
         TextView selectedBudgetCurrencyHeader = (TextView) promptView.findViewById(R.id.selectedBudgetCurrencyHeader);
@@ -983,9 +987,11 @@ public class TransactionInfoActivity extends BaseActivity implements
         TextView defaultBudgetCurrency = (TextView) promptView.findViewById(R.id.defaultBudgetCurrency);
         final EditText input = (EditText) promptView.findViewById(R.id.exchangeRateEditText);
 
-        double inverseRate = 1 / selectedBudgetCurrency.getRate();
-
-        input.setText(Double.toString(inverseRate));
+        //If conversion is greater than 0, put its value into input, else leave it empty for user to put
+        if(selectedBudgetCurrency.getRate() > 0){
+            double inverseRate = 1 / selectedBudgetCurrency.getRate();
+            input.setText(Double.toString(inverseRate));
+        }
 
         selectedBudgetCurrencyHeader.setText(selectedBudgetCurrency.getCurrencyCode());
         selectedBudgetCurrencyContent.setText(selectedBudgetCurrency.getCurrencyCode());
@@ -995,7 +1001,30 @@ public class TransactionInfoActivity extends BaseActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_continue), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        currentCurrency = selectedBudgetCurrency;
 
+                        Toast.makeText(getApplicationContext(), " x: "+Double.valueOf(input.getText().toString()), Toast.LENGTH_SHORT).show();
+
+                        double newRate = Double.valueOf(input.getText().toString());
+
+                        //Update the exchange rate into realm
+                        Realm myRealm = Realm.getDefaultInstance();
+                        myRealm.beginTransaction();
+                        BudgetCurrency cc = myRealm.where(BudgetCurrency.class).equalTo("currencyCode", selectedBudgetCurrency.getCurrencyCode()).findFirst();
+
+                        //Reverse the inverse
+                        cc.setRate(1 / newRate);
+                        myRealm.commitTransaction();
+                        myRealm.close();
+
+                        //also need to update the rate in local
+                        currentCurrency.setRate(1 / newRate);
+
+
+                        updateConversion();
+
+                        String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
+                        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
@@ -1244,16 +1273,8 @@ public class TransactionInfoActivity extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == instance.RESULT_OK && data.getExtras() != null) {
             if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
-                currentCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY));
-
                 Toast.makeText(instance, "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
-
-                String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-                transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
-
-                createExchangeDialog(currentCurrency);
-
-                updateConversion();
+                createExchangeDialog((BudgetCurrency) Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY)));
             }
         }
     }

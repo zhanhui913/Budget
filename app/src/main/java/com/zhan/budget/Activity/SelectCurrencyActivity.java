@@ -297,92 +297,54 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
     @Override
     public void onClickCurrency(final int position){
-        //Coming from CalendarFragment or SettingsFragment
-        if(returnDefaultCurrency){
-            View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+        //No need to process the click on a Budget Currency that is already the default
+        if(!resultsCurrency.get(position).isDefault()) {
 
-            TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+            //Coming from CalendarFragment or SettingsFragment
+            if (returnDefaultCurrency) {
+                View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-            title.setText("Confirm Currency");
-            message.setText("Are you sure you want to set "+currencyList.get(position).getCurrencyCode()+" as your default currency.");
+                TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+                TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-            new AlertDialog.Builder(this)
-                    .setView(promptView)
-                    .setCancelable(true)
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            myRealm.beginTransaction();
-                            for(int k = 0; k < currencyList.size(); k++){
-                                //currencyList.get(k).setDefault(false);
-                                resultsCurrency.get(k).setDefault(false);
+                title.setText("Confirm Currency");
+                message.setText("Are you sure you want to set " + currencyList.get(position).getCurrencyCode() + " as your default currency.");
+
+                new AlertDialog.Builder(this)
+                        .setView(promptView)
+                        .setCancelable(true)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                myRealm.beginTransaction();
+                                for (int k = 0; k < currencyList.size(); k++) {
+                                    //currencyList.get(k).setDefault(false);
+                                    resultsCurrency.get(k).setDefault(false);
+                                }
+                                //currencyList.get(position).setDefault(true);
+                                resultsCurrency.get(position).setDefault(true);
+
+                                myRealm.commitTransaction();
+
+                                convertDefaultCurrency(resultsCurrency.get(position));
                             }
-                            //currencyList.get(position).setDefault(true);
-                            resultsCurrency.get(position).setDefault(true);
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+                //Coming from TransactionInfoActivity
+                Intent intent = new Intent();
 
-                            myRealm.commitTransaction();
-
-                            convertDefaultCurrency(resultsCurrency.get(position));
-                        }
-                    })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .create()
-                    .show();
-        }else{
-            //Coming from TransactionInfoActivity
-            Intent intent = new Intent();
-
-            Parcelable wrapped = Parcels.wrap(currencyList.get(position));
-            intent.putExtra(Constants.RESULT_CURRENCY, wrapped);
-            setResult(RESULT_OK, intent);
-            finish();
-        }
-    }
-/*
-    @Override
-    public void onCurrencySetAsDefault(int position){
-        Toast.makeText(getApplicationContext(), returnDefaultCurrency+", "+inSettings+" = "+position, Toast.LENGTH_SHORT).show();
-        if(returnDefaultCurrency){
-            if(inSettings){
-                myRealm.beginTransaction();
-                for(int i = 0; i < currencyList.size(); i++){
-                    resultsCurrency.get(i).setDefault(false);
-                }
-                resultsCurrency.get(position).setDefault(true);
-                myRealm.commitTransaction();
-
-                currencyList = myRealm.copyFromRealm(resultsCurrency);
-
-                //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
-                Util.createSnackbar(this, (View)currencyListView.getParent(), "Set "+currencyList.get(position).getCurrencyCode()+" as default currency");
-
-                currencyAdapter.setBudgetCurrencyList(currencyList);
-
-                convertDefaultCurrency(position);
+                Parcelable wrapped = Parcels.wrap(currencyList.get(position));
+                intent.putExtra(Constants.RESULT_CURRENCY, wrapped);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         }
     }
-
-    @Override
-    public void onCurrencyDeSetFromDefault(int position){
-        if(returnDefaultCurrency){
-            if(inSettings) {
-                myRealm.beginTransaction();
-                resultsCurrency.get(position).setDefault(false);
-                myRealm.commitTransaction();
-
-                currencyList = myRealm.copyFromRealm(resultsCurrency);
-
-                //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
-                Util.createSnackbar(this, (View) currencyListView.getParent(), "Remove " + currencyList.get(position).getCurrencyCode() + " as default currency");
-
-                currencyAdapter.setBudgetCurrencyList(currencyList);
-            }
-        }
-    }*/
 }

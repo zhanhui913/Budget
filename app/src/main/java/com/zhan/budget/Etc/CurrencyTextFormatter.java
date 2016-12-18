@@ -106,7 +106,6 @@ public final class CurrencyTextFormatter {
      * @return The amount after converting to default currency
      */
     public static float convertCurrency(float amount, BudgetCurrency currency){
-        //return (float)currency.getRate() * amount;
-        return 0.5f * amount;
+        return (float)currency.getRate() * amount;
     }
 }
