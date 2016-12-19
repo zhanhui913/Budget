@@ -66,7 +66,7 @@ public class BudgetCurrency extends RealmObject {
 
     public boolean checkEquals(BudgetCurrency other){
         if(!currencyCode.equalsIgnoreCase(other.getCurrencyCode())) return false;
-        if(currencyName.equalsIgnoreCase(other.getCurrencyName())) return false;
+        if(!currencyName.equalsIgnoreCase(other.getCurrencyName())) return false;
         if(isDefault != (other.isDefault())) return false;
         if(rate != (other.getRate())) return false;
         return true;
