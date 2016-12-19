@@ -83,7 +83,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
-    private BudgetCurrency currentCurrency;
+    private BudgetCurrency budgetCurrency;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -118,7 +118,7 @@ public class AccountFragment extends BaseRealmFragment implements
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
         accountListView.setLayoutManager(linearLayoutManager);
 
-        accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, currentCurrency, true, false);
+        accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, budgetCurrency, true, false);
         accountListView.setAdapter(accountRecyclerAdapter);
 
         //Add divider
@@ -150,16 +150,16 @@ public class AccountFragment extends BaseRealmFragment implements
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        budgetCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(budgetCurrency == null){
+            budgetCurrency = new BudgetCurrency();
+            budgetCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            budgetCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }else{
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
+            budgetCurrency = myRealm.copyFromRealm(budgetCurrency);
         }
 
-        Toast.makeText(getContext(), "Account fragment, default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Account fragment, default currency : "+budgetCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
 
         myRealm.close();
     }
@@ -241,7 +241,7 @@ public class AccountFragment extends BaseRealmFragment implements
                     for(int c = 0; c < accountList.size(); c++){
                         if(transactionMonthList.get(t).getAccount() != null){
                             if(transactionMonthList.get(t).getAccount().getId().equalsIgnoreCase(accountList.get(c).getId())){
-                                float transactionPrice = transactionMonthList.get(t).getPrice();
+                                float transactionPrice = CurrencyTextFormatter.convertCurrency(transactionMonthList.get(t).getPrice(), transactionMonthList.get(t).getRate());
                                 float currentAccountPrice = accountList.get(c).getCost();
                                 accountList.get(c).setCost(transactionPrice + currentAccountPrice);
                                 totalCost += transactionPrice;
@@ -265,7 +265,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 pieChartFragment.setData(accountList, animate);
 
-                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, currentCurrency));
+                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, budgetCurrency));
 
                 if(result > 0){
                     centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
