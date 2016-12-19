@@ -24,6 +24,7 @@ import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
@@ -87,7 +88,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
-    private BudgetCurrency currentCurrency;
+    private BudgetCurrency defaultCurrency;
 
     public CategoryGenericFragment() {
         // Required empty public constructor
@@ -132,7 +133,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, arrangementType, currentCurrency, new OnStartDragListener() {
+        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, arrangementType, defaultCurrency, new OnStartDragListener() {
                     @Override
                     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                         //isPulldownAllow = false;
@@ -184,16 +185,16 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(defaultCurrency == null){
+            defaultCurrency = new BudgetCurrency();
+            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }else {
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
+            defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
         }
 
-        Toast.makeText(getContext(), "category generic fragment; default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "category generic fragment; default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();
     }
 
@@ -347,7 +348,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                     for(int c = 0; c < categoryList.size(); c++){
                         if(transactionMonthList.get(t).getCategory() != null){
                             if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                                float transactionPrice = transactionMonthList.get(t).getPrice();
+                                float transactionPrice = CurrencyTextFormatter.convertCurrency(transactionMonthList.get(t).getPrice(), transactionMonthList.get(t).getRate());
                                 float currentCategoryPrice = categoryList.get(c).getCost();
                                 categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
                                 totalCost += transactionPrice;
