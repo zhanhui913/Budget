@@ -30,7 +30,7 @@ public class Transaction extends RealmObject {
     private BudgetCurrency currency;
 
     //exchange rate for currency at the time (Cannot rely on BudgetCurrency's rate as that property is the current one)
-    //This will be 1.0f if the default budget currency is the same as this currency
+    //This will be 1.0f if the default budget currency is the same as this budget currency
     private double rate;
 
     public Transaction(){

@@ -90,7 +90,8 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         if(transaction.getCurrency().checkEquals(defaultCurrency)){
             viewHolder.defCost.setVisibility(View.GONE);
         }else{
-            float afterExchange = CurrencyTextFormatter.convertCurrency(transaction.getPrice(), transaction.getCurrency());
+            viewHolder.defCost.setVisibility(View.VISIBLE);
+            float afterExchange = CurrencyTextFormatter.convertCurrency(transaction.getPrice(), transaction.getRate());
             viewHolder.defCost.setText(CurrencyTextFormatter.formatFloat(afterExchange, defaultCurrency));
         }
 

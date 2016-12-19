@@ -995,6 +995,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         transaction.setDate(DateUtil.formatDate(getApplicationContext(), selectedDate));
         transaction.setAccount(selectedAccount);
         transaction.setCurrency(currentCurrency);
+        transaction.setRate(currentCurrency.getRate()); 
 
         if(currentPage == BudgetType.EXPENSE){
             transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString));

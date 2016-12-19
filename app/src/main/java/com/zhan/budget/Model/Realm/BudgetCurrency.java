@@ -20,6 +20,8 @@ public class BudgetCurrency extends RealmObject {
 
     private String currencyName;
     private boolean isDefault;
+
+    //This will be 1.0f if the default budget currency is the same as this budget currency
     private double rate;
 
     public BudgetCurrency(){

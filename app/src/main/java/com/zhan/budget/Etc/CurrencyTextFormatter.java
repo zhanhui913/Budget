@@ -110,12 +110,26 @@ public final class CurrencyTextFormatter {
      * @return The amount after converting to default currency
      */
     public static float convertCurrency(float amount, BudgetCurrency currency){
+        //Note: Used to convert regular currency with currency
         return (float)(1 / currency.getRate()) * amount;
     }
 
     /**
+     * Converts amount of provided currency to defaults currency
+     * @param amount Amount
+     * @param exchangeRateAtTheTime The exchange rate at the time
+     * @return The amount after converting to default currency
+     */
+    public static float convertCurrency(float amount, double exchangeRateAtTheTime){
+        //Note: Used to convert a BudgetCurrency's rate at the time when the transaction was created
+        //with the default BudgetCurrency
+        return (float)(1 / exchangeRateAtTheTime) * amount;
+    }
+
+    /**
      * Given a list of transactions that may contain different currencies, calculate the total
-     * in respect to the default currency.
+     * in respect to the default currency while using the rate set at the time the transaction was
+     * created.
      * This will filter out transactions with no category and whos day type set to scheduled.
      * @return sum in the default currency
      */
@@ -123,7 +137,7 @@ public final class CurrencyTextFormatter {
         float currentSum = 0f;
         for(int i = 0; i < transactionList.size(); i++){
             if(transactionList.get(i).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString()) && transactionList.get(i).getCategory() != null) {
-                currentSum += convertCurrency(transactionList.get(i).getPrice(), transactionList.get(i).getCurrency());
+                currentSum += convertCurrency(transactionList.get(i).getPrice(), transactionList.get(i).getRate());
             }
         }
         return currentSum;
