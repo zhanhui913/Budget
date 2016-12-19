@@ -88,7 +88,10 @@
         <activity
             android:name=".Activity.SelectCurrencyActivity"
             android:label="@string/title_activity_select_currency"
-            android:theme="@style/AppThemeLight.NoActionBar"/>
+            android:theme="@style/AppThemeLight.NoActionBar">
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity
             android:name=".Activity.PdfActivity"
             android:label="@string/title_activity_pdf"
