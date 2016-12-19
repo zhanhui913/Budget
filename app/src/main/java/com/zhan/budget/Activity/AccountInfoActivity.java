@@ -166,7 +166,7 @@ public class AccountInfoActivity extends BaseActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        accountNameTextView.setText(input.getText().toString());
+                        accountNameTextView.setText(input.getText().toString().trim());
 
                         account.setName(input.getText().toString().trim());
 

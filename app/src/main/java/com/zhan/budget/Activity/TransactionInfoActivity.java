@@ -750,7 +750,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        locationString = inputLocation.getText().toString();
+                        locationString = inputLocation.getText().toString().trim();
 
                         if(editTransaction != null && editTransaction.getLocation() != null){
                             if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
@@ -973,7 +973,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
 
                 Location newLocationObject = new Location();
-                newLocationObject.setName(locationString);
+                newLocationObject.setName(locationString.trim());
                 newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                 transaction.setLocation(newLocationObject);
 
