@@ -103,7 +103,7 @@ public class CalendarFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
-    private BudgetCurrency currentCurrency;
+    private BudgetCurrency defaultCurrency;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -141,7 +141,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         transactionListView.setLayoutManager(linearLayoutManager);
 
         transactionList = new ArrayList<>();
-        transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, currentCurrency, false); //do not display date in each transaction item
+        transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, defaultCurrency, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
         //Add divider
@@ -471,14 +471,9 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 Log.d(TAG, "received " + element.size() + " transactions");
 
-                float sumFloatValue = 0f;
-                for(int i = 0; i < resultsTransactionForDay.size(); i++){
-                    if(resultsTransactionForDay.get(i).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString()) && resultsTransactionForDay.get(i).getCategory() != null){
-                        sumFloatValue += resultsTransactionForDay.get(i).getPrice();
-                    }
-                }
+                float sumFloatValue = CurrencyTextFormatter.findTotalCostForTransactions(resultsTransactionForDay);
 
-                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, currentCurrency));
+                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, defaultCurrency));
 
                 if(sumFloatValue > 0){
                     totalCostTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
@@ -532,7 +527,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
         //This is new transaction
         newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, true);
-        //newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(selectedDate));
         newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getContext(), selectedDate));
         startActivityForResult(newTransactionIntent, Constants.RETURN_NEW_TRANSACTION);
     }
@@ -558,7 +552,6 @@ public class CalendarFragment extends BaseRealmFragment implements
      */
     private void updateMonthInToolbar(){
         Date tempDate = new GregorianCalendar(calendarView.getCurrentYear(), calendarView.getCurrentMonth(), 1).getTime();
-        //mListener.updateToolbar(DateUtil.convertDateToStringFormat2(tempDate));
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), tempDate));
     }
 
@@ -574,67 +567,27 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     private void updateScheduledTransactionsForDecoration(){
         eventMap = new HashMap<>();
-        /*Log.d("EVENT", "there are " + eventMap.size() + " items in map");
-
-        final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
-        scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-
-                for (int i = 0; i < element.size(); i++) {
-                    List<BudgetEvent> colorList = new ArrayList<>();
-                    try {
-                        //Put as many indication per transactions that is SCHEDULED
-                        //if (eventMap.containsKey(element.get(i).getDate())) {
-                        //    eventMap.get(element.get(i).getDate()).add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
-                        //} else {
-                        //    colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
-                        //    eventMap.put(element.get(i).getDate(), colorList);
-                        //}
-                        //Only put 1 indication for the event per day
-                        if(!eventMap.containsKey(element.get(i).getDate())){
-                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), scheduledTransactions.get(i).getCategory().getColor())));
-                            eventMap.put(element.get(i).getDate(), colorList);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.d("EVENT", "there are " + element.size() + " items in schedule list");
-                Log.d("EVENT", "there are " + eventMap.size() + " items in map");
-
-                calendarView.refresh();
-            }
-        });*/
-
-
 
         final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
         scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(final RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
-
-                Log.d("TIMER", "timer 1");
-                ads(myRealm.copyFromRealm(element));
-                Log.d("TIMER", "timer 2");
+                performCalculationForDecorators(myRealm.copyFromRealm(element));
             }
         });
     }
 
-    private void ads(final List<Transaction> element){
+    private void performCalculationForDecorators(final List<Transaction> element){
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Log.d("TIMER", "timer 3");
             }
 
             @Override
             protected Void doInBackground(Void... voids) {
-                Log.d("TIMER", "timer 4");
                 for (int i = 0; i < element.size(); i++) {
                     List<BudgetEvent> colorList = new ArrayList<>();
                     try {
@@ -653,27 +606,10 @@ public class CalendarFragment extends BaseRealmFragment implements
             @Override
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
-                Log.d("TIMER", "timer 5");
                 calendarView.refresh();
             }
         };
         loader.execute();
-    }
-
-    private void addDecorator(Date date, int color){
-        if(!eventMap.containsKey(date)){
-            List<BudgetEvent> colorList = new ArrayList<>();
-            colorList.add(new BudgetEvent(color));
-            eventMap.put(date, colorList);
-            calendarView.refresh();
-        }
-    }
-
-    private void removeDecorator(Date date){
-        if(eventMap.containsKey(date)){
-            eventMap.remove(date);
-            calendarView.refresh();
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -715,16 +651,16 @@ public class CalendarFragment extends BaseRealmFragment implements
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(defaultCurrency == null){
+            defaultCurrency = new BudgetCurrency();
+            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }else{
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
+            defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
         }
 
-        Toast.makeText(getContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();
     }
 
@@ -774,9 +710,9 @@ public class CalendarFragment extends BaseRealmFragment implements
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
             }else if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
-                currentCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY));
+                defaultCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY));
 
-                Toast.makeText(getContext(), "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "selected currency : "+defaultCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
                 populateTransactionsForDate(selectedDate);
             }
         }

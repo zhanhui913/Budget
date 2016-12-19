@@ -2,10 +2,14 @@ package com.zhan.budget.Etc;
 
 import android.util.Log;
 
+import com.zhan.budget.Activity.Settings.TranslationActivity;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
+import com.zhan.budget.Model.Realm.Transaction;
 
 import java.text.DecimalFormat;
 import java.util.Currency;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -107,5 +111,21 @@ public final class CurrencyTextFormatter {
      */
     public static float convertCurrency(float amount, BudgetCurrency currency){
         return (float)(1 / currency.getRate()) * amount;
+    }
+
+    /**
+     * Given a list of transactions that may contain different currencies, calculate the total
+     * in respect to the default currency.
+     * This will filter out transactions with no category and whos day type set to scheduled.
+     * @return sum in the default currency
+     */
+    public static float findTotalCostForTransactions(List<Transaction> transactionList){
+        float currentSum = 0f;
+        for(int i = 0; i < transactionList.size(); i++){
+            if(transactionList.get(i).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString()) && transactionList.get(i).getCategory() != null) {
+                currentSum += convertCurrency(transactionList.get(i).getPrice(), transactionList.get(i).getCurrency());
+            }
+        }
+        return currentSum;
     }
 }
