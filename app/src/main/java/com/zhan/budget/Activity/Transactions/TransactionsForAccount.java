@@ -40,7 +40,7 @@ public class TransactionsForAccount extends BaseTransactions {
                 element.removeChangeListener(this);
 
                 transactionList = myRealm.copyFromRealm(element);
-                float total = element.sum("price").floatValue();
+                float total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
 
                 transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, defaultCurrency, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);

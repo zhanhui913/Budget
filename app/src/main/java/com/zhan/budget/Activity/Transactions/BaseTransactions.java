@@ -197,11 +197,11 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                transactionList = myRealm.copyFromRealm(transactionsForMonth);
+                transactionList = myRealm.copyFromRealm(element);
                 transactionAdapter.setTransactionList(transactionList);
                 updateTransactionStatus();
 
-                float total = element.sum("price").floatValue();
+                float total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
 
                 updateTitleBalance(CurrencyTextFormatter.formatFloat(total, defaultCurrency));
             }
