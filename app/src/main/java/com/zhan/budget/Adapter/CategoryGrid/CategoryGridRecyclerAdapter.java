@@ -102,7 +102,7 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         viewHolder.circularView.setCircleColor(category.getColor());
 
         if(category.isText()){
-            viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(category.getName().toUpperCase()));
+            viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(category.getName().toUpperCase().trim()));
             viewHolder.circularView.setIconResource(0);
         }else{
             viewHolder.circularView.setText("");

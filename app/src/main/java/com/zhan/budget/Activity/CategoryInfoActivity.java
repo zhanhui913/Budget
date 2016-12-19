@@ -279,11 +279,11 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        categoryNameTextView.setText(input.getText().toString());
-                        category.setName(input.getText().toString());
+                        categoryNameTextView.setText(input.getText().toString().trim());
+                        category.setName(input.getText().toString().trim());
 
                         if(isCurrentCircularText){ //if the current toggle is text
-                            changeCircularViewToText(input.getText().toString());
+                            changeCircularViewToText(input.getText().toString().trim());
                         }
                     }
                 })
@@ -573,7 +573,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     private void changeCircularViewToText(String value){
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)){
-            categoryCircularView.setText(""+Util.getFirstCharacterFromString(categoryNameTextView.getText().toString().toUpperCase()));
+            categoryCircularView.setText(""+Util.getFirstCharacterFromString(categoryNameTextView.getText().toString().toUpperCase().trim()));
         }
         categoryCircularView.setIconResource(0);
     }

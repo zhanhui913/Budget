@@ -90,7 +90,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             viewHolder.amount.setText(String.format(context.getString(R.string.location_time), location.getAmount()));
         }
         viewHolder.icon.setCircleColor(location.getColor());
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase().trim()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
     }
 

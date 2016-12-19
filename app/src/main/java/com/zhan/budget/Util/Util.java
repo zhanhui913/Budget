@@ -130,17 +130,19 @@ public final class Util {
         return directory.delete();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // String
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void Write(String content) {
-        Log.d("ZHAN", content);
-    }
-
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    public static int pxToDp(int px) {
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    public static char getFirstCharacterFromString(String value){
+        //return value.toCharArray()[0];
+        if(value.equalsIgnoreCase("")){
+            return Character.MIN_VALUE;
+        }else{
+            return value.toCharArray()[0];
+        }
     }
 
     /**
@@ -163,6 +165,44 @@ public final class Util {
      */
     public static String checkNull(String value){
         return (Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)) ? value : "" ;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Snackbar
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void createSnackbar(Context context, View v, String value){
+        Snackbar snackbar = Snackbar.make(v, value, Snackbar.LENGTH_SHORT);
+
+        View sbView = snackbar.getView();
+
+        // Change background color
+        sbView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+        // Changing message text color
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        snackbar.show();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Etc
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void Write(String content) {
+        Log.d("ZHAN", content);
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     /**
@@ -192,15 +232,6 @@ public final class Util {
         return metrics.widthPixels;
     }
 
-    public static char getFirstCharacterFromString(String value){
-        //return value.toCharArray()[0];
-        if(value.equalsIgnoreCase("")){
-            return Character.MIN_VALUE;
-        }else{
-            return value.toCharArray()[0];
-        }
-    }
-
     /**
      * Returns the defined CircularView's style for radius
      * @return int radius
@@ -225,25 +256,5 @@ public final class Util {
         ta.recycle();
 
         return cvRadius + cvPadding + cvStroke;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Snackbar
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void createSnackbar(Context context, View v, String value){
-        Snackbar snackbar = Snackbar.make(v, value, Snackbar.LENGTH_SHORT);
-
-        View sbView = snackbar.getView();
-
-        // Change background color
-        sbView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
-
-        // Changing message text color
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(ContextCompat.getColor(context, R.color.white));
-        snackbar.show();
     }
 }

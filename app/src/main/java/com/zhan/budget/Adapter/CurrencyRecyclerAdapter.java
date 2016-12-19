@@ -73,7 +73,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
         viewHolder.currencyName.setText(budgetCurrency.getCurrencyName() + " (" + budgetCurrency.getCurrencyCode() + ")");
         viewHolder.icon.setCircleColor(R.color.colorPrimary);
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(budgetCurrency.getCurrencyCode().toUpperCase()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(budgetCurrency.getCurrencyCode().toUpperCase().trim()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
         if(budgetCurrency.isDefault()){

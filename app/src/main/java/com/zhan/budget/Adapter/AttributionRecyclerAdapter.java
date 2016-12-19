@@ -67,7 +67,7 @@ public class AttributionRecyclerAdapter extends RecyclerView.Adapter<Attribution
         viewHolder.name.setText(data.getName());
         viewHolder.author.setText(data.getAuthor());
         viewHolder.icon.setCircleColor(data.getColor());
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(data.getName().toUpperCase()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(data.getName().toUpperCase().trim()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
     }
 

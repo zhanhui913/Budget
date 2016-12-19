@@ -81,7 +81,7 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
         viewHolder.name.setText(account.getName());
 
         viewHolder.icon.setCircleColor(account.getColor());
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(account.getName().toUpperCase()));
+        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(account.getName().toUpperCase().trim()));
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
         if(displayCost){

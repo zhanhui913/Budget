@@ -95,7 +95,7 @@ public class LocationInfoActivity extends BaseActivity implements
         locationCircularView.setCircleColor(location.getColor());
 
         if(!isNewLocation){
-            locationCircularView.setText(""+Util.getFirstCharacterFromString(location.getName().toUpperCase()));
+            locationCircularView.setText(""+Util.getFirstCharacterFromString(location.getName().toUpperCase().trim()));
         }
 
         getSupportFragmentManager().beginTransaction().add(R.id.colorFragment, colorPickerCategoryFragment).commit();
@@ -166,13 +166,14 @@ public class LocationInfoActivity extends BaseActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        locationNameTextView.setText(input.getText().toString());
+                        locationNameTextView.setText(input.getText().toString().trim());
 
-                        location.setName(input.getText().toString());
+                        location.setName(input.getText().toString().trim());
 
                         //update the text in the circular view to reflect the new name
-                        locationCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
-                        locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));                    }
+                        locationCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase().trim()));
+                        locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
+                    }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

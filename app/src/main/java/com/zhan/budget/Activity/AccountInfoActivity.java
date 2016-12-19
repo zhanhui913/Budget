@@ -95,7 +95,7 @@ public class AccountInfoActivity extends BaseActivity implements
         accountCircularView.setCircleColor(account.getColor());
 
         if(!isNewAccount){
-            accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase()));
+            accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase().trim()));
         }
 
         getSupportFragmentManager().beginTransaction().add(R.id.colorFragment, colorPickerCategoryFragment).commit();
@@ -168,11 +168,12 @@ public class AccountInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         accountNameTextView.setText(input.getText().toString());
 
-                        account.setName(input.getText().toString());
+                        account.setName(input.getText().toString().trim());
 
                         //update the text in the circular view to reflect the new name
-                        accountCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
-                        accountCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));                    }
+                        accountCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase().trim()));
+                        accountCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
+                    }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
