@@ -133,22 +133,30 @@
             android:layout_centerVertical="true"
             android:gravity="end">
 
-        <!-- Only visible on TransactionsForCategory, TransactionsForAccount, TransactionsForLocation -->
-        <TextView
-            android:id="@+id/transactionDate"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/month"
-            android:textSize="@dimen/text_content_size" />
+            <!-- Only visible on TransactionsForCategory, TransactionsForAccount, TransactionsForLocation -->
+            <TextView
+                android:id="@+id/transactionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/month"
+                android:textSize="@dimen/text_content_size" />
 
-        <TextView
-            android:id="@+id/transactionCost"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="@string/cost"
-            android:textSize="@dimen/text_title_size" />
+            <TextView
+                android:id="@+id/transactionCost"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/cost"
+                android:textSize="@dimen/text_title_size" />
+
+            <TextView
+                android:id="@+id/transactionDefaultCost"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:text="@string/cost"
+                android:textSize="@dimen/text_tiny_size" />
         </LinearLayout>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

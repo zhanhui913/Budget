@@ -40,14 +40,14 @@ public class TransactionsForLocation extends BaseTransactions {
                 transactionList = myRealm.copyFromRealm(element);
                 float total = element.sum("price").floatValue();
 
-                transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, currentCurrency, true); //display date in each transaction item
+                transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, defaultCurrency, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
                 Log.d("ZHAN", "there are " + transactionList.size() + " transactions in this account " + location + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
 
                 //update balance
-                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, currentCurrency));
+                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, defaultCurrency));
 
                 updateTransactionStatus();
             }

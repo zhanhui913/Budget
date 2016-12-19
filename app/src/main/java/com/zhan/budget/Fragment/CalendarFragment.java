@@ -498,7 +498,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         updateTransactionStatus();
     }
 
-
     private void updateTransactionStatusAtPosition(int position, Transaction transaction){
         transactionList.set(position, transaction);
 
@@ -624,21 +623,14 @@ public class CalendarFragment extends BaseRealmFragment implements
      */
     private void checkForCurrency(){
         //Check for number of rows in BudgetCurrency to determine if there is any data at all
-        RealmResults<BudgetCurrency> resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
-        resultsCurrency.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
-            @Override
-            public void onChange(RealmResults<BudgetCurrency> element) {
-                element.removeChangeListener(this);
+        RealmResults<BudgetCurrency> resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSorted("currencyCode");
+        Toast.makeText(getContext(), "there are "+resultsCurrency.size()+" in list", Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(getContext(), "there are "+element.size()+" in list", Toast.LENGTH_SHORT).show();
-
-                if(element.size() <= 0){
-                    askForCurrencyActivity();
-                }else{
-                    getDefaultCurrency();
-                }
-            }
-        });
+        if(resultsCurrency.size() <= 0){
+            askForCurrencyActivity();
+        }else{
+            getDefaultCurrency();
+        }
     }
 
     private void askForCurrencyActivity(){

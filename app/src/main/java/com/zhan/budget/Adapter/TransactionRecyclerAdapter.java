@@ -39,14 +39,14 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     private Context context;
     private List<Transaction> transactionList;
     private boolean showDate;
-    private BudgetCurrency currentCurrency;
+    private BudgetCurrency defaultCurrency;
     private static OnTransactionAdapterInteractionListener mListener;
 
-    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, BudgetCurrency currentCurrency, boolean showDate) {
+    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, BudgetCurrency defaultCurrency, boolean showDate) {
         this.context = fragment.getContext();
         this.showDate = showDate;
         this.transactionList = transactionList;
-        this.currentCurrency = currentCurrency;
+        this.defaultCurrency = defaultCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnTransactionAdapterInteractionListener) {
@@ -56,11 +56,11 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }
     }
 
-    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, BudgetCurrency currentCurrency, boolean showDate){
+    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, BudgetCurrency defaultCurrency, boolean showDate){
         this.context = activity;
         this.showDate = showDate;
         this.transactionList = transactionList;
-        this.currentCurrency = currentCurrency;
+        this.defaultCurrency = defaultCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if(activity instanceof  OnTransactionAdapterInteractionListener){
@@ -85,6 +85,14 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         // getting Transaction data for the row
         final Transaction transaction = transactionList.get(position);
+
+        //Currency
+        if(transaction.getCurrency().checkEquals(defaultCurrency)){
+            viewHolder.defCost.setVisibility(View.GONE);
+        }else{
+            float afterExchange = CurrencyTextFormatter.convertCurrency(transaction.getPrice(), transaction.getCurrency());
+            viewHolder.defCost.setText(CurrencyTextFormatter.formatFloat(afterExchange, defaultCurrency));
+        }
 
         //Account
         if(transaction.getAccount() != null){
@@ -207,7 +215,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
-        public TextView name, cost, date, account, location;
+        public TextView name, cost, defCost, date, account, location;
 
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, approveBtn, unapproveBtn, locationIcon, accountIcon;
@@ -222,6 +230,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             circularView = (CircularView) itemView.findViewById(R.id.categoryIcon);
             name = (TextView) itemView.findViewById(R.id.transactionNote);
             cost = (TextView) itemView.findViewById(R.id.transactionCost);
+            defCost = (TextView) itemView.findViewById(R.id.transactionDefaultCost);
             date = (TextView) itemView.findViewById(R.id.transactionDate);
             account = (TextView) itemView.findViewById(R.id.transactionAccount);
             location = (TextView) itemView.findViewById(R.id.transactionLocation);

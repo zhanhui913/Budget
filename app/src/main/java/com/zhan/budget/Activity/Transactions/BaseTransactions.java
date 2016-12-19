@@ -45,7 +45,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     protected TransactionRecyclerAdapter transactionAdapter;
     protected List<Transaction> transactionList;
     protected RealmResults<Transaction> transactionsForMonth;
-    protected BudgetCurrency currentCurrency;
+    protected BudgetCurrency defaultCurrency;
 
     private Toolbar toolbar;
     private TextView titleNameTextView, emptyListTextView;
@@ -130,16 +130,16 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
+        if(defaultCurrency == null){
+            defaultCurrency = new BudgetCurrency();
+            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
         }else{
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
+            defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
         }
 
-        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
         myRealm.close();
     }
 
@@ -203,7 +203,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
                 float total = element.sum("price").floatValue();
 
-                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, currentCurrency));
+                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, defaultCurrency));
             }
         });
     }
