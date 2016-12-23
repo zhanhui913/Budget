@@ -13,13 +13,11 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.evernote.android.job.JobManager;
 import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.Settings.AboutActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
@@ -31,8 +29,10 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Services.AutoBackupJob;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Colors;
+import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Tutorial;
@@ -192,18 +192,10 @@ public class SettingFragment extends BaseFragment {
         boolean allowAutoBackup = BudgetPreference.getAllowAutoBackup(getContext());
         if(allowAutoBackup){
             autoBackupContent.setVisibility(View.VISIBLE);
-            int selectedHour = BudgetPreference.getAutoBackupHour(getContext());
-            int selectedMinute = BudgetPreference.getAutoBackupMinute(getContext());
-            updateAutoBackupInfo(DateUtil.getTimeInAMPM(getContext(), selectedHour, selectedMinute));
         }else{
             autoBackupContent.setVisibility(View.GONE);
         }
         autoBackupSwitch.setChecked(allowAutoBackup);
-
-
-
-
-
 
         //Set last backup
         backupCV.setCircleColor(R.color.sunflower);
@@ -249,6 +241,7 @@ public class SettingFragment extends BaseFragment {
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
 
+        startServices();
         addListeners();
         getDefaultCurrency();
     }
@@ -320,6 +313,8 @@ public class SettingFragment extends BaseFragment {
                 }else{
                     BudgetPreference.setAllowAutoBackup(getContext(), isChecked);
                     autoBackupContent.setVisibility(View.GONE);
+
+                    cancelAutoBackupJob();
                 }
             }
         });
@@ -488,7 +483,7 @@ public class SettingFragment extends BaseFragment {
     }
 
     public void backUpData(){
-        try{
+        /*try{
             //create a backup file
             File exportRealmFile = new File(DOWNLOAD_DIRECTORY, EXPORT_REALM_FILE_NAME);
 
@@ -507,6 +502,16 @@ public class SettingFragment extends BaseFragment {
             Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_backup_data_successful));
         }catch(IOException e){
             e.printStackTrace();
+        }*/
+
+        if(DataBackup.backUpData()){
+            String dateString = DateUtil.convertDateToStringFormat7(getContext(), new Date());
+            updateLastBackupInfo(dateString);
+            BudgetPreference.setLastBackup(getContext(), dateString);
+
+            Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_backup_data_successful));
+        }else{
+            Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_backup_data_failed));
         }
     }
 
@@ -543,51 +548,11 @@ public class SettingFragment extends BaseFragment {
     }
 
     private void createAutoBackupTimeDialog(){
-        View promptView = View.inflate(getContext(), R.layout.alertdialog_timepicker, null);
-
-
-        final TimePicker timePicker = (TimePicker) promptView.findViewById(R.id.timePicker);
-
-        int selectedHour = BudgetPreference.getAutoBackupHour(getContext());
-        int selectedMinute = BudgetPreference.getAutoBackupMinute(getContext());
-
-        timePicker.setCurrentHour(selectedHour);
-        timePicker.setCurrentMinute(selectedMinute);
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setView(promptView)
-                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "selected time is "+timePicker.getCurrentHour()+", "+timePicker.getCurrentMinute(), Toast.LENGTH_SHORT).show();
-
-                        autoBackupContent.setVisibility(View.VISIBLE);
-
-                        updateAutoBackupInfo(DateUtil.getTimeInAMPM(getContext(), timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
-
-                        BudgetPreference.setAllowAutoBackup(getContext(), true);
-                        BudgetPreference.setAutoBackupHour(getContext(), timePicker.getCurrentHour());
-                        BudgetPreference.setAutoBackupMinute(getContext(), timePicker.getCurrentMinute());
-                    }
-                })
-                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-
-                    }
-                });
-
-        AlertDialog timeDialog = builder.create();
-        timeDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        timeDialog.show();
+        createAutoBackupJob();
     }
 
     private void updateLastBackupInfo(String value){
         backupContent.setText(String.format(getString(R.string.setting_content_backup_data), value));
-    }
-
-    private void updateAutoBackupInfo(String value){
-        autoBackupContent.setText(String.format(getString(R.string.setting_content_auto_backup_data), value));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1002,4 +967,24 @@ public class SettingFragment extends BaseFragment {
         startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Services
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private int mLastJobId;
+    private JobManager mJobManager;
+
+    private void startServices(){
+        mJobManager = JobManager.instance();
+    }
+
+    private void cancelAutoBackupJob(){
+        mJobManager.cancel(mLastJobId);
+    }
+
+    private void createAutoBackupJob(){
+        mLastJobId = AutoBackupJob.scheduleJob();
+    }
 }

@@ -141,6 +141,7 @@
 	<string name="setting_content_auto_backup_data" formatted="false">Backup everyday at %s</string>
 	<string name="setting_title_backup_data">Backup data</string>
 	<string name="setting_content_backup_data_successful">Backup data successful</string>
+	<string name="setting_content_backup_data_failed">Backup data failed</string>
 	<string name="setting_content_backup_data" formatted="false">last backup : %s</string>
 	<string name="setting_title_restore_data">Restore data</string>
 	<string name="setting_content_restore_data_successful">Restore data successful</string>

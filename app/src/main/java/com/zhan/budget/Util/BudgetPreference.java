@@ -86,22 +86,6 @@ public final class BudgetPreference {
         setPreferenceBoolean(context, Constants.ALLOW_AUTO_BACKUP, val);
     }
 
-    public static int getAutoBackupHour(Context context){
-        return getPreferenceInt(context, Constants.AUTO_BACKUP_HOUR, 12);
-    }
-
-    public static int getAutoBackupMinute(Context context){
-        return getPreferenceInt(context, Constants.AUTO_BACKUP_MINUTE, 0);
-    }
-
-    public static void setAutoBackupHour(Context context, int hour){
-        setPreferenceInt(context, Constants.AUTO_BACKUP_HOUR, hour);
-    }
-
-    public static void setAutoBackupMinute(Context context, int minute){
-        setPreferenceInt(context, Constants.AUTO_BACKUP_MINUTE, minute);
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Last backup functions

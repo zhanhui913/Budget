@@ -54,7 +54,7 @@ dependencies {
     apt 'org.parceler:parceler:1.0.4'
 
     //Espresso Testing
-    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    androidTestCompile 'com.android.support:support-annotations:25.0.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
@@ -79,5 +79,6 @@ dependencies {
     compile 'com.yqritc:recyclerview-flexibledivider:1.2.9'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'org.jsoup:jsoup:1.9.2'
+    compile 'com.evernote:android-job:1.1.3'
 }
 
