@@ -13,7 +13,12 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.Settings.AboutActivity;
@@ -60,9 +65,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, currencyCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, currencyCV, autoBackupCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
-    private TextView themeContent, firstDayContent, backupContent, versionNumber;
+    private TextView themeContent, firstDayContent, autoBackupContent, backupContent, versionNumber;
+    private Switch autoBackupSwitch;
 
     private BudgetCurrency currentCurrency;
 
@@ -103,6 +109,10 @@ public class SettingFragment extends BaseFragment {
 
         currencyCV = (CircularView) view.findViewById(R.id.currencyCV);
         currencyBtn = (ViewGroup) view.findViewById(R.id.currencyBtn);
+
+        autoBackupCV = (CircularView) view.findViewById(R.id.autoBackupCV);
+        autoBackupSwitch = (Switch) view.findViewById(R.id.autoBackupSwitch);
+        autoBackupContent = (TextView) view.findViewById(R.id.autoBackupContent);
 
         backupCV = (CircularView) view.findViewById(R.id.backupCV);
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
@@ -173,6 +183,27 @@ public class SettingFragment extends BaseFragment {
         currencyCV.setCircleColor(R.color.alizarin);
         currencyCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
         currencyCV.setIconResource(R.drawable.svg_ic_dollar);
+
+        //Set auto backup
+        autoBackupCV.setCircleColor(R.color.sunflower);
+        autoBackupCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
+        autoBackupCV.setIconResource(R.drawable.svg_ic_backup);
+
+        boolean allowAutoBackup = BudgetPreference.getAllowAutoBackup(getContext());
+        if(allowAutoBackup){
+            autoBackupContent.setVisibility(View.VISIBLE);
+            int selectedHour = BudgetPreference.getAutoBackupHour(getContext());
+            int selectedMinute = BudgetPreference.getAutoBackupMinute(getContext());
+            updateAutoBackupInfo(DateUtil.getTimeInAMPM(getContext(), selectedHour, selectedMinute));
+        }else{
+            autoBackupContent.setVisibility(View.GONE);
+        }
+        autoBackupSwitch.setChecked(allowAutoBackup);
+
+
+
+
+
 
         //Set last backup
         backupCV.setCircleColor(R.color.sunflower);
@@ -281,6 +312,18 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
+        autoBackupSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    createAutoBackupTimeDialog();
+                }else{
+                    BudgetPreference.setAllowAutoBackup(getContext(), isChecked);
+                    autoBackupContent.setVisibility(View.GONE);
+                }
+            }
+        });
+
         backupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,8 +396,6 @@ public class SettingFragment extends BaseFragment {
         });
     }
 
-
-
     private void getDefaultCurrency(){
         final Realm myRealm = Realm.getDefaultInstance();
 
@@ -369,7 +410,6 @@ public class SettingFragment extends BaseFragment {
 
         myRealm.close();
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -502,8 +542,52 @@ public class SettingFragment extends BaseFragment {
         return null;
     }
 
+    private void createAutoBackupTimeDialog(){
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_timepicker, null);
+
+
+        final TimePicker timePicker = (TimePicker) promptView.findViewById(R.id.timePicker);
+
+        int selectedHour = BudgetPreference.getAutoBackupHour(getContext());
+        int selectedMinute = BudgetPreference.getAutoBackupMinute(getContext());
+
+        timePicker.setCurrentHour(selectedHour);
+        timePicker.setCurrentMinute(selectedMinute);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getContext(), "selected time is "+timePicker.getCurrentHour()+", "+timePicker.getCurrentMinute(), Toast.LENGTH_SHORT).show();
+
+                        autoBackupContent.setVisibility(View.VISIBLE);
+
+                        updateAutoBackupInfo(DateUtil.getTimeInAMPM(getContext(), timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
+
+                        BudgetPreference.setAllowAutoBackup(getContext(), true);
+                        BudgetPreference.setAutoBackupHour(getContext(), timePicker.getCurrentHour());
+                        BudgetPreference.setAutoBackupMinute(getContext(), timePicker.getCurrentMinute());
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+
+                    }
+                });
+
+        AlertDialog timeDialog = builder.create();
+        timeDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        timeDialog.show();
+    }
+
     private void updateLastBackupInfo(String value){
         backupContent.setText(String.format(getString(R.string.setting_content_backup_data), value));
+    }
+
+    private void updateAutoBackupInfo(String value){
+        autoBackupContent.setText(String.format(getString(R.string.setting_content_auto_backup_data), value));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

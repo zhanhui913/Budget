@@ -137,6 +137,8 @@
 	<string name="setting_content_currency">Manage currencies</string>
 
 	<!-- DATA -->
+	<string name="setting_title_auto_backup_data">Auto backup data</string>
+	<string name="setting_content_auto_backup_data" formatted="false">Backup everyday at %s</string>
 	<string name="setting_title_backup_data">Backup data</string>
 	<string name="setting_content_backup_data_successful">Backup data successful</string>
 	<string name="setting_content_backup_data" formatted="false">last backup : %s</string>
@@ -240,7 +242,6 @@
 	<!--Attribution -->
 	<string name="open_source_project_name">Name</string>
 	<string name="open_source_project_author">Author</string>
-
 
 
 	<string name="monthly_overview">Monthly Overview</string>

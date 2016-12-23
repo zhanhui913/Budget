@@ -86,6 +86,26 @@ public final class DateUtil {
     }
 
     /**
+     * Returns the string version of time.
+     * @param context Application context
+     * @param hour Must give hour in 24 Hour format
+     * @param minute minute
+     * @return string version
+     */
+    public static String getTimeInAMPM(Context context, int hour, int minute){
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", context.getResources().getConfiguration().locale);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        Date d = cal.getTime();
+
+        return formatter.format(d).toString();
+    }
+
+    /**
      * Refreshes the date to set the time component of date to 00:00:00
      * @param date Current Date
      * @return date with 00:00:00 time component

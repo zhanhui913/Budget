@@ -31,6 +31,11 @@ public class Constants {
     //Default theme
     public static final String DEFAULT_THEME = "Default Theme";
 
+    //Auto backup
+    public static final String ALLOW_AUTO_BACKUP = "Allow auto backup";
+    public static final String AUTO_BACKUP_HOUR = "Auto Backup Hour";
+    public static final String AUTO_BACKUP_MINUTE = "Auto Backup Minute";
+
     //Last backup
     public static final String LAST_BACKUP = "Last Backup";
 
