@@ -67,7 +67,7 @@ public class SettingFragment extends BaseFragment {
 
     private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, currencyCV, autoBackupCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
-    private TextView themeContent, firstDayContent, autoBackupContent, backupContent, versionNumber;
+    private TextView themeContent, firstDayContent, backupContent, versionNumber;
     private Switch autoBackupSwitch;
 
     private BudgetCurrency currentCurrency;
@@ -112,7 +112,6 @@ public class SettingFragment extends BaseFragment {
 
         autoBackupCV = (CircularView) view.findViewById(R.id.autoBackupCV);
         autoBackupSwitch = (Switch) view.findViewById(R.id.autoBackupSwitch);
-        autoBackupContent = (TextView) view.findViewById(R.id.autoBackupContent);
 
         backupCV = (CircularView) view.findViewById(R.id.backupCV);
         backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
@@ -190,11 +189,6 @@ public class SettingFragment extends BaseFragment {
         autoBackupCV.setIconResource(R.drawable.svg_ic_backup);
 
         boolean allowAutoBackup = BudgetPreference.getAllowAutoBackup(getContext());
-        if(allowAutoBackup){
-            autoBackupContent.setVisibility(View.VISIBLE);
-        }else{
-            autoBackupContent.setVisibility(View.GONE);
-        }
         autoBackupSwitch.setChecked(allowAutoBackup);
 
         //Set last backup
@@ -308,12 +302,11 @@ public class SettingFragment extends BaseFragment {
         autoBackupSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    createAutoBackupTimeDialog();
-                }else{
-                    BudgetPreference.setAllowAutoBackup(getContext(), isChecked);
-                    autoBackupContent.setVisibility(View.GONE);
+                BudgetPreference.setAllowAutoBackup(getContext(), isChecked);
 
+                if(isChecked){
+                    checkPermissionToAutoBackup();
+                }else{
                     cancelAutoBackupJob();
                 }
             }
@@ -452,7 +445,6 @@ public class SettingFragment extends BaseFragment {
                     .setNegativeButton(R.string.permission_deny, null)
                     .create()
                     .show();
-
         }else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
         }
@@ -545,10 +537,6 @@ public class SettingFragment extends BaseFragment {
         }
 
         return null;
-    }
-
-    private void createAutoBackupTimeDialog(){
-        createAutoBackupJob();
     }
 
     private void updateLastBackupInfo(String value){
@@ -976,6 +964,39 @@ public class SettingFragment extends BaseFragment {
     private int mLastJobId;
     private JobManager mJobManager;
 
+    private void checkPermissionToAutoBackup(){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            //STORAGE permission has not been granted
+            requestFilePermissionToWriteAutoBackup();
+        }else{
+            createAutoBackupJob();
+        }
+    }
+
+    public void requestFilePermissionToWriteAutoBackup(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.permission_denied)
+                    .setMessage(R.string.permission_rationale_write_backup_data)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
+                        }
+                    })
+                    .setNegativeButton(R.string.permission_deny, null)
+                    .create()
+                    .show();
+
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
+        }
+    }
+
     private void startServices(){
         mJobManager = JobManager.instance();
     }
@@ -984,7 +1005,7 @@ public class SettingFragment extends BaseFragment {
         mJobManager.cancel(mLastJobId);
     }
 
-    private void createAutoBackupJob(){
+    public void createAutoBackupJob(){
         mLastJobId = AutoBackupJob.scheduleJob();
     }
 }

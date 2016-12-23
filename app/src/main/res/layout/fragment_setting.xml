@@ -283,13 +283,6 @@
                           android:layout_height="wrap_content"
                           android:layout_weight="1"
                           android:text="@string/setting_title_auto_backup_data"/>
-
-                <TextView style="@style/SettingsTextViewContentStyle"
-                          android:id="@+id/autoBackupContent"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="1"
-                          android:text="@string/setting_content_auto_backup_data"/>
             </LinearLayout>
 
             <Switch
