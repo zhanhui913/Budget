@@ -119,6 +119,8 @@ public class MainActivity extends BaseActivity
                 settingFragment.exportCSVSort();
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
                 settingFragment.sendRealmData();
+            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
+                settingFragment.createAutoBackupJob();
             }
         }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
             boolean showRationale = true;
@@ -145,6 +147,8 @@ public class MainActivity extends BaseActivity
                     settingFragment.requestFilePermissionToWriteCSV();
                 }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
                     settingFragment.requestFilePermissionToAccess();
+                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
+                    settingFragment.createAutoBackupJob();
                 }
             }else{
                 // Permission was denied while checking the check box "Never ask again"

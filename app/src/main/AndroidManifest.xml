@@ -101,7 +101,7 @@
             android:name=".Activity.Settings.DeveloperActivity"
             android:label="@string/title_activity_developer"
             android:theme="@style/AppThemeLight.NoActionBar"/>
-    </application>
->>>>>>> v1.3.1
 
+
+    </application>
 </manifest>

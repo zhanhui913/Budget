@@ -4,7 +4,9 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.evernote.android.job.JobManager;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Services.CustomJobCreator;
 import com.zhan.budget.Util.BudgetPreference;
 
 import io.realm.DynamicRealm;
@@ -80,5 +82,8 @@ public class MyApplication extends Application {
         Realm.setDefaultConfiguration(config);
 
         BudgetPreference.resetRealmCache(this);
+
+
+        JobManager.create(this).addJobCreator(new CustomJobCreator());
     }
 }
