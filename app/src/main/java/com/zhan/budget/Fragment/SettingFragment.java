@@ -1002,10 +1002,13 @@ public class SettingFragment extends BaseFragment {
     }
 
     private void cancelAutoBackupJob(){
-        mJobManager.cancel(mLastJobId);
+        mJobManager.cancelAllForTag(AutoBackupJob.TAG);
     }
 
     public void createAutoBackupJob(){
+        //Creating an auto back job doesnt create it initially, it creates it after the set time,
+        //so I have to manually backup the 1st time
+        backUpData();
         mLastJobId = AutoBackupJob.scheduleJob();
     }
 }
