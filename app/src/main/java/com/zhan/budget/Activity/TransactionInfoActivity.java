@@ -145,7 +145,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
                 transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
             }
-
         }else{
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
@@ -203,7 +202,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 }else{
                     transactionNameTextView.setText("");
                 }
-
             }
 
             if(editTransaction.getLocation() != null){
@@ -257,6 +255,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             //Call one time to give priceStringWithDot the correct string format of 0.00
             removeDigit();
         }
+
 
         getAllLocations();
         createToolbar();
@@ -876,12 +875,16 @@ public class TransactionInfoActivity extends BaseActivity implements
      * the default currency
      */
     private void updateConversion(){
-        float f = CurrencyTextFormatter.formatCurrency(priceString);
+        if(currentCurrency.checkEquals(defaultCurrency)){
+            transactionCostCurrencyCodeText.setVisibility(View.GONE);
+        }else{
+            transactionCostCurrencyCodeText.setVisibility(View.VISIBLE);
+            float f = CurrencyTextFormatter.formatCurrency(priceString);
+            float  afterConversion = CurrencyTextFormatter.convertCurrency(f, currentCurrency);
 
-        float  afterConversion = CurrencyTextFormatter.convertCurrency(f, currentCurrency);
-
-        afterConversion = (currentPage == BudgetType.EXPENSE) ? -afterConversion : afterConversion;
-        transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, defaultCurrency));
+            afterConversion = (currentPage == BudgetType.EXPENSE) ? -afterConversion : afterConversion;
+            transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, defaultCurrency));
+        }
     }
 
     private void createExchangeDialog(final BudgetCurrency selectedBudgetCurrency){
@@ -1233,7 +1236,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(currentPage == BudgetType.EXPENSE && !Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
             transactionNameTextView.setText(category.getName());
         }
-
     }
 
     @Override
