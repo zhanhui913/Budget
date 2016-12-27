@@ -5,10 +5,13 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,21 +22,26 @@ import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by Zhan on 2016-10-19.
  */
 
-public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecyclerAdapter.ViewHolder> {
+public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecyclerAdapter.ViewHolder> implements Filterable {
 
     private Context context;
     private List<BudgetCurrency> budgetCurrencyList;
+    private List<BudgetCurrency> filteredList;
+    private BudgetCurrencyFilter budgetCurrencyFilter;
     private OnCurrencyAdapterInteractionListener mListener;
 
     public CurrencyRecyclerAdapter(Fragment fragment, List<BudgetCurrency> budgetCurrencyList) {
         this.context = fragment.getContext();
         this.budgetCurrencyList = budgetCurrencyList;
+        this.filteredList = budgetCurrencyList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCurrencyAdapterInteractionListener interface
         if (fragment instanceof CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener) {
@@ -46,6 +54,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
     public CurrencyRecyclerAdapter(Activity activity, List<BudgetCurrency> budgetCurrencyList){
         this.context = activity;
         this.budgetCurrencyList = budgetCurrencyList;
+        this.filteredList = budgetCurrencyList;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCurrencyAdapterInteractionListener interface
         if(activity instanceof CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener){
@@ -69,7 +78,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
     @Override
     public void onBindViewHolder(final CurrencyRecyclerAdapter.ViewHolder viewHolder, int position) {
         // getting BudgetCurrency data for the row
-        final BudgetCurrency budgetCurrency = budgetCurrencyList.get(position);
+        final BudgetCurrency budgetCurrency = filteredList.get(position);
 
         viewHolder.currencyName.setText(budgetCurrency.getCurrencyName() + " (" + budgetCurrency.getCurrencyCode() + ")");
         viewHolder.icon.setCircleColor(R.color.colorPrimary);
@@ -87,11 +96,12 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
     @Override
     public int getItemCount() {
-        return this.budgetCurrencyList.size();
+        return this.filteredList.size();
     }
 
     public void setBudgetCurrencyList(List<BudgetCurrency> list){
         this.budgetCurrencyList = list;
+        this.filteredList = list;
         notifyDataSetChanged();
     }
 
@@ -126,6 +136,71 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
                     mListener.onClickCurrency(getLayoutPosition());
                 }
             });
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Filterables
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Get custom filter
+     * @return filter
+     */
+    @Override
+    public Filter getFilter() {
+        if (budgetCurrencyFilter == null) {
+            budgetCurrencyFilter = new BudgetCurrencyFilter(this, budgetCurrencyList);
+        }
+
+        return budgetCurrencyFilter;
+    }
+
+    /**
+     * Custom filter for BudgetCurrency list
+     * Filter content in BudgetCurrency list according to the search text
+     */
+    private static class BudgetCurrencyFilter extends Filter {
+
+        private final CurrencyRecyclerAdapter adapter;
+        private final List<BudgetCurrency> originalList;
+        private final List<BudgetCurrency> filteredList;
+
+        private BudgetCurrencyFilter(CurrencyRecyclerAdapter adapter, List<BudgetCurrency> originalList) {
+            super();
+            this.adapter = adapter;
+            this.originalList = new LinkedList<>(originalList);
+            this.filteredList = new ArrayList<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+
+            if (constraint.length() == 0) {
+                filteredList.addAll(originalList);
+            } else {
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (final BudgetCurrency currency : originalList) {
+                    if (currency.getCurrencyName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(currency);
+                    }
+                }
+            }
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            adapter.filteredList.clear();
+            adapter.filteredList.addAll((ArrayList<BudgetCurrency>) results.values);
+            adapter.notifyDataSetChanged();
         }
     }
 

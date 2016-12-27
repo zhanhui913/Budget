@@ -1,16 +1,20 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,9 +25,6 @@ import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Etc.MassExchangeRate;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
-import com.zhan.budget.Util.Util;
-import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 import org.xml.sax.InputSource;
@@ -43,7 +44,8 @@ import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 
 public class SelectCurrencyActivity extends BaseRealmActivity implements
-        CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener{
+        CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener,
+        SearchView.OnQueryTextListener{
 
     private Toolbar toolbar;
     private Activity instance;
@@ -123,9 +125,9 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
         if(getSupportActionBar() != null){
             if(returnDefaultCurrency){
-                getSupportActionBar().setTitle("Select default currency");
+                getSupportActionBar().setTitle("Set currency");
             }else{
-                getSupportActionBar().setTitle("Select currency");
+                getSupportActionBar().setTitle("Set currency");
             }
         }
     }
@@ -287,6 +289,49 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
             }
         });
         massExchangeRate.execute();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Menu
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.searchBtn);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setOnQueryTextListener(this);
+        }
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Search functionality
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.d("filter", newText);
+        currencyAdapter.getFilter().filter(newText);
+
+        return true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

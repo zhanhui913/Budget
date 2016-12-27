@@ -217,6 +217,7 @@
 	<string name="chevron_left">Left</string>
 	<string name="chevron_right">Right</string>
 	<string name="form_btn_save">Save</string>
+	<string name="form_btn_search">Search</string>
 	<string name="csv">CSV</string>
 	<string name="csv_success" formatted="false">CSV sorted by %s</string>
 	<string name="csv_failed">CSV creation failed</string>
@@ -252,6 +253,7 @@
 	<string name="dialog_currency_title">Set Exchange Rate</string>
 	<string name="currency_select">You selected</string>
 	<string name="currency_current_exchange_rate">Current exchange rate is</string>
+	<string name="search_currency_hint">US Dollar</string>
 
 
 </resources>
