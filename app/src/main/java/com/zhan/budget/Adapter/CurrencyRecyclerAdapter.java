@@ -23,6 +23,7 @@ import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -77,7 +78,7 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
     @Override
     public void onBindViewHolder(final CurrencyRecyclerAdapter.ViewHolder viewHolder, int position) {
         // getting BudgetCurrency data for the row
-        final BudgetCurrency budgetCurrency = budgetCurrencyList.get(position);
+        final BudgetCurrency budgetCurrency = filteredList.get(position);
 
         viewHolder.currencyName.setText(budgetCurrency.getCurrencyName() + " (" + budgetCurrency.getCurrencyCode() + ")");
         viewHolder.icon.setCircleColor(R.color.colorPrimary);
@@ -95,11 +96,12 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
 
     @Override
     public int getItemCount() {
-        return this.budgetCurrencyList.size();
+        return this.filteredList.size();
     }
 
     public void setBudgetCurrencyList(List<BudgetCurrency> list){
         this.budgetCurrencyList = list;
+        this.filteredList = list;
         notifyDataSetChanged();
     }
 
@@ -143,7 +145,6 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Get custom filter
      * @return filter
@@ -151,55 +152,55 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
     @Override
     public Filter getFilter() {
         if (budgetCurrencyFilter == null) {
-            budgetCurrencyFilter = new BudgetCurrencyFilter();
+            budgetCurrencyFilter = new BudgetCurrencyFilter(this, budgetCurrencyList);
         }
 
         return budgetCurrencyFilter;
     }
 
-
     /**
      * Custom filter for BudgetCurrency list
      * Filter content in BudgetCurrency list according to the search text
      */
-    private class BudgetCurrencyFilter extends Filter {
+    private static class BudgetCurrencyFilter extends Filter {
+
+        private final CurrencyRecyclerAdapter adapter;
+        private final List<BudgetCurrency> originalList;
+        private final List<BudgetCurrency> filteredList;
+
+        private BudgetCurrencyFilter(CurrencyRecyclerAdapter adapter, List<BudgetCurrency> originalList) {
+            super();
+            this.adapter = adapter;
+            this.originalList = new LinkedList<>(originalList);
+            this.filteredList = new ArrayList<>();
+        }
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults filterResults = new Filter.FilterResults();
-            if (constraint != null && constraint.length() > 0) {
-                List<BudgetCurrency> tempList = new ArrayList<>();
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
 
-                // search content in BudgetCurrency list
-                for (BudgetCurrency currency : budgetCurrencyList) {
-                    if (currency.getCurrencyName().toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        tempList.add(currency);
+            if (constraint.length() == 0) {
+                filteredList.addAll(originalList);
+            } else {
+                final String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (final BudgetCurrency currency : originalList) {
+                    if (currency.getCurrencyName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(currency);
                     }
                 }
-
-                filterResults.count = tempList.size();
-                filterResults.values = tempList;
-            } else {
-                filterResults.count = budgetCurrencyList.size();
-                filterResults.values = budgetCurrencyList;
             }
-
-            return filterResults;
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
         }
 
-        /**
-         * Notify about filtered list to ui
-         * @param constraint text
-         * @param results filtered result
-         */
-        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredList = (ArrayList<BudgetCurrency>) results.values;
-
-            notifyDataSetChanged();
-
-            Log.d("filter_adapter", "res: "+filteredList.size());
+            adapter.filteredList.clear();
+            adapter.filteredList.addAll((ArrayList<BudgetCurrency>) results.values);
+            adapter.notifyDataSetChanged();
         }
     }
 
