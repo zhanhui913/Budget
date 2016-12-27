@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,7 +51,8 @@ import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 
 public class SelectCurrencyActivity extends BaseRealmActivity implements
-        CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener{
+        CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener,
+        SearchView.OnQueryTextListener{
 
     private Toolbar toolbar;
     private Activity instance;
@@ -301,6 +304,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -313,7 +317,28 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
         return true;
     }
+    */
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.searchBtn);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setOnQueryTextListener(this);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -322,7 +347,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.formSaveBtn) {
+        if (id == R.id.searchBtn) {
 
 
             return true;
@@ -331,7 +356,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
         return super.onOptionsItemSelected(item);
     }
-
+*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -389,5 +414,32 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 finish();
             }
         }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Search functionality
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /*@Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.overridePendingTransition(R.anim.stay_in, R.anim.bottom_out);
+    }*/
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.d("filter", newText);
+        currencyAdapter.getFilter().filter(newText);
+
+        return true;
     }
 }
