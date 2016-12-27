@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +13,8 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +25,6 @@ import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Etc.MassExchangeRate;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
-import com.zhan.budget.Util.Util;
-import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 import org.xml.sax.InputSource;
@@ -304,25 +297,9 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.searchBtn).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        return true;
-    }
-    */
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.search, menu);
+        getMenuInflater().inflate(R.menu.search, menu);
 
         MenuItem searchItem = menu.findItem(R.id.searchBtn);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -335,28 +312,28 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setOnQueryTextListener(this);
         }
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
-/*
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Search functionality
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.searchBtn) {
-
-
-            return true;
-
-        }
-
-        return super.onOptionsItemSelected(item);
+    public boolean onQueryTextSubmit(String query) {
+        return false;
     }
-*/
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.d("filter", newText);
+        currencyAdapter.getFilter().filter(newText);
+
+        return true;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -414,32 +391,5 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 finish();
             }
         }
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Search functionality
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /*@Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.overridePendingTransition(R.anim.stay_in, R.anim.bottom_out);
-    }*/
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        Log.d("filter", newText);
-        currencyAdapter.getFilter().filter(newText);
-
-        return true;
     }
 }
