@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.R;
 
 /**
@@ -27,8 +26,6 @@ public final class ThemeUtil {
         Log.d("THEME_COLOR_DEBUG", "changing theme to " + theme);
 
         Intent intent = new Intent(activity, activity.getClass());
-        intent.putExtra(Constants.REQUEST_CHANGE_THEME, true);
-
         activity.finish();
         activity.startActivity(intent);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
