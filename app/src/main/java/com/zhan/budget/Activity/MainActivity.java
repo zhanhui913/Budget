@@ -37,7 +37,6 @@ public class MainActivity extends BaseActivity
     private CategoryFragment categoryFragment;
     private MonthReportFragment monthReportFragment;
     private AccountFragment accountFragment;
-    //private InfoFragment infoFragment;
     private RateFragment rateFragment;
     private LocationFragment locationFragment;
 
@@ -51,7 +50,6 @@ public class MainActivity extends BaseActivity
         categoryFragment = new CategoryFragment();
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
-        //infoFragment = new InfoFragment();
 
         // remove for now in v1.0.0
         //rateFragment = new RateFragment();
@@ -74,7 +72,6 @@ public class MainActivity extends BaseActivity
         if(navigationView != null){
             navigationView.setNavigationItemSelectedListener(this);
         }
-
 
         getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
 
