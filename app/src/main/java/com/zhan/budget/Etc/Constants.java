@@ -16,30 +16,11 @@ public class Constants {
     public static final Locale BUDGET_LOCALE = Locale.CANADA;
 
     //Permissions for Android M
-    //Note: Go to MainActivity's onRequestPermissionsResult to complete
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1; //to create realm backup
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2; //to read realm backup
     public static final int MY_PERMISSIONS_REQUEST_WRITE_CSV = 3; //to create csv
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE = 4; //to access orig realm data
     public static final int MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE = 5; //to create realm auto backup
-
-    //First time
-    public static final String FIRST_TIME = "First Time";
-
-    //First time Currency
-    public static final String FIRST_TIME_CURRENCY = "First Time Currency";
-
-    //Default theme
-    public static final String DEFAULT_THEME = "Default Theme";
-
-    //Auto backup
-    public static final String ALLOW_AUTO_BACKUP = "Allow auto backup";
-
-    //Last backup
-    public static final String LAST_BACKUP = "Last Backup";
-
-    //Start day of calendar (Sunday or Monday)
-    public static final String START_DAY_CALENDAR = "Start Day of Calendar";
 
     //Default account
     public static final String DEFAULT_ACCOUNT = "Default Account";

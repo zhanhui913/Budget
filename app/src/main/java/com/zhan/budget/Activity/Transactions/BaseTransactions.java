@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,13 +18,12 @@ import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-
-import org.parceler.Parcels;
 
 import java.util.Date;
 import java.util.List;
@@ -260,7 +258,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data.getExtras() != null) {
-             if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
+             if(requestCode == RequestCodes.EDIT_TRANSACTION){
                  boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
 
                  //Toast.makeText(getBaseContext(), "has changed : "+hasChanged, Toast.LENGTH_SHORT).show();
@@ -295,7 +293,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         //Clicking the Transaction here does nothing
         //Toast.makeText(getBaseContext(), "Click transaction "+transactionList.get(position).getNote(), Toast.LENGTH_SHORT).show();
 
-
+/*
         Intent editTransactionIntent = new Intent(getBaseContext(), TransactionInfoActivity.class);
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getApplicationContext(), transactionList.get(position).getDate()));
@@ -303,7 +301,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         Parcelable wrapped = Parcels.wrap(transactionList.get(position));
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
 
-        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
+        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);*/
+
+        startActivityForResult(TransactionInfoActivity.createIntentToEditTransaction(getBaseContext(), transactionList.get(position)), RequestCodes.EDIT_TRANSACTION);
     }
 
     @Override

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +29,7 @@ import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.DayType;
@@ -522,19 +522,22 @@ public class CalendarFragment extends BaseRealmFragment implements
      * Create an intent to add transaction.
      */
     private void addNewTransaction(){
-        Intent newTransactionIntent = new Intent(getContext(), TransactionInfoActivity.class);
+ /*       Intent newTransactionIntent = new Intent(getContext(), TransactionInfoActivity.class);
 
         //This is new transaction
         newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, true);
         newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getContext(), selectedDate));
         startActivityForResult(newTransactionIntent, Constants.RETURN_NEW_TRANSACTION);
+*/
+
+        startActivityForResult(TransactionInfoActivity.createIntentForNewTransaction(getContext(), selectedDate), RequestCodes.NEW_TRANSACTION);
     }
 
     /**
      * Create an intent to edit a transaction.
      */
     private void editTransaction(int position){
-        Intent editTransactionIntent = new Intent(getContext(), TransactionInfoActivity.class);
+        /*Intent editTransactionIntent = new Intent(getContext(), TransactionInfoActivity.class);
 
         //This is edit mode, not a new transaction
         editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
@@ -544,6 +547,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
 
         startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
+        */
+        startActivityForResult(TransactionInfoActivity.createIntentToEditTransaction(getContext(), transactionList.get(position)), RequestCodes.EDIT_TRANSACTION);
     }
 
     /**
@@ -689,13 +694,13 @@ public class CalendarFragment extends BaseRealmFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_NEW_TRANSACTION){
+            if(requestCode == RequestCodes.NEW_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
 
                 populateTransactionsForDate(tt.getDate());
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
-            }else if(requestCode == Constants.RETURN_EDIT_TRANSACTION){
+            }else if(requestCode == RequestCodes.EDIT_TRANSACTION){
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
 
                 populateTransactionsForDate(tt.getDate());

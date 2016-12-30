@@ -2,6 +2,7 @@ package com.zhan.budget.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -65,6 +66,11 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private static final String TAG = "TransactionInfoActivity";
 
+    public static final String NEW_TRANSACTION = "New Transaction";
+    public static final String TRANSACTION_DATE = "Transaction Date";
+    public static final String EDIT_TRANSACTION_ITEM = "Edit Transaction Item";
+
+
     private boolean isNewTransaction = false;
     private Activity instance;
     private Toolbar toolbar;
@@ -120,6 +126,23 @@ public class TransactionInfoActivity extends BaseActivity implements
     //Switch whenever theres a change in location
     private boolean newLocation = false;
 
+    public static Intent createIntentForNewTransaction(Context context, Date date) {
+        Intent intent = new Intent(context, TransactionInfoActivity.class);
+        intent.putExtra(NEW_TRANSACTION, true);
+        intent.putExtra(TRANSACTION_DATE, date);
+        return intent;
+    }
+
+    public static Intent createIntentToEditTransaction(Context context, Transaction transaction) {
+        Intent intent = new Intent(context, TransactionInfoActivity.class);
+        intent.putExtra(NEW_TRANSACTION, false);
+
+        Parcelable wrapped = Parcels.wrap(transaction);
+        intent.putExtra(EDIT_TRANSACTION_ITEM, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_transaction_info;
@@ -130,14 +153,12 @@ public class TransactionInfoActivity extends BaseActivity implements
         instance = TransactionInfoActivity.this;
 
         //Get intents from caller activity
-        isNewTransaction = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
-        selectedDate = DateUtil.convertStringToDate(getApplicationContext(), (getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
-
-        if(!isNewTransaction){
-            editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
-        }
+        isNewTransaction = (getIntent().getExtras()).getBoolean(NEW_TRANSACTION);
 
         if(!isNewTransaction) {
+            editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_TRANSACTION_ITEM));
+            selectedDate = editTransaction.getDate();
+
             if(editTransaction.getCategory() != null){
                 transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
                 transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
@@ -146,6 +167,8 @@ public class TransactionInfoActivity extends BaseActivity implements
                 transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
             }
         }else{
+            selectedDate = (Date)(getIntent().getSerializableExtra(TRANSACTION_DATE));
+
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
         }
