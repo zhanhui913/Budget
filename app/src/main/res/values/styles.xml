@@ -1,132 +1,132 @@
 <resources>
 
-    <!-- Light application theme. -->
-    <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/night_text</item>
-        <item name="android:windowBackground">@color/day</item>
-        <item name="actionOverflowMenuStyle">@style/AppThemeLight.Menu</item>
+	<!-- Light application theme. -->
+	<style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:textColor">@color/night_text</item>
+		<item name="android:windowBackground">@color/day</item>
+		<item name="actionOverflowMenuStyle">@style/AppThemeLight.Menu</item>
 
-        <!-- For xml uses -->
-        <item name="themeColor">@color/day</item>
-        <item name="themeColorHighlight">@color/day_highlight</item>
-        <item name="themeColorText">@color/night_text</item>
-        <item name="themeColorBtn">@drawable/budget_day_button</item>
-    </style>
+		<!-- For xml uses -->
+		<item name="themeColor">@color/day</item>
+		<item name="themeColorHighlight">@color/day_highlight</item>
+		<item name="themeColorText">@color/night_text</item>
+		<item name="themeColorBtn">@drawable/budget_day_button</item>
+	</style>
 
-    <style name="AppThemeLight.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+	<style name="AppThemeLight.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
 
-    <!-- This keeps the text on the toolbar white color-->
-    <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+	<!-- This keeps the text on the toolbar white color-->
+	<style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <!-- This keeps the background on the menu popup light theme and thus dark text color -->
-    <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+	<!-- This keeps the background on the menu popup light theme and thus dark text color -->
+	<style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="AppThemeLight.Menu" parent="Widget.AppCompat.PopupMenu.Overflow">
-        <item name="android:popupBackground">@color/day</item>
-    </style>
+	<style name="AppThemeLight.Menu" parent="Widget.AppCompat.PopupMenu.Overflow">
+		<item name="android:popupBackground">@color/day</item>
+	</style>
 
 
-    <!-- Dark application theme. -->
-    <style name="AppThemeDark" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/day_text</item>
-        <item name="android:windowBackground">@color/night</item>
-        <item name="actionOverflowMenuStyle">@style/AppThemeDark.Menu</item>
+	<!-- Dark application theme. -->
+	<style name="AppThemeDark" parent="Theme.AppCompat">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:textColor">@color/day_text</item>
+		<item name="android:windowBackground">@color/night</item>
+		<item name="actionOverflowMenuStyle">@style/AppThemeDark.Menu</item>
 
-        <!-- For xml uses -->
-        <item name="themeColor">@color/night</item>
-        <item name="themeColorHighlight">@color/night_highlight</item>
-        <item name="themeColorText">@color/day_text</item>
-        <item name="themeColorBtn">@drawable/budget_night_button</item>
-    </style>
+		<!-- For xml uses -->
+		<item name="themeColor">@color/night</item>
+		<item name="themeColorHighlight">@color/night_highlight</item>
+		<item name="themeColorText">@color/day_text</item>
+		<item name="themeColorBtn">@drawable/budget_night_button</item>
+	</style>
 
-    <style name="AppThemeDark.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+	<style name="AppThemeDark.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
 
-    <style name="AppThemeDark.Menu" parent="Widget.AppCompat.PopupMenu.Overflow">
-        <item name="android:popupBackground">@color/night</item>
-    </style>
+	<style name="AppThemeDark.Menu" parent="Widget.AppCompat.PopupMenu.Overflow">
+		<item name="android:popupBackground">@color/night</item>
+	</style>
 
-    <!-- Number pad's style -->
-    <style name="NumberPadStyle" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">@dimen/num_pad_height</item>
-        <item name="android:layout_weight">0.3</item>
-        <item name="android:textSize">@dimen/num_pad_text_size</item>
-        <item name="android:background">?attr/themeColorBtn</item>
-        <item name="android:layout_margin">1dp</item>
-    </style>
+	<!-- Number pad's style -->
+	<style name="NumberPadStyle" parent="Widget.AppCompat.Button.Borderless">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_height">@dimen/num_pad_height</item>
+		<item name="android:layout_weight">0.3</item>
+		<item name="android:textSize">@dimen/num_pad_text_size</item>
+		<item name="android:background">?attr/themeColorBtn</item>
+		<item name="android:layout_margin">1dp</item>
+	</style>
 
-    <!-- Circular view's style -->
-    <style name="CircularViewStyle">
-        <item name="cv_iconTopPadding">8dp</item>
-        <item name="cv_iconBottomPadding">8dp</item>
-        <item name="cv_iconLeftPadding">8dp</item>
-        <item name="cv_iconRightPadding">8dp</item>
-        <item name="cv_bgRadius">20dp</item>
-        <item name="cv_textSize">20sp</item>
-    </style>
+	<!-- Circular view's style -->
+	<style name="CircularViewStyle">
+		<item name="cv_iconTopPadding">8dp</item>
+		<item name="cv_iconBottomPadding">8dp</item>
+		<item name="cv_iconLeftPadding">8dp</item>
+		<item name="cv_iconRightPadding">8dp</item>
+		<item name="cv_bgRadius">20dp</item>
+		<item name="cv_textSize">20sp</item>
+	</style>
 
-    <style name="CircularViewStyle_selected" parent="CircularViewStyle">
-        <item name="cv_strokePadding">3dp</item>
-        <item name="cv_strokeWidth">1dp</item>
-        <item name="cv_strokeColor">@color/transparent</item>
-    </style>
+	<style name="CircularViewStyle_selected" parent="CircularViewStyle">
+		<item name="cv_strokePadding">3dp</item>
+		<item name="cv_strokeWidth">1dp</item>
+		<item name="cv_strokeColor">@color/transparent</item>
+	</style>
 
-    <style name="CircularViewStyle_unselected" parent="CircularViewStyle">
-        <item name="cv_strokePadding">0dp</item>
-        <item name="cv_strokeWidth">0dp</item>
-    </style>
+	<style name="CircularViewStyle_unselected" parent="CircularViewStyle">
+		<item name="cv_strokePadding">0dp</item>
+		<item name="cv_strokeWidth">0dp</item>
+	</style>
 
-    <!--Setting's style -->
-    <style name="SettingsTextViewHeaderStyle">
-        <item name="android:textSize">@dimen/text_content_size</item>
-        <item name="android:layout_marginTop">@dimen/item_top_padding</item>
-        <item name="android:layout_marginBottom">@dimen/item_bottom_padding</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
+	<!--Setting's style -->
+	<style name="SettingsTextViewHeaderStyle">
+		<item name="android:textSize">@dimen/text_content_size</item>
+		<item name="android:layout_marginTop">@dimen/item_top_padding</item>
+		<item name="android:layout_marginBottom">@dimen/item_bottom_padding</item>
+		<item name="android:textColor">@color/colorPrimaryDark</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:textAllCaps">true</item>
+	</style>
 
-    <style name="SettingsTextViewTitleStyle">
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_marginLeft">@dimen/item_left_padding</item>
-        <item name="android:textSize">@dimen/text_title_size</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:background">?attr/themeColorBtn</item>
-    </style>
+	<style name="SettingsTextViewTitleStyle">
+		<item name="android:gravity">center_vertical</item>
+		<item name="android:layout_marginLeft">@dimen/item_left_padding</item>
+		<item name="android:textSize">@dimen/text_title_size</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:background">?attr/themeColorBtn</item>
+	</style>
 
-    <style name="SettingsTextViewContentStyle">
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">@dimen/item_left_padding</item>
-        <item name="android:layout_marginLeft">@dimen/item_left_padding</item>
-        <item name="android:textSize">@dimen/text_content_size</item>
-    </style>
+	<style name="SettingsTextViewContentStyle">
+		<item name="android:gravity">center_vertical</item>
+		<item name="android:paddingLeft">@dimen/item_left_padding</item>
+		<item name="android:layout_marginLeft">@dimen/item_left_padding</item>
+		<item name="android:textSize">@dimen/text_content_size</item>
+	</style>
 
-    <!-- Alert dialog's style -->
-    <style name="AlertDialogTitleStyle">
-        <item name="android:textSize">@dimen/text_header_size</item>
-        <item name="android:textColor">@color/day_text</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:padding">@dimen/item_padding</item>
-    </style>
+	<!-- Alert dialog's style -->
+	<style name="AlertDialogTitleStyle">
+		<item name="android:textSize">@dimen/text_header_size</item>
+		<item name="android:textColor">@color/day_text</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:padding">@dimen/item_padding</item>
+	</style>
 
-    <!-- List Adapter's individual item's xml padding -->
-    <style name="ItemPaddingStyle">
-        <item name="android:paddingTop">@dimen/item_top_padding</item>
-        <item name="android:paddingBottom">@dimen/item_bottom_padding</item>
-        <item name="android:paddingLeft">@dimen/item_left_padding</item>
-        <item name="android:paddingRight">@dimen/item_right_padding</item>
-    </style>
+	<!-- List Adapter's individual item's xml padding -->
+	<style name="ItemPaddingStyle">
+		<item name="android:paddingTop">@dimen/item_top_padding</item>
+		<item name="android:paddingBottom">@dimen/item_bottom_padding</item>
+		<item name="android:paddingLeft">@dimen/item_left_padding</item>
+		<item name="android:paddingRight">@dimen/item_right_padding</item>
+	</style>
 
 </resources>

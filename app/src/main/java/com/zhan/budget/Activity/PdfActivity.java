@@ -111,7 +111,7 @@ public class PdfActivity extends BaseActivity {
         doc.setRenderHeight(PDF_HEIGHT);
         doc.setOrientation(PdfDocument.A4_MODE.PORTRAIT);
         doc.setProgressTitle(R.string.app_name);
-        doc.setProgressMessage(R.string.action_settings);
+        doc.setProgressMessage(R.string.title_activity_pdf);
         doc.setFileName("test_Budget_PDF");
         doc.setInflateOnMainThread(false);
         doc.setListener(new PdfDocument.Callback() {

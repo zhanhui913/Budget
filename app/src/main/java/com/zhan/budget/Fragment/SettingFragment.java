@@ -988,12 +988,28 @@ public class SettingFragment extends BaseFragment {
                             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
                         }
                     })
-                    .setNegativeButton(R.string.permission_deny, null)
+                    .setNegativeButton(R.string.permission_deny, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            turnOffAutoUpdateSwitch();
+                        }
+                    })
                     .create()
                     .show();
-
         }else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
+        }
+    }
+
+    public void turnOffAutoUpdateSwitch(){
+        if(autoBackupSwitch != null){
+            autoBackupSwitch.setChecked(false);
+        }
+    }
+
+    public void turnOnAutoUpdateSwitch(){
+        if(autoBackupSwitch != null){
+            autoBackupSwitch.setChecked(true);
         }
     }
 

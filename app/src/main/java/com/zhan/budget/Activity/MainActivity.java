@@ -1,28 +1,22 @@
 package com.zhan.budget.Activity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.AccountFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
-import com.zhan.budget.Fragment.SettingFragment;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
 
@@ -43,9 +37,7 @@ public class MainActivity extends BaseActivity
     private CategoryFragment categoryFragment;
     private MonthReportFragment monthReportFragment;
     private AccountFragment accountFragment;
-    //private InfoFragment infoFragment;
     private RateFragment rateFragment;
-    private SettingFragment settingFragment;
     private LocationFragment locationFragment;
 
     @Override
@@ -58,8 +50,6 @@ public class MainActivity extends BaseActivity
         categoryFragment = new CategoryFragment();
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
-        settingFragment = new SettingFragment();
-        //infoFragment = new InfoFragment();
 
         // remove for now in v1.0.0
         //rateFragment = new RateFragment();
@@ -83,77 +73,22 @@ public class MainActivity extends BaseActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
 
-        if(getIntent().getExtras() != null){
-            //This will be true if its coming from Settings (ie: called from SettingsFragment during a change theme)
-            boolean isFromSettings = (getIntent().getExtras()).getBoolean(Constants.REQUEST_CHANGE_THEME);
+        getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
 
-            if(isFromSettings){
-                getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, settingFragment).commit();
-
-                //set 5th fragment (Settings) in navigation drawer
-                navigationView.getMenu().getItem(5).setChecked(true);
-            }else{
-                getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
-
-                //set 1st fragment (Calendar) in navigation drawer
-                navigationView.getMenu().getItem(0).setChecked(true);
-            }
-        }else{
-            getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
-
-            //set 1st fragment (Calendar) in navigation drawer
-            navigationView.getMenu().getItem(0).setChecked(true);
-        }
+        //set 1st fragment (Calendar) in navigation drawer
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        // If request is cancelled, the result arrays are empty.
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            // Permission was granted!
-            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                settingFragment.backUpData();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
-                settingFragment.restore();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
-                settingFragment.exportCSVSort();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
-                settingFragment.sendRealmData();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
-                settingFragment.createAutoBackupJob();
-            }
-        }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
-            boolean showRationale = true;
-
-            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
-                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
-                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
-                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-            }
-
-            if(showRationale){
-                // Permission was denied without checking the check box "Never ask again"
-                Log.d("SETTINGS", "permission denied without never ask again");
-
-                if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                    settingFragment.requestFilePermissionToWrite();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
-                    settingFragment.requestFilePermissionToRead();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
-                    settingFragment.requestFilePermissionToWriteCSV();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
-                    settingFragment.requestFilePermissionToAccess();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
-                    settingFragment.createAutoBackupJob();
-                }
-            }else{
-                // Permission was denied while checking the check box "Never ask again"
-                Log.d("SETTINGS", "permission denied with never ask again");
-            }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.SETTINGS) {
+            Intent intent = getIntent();
+            //overridePendingTransition(0, 0);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            //overridePendingTransition(0, 0);
+            startActivity(intent);
         }
     }
 
@@ -204,8 +139,7 @@ public class MainActivity extends BaseActivity
                         fragment = locationFragment;
                         break;
                     case R.id.nav_setting:
-                        fragment = settingFragment;
-                        title = "Setting";
+                        startActivityForResult(SettingsActivity.createIntent(getApplicationContext()), RequestCodes.SETTINGS);
                         break;
                     /*case R.id.nav_info:
                         fragment = infoFragment;
@@ -218,15 +152,13 @@ public class MainActivity extends BaseActivity
                 }
 
                 if (fragment != null) {
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.contentFrame, fragment);
-                    ft.commit();
-                }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.contentFrame, fragment).commit();
 
-                //set the toolbar title
-                if (getSupportActionBar() != null) {
-                    if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(title)) {
-                        getSupportActionBar().setTitle(title);
+                    //set the toolbar title
+                    if (getSupportActionBar() != null) {
+                        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(title)) {
+                            getSupportActionBar().setTitle(title);
+                        }
                     }
                 }
             }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/nav1" android:checkableBehavior="single">
+    <group
+        android:id="@+id/checkableGroup"
+        android:checkableBehavior="single">
+
         <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/svg_ic_menu_calendar"
@@ -24,7 +27,10 @@
             android:title="@string/nav_report" />
     </group>
 
-    <group android:id="@+id/nav2" android:checkableBehavior="single">
+    <group
+        android:id="@+id/nonCheckableGroup"
+        android:checkableBehavior="none">
+
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/svg_ic_settings"

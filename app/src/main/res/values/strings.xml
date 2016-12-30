@@ -4,8 +4,6 @@
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 
-	<string name="action_settings">Settings</string>
-
 	<!-- Permissions -->
 	<string name="permission_rationale_storage">You need to allow access to storage in order to create a backup database.</string>
 	<string name="permission_denied">Permission denied.</string>
@@ -37,6 +35,7 @@
 	<string name="title_activity_about">AboutActivity</string>
 	<string name="title_activity_translation">TranslationActivity</string>
 	<string name="title_activity_developer">DeveloperActivity</string>
+	<string name="title_activity_settings">Settings</string>
 
 	<!-- Tutorial string -->
 	<string name="tutorial_title_1">Calendar</string>
