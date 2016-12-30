@@ -24,10 +24,12 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForAccount;
 import com.zhan.budget.Adapter.AccountRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
@@ -43,11 +45,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.PtrUIHandler;
-import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -414,8 +411,8 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 //Scroll to the last position
                 accountListView.scrollToPosition(accountRecyclerAdapter.getItemCount() - 1);
-            }else if(requestCode == Constants.RETURN_HAS_CHANGED){
-                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+            }else if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                 if(hasChanged){
                     //If something has been changed, update the list
@@ -463,7 +460,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
         Parcelable wrapped = Parcels.wrap(accountList.get(position));
         viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, wrapped);
-        startActivityForResult(viewAllTransactionsForAccount, Constants.RETURN_HAS_CHANGED);
+        startActivityForResult(viewAllTransactionsForAccount, RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
     @Override

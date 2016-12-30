@@ -22,9 +22,11 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.LocationInfoActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Location;
@@ -468,8 +470,8 @@ public class LocationFragment extends BaseRealmFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_HAS_CHANGED){
-                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+            if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
@@ -562,7 +564,7 @@ public class LocationFragment extends BaseRealmFragment
         Parcelable wrapped = Parcels.wrap(locationList.get(position));
         viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, wrapped);
 
-        startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_HAS_CHANGED);
+        startActivityForResult(viewAllTransactionsForLocation, RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
     @Override

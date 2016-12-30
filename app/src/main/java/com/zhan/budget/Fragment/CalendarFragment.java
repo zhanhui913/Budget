@@ -483,19 +483,11 @@ public class CalendarFragment extends BaseRealmFragment implements
                     totalCostTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
                 }
 
-                updateTransactionList();
+                transactionList = myRealm.copyFromRealm(element);
+                transactionAdapter.setTransactionList(transactionList);
+                updateTransactionStatus();
             }
         });
-    }
-
-    /**
-     * Fetch new data from realm for the list of transactions for the day
-     */
-    private void updateTransactionList(){
-        transactionList = myRealm.copyFromRealm(resultsTransactionForDay);
-        transactionAdapter.setTransactionList(transactionList);
-
-        updateTransactionStatus();
     }
 
     private void updateTransactionStatusAtPosition(int position, Transaction transaction){
@@ -689,6 +681,8 @@ public class CalendarFragment extends BaseRealmFragment implements
                 calendarView.selectDate(tt.getDate());
             }else if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
                 defaultCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY));
+
+                transactionAdapter.setDefaultCurrency(defaultCurrency);
 
                 Toast.makeText(getContext(), "selected currency : "+defaultCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
                 populateTransactionsForDate(selectedDate);

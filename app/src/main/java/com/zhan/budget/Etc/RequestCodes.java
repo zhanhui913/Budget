@@ -19,6 +19,7 @@ public final class RequestCodes {
 
     public static final int NEW_TRANSACTION = 100;
     public static final int EDIT_TRANSACTION = 101;
+    public static final int HAS_TRANSACTION_CHANGED = 102;
 
     /////
     //

@@ -74,6 +74,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     public static final String RESULT_TRANSACTION = "Result Transaction";
 
+    public static final String HAS_CHANGED = "Has Changed";
 
     private boolean isNewTransaction = false;
     private Activity instance;
@@ -1041,9 +1042,9 @@ public class TransactionInfoActivity extends BaseActivity implements
         //Check if any value changed
         if(editTransaction != null){
             if(editTransaction.checkEquals(transaction)){
-                intent.putExtra(Constants.CHANGED, false);
+                intent.putExtra(HAS_CHANGED, false);
             }else{
-                intent.putExtra(Constants.CHANGED, true);
+                intent.putExtra(HAS_CHANGED, true);
             }
         }
 

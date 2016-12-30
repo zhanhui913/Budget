@@ -118,7 +118,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.putExtra(Constants.CHANGED, isChanged);
+                intent.putExtra(TransactionInfoActivity.HAS_CHANGED, isChanged);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -259,7 +259,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data.getExtras() != null) {
              if(requestCode == RequestCodes.EDIT_TRANSACTION){
-                 boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+                 boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                  //Toast.makeText(getBaseContext(), "has changed : "+hasChanged, Toast.LENGTH_SHORT).show();
 
@@ -276,7 +276,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra(Constants.CHANGED, isChanged);
+        intent.putExtra(TransactionInfoActivity.HAS_CHANGED, isChanged);
         setResult(RESULT_OK, intent);
 
         finish();

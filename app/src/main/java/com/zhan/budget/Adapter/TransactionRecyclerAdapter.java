@@ -205,6 +205,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         return this.transactionList;
     }
 
+    public void setDefaultCurrency(BudgetCurrency budgetCurrency){
+        this.defaultCurrency = budgetCurrency;
+    }
+
     /**
      * Simple example of a view holder that implements {@link ItemTouchHelperViewHolder} and has a
      * "handle" view that initiates a drag event when touched.

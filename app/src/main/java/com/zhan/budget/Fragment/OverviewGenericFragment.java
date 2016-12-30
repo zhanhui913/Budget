@@ -17,10 +17,12 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
@@ -288,8 +290,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_HAS_CHANGED){
-                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+            if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
@@ -370,7 +372,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         Parcelable wrapped = Parcels.wrap(categoryList.get(position));
 
         viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-        startActivityForResult(viewAllTransactionsForCategory, Constants.RETURN_HAS_CHANGED);
+        startActivityForResult(viewAllTransactionsForCategory, RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

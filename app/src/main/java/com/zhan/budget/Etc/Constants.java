@@ -60,7 +60,7 @@ public class Constants {
     public static final int RETURN_EDIT_ACCOUNT = 8;
     public static final int RETURN_NEW_LOCATION = 9;
     public static final int RETURN_EDIT_LOCATION = 10;
-    public static final int RETURN_HAS_CHANGED = 11;//Used to determined if transaction list has changed.
+    //public static final int RETURN_HAS_CHANGED = 11;//Used to determined if transaction list has changed.
     public static final int RETURN_SELECTED_CURRENCY = 12;
 
     //public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
@@ -82,6 +82,6 @@ public class Constants {
 
     public static final String RESULT_CURRENCY = "Return Currency Result";
 
-    public static final String CHANGED = "Has Been Changed?";
+    //public static final String CHANGED = "Has Been Changed?";
 
 }
