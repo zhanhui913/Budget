@@ -3,7 +3,6 @@ package com.zhan.budget.Util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -232,29 +231,4 @@ public final class Util {
         return metrics.widthPixels;
     }
 
-    /**
-     * Returns the defined CircularView's style for radius
-     * @return int radius
-     */
-    public static int getCircularViewRadius(Context context){
-        // The attributes you want retrieved
-        int[] attrs = {com.zhan.library.R.attr.cv_bgRadius, com.zhan.library.R.attr.cv_strokePadding, com.zhan.library.R.attr.cv_strokeWidth};
-
-        // Parse CircularViewStyle, using Context.obtainStyledAttributes()
-        TypedArray ta = context.obtainStyledAttributes(R.style.CircularViewStyle_selected, attrs);
-
-        // Fetching the radius defined in your style
-        int cvRadius = (int)ta.getDimension(0, dpToPx(20));
-
-        // Padding
-        int cvPadding = (int)ta.getDimension(1, dpToPx(20));
-
-        //stroke
-        int cvStroke = (int)ta.getDimension(2, dpToPx(1));
-
-        // OH, and don't forget to recycle the TypedArray
-        ta.recycle();
-
-        return cvRadius + cvPadding + cvStroke;
-    }
 }
