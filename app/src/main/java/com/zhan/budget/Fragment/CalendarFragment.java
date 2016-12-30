@@ -433,7 +433,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         calendarView.setOnDateClickListener(new FlexibleCalendarView.OnDateClickListener() {
             @Override
             public void onDateClick(int year, int month, int day) {
-                selectedDate = (new GregorianCalendar(year, month, day)).getTime();
+                selectedDate = DateUtil.refreshDate((new GregorianCalendar(year, month, day)).getTime());
                 populateTransactionsForDate(selectedDate);
             }
         });

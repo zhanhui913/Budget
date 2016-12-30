@@ -341,4 +341,17 @@ public final class DateUtil {
                 return DateFormatSymbols.getInstance().getShortWeekdays()[1];
         }
     }
+
+    /**
+     * Compares 2 date and returns true if its the same day
+     * @param date1 Date
+     * @param date2 Date
+     * @return True if same date, false otherwise
+     */
+    public static boolean isSameDay(Date date1, Date date2){
+        if(getDateWithDirection(date1, 0).equals(getDateWithDirection(date2, 0))){
+            return true;
+        }
+        return false;
+    }
 }

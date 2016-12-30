@@ -157,7 +157,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         if(!isNewTransaction) {
             editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_TRANSACTION_ITEM));
-            selectedDate = editTransaction.getDate();
+            selectedDate = DateUtil.refreshDate(editTransaction.getDate());
 
             if(editTransaction.getCategory() != null){
                 transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
@@ -167,7 +167,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
             }
         }else{
-            selectedDate = (Date)(getIntent().getSerializableExtra(TRANSACTION_DATE));
+            selectedDate = DateUtil.refreshDate((Date)(getIntent().getSerializableExtra(TRANSACTION_DATE)));
 
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
@@ -988,7 +988,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             Date now = DateUtil.refreshDate(new Date());
 
             //If its previous date or current
-            if(selectedDate.before(now) || (selectedDate.getTime() == now.getTime())){
+            if(selectedDate.before(now) || DateUtil.isSameDay(selectedDate, now)){
                 transaction.setDayType(DayType.COMPLETED.toString());
             }else{
                 transaction.setDayType(DayType.SCHEDULED.toString());
