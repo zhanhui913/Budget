@@ -22,7 +22,7 @@ public final class ThemeUtil {
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
     public static void changeToTheme(Activity activity, int theme) {
-        MyApplication.getInstance(activity).setBudgetTheme(theme);
+        MyApplication.getInstance().setBudgetTheme(theme);
 
         Log.d("THEME_COLOR_DEBUG", "changing theme to " + theme);
 
