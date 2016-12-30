@@ -522,14 +522,6 @@ public class CalendarFragment extends BaseRealmFragment implements
      * Create an intent to add transaction.
      */
     private void addNewTransaction(){
- /*       Intent newTransactionIntent = new Intent(getContext(), TransactionInfoActivity.class);
-
-        //This is new transaction
-        newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, true);
-        newTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getContext(), selectedDate));
-        startActivityForResult(newTransactionIntent, Constants.RETURN_NEW_TRANSACTION);
-*/
-
         startActivityForResult(TransactionInfoActivity.createIntentForNewTransaction(getContext(), selectedDate), RequestCodes.NEW_TRANSACTION);
     }
 
@@ -537,17 +529,6 @@ public class CalendarFragment extends BaseRealmFragment implements
      * Create an intent to edit a transaction.
      */
     private void editTransaction(int position){
-        /*Intent editTransactionIntent = new Intent(getContext(), TransactionInfoActivity.class);
-
-        //This is edit mode, not a new transaction
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getContext(), selectedDate));
-
-        Parcelable wrapped = Parcels.wrap(transactionList.get(position));
-        editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
-
-        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);
-        */
         startActivityForResult(TransactionInfoActivity.createIntentToEditTransaction(getContext(), transactionList.get(position)), RequestCodes.EDIT_TRANSACTION);
     }
 
@@ -695,13 +676,13 @@ public class CalendarFragment extends BaseRealmFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
             if(requestCode == RequestCodes.NEW_TRANSACTION){
-                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_TRANSACTION));
+                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(TransactionInfoActivity.RESULT_TRANSACTION));
 
                 populateTransactionsForDate(tt.getDate());
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
             }else if(requestCode == RequestCodes.EDIT_TRANSACTION){
-                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_TRANSACTION));
+                Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(TransactionInfoActivity.RESULT_TRANSACTION));
 
                 populateTransactionsForDate(tt.getDate());
                 updateScheduledTransactionsForDecoration();

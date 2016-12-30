@@ -290,19 +290,6 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     @Override
     public void onClickTransaction(int position){
-        //Clicking the Transaction here does nothing
-        //Toast.makeText(getBaseContext(), "Click transaction "+transactionList.get(position).getNote(), Toast.LENGTH_SHORT).show();
-
-/*
-        Intent editTransactionIntent = new Intent(getBaseContext(), TransactionInfoActivity.class);
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION, false);
-        editTransactionIntent.putExtra(Constants.REQUEST_NEW_TRANSACTION_DATE, DateUtil.convertDateToString(getApplicationContext(), transactionList.get(position).getDate()));
-
-        Parcelable wrapped = Parcels.wrap(transactionList.get(position));
-        editTransactionIntent.putExtra(Constants.REQUEST_EDIT_TRANSACTION, wrapped);
-
-        startActivityForResult(editTransactionIntent, Constants.RETURN_EDIT_TRANSACTION);*/
-
         startActivityForResult(TransactionInfoActivity.createIntentToEditTransaction(getBaseContext(), transactionList.get(position)), RequestCodes.EDIT_TRANSACTION);
     }
 

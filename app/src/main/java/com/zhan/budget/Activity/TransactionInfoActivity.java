@@ -67,8 +67,12 @@ public class TransactionInfoActivity extends BaseActivity implements
     private static final String TAG = "TransactionInfoActivity";
 
     public static final String NEW_TRANSACTION = "New Transaction";
-    public static final String TRANSACTION_DATE = "Transaction Date";
+
     public static final String EDIT_TRANSACTION_ITEM = "Edit Transaction Item";
+
+    public static final String TRANSACTION_DATE = "Transaction Date";
+
+    public static final String RESULT_TRANSACTION = "Result Transaction";
 
 
     private boolean isNewTransaction = false;
@@ -1031,31 +1035,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             transaction.setCategory(selectedIncomeCategory);
         }
 
-        ScheduledTransaction sT = new ScheduledTransaction();
-        if(isScheduledTransaction){
-            Log.d("isScheduledTransaction", "adding scheduled transaction");
-            scheduledTransaction.setTransaction(transaction);
-
-            sT.setId(Util.generateUUID());
-            sT.setRepeatUnit(scheduledTransaction.getRepeatUnit());
-            sT.setRepeatType(scheduledTransaction.getRepeatType());
-            //setting transaction in the schedule transaction in the caller fragment
-        }else{
-            Log.d("isScheduledTransaction", "not adding scheduled transaction");
-        }
-        Parcelable scheduledTransactionWrapped = Parcels.wrap(sT);
-
         Parcelable wrapped = Parcels.wrap(transaction);
-
-        if(!isNewTransaction){
-            intent.putExtra(Constants.RESULT_EDIT_TRANSACTION, wrapped);
-        }else{
-            intent.putExtra(Constants.RESULT_NEW_TRANSACTION, wrapped);
-        }
-
-        if(isScheduledTransaction) {
-            intent.putExtra(Constants.RESULT_SCHEDULE_TRANSACTION, scheduledTransactionWrapped);
-        }
+        intent.putExtra(RESULT_TRANSACTION, wrapped);
 
         //Check if any value changed
         if(editTransaction != null){
@@ -1067,6 +1048,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         addNewOrEditTransaction(transaction);
+
         if(isScheduledTransaction){
             addScheduleTransaction(scheduledTransaction, transaction);
         }
@@ -1101,8 +1083,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
             Log.i(TAG, "----------- Parceler Result ----------");
 
-
-
             localTransaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = localTransaction.getDate();
 
@@ -1117,10 +1097,8 @@ public class TransactionInfoActivity extends BaseActivity implements
                     nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
                 }
 
-
                 localTransaction.setId(Util.generateUUID());
                 localTransaction.setDate(nextDate);
-
 
                 Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
                 myRealm.copyToRealmOrUpdate(localTransaction);
@@ -1128,10 +1106,21 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
 
             //Put back orig value
+            //This is so that the localTransaction object in the intent can remain the same
+            //So that when this returns to CalendarFragment, it will point to the correct date
+            //which should be the starting date, not the end date of the scheduled transactions.
             myRealm.beginTransaction();
             localTransaction.setId(origID);
             localTransaction.setDate(origDate);
-            localTransaction.setDayType(DayType.COMPLETED.toString());
+
+            Date now = DateUtil.refreshDate(new Date());
+
+            if(localTransaction.getDate().before(now) || DateUtil.isSameDay(now, localTransaction.getDate())){
+                localTransaction.setDayType(DayType.COMPLETED.toString());
+            }else{
+                localTransaction.setDayType(DayType.SCHEDULED.toString());
+            }
+
             myRealm.copyToRealmOrUpdate(localTransaction);
             myRealm.commitTransaction();
 

@@ -30,9 +30,9 @@ public class Constants {
     public static final String DEFAULT_CURRENCY_NAME = "US Dollar";
 
     //Activity request
-    public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
-    public static final String REQUEST_NEW_TRANSACTION_DATE = "New Transaction Date";
-    public static final String REQUEST_EDIT_TRANSACTION = "Edit Transaction";
+    //public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
+    //public static final String REQUEST_NEW_TRANSACTION_DATE = "New Transaction Date";
+    //public static final String REQUEST_EDIT_TRANSACTION = "Edit Transaction";
 
     public static final String REQUEST_NEW_CATEGORY = "New Category";
     public static final String REQUEST_NEW_CATEGORY_TYPE = "New Category Type";
@@ -50,8 +50,8 @@ public class Constants {
     public static final String REQUEST_DEFAULT_CURRENCY = "Default Currency";
 
     //Return result
-    public static final int RETURN_NEW_TRANSACTION = 1;
-    public static final int RETURN_EDIT_TRANSACTION = 2;
+    //public static final int RETURN_NEW_TRANSACTION = 1;
+    //public static final int RETURN_EDIT_TRANSACTION = 2;
     public static final int RETURN_NEW_CATEGORY = 3;
     public static final int RETURN_EDIT_CATEGORY = 4;
     public static final int RETURN_NEW_OVERVIEW = 5;
@@ -63,14 +63,14 @@ public class Constants {
     public static final int RETURN_HAS_CHANGED = 11;//Used to determined if transaction list has changed.
     public static final int RETURN_SELECTED_CURRENCY = 12;
 
-    public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
-    public static final String RESULT_EDIT_TRANSACTION = "Edit Transaction Result";
+    //public static final String RESULT_NEW_TRANSACTION = "New Transaction Result";
+    //public static final String RESULT_EDIT_TRANSACTION = "Edit Transaction Result";
 
     public static final String RESULT_NEW_CATEGORY = "New Category Result";
     public static final String RESULT_EDIT_CATEGORY = "Edit Category Result";
     public static final String RESULT_DELETE_CATEGORY = "Delete Category Result";
 
-    public static final String RESULT_SCHEDULE_TRANSACTION = "ScheduledTransaction";
+    //public static final String RESULT_SCHEDULE_TRANSACTION = "ScheduledTransaction";
 
     public static final String RESULT_EDIT_ACCOUNT = "Edit Account Result";
     public static final String RESULT_NEW_ACCOUNT = "New Account Result";
