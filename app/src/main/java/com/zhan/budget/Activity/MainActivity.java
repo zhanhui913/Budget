@@ -17,8 +17,8 @@ import com.zhan.budget.Fragment.CategoryFragment;
 import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
+import com.zhan.budget.MyApplication;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Util;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -39,6 +39,8 @@ public class MainActivity extends BaseActivity
     private AccountFragment accountFragment;
     private RateFragment rateFragment;
     private LocationFragment locationFragment;
+
+    private int savedTheme;
 
     @Override
     protected int getActivityLayout(){
@@ -83,12 +85,15 @@ public class MainActivity extends BaseActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SETTINGS) {
-            Intent intent = getIntent();
-            //overridePendingTransition(0, 0);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            //overridePendingTransition(0, 0);
-            startActivity(intent);
+            //Only restart activity if theme is different
+            if(savedTheme != MyApplication.getInstance(getApplicationContext()).getBudgetTheme()){
+                Intent intent = getIntent();
+                //overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                //overridePendingTransition(0, 0);
+                startActivity(intent);
+            }
         }
     }
 
@@ -120,7 +125,6 @@ public class MainActivity extends BaseActivity
             @Override
             public void run() {
                 Fragment fragment = null;
-                String title = "";
 
                 switch (viewId) {
                     case R.id.nav_calendar:
@@ -139,12 +143,10 @@ public class MainActivity extends BaseActivity
                         fragment = locationFragment;
                         break;
                     case R.id.nav_setting:
+                        savedTheme = MyApplication.getInstance().getBudgetTheme();
                         startActivityForResult(SettingsActivity.createIntent(getApplicationContext()), RequestCodes.SETTINGS);
                         break;
-                    /*case R.id.nav_info:
-                        fragment = infoFragment;
-                        title = "Info";
-                        break;
+                    /*
                     case R.id.nav_rate:
                         fragment = rateFragment;
                         title = "Rate";
@@ -153,13 +155,6 @@ public class MainActivity extends BaseActivity
 
                 if (fragment != null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.contentFrame, fragment).commit();
-
-                    //set the toolbar title
-                    if (getSupportActionBar() != null) {
-                        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(title)) {
-                            getSupportActionBar().setTitle(title);
-                        }
-                    }
                 }
             }
         }, 300);

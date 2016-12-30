@@ -1,6 +1,8 @@
 package com.zhan.budget;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -8,6 +10,7 @@ import com.evernote.android.job.JobManager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Services.CustomJobCreator;
 import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.ThemeUtil;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -22,9 +25,18 @@ import io.realm.RealmSchema;
  */
 public class MyApplication extends Application {
 
+    private static MyApplication instance;
+
+    private int CURRENT_THEME = ThemeUtil.THEME_LIGHT;
+
     @Override
     public void onCreate(){
         super.onCreate();
+
+        instance = this;
+
+        CURRENT_THEME = BudgetPreference.getCurrentTheme(instance); Log.d("GOD", "MyApplication, Theme : "+CURRENT_THEME);
+
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
                 .schemaVersion(2)
@@ -86,4 +98,22 @@ public class MyApplication extends Application {
 
         JobManager.create(this).addJobCreator(new CustomJobCreator());
     }
+
+    public static MyApplication getInstance() {
+        return instance;
+    }
+
+    public static MyApplication getInstance(Context context) {
+        return context != null ? (MyApplication) context.getApplicationContext() : instance;
+    }
+
+    public int getBudgetTheme() {
+        return CURRENT_THEME;
+    }
+
+    public void setBudgetTheme(@NonNull int theme) {
+        CURRENT_THEME = theme;
+        BudgetPreference.setCurrentTheme(instance, CURRENT_THEME);
+    }
+
 }
