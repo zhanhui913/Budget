@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity
                         fragment = locationFragment;
                         break;
                     case R.id.nav_setting:
-                        savedTheme = MyApplication.getInstance().getBudgetTheme();
+                        savedTheme = MyApplication.getInstance(getApplicationContext()).getBudgetTheme();
                         startActivityForResult(SettingsActivity.createIntent(getApplicationContext()), RequestCodes.SETTINGS);
                         break;
                     /*
