@@ -292,10 +292,7 @@ public class SettingFragment extends BaseFragment {
         currencyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent settingsCurrency = new Intent(getContext(), SelectCurrencyActivity.class);
-                settingsCurrency.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, true);
-                settingsCurrency.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, true);
-                startActivity(settingsCurrency);
+                startActivity(SelectCurrencyActivity.createIntentToSetDefaultCurrency(getContext()));
             }
         });
 

@@ -5,9 +5,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -186,7 +184,8 @@ public class CurrencyRecyclerAdapter extends RecyclerView.Adapter<CurrencyRecycl
                 final String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (final BudgetCurrency currency : originalList) {
-                    if (currency.getCurrencyName().toLowerCase().contains(filterPattern)) {
+                    String name = currency.getCurrencyName();
+                    if (name.toLowerCase().contains(filterPattern)) {
                         filteredList.add(currency);
                     }
                 }

@@ -612,10 +612,7 @@ public class CalendarFragment extends BaseRealmFragment implements
     }
 
     private void askForCurrencyActivity(){
-        Intent currencyIntent = new Intent(getContext(), SelectCurrencyActivity.class);
-        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
-        currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, true);
-        startActivityForResult(currencyIntent, Constants.RETURN_SELECTED_CURRENCY);
+        startActivityForResult(SelectCurrencyActivity.createIntentToSetDefaultCurrency(getContext()), RequestCodes.SELECTED_CURRENCY);
     }
 
     private void getDefaultCurrency(){
@@ -679,8 +676,8 @@ public class CalendarFragment extends BaseRealmFragment implements
                 populateTransactionsForDate(tt.getDate());
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
-            }else if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
-                defaultCurrency = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY));
+            }else if(requestCode == RequestCodes.SELECTED_CURRENCY){
+                defaultCurrency = Parcels.unwrap(data.getExtras().getParcelable(SelectCurrencyActivity.RESULT_CURRENCY));
 
                 transactionAdapter.setDefaultCurrency(defaultCurrency);
 

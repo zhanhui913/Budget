@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CurrencyRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyXMLHandler;
 import com.zhan.budget.Etc.MassExchangeRate;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
@@ -47,6 +46,10 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         CurrencyRecyclerAdapter.OnCurrencyAdapterInteractionListener,
         SearchView.OnQueryTextListener{
 
+    public static final String RESULT_CURRENCY = "Result Currency";
+
+    public static final String NEED_RETURN_CURRENCY = "Currency";
+
     private Toolbar toolbar;
     private Activity instance;
 
@@ -58,15 +61,22 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     private RealmResults<BudgetCurrency> resultsCurrency;
 
     /**
-     * If true, this was called in SettingsFragment (Will allow user to see which currency is default).
-     * If false, this was called in first time (Will allow user to click on a currency to select as default).
+     * If true, this selection on a specific currency returns the Currency.
+     * If false, this selection on a specific currency simply sets the default currency. (No need to return anything)
      */
-    //private boolean inSettings = true;
+    private boolean returnCurrency = true;
 
-    /**
-     * Does this selection on a specific currency return as Default Currency
-     */
-    private boolean returnDefaultCurrency = true;
+    public static Intent createIntentToGetCurrency(Context context){
+        Intent intent = new Intent(context, SelectCurrencyActivity.class);
+        intent.putExtra(NEED_RETURN_CURRENCY, true);
+        return intent;
+    }
+
+    public static Intent createIntentToSetDefaultCurrency(Context context){
+        Intent intent = new Intent(context, SelectCurrencyActivity.class);
+        intent.putExtra(NEED_RETURN_CURRENCY, false);
+        return intent;
+    }
 
     @Override
     protected int getActivityLayout(){
@@ -80,8 +90,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         instance = this;
 
         if(getIntent().getExtras() != null){
-            //inSettings = (getIntent().getExtras()).getBoolean(Constants.REQUEST_CURRENCY_IN_SETTINGS);
-            returnDefaultCurrency = (getIntent().getExtras()).getBoolean(Constants.REQUEST_DEFAULT_CURRENCY);
+            returnCurrency = (getIntent().getExtras()).getBoolean(NEED_RETURN_CURRENCY);
         }
 
         createToolbar();
@@ -124,10 +133,10 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         toolbar.setNavigationIcon(R.drawable.svg_ic_clear);
 
         if(getSupportActionBar() != null){
-            if(returnDefaultCurrency){
+            if(!returnCurrency){
                 getSupportActionBar().setTitle("Set currency");
             }else{
-                getSupportActionBar().setTitle("Set currency");
+                getSupportActionBar().setTitle("Get currency");
             }
         }
     }
@@ -283,7 +292,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
                 Intent intent = new Intent();
                 Parcelable wrapped = Parcels.wrap(currency);
-                intent.putExtra(Constants.RESULT_CURRENCY, wrapped);
+                intent.putExtra(RESULT_CURRENCY, wrapped);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -346,7 +355,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         if(!resultsCurrency.get(position).isDefault()) {
 
             //Coming from CalendarFragment or SettingsFragment
-            if (returnDefaultCurrency) {
+            if (!returnCurrency) {
                 View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
                 TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
@@ -386,7 +395,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 Intent intent = new Intent();
 
                 Parcelable wrapped = Parcels.wrap(currencyList.get(position));
-                intent.putExtra(Constants.RESULT_CURRENCY, wrapped);
+                intent.putExtra(RESULT_CURRENCY, wrapped);
                 setResult(RESULT_OK, intent);
                 finish();
             }

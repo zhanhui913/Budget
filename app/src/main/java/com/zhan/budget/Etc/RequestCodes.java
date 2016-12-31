@@ -45,13 +45,20 @@ public final class RequestCodes {
     //
     /////
 
+    /////
+    //
+    // Currency (600 - 700)
+    //
+    /////
+
+    public static final int SELECTED_CURRENCY = 600;
 
     /////
     //
-    // Etc (600 - 700)
+    // Etc (700 - 800)
     //
     /////
 
-    public static final int SETTINGS = 600;
+    public static final int SETTINGS = 700;
 
 }

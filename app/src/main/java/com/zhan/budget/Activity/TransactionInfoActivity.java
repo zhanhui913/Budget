@@ -29,6 +29,7 @@ import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -434,7 +435,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         changeCurrencyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openCurrencyListActivity();
+                startActivityForResult(SelectCurrencyActivity.createIntentToGetCurrency(getApplicationContext()), RequestCodes.SELECTED_CURRENCY);
             }
         });
 
@@ -449,8 +450,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 switch (position) {
                     case 0:
                         currentPage = BudgetType.EXPENSE;
-                        //float ss = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
-                        //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(ss, Constants.BUDGET_LOCALE));
                         transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, currentCurrency));
 
                         //If note is empty
@@ -465,8 +464,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
-                        //float ss1 = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
-                        //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(ss1), Constants.BUDGET_LOCALE));
                         transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, currentCurrency));
 
                         //If note is empty
@@ -867,13 +864,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         myRealm.close();
     }
 
-    private void openCurrencyListActivity(){
-        Intent currencyIntent = new Intent(getApplicationContext(), SelectCurrencyActivity.class);
-        currencyIntent.putExtra(Constants.REQUEST_CURRENCY_IN_SETTINGS, false);
-        currencyIntent.putExtra(Constants.REQUEST_DEFAULT_CURRENCY, false);
-        startActivityForResult(currencyIntent, Constants.RETURN_SELECTED_CURRENCY);
-    }
-
     private void addDigitToTextView(int digit){
         if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH){
             priceString += digit;
@@ -1193,10 +1183,10 @@ public class TransactionInfoActivity extends BaseActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == instance.RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_SELECTED_CURRENCY){
+        if (resultCode == RESULT_OK && data.getExtras() != null) {
+            if(requestCode == RequestCodes.SELECTED_CURRENCY){
                 Toast.makeText(instance, "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
-                createExchangeDialog((BudgetCurrency) Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_CURRENCY)));
+                createExchangeDialog((BudgetCurrency) Parcels.unwrap(data.getExtras().getParcelable(SelectCurrencyActivity.RESULT_CURRENCY)));
             }
         }
     }
