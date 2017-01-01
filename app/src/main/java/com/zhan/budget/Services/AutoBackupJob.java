@@ -28,7 +28,7 @@ public class AutoBackupJob extends Job {
         String dateString = DateUtil.convertDateToStringFormat7(getContext(), new Date());
         BudgetPreference.setLastBackup(getContext(), dateString);
 
-        if(DataBackup.backUpData()){
+        if(DataBackup.backUpData(getContext())){
             return Result.SUCCESS;
         }else {
             return Result.RESCHEDULE;

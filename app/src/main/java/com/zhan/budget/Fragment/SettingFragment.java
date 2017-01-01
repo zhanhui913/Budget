@@ -235,7 +235,7 @@ public class SettingFragment extends BaseFragment {
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
 
-        startServices();
+        //startServices();
         addListeners();
         getDefaultCurrency();
     }
@@ -304,7 +304,7 @@ public class SettingFragment extends BaseFragment {
                 if(isChecked){
                     checkPermissionToAutoBackup();
                 }else{
-                    cancelAutoBackupJob();
+                    //cancelAutoBackupJob();
                 }
             }
         });
@@ -472,28 +472,7 @@ public class SettingFragment extends BaseFragment {
     }
 
     public void backUpData(){
-        /*try{
-            //create a backup file
-            File exportRealmFile = new File(DOWNLOAD_DIRECTORY, EXPORT_REALM_FILE_NAME);
-
-            //If backup file already exist, delete it
-            exportRealmFile.delete();
-
-            //Copy current realm to backup file
-            Realm myRealm = Realm.getDefaultInstance();
-            myRealm.writeCopyTo(exportRealmFile);
-            myRealm.close();
-
-            String dateString = DateUtil.convertDateToStringFormat7(getContext(), new Date());
-            updateLastBackupInfo(dateString);
-            BudgetPreference.setLastBackup(getContext(), dateString);
-
-            Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_backup_data_successful));
-        }catch(IOException e){
-            e.printStackTrace();
-        }*/
-
-        if(DataBackup.backUpData()){
+        if(DataBackup.backUpData(getContext())){
             String dateString = DateUtil.convertDateToStringFormat7(getContext(), new Date());
             updateLastBackupInfo(dateString);
             BudgetPreference.setLastBackup(getContext(), dateString);
@@ -966,7 +945,8 @@ public class SettingFragment extends BaseFragment {
             //STORAGE permission has not been granted
             requestFilePermissionToWriteAutoBackup();
         }else{
-            createAutoBackupJob();
+            //createAutoBackupJob();
+            backUpData();
         }
     }
 
@@ -1010,6 +990,8 @@ public class SettingFragment extends BaseFragment {
         }
     }
 
+
+/*
     private void startServices(){
         mJobManager = JobManager.instance();
     }
@@ -1023,5 +1005,5 @@ public class SettingFragment extends BaseFragment {
         //so I have to manually backup the 1st time
         backUpData();
         mLastJobId = AutoBackupJob.scheduleJob();
-    }
+    }*/
 }

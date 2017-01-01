@@ -1,11 +1,13 @@
 package com.zhan.budget.Util;
 
+import android.content.Context;
 import android.os.Environment;
 
 import com.zhan.budget.Etc.Constants;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import io.realm.Realm;
 
@@ -20,7 +22,7 @@ public class DataBackup {
 
     public DataBackup(){}
 
-    public static boolean backUpData(){
+    public static boolean backUpData(Context context){
         try{
             //create a backup file
             File exportRealmFile = new File(DOWNLOAD_DIRECTORY, EXPORT_REALM_FILE_NAME);
@@ -32,6 +34,9 @@ public class DataBackup {
             Realm myRealm = Realm.getDefaultInstance();
             myRealm.writeCopyTo(exportRealmFile);
             myRealm.close();
+
+            String dateString = DateUtil.convertDateToStringFormat7(context, new Date());
+            BudgetPreference.setLastBackup(context, dateString);
 
             return true;
         }catch(IOException e){

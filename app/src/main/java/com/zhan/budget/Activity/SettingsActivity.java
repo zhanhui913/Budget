@@ -73,7 +73,7 @@ public class SettingsActivity extends BaseActivity {
                 settingFragment.sendRealmData();
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
                 settingFragment.turnOnAutoUpdateSwitch();
-                settingFragment.createAutoBackupJob();
+                settingFragment.backUpData();
             }
         }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
             boolean showRationale = true;
