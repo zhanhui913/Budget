@@ -161,14 +161,13 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 Toast.makeText(instance, "there are "+element.size()+" in list", Toast.LENGTH_SHORT).show();
 
                 // If there are for some reason fewer currencies in Realm than in XML.
-                // Delete all entries in the realm first, then recreate it
+                // Delete all entries in the realm first, then recreate it by reading from xml
                 if(element.size() < getNumOfCurrenciesInXML()){
                     deleteAllCurrenciesInRealm();
-                    readFromCurrencyXML();
-
-                }else{
-                    readFromCurrencyRealm();
+                    addCurrencyToRealmFromXML();
                 }
+
+                readFromCurrencyRealm();
             }
         });
     }
@@ -210,7 +209,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         });
     }
 
-    private void readFromCurrencyXML(){
+    private void addCurrencyToRealmFromXML(){
         try{
             InputStream iss = getResources().openRawResource(R.raw.currencies);
 
@@ -233,8 +232,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                     budgetCurrency.setCurrencyCode(tempList.get(i).getCurrencyCode());
                     budgetCurrency.setDefault(false);
                     budgetCurrency.setRate(0f);
-
-                    currencyList.add(budgetCurrency);
                 }
 
                 Toast.makeText(getApplicationContext(), "Read from xml currency", Toast.LENGTH_SHORT).show();
@@ -243,14 +240,12 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
             }
             myRealm.commitTransaction();
 
-            currencyAdapter.setBudgetCurrencyList(currencyList);
         }catch(Exception ex){
             ex.printStackTrace();
         }
     }
 
     private void readFromCurrencyRealm(){
-
         resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSortedAsync("currencyCode");
         resultsCurrency.addChangeListener(new RealmChangeListener<RealmResults<BudgetCurrency>>() {
             @Override
