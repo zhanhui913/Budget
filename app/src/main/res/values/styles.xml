@@ -75,6 +75,8 @@
 		<item name="cv_iconRightPadding">8dp</item>
 		<item name="cv_bgRadius">20dp</item>
 		<item name="cv_textSize">20sp</item>
+		<item name="cv_iconColor">?attr/themeColor</item>
+		<item name="cv_textColor">?attr/themeColor</item>
 	</style>
 
 	<style name="CircularViewStyle_selected" parent="CircularViewStyle">

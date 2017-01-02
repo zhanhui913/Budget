@@ -1,5 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.SettingFragment">
@@ -35,7 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/colorPrimary"
+                app:cv_iconDrawable="@drawable/c_theme_light_dark" />
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/themeTitle"
@@ -73,7 +76,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/lightPurple"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_calendar"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/firstDayTitle"
@@ -111,7 +116,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/peter_river"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_category"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/categoryOrderTitle"
@@ -148,7 +155,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/light_cyan"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_account"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/defaultAccountTitle"
@@ -186,7 +195,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/carrot"
+                app:cv_iconDrawable="@drawable/svg_ic_location"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/locationTitle"
@@ -224,7 +235,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/alizarin"
+                app:cv_iconDrawable="@drawable/svg_ic_dollar"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/currencyTitle"
@@ -267,7 +280,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/sunflower"
+                app:cv_iconDrawable="@drawable/svg_ic_backup"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -303,45 +318,7 @@
                 android:layout_alignParentEnd="true"
                 android:paddingLeft="@dimen/item_left_padding"/>
         </RelativeLayout>
-<!--
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/left_padding_divider"
-            android:background="?attr/themeColorHighlight"/>
 
-        <RelativeLayout style="@style/ItemPaddingStyle"
-            android:id="@+id/backupBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/themeColorBtn"
-            android:clickable="true"
-            android:focusable="true">
-
-            <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
-                android:id="@+id/backupCV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
-
-            <TextView style="@style/SettingsTextViewTitleStyle"
-                android:id="@+id/backupTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/backupCV"
-                android:text="@string/setting_title_backup_data"/>
-
-            <TextView style="@style/SettingsTextViewContentStyle"
-                android:id="@+id/backupContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/backupCV"
-                android:layout_below="@+id/backupTitle"
-                android:text="@string/setting_content_backup_data"/>
-        </RelativeLayout>
--->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -362,7 +339,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/asbestos"
+                app:cv_iconDrawable="@drawable/svg_ic_restore"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/restoreBackupTitle"
@@ -393,7 +372,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/emerald"
+                app:cv_iconDrawable="@drawable/c_reset_db"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/resetDataTitle"
@@ -425,7 +406,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/wet_asphalt"
+                app:cv_iconDrawable="@drawable/c_export"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/exportCSVTitle"
@@ -449,7 +432,6 @@
             android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="@color/colorPrimaryDark"/>
 
-
         <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/ratingBtn"
             android:layout_width="match_parent"
@@ -464,7 +446,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/light_cyan"
+                app:cv_iconDrawable="@drawable/svg_ic_star"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/ratingTitle"
@@ -502,7 +486,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/wisteria"
+                app:cv_iconDrawable="@drawable/svg_ic_email"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/emailTitle"
@@ -540,7 +526,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/pink"
+                app:cv_iconDrawable="@drawable/c_help"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/tourTitle"
@@ -575,7 +563,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/lightPurple"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_calendar"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/faqTitle"
@@ -606,7 +596,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/jordy_blue"
+                app:cv_iconDrawable="@drawable/c_info"/>
 
             <TextView style="@style/SettingsTextViewTitleStyle"
                 android:id="@+id/openSourceTitle"

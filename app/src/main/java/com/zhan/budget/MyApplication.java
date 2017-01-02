@@ -99,7 +99,7 @@ public class MyApplication extends Application {
 
         BudgetPreference.resetRealmCache(this);
 
-        JobManager.create(this).addJobCreator(new CustomJobCreator());
+        //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
         Log.d("HELP", "start listening to realm changes");
         listenToRealmDBChanges();
@@ -107,7 +107,7 @@ public class MyApplication extends Application {
     }
 
     private void listenToRealmDBChanges(){
-        Realm myRealm = Realm.getDefaultInstance();
+        final Realm myRealm = Realm.getDefaultInstance();
         myRealm.addChangeListener(new RealmChangeListener<Realm>() {
             @Override
             public void onChange(Realm element) {

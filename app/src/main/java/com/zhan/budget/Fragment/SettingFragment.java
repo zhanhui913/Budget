@@ -63,7 +63,6 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, currencyCV, autoBackupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
     private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
     private Switch autoBackupSwitch;
@@ -88,52 +87,37 @@ public class SettingFragment extends BaseFragment {
 
     @Override
     protected void init(){
-        themeCV = (CircularView) view.findViewById(R.id.themeCV);
         themeBtn = (ViewGroup) view.findViewById(R.id.themeBtn);
         themeContent = (TextView) view.findViewById(R.id.themeContent);
 
-        firstDayCV = (CircularView) view.findViewById(R.id.firstDayCV);
         firstDayBtn = (ViewGroup) view.findViewById(R.id.firstDayBtn);
         firstDayContent = (TextView) view.findViewById(R.id.firstDayContent);
 
-        categoryCV = (CircularView) view.findViewById(R.id.categoryOrderCV);
         categoryOrderBtn = (ViewGroup) view.findViewById(R.id.categoryOrderBtn);
 
-        accountCV = (CircularView) view.findViewById(R.id.defaultAccountCV);
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
 
-        locationCV = (CircularView) view.findViewById(R.id.locationCV);
         locationBtn = (ViewGroup) view.findViewById(R.id.locationBtn);
 
-        currencyCV = (CircularView) view.findViewById(R.id.currencyCV);
         currencyBtn = (ViewGroup) view.findViewById(R.id.currencyBtn);
 
-        autoBackupCV = (CircularView) view.findViewById(R.id.autoBackupCV);
         autoBackupSwitch = (Switch) view.findViewById(R.id.autoBackupSwitch);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
-        restoreBackupCV = (CircularView) view.findViewById(R.id.restoreBackupCV);
         restoreBackupBtn = (ViewGroup)view.findViewById(R.id.restoreBackupBtn);
 
-        resetCV = (CircularView) view.findViewById(R.id.resetDataCV);
         resetBtn = (ViewGroup) view.findViewById(R.id.resetDataBtn);
 
-        exportCSVCV = (CircularView) view.findViewById(R.id.exportCSVCV);
         exportCSVBtn = (ViewGroup) view.findViewById(R.id.exportCSVBtn);
 
-        ratingsCV = (CircularView) view.findViewById(R.id.ratingCV);
         ratingsBtn = (ViewGroup) view.findViewById(R.id.ratingBtn);
 
-        emailCV = (CircularView) view.findViewById(R.id.emailCV);
         emailBtn = (ViewGroup) view.findViewById(R.id.emailBtn);
 
-        tutorialCV = (CircularView) view.findViewById(R.id.tutorialCV);
         tutorialBtn = (ViewGroup) view.findViewById(R.id.tutorialBtn);
 
-        faqCV = (CircularView) view.findViewById(R.id.faqCV);
         faqBtn = (ViewGroup) view.findViewById(R.id.faqBtn);
 
-        aboutCV = (CircularView) view.findViewById(R.id.aboutCV);
         aboutBtn = (ViewGroup) view.findViewById(R.id.aboutBtn);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
@@ -147,81 +131,15 @@ public class SettingFragment extends BaseFragment {
         //Set theme
         CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
         themeContent.setText(CURRENT_THEME == ThemeUtil.THEME_DARK ? R.string.setting_content_theme_night : R.string.setting_content_theme_day);
-        themeCV.setCircleColor(R.color.colorPrimary);
-        themeCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        themeCV.setIconResource(R.drawable.c_theme_light_dark);
 
         //Set start day
         int startDay = BudgetPreference.getStartDay(getContext());
         firstDayContent.setText(startDay == Calendar.SUNDAY ? R.string.setting_content_day_sun : R.string.setting_content_day_mon);
-        firstDayCV.setCircleColor(R.color.lightPurple);
-        firstDayCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        firstDayCV.setIconResource(R.drawable.svg_ic_menu_calendar);
-
-        //Set category
-        categoryCV.setCircleColor(R.color.peter_river);
-        categoryCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        categoryCV.setIconResource(R.drawable.svg_ic_menu_category);
-
-        //Set account
-        accountCV.setCircleColor(R.color.light_cyan);
-        accountCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        accountCV.setIconResource(R.drawable.svg_ic_menu_account);
-
-        //Set location
-        locationCV.setCircleColor(R.color.carrot);
-        locationCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        locationCV.setIconResource(R.drawable.svg_ic_location);
-
-        //Set currency
-        currencyCV.setCircleColor(R.color.alizarin);
-        currencyCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        currencyCV.setIconResource(R.drawable.svg_ic_dollar);
 
         //Set auto backup
-        autoBackupCV.setCircleColor(R.color.sunflower);
-        autoBackupCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        autoBackupCV.setIconResource(R.drawable.svg_ic_backup);
-
         boolean allowAutoBackup = BudgetPreference.getAllowAutoBackup(getContext());
         autoBackupSwitch.setChecked(allowAutoBackup);
-
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
-
-        //Set restore
-        restoreBackupCV.setCircleColor(R.color.asbestos);
-        restoreBackupCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        restoreBackupCV.setIconResource(R.drawable.svg_ic_restore);
-
-        //Set reset
-        resetCV.setCircleColor(R.color.emerald);
-        resetCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        resetCV.setIconResource(R.drawable.svg_ic_location);
-
-        //Set export CSV
-        exportCSVCV.setCircleColor(R.color.wet_asphalt);
-        exportCSVCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        exportCSVCV.setIconResource(R.drawable.c_export);
-
-        //Set ratings
-        ratingsCV.setCircleColor(R.color.light_cyan);
-        ratingsCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        ratingsCV.setIconResource(R.drawable.svg_ic_star);
-
-        //Set email
-        emailCV.setCircleColor(R.color.wisteria);
-        emailCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        emailCV.setIconResource(R.drawable.svg_ic_email);
-
-        //Set tutorial
-        tutorialCV.setCircleColor(R.color.pink);
-        tutorialCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        tutorialCV.setIconResource(R.drawable.c_help);
-
-        //Set about
-        aboutCV.setCircleColor(R.color.jordy_blue);
-        aboutCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        aboutCV.setIconResource(R.drawable.c_info);
 
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
@@ -265,7 +183,6 @@ public class SettingFragment extends BaseFragment {
         defaultAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getAccountList();
                 Intent settingsAccount = new Intent(getContext(), SettingsAccount.class);
                 startActivity(settingsAccount);
             }
@@ -296,14 +213,7 @@ public class SettingFragment extends BaseFragment {
                 }
             }
         });
-/*
-        backupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPermissionToCreateBackup();
-            }
-        });
-*/
+
         restoreBackupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -393,26 +303,18 @@ public class SettingFragment extends BaseFragment {
     private File DOWNLOAD_DIRECTORY = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
     private final String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
-/*
-    private void checkPermissionToCreateBackup(){
+
+
+    private void checkPermissionToAutoBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
-            requestFilePermissionToWrite();
+            requestFilePermissionToWriteAutoBackup();
         }else{
             backUpData();
         }
-    }*/
-
-    private void checkPermissionToRestoreBackup(){
-        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            //STORAGE permission has not been granted
-            requestFilePermissionToRead();
-        }else{
-            restore();
-        }
     }
-/*
-    public void requestFilePermissionToWrite(){
+
+    public void requestFilePermissionToWriteAutoBackup(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
@@ -424,16 +326,42 @@ public class SettingFragment extends BaseFragment {
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
                         }
                     })
-                    .setNegativeButton(R.string.permission_deny, null)
+                    .setNegativeButton(R.string.permission_deny, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            turnOffAutoUpdateSwitch();
+                        }
+                    })
                     .create()
                     .show();
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
         }
-    }*/
+    }
+
+    public void turnOffAutoUpdateSwitch(){
+        if(autoBackupSwitch != null){
+            autoBackupSwitch.setChecked(false);
+        }
+    }
+
+    public void turnOnAutoUpdateSwitch(){
+        if(autoBackupSwitch != null){
+            autoBackupSwitch.setChecked(true);
+        }
+    }
+
+    private void checkPermissionToRestoreBackup(){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            //STORAGE permission has not been granted
+            requestFilePermissionToRead();
+        }else{
+            restore();
+        }
+    }
 
     public void requestFilePermissionToRead(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -925,52 +853,5 @@ public class SettingFragment extends BaseFragment {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void checkPermissionToAutoBackup(){
-        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            //STORAGE permission has not been granted
-            requestFilePermissionToWriteAutoBackup();
-        }else{
-            backUpData();
-        }
-    }
 
-    public void requestFilePermissionToWriteAutoBackup(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.permission_denied)
-                    .setMessage(R.string.permission_rationale_write_backup_data)
-                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
-                        }
-                    })
-                    .setNegativeButton(R.string.permission_deny, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            turnOffAutoUpdateSwitch();
-                        }
-                    })
-                    .create()
-                    .show();
-        }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
-        }
-    }
-
-    public void turnOffAutoUpdateSwitch(){
-        if(autoBackupSwitch != null){
-            autoBackupSwitch.setChecked(false);
-        }
-    }
-
-    public void turnOnAutoUpdateSwitch(){
-        if(autoBackupSwitch != null){
-            autoBackupSwitch.setChecked(true);
-        }
-    }
 }
