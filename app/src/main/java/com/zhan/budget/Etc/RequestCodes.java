@@ -27,6 +27,9 @@ public final class RequestCodes {
     //
     /////
 
+    public static final int NEW_CATEGORY = 200;
+    public static final int EDIT_CATEGORY = 201;
+
     /////
     //
     // Account (300 - 400)

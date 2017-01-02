@@ -276,14 +276,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     }
 
     private void editCategory(int position){
-        Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
-
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
-
-        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
+        startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryList.get(position)), RequestCodes.EDIT_CATEGORY);
     }
 
     @Override
@@ -299,6 +292,9 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                     getMonthReport(currentMonth, true);
                 }
+            }else if(requestCode == RequestCodes.EDIT_CATEGORY){
+                //TODO : Need to handle the editing of a  category while in Overview fragment
+                //
             }
         }
     }

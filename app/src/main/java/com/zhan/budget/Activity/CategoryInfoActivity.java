@@ -2,6 +2,7 @@ package com.zhan.budget.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -37,12 +38,22 @@ import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
+import java.util.Date;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class CategoryInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
         IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener{
+
+    public static final String NEW_CATEGORY = "New Category";
+
+    public static final String NEW_CATEGORY_TYPE = "New Category";
+
+    public static final String EDIT_CATEGORY_ITEM = "Edit Category Item";
+
+    public static final String RESULT_CATEGORY = "Result Category";
 
     private Activity instance;
     private Toolbar toolbar;
@@ -71,6 +82,23 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     private BudgetCurrency currentCurrency;
 
+    public static Intent createIntentForNewCategory(Context context, BudgetType type){
+        Intent intent = new Intent(context, CategoryInfoActivity.class);
+        intent.putExtra(NEW_CATEGORY, true);
+        intent.putExtra(NEW_CATEGORY_TYPE, type.toString());
+        return intent;
+    }
+
+    public static Intent createIntentToEditCategory(Context context, Category category){
+        Intent intent = new Intent(context, CategoryInfoActivity.class);
+        intent.putExtra(NEW_CATEGORY, false);
+
+        Parcelable wrapped = Parcels.wrap(category);
+        intent.putExtra(EDIT_CATEGORY_ITEM, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_category_info;
@@ -82,17 +110,17 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         getDefaultCurrency();
 
-        isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
+        isNewCategory = (getIntent().getExtras()).getBoolean(NEW_CATEGORY);
 
         if(!isNewCategory){
-            category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
+            category = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_CATEGORY_ITEM));
         }else{
             //Give default category values
             category = new Category();
             category.setId(Util.generateUUID());
             category.setColor(CategoryUtil.getDefaultCategoryColor(this));
             category.setIcon(CategoryUtil.getDefaultCategoryIcon(this));
-            category.setType(getIntent().getExtras().getString(Constants.REQUEST_NEW_CATEGORY_TYPE));
+            category.setType(getIntent().getExtras().getString(NEW_CATEGORY_TYPE));
             category.setText(false); //default use icon
         }
 
@@ -474,6 +502,7 @@ public class CategoryInfoActivity extends BaseActivity implements
                 .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
+
                         Realm myRealm = Realm.getDefaultInstance();
                         Category cat = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
                         myRealm.beginTransaction();
@@ -481,7 +510,6 @@ public class CategoryInfoActivity extends BaseActivity implements
                         myRealm.commitTransaction();
                         myRealm.close();
 
-                        intent.putExtra(Constants.RESULT_DELETE_CATEGORY, true); //deleting category
                         setResult(RESULT_OK, intent);
                         finish();
                     }
@@ -555,11 +583,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         Parcelable wrapped = Parcels.wrap(carbonCopy);
         myRealm.close();  BudgetPreference.removeRealmCache(this);
 
-        if(!isNewCategory){
-            intent.putExtra(Constants.RESULT_EDIT_CATEGORY, wrapped);
-        }else{
-            intent.putExtra(Constants.RESULT_NEW_CATEGORY, wrapped);
-        }
+        intent.putExtra(RESULT_CATEGORY, wrapped);
 
         setResult(RESULT_OK, intent);
 

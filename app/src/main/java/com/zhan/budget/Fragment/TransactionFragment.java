@@ -10,6 +10,7 @@ import android.util.Log;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Adapter.CategoryGrid.CategoryGridRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
@@ -140,19 +141,14 @@ public class TransactionFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickAddNewCategory(BudgetType type){
-        //Toast.makeText(getContext(), "add new cat "+type.toString(), Toast.LENGTH_SHORT).show();
-
-        Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, type.toString());
-        startActivityForResult(addNewCategoryIntent, Constants.RETURN_NEW_CATEGORY);
+        startActivityForResult(CategoryInfoActivity.createIntentForNewCategory(getContext(), type), RequestCodes.NEW_CATEGORY);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_NEW_CATEGORY) {
+            if(requestCode == RequestCodes.NEW_CATEGORY) {
                 populateCategory(budgetType);
             }
         }

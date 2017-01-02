@@ -273,10 +273,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     }
 
     private void addNewCategory(){
-        Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, budgetType.toString());
-        startActivityForResult(addNewCategoryIntent, Constants.RETURN_NEW_CATEGORY);
+        startActivityForResult(CategoryInfoActivity.createIntentForNewCategory(getContext(), budgetType), RequestCodes.NEW_CATEGORY);
     }
 
     //Should be called only the first time when the fragment is created
@@ -390,14 +387,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     }
 
     private void editCategory(int position){
-        Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
-
-        Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
-
-        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
-
-        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
+        startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryRecyclerAdapter.getCategoryList().get(position)), RequestCodes.EDIT_CATEGORY);
     }
 
     private void confirmDelete(final int position){
@@ -432,7 +422,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_CATEGORY) {
+            if(requestCode == RequestCodes.EDIT_CATEGORY) {
 /*
                 boolean deleteCategory = data.getExtras().getBoolean(Constants.RESULT_DELETE_CATEGORY);
                 Toast.makeText(getContext(), "deleting cat here", Toast.LENGTH_LONG).show();
@@ -459,8 +449,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                 updateCategoryStatus();
                 */
                 populateCategoryWithNoInfo();
-            }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
-                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_CATEGORY));
+            }else if(requestCode == RequestCodes.NEW_CATEGORY){
+                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(CategoryInfoActivity.RESULT_CATEGORY));
 
                 Log.i("ZHAN", "----------- onActivityResult new category ----------");
                 Log.d("ZHAN", "category name is "+categoryReturned.getName());
