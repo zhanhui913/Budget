@@ -22,7 +22,7 @@ public class CurrencyJob extends Job {
     }
 
     public static void scheduleJob() {
-        new JobRequest.Builder(AutoBackupJob.TAG)
+        new JobRequest.Builder(CurrencyJob.TAG)
                 .setExecutionWindow(30_000L, 40_000L)
                 .build()
                 .schedule();

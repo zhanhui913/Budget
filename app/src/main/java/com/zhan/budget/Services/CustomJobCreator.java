@@ -12,8 +12,6 @@ public class CustomJobCreator implements JobCreator {
     @Override
     public Job create(String tag) {
         switch (tag) {
-            case AutoBackupJob.TAG:
-                return new AutoBackupJob();
             case CurrencyJob.TAG:
                 return new CurrencyJob();
             default:

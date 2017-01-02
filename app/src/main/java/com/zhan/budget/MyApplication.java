@@ -8,16 +8,20 @@ import android.widget.Toast;
 
 import com.evernote.android.job.JobManager;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Services.CustomJobCreator;
 import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.ThemeUtil;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
+import io.realm.RealmResults;
 import io.realm.RealmSchema;
 
 /**
@@ -95,8 +99,27 @@ public class MyApplication extends Application {
 
         BudgetPreference.resetRealmCache(this);
 
+        //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
-        JobManager.create(this).addJobCreator(new CustomJobCreator());
+        Log.d("HELP", "start listening to realm changes");
+        listenToRealmDBChanges();
+
+    }
+
+    private void listenToRealmDBChanges(){
+        final Realm myRealm = Realm.getDefaultInstance();
+        myRealm.addChangeListener(new RealmChangeListener<Realm>() {
+            @Override
+            public void onChange(Realm element) {
+                Log.d("HELP","Theres a change in DB in REalm");
+
+                if(BudgetPreference.getAllowAutoBackup(getApplicationContext())){
+                    Log.d("HELP","backing up now");
+
+                    DataBackup.backUpData(getApplicationContext());
+                }
+            }
+        });
     }
 
     public static MyApplication getInstance() {
