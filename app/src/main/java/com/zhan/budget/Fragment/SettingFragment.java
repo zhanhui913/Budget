@@ -17,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.evernote.android.job.JobManager;
 import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.Settings.AboutActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
@@ -29,7 +28,6 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Services.AutoBackupJob;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DataBackup;
@@ -65,8 +63,8 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, currencyCV, autoBackupCV, backupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, backupBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
+    private CircularView themeCV, firstDayCV, categoryCV, accountCV, locationCV, currencyCV, autoBackupCV, restoreBackupCV, resetCV, exportCSVCV, ratingsCV, emailCV, tutorialCV, faqCV, aboutCV;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
     private Switch autoBackupSwitch;
 
@@ -112,9 +110,6 @@ public class SettingFragment extends BaseFragment {
 
         autoBackupCV = (CircularView) view.findViewById(R.id.autoBackupCV);
         autoBackupSwitch = (Switch) view.findViewById(R.id.autoBackupSwitch);
-
-        backupCV = (CircularView) view.findViewById(R.id.backupCV);
-        backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
         restoreBackupCV = (CircularView) view.findViewById(R.id.restoreBackupCV);
@@ -191,10 +186,6 @@ public class SettingFragment extends BaseFragment {
         boolean allowAutoBackup = BudgetPreference.getAllowAutoBackup(getContext());
         autoBackupSwitch.setChecked(allowAutoBackup);
 
-        //Set last backup
-        backupCV.setCircleColor(R.color.sunflower);
-        backupCV.setIconColor(Colors.getHexColorFromAttr(getContext(), R.attr.themeColor));
-        backupCV.setIconResource(R.drawable.svg_ic_backup);
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
 
         //Set restore
@@ -235,7 +226,6 @@ public class SettingFragment extends BaseFragment {
         //set version number
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
 
-        //startServices();
         addListeners();
         getDefaultCurrency();
     }
@@ -303,19 +293,17 @@ public class SettingFragment extends BaseFragment {
 
                 if(isChecked){
                     checkPermissionToAutoBackup();
-                }else{
-                    //cancelAutoBackupJob();
                 }
             }
         });
-
+/*
         backupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPermissionToCreateBackup();
             }
         });
-
+*/
         restoreBackupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -405,7 +393,7 @@ public class SettingFragment extends BaseFragment {
     private File DOWNLOAD_DIRECTORY = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
     private final String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
-
+/*
     private void checkPermissionToCreateBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
@@ -413,7 +401,7 @@ public class SettingFragment extends BaseFragment {
         }else{
             backUpData();
         }
-    }
+    }*/
 
     private void checkPermissionToRestoreBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
@@ -423,7 +411,7 @@ public class SettingFragment extends BaseFragment {
             restore();
         }
     }
-
+/*
     public void requestFilePermissionToWrite(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             // Provide an additional rationale to the user if the permission was not granted
@@ -445,7 +433,7 @@ public class SettingFragment extends BaseFragment {
         }else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
         }
-    }
+    }*/
 
     public void requestFilePermissionToRead(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -937,15 +925,11 @@ public class SettingFragment extends BaseFragment {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private int mLastJobId;
-    private JobManager mJobManager;
-
     private void checkPermissionToAutoBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
             requestFilePermissionToWriteAutoBackup();
         }else{
-            //createAutoBackupJob();
             backUpData();
         }
     }
@@ -989,21 +973,4 @@ public class SettingFragment extends BaseFragment {
             autoBackupSwitch.setChecked(true);
         }
     }
-
-
-/*
-    private void startServices(){
-        mJobManager = JobManager.instance();
-    }
-
-    private void cancelAutoBackupJob(){
-        mJobManager.cancelAllForTag(AutoBackupJob.TAG);
-    }
-
-    public void createAutoBackupJob(){
-        //Creating an auto back job doesnt create it initially, it creates it after the set time,
-        //so I have to manually backup the 1st time
-        backUpData();
-        mLastJobId = AutoBackupJob.scheduleJob();
-    }*/
 }

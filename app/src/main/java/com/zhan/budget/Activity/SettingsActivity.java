@@ -63,9 +63,9 @@ public class SettingsActivity extends BaseActivity {
         // If request is cancelled, the result arrays are empty.
         if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
             // Permission was granted!
-            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                settingFragment.backUpData();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+            /*if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
+                //settingFragment.backUpData();
+            }else*/ if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                 settingFragment.restore();
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
                 settingFragment.exportCSVSort();
@@ -77,10 +77,10 @@ public class SettingsActivity extends BaseActivity {
             }
         }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
             boolean showRationale = true;
-
+/*
             if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+            }else*/ if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
             }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -92,9 +92,11 @@ public class SettingsActivity extends BaseActivity {
                 // Permission was denied without checking the check box "Never ask again"
                 Log.d("SETTINGS", "permission denied without never ask again");
 
-                if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                    settingFragment.requestFilePermissionToWrite();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+                /*if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
+                    //settingFragment.requestFilePermissionToWrite();
+                }*/
+
+                if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                     settingFragment.requestFilePermissionToRead();
                 }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
                     settingFragment.requestFilePermissionToWriteCSV();
