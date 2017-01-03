@@ -36,6 +36,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener{
 
     protected static final String TAG = "BaseTransactions";
+
+    protected static final String ALL_TRANSACTION_FOR_DATE = "All Transactions For Date";
+
     protected Activity instance;
     protected Date beginMonth, endMonth;
 
@@ -71,7 +74,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         instance = this;
 
         //Get intents from caller activity
-        beginMonth = DateUtil.refreshMonth(DateUtil.convertStringToDate(getApplicationContext(), (getIntent().getExtras()).getString(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH)));
+        beginMonth = DateUtil.refreshMonth((Date)(getIntent().getSerializableExtra(ALL_TRANSACTION_FOR_DATE)));
 
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);

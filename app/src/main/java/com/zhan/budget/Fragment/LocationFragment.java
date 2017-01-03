@@ -558,13 +558,7 @@ public class LocationFragment extends BaseRealmFragment
     public void onClickLocation(int position){
         closeSwipeItem(position);
 
-        Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
-
-        Parcelable wrapped = Parcels.wrap(locationList.get(position));
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, wrapped);
-
-        startActivityForResult(viewAllTransactionsForLocation, RequestCodes.HAS_TRANSACTION_CHANGED);
+        startActivityForResult(TransactionsForLocation.createIntentToViewAllTransactionsForLocationForMonth(getContext(), locationList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
     @Override

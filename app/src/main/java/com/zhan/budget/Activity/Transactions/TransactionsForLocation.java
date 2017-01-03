@@ -1,9 +1,11 @@
 package com.zhan.budget.Activity.Transactions;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Location;
@@ -13,6 +15,8 @@ import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
 
+import java.util.Date;
+
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -20,9 +24,21 @@ public class TransactionsForLocation extends BaseTransactions {
 
     private Location location;
 
+    public static final String ALL_TRANSACTION_FOR_LOCATION = "All Transactions For Location";
+
+    public static Intent createIntentToViewAllTransactionsForLocationForMonth(Context context, Location location, Date date){
+        Intent intent = new Intent(context, TransactionsForLocation.class);
+        intent.putExtra(ALL_TRANSACTION_FOR_DATE, date);
+
+        Parcelable wrapped = Parcels.wrap(location);
+        intent.putExtra(ALL_TRANSACTION_FOR_LOCATION, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected void getDifferentData(){
-        location = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION));
+        location = Parcels.unwrap((getIntent().getExtras()).getParcelable(ALL_TRANSACTION_FOR_LOCATION));
         updateTitleName(location.getName());
         updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), location.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
     }

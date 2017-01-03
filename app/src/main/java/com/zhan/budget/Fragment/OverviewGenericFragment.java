@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,8 +29,6 @@ import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-
-import org.parceler.Parcels;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -360,15 +357,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onClick(int position){
-        //Toast.makeText(getContext(), "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-        Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
-
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-        startActivityForResult(viewAllTransactionsForCategory, RequestCodes.HAS_TRANSACTION_CHANGED);
+        startActivityForResult(TransactionsForCategory.createIntentToViewAllTransactionsForCategoryForMonth(getContext(), categoryList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

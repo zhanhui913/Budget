@@ -455,12 +455,7 @@ public class AccountFragment extends BaseRealmFragment implements
     public void onClickAccount(int position){
         closeSwipeItem(position);
 
-        Intent viewAllTransactionsForAccount = new Intent(getContext(), TransactionsForAccount.class);
-        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
-
-        Parcelable wrapped = Parcels.wrap(accountList.get(position));
-        viewAllTransactionsForAccount.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT, wrapped);
-        startActivityForResult(viewAllTransactionsForAccount, RequestCodes.HAS_TRANSACTION_CHANGED);
+        startActivityForResult(TransactionsForAccount.createIntentToViewAllTransactionsForAccountForMonth(getContext(), accountList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
     @Override

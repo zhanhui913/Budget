@@ -1,10 +1,12 @@
 package com.zhan.budget.Activity.Transactions;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
@@ -15,6 +17,8 @@ import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
 
+import java.util.Date;
+
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -22,9 +26,21 @@ public class TransactionsForAccount extends BaseTransactions {
 
     private Account account;
 
+    public static final String ALL_TRANSACTION_FOR_ACCOUNT = "All Transactions For Account";
+
+    public static Intent createIntentToViewAllTransactionsForAccountForMonth(Context context, Account account, Date date){
+        Intent intent = new Intent(context, TransactionsForAccount.class);
+        intent.putExtra(ALL_TRANSACTION_FOR_DATE, date);
+
+        Parcelable wrapped = Parcels.wrap(account);
+        intent.putExtra(ALL_TRANSACTION_FOR_ACCOUNT, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected void getDifferentData(){
-        account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_ALL_TRANSACTION_FOR_ACCOUNT_ACCOUNT));
+        account = Parcels.unwrap((getIntent().getExtras()).getParcelable(ALL_TRANSACTION_FOR_ACCOUNT));
         updateTitleName(account.getName());
         updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), account.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
     }

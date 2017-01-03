@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -590,16 +589,9 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     @Override
     public void onClick(int position){
         if(arrangementType == CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET) {
-
             closeSwipeItem(position);
 
-            Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(getContext(), currentMonth));
-
-            Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
-
-            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-            startActivityForResult(viewAllTransactionsForCategory, RequestCodes.HAS_TRANSACTION_CHANGED);
+            startActivityForResult(TransactionsForCategory.createIntentToViewAllTransactionsForCategoryForMonth(getContext(), categoryRecyclerAdapter.getCategoryList().get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
         }
     }
 
