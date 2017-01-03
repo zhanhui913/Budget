@@ -2,6 +2,7 @@ package com.zhan.budget.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -15,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
@@ -31,12 +31,19 @@ import io.realm.Realm;
 public class AccountInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener{
 
+    public static final String NEW_ACCOUNT = "New Account";
+
+    public static final String EDIT_ACCOUNT_ITEM = "Edit Account Item";
+
+    public static final String RESULT_ACCOUNT = "Result Account";
+
+    public static final String DELETE_ACCOUNT = "Delete Account";
+
     private Activity instance;
     private Toolbar toolbar;
     private TextView accountNameTextView;
     private ImageButton deleteAccountBtn, changeNameBtn;
     private CircularView accountCircularView;
-
 
     //Fragments
     private ColorPickerCategoryFragment colorPickerCategoryFragment;
@@ -47,6 +54,22 @@ public class AccountInfoActivity extends BaseActivity implements
     //Selected color
     private String selectedColor;
 
+    public static Intent createIntentForNewAccount(Context context) {
+        Intent intent = new Intent(context, AccountInfoActivity.class);
+        intent.putExtra(NEW_ACCOUNT, true);
+        return intent;
+    }
+
+    public static Intent createIntentToEditAccount(Context context, Account account) {
+        Intent intent = new Intent(context, AccountInfoActivity.class);
+        intent.putExtra(NEW_ACCOUNT, false);
+
+        Parcelable wrapped = Parcels.wrap(account);
+        intent.putExtra(EDIT_ACCOUNT_ITEM, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_account_info;
@@ -56,12 +79,12 @@ public class AccountInfoActivity extends BaseActivity implements
     protected void init(){
         instance = this;
 
-        isNewAccount = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_ACCOUNT);
+        isNewAccount = (getIntent().getExtras()).getBoolean(NEW_ACCOUNT);
 
         Log.d("ACCOUNT_INFO", "isNewAccount "+isNewAccount);
 
         if(!isNewAccount){
-            account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_ACCOUNT));
+            account = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_ACCOUNT_ITEM));
 
             Log.d("ACCOUNT_INFO", "received account name : " +account.getName());
             Log.d("ACCOUNT_INFO", "received account id : " +account.getId());
@@ -208,7 +231,7 @@ public class AccountInfoActivity extends BaseActivity implements
                         myRealm.commitTransaction();
                         myRealm.close();
 
-                        intent.putExtra(Constants.RESULT_DELETE_ACCOUNT, true); //deleting account
+                        intent.putExtra(DELETE_ACCOUNT, true); //deleting account
                         setResult(RESULT_OK, intent);
                         finish();
                     }
@@ -254,11 +277,10 @@ public class AccountInfoActivity extends BaseActivity implements
         myRealm.close();
 
         if(!isNewAccount){
-            intent.putExtra(Constants.RESULT_DELETE_ACCOUNT, false); //not deleting account
-            intent.putExtra(Constants.RESULT_EDIT_ACCOUNT, wrapped);
-        }else{
-            intent.putExtra(Constants.RESULT_NEW_ACCOUNT, wrapped);
+            intent.putExtra(DELETE_ACCOUNT, false); //not deleting account
         }
+
+        intent.putExtra(RESULT_ACCOUNT, wrapped);
 
         setResult(RESULT_OK, intent);
 

@@ -3,7 +3,6 @@ package com.zhan.budget.Activity.Settings;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +19,7 @@ import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Adapter.AccountRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
@@ -217,22 +217,11 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     private void addAccount(){
-        Intent addAccountIntent = new Intent(this, AccountInfoActivity.class);
-        addAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, true);
-        startActivityForResult(addAccountIntent, Constants.RETURN_NEW_ACCOUNT);
+        startActivityForResult(AccountInfoActivity.createIntentForNewAccount(getApplicationContext()), RequestCodes.NEW_ACCOUNT);
     }
 
     private void editAccount(int position){
-        Log.d(TAG, "trying to edit account at pos : "+position);
-        Log.d(TAG, "accoutn name : " +resultsAccount.get(position).getName());
-        Log.d(TAG, "accoutn id : " +resultsAccount.get(position).getId());
-        Log.d(TAG, "accoutn color : " +resultsAccount.get(position).getColor());
-
-        Intent editAccountIntent = new Intent(this, AccountInfoActivity.class);
-        Parcelable wrapped = Parcels.wrap(accountList.get(position));
-        editAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, false);
-        editAccountIntent.putExtra(Constants.REQUEST_EDIT_ACCOUNT, wrapped);
-        startActivityForResult(editAccountIntent, Constants.RETURN_EDIT_ACCOUNT);
+        startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getApplicationContext(), accountList.get(position)), RequestCodes.EDIT_ACCOUNT);
     }
 
     private void updateAccountStatus(){
@@ -296,12 +285,12 @@ public class SettingsAccount extends BaseRealmActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
+            if(requestCode == RequestCodes.EDIT_ACCOUNT) {
 
-                boolean deleteAccount = data.getExtras().getBoolean(Constants.RESULT_DELETE_ACCOUNT);
+                boolean deleteAccount = data.getExtras().getBoolean(AccountInfoActivity.DELETE_ACCOUNT);
 
                 if(!deleteAccount){
-                    Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
+                    Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(AccountInfoActivity.RESULT_ACCOUNT));
 
                     Log.i(TAG, "----------- onActivityResult edit account ----------");
                     Log.d(TAG, "account name is "+accountReturned.getName());
@@ -316,8 +305,8 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 accountRecyclerAdapter.setAccountList(accountList);
                 updateAccountStatus();
-            }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
-                Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+            }else if(requestCode == RequestCodes.NEW_ACCOUNT){
+                Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(AccountInfoActivity.RESULT_ACCOUNT));
                 Log.i(TAG, "----------- onActivityResult new account ----------");
                 Log.d(TAG, "account name is "+accountReturned.getName());
                 Log.d(TAG, "account color is "+accountReturned.getColor());

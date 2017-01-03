@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -38,8 +37,6 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -285,18 +282,7 @@ public class AccountFragment extends BaseRealmFragment implements
     }
 
     private void editAccount(int position){
-        Log.d("ACCOUNT_INFO", "trying to edit account at pos : "+position);
-        Log.d("ACCOUNT_INFO", "accoutn name : " +accountList.get(position).getName());
-        Log.d("ACCOUNT_INFO", "accoutn id : " +accountList.get(position).getId());
-        Log.d("ACCOUNT_INFO", "accoutn color : " +accountList.get(position).getColor());
-
-
-
-        Intent editAccountIntent = new Intent(getContext(), AccountInfoActivity.class);
-        Parcelable wrapped = Parcels.wrap(accountRecyclerAdapter.getAccountList().get(position));
-        editAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, false);
-        editAccountIntent.putExtra(Constants.REQUEST_EDIT_ACCOUNT, wrapped);
-        startActivityForResult(editAccountIntent, Constants.RETURN_EDIT_ACCOUNT);
+        startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getContext(), accountRecyclerAdapter.getAccountList().get(position)), RequestCodes.EDIT_ACCOUNT);
     }
 
     private void updateAccountStatus(){
@@ -371,7 +357,7 @@ public class AccountFragment extends BaseRealmFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
+            if(requestCode == RequestCodes.EDIT_ACCOUNT) {
 /*
                 boolean deleteAccount = data.getExtras().getBoolean(Constants.RESULT_DELETE_ACCOUNT);
 
@@ -395,8 +381,9 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 //recalculate everything
                 populateAccountWithNoInfo();
-            }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
-                final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+            }else if(requestCode == RequestCodes.NEW_ACCOUNT){
+                //As we cannot pull down to add a new account here, this is kinda useless
+               /* final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(AccountInfoActivity.RESULT_ACCOUNT));
 
                 Log.i("ZHAN", "----------- onActivityResult new account ----------");
                 Log.d("ZHAN", "account name is "+accountReturned.getName());
@@ -411,6 +398,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 //Scroll to the last position
                 accountListView.scrollToPosition(accountRecyclerAdapter.getItemCount() - 1);
+                */
             }else if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
                 boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 

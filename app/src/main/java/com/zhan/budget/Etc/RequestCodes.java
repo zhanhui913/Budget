@@ -36,11 +36,15 @@ public final class RequestCodes {
     //
     /////
 
+    public static final int NEW_ACCOUNT = 300;
+    public static final int EDIT_ACCOUNT = 301;
+
     /////
     //
     // Location (400 - 500)
     //
     /////
+    
 
     /////
     //
