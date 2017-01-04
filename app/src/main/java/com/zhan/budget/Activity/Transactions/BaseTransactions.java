@@ -147,7 +147,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     private void confirmDeleteTransaction(final int position){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(getString(R.string.dialog_title_delete));

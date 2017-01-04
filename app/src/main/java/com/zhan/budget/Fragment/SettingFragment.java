@@ -29,14 +29,12 @@ import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Tutorial;
 import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.ExtendedNumberPicker;
-import com.zhan.library.CircularView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -482,7 +480,7 @@ public class SettingFragment extends BaseFragment {
 
         View sortDialogView = View.inflate(getContext(), R.layout.alertdialog_number_picker, null);
 
-        TextView title = (TextView)sortDialogView.findViewById(R.id.title);
+        TextView title = (TextView)sortDialogView.findViewById(R.id.alertdialogTitle);
         title.setText(R.string.setting_content_export_data_sort);
 
         final ExtendedNumberPicker sortPicker = (ExtendedNumberPicker)sortDialogView.findViewById(R.id.numberPicker);
@@ -671,7 +669,7 @@ public class SettingFragment extends BaseFragment {
     private void resetData(){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(R.string.reset);

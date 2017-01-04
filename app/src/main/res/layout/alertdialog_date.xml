@@ -4,17 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
-
-        <TextView style="@style/AlertDialogTitleStyle"
-            android:id="@+id/alertdialogMonthTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/month"/>
-    </LinearLayout>
+    <include layout="@layout/alertdialog_base"/>
 
     <com.p_v.flexiblecalendar.FlexibleCalendarView
         xmlns:flexible="http://schemas.android.com/apk/res-auto"

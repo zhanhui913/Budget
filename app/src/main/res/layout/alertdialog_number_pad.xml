@@ -4,17 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+    <include layout="@layout/alertdialog_base"/>
 
-    <TextView style="@style/AlertDialogTitleStyle"
-        android:id="@+id/numberPadTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/budget" />
-    </LinearLayout>
     <TextView
         android:id="@+id/numericTextView"
         android:layout_width="match_parent"

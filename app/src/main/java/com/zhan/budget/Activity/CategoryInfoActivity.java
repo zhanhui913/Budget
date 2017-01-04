@@ -38,8 +38,6 @@ import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
-import java.util.Date;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -294,9 +292,9 @@ public class CategoryInfoActivity extends BaseActivity implements
     }
 
     private void changeName(){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_edittext, null);
 
-        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView genericTitle = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
         genericTitle.setText(getString(R.string.name));
@@ -329,7 +327,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void changeBudget(){
         View promptView = View.inflate(instance, R.layout.alertdialog_number_pad, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
         priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency);
@@ -490,7 +488,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void confirmDelete(){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(getString(R.string.dialog_title_delete));
@@ -613,7 +611,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void notificationForCategory(){
         View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(R.string.category);

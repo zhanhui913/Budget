@@ -4,16 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
-
-        <TextView style="@style/AlertDialogTitleStyle"
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    <include layout="@layout/alertdialog_base"/>
 
     <!-- set blockDescendants so that it doesn't auto highlight the first option -->
     <com.zhan.budget.View.ExtendedNumberPicker

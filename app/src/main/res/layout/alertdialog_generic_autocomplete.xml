@@ -4,11 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-
-    <LinearLayout
+<!--
+    <LinearLayout style="@style/AlertDialogHeaderStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:layout_height="wrap_content">
 
         <TextView style="@style/AlertDialogTitleStyle"
             android:id="@+id/genericTitle"
@@ -16,6 +15,8 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_content_name" />
     </LinearLayout>
+-->
+    <include layout="@layout/alertdialog_base"/>
 
     <AutoCompleteTextView
         android:id="@+id/genericAutoCompleteEditText"

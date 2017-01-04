@@ -123,6 +123,10 @@
 		<item name="android:padding">@dimen/item_padding</item>
 	</style>
 
+	<style name="AlertDialogHeaderStyle">
+		<item name="android:background">@drawable/gradient</item>
+	</style>
+
 	<!-- List Adapter's individual item's xml padding -->
 	<style name="ItemPaddingStyle">
 		<item name="android:paddingTop">@dimen/item_top_padding</item>

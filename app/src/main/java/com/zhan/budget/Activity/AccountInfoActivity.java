@@ -176,9 +176,9 @@ public class AccountInfoActivity extends BaseActivity implements
     }
 
     private void changeName(){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_edittext, null);
 
-        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView genericTitle = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
         genericTitle.setText(getString(R.string.name));
@@ -212,7 +212,7 @@ public class AccountInfoActivity extends BaseActivity implements
     private void confirmDelete(){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(getString(R.string.dialog_title_delete));
@@ -297,7 +297,7 @@ public class AccountInfoActivity extends BaseActivity implements
     private void notificationForAccount(){
         View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(R.string.account);

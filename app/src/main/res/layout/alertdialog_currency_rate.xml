@@ -5,17 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
-
-        <TextView style="@style/AlertDialogTitleStyle"
-            android:id="@+id/genericTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_currency_title" />
-    </LinearLayout>
+    <include layout="@layout/alertdialog_base"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

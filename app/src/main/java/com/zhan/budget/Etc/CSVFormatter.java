@@ -53,8 +53,8 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         //Option 1
         View promptView = View.inflate(context, R.layout.alertdialog_progressbar, null);
 
-        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
-        genericTitle.setText(R.string.dialog_title_csv);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        title.setText(R.string.dialog_title_csv);
 
         mDialog = (RoundCornerProgressBar) promptView.findViewById(R.id.progressBar);
         mDialog.setMax(transactionList.size());
@@ -82,26 +82,6 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
         alertDialog = builder.create();
         alertDialog.show();
-
-        /*
-        //Option 2
-        mDialog.setMax(transactionList.size());
-        mDialog.setMessage("CSVing....");
-        mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mDialog.setProgress(0); //start at 0
-        mDialog.setCancelable(false);
-        mDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                CSVFormatter.this.cancel(true);
-
-                if(mListener != null){
-                    mListener.onCompleteCSV(false);
-                }
-            }
-        });*/
-
-       // mDialog.show();
     }
 
     public void setCSVInteraction(OnCSVInteractionListener mListener){

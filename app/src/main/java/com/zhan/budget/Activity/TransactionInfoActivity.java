@@ -496,7 +496,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void createDateDialog(){
         View dateDialogView = View.inflate(instance, R.layout.alertdialog_date, null);
 
-        monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogMonthTextView);
+        monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogTitle);
         final FlexibleCalendarView calendarView = (FlexibleCalendarView) dateDialogView.findViewById(R.id.alertdialogCalendarView);
 
         int year = DateUtil.getYearFromDate(selectedDate);
@@ -610,7 +610,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
 
-            TextView title = (TextView)accountDialogView.findViewById(R.id.title);
+            TextView title = (TextView)accountDialogView.findViewById(R.id.alertdialogTitle);
             title.setText(getString(R.string.account));
 
             accountNameList = new ArrayList<>();
@@ -677,7 +677,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }else{
             View accountDialogView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-            TextView title = (TextView)accountDialogView.findViewById(R.id.genericTitle);
+            TextView title = (TextView)accountDialogView.findViewById(R.id.alertdialogTitle);
             TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
 
             title.setText(getString(R.string.account));
@@ -696,11 +696,11 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void createNoteDialog(){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_edittext, null);
 
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         title.setText(getString(R.string.add_note));
         input.setHint(getString(R.string.note));
         input.setText(noteString);
@@ -760,7 +760,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_autocomplete, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         title.setText(getString(R.string.add_location));
 
         inputLocation = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
@@ -805,6 +805,9 @@ public class TransactionInfoActivity extends BaseActivity implements
         quantityNumberPicker.setWrapSelectorWheel(true);
 
         final ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
+
+        TextView title = (TextView)promptView.findViewById(R.id.alertdialogTitle);
+        title.setText(R.string.dialog_title_repeat);
 
         //Initializing a new string array with elements
         final String[] values= {getString(R.string.days), getString(R.string.weeks), getString(R.string.months)};
@@ -907,6 +910,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private void createExchangeDialog(final BudgetCurrency selectedBudgetCurrency){
         View promptView = View.inflate(instance, R.layout.alertdialog_currency_rate, null);
+
+        TextView title = (TextView)promptView.findViewById(R.id.alertdialogTitle);
+        title.setText(R.string.dialog_currency_title);
 
         TextView selectedBudgetCurrencyHeader = (TextView) promptView.findViewById(R.id.selectedBudgetCurrencyHeader);
         TextView selectedBudgetCurrencyContent = (TextView) promptView.findViewById(R.id.selectedBudgetCurrencyContent);
@@ -1157,7 +1163,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void notificationForCategory(BudgetType type){
         View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
         title.setText(getString(R.string.category));
