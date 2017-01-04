@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +24,6 @@ import com.zhan.budget.Activity.LocationInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
@@ -33,8 +31,6 @@ import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -459,11 +455,7 @@ public class LocationFragment extends BaseRealmFragment
     }
 
     private void editLocation(int position){
-        Intent editLocationIntent = new Intent(getContext(), LocationInfoActivity.class);
-        Parcelable wrapped = Parcels.wrap(locationList.get(position));
-        editLocationIntent.putExtra(Constants.REQUEST_NEW_LOCATION, false);
-        editLocationIntent.putExtra(Constants.REQUEST_EDIT_LOCATION, wrapped);
-        startActivityForResult(editLocationIntent, Constants.RETURN_EDIT_LOCATION);
+        startActivityForResult(LocationInfoActivity.createIntentToEditLocation(getContext(), locationList.get(position)), RequestCodes.EDIT_LOCATION);
     }
 
     @Override
@@ -480,6 +472,8 @@ public class LocationFragment extends BaseRealmFragment
                     populateLocationWithNoInfo(currentMonth, true);
                 }
                 updateLocationStatus();
+            }else if(requestCode == RequestCodes.EDIT_LOCATION){
+                //Todo : handle location editing from here
             }
         }
     }

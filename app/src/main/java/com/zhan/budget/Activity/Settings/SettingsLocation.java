@@ -3,7 +3,6 @@ package com.zhan.budget.Activity.Settings;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +17,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Activity.LocationInfoActivity;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.R;
 import com.zhan.budget.View.PlusView;
@@ -194,17 +193,11 @@ public class SettingsLocation extends BaseRealmActivity implements
     }
 
     private void addLocation(){
-        Intent addLocationIntent = new Intent(this, LocationInfoActivity.class);
-        addLocationIntent.putExtra(Constants.REQUEST_NEW_LOCATION, true);
-        startActivityForResult(addLocationIntent, Constants.RETURN_NEW_LOCATION);
+        startActivityForResult(LocationInfoActivity.createIntentForNewLocation(getApplicationContext()), RequestCodes.NEW_LOCATION);
     }
 
     private void editLocation(int position){
-        Intent editLocationIntent = new Intent(this, LocationInfoActivity.class);
-        Parcelable wrapped = Parcels.wrap(locationList.get(position));
-        editLocationIntent.putExtra(Constants.REQUEST_NEW_LOCATION, false);
-        editLocationIntent.putExtra(Constants.REQUEST_EDIT_LOCATION, wrapped);
-        startActivityForResult(editLocationIntent, Constants.RETURN_EDIT_LOCATION);
+        startActivityForResult(LocationInfoActivity.createIntentToEditLocation(getApplicationContext(), locationList.get(position)), RequestCodes.EDIT_LOCATION);
     }
 
     private void updateLocationStatus(){
@@ -268,12 +261,12 @@ public class SettingsLocation extends BaseRealmActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_LOCATION) {
+            if(requestCode == RequestCodes.EDIT_LOCATION) {
 
-                boolean deleteLocation = data.getExtras().getBoolean(Constants.RESULT_DELETE_LOCATION);
+                boolean deleteLocation = data.getExtras().getBoolean(LocationInfoActivity.DELETE_LOCATION);
 
                 if(!deleteLocation){
-                    Location locationReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_LOCATION));
+                    Location locationReturned = Parcels.unwrap(data.getExtras().getParcelable(LocationInfoActivity.RESULT_LOCATION));
 
                     Log.i(TAG, "----------- onActivityResult edit location ----------");
                     Log.d(TAG, "location name is "+locationReturned.getName());
@@ -287,8 +280,8 @@ public class SettingsLocation extends BaseRealmActivity implements
 
                 locationListAdapter.setLocationList(locationList);
                 updateLocationStatus();
-            }else if(requestCode == Constants.RETURN_NEW_LOCATION){
-                Location locationReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_LOCATION));
+            }else if(requestCode == RequestCodes.NEW_LOCATION){
+                Location locationReturned = Parcels.unwrap(data.getExtras().getParcelable(LocationInfoActivity.RESULT_LOCATION));
 
                 Log.i(TAG, "----------- onActivityResult new location ----------");
                 Log.d(TAG, "location name is "+locationReturned.getName());

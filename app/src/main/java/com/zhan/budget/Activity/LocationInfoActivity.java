@@ -2,6 +2,7 @@ package com.zhan.budget.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -15,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.R;
@@ -34,6 +34,14 @@ public class LocationInfoActivity extends BaseActivity implements
 
     private static final String TAG = "Location_INFO";
 
+    public static final String NEW_LOCATION = "New Location";
+
+    public static final String EDIT_LOCATION_ITEM = "Edit Location Item";
+
+    public static final String RESULT_LOCATION = "Result Location";
+
+    public static final String DELETE_LOCATION = "Delete Location";
+
     private Activity instance;
     private Toolbar toolbar;
     private TextView locationNameTextView;
@@ -49,6 +57,22 @@ public class LocationInfoActivity extends BaseActivity implements
     //Selected color
     private String selectedColor;
 
+    public static Intent createIntentForNewLocation(Context context) {
+        Intent intent = new Intent(context, LocationInfoActivity.class);
+        intent.putExtra(NEW_LOCATION, true);
+        return intent;
+    }
+
+    public static Intent createIntentToEditLocation(Context context, Location location) {
+        Intent intent = new Intent(context, LocationInfoActivity.class);
+        intent.putExtra(NEW_LOCATION, false);
+
+        Parcelable wrapped = Parcels.wrap(location);
+        intent.putExtra(EDIT_LOCATION_ITEM, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_location_info;
@@ -58,12 +82,12 @@ public class LocationInfoActivity extends BaseActivity implements
     protected void init(){
         instance = this;
 
-        isNewLocation = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_LOCATION);
+        isNewLocation = (getIntent().getExtras()).getBoolean(NEW_LOCATION);
 
         Log.d(TAG, "isNewLocation "+isNewLocation);
 
         if(!isNewLocation){
-            location = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_LOCATION));
+            location = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_LOCATION_ITEM));
 
             Log.d(TAG, "received location name : " +location.getName());
             Log.d(TAG, "received location color : " +location.getColor());
@@ -210,7 +234,7 @@ public class LocationInfoActivity extends BaseActivity implements
                         myRealm.commitTransaction();
                         myRealm.close();
 
-                        intent.putExtra(Constants.RESULT_DELETE_LOCATION, true); //deleting location
+                        intent.putExtra(DELETE_LOCATION, true); //deleting location
                         setResult(RESULT_OK, intent);
                         finish();
 
@@ -278,11 +302,10 @@ public class LocationInfoActivity extends BaseActivity implements
         myRealm.close();BudgetPreference.removeRealmCache(this);
 
         if(!isNewLocation){
-            intent.putExtra(Constants.RESULT_DELETE_LOCATION, false); //not deleting location
-            intent.putExtra(Constants.RESULT_EDIT_LOCATION, wrapped);
-        }else{
-            intent.putExtra(Constants.RESULT_NEW_LOCATION, wrapped);
+            intent.putExtra(DELETE_LOCATION, false); //not deleting location
         }
+
+        intent.putExtra(RESULT_LOCATION, wrapped);
 
         setResult(RESULT_OK, intent);
 

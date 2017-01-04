@@ -46,6 +46,9 @@ public final class RequestCodes {
     /////
     
 
+    public static final int NEW_LOCATION = 400;
+    public static final int EDIT_LOCATION = 401;
+
     /////
     //
     // Overview (500 - 600)
