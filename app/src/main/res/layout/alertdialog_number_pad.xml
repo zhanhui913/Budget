@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout style="@style/AlertDialogLayoutStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include layout="@layout/alertdialog_base"/>
 
-    <TextView
-        android:id="@+id/numericTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_header_size"
-        android:textStyle="bold"
-        android:gravity="end"
-        android:paddingTop="@dimen/item_padding"
-        android:paddingLeft="@dimen/item_padding"
-        android:paddingRight="@dimen/item_padding"
-        android:maxLines="1"/>
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dialog_content_top_padding">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/themeColorHighlight"
-        android:layout_margin="@dimen/item_padding">
+        <TextView
+            android:id="@+id/numericTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_header_size"
+            android:textStyle="bold"
+            android:gravity="end"
+            android:maxLines="1"/>
 
         <include layout="@layout/number_pad"
             android:id="@+id/numberPad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -8,6 +8,7 @@
 		<item name="android:textColor">@color/night_text</item>
 		<item name="android:windowBackground">@color/day</item>
 		<item name="actionOverflowMenuStyle">@style/AppThemeLight.Menu</item>
+		<item name="alertDialogTheme">@style/AlertDialogThemeStyle</item>
 
 		<!-- For xml uses -->
 		<item name="themeColor">@color/day</item>
@@ -40,6 +41,7 @@
 		<item name="android:textColor">@color/day_text</item>
 		<item name="android:windowBackground">@color/night</item>
 		<item name="actionOverflowMenuStyle">@style/AppThemeDark.Menu</item>
+		<item name="alertDialogTheme">@style/AlertDialogThemeStyle</item>
 
 		<!-- For xml uses -->
 		<item name="themeColor">@color/night</item>
@@ -118,13 +120,26 @@
 	<!-- Alert dialog's style -->
 	<style name="AlertDialogTitleStyle">
 		<item name="android:textSize">@dimen/text_header_size</item>
-		<item name="android:textColor">@color/day_text</item>
+		<item name="android:textColor">@color/colorPrimary</item>
 		<item name="android:textStyle">bold</item>
-		<item name="android:padding">@dimen/item_padding</item>
 	</style>
 
-	<style name="AlertDialogHeaderStyle">
-		<item name="android:background">@drawable/gradient</item>
+	<style name="AlertDialogLayoutStyle">
+		<item name="android:padding">@dimen/dialog_padding</item>
+		<item name="android:orientation">vertical</item>
+	</style>
+
+	<style name="AlertDialogThemeStyle" parent="Theme.AppCompat.Dialog.Alert">
+		<item name="colorAccent">@color/colorPrimary</item>
+		<item name="android:textColorPrimary">?attr/themeColorText</item>
+		<item name="android:background">?attr/themeColor</item>
+		<item name="buttonBarButtonStyle">@style/AlertDialog_API_25</item>
+	</style>
+
+	<!-- API 25 uses buttonBarButtonStyle -->
+	<style name="AlertDialog_API_25" parent="Widget.AppCompat.Button.Borderless">
+		<!-- this is the button text color!    -->
+		<item name="android:textColor">@color/colorPrimary</item>
 	</style>
 
 	<!-- List Adapter's individual item's xml padding -->
