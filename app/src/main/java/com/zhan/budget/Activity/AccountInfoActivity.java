@@ -138,7 +138,7 @@ public class AccountInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(isNewAccount){
-                getSupportActionBar().setTitle(getString(R.string.add_account));
+                getSupportActionBar().setTitle(getString(R.string.new_account));
             }else{
                 getSupportActionBar().setTitle(getString(R.string.edit_account));
             }
