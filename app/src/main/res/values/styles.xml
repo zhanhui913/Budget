@@ -118,13 +118,13 @@
 	<!-- Alert dialog's style -->
 	<style name="AlertDialogTitleStyle">
 		<item name="android:textSize">@dimen/text_header_size</item>
-		<item name="android:textColor">@color/day_text</item>
+		<item name="android:textColor">@color/colorPrimary</item>
 		<item name="android:textStyle">bold</item>
-		<item name="android:padding">@dimen/item_padding</item>
 	</style>
 
-	<style name="AlertDialogHeaderStyle">
-		<item name="android:background">@drawable/gradient</item>
+	<style name="AlertDialogStyle">
+		<item name="android:padding">@dimen/dialog_padding</item>
+		<item name="android:orientation">vertical</item>
 	</style>
 
 	<!-- List Adapter's individual item's xml padding -->

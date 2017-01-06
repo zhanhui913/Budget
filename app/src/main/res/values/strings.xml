@@ -253,6 +253,7 @@
 	<string name="currency_select">You selected</string>
 	<string name="currency_current_exchange_rate">Current exchange rate is</string>
 	<string name="search_currency_hint">US Dollar</string>
+	<string name="packaging_currency_title">Packaging</string>
 
 
 </resources>

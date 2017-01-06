@@ -266,7 +266,9 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
     private void convertDefaultCurrency(final BudgetCurrency currency){
         List<BudgetCurrency>  tempCurrencyList = myRealm.copyFromRealm(resultsCurrency);
 
-        MassExchangeRate massExchangeRate = new MassExchangeRate(instance, currency, tempCurrencyList, new MassExchangeRate.OnMassExchangeRateInteractionListener() {
+        MassExchangeRate massExchangeRate = new MassExchangeRate(instance, currency, tempCurrencyList);
+
+        massExchangeRate.setMassExchangeListener(new MassExchangeRate.OnMassExchangeRateInteractionListener() {
             @Override
             public void onCompleteAllCurrencyCalculation(List<BudgetCurrency> results) {
                 Toast.makeText(getApplicationContext(), "MASS CALCULATION COMPLETED",Toast.LENGTH_SHORT).show();

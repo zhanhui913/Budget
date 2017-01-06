@@ -51,5 +51,8 @@
 	<dimen name="grid_view_vertical_offset">0dp</dimen>
 	<dimen name="grid_view_horizontal_offset">0dp</dimen>
 
+	<dimen name="dialog_padding">24dp</dimen>
+	<dimen name="dialog_content_top_padding">20dp</dimen>
+
 	<dimen name="version_number">10sp</dimen>
 </resources>

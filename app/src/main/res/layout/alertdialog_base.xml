@@ -1,14 +1,8 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<LinearLayout style="@style/AlertDialogHeaderStyle"
-	              android:layout_width="match_parent"
-	              android:layout_height="wrap_content">
-
 		<TextView style="@style/AlertDialogTitleStyle"
 		          android:id="@+id/alertdialogTitle"
 		          android:layout_width="match_parent"
 		          android:layout_height="wrap_content"
 		          android:text="@string/app_name"/>
-	</LinearLayout>
-
 </merge>
