@@ -1,6 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +39,8 @@ import io.realm.Realm;
 public class OverviewActivity extends BaseActivity implements
     OverviewGenericFragment.OverviewInteractionListener{
 
+    public static final String MONTH = "View Overview Month";
+
     //Charts
     private PercentChartFragment percentChartFragment;
     private BarChartFragment barChartFragment;
@@ -59,6 +63,12 @@ public class OverviewActivity extends BaseActivity implements
 
     private BudgetCurrency currentCurrency;
 
+    public static Intent createIntentToViewOverviewOnMonth(Context context, Date date){
+        Intent intent = new Intent(context, OverviewActivity.class);
+        intent.putExtra(MONTH, date);
+        return intent;
+    }
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_overview;
@@ -68,11 +78,14 @@ public class OverviewActivity extends BaseActivity implements
     protected void init(){ Log.d("REALMZ1", "on init for overview activity");
         instance = this;
 
-        currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
+        //currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
+        currentMonth = DateUtil.refreshDate((Date)(getIntent().getSerializableExtra(MONTH)));
 
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
         totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
+
+        getDefaultCurrency();
 
         createToolbar();
         addListeners();

@@ -1,7 +1,6 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -268,10 +267,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickMonth(int position){
-        Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
-        overviewActivity.putExtra(Constants.REQUEST_NEW_OVERVIEW_MONTH, monthReportList.get(position).getMonth());
-        //startActivityForResult(overviewActivity, Constants.RETURN_NEW_OVERVIEW);
-        startActivity(overviewActivity);
+        startActivity(OverviewActivity.createIntentToViewOverviewOnMonth(getContext(), monthReportList.get(position).getMonth()));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
