@@ -202,7 +202,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         
         if(getSupportActionBar() != null){
             if(isNewCategory){
-                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.add_category_expense) : getString(R.string.add_category_income));
+                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.new_category_expense) : getString(R.string.new_category_income));
             }else{
                 getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.edit_category_expense) : getString(R.string.edit_category_income));
             }

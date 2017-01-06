@@ -139,7 +139,7 @@ public class LocationInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(isNewLocation){
-                getSupportActionBar().setTitle(getString(R.string.add_location));
+                getSupportActionBar().setTitle(getString(R.string.new_location));
             }else{
                 getSupportActionBar().setTitle(getString(R.string.edit_location));
             }

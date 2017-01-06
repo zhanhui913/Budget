@@ -307,7 +307,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             if(!isNewTransaction){
                 getSupportActionBar().setTitle(getString(R.string.edit_transaction));
             }else{
-                getSupportActionBar().setTitle(getString(R.string.add_transaction));
+                getSupportActionBar().setTitle(getString(R.string.new_transaction));
             }
         }
     }
@@ -701,7 +701,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
         TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
-        title.setText(getString(R.string.add_note));
+        title.setText(getString(R.string.new_note));
         input.setHint(getString(R.string.note));
         input.setText(noteString);
 
@@ -761,7 +761,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_autocomplete, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
-        title.setText(getString(R.string.add_location));
+        title.setText(getString(R.string.new_location));
 
         inputLocation = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
         inputLocation.setHint(getString(R.string.location));

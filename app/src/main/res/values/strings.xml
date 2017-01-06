@@ -85,12 +85,12 @@
 	<string name="month">Month</string>
 
 	<!-- Title when adding/editting item-->
-	<string name="add_transaction">Add transaction</string>
-	<string name="add_category_expense">Add expense category</string>
-	<string name="add_category_income">Add income category</string>
-	<string name="add_account">Add account</string>
-	<string name="add_location">Add location</string>
-	<string name="add_note">Add note</string>
+	<string name="new_transaction">New transaction</string>
+	<string name="new_category_expense">New expense category</string>
+	<string name="new_category_income">New income category</string>
+	<string name="new_account">New account</string>
+	<string name="new_location">New location</string>
+	<string name="new_note">New note</string>
 	<string name="edit_transaction">Edit transaction</string>
 	<string name="edit_category_expense">Edit expense category</string>
 	<string name="edit_category_income">Edit income category</string>
