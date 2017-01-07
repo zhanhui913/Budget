@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.OverviewActivity;
+import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Adapter.MonthReportRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -109,8 +109,8 @@ public class MonthReportFragment extends BaseRealmFragment implements
         defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(defaultCurrency == null){
             defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
         }else {
             defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
         }

@@ -50,6 +50,10 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
     public static final String NEED_RETURN_CURRENCY = "Currency";
 
+    public static final String DEFAULT_CURRENCY_CODE = "USD";
+
+    public static final String DEFAULT_CURRENCY_NAME = "US Dollar";
+
     private Toolbar toolbar;
     private Activity instance;
 

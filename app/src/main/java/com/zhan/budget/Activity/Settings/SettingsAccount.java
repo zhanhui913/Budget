@@ -17,8 +17,8 @@ import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.BaseRealmActivity;
+import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Adapter.AccountRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
@@ -119,8 +119,8 @@ public class SettingsAccount extends BaseRealmActivity implements
         currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(currentCurrency == null){
             currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+            currentCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
         }else{
             currentCurrency = myRealm.copyFromRealm(currentCurrency);
         }

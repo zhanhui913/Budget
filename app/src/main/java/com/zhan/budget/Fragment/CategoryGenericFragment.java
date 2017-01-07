@@ -18,12 +18,12 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
+import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
@@ -189,8 +189,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(defaultCurrency == null){
             defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
         }else {
             defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
         }

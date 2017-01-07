@@ -16,11 +16,11 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
+import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -116,8 +116,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(currentCurrency == null){
             currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+            currentCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
         }else{
             currentCurrency = myRealm.copyFromRealm(currentCurrency);
         }

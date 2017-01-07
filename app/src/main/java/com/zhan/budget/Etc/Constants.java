@@ -23,11 +23,11 @@ public class Constants {
     public static final int MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE = 5; //to create realm auto backup
 
     //Default account
-    public static final String DEFAULT_ACCOUNT = "Default Account";
+    //public static final String DEFAULT_ACCOUNT = "Default Account";
 
     //Default currency Code and currency name
-    public static final String DEFAULT_CURRENCY_CODE = "USD";
-    public static final String DEFAULT_CURRENCY_NAME = "US Dollar";
+    //public static final String DEFAULT_CURRENCY_CODE = "USD";
+    //public static final String DEFAULT_CURRENCY_NAME = "US Dollar";
 
     //Activity request
     //public static final String REQUEST_NEW_TRANSACTION = "New Transaction";
@@ -54,8 +54,8 @@ public class Constants {
     //public static final int RETURN_EDIT_TRANSACTION = 2;
     //public static final int RETURN_NEW_CATEGORY = 3;
     //public static final int RETURN_EDIT_CATEGORY = 4;
-    public static final int RETURN_NEW_OVERVIEW = 5;
-    public static final int RETURN_CHANGE_LOCATION = 6;
+    //public static final int RETURN_NEW_OVERVIEW = 5;
+    //public static final int RETURN_CHANGE_LOCATION = 6;
     //public static final int RETURN_NEW_ACCOUNT = 7;
     //public static final int RETURN_EDIT_ACCOUNT = 8;
     //public static final int RETURN_NEW_LOCATION = 9;
@@ -80,7 +80,7 @@ public class Constants {
     //public static final String RESULT_NEW_LOCATION = "New Location Result";
     //public static final String RESULT_DELETE_LOCATION = "Delete Location Result";
 
-    public static final String RESULT_CURRENCY = "Return Currency Result";
+    //public static final String RESULT_CURRENCY = "Return Currency Result";
 
     //public static final String CHANGED = "Has Been Changed?";
 

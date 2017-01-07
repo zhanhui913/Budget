@@ -1,9 +1,9 @@
 package com.zhan.budget.Activity.Transactions;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +14,9 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
+import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.DayType;
@@ -134,8 +134,8 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(defaultCurrency == null){
             defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
         }else{
             defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
         }

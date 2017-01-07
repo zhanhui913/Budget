@@ -207,8 +207,8 @@ public class OverviewActivity extends BaseActivity implements
         currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(currentCurrency == null){
             currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+            currentCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
+            currentCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
         }else{
             currentCurrency = myRealm.copyFromRealm(currentCurrency);
         }

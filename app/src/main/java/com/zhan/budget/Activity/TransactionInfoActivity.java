@@ -858,8 +858,8 @@ public class TransactionInfoActivity extends BaseActivity implements
         defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
         if(defaultCurrency == null){
             defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
+            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
+            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
         }
 
         Toast.makeText(getApplicationContext(), "default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
