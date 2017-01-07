@@ -78,7 +78,6 @@ public class OverviewActivity extends BaseActivity implements
     protected void init(){ Log.d("REALMZ1", "on init for overview activity");
         instance = this;
 
-        //currentMonth = (Date)(getIntent().getExtras()).get(Constants.REQUEST_NEW_OVERVIEW_MONTH);
         currentMonth = DateUtil.refreshDate((Date)(getIntent().getSerializableExtra(MONTH)));
 
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
