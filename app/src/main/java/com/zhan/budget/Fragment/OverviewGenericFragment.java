@@ -30,6 +30,8 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 
+import org.parceler.Parcels;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,6 +65,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private SwipeLayout currentSwipeLayoutTarget;
 
     private BudgetCurrency currentCurrency;
+
+    private Category categoryEdited;
 
     public static OverviewGenericFragment newInstance(BudgetType budgetType, Date currentMonth) {
         OverviewGenericFragment fragment = new OverviewGenericFragment();
@@ -278,7 +282,9 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     }
 
     private void editCategory(int position){
-        startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryList.get(position)), RequestCodes.EDIT_CATEGORY);
+        closeSwipeItem(position);
+        categoryEdited = categoryList.get(position);
+        startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryEdited), RequestCodes.EDIT_CATEGORY);
     }
 
     @Override
@@ -290,13 +296,15 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
-                    //Toast.makeText(getContext(), "hanged changed", Toast.LENGTH_SHORT).show();
-
                     getMonthReport(currentMonth, true);
                 }
             }else if(requestCode == RequestCodes.EDIT_CATEGORY){
-                //TODO : Need to handle the editing of a  category while in Overview fragment
-                //
+                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(CategoryInfoActivity.RESULT_CATEGORY));
+
+                if(!categoryReturned.checkEquals(categoryEdited)){
+                    //If something has been changed, update the list and the pie chart
+                    getCategoryList();
+                }
             }
         }
     }
