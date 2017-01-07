@@ -5,11 +5,14 @@ package com.zhan.budget.Etc;
  */
 
 public final class RequestCodes {
-    public static final int REQUEST_PERMISSION_WRITE = 1;
 
-    public static final int REQUEST_PERMISSION_READ = 2;
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE = 1; //to create realm auto backup
 
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2; //to read realm backup
 
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_CSV = 3; //to create csv
+
+    public static final int MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE = 4; //to access orig realm data
 
     /////
     //
@@ -49,26 +52,21 @@ public final class RequestCodes {
     public static final int NEW_LOCATION = 400;
     public static final int EDIT_LOCATION = 401;
 
-    /////
-    //
-    // Overview (500 - 600)
-    //
-    /////
 
     /////
     //
-    // Currency (600 - 700)
+    // Currency (500 - 600)
     //
     /////
 
-    public static final int SELECTED_CURRENCY = 600;
+    public static final int SELECTED_CURRENCY = 500;
 
     /////
     //
-    // Etc (700 - 800)
+    // Etc (600 - 700)
     //
     /////
 
-    public static final int SETTINGS = 700;
+    public static final int SETTINGS = 600;
 
 }

@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.SettingFragment;
 import com.zhan.budget.R;
 
@@ -63,24 +63,24 @@ public class SettingsActivity extends BaseActivity {
         // If request is cancelled, the result arrays are empty.
         if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
             // Permission was granted!
-            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+            if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                 settingFragment.restore();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
+            }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_CSV){
                 settingFragment.exportCSVSort();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
+            }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
                 settingFragment.sendRealmData();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
+            }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
                 settingFragment.turnOnAutoUpdateSwitch();
                 settingFragment.backUpData();
             }
         }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
             boolean showRationale = true;
 
-             if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+             if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
+            }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_CSV){
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
+            }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
                 showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
 
@@ -88,13 +88,13 @@ public class SettingsActivity extends BaseActivity {
                 // Permission was denied without checking the check box "Never ask again"
                 Log.d("SETTINGS", "permission denied without never ask again");
 
-                if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
+                if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
                     settingFragment.requestFilePermissionToRead();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
+                }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_CSV){
                     settingFragment.requestFilePermissionToWriteCSV();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
+                }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE){
                     settingFragment.requestFilePermissionToAccess();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
+                }else if(requestCode == RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE){
                     settingFragment.turnOffAutoUpdateSwitch();
                     settingFragment.requestFilePermissionToWriteAutoBackup();
                 }

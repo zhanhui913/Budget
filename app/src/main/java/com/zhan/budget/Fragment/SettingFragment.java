@@ -2,7 +2,6 @@ package com.zhan.budget.Fragment;
 
 
 import android.Manifest;
-import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ import com.zhan.budget.Activity.Settings.SettingsLocation;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -331,7 +332,7 @@ public class SettingFragment extends BaseFragment {
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
                         }
                     })
                     .setNegativeButton(R.string.permission_deny, new DialogInterface.OnClickListener() {
@@ -343,7 +344,7 @@ public class SettingFragment extends BaseFragment {
                     .create()
                     .show();
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
         }
     }
 
@@ -387,7 +388,7 @@ public class SettingFragment extends BaseFragment {
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         }
                     })
                     .setNegativeButton(R.string.permission_deny, null)
@@ -395,7 +396,7 @@ public class SettingFragment extends BaseFragment {
                     .show();
 
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         }
     }
 
@@ -481,7 +482,7 @@ public class SettingFragment extends BaseFragment {
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_CSV);
                         }
                     })
                     .setNegativeButton(R.string.permission_deny, null)
@@ -489,7 +490,7 @@ public class SettingFragment extends BaseFragment {
                     .show();
 
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_CSV);
         }
     }
 
@@ -789,7 +790,7 @@ public class SettingFragment extends BaseFragment {
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
                         }
                     })
                     .setNegativeButton(R.string.permission_deny, null)
@@ -797,7 +798,7 @@ public class SettingFragment extends BaseFragment {
                     .show();
 
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
         }
     }
 
