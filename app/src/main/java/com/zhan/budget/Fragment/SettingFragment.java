@@ -318,9 +318,16 @@ public class SettingFragment extends BaseFragment {
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
 
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.permission_denied)
-                    .setMessage(R.string.permission_rationale_write_backup_data)
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_write_backup_data);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -367,16 +374,23 @@ public class SettingFragment extends BaseFragment {
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
 
-            new AlertDialog.Builder(getContext())
-                    .setTitle(getString(R.string.permission_denied))
-                    .setMessage(getString(R.string.permission_rationale_read_backup_data))
-                    .setPositiveButton(getString(R.string.permission_retry), new DialogInterface.OnClickListener() {
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_read_backup_data);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         }
                     })
-                    .setNegativeButton(getString(R.string.permission_deny), null)
+                    .setNegativeButton(R.string.permission_deny, null)
                     .create()
                     .show();
 
@@ -454,9 +468,16 @@ public class SettingFragment extends BaseFragment {
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
 
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.permission_denied)
-                    .setMessage(R.string.permission_rationale_write_csv)
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_write_csv);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -466,6 +487,7 @@ public class SettingFragment extends BaseFragment {
                     .setNegativeButton(R.string.permission_deny, null)
                     .create()
                     .show();
+
         }else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
         }
@@ -677,7 +699,6 @@ public class SettingFragment extends BaseFragment {
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
-                .setCancelable(true)
                 .setPositiveButton(R.string.dialog_button_reset, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Util.createSnackbar(getContext(), getView(), getString(R.string.resetting));
@@ -755,9 +776,16 @@ public class SettingFragment extends BaseFragment {
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
 
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.permission_denied)
-                    .setMessage(R.string.permission_rationale_access_data)
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_access_data);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
                     .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
