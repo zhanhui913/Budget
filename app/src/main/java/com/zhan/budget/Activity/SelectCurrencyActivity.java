@@ -362,13 +362,12 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                 TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
                 TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-                title.setText("Confirm Currency");
-                message.setText("Are you sure you want to set " + currencyList.get(position).getCurrencyCode() + " as your default currency.");
+                title.setText(R.string.dialog_currency_select_title);
+                message.setText(String.format(getString(R.string.currency_set_default), currencyList.get(position).getCurrencyCode()));
 
                 new AlertDialog.Builder(this)
                         .setView(promptView)
-                        .setCancelable(true)
-                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.dialog_button_set, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 myRealm.beginTransaction();
                                 for (int k = 0; k < resultsCurrency.size(); k++) {
@@ -383,7 +382,7 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                                 convertDefaultCurrency(resultsCurrency.get(position));
                             }
                         })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();

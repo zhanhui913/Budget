@@ -231,7 +231,6 @@ public class SettingsLocation extends BaseRealmActivity implements
 
         new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setCancelable(true)
                 .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         closeSwipeItem(position);
@@ -242,6 +241,12 @@ public class SettingsLocation extends BaseRealmActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        closeSwipeItem(position);
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
                         closeSwipeItem(position);
                     }
                 })

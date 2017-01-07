@@ -220,7 +220,6 @@ public class AccountInfoActivity extends BaseActivity implements
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setCancelable(true)
                 .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();

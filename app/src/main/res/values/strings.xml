@@ -103,16 +103,16 @@
 	<string name="pull_down_add_location">Pull down to add a location</string>
 
 	<string name="empty_account_selection">There is no account available for selection</string>
-	<string name="empty_category">There is no %s category</string>
+	<string name="empty_category" formatted="false">There is no %s category</string>
 	<string name="empty_account">There is no account</string>
 	<string name="empty_location">There is no location</string>
 	<string name="empty_transaction_custom_date" formatted="false">There is no transaction for \'%s\' during %s</string>
 
 
 	<!-- Monthly Report Fragment -->
-	<string name="you_spent">You spent %s</string>
-	<string name="you_earned">You earned %s</string>
-	<string name="you_saved">You saved %s</string>
+	<string name="you_spent" formatted="false">You spent %s</string>
+	<string name="you_earned" formatted="false">You earned %s</string>
+	<string name="you_saved" formatted="false">You saved %s</string>
 
 	<!-- Settings Fragment -->
 	<string name="setting_header_general">General</string>
@@ -179,6 +179,7 @@
 	<string name="dialog_button_delete">DELETE</string>
 	<string name="dialog_button_save">SAVE</string>
 	<string name="dialog_button_continue">CONTINUE</string>
+	<string name="dialog_button_set">SET</string>
 	<string name="dialog_button_reset">RESET</string>
 	<string name="dialog_button_cancel">CANCEL</string>
 
@@ -200,7 +201,7 @@
 	<string name="num_pad_0">0</string>
 
 	<!-- ETC -->
-	<string name="category_selected_warning">Make sure a %s category is selected</string>
+	<string name="category_selected_warning" formatted="false">Make sure a %s category is selected</string>
 	<string name="category_valid_name_warning">Please input a valid name for this category</string>
 	<string name="days">days</string>
 	<string name="weeks">weeks</string>
@@ -250,10 +251,12 @@
 	<!-- Currency -->
 	<string name="def_currency">Default Currency</string>
 	<string name="dialog_currency_title">Set Exchange Rate</string>
+	<string name="dialog_currency_select_title">Set Currency</string>
 	<string name="currency_select">You selected</string>
 	<string name="currency_current_exchange_rate">Current exchange rate is</string>
 	<string name="search_currency_hint">US Dollar</string>
 	<string name="packaging_currency_title">Packaging</string>
+	<string name="currency_set_default" formatted="false">Set %s as your default currency</string>
 
 
 </resources>

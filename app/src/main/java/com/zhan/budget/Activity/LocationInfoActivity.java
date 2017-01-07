@@ -221,7 +221,6 @@ public class LocationInfoActivity extends BaseActivity implements
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setCancelable(true)
                 .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
@@ -237,9 +236,6 @@ public class LocationInfoActivity extends BaseActivity implements
                         intent.putExtra(DELETE_LOCATION, true); //deleting location
                         setResult(RESULT_OK, intent);
                         finish();
-
-
-
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
