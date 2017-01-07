@@ -44,7 +44,8 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
         for(int t = 0; t < transactionList.size(); t++){
             for(int c = 0; c < categoryList.size(); c++){
                 if(transactionList.get(t).getCategory() != null && transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                    float transactionPrice = transactionList.get(t).getPrice();
+                    //Convert currency in transaction to default currency price using the rate that was added at the time the transaction was created
+                    float transactionPrice = CurrencyTextFormatter.convertCurrency(transactionList.get(t).getPrice(), transactionList.get(t).getRate());
                     float currentCategoryPrice = categoryList.get(c).getCost();
                     categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
                 }
