@@ -370,16 +370,18 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
                         .setPositiveButton(R.string.dialog_button_set, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 myRealm.beginTransaction();
+                                int positionInResults = 0;
                                 for (int k = 0; k < resultsCurrency.size(); k++) {
                                     resultsCurrency.get(k).setDefault(false);
                                     if(resultsCurrency.get(k).getCurrencyName().equalsIgnoreCase(currencyList.get(position).getCurrencyName())){
                                         resultsCurrency.get(k).setDefault(true);
+                                        positionInResults = k;
                                     }
                                 }
 
                                 myRealm.commitTransaction();
 
-                                convertDefaultCurrency(resultsCurrency.get(position));
+                                convertDefaultCurrency(resultsCurrency.get(positionInResults));
                             }
                         })
                         .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
