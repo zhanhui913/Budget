@@ -149,6 +149,20 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //If there is no default budget currency
+                if(!isThereDefaultCurrency()){
+                    Intent intent = new Intent();
+
+                    BudgetCurrency defaultUSD = new BudgetCurrency();
+                    defaultUSD.setCurrencyName(DEFAULT_CURRENCY_NAME);
+                    defaultUSD.setCurrencyCode(DEFAULT_CURRENCY_CODE);
+                    defaultUSD.setDefault(true);
+
+                    Parcelable wrapped = Parcels.wrap(defaultUSD);
+                    intent.putExtra(RESULT_CURRENCY, wrapped);
+                    setResult(RESULT_OK, intent);
+                }
+
                 finish();
             }
         });
@@ -290,7 +304,6 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
 
                 myRealm.commitTransaction();
 
-
                 Intent intent = new Intent();
                 Parcelable wrapped = Parcels.wrap(currency);
                 intent.putExtra(RESULT_CURRENCY, wrapped);
@@ -299,6 +312,15 @@ public class SelectCurrencyActivity extends BaseRealmActivity implements
             }
         });
         massExchangeRate.execute();
+    }
+
+    private boolean isThereDefaultCurrency(){
+        for(int i = 0; i < resultsCurrency.size(); i++){
+            if(resultsCurrency.get(i).isDefault()){
+                return true;
+            }
+        }
+        return false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
