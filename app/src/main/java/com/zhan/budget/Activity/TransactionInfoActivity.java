@@ -1,13 +1,13 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -27,8 +27,8 @@ import android.widget.Toast;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Etc.ExchangeRate;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
@@ -1192,7 +1192,38 @@ public class TransactionInfoActivity extends BaseActivity implements
         if (resultCode == RESULT_OK && data.getExtras() != null) {
             if(requestCode == RequestCodes.SELECTED_CURRENCY){
                 Toast.makeText(instance, "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
-                createExchangeDialog((BudgetCurrency) Parcels.unwrap(data.getExtras().getParcelable(SelectCurrencyActivity.RESULT_CURRENCY)));
+
+                final BudgetCurrency returnedCurrency = (BudgetCurrency) Parcels.unwrap(data.getExtras().getParcelable(SelectCurrencyActivity.RESULT_CURRENCY));
+
+                if(returnedCurrency.getRate() > 0){
+                    createExchangeDialog(returnedCurrency);
+                }else{
+                    //check online first
+                    new ExchangeRate(defaultCurrency.getCurrencyCode(), returnedCurrency.getCurrencyCode(), 1, 1, new ExchangeRate.OnExchangeRateInteractionListener() {
+                        @Override
+                        public void onCompleteCalculation(int position, double result) {
+                            returnedCurrency.setRate(result);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    createExchangeDialog(returnedCurrency);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailedCalculation(int position) {
+                            //Leave it as 0
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    createExchangeDialog(returnedCurrency);
+                                }
+                            });
+                        }
+                    });
+                }
             }
         }
     }

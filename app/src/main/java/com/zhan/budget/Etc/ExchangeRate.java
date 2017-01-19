@@ -78,12 +78,17 @@ public class ExchangeRate {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                //No internet
+                mListener.onFailedCalculation(index);
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()){
+                    mListener.onFailedCalculation(index);
+                    throw new IOException("Unexpected code " + response);
+                }
 
                 /*Headers responseHeaders = response.headers();
                 for (int i = 0, size = responseHeaders.size(); i < size; i++) {
