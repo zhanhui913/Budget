@@ -68,30 +68,7 @@ public class MyApplication extends Application {
 
                         Toast.makeText(MyApplication.this, "a) It looks like you're at version "+oldVersion, Toast.LENGTH_SHORT).show();
                         Log.d("MY_APP", "old version :"+oldVersion);
-/*
-                        //migrate to version 3
 
-                        //need to go through all transaction and apply selected default budget currency (if selected from here)
-                        //maybe ask default currency from here
-
-                        if(oldVersion == 2){
-                             schema.get("Transaction")
-                                     .addField("currency", BudgetCurrency.class)
-                                     .transform(new RealmObjectSchema.Function() {
-                                         @Override
-                                         public void apply(DynamicRealmObject obj) {
-                                             //Sets all empty values to USD
-                                             BudgetCurrency usdCurrency = new BudgetCurrency();
-                                             usdCurrency.setCurrencyCode(Constants.DEFAULT_CURRENCY_CODE);
-                                             usdCurrency.setCurrencyName(Constants.DEFAULT_CURRENCY_NAME);
-                                             usdCurrency.setDefault(true);
-
-                                             obj.set("currency",usdCurrency);
-                                         }
-                                     });
-                             Toast.makeText(MyApplication.this, "b) It looks like you were at version 2, now at 3", Toast.LENGTH_SHORT).show();
-                             oldVersion++;
-                         }*/
                     }
                 })
                 .build();
