@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.library.CircularView;
 
@@ -86,6 +87,8 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.green));
         }else if(savings < 0){
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.red));
+        }else{
+            viewHolder.netThisMonth.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
 
         viewHolder.netThisMonth.setText(String.format(context.getString(R.string.you_saved), CurrencyTextFormatter.formatFloat(savings)));
