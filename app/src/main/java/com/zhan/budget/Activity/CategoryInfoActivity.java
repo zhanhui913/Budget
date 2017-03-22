@@ -18,7 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -45,7 +44,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     public static final String NEW_CATEGORY = "New Category";
 
-    public static final String NEW_CATEGORY_TYPE = "New Category";
+    public static final String NEW_CATEGORY_TYPE = "New Category Type";
 
     public static final String EDIT_CATEGORY_ITEM = "Edit Category Item";
 
