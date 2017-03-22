@@ -17,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.Settings.AboutActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
@@ -26,7 +25,6 @@ import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.RequestCodes;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -62,13 +60,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, currencyBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
     private Switch autoBackupSwitch;
 
-    private BudgetCurrency currentCurrency;
-
-    //
     private static int CURRENT_THEME;
 
     //CSV
@@ -97,8 +92,6 @@ public class SettingFragment extends BaseFragment {
         defaultAccountBtn = (ViewGroup) view.findViewById(R.id.defaultAccountBtn);
 
         locationBtn = (ViewGroup) view.findViewById(R.id.locationBtn);
-
-        currencyBtn = (ViewGroup) view.findViewById(R.id.currencyBtn);
 
         autoBackupSwitch = (Switch) view.findViewById(R.id.autoBackupSwitch);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
@@ -144,7 +137,6 @@ public class SettingFragment extends BaseFragment {
         versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
 
         addListeners();
-        getDefaultCurrency();
     }
 
     private void addListeners(){
@@ -192,13 +184,6 @@ public class SettingFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent settingsLocation = new Intent(getContext(), SettingsLocation.class);
                 startActivity(settingsLocation);
-            }
-        });
-
-        currencyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(SelectCurrencyActivity.createIntentToSetDefaultCurrency(getContext()));
             }
         });
 
@@ -276,21 +261,6 @@ public class SettingFragment extends BaseFragment {
                 return false;
             }
         });
-    }
-
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }else {
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
-        }
-
-        myRealm.close();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -669,7 +639,7 @@ public class SettingFragment extends BaseFragment {
 
         final File csvFile = new File(DOWNLOAD_DIRECTORY, csvFileName);
 
-        CSVFormatter csvFormatter = new CSVFormatter(getContext(), transactionList, currentCurrency, csvFile);
+        CSVFormatter csvFormatter = new CSVFormatter(getContext(), transactionList, csvFile);
         csvFormatter.setCSVInteraction(new CSVFormatter.OnCSVInteractionListener() {
             @Override
             public void onCompleteCSV(boolean value) {

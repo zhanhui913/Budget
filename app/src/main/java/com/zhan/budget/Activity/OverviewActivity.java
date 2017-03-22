@@ -12,10 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
@@ -23,7 +21,6 @@ import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Fragment.OverviewGenericFragment;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
@@ -33,8 +30,6 @@ import com.zhan.budget.View.CustomViewPager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import io.realm.Realm;
 
 public class OverviewActivity extends BaseActivity implements
     OverviewGenericFragment.OverviewInteractionListener{
@@ -61,8 +56,6 @@ public class OverviewActivity extends BaseActivity implements
     private List<Category> expenseCategoryList;
     private List<Category> incomeCategoryList;
 
-    private BudgetCurrency currentCurrency;
-
     public static Intent createIntentToViewOverviewOnMonth(Context context, Date date){
         Intent intent = new Intent(context, OverviewActivity.class);
         intent.putExtra(MONTH, date);
@@ -83,8 +76,6 @@ public class OverviewActivity extends BaseActivity implements
         TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
         totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
-
-        getDefaultCurrency();
 
         createToolbar();
         addListeners();
@@ -180,7 +171,7 @@ public class OverviewActivity extends BaseActivity implements
     private void changeTopPanelInfo(int position, boolean animate){
         if(position == 0){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost, currentCurrency));
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost));
             pieChartFragment.setData(expenseCategoryList, animate);
 
             if(totalExpenseCost < 0){
@@ -190,7 +181,7 @@ public class OverviewActivity extends BaseActivity implements
             }
         }else if(position == 1){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost, currentCurrency));
+            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost));
             pieChartFragment.setData(incomeCategoryList, animate);
 
             if(totalIncomeCost > 0){
@@ -199,23 +190,6 @@ public class OverviewActivity extends BaseActivity implements
                 totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
             }
         }
-    }
-
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }else{
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
-        }
-
-        myRealm.close();
-        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        //updateCost(category.getBudget(), currentCurrency);
     }
 
     @Override

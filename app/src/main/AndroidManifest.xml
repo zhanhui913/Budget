@@ -86,18 +86,6 @@
 			android:label="@string/title_activity_transactions_for_account"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
-			android:name=".Activity.SelectCurrencyActivity"
-			android:label="@string/title_activity_select_currency"
-			android:theme="@style/AppThemeLight.NoActionBar">
-			<intent-filter>
-				<action android:name="android.intent.action.SEARCH"/>
-			</intent-filter>
-
-			<meta-data
-				android:name="android.app.searchable"
-				android:resource="@xml/searchable"/>
-		</activity>
-		<activity
 			android:name=".Activity.PdfActivity"
 			android:label="@string/title_activity_pdf"
 			android:theme="@style/AppThemeLight.NoActionBar"/>

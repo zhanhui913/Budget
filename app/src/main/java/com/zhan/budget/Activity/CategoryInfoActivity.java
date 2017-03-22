@@ -26,7 +26,6 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
@@ -77,8 +76,6 @@ public class CategoryInfoActivity extends BaseActivity implements
     private int catRes; //The res ID for category icon for circular view use
     private boolean isCurrentCircularText; //Is the current circular view using text or icon
 
-    private BudgetCurrency currentCurrency;
-
     public static Intent createIntentForNewCategory(Context context, BudgetType type){
         Intent intent = new Intent(context, CategoryInfoActivity.class);
         intent.putExtra(NEW_CATEGORY, true);
@@ -104,8 +101,6 @@ public class CategoryInfoActivity extends BaseActivity implements
     @Override
     protected void init(){
         instance = this;
-
-        getDefaultCurrency();
 
         isNewCategory = (getIntent().getExtras()).getBoolean(NEW_CATEGORY);
 
@@ -139,7 +134,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         currentPageTextView.setText(R.string.color);
 
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
@@ -170,7 +165,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         addListeners();
 
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
 
         //Check if current category is using text or icon in its circular view
         if(category.isText()){
@@ -329,20 +324,20 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
-        priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency);
+        priceString = CurrencyTextFormatter.formatFloat(category.getBudget());
 
         //Remove any extra un-needed signs
-        priceString = CurrencyTextFormatter.stripCharacters(priceString, currentCurrency);
+        priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
         title.setText(getString(R.string.budget));
-        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
+        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         category.setBudget(CurrencyTextFormatter.formatCurrency(priceString));
-                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency));
+                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
@@ -447,7 +442,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void addDigitToTextView(TextView textView, int digit){
         if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH) {
             priceString += digit;
-            textView.setText(CurrencyTextFormatter.formatText(priceString, currentCurrency));
+            textView.setText(CurrencyTextFormatter.formatText(priceString));
         }
     }
 
@@ -456,31 +451,7 @@ public class CategoryInfoActivity extends BaseActivity implements
             priceString = priceString.substring(0, priceString.length() - 1);
         }
 
-        textView.setText(CurrencyTextFormatter.formatText(priceString, currentCurrency));
-    }
-
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        currentCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(currentCurrency == null){
-            currentCurrency = new BudgetCurrency();
-            currentCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            currentCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }{
-            currentCurrency = myRealm.copyFromRealm(currentCurrency);
-        }
-
-        myRealm.close();
-        Toast.makeText(getApplicationContext(), "default currency : "+currentCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        //updateCost(category.getBudget(), currentCurrency);
-    }
-
-    /**
-     * Updates the textview that displays the cost along with the selected currency
-     */
-    private void updateCost(String val, BudgetCurrency currency){
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatText(val, currentCurrency));
+        textView.setText(CurrencyTextFormatter.formatText(priceString));
     }
 
     private void confirmDelete(){

@@ -22,7 +22,6 @@ import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -53,14 +52,12 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
     private Context context;
     private List<Category> categoryList;
     private OnCategoryGenericAdapterInteractionListener mListener;
-    private BudgetCurrency currentCurrency;
     private OnStartDragListener mDragStartListener;
 
-    public CategoryGenericRecyclerAdapter(Fragment fragment, List<Category> list, ARRANGEMENT arrangement, BudgetCurrency currentCurrency, OnStartDragListener startDragListener) {
+    public CategoryGenericRecyclerAdapter(Fragment fragment, List<Category> list, ARRANGEMENT arrangement, OnStartDragListener startDragListener) {
         this.context = fragment.getContext();
         this.categoryList = list;
         this.arrangement = arrangement;
-        this.currentCurrency = currentCurrency;
         this.mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryGenericAdapterInteractionListener interface
@@ -71,11 +68,10 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         }
     }
 
-    public CategoryGenericRecyclerAdapter(Activity activity, List<Category> list, ARRANGEMENT arrangement, BudgetCurrency currentCurrency, OnStartDragListener startDragListener) {
+    public CategoryGenericRecyclerAdapter(Activity activity, List<Category> list, ARRANGEMENT arrangement, OnStartDragListener startDragListener) {
         this.context = activity;
         this.categoryList = list;
         this.arrangement = arrangement;
-        this.currentCurrency = currentCurrency;
         this.mDragStartListener = startDragListener;
 
         //Any activity or fragment that uses this adapter needs to implement the OnCategoryGenericAdapterInteractionListener interface
@@ -116,14 +112,14 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         viewHolder.name.setText(category.getName());
 
         if(arrangement == ARRANGEMENT.BUDGET || arrangement == ARRANGEMENT.MOVE){
-            viewHolder.budget.setText(String.format(context.getString(R.string.category_budget), CurrencyTextFormatter.formatFloat(category.getBudget(), currentCurrency)));
+            viewHolder.budget.setText(String.format(context.getString(R.string.category_budget), CurrencyTextFormatter.formatFloat(category.getBudget())));
         }else{
             viewHolder.budget.setText(String.format(context.getString(R.string.category_percent), category.getPercent()));
         }
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
             if(arrangement == ARRANGEMENT.BUDGET) {
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), currentCurrency));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost()));
 
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
 
@@ -155,14 +151,14 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), currentCurrency));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost()));
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
 
             if(arrangement == ARRANGEMENT.BUDGET){
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), currentCurrency));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost())));
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
             }else if(arrangement == ARRANGEMENT.MOVE){
@@ -174,7 +170,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), currentCurrency));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost()));
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
             }
         }

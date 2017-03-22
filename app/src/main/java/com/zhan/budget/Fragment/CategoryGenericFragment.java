@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
-import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
@@ -28,7 +27,6 @@ import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -89,8 +87,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
-    private BudgetCurrency defaultCurrency;
-
     public CategoryGenericFragment() {
         // Required empty public constructor
     }
@@ -125,8 +121,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         currentMonth = new Date();
 
-        getDefaultCurrency();
-
         TextView emptyCategoryText = (TextView) view.findViewById(R.id.pullDownText);
         emptyCategoryText.setText("Pull down to add an "+budgetType.toString()+" category");
 
@@ -134,7 +128,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
         categoryList = new ArrayList<>();
 
-        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, arrangementType, defaultCurrency, new OnStartDragListener() {
+        categoryRecyclerAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, arrangementType, new OnStartDragListener() {
                     @Override
                     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
                         //isPulldownAllow = false;
@@ -181,22 +175,6 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
             ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
             downArrow.setVisibility(View.INVISIBLE);
         }
-    }
-
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(defaultCurrency == null){
-            defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }else {
-            defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
-        }
-
-        Toast.makeText(getContext(), "category generic fragment; default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        myRealm.close();
     }
 
     private void createPullDownToAddCategory(){
@@ -346,7 +324,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                     for(int c = 0; c < categoryList.size(); c++){
                         if(transactionMonthList.get(t).getCategory() != null){
                             if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                                float transactionPrice = CurrencyTextFormatter.convertCurrency(transactionMonthList.get(t).getPrice(), transactionMonthList.get(t).getRate());
+                                float transactionPrice = transactionMonthList.get(t).getPrice();
                                 float currentCategoryPrice = categoryList.get(c).getCost();
                                 categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
                                 totalCost += transactionPrice;

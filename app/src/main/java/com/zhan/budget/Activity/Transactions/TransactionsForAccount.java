@@ -58,14 +58,14 @@ public class TransactionsForAccount extends BaseTransactions {
                 transactionList = myRealm.copyFromRealm(element);
                 float total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
 
-                transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, defaultCurrency, true); //display date in each transaction item
+                transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
                 Log.d("ZHAN", "there are " + transactionList.size() + " transactions in this account " + account.getName() + " for this month " + beginMonth + " -> " + endMonth);
                 Log.d("ZHAN", "total sum is "+total);
 
                 //update balance
-                updateTitleBalance(CurrencyTextFormatter.formatFloat(total, defaultCurrency));
+                updateTitleBalance(CurrencyTextFormatter.formatFloat(total));
 
                 if(total > 0){
                     titleBalanceTextView.setTextColor(ContextCompat.getColor(instance, R.color.green));

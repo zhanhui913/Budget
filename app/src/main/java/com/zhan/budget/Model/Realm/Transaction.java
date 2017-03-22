@@ -27,11 +27,6 @@ public class Transaction extends RealmObject {
     private Account account;
     private String dayType;
     private Location location;
-    private BudgetCurrency currency;
-
-    //exchange rate for currency at the time (Cannot rely on BudgetCurrency's rate as that property is the current one)
-    //This will be 1.0f if the default budget currency is the same as this budget currency
-    private double rate;
 
     public Transaction(){
 
@@ -101,22 +96,6 @@ public class Transaction extends RealmObject {
         this.location = location;
     }
 
-    public BudgetCurrency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(BudgetCurrency currency) {
-        this.currency = currency;
-    }
-
-    public double getRate() {
-        return rate;
-    }
-
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property that isnt ignored
@@ -139,14 +118,6 @@ public class Transaction extends RealmObject {
         if(other.getLocation() != null && location != null){
             if(!location.checkEquals(other.getLocation())) return false;
         }
-
-        if(other.getCurrency() != null && currency != null){
-            if(!currency.checkEquals(other.getCurrency())) return false;
-        }else if(other.getCurrency() == null || currency == null){
-            return false;
-        }
-
-        if(rate != other.getRate()) return false;
 
         return true;
     }

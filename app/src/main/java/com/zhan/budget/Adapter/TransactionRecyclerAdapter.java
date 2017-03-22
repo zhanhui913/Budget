@@ -18,7 +18,6 @@ import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -39,14 +38,12 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     private Context context;
     private List<Transaction> transactionList;
     private boolean showDate;
-    private BudgetCurrency defaultCurrency;
     private static OnTransactionAdapterInteractionListener mListener;
 
-    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, BudgetCurrency defaultCurrency, boolean showDate) {
+    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         this.context = fragment.getContext();
         this.showDate = showDate;
         this.transactionList = transactionList;
-        this.defaultCurrency = defaultCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if (fragment instanceof OnTransactionAdapterInteractionListener) {
@@ -56,11 +53,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }
     }
 
-    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, BudgetCurrency defaultCurrency, boolean showDate){
+    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
         this.context = activity;
         this.showDate = showDate;
         this.transactionList = transactionList;
-        this.defaultCurrency = defaultCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
         if(activity instanceof  OnTransactionAdapterInteractionListener){
@@ -86,15 +82,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         // getting Transaction data for the row
         final Transaction transaction = transactionList.get(position);
 
-        //Currency
-        if(transaction.getCurrency().checkEquals(defaultCurrency)){
-            viewHolder.defCost.setVisibility(View.GONE);
-        }else{
-            viewHolder.defCost.setVisibility(View.VISIBLE);
-            float afterExchange = CurrencyTextFormatter.convertCurrency(transaction.getPrice(), transaction.getRate());
-            viewHolder.defCost.setText(CurrencyTextFormatter.formatFloat(afterExchange, defaultCurrency));
-        }
-
         //Account
         if(transaction.getAccount() != null){
             viewHolder.account.setVisibility(View.VISIBLE);
@@ -105,7 +92,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.accountIcon.setVisibility(View.GONE);
         }
 
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), transaction.getCurrency()));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice()));
 
         //If transaction's dayType is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
@@ -205,10 +192,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         return this.transactionList;
     }
 
-    public void setDefaultCurrency(BudgetCurrency budgetCurrency){
-        this.defaultCurrency = budgetCurrency;
-    }
-
     /**
      * Simple example of a view holder that implements {@link ItemTouchHelperViewHolder} and has a
      * "handle" view that initiates a drag event when touched.
@@ -220,7 +203,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
-        public TextView name, cost, defCost, date, account, location;
+        public TextView name, cost, date, account, location;
 
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, approveBtn, unapproveBtn, locationIcon, accountIcon;
@@ -235,7 +218,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             circularView = (CircularView) itemView.findViewById(R.id.categoryIcon);
             name = (TextView) itemView.findViewById(R.id.transactionNote);
             cost = (TextView) itemView.findViewById(R.id.transactionCost);
-            defCost = (TextView) itemView.findViewById(R.id.transactionDefaultCost);
             date = (TextView) itemView.findViewById(R.id.transactionDate);
             account = (TextView) itemView.findViewById(R.id.transactionAccount);
             location = (TextView) itemView.findViewById(R.id.transactionLocation);

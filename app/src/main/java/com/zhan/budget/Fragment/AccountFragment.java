@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
-import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForAccount;
 import com.zhan.budget.Adapter.AccountRecyclerAdapter;
@@ -32,7 +31,6 @@ import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
@@ -77,8 +75,6 @@ public class AccountFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
-    private BudgetCurrency budgetCurrency;
-
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -105,14 +101,12 @@ public class AccountFragment extends BaseRealmFragment implements
         centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
-        getDefaultCurrency();
-
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
         accountListView.setLayoutManager(linearLayoutManager);
 
-        accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, budgetCurrency, true, false);
+        accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, true, false);
         accountListView.setAdapter(accountRecyclerAdapter);
 
         //Add divider
@@ -139,23 +133,6 @@ public class AccountFragment extends BaseRealmFragment implements
         //This may conflict with populateAccountWithNoInfo async where its trying to get the initial
         //accounts
         updateMonthInToolbar(0, false);
-    }
-
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        budgetCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(budgetCurrency == null){
-            budgetCurrency = new BudgetCurrency();
-            budgetCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            budgetCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }else{
-            budgetCurrency = myRealm.copyFromRealm(budgetCurrency);
-        }
-
-        Toast.makeText(getContext(), "Account fragment, default currency : "+budgetCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-
-        myRealm.close();
     }
 
     /**
@@ -235,7 +212,7 @@ public class AccountFragment extends BaseRealmFragment implements
                     for(int c = 0; c < accountList.size(); c++){
                         if(transactionMonthList.get(t).getAccount() != null){
                             if(transactionMonthList.get(t).getAccount().getId().equalsIgnoreCase(accountList.get(c).getId())){
-                                float transactionPrice = CurrencyTextFormatter.convertCurrency(transactionMonthList.get(t).getPrice(), transactionMonthList.get(t).getRate());
+                                float transactionPrice = transactionMonthList.get(t).getPrice();
                                 float currentAccountPrice = accountList.get(c).getCost();
                                 accountList.get(c).setCost(transactionPrice + currentAccountPrice);
                                 totalCost += transactionPrice;
@@ -259,7 +236,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 pieChartFragment.setData(accountList, animate);
 
-                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result, budgetCurrency));
+                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result));
 
                 if(result > 0){
                     centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));

@@ -150,13 +150,6 @@
                 android:text="@string/cost"
                 android:textSize="@dimen/text_title_size" />
 
-            <TextView
-                android:id="@+id/transactionDefaultCost"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:text="@string/cost"
-                android:textSize="@dimen/text_tiny_size" />
         </LinearLayout>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>

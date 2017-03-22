@@ -41,16 +41,6 @@
             android:layout_alignParentEnd="true"
             android:maxLines="1"/>
 
-        <TextView
-            android:id="@+id/transactionCostCurrencyCodeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cost"
-            android:textSize="@dimen/text_content_size"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/transactionCostText"
-            android:maxLines="1"/>
     </RelativeLayout>
 
     <include layout="@layout/transaction_circle_indicator"
@@ -89,14 +79,6 @@
             android:src="@drawable/svg_ic_repeat"
             android:background="@drawable/budget_green_button"
             android:layout_toRightOf="@+id/dateBtn" />
-
-        <ImageButton
-            android:id="@+id/changeCurrencyBtn"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/svg_ic_dollar"
-            android:layout_toLeftOf="@+id/addAccountBtn"
-            android:background="@drawable/budget_green_button"/>
 
         <ImageButton
             android:id="@+id/addAccountBtn"

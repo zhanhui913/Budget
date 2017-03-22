@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
@@ -29,13 +28,11 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
     private Context context;
     private List<Account> accountList;
     private boolean displayCost, allowClickSetDefault;
-    private BudgetCurrency currentCurrency;
     private OnAccountAdapterInteractionListener mListener;
 
-    public AccountRecyclerAdapter(Fragment fragment, List<Account> accountList, BudgetCurrency currency, boolean displayCost, boolean allowClickSetDefault) {
+    public AccountRecyclerAdapter(Fragment fragment, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault) {
         this.context = fragment.getContext();
         this.accountList = accountList;
-        this.currentCurrency = currency;
         this.displayCost = displayCost;
         this.allowClickSetDefault = allowClickSetDefault;
 
@@ -47,10 +44,9 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
         }
     }
 
-    public AccountRecyclerAdapter(Activity activity, List<Account> accountList, BudgetCurrency currency, boolean displayCost, boolean allowClickSetDefault){
+    public AccountRecyclerAdapter(Activity activity, List<Account> accountList, boolean displayCost, boolean allowClickSetDefault){
         this.context = activity;
         this.accountList = accountList;
-        this.currentCurrency = currency;
         this.displayCost = displayCost;
         this.allowClickSetDefault = allowClickSetDefault;
 
@@ -85,7 +81,7 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
         viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
         if(displayCost){
-            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(account.getCost(), currentCurrency));
+            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(account.getCost()));
 
             if(account.getCost() > 0){
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));

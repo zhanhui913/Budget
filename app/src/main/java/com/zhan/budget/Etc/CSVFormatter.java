@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
@@ -42,12 +41,10 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
     private File csvFile;
 
-    private BudgetCurrency currency;
 
-    public CSVFormatter(Context context, List<Transaction> transactionList, BudgetCurrency currency, File csvFile){
+    public CSVFormatter(Context context, List<Transaction> transactionList, File csvFile){
         this.context = context;
         this.transactionList = transactionList;
-        this.currency = currency;
         this.csvFile = csvFile;
 
         //Option 1
@@ -129,7 +126,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
                 fileWriter.append(COMMA_DELIMITER);
 
                 //Need to remove commas from $1,000 for example
-                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), currency)).replace(",",""));
+                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice())).replace(",",""));
                 fileWriter.append(COMMA_DELIMITER);
                 if(transactionList.get(i).getAccount() != null){
                     fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));

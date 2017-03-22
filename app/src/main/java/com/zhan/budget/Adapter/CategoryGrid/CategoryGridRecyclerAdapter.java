@@ -113,7 +113,7 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         viewHolder.name.setText(category.getName());
 
         if(category.isSelected()){
-            viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
+            viewHolder.circularView.setStrokeColor(R.color.colorPrimary);
         }else{
             viewHolder.circularView.setStrokeColor(R.color.transparent);
         }

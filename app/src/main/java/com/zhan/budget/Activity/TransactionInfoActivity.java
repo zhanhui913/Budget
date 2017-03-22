@@ -27,14 +27,12 @@ import android.widget.Toast;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
@@ -83,9 +81,9 @@ public class TransactionInfoActivity extends BaseActivity implements
     private Button button1,button2,button3,button4,button5,button6,button7,button8,button9,button0;
     private ImageButton buttonX;
 
-    private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn, changeCurrencyBtn;
+    private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
 
-    private TextView transactionCostView, transactionNameTextView, transactionCostCurrencyCodeText, currentPageTextView;
+    private TextView transactionCostView, transactionNameTextView, currentPageTextView;
 
     private String priceString, noteString, locationString;
 
@@ -120,9 +118,6 @@ public class TransactionInfoActivity extends BaseActivity implements
     private Transaction editTransaction;
     private Boolean isScheduledTransaction = false; //default is false
     private ScheduledTransaction scheduledTransaction;
-
-    private BudgetCurrency defaultCurrency;
-    private BudgetCurrency currentCurrency;
 
     private HashSet<String> locationHash = new HashSet<>();
 
@@ -196,12 +191,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         dateBtn = (ImageButton)findViewById(R.id.dateBtn);
         repeatBtn = (ImageButton)findViewById(R.id.repeatBtn);
         locationBtn = (ImageButton)findViewById(R.id.addLocationBtn);
-        changeCurrencyBtn = (ImageButton)findViewById(R.id.changeCurrencyBtn);
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
         transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
         currentPageTextView = (TextView)findViewById(R.id.currentPageTitle);
-        transactionCostCurrencyCodeText = (TextView)findViewById(R.id.transactionCostCurrencyCodeText);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
@@ -251,9 +244,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             }else{
                 currentPage = BudgetType.EXPENSE;
             }
-
-            getDefaultCurrency();
-            currentCurrency = editTransaction.getCurrency();
             
             if(currentPage == BudgetType.EXPENSE){
                 currentPageTextView.setText(R.string.category_expense);
@@ -261,23 +251,18 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPageTextView.setText(R.string.category_income);
             }
 
-            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), currentCurrency);
+            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice());
 
             //Remove any extra un-needed signs
-            priceString = CurrencyTextFormatter.stripCharacters(priceString, currentCurrency);
+            priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
             Log.d("DEBUG", "---------->" + priceString);
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
 
-            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
-
-            updateConversion();
+            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString));
 
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }else{
-            getDefaultCurrency();
-
-            currentCurrency = defaultCurrency;
 
             priceString = "0";
 
@@ -432,13 +417,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         });
 
-        changeCurrencyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(SelectCurrencyActivity.createIntentToGetCurrency(getApplicationContext()), RequestCodes.SELECTED_CURRENCY);
-            }
-        });
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -450,7 +428,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 switch (position) {
                     case 0:
                         currentPage = BudgetType.EXPENSE;
-                        transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, currentCurrency));
+                        transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString));
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedExpenseCategory != null){
@@ -459,12 +437,10 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                         currentPageTextView.setText(R.string.category_expense);
 
-                        updateConversion();
-
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
-                        transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, currentCurrency));
+                        transactionCostView.setText(CurrencyTextFormatter.formatText(priceString));
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedIncomeCategory != null){
@@ -472,8 +448,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
 
                         currentPageTextView.setText(R.string.category_income);
-
-                        updateConversion();
 
                         break;
                 }
@@ -852,29 +826,12 @@ public class TransactionInfoActivity extends BaseActivity implements
         noteDialog.show();
     }
 
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(defaultCurrency == null){
-            defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }
-
-        Toast.makeText(getApplicationContext(), "default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        transactionCostCurrencyCodeText.setText(defaultCurrency.getCurrencyCode());
-        myRealm.close();
-    }
-
     private void addDigitToTextView(int digit){
         if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH){
             priceString += digit;
 
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
-
-            updateConversion();
+            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString + priceString));
         }else {
             Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.price_too_long));
         }
@@ -886,88 +843,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
-
-        updateConversion();
-    }
-
-    /**
-     * Updates the secondary cost that represents the conversion rate of the selected currency and
-     * the default currency
-     */
-    private void updateConversion(){
-        if(currentCurrency.checkEquals(defaultCurrency)){
-            transactionCostCurrencyCodeText.setVisibility(View.GONE);
-        }else{
-            transactionCostCurrencyCodeText.setVisibility(View.VISIBLE);
-            float f = CurrencyTextFormatter.formatCurrency(priceString);
-            float  afterConversion = CurrencyTextFormatter.convertCurrency(f, currentCurrency);
-
-            afterConversion = (currentPage == BudgetType.EXPENSE) ? -afterConversion : afterConversion;
-            transactionCostCurrencyCodeText.setText(CurrencyTextFormatter.formatFloat(afterConversion, defaultCurrency));
-        }
-    }
-
-    private void createExchangeDialog(final BudgetCurrency selectedBudgetCurrency){
-        View promptView = View.inflate(instance, R.layout.alertdialog_currency_rate, null);
-
-        TextView title = (TextView)promptView.findViewById(R.id.alertdialogTitle);
-        title.setText(R.string.dialog_currency_title);
-
-        TextView selectedBudgetCurrencyHeader = (TextView) promptView.findViewById(R.id.selectedBudgetCurrencyHeader);
-        TextView selectedBudgetCurrencyContent = (TextView) promptView.findViewById(R.id.selectedBudgetCurrencyContent);
-        TextView defaultBudgetCurrency = (TextView) promptView.findViewById(R.id.defaultBudgetCurrency);
-        final EditText input = (EditText) promptView.findViewById(R.id.exchangeRateEditText);
-
-        //If conversion is greater than 0, put its value into input, else leave it empty for user to put
-        if(selectedBudgetCurrency.getRate() > 0){
-            double inverseRate = 1 / selectedBudgetCurrency.getRate();
-            input.setText(Double.toString(inverseRate));
-        }
-
-        selectedBudgetCurrencyHeader.setText(selectedBudgetCurrency.getCurrencyCode());
-        selectedBudgetCurrencyContent.setText(selectedBudgetCurrency.getCurrencyCode());
-        defaultBudgetCurrency.setText(defaultCurrency.getCurrencyCode());
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(instance)
-                .setView(promptView)
-                .setPositiveButton(getString(R.string.dialog_button_continue), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        currentCurrency = selectedBudgetCurrency;
-
-                        Toast.makeText(getApplicationContext(), " x: "+Double.valueOf(input.getText().toString()), Toast.LENGTH_SHORT).show();
-
-                        double newRate = Double.valueOf(input.getText().toString());
-
-                        //Update the exchange rate into realm
-                        Realm myRealm = Realm.getDefaultInstance();
-                        myRealm.beginTransaction();
-                        BudgetCurrency cc = myRealm.where(BudgetCurrency.class).equalTo("currencyCode", selectedBudgetCurrency.getCurrencyCode()).findFirst();
-
-                        //Reverse the inverse
-                        cc.setRate(1 / newRate);
-                        myRealm.commitTransaction();
-                        myRealm.close();
-
-                        //also need to update the rate in local
-                        currentCurrency.setRate(1 / newRate);
-
-
-                        updateConversion();
-
-                        String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-                        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, currentCurrency));
-                    }
-                })
-                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog exchangeDialog = builder.create();
-        exchangeDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        exchangeDialog.show();
+        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString + priceString));
     }
 
     @Override
@@ -1021,8 +897,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         transaction.setNote(this.noteString);
         transaction.setDate(DateUtil.formatDate(getApplicationContext(), selectedDate));
         transaction.setAccount(selectedAccount);
-        transaction.setCurrency(currentCurrency);
-        transaction.setRate(currentCurrency.getRate()); 
 
         if(currentPage == BudgetType.EXPENSE){
             transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString));
@@ -1178,23 +1052,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 })
                 .create()
                 .show();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Etc
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data.getExtras() != null) {
-            if(requestCode == RequestCodes.SELECTED_CURRENCY){
-                Toast.makeText(instance, "selected currency : "+currentCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
-                createExchangeDialog((BudgetCurrency) Parcels.unwrap(data.getExtras().getParcelable(SelectCurrencyActivity.RESULT_CURRENCY)));
-            }
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

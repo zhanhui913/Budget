@@ -2,9 +2,7 @@ package com.zhan.budget.Etc;
 
 import android.util.Log;
 
-import com.zhan.budget.Activity.Settings.TranslationActivity;
 import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Transaction;
 
 import java.text.DecimalFormat;
@@ -22,7 +20,7 @@ public final class CurrencyTextFormatter {
 
     private CurrencyTextFormatter(){}
 
-    public static String formatText(String val, BudgetCurrency currency){
+    public static String formatText(String val){
 
         //special case for the start of a negative number
         //if(val.equals("-")) return val;
@@ -52,13 +50,8 @@ public final class CurrencyTextFormatter {
             throw new IllegalArgumentException("Invalid argument in val");
         }*/
 
-        if(currency != null){
-            val = val.replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
-            return val;
-        }else{
-            Log.e("CurrencyTextFormatter", "Currency is null");
-            return "Currency is null";
-        }
+        val = val.replace("$","").replace("(","-").replace(")","");
+        return val;
     }
 
     public static float formatCurrency(String val){
@@ -82,48 +75,15 @@ public final class CurrencyTextFormatter {
         return newTextValue;
     }
 
-    public static String formatFloat(float val, BudgetCurrency currency){
+    public static String formatFloat(float val){
         //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
         //ie: $x.00
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
-        if(currency != null){
-            return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","") + currency.getCurrencyCode();
-        }else {
-            Log.e("CurrencyTextFormatter", "Currency is null");
-            return "Currency is null";
-        }
+        return currencyFormatter.format(val).replace("$","").replace("(","-").replace(")","");
     }
 
-    public static String stripCharacters(String value, BudgetCurrency currency){
-        if(currency != null) {
-            return value.replace("$", "").replace("-", "").replace("+", "").replace(".", "").replace(",", "").replace("(", "").replace(")", "").replace(currency.getCurrencyCode(), "");
-        }else{
-            Log.e("CurrencyTextFormatter", "Currency is null");
-            return "Currency is null";
-        }
-    }
-
-    /**
-     * Converts amount of provided currency to defaults currency
-     * @param amount Amount
-     * @param currency The source of the currency
-     * @return The amount after converting to default currency
-     */
-    public static float convertCurrency(float amount, BudgetCurrency currency){
-        //Note: Used to convert regular currency with currency
-        return (float)(1 / currency.getRate()) * amount;
-    }
-
-    /**
-     * Converts amount of provided currency to defaults currency
-     * @param amount Amount
-     * @param exchangeRateAtTheTime The exchange rate at the time
-     * @return The amount after converting to default currency
-     */
-    public static float convertCurrency(float amount, double exchangeRateAtTheTime){
-        //Note: Used to convert a BudgetCurrency's rate at the time when the transaction was created
-        //with the default BudgetCurrency
-        return (float)(1 / exchangeRateAtTheTime) * amount;
+    public static String stripCharacters(String value){
+        return value.replace("$", "").replace("-", "").replace("+", "").replace(".", "").replace(",", "").replace("(", "").replace(")", "");
     }
 
     /**
@@ -137,7 +97,7 @@ public final class CurrencyTextFormatter {
         float currentSum = 0f;
         for(int i = 0; i < transactionList.size(); i++){
             if(transactionList.get(i).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString()) && transactionList.get(i).getCategory() != null) {
-                currentSum += convertCurrency(transactionList.get(i).getPrice(), transactionList.get(i).getRate());
+                currentSum += transactionList.get(i).getPrice();
             }
         }
         return currentSum;

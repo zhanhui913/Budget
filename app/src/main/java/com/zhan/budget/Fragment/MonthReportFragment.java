@@ -14,13 +14,11 @@ import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.OverviewActivity;
-import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Adapter.MonthReportRecyclerAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.MonthReport;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
@@ -59,8 +57,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
     private List<Category> categoryList;
     private RealmResults<Category> resultsCategory;
 
-    private BudgetCurrency defaultCurrency;
-
     public MonthReportFragment() {
         // Required empty public constructor
     }
@@ -80,14 +76,12 @@ public class MonthReportFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
 
-        getDefaultCurrency();
-
         categoryList = new ArrayList<>();
         monthReportList = new ArrayList<>();
         monthReportListview = (RecyclerView) view.findViewById(R.id.monthReportListview);
         monthReportListview.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        monthReportRecyclerAdapter = new MonthReportRecyclerAdapter(this, monthReportList, defaultCurrency);
+        monthReportRecyclerAdapter = new MonthReportRecyclerAdapter(this, monthReportList);
         monthReportListview.setAdapter(monthReportRecyclerAdapter);
 
         //Add divider
@@ -101,22 +95,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
         createMonthCard();
         getCategoryList();
         updateYearInToolbar(0);
-    }
-
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(defaultCurrency == null){
-            defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }else {
-            defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
-        }
-
-        Toast.makeText(getContext(), "month report fragment; default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        myRealm.close();
     }
 
     /**
@@ -200,7 +178,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
                             for (int a = 0; a < monthReportList.size(); a++) {
                                 if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
-                                    monthReportList.get(a).addCostThisMonth(CurrencyTextFormatter.convertCurrency(transactionList.get(i).getPrice(), transactionList.get(i).getRate()));
+                                    monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
                                 }
                             }
                         }else if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
@@ -208,7 +186,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
                             for (int a = 0; a < monthReportList.size(); a++) {
                                 if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
-                                    monthReportList.get(a).addIncomeThisMonth(CurrencyTextFormatter.convertCurrency(transactionList.get(i).getPrice(), transactionList.get(i).getRate()));
+                                    monthReportList.get(a).addIncomeThisMonth(transactionList.get(i).getPrice());
                                 }
                             }
                         }

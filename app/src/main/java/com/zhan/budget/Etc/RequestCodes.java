@@ -59,7 +59,6 @@ public final class RequestCodes {
     //
     /////
 
-    public static final int SELECTED_CURRENCY = 500;
 
     /////
     //

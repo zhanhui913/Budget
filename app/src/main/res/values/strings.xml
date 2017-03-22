@@ -31,7 +31,6 @@
 	<string name="title_activity_account_info">AccountInfoActivity</string>
 	<string name="title_activity_transactions_for_account">TransactionsForAccount</string>
 	<string name="title_activity_location_info">LocationInfoActivity</string>
-	<string name="title_activity_select_currency">SelectCurrencyActivity</string>
 	<string name="title_activity_about">AboutActivity</string>
 	<string name="title_activity_translation">TranslationActivity</string>
 	<string name="title_activity_developer">DeveloperActivity</string>
@@ -245,18 +244,6 @@
 	<string name="open_source_project_name">Name</string>
 	<string name="open_source_project_author">Author</string>
 
-
 	<string name="monthly_overview">Monthly Overview</string>
-
-	<!-- Currency -->
-	<string name="def_currency">Default Currency</string>
-	<string name="dialog_currency_title">Set Exchange Rate</string>
-	<string name="dialog_currency_select_title">Set Currency</string>
-	<string name="currency_select">You selected</string>
-	<string name="currency_current_exchange_rate">Current exchange rate is</string>
-	<string name="search_currency_hint">US Dollar</string>
-	<string name="packaging_currency_title">Packaging</string>
-	<string name="currency_set_default" formatted="false">Set %s as your default currency</string>
-
 
 </resources>

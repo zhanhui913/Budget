@@ -84,7 +84,7 @@
 	<style name="CircularViewStyle_selected" parent="CircularViewStyle">
 		<item name="cv_strokePadding">3dp</item>
 		<item name="cv_strokeWidth">1dp</item>
-		<item name="cv_strokeColor">@color/transparent</item>
+		<item name="cv_strokeColor">@color/colorPrimary</item>
 	</style>
 
 	<style name="CircularViewStyle_unselected" parent="CircularViewStyle">

@@ -17,14 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-import com.zhan.budget.Activity.SelectCurrencyActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -33,7 +31,6 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -61,7 +58,6 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -102,8 +98,6 @@ public class CalendarFragment extends BaseRealmFragment implements
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
 
-    private BudgetCurrency defaultCurrency;
-
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -125,8 +119,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         super.init();
         isFirstTime();
 
-        checkForCurrency();
-
         //By default it will be the current date;
         selectedDate = new Date();
 
@@ -140,7 +132,7 @@ public class CalendarFragment extends BaseRealmFragment implements
         transactionListView.setLayoutManager(linearLayoutManager);
 
         transactionList = new ArrayList<>();
-        transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, defaultCurrency, false); //do not display date in each transaction item
+        transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
         //Add divider
@@ -176,7 +168,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         myRealm.beginTransaction();
 
         startTime = System.nanoTime();
-
 
         //First time usage
         ArrayList<Category> categoryList = new ArrayList<>();
@@ -472,7 +463,7 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 float sumFloatValue = CurrencyTextFormatter.findTotalCostForTransactions(resultsTransactionForDay);
 
-                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue, defaultCurrency));
+                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue));
 
                 if(sumFloatValue > 0){
                     totalCostTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
@@ -590,48 +581,6 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    // Budget Currency
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Checks if BudgetCurrency table is filled, if not it will request the user to select a default
-     * budgetCurrency
-     */
-    private void checkForCurrency(){
-        //Check for number of rows in BudgetCurrency to determine if there is any data at all
-        RealmResults<BudgetCurrency> resultsCurrency = myRealm.where(BudgetCurrency.class).findAllSorted("currencyCode");
-        Toast.makeText(getContext(), "there are "+resultsCurrency.size()+" in list", Toast.LENGTH_SHORT).show();
-
-        if(resultsCurrency.size() <= 0){
-            askForCurrencyActivity();
-        }else{
-            getDefaultCurrency();
-        }
-    }
-
-    private void askForCurrencyActivity(){
-        startActivityForResult(SelectCurrencyActivity.createIntentToSetDefaultCurrency(getContext()), RequestCodes.SELECTED_CURRENCY);
-    }
-
-    private void getDefaultCurrency(){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        defaultCurrency = myRealm.where(BudgetCurrency.class).equalTo("isDefault", true).findFirst();
-        if(defaultCurrency == null){
-            defaultCurrency = new BudgetCurrency();
-            defaultCurrency.setCurrencyCode(SelectCurrencyActivity.DEFAULT_CURRENCY_CODE);
-            defaultCurrency.setCurrencyName(SelectCurrencyActivity.DEFAULT_CURRENCY_NAME);
-        }else{
-            defaultCurrency = myRealm.copyFromRealm(defaultCurrency);
-        }
-
-        Toast.makeText(getContext(), "default currency : "+defaultCurrency.getCurrencyName(), Toast.LENGTH_LONG).show();
-        myRealm.close();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
     // Etc
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -675,13 +624,6 @@ public class CalendarFragment extends BaseRealmFragment implements
                 populateTransactionsForDate(tt.getDate());
                 updateScheduledTransactionsForDecoration();
                 calendarView.selectDate(tt.getDate());
-            }else if(requestCode == RequestCodes.SELECTED_CURRENCY){
-                defaultCurrency = Parcels.unwrap(data.getExtras().getParcelable(SelectCurrencyActivity.RESULT_CURRENCY));
-
-                transactionAdapter.setDefaultCurrency(defaultCurrency);
-
-                Toast.makeText(getContext(), "selected currency : "+defaultCurrency.getCurrencyCode(), Toast.LENGTH_SHORT).show();
-                populateTransactionsForDate(selectedDate);
             }
         }
     }

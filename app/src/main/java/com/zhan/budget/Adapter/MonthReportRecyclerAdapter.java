@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
-import com.zhan.budget.Model.Realm.BudgetCurrency;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.library.CircularView;
@@ -30,13 +28,11 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
 
     private Context context;
     private List<MonthReport> monthReportList;
-    private BudgetCurrency currentCurrency;
     private OnMonthReportAdapterInteractionListener mListener;
 
-    public MonthReportRecyclerAdapter(Fragment fragment, List<MonthReport> monthReportList, BudgetCurrency currentCurrency) {
+    public MonthReportRecyclerAdapter(Fragment fragment, List<MonthReport> monthReportList) {
         this.context = fragment.getContext();
         this.monthReportList = monthReportList;
-        this.currentCurrency = currentCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
         if (fragment instanceof OnMonthReportAdapterInteractionListener) {
@@ -49,7 +45,6 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
     public MonthReportRecyclerAdapter(Activity activity, List<MonthReport> monthReportList){
         this.context = activity;
         this.monthReportList = monthReportList;
-        this.currentCurrency = currentCurrency;
 
         //Any activity or fragment that uses this adapter needs to implement the OnMonthReportAdapterInteractionListener interface
         if(activity instanceof  OnMonthReportAdapterInteractionListener){
@@ -63,7 +58,6 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         // Inflate the custom layout
-        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month_report_extended, parent, false);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month_report_v2, parent, false);
 
         // Return a new holder instance
@@ -77,8 +71,8 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         MonthReport monthReport = monthReportList.get(position);
 
         viewHolder.month.setText(DateUtil.convertDateToStringFormat4(context, monthReport.getMonth()));
-        viewHolder.expenseThisMonth.setText(String.format(context.getString(R.string.you_spent), CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), currentCurrency)));
-        viewHolder.incomeThisMonth.setText(String.format(context.getString(R.string.you_earned), CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), currentCurrency)));
+        viewHolder.expenseThisMonth.setText(String.format(context.getString(R.string.you_spent), CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth())));
+        viewHolder.incomeThisMonth.setText(String.format(context.getString(R.string.you_earned), CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth())));
 
         float savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
 
@@ -94,7 +88,7 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.red));
         }
 
-        viewHolder.netThisMonth.setText(String.format(context.getString(R.string.you_saved), CurrencyTextFormatter.formatFloat(savings, currentCurrency)));
+        viewHolder.netThisMonth.setText(String.format(context.getString(R.string.you_saved), CurrencyTextFormatter.formatFloat(savings)));
 
         /*
         if(monthReport.getFirstCategory() != null){
