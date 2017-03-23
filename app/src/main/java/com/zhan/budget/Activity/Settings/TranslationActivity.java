@@ -35,9 +35,9 @@ public class TranslationActivity extends BaseActivity
     private void createTranslationList(){
         translationList = new ArrayList<>();
 
-        String[] translationLanguage = new String[]{"English", "Spanish", "French"};
-        String[] translationAuthor = new String[]{"Zhan H. Yap", "Fernando de la Cruz Soto", "TAIWO Azeez Abiodun"};
-        String[] translationColors = new String[]{"#FF2980b9", "#FFc0392b", "#FF7f8c8d"};
+        String[] translationLanguage = new String[]{"English"/*, "Spanish", "French"*/};
+        String[] translationAuthor = new String[]{"Zhan H. Yap"/*, "Fernando de la Cruz Soto", "TAIWO Azeez Abiodun"*/};
+        String[] translationColors = new String[]{"#FF2980b9"/*, "#FFc0392b", "#FF7f8c8d"*/};
 
         for(int i = 0; i < translationLanguage.length; i++){
             Attribution translation = new Attribution();
