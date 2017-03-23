@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
 
 import java.util.List;
 
