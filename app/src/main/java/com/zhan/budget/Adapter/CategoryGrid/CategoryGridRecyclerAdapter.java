@@ -13,7 +13,6 @@ import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
@@ -113,7 +112,7 @@ public class CategoryGridRecyclerAdapter extends RecyclerView.Adapter<CategoryGr
         viewHolder.name.setText(category.getName());
 
         if(category.isSelected()){
-            viewHolder.circularView.setStrokeColor(R.color.colorPrimary);
+            viewHolder.circularView.setStrokeColor(category.getColor());
         }else{
             viewHolder.circularView.setStrokeColor(R.color.transparent);
         }
