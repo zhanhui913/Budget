@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
             xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/categoryCircularView"
             android:layout_width="wrap_content"

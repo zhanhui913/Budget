@@ -116,6 +116,7 @@ public class AccountInfoActivity extends BaseActivity implements
         //default color selected
         selectedColor = account.getColor();
         accountCircularView.setCircleColor(account.getColor());
+        accountCircularView.setStrokeColor(account.getColor());
 
         if(!isNewAccount){
             accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase().trim()));
@@ -288,6 +289,7 @@ public class AccountInfoActivity extends BaseActivity implements
 
     private void updateCircularColor(){
         accountCircularView.setCircleColor(selectedColor);
+        accountCircularView.setStrokeColor(selectedColor);
     }
 
     /**

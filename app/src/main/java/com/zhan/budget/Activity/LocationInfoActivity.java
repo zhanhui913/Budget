@@ -117,6 +117,7 @@ public class LocationInfoActivity extends BaseActivity implements
         //default color selected
         selectedColor = location.getColor();
         locationCircularView.setCircleColor(location.getColor());
+        locationCircularView.setStrokeColor(location.getColor());
 
         if(!isNewLocation){
             locationCircularView.setText(""+Util.getFirstCharacterFromString(location.getName().toUpperCase().trim()));
@@ -310,6 +311,7 @@ public class LocationInfoActivity extends BaseActivity implements
 
     private void updateCircularColor(){
         locationCircularView.setCircleColor(selectedColor);
+        locationCircularView.setStrokeColor(selectedColor);
     }
 
     @Override

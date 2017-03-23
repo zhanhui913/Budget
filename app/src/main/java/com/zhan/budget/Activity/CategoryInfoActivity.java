@@ -179,6 +179,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void initCategoryCircularView(){
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
         categoryCircularView.setCircleColor(category.getColor());
+        categoryCircularView.setStrokeColor(category.getColor());
 
         catRes = CategoryUtil.getIconID(this, category.getIcon());
         categoryCircularView.setIconResource(catRes);
@@ -557,6 +558,7 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     private void updateCategoryColor(){
         categoryCircularView.setCircleColor(selectedColor);
+        categoryCircularView.setStrokeColor(selectedColor);
         iconPickerCategoryFragment.updateColor(selectedColor);
     }
 
