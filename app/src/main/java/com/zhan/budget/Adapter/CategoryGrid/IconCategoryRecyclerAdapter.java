@@ -42,7 +42,7 @@ public class IconCategoryRecyclerAdapter extends CategoryGridRecyclerAdapter {
         viewHolder.name.setVisibility(View.GONE);
 
         if(category.isSelected()){
-            viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
+            viewHolder.circularView.setStrokeColor(category.getColor());
         }else{
             viewHolder.circularView.setStrokeColor(R.color.transparent);
         }
