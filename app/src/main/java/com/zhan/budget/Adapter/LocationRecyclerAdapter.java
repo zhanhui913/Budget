@@ -89,9 +89,10 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
         }else{
             viewHolder.amount.setText(String.format(context.getString(R.string.location_time), location.getAmount()));
         }
-        viewHolder.icon.setCircleColor(location.getColor());
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase().trim()));
-        viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        viewHolder.circularView.setCircleColor(location.getColor());
+        viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(location.getName().toUpperCase().trim()));
+        viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        viewHolder.circularView.setStrokeColor(location.getColor());
     }
 
     @Override
@@ -112,7 +113,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public CircularView icon;
+        public CircularView circularView;
         public TextView name, amount;
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, editBtn;
@@ -124,7 +125,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            icon = (CircularView) itemView.findViewById(R.id.locationIcon);
+            circularView = (CircularView) itemView.findViewById(R.id.locationIcon);
             name = (TextView) itemView.findViewById(R.id.locationName);
             amount = (TextView) itemView.findViewById(R.id.locationAmount);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeLocation);
