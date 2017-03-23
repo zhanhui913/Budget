@@ -98,8 +98,9 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         // getting category data for the row
         final Category category = categoryList.get(position);
 
-        //Icon
+        //CircularView
         viewHolder.circularView.setCircleColor(category.getColor());
+        viewHolder.circularView.setStrokeColor(category.getColor());
 
         if(category.isText()){
             viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(category.getName().toUpperCase().trim()));

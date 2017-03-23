@@ -37,7 +37,7 @@
         android:clickable="true"
         android:background="?attr/themeColorBtn">
 
-        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
             xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/categoryIcon"
             android:layout_width="wrap_content"
