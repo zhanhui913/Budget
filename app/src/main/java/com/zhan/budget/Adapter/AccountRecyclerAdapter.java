@@ -76,9 +76,9 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
 
         viewHolder.name.setText(account.getName());
 
-        viewHolder.icon.setCircleColor(account.getColor());
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(account.getName().toUpperCase().trim()));
-        viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        viewHolder.circularView.setCircleColor(account.getColor());
+        viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(account.getName().toUpperCase().trim()));
+        viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
         if(displayCost){
             viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(account.getCost()));
@@ -90,6 +90,8 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
             }else{
                 viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
             }
+
+            viewHolder.circularView.setStrokeColor(account.getColor());
         }else{
             viewHolder.cost.setVisibility(View.GONE);
         }
@@ -99,9 +101,11 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
             if(account.isDefault()){
                 viewHolder.defaultAccountIndicatorOn.setVisibility(View.VISIBLE);
                 viewHolder.defaultAccountIndicatorOff.setVisibility(View.INVISIBLE);
+                viewHolder.circularView.setStrokeColor(account.getColor());
             }else{
                 viewHolder.defaultAccountIndicatorOn.setVisibility(View.INVISIBLE);
                 viewHolder.defaultAccountIndicatorOff.setVisibility(View.VISIBLE);
+                viewHolder.circularView.setStrokeColor(R.color.transparent);
             }
         }else{
             viewHolder.defaultAccountIndicatorOn.setVisibility(View.GONE);
@@ -130,7 +134,7 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
         public TextView name, cost;
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, editBtn, defaultAccountIndicatorOn, defaultAccountIndicatorOff;
-        public CircularView icon;
+        public CircularView circularView;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -139,7 +143,7 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            icon = (CircularView) itemView.findViewById(R.id.accountIcon);
+            circularView = (CircularView) itemView.findViewById(R.id.accountIcon);
             name = (TextView) itemView.findViewById(R.id.accountName);
             cost = (TextView) itemView.findViewById(R.id.accountCost);
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeAccount);

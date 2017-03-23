@@ -58,7 +58,7 @@
                 android:tint="@color/colorPrimaryDark"/>
         </RelativeLayout>
 
-        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
             android:id="@+id/accountIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
