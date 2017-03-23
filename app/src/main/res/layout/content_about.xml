@@ -56,13 +56,16 @@
         android:clickable="true"
         android:focusable="true">
 
-        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
             android:id="@+id/openSourceCV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            app:cv_bgColor="@color/belize_hole"
+            app:cv_strokeColor="@color/belize_hole"
+            app:cv_iconDrawable="@drawable/svg_ic_code"/>
 
         <TextView style="@style/SettingsTextViewTitleStyle"
             android:id="@+id/openSourceTitle"
@@ -94,13 +97,16 @@
         android:clickable="true"
         android:focusable="true">
 
-        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
             android:id="@+id/developerCV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            app:cv_bgColor="@color/nephritis"
+            app:cv_strokeColor="@color/nephritis"
+            app:cv_iconDrawable="@drawable/svg_ic_dev"/>
 
         <TextView style="@style/SettingsTextViewTitleStyle"
             android:id="@+id/developerTitle"
@@ -132,13 +138,16 @@
         android:clickable="true"
         android:focusable="true">
 
-        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
             android:id="@+id/translationCV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            app:cv_bgColor="@color/pomegranate"
+            app:cv_strokeColor="@color/pomegranate"
+            app:cv_iconDrawable="@drawable/svg_ic_flag"/>
 
         <TextView style="@style/SettingsTextViewTitleStyle"
             android:id="@+id/translationTitle"

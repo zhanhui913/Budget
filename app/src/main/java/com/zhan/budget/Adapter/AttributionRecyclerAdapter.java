@@ -66,9 +66,11 @@ public class AttributionRecyclerAdapter extends RecyclerView.Adapter<Attribution
 
         viewHolder.name.setText(data.getName());
         viewHolder.author.setText(data.getAuthor());
-        viewHolder.icon.setCircleColor(data.getColor());
-        viewHolder.icon.setText(""+ Util.getFirstCharacterFromString(data.getName().toUpperCase().trim()));
-        viewHolder.icon.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        viewHolder.circularView.setCircleColor(data.getColor());
+        viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(data.getName().toUpperCase().trim()));
+        viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        viewHolder.circularView.setStrokeColor(data.getColor());
+
     }
 
     @Override
@@ -85,7 +87,7 @@ public class AttributionRecyclerAdapter extends RecyclerView.Adapter<Attribution
 
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public CircularView icon;
+        public CircularView circularView;
         public TextView name, author;
 
         // We also create a constructor that accepts the entire item row
@@ -95,7 +97,7 @@ public class AttributionRecyclerAdapter extends RecyclerView.Adapter<Attribution
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            icon = (CircularView) itemView.findViewById(R.id.attributionCV);
+            circularView = (CircularView) itemView.findViewById(R.id.attributionCV);
             name = (TextView) itemView.findViewById(R.id.attributionTitle);
             author = (TextView) itemView.findViewById(R.id.attributionContent);
 

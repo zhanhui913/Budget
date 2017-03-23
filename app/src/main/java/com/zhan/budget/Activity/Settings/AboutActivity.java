@@ -53,13 +53,6 @@ public class AboutActivity extends BaseActivity {
 
     private void createOpenSource(){
         ViewGroup openSourceBtn = (ViewGroup) findViewById(R.id.openSourceBtn);
-        CircularView openSourceCV = (CircularView) findViewById(R.id.openSourceCV);
-
-        if(openSourceCV != null){
-            openSourceCV.setCircleColor(R.color.belize_hole);
-            openSourceCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
-            openSourceCV.setIconResource(R.drawable.svg_ic_code);
-        }
 
         if(openSourceBtn != null) {
             openSourceBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,13 +67,6 @@ public class AboutActivity extends BaseActivity {
 
     private void createDeveloper(){
         ViewGroup developerBtn = (ViewGroup) findViewById(R.id.developerBtn);
-        CircularView developerCV = (CircularView) findViewById(R.id.developerCV);
-
-        if(developerCV != null){
-            developerCV.setCircleColor(R.color.nephritis);
-            developerCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
-            developerCV.setIconResource(R.drawable.svg_ic_dev);
-        }
 
         if(developerBtn != null) {
             developerBtn.setOnClickListener(new View.OnClickListener() {
@@ -95,13 +81,6 @@ public class AboutActivity extends BaseActivity {
 
     private void createTranslation(){
         ViewGroup translationBtn = (ViewGroup) findViewById(R.id.translationBtn);
-        CircularView translationCV = (CircularView) findViewById(R.id.translationCV);
-
-        if(translationCV != null){
-            translationCV.setCircleColor(R.color.pomegranate);
-            translationCV.setIconColor(Colors.getHexColorFromAttr(this, R.attr.themeColor));
-            translationCV.setIconResource(R.drawable.svg_ic_flag);
-        }
 
         if(translationBtn != null){
             translationBtn.setOnClickListener(new View.OnClickListener() {
