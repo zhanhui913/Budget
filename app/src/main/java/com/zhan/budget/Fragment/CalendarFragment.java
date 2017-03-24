@@ -596,12 +596,12 @@ public class CalendarFragment extends BaseRealmFragment implements
         // handle item selection
         switch (item.getItemId()) {
             case R.id.leftChevron:
-                updateMonthInToolbar();
                 calendarView.moveToPreviousMonth();
+                updateMonthInToolbar();
                 return true;
             case R.id.rightChevron:
-                updateMonthInToolbar();
                 calendarView.moveToNextMonth();
+                updateMonthInToolbar();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
