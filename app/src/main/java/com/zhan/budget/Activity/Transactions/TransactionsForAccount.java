@@ -82,6 +82,16 @@ public class TransactionsForAccount extends BaseTransactions {
 
     @Override
     protected void updateMonthInToolbar(int direction){
+        beginMonth = DateUtil.getMonthWithDirection(beginMonth, direction);
 
+        //Need to go a day before as Realm's between date does inclusive on both end
+        endMonth = DateUtil.getLastDateOfMonth(beginMonth);
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth));
+        }
+
+        getDifferentData();
+        getAllTransactionsForMonth();
     }
 }

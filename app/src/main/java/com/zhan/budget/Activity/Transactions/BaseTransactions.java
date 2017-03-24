@@ -232,6 +232,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Simply for the different subclasses to put different values
+     */
     protected abstract void getDifferentData();
 
     protected abstract void getAllTransactionsForMonth();
