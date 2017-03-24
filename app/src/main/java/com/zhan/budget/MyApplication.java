@@ -6,10 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.evernote.android.job.JobManager;
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Services.CustomJobCreator;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.ThemeUtil;
@@ -21,7 +18,6 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
-import io.realm.RealmResults;
 import io.realm.RealmSchema;
 
 /**
@@ -43,7 +39,7 @@ public class MyApplication extends Application {
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
-                .schemaVersion(2)
+                .schemaVersion(3)
                 .migration(new RealmMigration() {
                     @Override
                     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
@@ -65,6 +61,25 @@ public class MyApplication extends Application {
                             oldVersion++;
                         }
 
+                        //migration to version 3
+                        if(oldVersion == 2){
+                            //Change Transaction's price and Category's budget and cost from float
+                            //to double
+
+                            schema.get("Transaction")
+                                    .addField("price_tmp", double.class)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            //Take the value from price column and add it to price_tmp
+                                            obj.setDouble("price_tmp", obj.getFloat("price"));
+                                        }
+                                    })
+                                    .removeField("price")
+                                    .renameField("price_tmp","price");
+
+                            oldVersion++;
+                        }
 
                         Toast.makeText(MyApplication.this, "a) It looks like you're at version "+oldVersion, Toast.LENGTH_SHORT).show();
                         Log.d("MY_APP", "old version :"+oldVersion);
