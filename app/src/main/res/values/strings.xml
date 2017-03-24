@@ -106,6 +106,9 @@
 	<string name="empty_account">There is no account</string>
 	<string name="empty_location">There is no location</string>
 	<string name="empty_transaction_custom_date" formatted="false">There is no transaction for \'%s\' during %s</string>
+	<string name="empty_transaction_category_date" formatted="false">There is no transaction with \'%s\' category during %s</string>
+	<string name="empty_transaction_account_date" formatted="false">There is no transaction with \'%s\' account during %s</string>
+	<string name="empty_transaction_location_date" formatted="false">There is no transaction with \'%s\' location during %s</string>
 
 
 	<!-- Monthly Report Fragment -->

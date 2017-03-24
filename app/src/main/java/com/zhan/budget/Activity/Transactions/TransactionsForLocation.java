@@ -40,7 +40,7 @@ public class TransactionsForLocation extends BaseTransactions {
     protected void getDifferentData(){
         location = Parcels.unwrap((getIntent().getExtras()).getParcelable(ALL_TRANSACTION_FOR_LOCATION));
         updateTitleName(location.getName());
-        updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), location.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
+        updateEmptyListText(String.format(getString(R.string.empty_transaction_location_date), location.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
     }
 
     @Override

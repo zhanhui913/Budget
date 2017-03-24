@@ -42,7 +42,7 @@ public class TransactionsForAccount extends BaseTransactions {
     protected void getDifferentData(){
         account = Parcels.unwrap((getIntent().getExtras()).getParcelable(ALL_TRANSACTION_FOR_ACCOUNT));
         updateTitleName(account.getName());
-        updateEmptyListText(String.format(getString(R.string.empty_transaction_custom_date), account.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
+        updateEmptyListText(String.format(getString(R.string.empty_transaction_account_date), account.getName(), DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth)));
     }
 
     @Override
