@@ -79,4 +79,9 @@ public class TransactionsForCategory extends BaseTransactions {
             }
         });
     }
+
+    @Override
+    protected void updateMonthInToolbar(int direction){
+
+    }
 }

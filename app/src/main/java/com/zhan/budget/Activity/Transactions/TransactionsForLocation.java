@@ -69,4 +69,9 @@ public class TransactionsForLocation extends BaseTransactions {
             }
         });
     }
+
+    @Override
+    protected void updateMonthInToolbar(int direction){
+
+    }
 }

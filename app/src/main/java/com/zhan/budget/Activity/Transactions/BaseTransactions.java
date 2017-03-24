@@ -7,6 +7,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -234,6 +236,8 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     protected abstract void getAllTransactionsForMonth();
 
+    protected abstract void updateMonthInToolbar(int direction);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Life cycle methods
@@ -281,15 +285,6 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     @Override
     public void onDeleteTransaction(int position){
-        /*myRealm.beginTransaction();
-        transactionsForMonth.deleteFromRealm(position);
-        myRealm.commitTransaction();
-
-        isChanged = true;
-
-        updateTransactionList();
-*/
-
         confirmDeleteTransaction(position);
     }
 
@@ -315,4 +310,33 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         //no need to implement this as this activity has no pull down to refresh feature
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Menu
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.change_month_year, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.leftChevron:
+                updateMonthInToolbar(-1);
+                return true;
+            case R.id.rightChevron:
+                updateMonthInToolbar(1);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
