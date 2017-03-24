@@ -226,6 +226,23 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         currentSwipeLayoutTarget.close();
     }
 
+    /**
+     * Updates the month, this will update the text in the toolbar and the results.
+     */
+    protected void updateMonth(int direction){
+        beginMonth = DateUtil.getMonthWithDirection(beginMonth, direction);
+
+        //Need to go a day before as Realm's between date does inclusive on both end
+        endMonth = DateUtil.getLastDateOfMonth(beginMonth);
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(DateUtil.convertDateToStringFormat2(getApplicationContext(), beginMonth));
+        }
+
+        getDifferentData();
+        getAllTransactionsForMonth();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Functions that subclass needs to implement
@@ -238,8 +255,6 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     protected abstract void getDifferentData();
 
     protected abstract void getAllTransactionsForMonth();
-
-    protected abstract void updateMonthInToolbar(int direction);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -333,10 +348,10 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.leftChevron:
-                updateMonthInToolbar(-1);
+                updateMonth(-1);
                 return true;
             case R.id.rightChevron:
-                updateMonthInToolbar(1);
+                updateMonth(1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
