@@ -324,8 +324,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                     for(int c = 0; c < categoryList.size(); c++){
                         if(transactionMonthList.get(t).getCategory() != null){
                             if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                                float transactionPrice = transactionMonthList.get(t).getPrice();
-                                float currentCategoryPrice = categoryList.get(c).getCost();
+                                double transactionPrice = transactionMonthList.get(t).getPrice();
+                                double currentCategoryPrice = categoryList.get(c).getCost();
                                 categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
                                 totalCost += transactionPrice;
                             }

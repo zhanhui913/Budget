@@ -22,13 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -251,7 +249,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPageTextView.setText(R.string.category_income);
             }
 
-            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice());
+            priceString = CurrencyTextFormatter.formatDouble(editTransaction.getPrice());
 
             //Remove any extra un-needed signs
             priceString = CurrencyTextFormatter.stripCharacters(priceString);

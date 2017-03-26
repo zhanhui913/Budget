@@ -461,9 +461,9 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 Log.d(TAG, "received " + element.size() + " transactions");
 
-                float sumFloatValue = CurrencyTextFormatter.findTotalCostForTransactions(resultsTransactionForDay);
+                double sumFloatValue = CurrencyTextFormatter.findTotalCostForTransactions(resultsTransactionForDay);
 
-                totalCostTextView.setText(CurrencyTextFormatter.formatFloat(sumFloatValue));
+                totalCostTextView.setText(CurrencyTextFormatter.formatDouble(sumFloatValue));
 
                 if(sumFloatValue > 0){
                     totalCostTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));

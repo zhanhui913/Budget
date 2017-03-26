@@ -63,8 +63,8 @@ public class PercentChartFragment extends BaseChartFragment {
         Collections.sort(categoryList, new Comparator<Category>() {
             @Override
             public int compare(Category c1, Category c2) {
-                float cost1 = c1.getCost();
-                float cost2 = c2.getCost();
+                double cost1 = c1.getCost();
+                double cost2 = c2.getCost();
 
                 //ascending order
                 return ((int) cost1) - ((int) cost2);

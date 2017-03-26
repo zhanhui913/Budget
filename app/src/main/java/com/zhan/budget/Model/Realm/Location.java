@@ -60,7 +60,7 @@ public class Location extends RealmObject implements PieDataCostInterface {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public float getPieDataCost(){
+    public double getPieDataCost(){
         return this.amount;
     }
 

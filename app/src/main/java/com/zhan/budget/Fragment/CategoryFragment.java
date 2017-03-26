@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
@@ -83,7 +82,7 @@ public class CategoryFragment extends BaseFragment {
                 isCategoryExpenseCalculationComplete = true;
                 totalExpenseCost = totalCost;
 
-                leftTextView.setText(CurrencyTextFormatter.formatFloat(totalCost));
+                leftTextView.setText(CurrencyTextFormatter.formatDouble(totalCost));
 
                 if(totalExpenseCost < 0){
                     leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
@@ -101,7 +100,7 @@ public class CategoryFragment extends BaseFragment {
                 isCategoryIncomeCalculationComplete = true;
                 totalIncomeCost = totalCost;
 
-                rightTextView.setText(CurrencyTextFormatter.formatFloat(totalCost));
+                rightTextView.setText(CurrencyTextFormatter.formatDouble(totalCost));
 
                 if(totalIncomeCost > 0){
                     rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));

@@ -21,9 +21,15 @@ public final class CurrencyTextFormatter {
     private CurrencyTextFormatter(){}
 
     public static String formatText(String val){
-
         //special case for the start of a negative number
         //if(val.equals("-")) return val;
+        boolean isNeg = false;
+        if(val.length()>0){
+            if(val.substring(0,1).equalsIgnoreCase("-")){
+                val = val.replace("-","");
+                isNeg=true;
+            }
+        }
 
         //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
         //ie: $x.00
@@ -32,7 +38,7 @@ public final class CurrencyTextFormatter {
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
 
         //if there's nothing left, that means we were handed an empty string. Also, cap the raw input so the formatter doesn't break.
-        if(!val.equals("") && val.length() < MAX_RAW_INPUT_LENGTH && !val.equals("-")) {
+        if(!val.equals("") && !val.equals("-") && val.length() <= MAX_RAW_INPUT_LENGTH) {
             //Convert the string into a double, which will later be passed into the currency formatter
             double newTextValue = Double.valueOf(val);
 
@@ -46,28 +52,29 @@ public final class CurrencyTextFormatter {
         }else if(val.equals("") || val.equals("-")){
             val = currencyFormatter.format(0);
         }
-        /*else {
-            throw new IllegalArgumentException("Invalid argument in val");
-        }*/
 
         val = val.replace("$","").replace("(","-").replace(")","");
+        if(isNeg){
+            val = "-" + val;
+        }
+
         return val;
     }
 
-    public static float formatCurrency(String val){
+    public static double formatCurrency(String val){
         //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
         //ie: $x.00
-        final float CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(Locale.CANADA).getDefaultFractionDigits());
+        final double CURRENCY_DECIMAL_DIVISOR = (int) Math.pow(10, Currency.getInstance(Locale.CANADA).getDefaultFractionDigits());
 
-        float newTextValue;
+        double newTextValue;
 
         if(val.equals("") && !val.equals("-")){
             newTextValue = 0;
         }else if(val.charAt(0) == '('){
             val = val.replace("(", "-").replace(")","");
-            newTextValue = Float.valueOf(val);
+            newTextValue = Double.valueOf(val);
         }else{
-            newTextValue = Float.valueOf(val);
+            newTextValue = Double.valueOf(val);
         }
 
         newTextValue = newTextValue / CURRENCY_DECIMAL_DIVISOR;
@@ -75,7 +82,7 @@ public final class CurrencyTextFormatter {
         return newTextValue;
     }
 
-    public static String formatFloat(float val){
+    public static String formatDouble(double val){
         //We're using Locale.CANADA so that the currency fraction digits is 2 zeroes at the end
         //ie: $x.00
         DecimalFormat currencyFormatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(Locale.CANADA);
@@ -93,8 +100,8 @@ public final class CurrencyTextFormatter {
      * This will filter out transactions with no category and whos day type set to scheduled.
      * @return sum in the default currency
      */
-    public static float findTotalCostForTransactions(List<Transaction> transactionList){
-        float currentSum = 0f;
+    public static double findTotalCostForTransactions(List<Transaction> transactionList){
+        double currentSum = 0f;
         for(int i = 0; i < transactionList.size(); i++){
             if(transactionList.get(i).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString()) && transactionList.get(i).getCategory() != null) {
                 currentSum += transactionList.get(i).getPrice();

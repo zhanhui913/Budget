@@ -22,7 +22,7 @@ public class Account extends RealmObject implements PieDataCostInterface{
     private String color;
 
     @Ignore
-    private float cost;
+    private double cost;
 
     public Account(){
 
@@ -52,11 +52,11 @@ public class Account extends RealmObject implements PieDataCostInterface{
         this.isDefault = isDefault;
     }
 
-    public float getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 
@@ -75,7 +75,7 @@ public class Account extends RealmObject implements PieDataCostInterface{
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public float getPieDataCost(){
+    public double getPieDataCost(){
         return this.getCost();
     }
 

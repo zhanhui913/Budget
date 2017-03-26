@@ -113,22 +113,22 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         viewHolder.name.setText(category.getName());
 
         if(arrangement == ARRANGEMENT.BUDGET || arrangement == ARRANGEMENT.MOVE){
-            viewHolder.budget.setText(String.format(context.getString(R.string.category_budget), CurrencyTextFormatter.formatFloat(category.getBudget())));
+            viewHolder.budget.setText(String.format(context.getString(R.string.category_budget), CurrencyTextFormatter.formatDouble(category.getBudget())));
         }else{
             viewHolder.budget.setText(String.format(context.getString(R.string.category_percent), category.getPercent()));
         }
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
             if(arrangement == ARRANGEMENT.BUDGET) {
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost()));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
 
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
 
                 //ProgressBar
                 if(category.getBudget() > 0){
                     viewHolder.progressBar.setVisibility(View.VISIBLE);
-                    viewHolder.progressBar.setMax(category.getBudget());
-                    viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
+                    viewHolder.progressBar.setMax((float)category.getBudget());
+                    viewHolder.progressBar.setProgress((float)Math.abs(category.getCost()));
 
                     /*if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
                         viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
@@ -152,14 +152,14 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost()));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
 
             if(arrangement == ARRANGEMENT.BUDGET){
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost())));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(Math.abs(category.getCost())));
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
             }else if(arrangement == ARRANGEMENT.MOVE){
@@ -171,7 +171,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost()));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
             }
         }

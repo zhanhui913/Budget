@@ -54,7 +54,7 @@ public class TransactionsForLocation extends BaseTransactions {
                 element.removeChangeListener(this);
 
                 transactionList = myRealm.copyFromRealm(element);
-                float total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
+                double total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
                 
                 transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
@@ -63,7 +63,7 @@ public class TransactionsForLocation extends BaseTransactions {
                 Log.d("ZHAN", "total sum is "+total);
 
                 //update balance
-                updateTitleBalance(CurrencyTextFormatter.formatFloat(total));
+                updateTitleBalance(CurrencyTextFormatter.formatDouble(total));
 
                 updateTransactionStatus();
             }

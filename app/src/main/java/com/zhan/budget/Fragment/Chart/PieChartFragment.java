@@ -170,7 +170,7 @@ public class PieChartFragment extends BaseChartFragment {
         // drawn above each other.
         ArrayList<Entry> value = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            value.add(new Entry(Math.abs(list.get(i).getPieDataCost()), i));
+            value.add(new Entry(Math.abs((float)list.get(i).getPieDataCost()), i));
         }
 
         dataSet = new PieDataSet(value, "");

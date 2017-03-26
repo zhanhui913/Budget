@@ -72,10 +72,10 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         MonthReport monthReport = monthReportList.get(position);
 
         viewHolder.month.setText(DateUtil.convertDateToStringFormat4(context, monthReport.getMonth()));
-        viewHolder.expenseThisMonth.setText(String.format(context.getString(R.string.you_spent), CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth())));
-        viewHolder.incomeThisMonth.setText(String.format(context.getString(R.string.you_earned), CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth())));
+        viewHolder.expenseThisMonth.setText(String.format(context.getString(R.string.you_spent), CurrencyTextFormatter.formatDouble(monthReport.getCostThisMonth())));
+        viewHolder.incomeThisMonth.setText(String.format(context.getString(R.string.you_earned), CurrencyTextFormatter.formatDouble(monthReport.getIncomeThisMonth())));
 
-        float savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
+        double savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
 
         //Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
         Log.d("CHECK", "----- "+monthReport.getMonth()+" -----");
@@ -91,7 +91,7 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
             viewHolder.netThisMonth.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
 
-        viewHolder.netThisMonth.setText(String.format(context.getString(R.string.you_saved), CurrencyTextFormatter.formatFloat(savings)));
+        viewHolder.netThisMonth.setText(String.format(context.getString(R.string.you_saved), CurrencyTextFormatter.formatDouble(savings)));
 
         /*
         if(monthReport.getFirstCategory() != null){

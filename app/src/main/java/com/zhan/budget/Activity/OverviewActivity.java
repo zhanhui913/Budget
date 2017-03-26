@@ -171,7 +171,7 @@ public class OverviewActivity extends BaseActivity implements
     private void changeTopPanelInfo(int position, boolean animate){
         if(position == 0){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalExpenseCost));
+            totalCostForMonth.setText(CurrencyTextFormatter.formatDouble(totalExpenseCost));
             pieChartFragment.setData(expenseCategoryList, animate);
 
             if(totalExpenseCost < 0){
@@ -181,7 +181,7 @@ public class OverviewActivity extends BaseActivity implements
             }
         }else if(position == 1){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatFloat(totalIncomeCost));
+            totalCostForMonth.setText(CurrencyTextFormatter.formatDouble(totalIncomeCost));
             pieChartFragment.setData(incomeCategoryList, animate);
 
             if(totalIncomeCost > 0){
