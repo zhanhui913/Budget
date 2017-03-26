@@ -63,7 +63,7 @@ public class MyApplication extends Application {
 
                         //migration to version 3
                         if(oldVersion == 2){
-                            //Change Transaction's price and Category's budget and cost from float
+                            //Change Transaction's price and Category's budget from float
                             //to double
 
                             schema.get("Transaction")
@@ -77,6 +77,18 @@ public class MyApplication extends Application {
                                     })
                                     .removeField("price")
                                     .renameField("price_tmp","price");
+
+                            schema.get("Category")
+                                    .addField("budget_tmp", double.class)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            //Take the value from budget column and add it to budget_tmp
+                                            obj.setDouble("budget_tmp", obj.getFloat("budget"));
+                                        }
+                                    })
+                                    .removeField("budget")
+                                    .renameField("budget_tmp","budget");
 
                             oldVersion++;
                         }

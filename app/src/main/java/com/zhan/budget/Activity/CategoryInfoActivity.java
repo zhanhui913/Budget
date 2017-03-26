@@ -133,7 +133,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         currentPageTextView.setText(R.string.color);
 
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
@@ -164,7 +164,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         addListeners();
 
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
 
         //Check if current category is using text or icon in its circular view
         if(category.isText()){
@@ -324,20 +324,20 @@ public class CategoryInfoActivity extends BaseActivity implements
         TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
-        priceString = CurrencyTextFormatter.formatFloat(category.getBudget());
+        priceString = CurrencyTextFormatter.formatDouble(category.getBudget());
 
         //Remove any extra un-needed signs
         priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
         title.setText(getString(R.string.budget));
-        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
+        budgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         category.setBudget(CurrencyTextFormatter.formatCurrency(priceString));
-                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget()));
+                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
@@ -542,7 +542,7 @@ public class CategoryInfoActivity extends BaseActivity implements
         Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
 
         //Need to explicitly copy the value of cost since its property is ignored in the model.
-        float cost = c.getCost();
+        double cost = c.getCost();
 
         Category carbonCopy = myRealm.copyFromRealm(c);
         carbonCopy.setCost(cost);
