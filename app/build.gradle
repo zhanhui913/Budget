@@ -50,7 +50,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile project(':circleindicator')
-    compile project(':percentview')
     apt 'org.parceler:parceler:1.0.4'
 
     //Espresso Testing
