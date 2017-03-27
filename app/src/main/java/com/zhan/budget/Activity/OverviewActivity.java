@@ -17,7 +17,6 @@ import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
-import com.zhan.budget.Fragment.Chart.PercentChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Fragment.OverviewGenericFragment;
 import com.zhan.budget.Model.BudgetType;
@@ -37,7 +36,6 @@ public class OverviewActivity extends BaseActivity implements
     public static final String MONTH = "View Overview Month";
 
     //Charts
-    private PercentChartFragment percentChartFragment;
     private BarChartFragment barChartFragment;
     private PieChartFragment pieChartFragment;
 
@@ -143,7 +141,6 @@ public class OverviewActivity extends BaseActivity implements
 
     private void createCharts(){
         //barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
-        //percentChartFragment = PercentChartFragment.newInstance(new ArrayList<Category>());
         pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), false, false, getString(R.string.category));
         getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
     }
@@ -217,10 +214,6 @@ public class OverviewActivity extends BaseActivity implements
                 Intent pdfIntent = new Intent(getApplicationContext(), PdfActivity.class);
                 startActivity(pdfIntent);
                 return true;*/
-            case R.id.percentChart:
-                //Toast.makeText(getApplicationContext(), "click here percent chart", Toast.LENGTH_SHORT).show();
-                replaceFragment(percentChartFragment);
-                return true;
             case R.id.barChart:
                 //Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(barChartFragment);
