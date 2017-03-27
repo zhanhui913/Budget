@@ -81,7 +81,7 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
         viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
         if(displayCost){
-            viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(account.getCost()));
+            viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(account.getCost()));
 
             if(account.getCost() > 0){
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));

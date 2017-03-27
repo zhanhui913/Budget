@@ -22,13 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -251,7 +249,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 currentPageTextView.setText(R.string.category_income);
             }
 
-            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice());
+            priceString = CurrencyTextFormatter.formatDouble(editTransaction.getPrice());
 
             //Remove any extra un-needed signs
             priceString = CurrencyTextFormatter.stripCharacters(priceString);
@@ -260,6 +258,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
 
             transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString));
+            updateCostColor();
 
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }else{
@@ -429,6 +428,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                     case 0:
                         currentPage = BudgetType.EXPENSE;
                         transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString));
+                        updateCostColor();
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedExpenseCategory != null){
@@ -441,6 +441,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                     case 1:
                         currentPage = BudgetType.INCOME;
                         transactionCostView.setText(CurrencyTextFormatter.formatText(priceString));
+                        updateCostColor();
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedIncomeCategory != null){
@@ -832,6 +833,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
             transactionCostView.setText(CurrencyTextFormatter.formatText(appendString + priceString));
+            updateCostColor();
         }else {
             Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.price_too_long));
         }
@@ -844,6 +846,11 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
         transactionCostView.setText(CurrencyTextFormatter.formatText(appendString + priceString));
+        updateCostColor();
+    }
+
+    private void updateCostColor(){
+        transactionCostView.setTextColor((currentPage == BudgetType.EXPENSE) ? ContextCompat.getColor(getApplicationContext(), R.color.red) : ContextCompat.getColor(getApplicationContext(), R.color.green));
     }
 
     @Override

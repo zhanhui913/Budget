@@ -22,7 +22,7 @@ public class Transaction extends RealmObject {
     @Index
     private Date date;
 
-    private float price;
+    private double price;
     private Category category;
     private Account account;
     private String dayType;
@@ -48,11 +48,11 @@ public class Transaction extends RealmObject {
         this.date = date;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

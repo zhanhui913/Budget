@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -40,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -212,8 +210,8 @@ public class AccountFragment extends BaseRealmFragment implements
                     for(int c = 0; c < accountList.size(); c++){
                         if(transactionMonthList.get(t).getAccount() != null){
                             if(transactionMonthList.get(t).getAccount().getId().equalsIgnoreCase(accountList.get(c).getId())){
-                                float transactionPrice = transactionMonthList.get(t).getPrice();
-                                float currentAccountPrice = accountList.get(c).getCost();
+                                double transactionPrice = transactionMonthList.get(t).getPrice();
+                                double currentAccountPrice = accountList.get(c).getCost();
                                 accountList.get(c).setCost(transactionPrice + currentAccountPrice);
                                 totalCost += transactionPrice;
                             }
@@ -236,7 +234,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 pieChartFragment.setData(accountList, animate);
 
-                centerPanelRightTextView.setText(CurrencyTextFormatter.formatFloat(result));
+                centerPanelRightTextView.setText(CurrencyTextFormatter.formatDouble(result));
 
                 if(result > 0){
                     centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));

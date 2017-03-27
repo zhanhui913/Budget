@@ -187,9 +187,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
                 transactionAdapter.setTransactionList(transactionList);
                 updateTransactionStatus();
 
-                float total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
+                double total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
 
-                updateTitleBalance(CurrencyTextFormatter.formatFloat(total));
+                updateTitleBalance(CurrencyTextFormatter.formatDouble(total));
             }
         });
     }

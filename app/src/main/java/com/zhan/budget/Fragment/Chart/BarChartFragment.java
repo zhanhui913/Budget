@@ -61,7 +61,7 @@ public class BarChartFragment extends BaseChartFragment{
         barSet = new BarSet();
 
         for(int i = 0 ; i < categoryList.size(); i++){
-            Bar bar = new Bar(categoryList.get(i).getName(), Math.abs(categoryList.get(i).getCost()));
+            Bar bar = new Bar(categoryList.get(i).getName(), (float)Math.abs(categoryList.get(i).getCost()));
             try {
                 bar.setColor(ContextCompat.getColor(getContext(), CategoryUtil.getColorID(getContext(), categoryList.get(i).getColor())));
             }catch(Exception e){

@@ -18,10 +18,10 @@ public class Category extends RealmObject implements PieDataCostInterface{
     private String id;
     private String name;
     private String type;
-    private float budget;
+    private double budget;
 
     @Ignore
-    private float cost;
+    private double cost;
     private String color;
     private String icon;
     private int index;
@@ -46,19 +46,19 @@ public class Category extends RealmObject implements PieDataCostInterface{
         this.id = id;
     }
 
-    public float getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public void setBudget(float budget) {
+    public void setBudget(double budget) {
         this.budget = budget;
     }
 
-    public float getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 
@@ -133,7 +133,7 @@ public class Category extends RealmObject implements PieDataCostInterface{
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public float getPieDataCost(){
+    public double getPieDataCost(){
         return this.getCost();
     }
 
