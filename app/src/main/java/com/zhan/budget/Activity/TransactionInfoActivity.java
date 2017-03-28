@@ -254,19 +254,15 @@ public class TransactionInfoActivity extends BaseActivity implements
             //Remove any extra un-needed signs
             priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
-            Log.d("DEBUG", "---------->" + priceString);
-            String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-
-            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString));
-            updateCostColor();
+            updatePriceStatus();
 
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
         }else{
 
-            priceString = "0";
+            priceString = "";
 
             //Call one time to give priceStringWithDot the correct string format of 0.00
-            removeDigit();
+            updatePriceStatus();
         }
 
 
@@ -427,8 +423,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                 switch (position) {
                     case 0:
                         currentPage = BudgetType.EXPENSE;
-                        transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString));
-                        updateCostColor();
+                        updatePriceStatus();
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedExpenseCategory != null){
@@ -440,8 +435,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
-                        transactionCostView.setText(CurrencyTextFormatter.formatText(priceString));
-                        updateCostColor();
+                        updatePriceStatus();
 
                         //If note is empty
                         if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedIncomeCategory != null){
@@ -831,9 +825,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH){
             priceString += digit;
 
-            String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString + priceString));
-            updateCostColor();
+            updatePriceStatus();
         }else {
             Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.price_too_long));
         }
@@ -844,16 +836,24 @@ public class TransactionInfoActivity extends BaseActivity implements
             priceString = priceString.substring(0, priceString.length() - 1);
         }
 
-        String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString + priceString));
-        updateCostColor();
+        updatePriceStatus();
     }
 
-    private void updateCostColor(){
-        if(CurrencyTextFormatter.formatCurrency(priceString) == 0){
+    /**
+     * Updates the price's textview's text format and color based on whether its EXPENSE, INCOME, or its 0
+     */
+    private void updatePriceStatus(){
+        if(CurrencyTextFormatter.formatCurrency(priceString) == 0) {
+            transactionCostView.setText(CurrencyTextFormatter.formatText(priceString));
             transactionCostView.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
-        }else {
-            transactionCostView.setTextColor((currentPage == BudgetType.EXPENSE) ? ContextCompat.getColor(instance, R.color.red) : ContextCompat.getColor(instance, R.color.green));
+        }else{
+            if(currentPage == BudgetType.EXPENSE){
+                transactionCostView.setText(CurrencyTextFormatter.formatText("-" + priceString));
+                transactionCostView.setTextColor(ContextCompat.getColor(instance, R.color.red));
+            }else{
+                transactionCostView.setText(CurrencyTextFormatter.formatText(priceString));
+                transactionCostView.setTextColor(ContextCompat.getColor(instance, R.color.green));
+            }
         }
     }
 
