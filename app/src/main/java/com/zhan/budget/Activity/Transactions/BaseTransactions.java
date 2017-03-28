@@ -3,6 +3,7 @@ package com.zhan.budget.Activity.Transactions;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 
 import java.util.Date;
@@ -185,11 +187,9 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
                 transactionList = myRealm.copyFromRealm(element);
                 transactionAdapter.setTransactionList(transactionList);
+
+                updateTitleBalance(CurrencyTextFormatter.findTotalCostForTransactions(transactionList));
                 updateTransactionStatus();
-
-                double total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
-
-                updateTitleBalance(CurrencyTextFormatter.formatDouble(total));
             }
         });
     }
@@ -208,8 +208,16 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         titleNameTextView.setText(value);
     }
 
-    protected void updateTitleBalance(String value){
-        titleBalanceTextView.setText(value);
+    protected void updateTitleBalance(double total){
+        titleBalanceTextView.setText(CurrencyTextFormatter.formatDouble(total));
+
+        if(total > 0){
+            titleBalanceTextView.setTextColor(ContextCompat.getColor(instance, R.color.green));
+        }else if(total < 0){
+            titleBalanceTextView.setTextColor(ContextCompat.getColor(instance, R.color.red));
+        }else{
+            titleBalanceTextView.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+        }
     }
 
     protected void updateEmptyListText(String value){

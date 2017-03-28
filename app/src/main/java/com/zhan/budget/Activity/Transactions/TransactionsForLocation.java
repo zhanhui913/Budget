@@ -45,7 +45,7 @@ public class TransactionsForLocation extends BaseTransactions {
 
     @Override
     protected void getAllTransactionsForMonth(){
-        Log.d("DEBUG", "getAllTransactionsWithAccountForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
+        Log.d("TransactionsForLocation", "getAllTransactionsWithAccountForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
         transactionsForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("location.name", location.getName()).equalTo("dayType", DayType.COMPLETED.toString()).findAllSortedAsync("date");
         transactionsForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
@@ -59,12 +59,11 @@ public class TransactionsForLocation extends BaseTransactions {
                 transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
-                Log.d("ZHAN", "there are " + transactionList.size() + " transactions in this account " + location + " for this month " + beginMonth + " -> " + endMonth);
-                Log.d("ZHAN", "total sum is "+total);
+                Log.d("TransactionsForLocation", "there are " + transactionList.size() + " transactions in this account " + location + " for this month " + beginMonth + " -> " + endMonth);
+                Log.d("TransactionsForLocation", "total sum is "+total);
 
                 //update balance
-                updateTitleBalance(CurrencyTextFormatter.formatDouble(total));
-
+                updateTitleBalance(total);
                 updateTransactionStatus();
             }
         });

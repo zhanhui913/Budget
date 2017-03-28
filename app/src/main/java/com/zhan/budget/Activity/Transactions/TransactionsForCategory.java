@@ -3,7 +3,6 @@ package com.zhan.budget.Activity.Transactions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
@@ -12,7 +11,6 @@ import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
@@ -47,7 +45,7 @@ public class TransactionsForCategory extends BaseTransactions {
 
     @Override
     protected void getAllTransactionsForMonth(){
-        Log.d("DEBUG", "getAllTransactionsWithCategoryForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
+        Log.d("TransactionsForCategory", "getAllTransactionsWithCategoryForMonth from " + beginMonth.toString() + " to " + endMonth.toString());
 
         transactionsForMonth = myRealm.where(Transaction.class).between("date", beginMonth, endMonth).equalTo("category.id", selectedCategory.getId()).equalTo("dayType", DayType.COMPLETED.toString()).findAllSortedAsync("date");
         transactionsForMonth.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
@@ -61,20 +59,11 @@ public class TransactionsForCategory extends BaseTransactions {
                 transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
-                Log.d("ZHAN", "there are " + transactionList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
-                Log.d("ZHAN", "total sum is "+total);
+                Log.d("TransactionsForCategory", "there are " + transactionList.size() + " transactions in this category " + selectedCategory.getName() + " for this month " + beginMonth + " -> " + endMonth);
+                Log.d("TransactionsForCategory", "total sum is "+total);
 
                 //update balance
-                updateTitleBalance(CurrencyTextFormatter.formatDouble(total));
-
-                if(total > 0){
-                    titleBalanceTextView.setTextColor(ContextCompat.getColor(instance, R.color.green));
-                }else if(total < 0){
-                    titleBalanceTextView.setTextColor(ContextCompat.getColor(instance, R.color.red));
-                }else{
-                    titleBalanceTextView.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
-                }
-
+                updateTitleBalance(total);
                 updateTransactionStatus();
             }
         });
