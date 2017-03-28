@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -511,7 +513,17 @@ public class CalendarFragment extends BaseRealmFragment implements
      * Create an intent to edit a transaction.
      */
     private void editTransaction(int position){
-        startActivityForResult(TransactionInfoActivity.createIntentToEditTransaction(getContext(), transactionList.get(position)), RequestCodes.EDIT_TRANSACTION);
+        Intent tt =TransactionInfoActivity.createIntentToEditTransaction(getContext(), transactionList.get(position));
+
+
+
+        Pair<View, String> p1 = Pair.create(transactionListView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.transactionNote), "sampleName");
+        Pair<View, String> p2 = Pair.create(transactionListView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.transactionCost), "sampleCost");
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(getActivity(), p1, p2);
+
+
+        startActivityForResult(tt, RequestCodes.EDIT_TRANSACTION, options.toBundle());
     }
 
     /**

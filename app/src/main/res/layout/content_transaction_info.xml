@@ -26,7 +26,8 @@
             android:layout_alignParentLeft="true"
             android:paddingRight="@dimen/item_right_padding"
             android:paddingEnd="@dimen/item_right_padding"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:transitionName="sampleName"/>
 
         <!-- There is no max characters as the code handles it there -->
         <TextView
@@ -39,7 +40,8 @@
             android:layout_toRightOf="@+id/transactionNameText"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:transitionName="sampleCost"/>
 
     </RelativeLayout>
 

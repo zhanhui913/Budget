@@ -1,13 +1,13 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -296,7 +296,8 @@ public class TransactionInfoActivity extends BaseActivity implements
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                //finish();
+                supportFinishAfterTransition();
             }
         });
 
@@ -859,7 +860,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        finish();
+        //finish();
+        supportFinishAfterTransition();
     }
 
     private void save(){
@@ -937,7 +939,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         setResult(RESULT_OK, intent);
 
-        finish();
+        //finish();
+        supportFinishAfterTransition();
     }
 
     /**

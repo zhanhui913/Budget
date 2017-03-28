@@ -6,6 +6,8 @@
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
 		<item name="android:statusBarColor">@android:color/transparent</item>
 		<item name="android:actionOverflowMenuStyle">@style/AppThemeLight.Menu</item>
+
+		<item name="android:windowContentTransitions">true</item>
 	</style>
 
 	<style name="AppThemeDark.NoActionBar">
@@ -14,5 +16,7 @@
 		<item name="android:windowDrawsSystemBarBackgrounds">true</item>
 		<item name="android:statusBarColor">@android:color/transparent</item>
 		<item name="android:actionOverflowMenuStyle">@style/AppThemeDark.Menu</item>
+
+		<item name="android:windowContentTransitions">true</item>
 	</style>
 </resources>
