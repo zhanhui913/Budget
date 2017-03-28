@@ -850,7 +850,11 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void updateCostColor(){
-        transactionCostView.setTextColor((currentPage == BudgetType.EXPENSE) ? ContextCompat.getColor(getApplicationContext(), R.color.red) : ContextCompat.getColor(getApplicationContext(), R.color.green));
+        if(CurrencyTextFormatter.formatCurrency(priceString) == 0){
+            transactionCostView.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+        }else {
+            transactionCostView.setTextColor((currentPage == BudgetType.EXPENSE) ? ContextCompat.getColor(instance, R.color.red) : ContextCompat.getColor(instance, R.color.green));
+        }
     }
 
     @Override
