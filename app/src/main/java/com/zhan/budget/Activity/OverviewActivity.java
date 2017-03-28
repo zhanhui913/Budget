@@ -53,6 +53,8 @@ public class OverviewActivity extends BaseActivity {
     private List<Category> expenseCategoryList;
     private List<Category> incomeCategoryList;
 
+    private int currentTabPosition = 0; //EXPENSE tab (ie: position = 0) is default
+
     public static Intent createIntentToViewOverviewOnMonth(Context context, Date date){
         Intent intent = new Intent(context, OverviewActivity.class);
         intent.putExtra(MONTH, date);
@@ -120,7 +122,11 @@ public class OverviewActivity extends BaseActivity {
                     expenseCategoryList = categoryList;
                 }
 
-                changeTopPanelInfo(0, animate);
+                //Only if the current tab position is set to this do we update the pie chart and
+                //other info visually
+                if(currentTabPosition == 0){
+                    changeTopPanelInfo(0, animate);
+                }
             }
         });
 
@@ -132,7 +138,11 @@ public class OverviewActivity extends BaseActivity {
                     incomeCategoryList = categoryList;
                 }
 
-                changeTopPanelInfo(1, animate);
+                //Only if the current tab position is set to this do we update the pie chart and
+                //other info visually
+                if(currentTabPosition == 1){
+                    changeTopPanelInfo(1, animate);
+                }
             }
         });
 
@@ -146,6 +156,7 @@ public class OverviewActivity extends BaseActivity {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                currentTabPosition = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 changeTopPanelInfo(tab.getPosition(), true);
             }
@@ -200,14 +211,16 @@ public class OverviewActivity extends BaseActivity {
     /**
      * Updates the month, this will update the text in the toolbar and the results.
      */
-    private void updateMonth(int direction){
+    private void updateMonth(int direction){ Log.d("PIE","move, current pos "+currentTabPosition);
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
 
         dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
 
+        //Update month
         overviewExpenseFragment.setCurrentMonth(currentMonth);
         overviewIncomeFragment.setCurrentMonth(currentMonth);
 
+        //Re-calculate
         overviewExpenseFragment.getCategoryList();
         overviewIncomeFragment.getCategoryList();
     }
