@@ -32,6 +32,8 @@ public class PieChartFragment extends BaseChartFragment {
     protected static final String ARG_CHART_3 = "animate";
     protected static final String ARG_CHART_4 = "name";
 
+    public static int ANIMATION_DURATION_MILLI = 500;
+
     protected List<? extends PieDataCostInterface> dataList;
     protected PieDataSet dataSet;
 
@@ -198,7 +200,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.highlightValues(null);
 
         if(animate){
-            pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
+            pieChart.animateY(ANIMATION_DURATION_MILLI, Easing.EasingOption.EaseInOutQuad);
         }
 
         if(list.size() > 0){
