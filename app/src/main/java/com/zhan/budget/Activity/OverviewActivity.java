@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Fragment.Chart.BarChartFragment;
 import com.zhan.budget.Fragment.Chart.BaseChartFragment;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Fragment.OverviewGenericFragment;
@@ -35,7 +34,6 @@ public class OverviewActivity extends BaseActivity {
     public static final String MONTH = "View Overview Month";
 
     //Charts
-    private BarChartFragment barChartFragment;
     private PieChartFragment pieChartFragment;
 
     //Expense Income Fragment to list view
@@ -238,10 +236,8 @@ public class OverviewActivity extends BaseActivity {
 
     //Remove menu for now
     public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.overview_chart, menu);
         getMenuInflater().inflate(R.menu.change_month_year, menu);
         return true;
-        //return false;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -250,10 +246,6 @@ public class OverviewActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "click here pdf maker", Toast.LENGTH_SHORT).show();
                 Intent pdfIntent = new Intent(getApplicationContext(), PdfActivity.class);
                 startActivity(pdfIntent);
-                return true;
-            case R.id.barChart:
-                //Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
-                replaceFragment(barChartFragment);
                 return true;
             case R.id.pieChart:
                 //Toast.makeText(getApplicationContext(), "click here pie chart", Toast.LENGTH_SHORT).show();
