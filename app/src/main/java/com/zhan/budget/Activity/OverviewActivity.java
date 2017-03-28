@@ -30,8 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class OverviewActivity extends BaseActivity implements
-    OverviewGenericFragment.OverviewInteractionListener{
+public class OverviewActivity extends BaseActivity {
 
     public static final String MONTH = "View Overview Month";
 
@@ -45,7 +44,7 @@ public class OverviewActivity extends BaseActivity implements
     private Activity instance;
     private Toolbar toolbar;
     private Date currentMonth;
-    private TextView totalCostForMonth;
+    private TextView dateTextView, totalCostForMonth;
     private CustomViewPager viewPager;
     private TabLayout tabLayout;
 
@@ -53,6 +52,8 @@ public class OverviewActivity extends BaseActivity implements
     private float totalIncomeCost = 0f;
     private List<Category> expenseCategoryList;
     private List<Category> incomeCategoryList;
+
+    private int currentTabPosition = 0; //EXPENSE tab (ie: position = 0) is default
 
     public static Intent createIntentToViewOverviewOnMonth(Context context, Date date){
         Intent intent = new Intent(context, OverviewActivity.class);
@@ -71,7 +72,7 @@ public class OverviewActivity extends BaseActivity implements
 
         currentMonth = DateUtil.refreshDate((Date)(getIntent().getSerializableExtra(MONTH)));
 
-        TextView dateTextView = (TextView) findViewById(R.id.dateTextView);
+        dateTextView = (TextView) findViewById(R.id.dateTextView);
         dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
         totalCostForMonth = (TextView) findViewById(R.id.totalCostTextView);
 
@@ -113,6 +114,38 @@ public class OverviewActivity extends BaseActivity implements
         overviewExpenseFragment = OverviewGenericFragment.newInstance(BudgetType.EXPENSE, currentMonth);
         overviewIncomeFragment = OverviewGenericFragment.newInstance(BudgetType.INCOME, currentMonth);
 
+        overviewExpenseFragment.setListener(new OverviewGenericFragment.OverviewInteractionListener() {
+            @Override
+            public void onComplete(BudgetType type, List<Category> categoryList, float totalCost, boolean animate) {
+                if(type == BudgetType.EXPENSE){
+                    totalExpenseCost = totalCost;
+                    expenseCategoryList = categoryList;
+                }
+
+                //Only if the current tab position is set to this do we update the pie chart and
+                //other info visually
+                if(currentTabPosition == 0){
+                    changeTopPanelInfo(0, animate);
+                }
+            }
+        });
+
+        overviewIncomeFragment.setListener(new OverviewGenericFragment.OverviewInteractionListener() {
+            @Override
+            public void onComplete(BudgetType type, List<Category> categoryList, float totalCost, boolean animate) {
+                if(type == BudgetType.INCOME){
+                    totalIncomeCost = totalCost;
+                    incomeCategoryList = categoryList;
+                }
+
+                //Only if the current tab position is set to this do we update the pie chart and
+                //other info visually
+                if(currentTabPosition == 1){
+                    changeTopPanelInfo(1, animate);
+                }
+            }
+        });
+
         viewPager = (CustomViewPager) findViewById(R.id.viewPager);
         viewPager.setPagingEnabled(false);
 
@@ -123,6 +156,7 @@ public class OverviewActivity extends BaseActivity implements
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                currentTabPosition = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 changeTopPanelInfo(tab.getPosition(), true);
             }
@@ -143,21 +177,6 @@ public class OverviewActivity extends BaseActivity implements
         //barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
         pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), false, false, getString(R.string.category));
         getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
-    }
-
-    @Override
-    public void onComplete(BudgetType type, List<Category> categoryList, float totalCost, boolean animate){
-        if(type == BudgetType.EXPENSE){
-            totalExpenseCost = totalCost;
-            expenseCategoryList = categoryList;
-
-            //set default tab to be the EXPENSE (ie position = 0)
-            //Put this here so that it only gets called once.
-            changeTopPanelInfo(0, animate);
-        }else{
-            totalIncomeCost = totalCost;
-            incomeCategoryList = categoryList;
-        }
     }
 
     /**
@@ -189,6 +208,23 @@ public class OverviewActivity extends BaseActivity implements
         }
     }
 
+    /**
+     * Updates the month, this will update the text in the toolbar and the results.
+     */
+    private void updateMonth(int direction){ Log.d("PIE","move, current pos "+currentTabPosition);
+        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
+
+        dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
+
+        //Update month
+        overviewExpenseFragment.setCurrentMonth(currentMonth);
+        overviewIncomeFragment.setCurrentMonth(currentMonth);
+
+        //Re-calculate
+        overviewExpenseFragment.getCategoryList();
+        overviewIncomeFragment.getCategoryList();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -202,9 +238,10 @@ public class OverviewActivity extends BaseActivity implements
 
     //Remove menu for now
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.overview_chart, menu);
-        //return true;
-        return false;
+        //getMenuInflater().inflate(R.menu.overview_chart, menu);
+        getMenuInflater().inflate(R.menu.change_month_year, menu);
+        return true;
+        //return false;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -213,7 +250,7 @@ public class OverviewActivity extends BaseActivity implements
                 Toast.makeText(getApplicationContext(), "click here pdf maker", Toast.LENGTH_SHORT).show();
                 Intent pdfIntent = new Intent(getApplicationContext(), PdfActivity.class);
                 startActivity(pdfIntent);
-                return true;*/
+                return true;
             case R.id.barChart:
                 //Toast.makeText(getApplicationContext(), "click here bar chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(barChartFragment);
@@ -221,6 +258,12 @@ public class OverviewActivity extends BaseActivity implements
             case R.id.pieChart:
                 //Toast.makeText(getApplicationContext(), "click here pie chart", Toast.LENGTH_SHORT).show();
                 replaceFragment(pieChartFragment);
+                return true;*/
+            case R.id.leftChevron:
+                updateMonth(-1);
+                return true;
+            case R.id.rightChevron:
+                updateMonth(1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

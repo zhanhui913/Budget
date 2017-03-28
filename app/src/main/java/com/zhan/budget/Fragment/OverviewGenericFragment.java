@@ -105,8 +105,12 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         getCategoryList();
     }
 
+    public void setCurrentMonth(Date date){
+        this.currentMonth = date;
+    }
+
     //Should be called only the first time when the fragment is created
-    private void getCategoryList(){
+    public void getCategoryList(){
         //final Realm myRealm = Realm.getDefaultInstance();
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
@@ -117,7 +121,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(element);
                 Log.d("qwer","there are "+categoryList.size()+" category of type : "+budgetType.toString());
-                //myRealm.close();  BudgetPreference.removeRealmCache(getContext());
                 getMonthReport(currentMonth, true);
             }
         });
@@ -262,6 +265,10 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryEdited), RequestCodes.EDIT_CATEGORY);
     }
 
+    public void setListener(OverviewInteractionListener mListener){
+        this.mListener = mListener;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -305,7 +312,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         super.onAttach(context);
         if (context instanceof OverviewInteractionListener) {
             mListener = (OverviewInteractionListener) context;
-        } else {
+        } else if(mListener == null){
             throw new RuntimeException(context.toString()
                     + " must implement OverviewInteractionListener");
         }
