@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/infoPanel"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/downChevronIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/emptyImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_above="@+id/emptyPrimaryText"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/svg_ic_down_chevron"
         android:layout_centerHorizontal="true"
         android:tint="?attr/themeColorText"/>
 
@@ -28,8 +26,7 @@
         android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
         android:text="@string/pull_down_add_transaction"
-        android:textSize="@dimen/text_header_size"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/text_header_size" />
 
     <TextView
         android:id="@+id/emptySecondaryText"
