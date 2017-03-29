@@ -88,6 +88,7 @@ public class LocationFragment extends BaseRealmFragment
         currentMonth = DateUtil.refreshMonth(new Date());
 
         centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
+        centerPanelLeftTextView.setVisibility(View.GONE);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -125,10 +126,6 @@ public class LocationFragment extends BaseRealmFragment
 
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
-
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
-
-        //fetchNewLocationData(currentMonth, true);
 
         populateLocationWithNoInfo(currentMonth, true);
     }

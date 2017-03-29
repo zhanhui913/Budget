@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -97,6 +96,7 @@ public class AccountFragment extends BaseRealmFragment implements
         accountList = new ArrayList<>();
 
         centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
+        centerPanelLeftTextView.setVisibility(View.GONE);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -278,8 +278,6 @@ public class AccountFragment extends BaseRealmFragment implements
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
-
         if(updateAccountInfo) {
             populateAccountWithInfo(true);
         }
@@ -439,7 +437,7 @@ public class AccountFragment extends BaseRealmFragment implements
     public void onEditAccount(int position){
         closeSwipeItem(position);
 
-        accountIndexEdited = position;
+        //accountIndexEdited = position;
         editAccount(position);
     }
 
