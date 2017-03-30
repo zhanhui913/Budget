@@ -142,7 +142,7 @@ public class LocationFragment extends BaseRealmFragment
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                aggregateLocation2(myRealm.copyFromRealm(element), true);
+                aggregateLocation(myRealm.copyFromRealm(element), true);
             }
         });
     }
@@ -152,7 +152,7 @@ public class LocationFragment extends BaseRealmFragment
      * @param tempList list of transactions
      * @param animate to animate pie chart or not
      */
-    private void aggregateLocation2(List<Transaction> tempList, boolean animate){
+    private void aggregateLocation(List<Transaction> tempList, boolean animate){
         HashMap<Location, Integer> locationHash = new HashMap<>();
 
         //Keep track of total locations count
