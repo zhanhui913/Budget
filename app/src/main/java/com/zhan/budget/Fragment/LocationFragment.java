@@ -129,7 +129,7 @@ public class LocationFragment extends BaseRealmFragment
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        populateLocationWithNoInfo(currentMonth, true);
+        populateLocationWithNoInfo();
     }
 
     /**
@@ -137,7 +137,7 @@ public class LocationFragment extends BaseRealmFragment
      * @param month
      * @param animate
      */
-    private void populateLocationWithNoInfo(final Date month, final boolean animate){
+    private void populateLocationWithNoInfo(){
         resultsLocation = myRealm.where(Location.class).findAllAsync();
         resultsLocation.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
             @Override
@@ -147,15 +147,18 @@ public class LocationFragment extends BaseRealmFragment
                 Log.d(TAG, "there's a change in results location");
 
                 locationList = myRealm.copyFromRealm(element);
-                getListOfTransactionsForMonth(month, animate);
+                getListOfTransactionsForMonth(true);
             }
         });
     }
 
-    private void getListOfTransactionsForMonth(Date month, final boolean animate){
-        Date endMonth = DateUtil.getLastDateOfMonth(month);
+    private void getListOfTransactionsForMonth(final boolean animate){
+        final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
-        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
+        //Need to go a day before as Realm's between date does inclusive on both end
+        final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
+
+        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", startMonth, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
@@ -455,7 +458,7 @@ public class LocationFragment extends BaseRealmFragment
 
         myRealm.commitTransaction();
 
-        populateLocationWithNoInfo(currentMonth, true);
+        populateLocationWithNoInfo();
     }
 
     private void editLocation(int position){
@@ -473,7 +476,7 @@ public class LocationFragment extends BaseRealmFragment
                     //If something has been changed, update the list and the pie chart
                     //fetchNewLocationData(currentMonth, false);
 
-                    populateLocationWithNoInfo(currentMonth, true);
+                    populateLocationWithNoInfo();
                 }
                 updateLocationStatus();
             }else if(requestCode == RequestCodes.EDIT_LOCATION){
