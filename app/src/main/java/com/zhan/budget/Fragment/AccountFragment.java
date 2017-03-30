@@ -119,7 +119,6 @@ public class AccountFragment extends BaseRealmFragment implements
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
-
         emptyAccountPrimaryText.setText(R.string.empty_account);
         emptyAccountSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
         emptyAccountSecondaryText.setText("Add one in the settings");
