@@ -5,32 +5,39 @@
     tools:context="com.zhan.budget.Fragment.AccountFragment">
 
     <RelativeLayout
-        android:id="@+id/topPanel"
+        android:id="@+id/fullPanelLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/graph_height"
-        android:background="?attr/themeColorHighlight">
+        android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/chartContentFrame"
+        <RelativeLayout
+            android:id="@+id/topPanel"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="@dimen/graph_height"
+            android:background="?attr/themeColorHighlight">
+
+            <FrameLayout
+                android:id="@+id/chartContentFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+        <include layout="@layout/center_panel_date"
+            android:id="@+id/centerPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topPanel"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/accountListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/centerPanel"/>
+
     </RelativeLayout>
-
-    <include layout="@layout/center_panel_date"
-        android:id="@+id/centerPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topPanel"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/accountListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/centerPanel"/>
 
     <include layout="@layout/empty_content"
         android:id="@+id/emptyAccountLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/centerPanel"/>
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

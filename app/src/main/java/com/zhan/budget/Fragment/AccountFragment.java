@@ -51,9 +51,10 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private OnAccountInteractionListener mListener;
 
+    private ViewGroup fullLayout;
     private ViewGroup emptyLayout;
 
-    private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyAccountPrimaryText, emptyAccountSecondaryText;
+    private TextView centerPanelRightTextView, emptyAccountPrimaryText, emptyAccountSecondaryText;
 
     private RecyclerView accountListView;
     private AccountRecyclerAdapter accountRecyclerAdapter;
@@ -95,8 +96,9 @@ public class AccountFragment extends BaseRealmFragment implements
 
         accountList = new ArrayList<>();
 
-        centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
-        centerPanelLeftTextView.setVisibility(View.GONE);
+        //Center Panel left textview
+        view.findViewById(R.id.dateTextView).setVisibility(View.GONE);
+
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -113,16 +115,14 @@ public class AccountFragment extends BaseRealmFragment implements
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
+        fullLayout = (ViewGroup)view.findViewById(R.id.fullPanelLayout);
+
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
-        //emptyAccountText.setText(R.string.empty_account);
-        emptyAccountPrimaryText.setText("You have no account.");
+
+        emptyAccountPrimaryText.setText(R.string.empty_account);
         emptyAccountSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
         emptyAccountSecondaryText.setText("Add one in the settings");
-
-
-        //ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
-        //downArrow.setVisibility(View.INVISIBLE);
 
         //Setup pie chart
         pieChartFragment = PieChartFragment.newInstance(accountList, false, false, getString(R.string.account));
@@ -267,10 +267,10 @@ public class AccountFragment extends BaseRealmFragment implements
     private void updateAccountStatus(){
         if(accountRecyclerAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
-            accountListView.setVisibility(View.VISIBLE);
+            fullLayout.setVisibility(View.VISIBLE);
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
-            accountListView.setVisibility(View.GONE);
+            fullLayout.setVisibility(View.GONE);
         }
     }
 
