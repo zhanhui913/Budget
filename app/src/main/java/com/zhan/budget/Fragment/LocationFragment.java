@@ -127,30 +127,10 @@ public class LocationFragment extends BaseRealmFragment
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        populateLocationWithNoInfo();
+        getListOfTransactionsForMonth();
     }
 
-    /**
-     * Get all locations
-     * @param month
-     * @param animate
-     */
-    private void populateLocationWithNoInfo(){
-        resultsLocation = myRealm.where(Location.class).findAllAsync();
-        resultsLocation.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
-            @Override
-            public void onChange(RealmResults<Location> element) {
-                element.removeChangeListener(this);
-
-                Log.d(TAG, "there's a change in results location");
-
-                locationList = myRealm.copyFromRealm(element);
-                getListOfTransactionsForMonth(true);
-            }
-        });
-    }
-
-    private void getListOfTransactionsForMonth(final boolean animate){
+    private void getListOfTransactionsForMonth(){
         final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
@@ -162,7 +142,7 @@ public class LocationFragment extends BaseRealmFragment
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                aggregateLocation(myRealm.copyFromRealm(element), animate);
+                aggregateLocation2(myRealm.copyFromRealm(element), true);
             }
         });
     }
@@ -172,8 +152,11 @@ public class LocationFragment extends BaseRealmFragment
      * @param tempList list of transactions
      * @param animate to animate pie chart or not
      */
-    private void aggregateLocation(List<Transaction> tempList, boolean animate){
+    private void aggregateLocation2(List<Transaction> tempList, boolean animate){
         HashMap<Location, Integer> locationHash = new HashMap<>();
+
+        //Keep track of total locations count
+        int totalLocationsCount = 0;
 
         for(int i = 0; i < tempList.size(); i++){
             if(tempList.get(i).getLocation() != null) {
@@ -182,29 +165,15 @@ public class LocationFragment extends BaseRealmFragment
                 } else {
                     locationHash.put(tempList.get(i).getLocation(), locationHash.get(tempList.get(i).getLocation()) + 1);
                 }
+                totalLocationsCount++;
             }
         }
 
-        //Keep track of total locations count
-        int totalLocationsCount = 0;
-
+        locationList = new ArrayList<>();
         for(Location key: locationHash.keySet()){
-            for(int k = 0; k < locationList.size(); k++){
-                if(locationList.get(k).getName().equalsIgnoreCase(key.getName())){
-                    locationList.get(k).setAmount(locationHash.get(key));
-                    totalLocationsCount += locationHash.get(key);
-                }
-            }
+            key.setAmount(locationHash.get(key));
+            locationList.add(key);
         }
-
-        //Remove those location with 0 amount
-        List<Location> locationsWithZeroAmount = new ArrayList<>();
-        for(int i = 0; i < locationList.size(); i++){
-            if(locationList.get(i).getAmount() == 0){
-                locationsWithZeroAmount.add(locationList.get(i));
-            }
-        }
-        locationList.removeAll(locationsWithZeroAmount);
 
         //Sort from highest to lowest first, then by name
         Collections.sort(locationList, new Comparator<Location>() {
@@ -247,159 +216,6 @@ public class LocationFragment extends BaseRealmFragment
             locationListview.setVisibility(View.GONE);
         }
     }
-
-    /////////
-    //
-    // Might delete functions in between below
-    //
-    /////////
-
-    /**
-     * Get new location data that is in the current month
-     * @param month Current month to target
-     * @param animate whether or not to animate the pie chart
-     */
-    private void fetchNewLocationData(Date month, final boolean animate){
-        Date endMonth = DateUtil.getLastDateOfMonth(month);
-
-        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
-        transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-
-                countLocationList(myRealm.copyFromRealm(element), animate);
-                /*if(isNew){
-                    countLocationList(myRealm.copyFromRealm(element));
-                }else{
-                    updateLocationList(myRealm.copyFromRealm(element));
-                }*/
-            }
-        });
-    }
-
-    /**
-     * Aggregate all transactions with the same location and update its pie chart.
-     * @param ttList list of transactions
-     */
-    private void countLocationList(List<Transaction> ttList, boolean animate){
-        HashMap<Location, Integer> locationHash = new HashMap<>();
-
-        for(int i = 0; i < ttList.size(); i++){
-            if(ttList.get(i).getLocation() != null) {
-                if (!locationHash.containsKey(ttList.get(i).getLocation())) {
-                    locationHash.put(ttList.get(i).getLocation(), 1);
-                } else {
-                    locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
-                }
-            }
-        }
-
-        locationList.clear();
-
-        //Keep track of total locations count
-        int totalLocationsCount = 0;
-
-        //Go through each hashmap
-        for(Location key: locationHash.keySet()){
-            Location location2 = new Location();
-            location2.setName(key.getName());
-            location2.setAmount(locationHash.get(key));
-            location2.setColor(key.getColor());
-
-            totalLocationsCount += locationHash.get(key);
-            locationList.add(location2);
-        }
-
-        //Sort from highest to lowest first, then by name
-        Collections.sort(locationList, new Comparator<Location>() {
-            @Override
-            public int compare(Location l1, Location l2) {
-                //descending order
-                int compare = (l2.getAmount() - l1.getAmount());
-                if(compare != 0){
-                    return compare;
-                }
-                //ascending order
-                return (l1.getName().compareToIgnoreCase(l2.getName()));
-            }
-        });
-
-        locationAdapter.setLocationList(locationList);
-
-        //This gives pie chart new location list
-        pieChartFragment.setData(locationList, animate);
-
-        if(totalLocationsCount == 0){
-            centerPanelRightTextView.setText(R.string.na);
-        }else{
-            if(totalLocationsCount > 1){
-                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
-            }else{
-                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
-            }
-        }
-    }
-
-    /**
-     * Updates the location count in the hashmap while keeping the colors the same
-     * @param ttList list of transactions
-     */
-    private void updateLocationList(List<Transaction> ttList){
-        HashMap<Location, Integer> locationHash = new HashMap<>();
-
-        for(int i = 0; i < ttList.size(); i++){
-            if(ttList.get(i).getLocation() != null) {
-                if (!locationHash.containsKey(ttList.get(i).getLocation())) {
-                    locationHash.put(ttList.get(i).getLocation(), 1);
-                } else {
-                    locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
-                }
-            }
-        }
-
-        locationList.clear();
-
-        //Keep track of total locations count
-        int totalLocationsCount = 0;
-
-        //Go through each hashmap
-        for(Location key: locationHash.keySet()){
-            Location location2 = new Location();
-            location2.setName(key.getName());
-            location2.setAmount(locationHash.get(key));
-            location2.setColor(key.getColor());
-
-            totalLocationsCount += locationHash.get(key);
-            locationList.add(location2);
-        }
-
-        //Sort from highest to lowest
-        Collections.sort(locationList, new Comparator<Location>() {
-            @Override
-            public int compare(Location l1, Location l2) {
-                //descending order
-                return (l2.getAmount() - l1.getAmount());
-            }
-        });
-
-        locationAdapter.setLocationList(locationList);
-
-        //This updates pie chart with new location list while keeping the colors the same
-        pieChartFragment.setData(locationList);
-
-        if(totalLocationsCount > 1){
-            centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
-        }else{
-            centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
-        }
-    }
-
-    /////////
-    //
-    // Might delete functions in between above
-    //
-    /////////
 
     private void openSwipeItem(int position){
         currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
@@ -444,19 +260,25 @@ public class LocationFragment extends BaseRealmFragment
                 .show();
     }
 
-    private void deleteLocation(int position){
-        myRealm.beginTransaction();
+    private void deleteLocation(final int position){
+        resultsLocation = myRealm.where(Location.class).findAllAsync();
+        resultsLocation.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
+            @Override
+            public void onChange(RealmResults<Location> element) {
+                element.removeChangeListener(this);
 
-        for(int i = 0; i < resultsLocation.size(); i++){
-            if(resultsLocation.get(i).getName().equalsIgnoreCase(locationList.get(position).getName())){
-                resultsLocation.deleteFromRealm(i);
-                break;
+                for(int i = 0; i < element.size(); i++) {
+                    if (element.get(i).getName().equalsIgnoreCase(locationList.get(position).getName())) {
+                        myRealm.beginTransaction();
+                        element.deleteFromRealm(i);
+                        myRealm.commitTransaction();
+                        break;
+                    }
+                }
+
+                getListOfTransactionsForMonth();
             }
-        }
-
-        myRealm.commitTransaction();
-
-        populateLocationWithNoInfo();
+        });
     }
 
     private void editLocation(int position){
@@ -472,9 +294,7 @@ public class LocationFragment extends BaseRealmFragment
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
-                    //fetchNewLocationData(currentMonth, false);
-
-                    populateLocationWithNoInfo();
+                    getListOfTransactionsForMonth();
                 }
                 updateLocationStatus();
             }else if(requestCode == RequestCodes.EDIT_LOCATION){
@@ -504,6 +324,35 @@ public class LocationFragment extends BaseRealmFragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onClickLocation(int position){
+        closeSwipeItem(position);
+        startActivityForResult(TransactionsForLocation.createIntentToViewAllTransactionsForLocationForMonth(getContext(), locationList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
+    }
+
+    @Override
+    public void onDeleteLocation(int position){
+        confirmDelete(position);
+    }
+
+    @Override
+    public void onEditLocation(int position){
+        closeSwipeItem(position);
+        editLocation(position);
+    }
+
+
+    @Override
+    public void onPullDownAllow(boolean value){
+        //cannot pull down here
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -545,35 +394,5 @@ public class LocationFragment extends BaseRealmFragment
      */
     public interface OnLocationInteractionListener {
         void updateToolbar(String date);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Adapter listeners
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onClickLocation(int position){
-        closeSwipeItem(position);
-
-        startActivityForResult(TransactionsForLocation.createIntentToViewAllTransactionsForLocationForMonth(getContext(), locationList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
-    }
-
-    @Override
-    public void onDeleteLocation(int position){
-        confirmDelete(position);
-    }
-
-    @Override
-    public void onEditLocation(int position){
-        closeSwipeItem(position);
-        editLocation(position);
-    }
-
-
-    @Override
-    public void onPullDownAllow(boolean value){
-        //cannot pull down here
     }
 }
