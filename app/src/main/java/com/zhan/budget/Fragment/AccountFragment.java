@@ -164,7 +164,6 @@ public class AccountFragment extends BaseRealmFragment implements
         final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
-        //final Date endMonth = DateUtil.getPreviousDate(DateUtil.getNextMonth(currentMonth));
         final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
 
         Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
@@ -275,6 +274,8 @@ public class AccountFragment extends BaseRealmFragment implements
     }
 
     private void updateMonthInToolbar(int direction, boolean updateAccountInfo){
+        accountListView.smoothScrollToPosition(0);
+
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
