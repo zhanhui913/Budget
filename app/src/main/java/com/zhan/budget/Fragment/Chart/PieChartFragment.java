@@ -214,6 +214,20 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.invalidate();
     }
 
+    public void resetPieChart(){
+        /*ArrayList<Entry> entry = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+
+        PieDataSet set = new PieDataSet(entry, "");
+        PieData data = new PieData(names, set);
+        pieChart.setData(data);
+        pieChart.highlightValues(null);
+        pieChart.invalidate();*/
+
+
+
+    }
+
     /**
      * Draw legend to the left of the chart
      */

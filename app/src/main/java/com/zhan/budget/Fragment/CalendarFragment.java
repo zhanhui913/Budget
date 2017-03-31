@@ -46,11 +46,13 @@ import com.zhan.budget.View.RectangleCellView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -223,7 +225,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             account.setColor(getResources().getString(tempAccountColorList[i]));
             accountList.add(account);
         }
-/*
+
         //Create fake locations
         String[] locationTempList = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
         for(int i = 0; i < locationTempList.length; i++){
@@ -235,8 +237,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         }
 
         //Create fake transactions
-        Date startDate = DateUtil.convertStringToDate("2016-01-01");
-        Date endDate = DateUtil.convertStringToDate("2016-07-01");
+        Date startDate = DateUtil.convertStringToDate(getContext(), "2017-03-01");
+        Date endDate = DateUtil.convertStringToDate(getContext(), "2017-05-01");
 
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
@@ -252,14 +254,14 @@ public class CalendarFragment extends BaseRealmFragment implements
             int rda = random.nextInt(accountList.size());
             int ll = random.nextInt(locationList.size());
 
-            if(date.before(new Date())){
+            //if(date.before(new Date())){
                 dayType = DayType.COMPLETED.toString();
-            }else{
-                dayType = DayType.SCHEDULED.toString();
-            }
+            //}else{
+            //    dayType = DayType.SCHEDULED.toString();
+            //}
 
             //Create random transactions per day
-            for (int j = 0; j < rd; j++) {
+            for (int j = 0; j < 1000; j++) {
                 Transaction transaction = myRealm.createObject(Transaction.class);
                 transaction.setId(Util.generateUUID());
                 transaction.setDate(date);
@@ -277,10 +279,10 @@ public class CalendarFragment extends BaseRealmFragment implements
 
                 transaction.setAccount(account);
                 transaction.setCategory(category);
-                transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(date));
+                transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(getContext(),date));
             }
         }
-*/
+
         myRealm.commitTransaction();
         endTime = System.nanoTime();
 
