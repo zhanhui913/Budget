@@ -29,7 +29,6 @@ import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
@@ -40,6 +39,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -64,6 +64,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private List<Account> accountList;
 
     private PieChartFragment pieChartFragment;
+    private CircularProgressBar circularProgressBar;
 
     private Date currentMonth;
     private RealmResults<Transaction> resultsTransaction;
@@ -121,6 +122,7 @@ public class AccountFragment extends BaseRealmFragment implements
         emptyAccountSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
         emptyAccountSecondaryText.setText("Add one in the settings");
 
+        circularProgressBar = (CircularProgressBar) view.findViewById(R.id.accountProgressBar);
 
         //ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
         //downArrow.setVisibility(View.INVISIBLE);
@@ -275,17 +277,27 @@ public class AccountFragment extends BaseRealmFragment implements
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
 
+        startTimeNow = System.nanoTime();
+
+        circularProgressBar.setVisibility(View.VISIBLE);
+        emptyLayout.setVisibility(View.GONE);
+        accountListView.setVisibility(View.GONE);
+
         RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", startMonth, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
+                endTimeNow = System.nanoTime();
+durationNow = (endTimeNow - startTimeNow);
+                long milli = (durationNow/1000000);
+                Log.d(TAG, "realm took "+milli+" ms");
                 element.removeChangeListener(this);
 
                 aggregateAccount2(myRealm.copyFromRealm(element), true);
             }
         });
     }
-
+long startTimeNow,endTimeNow, durationNow;
     private void aggregateAccount(List<Transaction> tempList, boolean animate){ Log.d(TAG, "aggregate here");
         HashMap<Account, Double> accountHash = new HashMap<>();
 
@@ -407,11 +419,13 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private void updateAccountStatus(){
         if(accountRecyclerAdapter.getItemCount() > 0){
+            circularProgressBar.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.GONE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
             accountListView.setVisibility(View.GONE);
+            circularProgressBar.setVisibility(View.GONE);
         }
     }
 
