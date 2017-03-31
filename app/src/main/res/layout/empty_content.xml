@@ -11,6 +11,7 @@
         android:layout_above="@+id/emptyPrimaryText"
         android:src="@drawable/svg_ic_down_chevron"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
         android:tint="?attr/themeColorText"/>
 
     <TextView

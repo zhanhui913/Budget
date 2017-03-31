@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -52,6 +51,7 @@ public class LocationFragment extends BaseRealmFragment
     private OnLocationInteractionListener mListener;
     private Date currentMonth;
 
+    private ViewGroup fullLayout;
     private ViewGroup emptyLayout;
 
     private RealmResults<Location> resultsLocation;
@@ -61,7 +61,7 @@ public class LocationFragment extends BaseRealmFragment
 
     private PieChartFragment pieChartFragment;
 
-    private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyLocationText;
+    private TextView centerPanelRightTextView, emptyLocationPrimaryText, emptyLocationSecondaryText;
 
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
@@ -87,8 +87,8 @@ public class LocationFragment extends BaseRealmFragment
         super.init();
         currentMonth = DateUtil.refreshMonth(new Date());
 
-        centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
-        centerPanelLeftTextView.setVisibility(View.GONE);
+        //Center Panel left textview
+        view.findViewById(R.id.dateTextView).setVisibility(View.GONE);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -106,12 +106,13 @@ public class LocationFragment extends BaseRealmFragment
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
-        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
-        emptyLocationText = (TextView) view.findViewById(R.id.pullDownText);
-        emptyLocationText.setText(getString(R.string.empty_location));
+        fullLayout = (ViewGroup)view.findViewById(R.id.fullPanelLayout);
 
-        ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
-        downArrow.setVisibility(View.INVISIBLE);
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
+        emptyLocationPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
+        emptyLocationPrimaryText.setText(getString(R.string.empty_location));
+        emptyLocationSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
+        emptyLocationSecondaryText.setText("Add one in the settings");
 
         //Setup pie chart
         pieChartFragment = PieChartFragment.newInstance(locationList, false, false, getString(R.string.location));
@@ -210,10 +211,10 @@ public class LocationFragment extends BaseRealmFragment
     private void updateLocationStatus(){
         if(locationAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
-            locationListview.setVisibility(View.VISIBLE);
+            fullLayout.setVisibility(View.VISIBLE);
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
-            locationListview.setVisibility(View.GONE);
+            fullLayout.setVisibility(View.GONE);
         }
     }
 
@@ -279,6 +280,7 @@ public class LocationFragment extends BaseRealmFragment
                 getListOfTransactionsForMonth();
             }
         });
+
     }
 
     private void editLocation(int position){
@@ -295,6 +297,7 @@ public class LocationFragment extends BaseRealmFragment
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
                     getListOfTransactionsForMonth();
+
                 }
                 updateLocationStatus();
             }else if(requestCode == RequestCodes.EDIT_LOCATION){
