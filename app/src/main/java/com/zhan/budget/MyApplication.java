@@ -94,22 +94,21 @@ public class MyApplication extends Application {
                                     .renameField("budget_tmp","budget");
 
                             //Combine Locations with same name
+                            //Step 1 : Add new column that matches name
+                            //Step 2 : Take values from that column and add it back to name
                             schema.get("Location")
-                                    .addField("name_tmp", String.class, FieldAttribute.PRIMARY_KEY)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
                                             String oldName = obj.getString("name");
 
                                             try{
-                                                obj.setString("name_tmp", Util.capsFirstWord(oldName));
+                                                obj.setString("name", Util.capsFirstWord(oldName));
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d("HELP", "There already exist a Location : "+oldName);
                                             }
                                         }
-                                    })
-                                    .removeField("name")
-                                    .renameField("name_tmp","name");
+                                    });
 
                             oldVersion++;
                         }
