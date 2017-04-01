@@ -7,9 +7,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.Category;
+import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.ThemeUtil;
+import com.zhan.budget.Util.Util;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -63,9 +66,7 @@ public class MyApplication extends Application {
 
                         //migration to version 3
                         if(oldVersion == 2){
-                            //Change Transaction's price and Category's budget from float
-                            //to double
-
+                            //Change Transaction's price and Category's budget from float to double
                             schema.get("Transaction")
                                     .addField("price_tmp", double.class)
                                     .transform(new RealmObjectSchema.Function() {
@@ -78,7 +79,7 @@ public class MyApplication extends Application {
                                     .removeField("price")
                                     .renameField("price_tmp","price");
 
-                            schema.get("Category")
+                            schema.get(Category.class.getName())
                                     .addField("budget_tmp", double.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
@@ -89,6 +90,19 @@ public class MyApplication extends Application {
                                     })
                                     .removeField("budget")
                                     .renameField("budget_tmp","budget");
+
+                            //Combine Locations with same name
+                            schema.get(Location.class.getName())
+                                    .addField("name_tmp", String.class)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            String oldName = obj.getString("name");
+                                            obj.setString("name", Util.capsFirstWord(oldName));
+                                        }
+                                    })
+                                    .removeField("name")
+                                    .renameField("name_tmp","name");
 
                             oldVersion++;
                         }
