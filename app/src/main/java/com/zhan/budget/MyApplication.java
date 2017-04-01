@@ -22,6 +22,7 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 /**
  * Created by Zhan on 16-06-02.
@@ -79,7 +80,7 @@ public class MyApplication extends Application {
                                     .removeField("price")
                                     .renameField("price_tmp","price");
 
-                            schema.get(Category.class.getName())
+                            schema.get("Category")
                                     .addField("budget_tmp", double.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
@@ -92,13 +93,18 @@ public class MyApplication extends Application {
                                     .renameField("budget_tmp","budget");
 
                             //Combine Locations with same name
-                            schema.get(Location.class.getName())
+                            schema.get("Location")
                                     .addField("name_tmp", String.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
                                             String oldName = obj.getString("name");
-                                            obj.setString("name", Util.capsFirstWord(oldName));
+
+                                            try{
+                                                obj.setString("name", Util.capsFirstWord(oldName));
+                                            }catch(RealmPrimaryKeyConstraintException e){
+                                                Log.d("HELP", "There already exist a Location : "+oldName);
+                                            }
                                         }
                                     })
                                     .removeField("name")

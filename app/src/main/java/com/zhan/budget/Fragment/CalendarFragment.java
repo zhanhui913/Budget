@@ -225,7 +225,7 @@ public class CalendarFragment extends BaseRealmFragment implements
             account.setColor(getResources().getString(tempAccountColorList[i]));
             accountList.add(account);
         }
-
+/*
         //Create fake locations
         String[] locationTempList = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
         for(int i = 0; i < locationTempList.length; i++){
@@ -281,7 +281,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 transaction.setCategory(category);
                 transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(getContext(),date));
             }
-        }
+        }*/
 
         myRealm.commitTransaction();
         endTime = System.nanoTime();
