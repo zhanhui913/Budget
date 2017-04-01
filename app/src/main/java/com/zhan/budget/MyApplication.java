@@ -16,6 +16,7 @@ import com.zhan.budget.Util.Util;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
+import io.realm.FieldAttribute;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
@@ -94,14 +95,14 @@ public class MyApplication extends Application {
 
                             //Combine Locations with same name
                             schema.get("Location")
-                                    .addField("name_tmp", String.class)
+                                    .addField("name_tmp", String.class, FieldAttribute.PRIMARY_KEY)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
                                             String oldName = obj.getString("name");
 
                                             try{
-                                                obj.setString("name", Util.capsFirstWord(oldName));
+                                                obj.setString("name_tmp", Util.capsFirstWord(oldName));
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d("HELP", "There already exist a Location : "+oldName);
                                             }
