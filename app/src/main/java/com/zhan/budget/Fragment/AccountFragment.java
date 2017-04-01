@@ -132,26 +132,41 @@ public class AccountFragment extends BaseRealmFragment implements
         //0 represents no change in month relative to currentMonth variable.
         updateMonthInToolbar(0);
     }
-
     private void updateMonthInToolbar(int direction){ Log.d(TAG, "updateMonthInToolbar");
         accountListView.smoothScrollToPosition(0);
 
-        //reset pie chart data
+        //reset pie chart data & total cost text view
         pieChartFragment.resetPieChart();
+        updatePriceStatus(0); //reset it back to 0
 
         //reset account list view
-
+        for(int i = 0 ; i < accountList.size(); i++){
+            accountList.get(i).setCost(0);
+        }
+        accountRecyclerAdapter.setAccountList(accountList);
 
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        getListOfTransactionsForMonth();
+        //option 1
+        if(!once){
+            populateAccountWithNoInfo();
+            once = true;
+        }else{
+            populateAccountWithInfo(true);
+        }
+
+        //option 2
+        //getListOfTransactionsForMonth();
     }
+
+//option 1 start
+private boolean once = false;
 
     /**
      * Gets the list of accounts. (called once only)
      */
-    /*private void populateAccountWithNoInfo(){
+    private void populateAccountWithNoInfo(){
         resultsAccount = myRealm.where(Account.class).findAllAsync();
         resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
@@ -167,11 +182,11 @@ public class AccountFragment extends BaseRealmFragment implements
             }
         });
     }
-*/
+
     /**
      * Resets data for all accounts and start new calculation.
      */
-    /*private void populateAccountWithInfo(final boolean animate){
+    private void populateAccountWithInfo(final boolean animate){
         final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
@@ -202,7 +217,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private void aggregateAccountInfo(final boolean animate){
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
-        AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
+        AsyncTask<Void, Void, Double> loader = new AsyncTask<Void, Void, Double>() {
 
             long startTime, endTime, duration;
 
@@ -213,11 +228,11 @@ public class AccountFragment extends BaseRealmFragment implements
             }
 
             @Override
-            protected Float doInBackground(Void... voids) {
+            protected Double doInBackground(Void... voids) {
 
                 startTime = System.nanoTime();
 
-                float totalCost = 0f;
+                double totalCost = 0f;
 
                 //Go through each COMPLETED transaction and put them into the correct account
                 for(int t = 0; t < transactionMonthList.size(); t++){
@@ -237,7 +252,7 @@ public class AccountFragment extends BaseRealmFragment implements
             }
 
             @Override
-            protected void onPostExecute(Float result) {
+            protected void onPostExecute(Double result) {
                 super.onPostExecute(result);
 
                 for(int i = 0; i < accountList.size(); i++){
@@ -248,15 +263,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 pieChartFragment.setData(accountList, animate);
 
-                centerPanelRightTextView.setText(CurrencyTextFormatter.formatDouble(result));
-
-                if(result > 0){
-                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-                }else if(result < 0){
-                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-                }else{
-                    centerPanelRightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
-                }
+                updatePriceStatus(result);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -271,10 +278,10 @@ public class AccountFragment extends BaseRealmFragment implements
         };
         loader.execute();
     }
+//option 1 end
 
-*/
 
-    //option 2
+//option 2 start
     private void getListOfTransactionsForMonth(){ Log.d(TAG, "getListOfTransactionsForMonth");
         final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
@@ -328,19 +335,9 @@ public class AccountFragment extends BaseRealmFragment implements
         }
 
         accountRecyclerAdapter.setAccountList(accountList);
-
         pieChartFragment.setData(accountList, animate);
 
-        centerPanelRightTextView.setText(CurrencyTextFormatter.formatDouble(totalCost));
-
-        if(totalCost > 0){
-            centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-        }else if(totalCost < 0){
-            centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-        }else{
-            centerPanelRightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
-        }
-
+        updatePriceStatus(totalCost);
         updateAccountStatus();
     }
 
@@ -393,18 +390,7 @@ public class AccountFragment extends BaseRealmFragment implements
                 }
 
                 accountRecyclerAdapter.setAccountList(accountList);
-
                 pieChartFragment.setData(accountList, animate);
-
-                centerPanelRightTextView.setText(CurrencyTextFormatter.formatDouble(result));
-
-                if(result > 0){
-                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-                }else if(result < 0){
-                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-                }else{
-                    centerPanelRightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
-                }
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -413,6 +399,7 @@ public class AccountFragment extends BaseRealmFragment implements
                 long second = (milli/1000);
                 float minutes = (second / 60.0f);
 
+                updatePriceStatus(result);
                 updateAccountStatus();
                 Log.d(TAG, " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
@@ -420,6 +407,7 @@ public class AccountFragment extends BaseRealmFragment implements
         Log.d(TAG, "about to execute asynctask");
         loader.execute();
     }
+//option 2 end
 
     private void editAccount(int position){
         startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getContext(), accountRecyclerAdapter.getAccountList().get(position)), RequestCodes.EDIT_ACCOUNT);
@@ -436,6 +424,17 @@ public class AccountFragment extends BaseRealmFragment implements
             accountListView.setVisibility(View.GONE);
             //fullLayout.setVisibility(View.GONE);
             //circularProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void updatePriceStatus(double cost){
+        centerPanelRightTextView.setText(CurrencyTextFormatter.formatDouble(cost));
+        if(cost > 0){
+            centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+        }else if(cost < 0){
+            centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+        }else{
+            centerPanelRightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }
 
