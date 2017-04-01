@@ -102,11 +102,22 @@ public class MyApplication extends Application {
                                         public void apply(DynamicRealmObject obj) {
                                             String oldName = obj.getString("name");
 
+                                            Log.d("HELP", "trying to change : "+oldName);
+
                                             try{
                                                 obj.setString("name", Util.capsFirstWord(oldName));
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d("HELP", "There already exist a Location : "+oldName);
                                             }
+                                        }
+                                    });
+
+
+                            schema.get("Transaction")
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+
                                         }
                                     });
 
