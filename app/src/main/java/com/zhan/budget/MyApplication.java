@@ -182,7 +182,7 @@ public class MyApplication extends Application {
 
                             //Step 4 : Remove the location with incorrect name format as well.
                             // (ie: those not in locationList)
-                            realm.beginTransaction();
+                            ///realm.beginTransaction();
                             realm.where("Location").findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<DynamicRealmObject>>() {
                                 @Override
                                 public void onChange(RealmResults<DynamicRealmObject> element) {
@@ -199,7 +199,7 @@ public class MyApplication extends Application {
                                 }
                             });
 
-                            realm.commitTransaction();
+                            //realm.commitTransaction();
 
 
                             oldVersion++;
