@@ -97,6 +97,7 @@ public class MyApplication extends Application {
                             //Step 1 : Add new column that matches name
                             //Step 2 : Take values from that column and add it back to name
                             schema.get("Location")
+                                    .addField("name_tmp", String.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
@@ -105,21 +106,34 @@ public class MyApplication extends Application {
                                             Log.d("HELP", "trying to change : "+oldName);
 
                                             try{
-                                                obj.setString("name", Util.capsFirstWord(oldName));
+                                                obj.setString("name_tmp", Util.capsFirstWord(oldName));
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d("HELP", "There already exist a Location : "+oldName);
                                             }
                                         }
                                     });
 
-
+                            Log.d("HELP", "-------------");
                             schema.get("Transaction")
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
+                                            //If transaction's location's name_tmp doesnt match name
+                                            //Then we need to change its location to match the name_tmp
 
+
+                                            String note = obj.getString("note");
+                                            DynamicRealmObject location = obj.getObject("Location");
+
+                                            String locName = location.getString("name");
+                                            String locNameTmp = location.getString("name_tmp");
+
+                                            Log.d("HELP", "Transaction ("+note+"), location : "+locName+", tmp = "+locNameTmp);
+                                            /*if(location.getString("name").equals(location.getString("name_tmp"))){
+                                            }*/
                                         }
                                     });
+                            Log.d("HELP", "-------------");
 
                             oldVersion++;
                         }
