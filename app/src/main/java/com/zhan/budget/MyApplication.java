@@ -170,7 +170,7 @@ public class MyApplication extends Application {
                                                     if(!obj.equals(locationList.get(i))){
                                                         Log.d("HELP","Adding "+obj+" to the delete list");
                                                         locationToDeleteList.add(obj);
-                                                        obj.deleteFromRealm();
+                                                        //obj.deleteFromRealm();
                                                     }
                                                 }
                                             }
