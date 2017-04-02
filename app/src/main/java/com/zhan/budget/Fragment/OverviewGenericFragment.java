@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -48,6 +49,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private BudgetType budgetType;
 
     private CircularProgressBar circularProgressBar;
+    private ViewGroup emptyLayout;
+    private TextView emptyAccountPrimaryText, emptyAccountSecondaryText;
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
@@ -55,6 +58,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private List<Category> categoryList;
 
     private CategoryGenericRecyclerAdapter categoryPercentListAdapter;
+    private RecyclerView categoryListView;
     private OverviewInteractionListener mListener;
 
     private LinearLayoutManager linearLayoutManager;
@@ -87,8 +91,17 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.overviewProgressBar);
 
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyOverviewLayout);
+        emptyAccountPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
+        emptyAccountPrimaryText.setText(String.format(getString(R.string.empty_category), budgetType.toString()));
+        emptyAccountSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
+        emptyAccountSecondaryText.setText("");
+
+        //Initially, the empty layout should be hidden
+        emptyLayout.setVisibility(View.GONE);
+
         categoryList = new ArrayList<>();
-        RecyclerView categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
+        categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
         categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -154,7 +167,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(final boolean animate){
-
         resetCategoryValues();
 
         CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), budgetType, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
@@ -182,6 +194,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
+
+                updateCategoryStatus();
 
                 mListener.onComplete(budgetType, categoryList, sumCost, animate);
             }
@@ -265,6 +279,16 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryEdited), RequestCodes.EDIT_CATEGORY);
     }
 
+    private void updateCategoryStatus(){
+        if(categoryPercentListAdapter.getCategoryList().size() > 0){
+            emptyLayout.setVisibility(View.GONE);
+            categoryListView.setVisibility(View.VISIBLE);
+        }else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            categoryListView.setVisibility(View.GONE);
+        }
+    }
+
     public void setListener(OverviewInteractionListener mListener){
         this.mListener = mListener;
     }
@@ -299,6 +323,11 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private void closeSwipeItem(int position){
         currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
         currentSwipeLayoutTarget.close();
+    }
+
+    //Different from resetCategoryValues(), this removes the adapters list
+    public void resetCategoryList(){
+        categoryPercentListAdapter.setCategoryList(new ArrayList<Category>());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

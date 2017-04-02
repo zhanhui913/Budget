@@ -58,6 +58,10 @@ public class CategoryFragment extends BaseFragment {
         leftTextView = (TextView) view.findViewById(R.id.leftTextView);
         rightTextView = (TextView) view.findViewById(R.id.rightTextView);
 
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), true, true, getString(R.string.category));
+        getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
+        pieChartFragment.displayLegend();
+
         createTabs();
 
         //0 represents no change in month relative to currentMonth variable.
@@ -82,14 +86,7 @@ public class CategoryFragment extends BaseFragment {
                 isCategoryExpenseCalculationComplete = true;
                 totalExpenseCost = totalCost;
 
-                leftTextView.setText(CurrencyTextFormatter.formatDouble(totalCost));
-
-                if(totalExpenseCost < 0){
-                    leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-                }else{
-                    leftTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
-                }
-
+                updateExpensePriceStatus(totalCost);
                 updatePieChart();
             }
         });
@@ -100,14 +97,7 @@ public class CategoryFragment extends BaseFragment {
                 isCategoryIncomeCalculationComplete = true;
                 totalIncomeCost = totalCost;
 
-                rightTextView.setText(CurrencyTextFormatter.formatDouble(totalCost));
-
-                if(totalIncomeCost > 0){
-                    rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-                }else{
-                    rightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
-                }
-
+                updateIncomePriceStatus(totalCost);
                 updatePieChart();
             }
         });
@@ -160,20 +150,46 @@ public class CategoryFragment extends BaseFragment {
             catList.add(catIncome);
             catList.add(catExpense);
 
-            pieChartFragment = PieChartFragment.newInstance(catList, true, true, getString(R.string.category));
-            getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
-            pieChartFragment.displayLegend();
-
+            pieChartFragment.setData(catList, true);
         }
     }
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
+        //reset pie chart data & total cost text view for both EXPENSE & INCOME
+        pieChartFragment.resetPieChart();
+        updateBothPriceStatus(0); //reset it back to 0
+
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         if(updateCategoryInfo) {
             categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
             categoryExpenseFragment.updateMonthCategoryInfo(currentMonth);
+        }
+    }
+
+    private void updateBothPriceStatus(double price){
+        updateExpensePriceStatus(price);
+        updateIncomePriceStatus(price);
+    }
+
+    private void updateExpensePriceStatus(double price){
+        leftTextView.setText(CurrencyTextFormatter.formatDouble(price));
+
+        if(price < 0){
+            leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+        }else if(price == 0){
+            leftTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+        }
+    }
+
+    private void updateIncomePriceStatus(double price){
+        rightTextView.setText(CurrencyTextFormatter.formatDouble(price));
+
+        if(price > 0){
+            rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+        }else if(price == 0){
+            rightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }
 

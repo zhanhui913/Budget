@@ -52,7 +52,6 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private OnAccountInteractionListener mListener;
 
-    //private ViewGroup fullLayout;
     private ViewGroup emptyLayout;
 
     private TextView centerPanelRightTextView, emptyAccountPrimaryText, emptyAccountSecondaryText;
@@ -64,7 +63,6 @@ public class AccountFragment extends BaseRealmFragment implements
     private List<Account> accountList;
 
     private PieChartFragment pieChartFragment;
-    //private CircularProgressBar circularProgressBar;
 
     private Date currentMonth;
     private RealmResults<Transaction> resultsTransaction;
@@ -111,19 +109,14 @@ public class AccountFragment extends BaseRealmFragment implements
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
-        //fullLayout = (ViewGroup)view.findViewById(R.id.fullPanelLayout);
-
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
         emptyAccountPrimaryText.setText(R.string.empty_account);
         emptyAccountSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
         emptyAccountSecondaryText.setText("Add one in the settings");
 
-       // circularProgressBar = (CircularProgressBar) view.findViewById(R.id.accountProgressBar);
-
         //Initially, the empty layout should be hidden
         emptyLayout.setVisibility(View.GONE);
-
 
         //Setup pie chart
         pieChartFragment = PieChartFragment.newInstance(accountList, false, false, getString(R.string.account));
@@ -132,6 +125,7 @@ public class AccountFragment extends BaseRealmFragment implements
         //0 represents no change in month relative to currentMonth variable.
         updateMonthInToolbar(0);
     }
+
     private void updateMonthInToolbar(int direction){ Log.d(TAG, "updateMonthInToolbar");
         accountListView.smoothScrollToPosition(0);
 
@@ -288,9 +282,6 @@ private boolean once = false;
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
 
-        //circularProgressBar.setVisibility(View.VISIBLE);
-        //emptyLayout.setVisibility(View.GONE);
-        //fullLayout.setVisibility(View.GONE);
         startTimeNow = System.nanoTime();
         myRealm.where(Transaction.class)
                 .between("date", startMonth, endMonth)
@@ -415,15 +406,11 @@ private boolean once = false;
 
     private void updateAccountStatus(){ Log.d(TAG,"update account status "+accountRecyclerAdapter.getItemCount());
         if(accountRecyclerAdapter.getItemCount() > 0){
-            //circularProgressBar.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.GONE);
-            //fullLayout.setVisibility(View.VISIBLE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
             accountListView.setVisibility(View.GONE);
-            //fullLayout.setVisibility(View.GONE);
-            //circularProgressBar.setVisibility(View.GONE);
         }
     }
 

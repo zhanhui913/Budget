@@ -185,24 +185,12 @@ public class OverviewActivity extends BaseActivity {
     private void changeTopPanelInfo(int position, boolean animate){
         if(position == 0){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatDouble(totalExpenseCost));
+            updatePriceStatus(totalExpenseCost);
             pieChartFragment.setData(expenseCategoryList, animate);
-
-            if(totalExpenseCost < 0){
-                totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.red));
-            }else{
-                totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
-            }
         }else if(position == 1){
             //Set total cost for month
-            totalCostForMonth.setText(CurrencyTextFormatter.formatDouble(totalIncomeCost));
+            updatePriceStatus(totalIncomeCost);
             pieChartFragment.setData(incomeCategoryList, animate);
-
-            if(totalIncomeCost > 0){
-                totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.green));
-            }else{
-                totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
-            }
         }
     }
 
@@ -214,6 +202,13 @@ public class OverviewActivity extends BaseActivity {
 
         dateTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), currentMonth));
 
+        pieChartFragment.resetPieChart();
+        updatePriceStatus(0); //reset it back to 0
+
+        //Remove the category list
+        overviewExpenseFragment.resetCategoryList();
+        overviewIncomeFragment.resetCategoryList();
+
         //Update month
         overviewExpenseFragment.setCurrentMonth(currentMonth);
         overviewIncomeFragment.setCurrentMonth(currentMonth);
@@ -221,6 +216,18 @@ public class OverviewActivity extends BaseActivity {
         //Re-calculate
         overviewExpenseFragment.getCategoryList();
         overviewIncomeFragment.getCategoryList();
+    }
+
+    private void updatePriceStatus(double price){
+        totalCostForMonth.setText(CurrencyTextFormatter.formatDouble(price));
+
+        if(price > 0){
+            totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.green));
+        }else if(price < 0){
+            totalCostForMonth.setTextColor(ContextCompat.getColor(instance, R.color.red));
+        }else if(price == 0){
+            totalCostForMonth.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+        }
     }
 
     @Override

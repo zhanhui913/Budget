@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,12 +24,14 @@ import com.zhan.budget.Activity.LocationInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
@@ -51,7 +54,6 @@ public class LocationFragment extends BaseRealmFragment
     private OnLocationInteractionListener mListener;
     private Date currentMonth;
 
-    private ViewGroup fullLayout;
     private ViewGroup emptyLayout;
 
     private RealmResults<Location> resultsLocation;
@@ -106,8 +108,6 @@ public class LocationFragment extends BaseRealmFragment
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
-        fullLayout = (ViewGroup)view.findViewById(R.id.fullPanelLayout);
-
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyLocationPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
         emptyLocationPrimaryText.setText(getString(R.string.empty_location));
@@ -124,6 +124,13 @@ public class LocationFragment extends BaseRealmFragment
 
     private void updateMonthInToolbar(int direction){
         locationListview.smoothScrollToPosition(0);
+
+        //reset pie chart data & total # text view
+        pieChartFragment.resetPieChart();
+        updateAmountStatus(0); //reset it back to 0
+
+        //reset location list view
+        locationAdapter.setLocationList(new ArrayList<Location>());
 
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
@@ -195,26 +202,17 @@ public class LocationFragment extends BaseRealmFragment
         //This gives pie chart new location list
         pieChartFragment.setData(locationList, animate);
 
-        if(totalLocationsCount == 0){
-            centerPanelRightTextView.setText(R.string.na);
-        }else{
-            if(totalLocationsCount > 1){
-                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), totalLocationsCount));
-            }else{
-                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), totalLocationsCount));
-            }
-        }
-
+        updateAmountStatus(totalLocationsCount);
         updateLocationStatus();
     }
 
     private void updateLocationStatus(){
         if(locationAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
-            fullLayout.setVisibility(View.VISIBLE);
+            locationListview.setVisibility(View.VISIBLE);
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
-            fullLayout.setVisibility(View.GONE);
+            locationListview.setVisibility(View.GONE);
         }
     }
 
@@ -226,6 +224,18 @@ public class LocationFragment extends BaseRealmFragment
     private void closeSwipeItem(int position){
         currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
         currentSwipeLayoutTarget.close();
+    }
+
+    private void updateAmountStatus(int amount){
+        if(amount == 0){
+            centerPanelRightTextView.setText(R.string.na);
+        }else{
+            if(amount > 1){
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), amount));
+            }else{
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), amount));
+            }
+        }
     }
 
     private void confirmDelete(final int position){
