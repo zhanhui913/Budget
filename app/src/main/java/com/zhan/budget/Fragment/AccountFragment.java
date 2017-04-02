@@ -36,6 +36,7 @@ import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import io.realm.RealmChangeListener;
@@ -51,9 +52,10 @@ public class AccountFragment extends BaseRealmFragment implements
 
     private OnAccountInteractionListener mListener;
 
+    //private ViewGroup fullLayout;
     private ViewGroup emptyLayout;
 
-    private TextView centerPanelLeftTextView, centerPanelRightTextView, emptyAccountPrimaryText, emptyAccountSecondaryText;
+    private TextView centerPanelRightTextView, emptyAccountPrimaryText, emptyAccountSecondaryText;
 
     private RecyclerView accountListView;
     private AccountRecyclerAdapter accountRecyclerAdapter;
@@ -62,12 +64,11 @@ public class AccountFragment extends BaseRealmFragment implements
     private List<Account> accountList;
 
     private PieChartFragment pieChartFragment;
+    //private CircularProgressBar circularProgressBar;
 
     private Date currentMonth;
     private RealmResults<Transaction> resultsTransaction;
     private List<Transaction> transactionMonthList;
-
-    private int accountIndexEdited;//The index of the account that the user just finished edited.
 
     private LinearLayoutManager linearLayoutManager;
     private SwipeLayout currentSwipeLayoutTarget;
@@ -93,10 +94,6 @@ public class AccountFragment extends BaseRealmFragment implements
         super.init();
         currentMonth = new Date();
 
-        accountList = new ArrayList<>();
-
-        centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
-        centerPanelLeftTextView.setVisibility(View.GONE);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -104,6 +101,7 @@ public class AccountFragment extends BaseRealmFragment implements
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
         accountListView.setLayoutManager(linearLayoutManager);
 
+        accountList = new ArrayList<>();
         accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, true, false);
         accountListView.setAdapter(accountRecyclerAdapter);
 
@@ -113,29 +111,57 @@ public class AccountFragment extends BaseRealmFragment implements
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
+        //fullLayout = (ViewGroup)view.findViewById(R.id.fullPanelLayout);
+
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyAccountPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
-        //emptyAccountText.setText(R.string.empty_account);
-        emptyAccountPrimaryText.setText("You have no account.");
+        emptyAccountPrimaryText.setText(R.string.empty_account);
         emptyAccountSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
         emptyAccountSecondaryText.setText("Add one in the settings");
 
+       // circularProgressBar = (CircularProgressBar) view.findViewById(R.id.accountProgressBar);
 
-        //ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
-        //downArrow.setVisibility(View.INVISIBLE);
+        //Initially, the empty layout should be hidden
+        emptyLayout.setVisibility(View.GONE);
+
 
         //Setup pie chart
         pieChartFragment = PieChartFragment.newInstance(accountList, false, false, getString(R.string.account));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
-        populateAccountWithNoInfo();
-
         //0 represents no change in month relative to currentMonth variable.
-        //false because we dont need to get all transactions yet.
-        //This may conflict with populateAccountWithNoInfo async where its trying to get the initial
-        //accounts
-        updateMonthInToolbar(0, false);
+        updateMonthInToolbar(0);
     }
+    private void updateMonthInToolbar(int direction){ Log.d(TAG, "updateMonthInToolbar");
+        accountListView.smoothScrollToPosition(0);
+
+        //reset pie chart data & total cost text view
+        pieChartFragment.resetPieChart();
+        updatePriceStatus(0); //reset it back to 0
+
+        //reset account list view
+        for(int i = 0 ; i < accountList.size(); i++){
+            accountList.get(i).setCost(0);
+        }
+        accountRecyclerAdapter.setAccountList(accountList);
+
+        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
+
+        //option 1
+        if(!once){
+            populateAccountWithNoInfo();
+            once = true;
+        }else{
+            populateAccountWithInfo(true);
+        }
+
+        //option 2
+        //getListOfTransactionsForMonth();
+    }
+
+//option 1 start
+private boolean once = false;
 
     /**
      * Gets the list of accounts. (called once only)
@@ -151,7 +177,7 @@ public class AccountFragment extends BaseRealmFragment implements
                 accountList = myRealm.copyFromRealm(element);
                 accountRecyclerAdapter.setAccountList(accountList);
 
-                updateAccountStatus();
+                //updateAccountStatus();
                 populateAccountWithInfo(true);
             }
         });
@@ -191,7 +217,7 @@ public class AccountFragment extends BaseRealmFragment implements
     private void aggregateAccountInfo(final boolean animate){
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
-        AsyncTask<Void, Void, Float> loader = new AsyncTask<Void, Void, Float>() {
+        AsyncTask<Void, Void, Double> loader = new AsyncTask<Void, Void, Double>() {
 
             long startTime, endTime, duration;
 
@@ -202,11 +228,11 @@ public class AccountFragment extends BaseRealmFragment implements
             }
 
             @Override
-            protected Float doInBackground(Void... voids) {
+            protected Double doInBackground(Void... voids) {
 
                 startTime = System.nanoTime();
 
-                float totalCost = 0f;
+                double totalCost = 0f;
 
                 //Go through each COMPLETED transaction and put them into the correct account
                 for(int t = 0; t < transactionMonthList.size(); t++){
@@ -226,7 +252,7 @@ public class AccountFragment extends BaseRealmFragment implements
             }
 
             @Override
-            protected void onPostExecute(Float result) {
+            protected void onPostExecute(Double result) {
                 super.onPostExecute(result);
 
                 for(int i = 0; i < accountList.size(); i++){
@@ -237,15 +263,7 @@ public class AccountFragment extends BaseRealmFragment implements
 
                 pieChartFragment.setData(accountList, animate);
 
-                centerPanelRightTextView.setText(CurrencyTextFormatter.formatDouble(result));
-
-                if(result > 0){
-                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-                }else if(result < 0){
-                    centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-                }else{
-                    centerPanelRightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
-                }
+                updatePriceStatus(result);
 
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
@@ -253,34 +271,170 @@ public class AccountFragment extends BaseRealmFragment implements
                 long milli = (duration/1000000);
                 long second = (milli/1000);
                 float minutes = (second / 60.0f);
+
+                updateAccountStatus();
                 Log.d("DEBUG_ACC", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
         };
         loader.execute();
     }
+//option 1 end
+
+
+//option 2 start
+    private void getListOfTransactionsForMonth(){ Log.d(TAG, "getListOfTransactionsForMonth");
+        final Date startMonth = DateUtil.refreshMonth(currentMonth);
+
+        //Need to go a day before as Realm's between date does inclusive on both end
+        final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
+
+        //circularProgressBar.setVisibility(View.VISIBLE);
+        //emptyLayout.setVisibility(View.GONE);
+        //fullLayout.setVisibility(View.GONE);
+        startTimeNow = System.nanoTime();
+        myRealm.where(Transaction.class)
+                .between("date", startMonth, endMonth)
+                .equalTo("dayType", DayType.COMPLETED.toString())
+                .findAllAsync()
+                .addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(final RealmResults<Transaction> element) {
+                endTimeNow = System.nanoTime();
+                durationNow = (endTimeNow - startTimeNow);
+                long milli = (durationNow/1000000);
+                Log.d(TAG, "realm took "+milli+" ms");
+                element.removeChangeListener(this);
+                Log.d(TAG, "There is "+element.size()+" results");
+
+                aggregateAccount2(myRealm.copyFromRealm(element), true);
+            }
+        });
+    }
+
+    long startTimeNow,endTimeNow, durationNow;
+    private void aggregateAccount(List<Transaction> tempList, boolean animate){ Log.d(TAG, "aggregate here");
+        HashMap<Account, Double> accountHash = new HashMap<>();
+
+        double totalCost = 0;
+
+        for(int i = 0; i < tempList.size(); i++){
+            if(tempList.get(i).getAccount() != null) {
+                if (!accountHash.containsKey(tempList.get(i).getAccount())) {
+                    accountHash.put(tempList.get(i).getAccount(), tempList.get(i).getPrice());
+                } else {
+                    accountHash.put(tempList.get(i).getAccount(), accountHash.get(tempList.get(i).getAccount()) + tempList.get(i).getPrice());
+                }
+                totalCost += tempList.get(i).getPrice();
+            }
+        }
+
+        accountList = new ArrayList<>();
+        for(Account key : accountHash.keySet()){
+            key.setCost(accountHash.get(key));
+            accountList.add(key);
+        }
+
+        accountRecyclerAdapter.setAccountList(accountList);
+        pieChartFragment.setData(accountList, animate);
+
+        updatePriceStatus(totalCost);
+        updateAccountStatus();
+    }
+
+    private void aggregateAccount2(final List<Transaction> tempList, final boolean animate){
+        AsyncTask<Void, Void, Double> loader = new AsyncTask<Void, Void, Double>() {
+
+            long startTime, endTime, duration;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                Log.d(TAG, "preparing to aggregate results");
+            }
+
+            @Override
+            protected Double doInBackground(Void... voids) {
+
+                startTime = System.nanoTime();
+
+                HashMap<Account, Double> accountHash = new HashMap<>();
+
+                double totalCost = 0;
+
+                for(int i = 0; i < tempList.size(); i++){
+                    if(tempList.get(i).getAccount() != null) {
+                        if (!accountHash.containsKey(tempList.get(i).getAccount())) {
+                            accountHash.put(tempList.get(i).getAccount(), tempList.get(i).getPrice());
+                        } else {
+                            accountHash.put(tempList.get(i).getAccount(), accountHash.get(tempList.get(i).getAccount()) + tempList.get(i).getPrice());
+                        }
+                        totalCost += tempList.get(i).getPrice();
+                    }
+                }
+
+                accountList = new ArrayList<>();
+                for(Account key : accountHash.keySet()){
+                    key.setCost(accountHash.get(key));
+                    accountList.add(key);
+                }
+
+                return totalCost;
+            }
+
+            @Override
+            protected void onPostExecute(Double result) {
+                super.onPostExecute(result);
+
+                for(int i = 0; i < accountList.size(); i++){
+                    Log.d(TAG, "category : "+accountList.get(i).getName()+" -> "+accountList.get(i).getCost());
+                }
+
+                accountRecyclerAdapter.setAccountList(accountList);
+                pieChartFragment.setData(accountList, animate);
+
+                endTime = System.nanoTime();
+                duration = (endTime - startTime);
+
+                long milli = (duration/1000000);
+                long second = (milli/1000);
+                float minutes = (second / 60.0f);
+
+                updatePriceStatus(result);
+                updateAccountStatus();
+                Log.d(TAG, " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+            }
+        };
+        Log.d(TAG, "about to execute asynctask");
+        loader.execute();
+    }
+//option 2 end
 
     private void editAccount(int position){
         startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getContext(), accountRecyclerAdapter.getAccountList().get(position)), RequestCodes.EDIT_ACCOUNT);
     }
 
-    private void updateAccountStatus(){
+    private void updateAccountStatus(){ Log.d(TAG,"update account status "+accountRecyclerAdapter.getItemCount());
         if(accountRecyclerAdapter.getItemCount() > 0){
+            //circularProgressBar.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.GONE);
+            //fullLayout.setVisibility(View.VISIBLE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
             accountListView.setVisibility(View.GONE);
+            //fullLayout.setVisibility(View.GONE);
+            //circularProgressBar.setVisibility(View.GONE);
         }
     }
 
-    private void updateMonthInToolbar(int direction, boolean updateAccountInfo){
-        accountListView.smoothScrollToPosition(0);
-
-        currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
-
-        if(updateAccountInfo) {
-            populateAccountWithInfo(true);
+    private void updatePriceStatus(double cost){
+        centerPanelRightTextView.setText(CurrencyTextFormatter.formatDouble(cost));
+        if(cost > 0){
+            centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+        }else if(cost < 0){
+            centerPanelRightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+        }else{
+            centerPanelRightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }
 
@@ -323,7 +477,7 @@ public class AccountFragment extends BaseRealmFragment implements
         myRealm.commitTransaction();
 
         //recalculate everything
-        populateAccountWithNoInfo();
+        getListOfTransactionsForMonth();
     }
 
     private void openSwipeItem(int position){
@@ -341,53 +495,14 @@ public class AccountFragment extends BaseRealmFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
             if(requestCode == RequestCodes.EDIT_ACCOUNT) {
-/*
-                boolean deleteAccount = data.getExtras().getBoolean(Constants.RESULT_DELETE_ACCOUNT);
 
-                if(!deleteAccount) {
-                    final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
-
-                    Log.i("ZHAN", "----------- onActivityResult edit account ----------");
-                    Log.d("ZHAN", "account name is " + accountReturned.getName());
-                    Log.d("ZHAN", "account color is " + accountReturned.getColor());
-                    Log.d("ZHAN", "account id is " + accountReturned.getId());
-                    Log.i("ZHAN", "----------- onActivityResult edit account ----------");
-
-                    accountList.set(accountIndexEdited, accountReturned);
-                }else{
-                    accountList.remove(accountIndexEdited);
-                }
-
-                accountRecyclerAdapter.setAccountList(accountList);
-                updateAccountStatus();
-                */
-
-                //recalculate everything
-                populateAccountWithNoInfo();
-            }else if(requestCode == RequestCodes.NEW_ACCOUNT){
-                //As we cannot pull down to add a new account here, this is kinda useless
-               /* final Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(AccountInfoActivity.RESULT_ACCOUNT));
-
-                Log.i("ZHAN", "----------- onActivityResult new account ----------");
-                Log.d("ZHAN", "account name is "+accountReturned.getName());
-                Log.d("ZHAN", "account color is "+accountReturned.getColor());
-                Log.d("ZHAN", "account id is "+accountReturned.getId());
-                Log.i("ZHAN", "----------- onActivityResult new account ----------");
-
-                accountList.add(accountReturned);
-                accountRecyclerAdapter.setAccountList(accountList);
-
-                updateAccountStatus();
-
-                //Scroll to the last position
-                accountListView.scrollToPosition(accountRecyclerAdapter.getItemCount() - 1);
-                */
+                getListOfTransactionsForMonth();
             }else if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
                 boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                 if(hasChanged){
                     //If something has been changed, update the list
-                    populateAccountWithInfo(false);
+                    getListOfTransactionsForMonth();
                 }
             }
         }
@@ -437,8 +552,6 @@ public class AccountFragment extends BaseRealmFragment implements
     @Override
     public void onEditAccount(int position){
         closeSwipeItem(position);
-
-        //accountIndexEdited = position;
         editAccount(position);
     }
 
@@ -474,10 +587,10 @@ public class AccountFragment extends BaseRealmFragment implements
         // handle item selection
         switch (item.getItemId()) {
             case R.id.leftChevron:
-                updateMonthInToolbar(-1, true);
+                updateMonthInToolbar(-1);
                 return true;
             case R.id.rightChevron:
-                updateMonthInToolbar(1, true);
+                updateMonthInToolbar(1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

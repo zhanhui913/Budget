@@ -123,7 +123,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private AutoCompleteTextView inputLocation;
 
     //Switch whenever theres a change in location
-    private boolean newLocation = false;
+    private boolean isLocationChanged = false;
 
     public static Intent createIntentForNewTransaction(Context context, Date date) {
         Intent intent = new Intent(context, TransactionInfoActivity.class);
@@ -707,7 +707,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void getAllLocations(){
         final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
 
-        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).findAllAsync();
+        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).equalTo("isNew", true).findAllAsync();
         locationRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
             @Override
             public void onChange(RealmResults<Location> element) {
@@ -746,11 +746,12 @@ public class TransactionInfoActivity extends BaseActivity implements
                         locationString = inputLocation.getText().toString().trim();
 
                         if(editTransaction != null && editTransaction.getLocation() != null){
+                            //If current location is different from what was stored
                             if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
-                                newLocation = true;
+                                isLocationChanged = true;
                             }
                         }else{
-                            newLocation = true;
+                            isLocationChanged = true;
                         }
                     }
                 })
@@ -883,14 +884,14 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
         }
 
-        if(newLocation){
+        if(isLocationChanged){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
-
                 Location newLocationObject = new Location();
-                newLocationObject.setName(locationString.trim());
+                newLocationObject.setName(Util.capsFirstWord(locationString.trim()));
                 newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                 transaction.setLocation(newLocationObject);
 
+                //This creates a new Location Realm object if it doesnt exist yet or updates it.
                 Realm myRealm = Realm.getDefaultInstance();
                 myRealm.beginTransaction();
                 myRealm.copyToRealmOrUpdate(newLocationObject);
