@@ -132,6 +132,7 @@ public class AccountFragment extends BaseRealmFragment implements
         //0 represents no change in month relative to currentMonth variable.
         updateMonthInToolbar(0);
     }
+
     private void updateMonthInToolbar(int direction){ Log.d(TAG, "updateMonthInToolbar");
         accountListView.smoothScrollToPosition(0);
 
