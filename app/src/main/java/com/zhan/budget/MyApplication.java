@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Util.BudgetPreference;
@@ -25,6 +26,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
+import io.realm.RealmResults;
 import io.realm.RealmSchema;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
@@ -180,9 +182,25 @@ public class MyApplication extends Application {
 
                             //Step 4 : Remove the location with incorrect name format as well.
                             // (ie: those not in locationList)
-                            /*schema.get("Location")
-                                    .removeIndex()
-                                    */
+                            realm.beginTransaction();
+                            realm.where("Location").findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<DynamicRealmObject>>() {
+                                @Override
+                                public void onChange(RealmResults<DynamicRealmObject> element) {
+                                    element.removeChangeListener(this);
+
+                                    for(int i = 0 ; i < element.size(); i++){
+                                        for(int k = 0; k < locationToDeleteList.size(); k++){
+                                            if(element.get(i).getString("name").equals(locationToDeleteList.get(k).getString("name"))){
+                                                Log.d("HELP","Remove "+element.get(i).getString("name")+" from realm list");
+                                                element.get(i).deleteFromRealm();
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            realm.commitTransaction();
+
 
                             oldVersion++;
                         }
