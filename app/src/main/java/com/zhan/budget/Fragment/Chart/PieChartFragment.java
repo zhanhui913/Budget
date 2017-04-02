@@ -3,6 +3,7 @@ package com.zhan.budget.Fragment.Chart;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -99,6 +100,8 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.getLegend().setEnabled(drawLegend);
         pieChart.getLegend().setPosition(Legend.LegendPosition.LEFT_OF_CHART);
         pieChart.getLegend().setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+
+        pieChart.setNoDataText("No Data");
 
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
@@ -199,10 +202,6 @@ public class PieChartFragment extends BaseChartFragment {
         // undo all highlights
         pieChart.highlightValues(null);
 
-        if(animate){
-            pieChart.animateY(ANIMATION_DURATION_MILLI, Easing.EasingOption.EaseInOutQuad);
-        }
-
         if(list.size() > 0){
             if(getArguments().getString(ARG_CHART_4).equalsIgnoreCase("")){
                 pieChart.setCenterText(getString(R.string.na));
@@ -211,7 +210,20 @@ public class PieChartFragment extends BaseChartFragment {
             }
         }
 
-        pieChart.invalidate();
+        if(animate){
+            //No need to call invalidate if animate is already called
+            pieChart.animateY(ANIMATION_DURATION_MILLI, Easing.EasingOption.EaseInOutQuad);
+        }else{
+            pieChart.invalidate();
+        }
+    }
+
+    public void resetPieChart(){
+        Log.d("CHART", "trying to reset pie chart");
+        if(pieChart != null){
+            pieChart.clear();
+            Log.d("CHART", "Resetted pie chart");
+        }
     }
 
     /**
