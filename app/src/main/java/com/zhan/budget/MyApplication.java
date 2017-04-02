@@ -52,7 +52,7 @@ public class MyApplication extends Application {
                     @Override
                     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
                         // DynamicRealm exposes an editable schema
-                        RealmSchema schema = realm.getSchema();
+                        final RealmSchema schema = realm.getSchema();
 
                         //migrate to version 2
                         if(oldVersion == 1){
@@ -148,8 +148,41 @@ public class MyApplication extends Application {
                                         }
                                     });
 
-                            //Step 3 : Now delete the name_tmp field in Location
-                            schema.get("Location").removeField("name_tmp");
+                            final List<DynamicRealmObject> locationToDeleteList = new ArrayList<>();
+
+                            //Step 3 : Now delete the name_tmp field in Location.
+                            // Find those location with the wrong name format
+                            schema.get("Location")
+                                    .removeField("name_tmp")
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            for(int i = 0 ; i < locationList.size(); i++){
+                                                //If after converting to lowercase and is equal and
+                                                //not the same obj, delete it.
+                                                // {Location: name="costco"} => delete
+                                                // {Location: name="COSTCO"} => delete
+                                                // {Location: name="COstco"} => delete
+                                                // {Location: name="Costco"} => dont delete
+                                                if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
+                                                    if(!obj.equals(locationList.get(i))){
+                                                        Log.d("HELP","Adding "+obj+" to the delete list");
+                                                        locationToDeleteList.add(obj);
+                                                        obj.deleteFromRealm();
+                                                    }
+                                                }
+                                            }
+
+
+
+                                        }
+                                    });
+
+                            //Step 4 : Remove the location with incorrect name format as well.
+                            // (ie: those not in locationList)
+                            /*schema.get("Location")
+                                    .removeIndex()
+                                    */
 
                             oldVersion++;
                         }
