@@ -54,7 +54,6 @@ public class LocationFragment extends BaseRealmFragment
     private OnLocationInteractionListener mListener;
     private Date currentMonth;
 
-    private ViewGroup fullLayout;
     private ViewGroup emptyLayout;
 
     private RealmResults<Location> resultsLocation;
@@ -108,8 +107,6 @@ public class LocationFragment extends BaseRealmFragment
                 new HorizontalDividerItemDecoration.Builder(getContext())
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
-
-        fullLayout = (ViewGroup)view.findViewById(R.id.fullPanelLayout);
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
         emptyLocationPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
@@ -212,10 +209,10 @@ public class LocationFragment extends BaseRealmFragment
     private void updateLocationStatus(){
         if(locationAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
-            fullLayout.setVisibility(View.VISIBLE);
+            locationListview.setVisibility(View.VISIBLE);
         }else{
             emptyLayout.setVisibility(View.VISIBLE);
-            fullLayout.setVisibility(View.GONE);
+            locationListview.setVisibility(View.GONE);
         }
     }
 
