@@ -136,7 +136,6 @@ public final class Util {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static char getFirstCharacterFromString(String value){
-        //return value.toCharArray()[0];
         if(value.equalsIgnoreCase("")){
             return Character.MIN_VALUE;
         }else{
@@ -145,6 +144,9 @@ public final class Util {
     }
 
     public static String capsFirstWord(String str) {
+        //First change the string to all lowercase, then only upper case the first character of the word
+        str = str.toLowerCase();
+
         String[] words = str.split(" ");
         StringBuilder ret = new StringBuilder();
         for(int i = 0; i < words.length; i++) {
