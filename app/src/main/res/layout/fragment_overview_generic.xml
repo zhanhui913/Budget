@@ -9,10 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <fr.castorflex.android.circularprogressbar.CircularProgressBar
             android:id="@+id/overviewProgressBar"
             android:layout_width="100dp"
@@ -25,5 +21,9 @@
             app:cpb_stroke_width="5dp"
             app:cpb_min_sweep_angle="10"
             app:cpb_max_sweep_angle="300" />
-    </RelativeLayout>
+
+    <include layout="@layout/empty_content"
+        android:id="@+id/emptyOverviewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>
