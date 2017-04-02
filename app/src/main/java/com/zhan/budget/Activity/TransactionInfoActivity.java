@@ -707,7 +707,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void getAllLocations(){
         final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
 
-        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).findAllAsync();
+        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).equalTo("isNew", true).findAllAsync();
         locationRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
             @Override
             public void onChange(RealmResults<Location> element) {

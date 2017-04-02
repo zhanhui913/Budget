@@ -103,6 +103,7 @@ public class MyApplication extends Application {
                             //Step 1 : Add new column that has the correct location name format
                             schema.get("Location")
                                     .addField("name_tmp", String.class)
+                                    .addField("isNew", boolean.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
@@ -119,6 +120,10 @@ public class MyApplication extends Application {
                                                 obj.setString("name", correctName);
 
                                                 //If reached here, that means we successfully change primary key.
+
+                                                //Only new Locations past this migration gets set this to true
+                                                obj.setBoolean("isNew", true);
+
                                                 //Add to list.
                                                 locationList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
@@ -150,10 +155,12 @@ public class MyApplication extends Application {
                                         }
                                     });
 
-                            final List<DynamicRealmObject> locationToDeleteList = new ArrayList<>();
+                            //final List<DynamicRealmObject> locationToDeleteList = new ArrayList<>();
 
                             //Step 3 : Now delete the name_tmp field in Location.
                             // Find those location with the wrong name format
+                            // Remove the location with incorrect name format as well.
+                            // (ie: those not in locationList) by adding false to isNew field
                             schema.get("Location")
                                     .removeField("name_tmp")
                                     .transform(new RealmObjectSchema.Function() {
@@ -169,38 +176,15 @@ public class MyApplication extends Application {
                                                 if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
                                                     if(!obj.equals(locationList.get(i))){
                                                         Log.d("HELP","Adding "+obj+" to the delete list");
-                                                        locationToDeleteList.add(obj);
-                                                        //obj.deleteFromRealm();
+                                                        //locationToDeleteList.add(obj);
+
+                                                        //Old Locations gets set to false
+                                                        obj.setBoolean("isNew", false);
                                                     }
                                                 }
                                             }
-
-
-
                                         }
                                     });
-
-                            //Step 4 : Remove the location with incorrect name format as well.
-                            // (ie: those not in locationList)
-                            ///realm.beginTransaction();
-                            realm.where("Location").findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<DynamicRealmObject>>() {
-                                @Override
-                                public void onChange(RealmResults<DynamicRealmObject> element) {
-                                    element.removeChangeListener(this);
-
-                                    for(int i = 0 ; i < element.size(); i++){
-                                        for(int k = 0; k < locationToDeleteList.size(); k++){
-                                            if(element.get(i).getString("name").equals(locationToDeleteList.get(k).getString("name"))){
-                                                Log.d("HELP","Remove "+element.get(i).getString("name")+" from realm list");
-                                                element.get(i).deleteFromRealm();
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-
-                            //realm.commitTransaction();
-
 
                             oldVersion++;
                         }
@@ -217,7 +201,6 @@ public class MyApplication extends Application {
 
         Log.d("HELP", "start listening to realm changes");
         listenToRealmDBChanges();
-
     }
 
     private void listenToRealmDBChanges(){
