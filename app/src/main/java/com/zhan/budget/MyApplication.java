@@ -123,7 +123,7 @@ public class MyApplication extends Application {
 
 
                                             String note = obj.getString("note");
-                                            DynamicRealmObject location = obj.get("Location");
+                                            DynamicRealmObject location = obj.getObject("location");
 
                                             String locName = location.getString("name");
                                             String locNameTmp = location.getString("name_tmp");
