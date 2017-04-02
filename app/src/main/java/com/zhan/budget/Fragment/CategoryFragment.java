@@ -178,7 +178,7 @@ public class CategoryFragment extends BaseFragment {
 
         if(price < 0){
             leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-        }else {
+        }else if(price == 0){
             leftTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }
@@ -188,7 +188,7 @@ public class CategoryFragment extends BaseFragment {
 
         if(price > 0){
             rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-        }else{
+        }else if(price == 0){
             rightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }

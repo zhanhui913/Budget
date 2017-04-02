@@ -154,7 +154,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(final boolean animate){
-
         resetCategoryValues();
 
         CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), budgetType, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
@@ -299,6 +298,11 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private void closeSwipeItem(int position){
         currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
         currentSwipeLayoutTarget.close();
+    }
+
+    //Different from resetCategoryValues(), this removes the adapters list
+    public void resetCategoryList(){
+        categoryPercentListAdapter.setCategoryList(new ArrayList<Category>());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
