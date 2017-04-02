@@ -162,6 +162,11 @@ public class MyApplication extends Application {
                                     });
                             Log.d("HELP", "-------------");
 
+                            //Now delete the name_tmp field in Location
+                            schema.get("Location").removeField("name_tmp");
+
+
+
                             oldVersion++;
                         }
 
