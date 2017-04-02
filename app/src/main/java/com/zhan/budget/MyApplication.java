@@ -149,18 +149,15 @@ public class MyApplication extends Application {
                                             //Then we need to change the Transaction's location to match the name_tmp
                                             if(!locationName.equals(tempLocationName)){
                                                 for(int i = 0; i < locList.size(); i++){
-                                                    if(locList.get(i).getString("name") == tempLocationName){
+                                                    if(locList.get(i).getString("name").equals(tempLocationName)){
                                                         obj.setObject("location", locList.get(i));
+
+                                                        Log.d("HELP", "New Transaction ("+catName+"), location : "+obj.getObject("location").getString("name")+", tmp = "+obj.getObject("location").getString("name_tmp"));
+
                                                         break;
                                                     }
                                                 }
-
-                                                Log.d("HELP", "New Transaction ("+catName+"), location : "+obj.getObject("location").getString("name")+", tmp = "+obj.getObject("location").getString("name_tmp"));
-
                                             }
-
-
-
                                         }
                                     });
                             Log.d("HELP", "-------------");
