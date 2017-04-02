@@ -108,7 +108,7 @@ public class MyApplication extends Application {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
 
-                                            locList.add(obj);
+
 
                                             String oldName = obj.getString("name");
 
@@ -123,6 +123,9 @@ public class MyApplication extends Application {
                                                 //Try to change primary key attribute now
                                                 obj.setString("name", Util.capsFirstWord(oldName));
 
+                                                //If reached here, successfully change primary key
+                                                //Add to list
+                                                locList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d("HELP", "There already exist a Location : "+oldName);
                                             }
@@ -131,6 +134,9 @@ public class MyApplication extends Application {
 
                             Log.d("HELP", "-------------");
                             Log.d("HELP", "There are "+locList.size()+" loc in list");
+                            for(int i  = 0; i < locList.size();i++){
+                                Log.d("HELP", i+") "+locList.get(i));
+                            }
                             schema.get("Transaction")
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
