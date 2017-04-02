@@ -121,14 +121,15 @@ public class MyApplication extends Application {
                                             //If transaction's location's name_tmp doesnt match name
                                             //Then we need to change its location to match the name_tmp
 
+                                            DynamicRealmObject cat = obj.getObject("category");
+                                            String catName = cat.getString("name");
 
-                                            String note = obj.getString("note");
                                             DynamicRealmObject location = obj.getObject("location");
 
                                             String locName = location.getString("name");
                                             String locNameTmp = location.getString("name_tmp");
 
-                                            Log.d("HELP", "Transaction ("+note+"), location : "+locName+", tmp = "+locNameTmp);
+                                            Log.d("HELP", "Transaction ("+catName+"), location : "+locName+", tmp = "+locNameTmp);
                                             /*if(location.getString("name").equals(location.getString("name_tmp"))){
                                             }*/
                                         }
