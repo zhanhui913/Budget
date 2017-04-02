@@ -96,89 +96,73 @@ public class MyApplication extends Application {
                                     .removeField("budget")
                                     .renameField("budget_tmp","budget");
 
-                            //Combine Locations with same name
-                            //Step 1 : Add new column that matches name
-                            //Step 2 : Take values from that column and add it back to name
+                            final List<DynamicRealmObject> locationList = new ArrayList<>();
 
-                            final List<DynamicRealmObject> locList = new ArrayList<>();
-
+                            //Step 1 : Add new column that has the correct location name format
                             schema.get("Location")
                                     .addField("name_tmp", String.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-
-
-
-                                            String oldName = obj.getString("name");
-
-                                            Log.d("HELP", "trying to change : "+oldName+"  to "+Util.capsFirstWord(oldName));
-
+                                            String correctName = Util.capsFirstWord(obj.getString("name"));
+                                            //Log.d("HELP", "trying to change : "+obj.getString("name")+"  to "+correctName);
                                             try{
                                                 //Wont have any problem with primary key exception
                                                 //as this is a temp column with no primary key
                                                 //attribute
-                                                obj.setString("name_tmp", Util.capsFirstWord(oldName));
+                                                obj.setString("name_tmp", correctName);
 
-                                                //Try to change primary key attribute now
-                                                obj.setString("name", Util.capsFirstWord(oldName));
+                                                //Try to change primary key attribute now, if there
+                                                //already exist one, it will get caught by exception.
+                                                obj.setString("name", correctName);
 
-                                                //If reached here, successfully change primary key
-                                                //Add to list
-                                                locList.add(obj);
+                                                //If reached here, that means we successfully change primary key.
+                                                //Add to list.
+                                                locationList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
-                                                Log.d("HELP", "There already exist a Location : "+oldName);
+                                                Log.d("HELP", "There already exist a Location : "+correctName);
                                             }
                                         }
                                     });
 
+
                             Log.d("HELP", "-------------");
-                            Log.d("HELP", "There are "+locList.size()+" loc in list");
-                            for(int i  = 0; i < locList.size();i++){
-                                Log.d("HELP", i+") "+locList.get(i));
-                            }
+                                                        Log.d("HELP", "There are "+locationList.size()+" loc in list");
+                                                        for(int i  = 0; i < locationList.size();i++){
+                                                                Log.d("HELP", i+") "+locationList.get(i));
+                                                            }
+                            Log.d("HELP", "-------------");
+
+                            //Step 2 : Replace Transaction's location with correct location object (with correct name format)
                             schema.get("Transaction")
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            DynamicRealmObject cat = obj.getObject("category"); //debug
-                                            String catName = cat.getString("name"); //debug
-
                                             DynamicRealmObject location = obj.getObject("location");
 
                                             String locationName = location.getString("name");
                                             String tempLocationName = location.getString("name_tmp");
 
-                                            Log.d("HELP", "Transaction ("+catName+"), location : "+locationName+", tmp = "+tempLocationName);
-
                                             //If transaction's location's name_tmp doesnt match name
-                                            //Then we need to change the Transaction's location to match the name_tmp
+                                            //Then we need to change the Transaction's old location to match the name_tmp
                                             if(!locationName.equals(tempLocationName)){
-                                                for(int i = 0; i < locList.size(); i++){
-                                                    if(locList.get(i).getString("name").equals(tempLocationName)){
-                                                        obj.setObject("location", locList.get(i));
-
-                                                        Log.d("HELP", "New Transaction ("+catName+"), location : "+obj.getObject("location").getString("name")+", tmp = "+obj.getObject("location").getString("name_tmp"));
-
+                                                for(int i = 0; i < locationList.size(); i++){
+                                                    if(locationList.get(i).getString("name").equals(tempLocationName)){
+                                                        obj.setObject("location", locationList.get(i));
                                                         break;
                                                     }
                                                 }
                                             }
                                         }
                                     });
-                            Log.d("HELP", "-------------");
 
-                            //Now delete the name_tmp field in Location
+                            //Step 3 : Now delete the name_tmp field in Location
                             schema.get("Location").removeField("name_tmp");
-
-
 
                             oldVersion++;
                         }
 
-                        Toast.makeText(MyApplication.this, "a) It looks like you're at version "+oldVersion, Toast.LENGTH_SHORT).show();
                         Log.d("MY_APP", "old version :"+oldVersion);
-
                     }
                 })
                 .build();
