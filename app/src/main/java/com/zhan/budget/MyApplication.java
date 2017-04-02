@@ -105,7 +105,7 @@ public class MyApplication extends Application {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
                                             String correctName = Util.capsFirstWord(obj.getString("name"));
-                                            //Log.d("HELP", "trying to change : "+obj.getString("name")+"  to "+correctName);
+
                                             try{
                                                 //Wont have any problem with primary key exception
                                                 //as this is a temp column with no primary key
@@ -124,14 +124,6 @@ public class MyApplication extends Application {
                                             }
                                         }
                                     });
-
-
-                            Log.d("HELP", "-------------");
-                                                        Log.d("HELP", "There are "+locationList.size()+" loc in list");
-                                                        for(int i  = 0; i < locationList.size();i++){
-                                                                Log.d("HELP", i+") "+locationList.get(i));
-                                                            }
-                            Log.d("HELP", "-------------");
 
                             //Step 2 : Replace Transaction's location with correct location object (with correct name format)
                             schema.get("Transaction")
