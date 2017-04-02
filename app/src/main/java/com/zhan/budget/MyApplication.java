@@ -14,6 +14,9 @@ import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
@@ -96,11 +99,17 @@ public class MyApplication extends Application {
                             //Combine Locations with same name
                             //Step 1 : Add new column that matches name
                             //Step 2 : Take values from that column and add it back to name
+
+                            final List<DynamicRealmObject> locList = new ArrayList<>();
+
                             schema.get("Location")
                                     .addField("name_tmp", String.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
+
+                                            locList.add(obj);
+
                                             String oldName = obj.getString("name");
 
                                             Log.d("HELP", "trying to change : "+oldName);
@@ -114,24 +123,37 @@ public class MyApplication extends Application {
                                     });
 
                             Log.d("HELP", "-------------");
+                            Log.d("HELP", "There are "+locList.size()+" loc in list");
                             schema.get("Transaction")
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            //If transaction's location's name_tmp doesnt match name
-                                            //Then we need to change its location to match the name_tmp
-
-                                            DynamicRealmObject cat = obj.getObject("category");
-                                            String catName = cat.getString("name");
+                                            DynamicRealmObject cat = obj.getObject("category"); //debug
+                                            String catName = cat.getString("name"); //debug
 
                                             DynamicRealmObject location = obj.getObject("location");
 
-                                            String locName = location.getString("name");
-                                            String locNameTmp = location.getString("name_tmp");
+                                            String locationName = location.getString("name");
+                                            String tempLocationName = location.getString("name_tmp");
 
-                                            Log.d("HELP", "Transaction ("+catName+"), location : "+locName+", tmp = "+locNameTmp);
-                                            /*if(location.getString("name").equals(location.getString("name_tmp"))){
-                                            }*/
+                                            Log.d("HELP", "Transaction ("+catName+"), location : "+locationName+", tmp = "+tempLocationName);
+
+                                            //If transaction's location's name_tmp doesnt match name
+                                            //Then we need to change the Transaction's location to match the name_tmp
+                                            if(!locationName.equals(tempLocationName)){
+                                                for(int i = 0; i < locList.size(); i++){
+                                                    if(locList.get(i).getString("name") == tempLocationName){
+                                                        obj.setObject("location", locList.get(i));
+                                                        break;
+                                                    }
+                                                }
+
+                                                Log.d("HELP", "New Transaction ("+catName+"), location : "+obj.getObject("location").getString("name")+", tmp = "+obj.getObject("location").getString("name_tmp"));
+
+                                            }
+
+
+
                                         }
                                     });
                             Log.d("HELP", "-------------");
