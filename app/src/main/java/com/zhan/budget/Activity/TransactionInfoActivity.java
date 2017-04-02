@@ -887,12 +887,11 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(isLocationChanged){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
                 Location newLocationObject = new Location();
-                //newLocationObject.setName(Util.capsFirstWord(locationString.trim()));
-
-                newLocationObject.setName(locationString.trim());
+                newLocationObject.setName(Util.capsFirstWord(locationString.trim()));
                 newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                 transaction.setLocation(newLocationObject);
 
+                //This creates a new Location Realm object if it doesnt exist yet or updates it.
                 Realm myRealm = Realm.getDefaultInstance();
                 myRealm.beginTransaction();
                 myRealm.copyToRealmOrUpdate(newLocationObject);
