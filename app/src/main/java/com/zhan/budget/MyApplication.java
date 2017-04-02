@@ -112,7 +112,7 @@ public class MyApplication extends Application {
 
                                             String oldName = obj.getString("name");
 
-                                            Log.d("HELP", "trying to change : "+oldName);
+                                            Log.d("HELP", "trying to change : "+oldName+"  to "+Util.capsFirstWord(oldName));
 
                                             try{
                                                 //Wont have any problem with primary key exception
