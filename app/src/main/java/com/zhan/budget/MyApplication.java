@@ -155,8 +155,6 @@ public class MyApplication extends Application {
                                         }
                                     });
 
-                            //final List<DynamicRealmObject> locationToDeleteList = new ArrayList<>();
-
                             //Step 3 : Now delete the name_tmp field in Location.
                             // Find those location with the wrong name format
                             // Remove the location with incorrect name format as well.
@@ -168,7 +166,7 @@ public class MyApplication extends Application {
                                         public void apply(DynamicRealmObject obj) {
                                             for(int i = 0 ; i < locationList.size(); i++){
                                                 //If after converting to lowercase and is equal and
-                                                //not the same obj, delete it.
+                                                //not the same obj, delete it by settings isNew to false
                                                 // {Location: name="costco"} => delete
                                                 // {Location: name="COSTCO"} => delete
                                                 // {Location: name="COstco"} => delete
@@ -176,7 +174,6 @@ public class MyApplication extends Application {
                                                 if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
                                                     if(!obj.equals(locationList.get(i))){
                                                         Log.d("HELP","Adding "+obj+" to the delete list");
-                                                        //locationToDeleteList.add(obj);
 
                                                         //Old Locations gets set to false
                                                         obj.setBoolean("isNew", false);

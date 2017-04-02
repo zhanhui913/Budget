@@ -22,7 +22,7 @@ public class Location extends RealmObject implements PieDataCostInterface {
     private int amount;
 
     //When migration to #3
-    //Old Locations (ie with wrong name format) are set to false
+    //Old Locations (ie those with wrong name format) are set to false
     private boolean isNew;
 
     public Location(){
