@@ -115,7 +115,14 @@ public class MyApplication extends Application {
                                             Log.d("HELP", "trying to change : "+oldName);
 
                                             try{
+                                                //Wont have any problem with primary key exception
+                                                //as this is a temp column with no primary key
+                                                //attribute
                                                 obj.setString("name_tmp", Util.capsFirstWord(oldName));
+
+                                                //Try to change primary key attribute now
+                                                obj.setString("name", Util.capsFirstWord(oldName));
+
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d("HELP", "There already exist a Location : "+oldName);
                                             }
