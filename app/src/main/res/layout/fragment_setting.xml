@@ -10,16 +10,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView style="@style/SettingsTextViewHeaderStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_header_general" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="@dimen/left_padding_divider"
-            android:background="@color/colorPrimaryDark"/>
+        <include layout="@layout/header_list"
+            android:id="@+id/settingsHeaderGeneral"/>
 
         <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/themeBtn"
@@ -219,16 +211,8 @@
                 android:text="@string/setting_content_location"/>
         </RelativeLayout>
 
-        <TextView style="@style/SettingsTextViewHeaderStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_header_data"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="@dimen/left_padding_divider"
-            android:background="@color/colorPrimaryDark"/>
+        <include layout="@layout/header_list"
+                 android:id="@+id/settingsHeaderData"/>
 
         <RelativeLayout style="@style/ItemPaddingStyle"
             android:layout_width="match_parent"
@@ -387,16 +371,8 @@
 
         </RelativeLayout>
 
-        <TextView style="@style/SettingsTextViewHeaderStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_header_feedback"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="@dimen/left_padding_divider"
-            android:background="@color/colorPrimaryDark"/>
+        <include layout="@layout/header_list"
+                 android:id="@+id/settingsHeaderFeedback"/>
 
         <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/ratingBtn"

@@ -81,6 +81,20 @@ public class SettingFragment extends BaseFragment {
 
     @Override
     protected void init(){
+        //setup headers
+        ViewGroup generalLayout = (ViewGroup) view.findViewById(R.id.settingsHeaderGeneral);
+        TextView generalHeader = (TextView) generalLayout.findViewById(R.id.headerText);
+        generalHeader.setText(R.string.setting_header_general);
+
+        ViewGroup dataLayout = (ViewGroup) view.findViewById(R.id.settingsHeaderData);
+        TextView dataHeader = (TextView) dataLayout.findViewById(R.id.headerText);
+        dataHeader.setText(R.string.setting_header_data);
+
+        ViewGroup feedbackLayout = (ViewGroup) view.findViewById(R.id.settingsHeaderFeedback);
+        TextView feedbackHeader = (TextView) feedbackLayout.findViewById(R.id.headerText);
+        feedbackHeader.setText(R.string.setting_header_feedback);
+
+        //setup content
         themeBtn = (ViewGroup) view.findViewById(R.id.themeBtn);
         themeContent = (TextView) view.findViewById(R.id.themeContent);
 
