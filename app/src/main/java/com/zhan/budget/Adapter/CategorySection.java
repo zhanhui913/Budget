@@ -48,7 +48,6 @@ public class CategorySection extends StatelessSection {
     private CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener mListener;
     private OnStartDragListener mDragStartListener;
 
-
     String title;
 
     public CategorySection(String title, Fragment fragment, ARRANGEMENT arrangement, List<Category> list) {
