@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CategorySection;
 import com.zhan.budget.Adapter.CategorySectionAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -31,6 +33,7 @@ import java.util.List;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
+
 public class CategoryFragment1 extends BaseRealmFragment {
 
     private static final String TAG = "CategoryFragment";
@@ -39,7 +42,10 @@ public class CategoryFragment1 extends BaseRealmFragment {
     private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
 
     private CategorySectionAdapter categorySectionAdapter;
+    private RecyclerView categoryListView;
 
+    private LinearLayoutManager linearLayoutManager;
+    private SwipeLayout currentSwipeLayoutTarget;
 
     private TextView leftTextView, rightTextView;
 
@@ -153,10 +159,18 @@ public class CategoryFragment1 extends BaseRealmFragment {
         categorySectionAdapter.setExpenseCategoryList(new ArrayList<Category>());
         categorySectionAdapter.setIncomeCategoryList(new ArrayList<Category>());
 
+        linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.categoryListView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(categorySectionAdapter);
+
+        categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
+        categoryListView.setLayoutManager(linearLayoutManager);
+        categoryListView.setAdapter(categorySectionAdapter);
+
+        //Add divider
+        categoryListView.addItemDecoration(
+                new HorizontalDividerItemDecoration.Builder(getContext())
+                        .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
+                        .build());
 
         populateCategoryWithNoInfo(BudgetType.EXPENSE);
     }
