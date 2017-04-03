@@ -1,5 +1,7 @@
 package com.zhan.budget.Adapter;
 
+import android.support.v4.app.Fragment;
+
 import com.zhan.budget.Model.Realm.Category;
 
 import java.util.List;
@@ -14,16 +16,19 @@ public class CategorySectionAdapter extends SectionedRecyclerViewAdapter {
 
     //private List<Category> expenseList;
     //private List<Category> incomeList;
+    private Fragment fragment;
+    private CategorySection.ARRANGEMENT arrangement;
 
-    public CategorySectionAdapter(){
-
+    public CategorySectionAdapter(Fragment fragment, CategorySection.ARRANGEMENT arrangement){
+        this.fragment = fragment;
+        this.arrangement = arrangement;
     }
 
     public void setExpenseCategoryList(List<Category> expenseList){
        // this.expenseList = expenseList;
 
-        if(getSectionForPosition(0) == null){
-            addSection(new CategorySection("Expense", expenseList));
+        if(getItemCount() == 0){
+            addSection(new CategorySection("Expense", this.fragment, this.arrangement, expenseList));
         }else{
             ((CategorySection)getSectionForPosition(0)).setCategoryList(expenseList);
             notifyDataSetChanged();
@@ -33,8 +38,8 @@ public class CategorySectionAdapter extends SectionedRecyclerViewAdapter {
     public void setIncomeCategoryList(List<Category> incomeList){
        // this.incomeList = incomeList;
 
-        if(getSectionForPosition(1) == null){
-            addSection(new CategorySection("Income", incomeList));
+        if(getItemCount() == 1){
+            addSection(new CategorySection("Income", this.fragment, this.arrangement, incomeList));
         }else{
             ((CategorySection)getSectionForPosition(1)).setCategoryList(incomeList);
             notifyDataSetChanged();

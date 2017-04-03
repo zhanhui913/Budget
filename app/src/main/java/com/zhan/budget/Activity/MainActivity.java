@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.AccountFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
-import com.zhan.budget.Fragment.CategoryFragment;
+import com.zhan.budget.Fragment.CategoryFragment1;
 import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
@@ -23,7 +23,7 @@ import com.zhan.budget.R;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalendarFragment.OnCalendarInteractionListener,
-        CategoryFragment.OnCategoryInteractionListener,
+        CategoryFragment1.OnCategoryInteractionListener,
         MonthReportFragment.OnMonthlyInteractionListener,
         AccountFragment.OnAccountInteractionListener,
         LocationFragment.OnLocationInteractionListener{
@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity
     NavigationView navigationView;
 
     private CalendarFragment calendarFragment;
-    private CategoryFragment categoryFragment;
+    private CategoryFragment1 categoryFragment;
     private MonthReportFragment monthReportFragment;
     private AccountFragment accountFragment;
     private RateFragment rateFragment;
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity
 
     private void createFragments(){
         calendarFragment = new CalendarFragment();
-        categoryFragment = new CategoryFragment();
+        categoryFragment = new CategoryFragment1();
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
 

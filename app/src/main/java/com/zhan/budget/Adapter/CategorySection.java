@@ -3,6 +3,7 @@ package com.zhan.budget.Adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,10 +51,12 @@ public class CategorySection extends StatelessSection {
 
     String title;
 
-    public CategorySection(String title, List<Category> list) {
-        super(R.layout.section_header_category, R.layout.item_category);
+    public CategorySection(String title, Fragment fragment, ARRANGEMENT arrangement, List<Category> list) {
+        super(R.layout.header_list, R.layout.item_category);
 
         this.title = title;
+        this.context = fragment.getContext();
+        this.arrangement = arrangement;
         this.categoryList = list;
     }
 
@@ -171,18 +174,17 @@ public class CategorySection extends StatelessSection {
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
 
-        headerHolder.tvTitle.setText(title);
+        headerHolder.headerTitle.setText(title);
     }
-
 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView tvTitle;
+        private final TextView headerTitle;
 
         public HeaderViewHolder(View view) {
             super(view);
 
-            tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            headerTitle = (TextView) view.findViewById(R.id.headerText);
         }
     }
 
