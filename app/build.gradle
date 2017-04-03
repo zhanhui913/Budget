@@ -78,5 +78,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'org.jsoup:jsoup:1.10.2'
     compile 'com.evernote:android-job:1.1.8'
+    compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.5'
 }
 
