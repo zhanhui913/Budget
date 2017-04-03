@@ -2,14 +2,12 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	xmlns:tools="http://schemas.android.com/tools">
+	android:layout_height="wrap_content">
 
 	<TextView style="@style/SettingsTextViewHeaderStyle"
 	    android:id="@+id/headerText"
 	    android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="@dimen/left_padding_divider"
 		android:text="Category Header"/>
 	<View
 		android:layout_width="match_parent"
