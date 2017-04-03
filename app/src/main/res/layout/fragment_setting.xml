@@ -13,7 +13,6 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/left_padding_divider"
             android:text="@string/setting_header_general" />
 
         <View
@@ -223,7 +222,6 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/left_padding_divider"
             android:text="@string/setting_header_data"/>
 
         <View
@@ -392,7 +390,6 @@
         <TextView style="@style/SettingsTextViewHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/left_padding_divider"
             android:text="@string/setting_header_feedback"/>
 
         <View

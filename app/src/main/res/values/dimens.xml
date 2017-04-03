@@ -16,8 +16,8 @@
 
 	<!-- This includes the left and right padding which is 8dp each and the default background size
     for circular view which is (20 for cv_bgRadius * 2 = 40)40dp and (3dp for stroke padding and 1dp
-     for stroke line) => (8dp * 2) + 40dp + 4dp = 60dp -->
-	<dimen name="left_padding_divider">60dp</dimen>
+     for stroke line) * 2(both side) => (8dp * 2) + 40dp + 8dp = 64dp -->
+	<dimen name="left_padding_divider">64dp</dimen>
 	<dimen name="right_padding_divider">0dp</dimen>
 
 	<dimen name="item_padding">8dp</dimen>
