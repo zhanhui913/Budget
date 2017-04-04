@@ -82,6 +82,8 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
         pieChart.setDrawHoleEnabled(true);
+        pieChart.setTransparentCircleRadius(0.5f);
+        pieChart.setTransparentCircleColor(R.color.transparent);
         pieChart.setDrawCenterText(true);
 
         int color = Colors.getColorFromAttr(getContext(), R.attr.themeColorText);
@@ -101,7 +103,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.getLegend().setPosition(Legend.LegendPosition.LEFT_OF_CHART);
         pieChart.getLegend().setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
 
-        pieChart.setNoDataText("No Data");
+        pieChart.setNoDataText(getString(R.string.na));
 
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
