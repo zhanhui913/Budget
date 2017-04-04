@@ -121,7 +121,7 @@ public class AccountFragment extends BaseRealmFragment implements
         emptyLayout.setVisibility(View.GONE);
 
         //Setup pie chart
-        pieChartFragment = PieChartFragment.newInstance(accountList, false, false, getString(R.string.account));
+        pieChartFragment = PieChartFragment.newInstance(accountList, false, false, false, getString(R.string.account));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         //0 represents no change in month relative to currentMonth variable.
