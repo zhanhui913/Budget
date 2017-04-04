@@ -49,7 +49,7 @@ public class CategorySection extends StatelessSection {
     String title;
 
     public CategorySection(String title, Fragment fragment, ARRANGEMENT arrangement, List<Category> list) {
-        super(R.layout.header_list, R.layout.item_category_v2);
+        super(R.layout.header_list, R.layout.footer_list, R.layout.item_category_v2);
 
         this.title = title;
         this.context = fragment.getContext();
@@ -161,6 +161,16 @@ public class CategorySection extends StatelessSection {
         headerHolder.headerTitle.setText(title);
     }
 
+    @Override
+    public RecyclerView.ViewHolder getFooterViewHolder(View view) {
+        return new FooterViewHolder(view);
+    }
+
+    @Override
+    public void onBindFooterViewHolder(RecyclerView.ViewHolder holder) {
+        FooterViewHolder footerHolder = (FooterViewHolder) holder;
+    }
+
     class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView headerTitle;
@@ -260,17 +270,15 @@ public class CategorySection extends StatelessSection {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Interfaces
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /*public interface OnSectionCategoryAdapterInteractionListener {
-        void onDeleteCategory(int position);
+    class FooterViewHolder extends RecyclerView.ViewHolder {
 
-        void onEditCategory(int position);
+        private final View divider;
 
-        void onClick(int position);
-    }*/
+        public FooterViewHolder(View view) {
+            super(view);
+            divider = view;
+        }
+    }
+
 }
