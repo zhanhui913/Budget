@@ -52,6 +52,21 @@ public class CategorySectionAdapter extends SectionedRecyclerViewAdapter {
         return ((CategorySection)getSection(incomeTAG)).getCategoryList();
     }
 
+    public void clearBothList(){
+        clearExpenseList();
+        clearIncomeList();
+    }
+
+    public void clearExpenseList(){
+        ((CategorySection) getSection(expenseTAG)).getCategoryList().clear();
+        notifyDataSetChanged();
+    }
+
+    public void clearIncomeList(){
+        ((CategorySection) getSection(incomeTAG)).getCategoryList().clear();
+        notifyDataSetChanged();
+    }
+
     public void setInteraction(OnCategorySectionAdapterInteractionListener mListener){
         this.mListener = mListener;
 

@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmChangeListener;
+import io.realm.RealmModel;
 import io.realm.RealmResults;
 
 public class CategoryFragment1 extends BaseRealmFragment {
@@ -181,6 +182,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 element.removeChangeListeners();
 
                 bothCategoryList = myRealm.copyFromRealm(element);
+                Log.d("TEST","after both list "+bothCategoryList.size());
 
                 for (int i = 0; i < bothCategoryList.size(); i++) {
                     if (bothCategoryList.get(i).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
@@ -209,7 +211,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
 
                 categorySectionAdapter.setExpenseCategoryList(expenseCategoryList);
                 categorySectionAdapter.setIncomeCategoryList(incomeCategoryList);
-
+                Log.d("TEST","after exp list "+categorySectionAdapter.getExpenseCategoryList().size());
+                Log.d("TEST","after inc list "+categorySectionAdapter.getIncomeCategoryList().size());
                 populateCategoryWithInfo();
             }
         });
@@ -434,24 +437,20 @@ public class CategoryFragment1 extends BaseRealmFragment {
     }
 
     private void deleteCategory(final String budgetType, final int position){
-        final RealmResults<Category> categoryToBeRemove;
+        final Category categoryToBeRemove;
 
         if(budgetType.equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-            categoryToBeRemove = myRealm.where(Category.class).equalTo("type", budgetType).equalTo("id", expenseCategoryList.get(position).getId()).findAllAsync();
+            categoryToBeRemove = myRealm.where(Category.class).equalTo("type", budgetType).equalTo("id", expenseCategoryList.get(position).getId()).findFirstAsync();
         }else{
-            categoryToBeRemove = myRealm.where(Category.class).equalTo("type", budgetType).equalTo("id", incomeCategoryList.get(position).getId()).findAllAsync();
+            categoryToBeRemove = myRealm.where(Category.class).equalTo("type", budgetType).equalTo("id", incomeCategoryList.get(position).getId()).findFirstAsync();
         }
 
-        categoryToBeRemove.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+        categoryToBeRemove.addChangeListener(new RealmChangeListener<RealmModel>() {
             @Override
-            public void onChange(RealmResults<Category> element) {
-                element.removeChangeListener(this);
-
+            public void onChange(RealmModel element) {
                 myRealm.beginTransaction();
-                Log.d(TAG, "removing found category : "+element.get(0).getName());
 
-                //grab the first one as there should only have 1 category due to the ID being unique
-                categoryToBeRemove.deleteFirstFromRealm();
+                categoryToBeRemove.deleteFromRealm();
 
                 myRealm.commitTransaction();
 
@@ -461,15 +460,10 @@ public class CategoryFragment1 extends BaseRealmFragment {
                     categorySectionAdapter.getIncomeCategoryList().remove(position);
                 }
 
-                //updateMonthInToolbar(0, true);
+                categorySectionAdapter.clearBothList();
                 populateCategoryWithNoInfo();
-
             }
         });
-
-        //this recalculates
-        //getMonthReport(currentMonth, true);
-
     }
 
     private void editCategory(String budgetType, int position){
@@ -552,6 +546,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
                     //updateMonthInToolbar(0, true);
+                    categorySectionAdapter.clearBothList();
                     populateCategoryWithNoInfo();
                 }
             }else if(requestCode == RequestCodes.EDIT_CATEGORY){
@@ -560,6 +555,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 if(!categoryReturned.checkEquals(categoryEdited)){
                     //If something has been changed, update the list and the pie chart
                     //updateMonthInToolbar(0, true);
+                    categorySectionAdapter.clearBothList();
                     populateCategoryWithNoInfo();
                 }
             }
