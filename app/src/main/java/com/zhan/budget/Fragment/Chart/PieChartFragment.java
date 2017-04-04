@@ -38,7 +38,7 @@ public class PieChartFragment extends BaseChartFragment {
     protected List<? extends PieDataCostInterface> dataList;
     protected PieDataSet dataSet;
 
-    private boolean drawLegend = false;
+    private boolean drawLegend;
 
     public PieChartFragment() {
         // Required empty public constructor
@@ -76,6 +76,8 @@ public class PieChartFragment extends BaseChartFragment {
     @Override
     public void init(){
         pieChart = (PieChart) view.findViewById(R.id.pieChart);
+
+        drawLegend = false;
 
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
@@ -167,6 +169,8 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     private void displayPieChart(List<? extends PieDataCostInterface> list, boolean animate){
+
+
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             names.add(list.get(i).getPieDataName());
@@ -202,7 +206,7 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setData(data);
 
         // undo all highlights
-        pieChart.highlightValues(null);
+        //pieChart.highlightValues(null);
 
         if(list.size() > 0){
             if(getArguments().getString(ARG_CHART_4).equalsIgnoreCase("")){
