@@ -96,67 +96,12 @@ public class CategoryFragment1 extends BaseRealmFragment {
         //false because we dont need to get all transactions yet.
         //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
         //categories
-        updateMonthInToolbar(0, false);
+        //updateMonthInToolbar(0, false);
 
-        createTabs();
+        createSectionCategoryListView();
     }
 
-    private void createTabs(){
-        /*TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.category_expense)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.category_income)));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
-        categoryIncomeFragment = CategoryGenericFragment.newInstance(BudgetType.INCOME, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
-
-        categoryExpenseFragment.setInteraction(new CategoryGenericFragment.OnCategoryGenericListener() {
-            @Override
-            public void onComplete(float totalCost) {
-                isCategoryExpenseCalculationComplete = true;
-                totalExpenseCost = totalCost;
-
-                updateExpensePriceStatus(totalCost);
-                updatePieChart();
-            }
-        });
-
-        categoryIncomeFragment.setInteraction(new CategoryGenericFragment.OnCategoryGenericListener() {
-            @Override
-            public void onComplete(float totalCost) {
-                isCategoryIncomeCalculationComplete = true;
-                totalIncomeCost = totalCost;
-
-                updateIncomePriceStatus(totalCost);
-                updatePieChart();
-            }
-        });
-
-        final CustomViewPager viewPager = (CustomViewPager) view.findViewById(R.id.viewPager);
-        viewPager.setPagingEnabled(false);
-
-        TwoPageViewPager adapterViewPager = new TwoPageViewPager(getChildFragmentManager(), categoryExpenseFragment, categoryIncomeFragment);
-        viewPager.setAdapter(adapterViewPager);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        */
-
+    private void createSectionCategoryListView(){
         categorySectionAdapter = new CategorySectionAdapter(this, CategorySection.ARRANGEMENT.BUDGET);
         categorySectionAdapter.setExpenseCategoryList(new ArrayList<Category>());
         categorySectionAdapter.setIncomeCategoryList(new ArrayList<Category>());
@@ -173,7 +118,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 */
-        populateCategoryWithNoInfo(BudgetType.EXPENSE);
+        populateCategoryWithNoInfo();
     }
 
     private List<Category> bothCategoryList;
@@ -182,41 +127,14 @@ public class CategoryFragment1 extends BaseRealmFragment {
     private List<Transaction> transactionMonthList;
 
     //Should be called only the first time when the fragment is created
-    private void populateCategoryWithNoInfo(BudgetType budgetType){
-        //Add EXPENSE
-  /*      myRealm.where(Category.class).equalTo("type", BudgetType.EXPENSE.toString()).findAllSortedAsync("index").addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
-            @Override
-            public void onChange(RealmResults<Category> element) {
-                element.removeChangeListeners();
+    private void populateCategoryWithNoInfo(){
 
-                expenseCategoryList = myRealm.copyFromRealm(element);
-                categorySectionAdapter.setExpenseCategoryList(expenseCategoryList); Log.d("ZHAPS", "there are "+expenseCategoryList.size()+" expense cat");
-                populateCategoryWithInfo();
-            }
-        });
-
-        //Add INCOME
-        myRealm.where(Category.class).equalTo("type", BudgetType.INCOME.toString()).findAllSortedAsync("index").addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
-            @Override
-            public void onChange(RealmResults<Category> element) {
-                element.removeChangeListeners();
-
-                incomeCategoryList = myRealm.copyFromRealm(element);
-                categorySectionAdapter.setIncomeCategoryList(incomeCategoryList); Log.d("ZHAPS", "there are "+incomeCategoryList.size()+" income cat");
-                //populateCategoryWithInfo();
-            }
-        });
-*/
-
-
-//option 2
         myRealm.where(Category.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
             public void onChange(RealmResults<Category> element) {
                 element.removeChangeListeners();
 
                 bothCategoryList = myRealm.copyFromRealm(element);
-                //categorySectionAdapter.setExpenseCategoryList(bothCategoryList); Log.d("ZHAPS", "there are "+bothCategoryList.size()+" both cat");
 
                 for(int i = 0; i < bothCategoryList.size(); i++){
                     if(bothCategoryList.get(i).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
@@ -278,7 +196,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
         Log.d("DEBUG", "1) There are " + incomeCategoryList.size() + " income categories");
         Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
 
-        AsyncTask<Void, Void, Double> loader = new AsyncTask<Void, Void, Double>() {
+        AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
             long startTime, endTime, duration;
 
@@ -289,47 +207,37 @@ public class CategoryFragment1 extends BaseRealmFragment {
             }
 
             @Override
-            protected Double doInBackground(Void... voids) {
+            protected Void doInBackground(Void... voids) {
 
                 startTime = System.nanoTime();
 
-                //Calculates the total cost for all Category with the same BudgetType.
-                double totalCost = 0f;
+
 
                 //Go through each COMPLETED transaction and put them into the correct category
                 for(int t = 0; t < transactionMonthList.size(); t++){
-                    /*for(int c = 0; c < expenseCategoryList.size(); c++){
-                        if(transactionMonthList.get(t).getCategory() != null){
-                            if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(expenseCategoryList.get(c).getId())){
-                                double transactionPrice = transactionMonthList.get(t).getPrice();
-                                double currentCategoryPrice = expenseCategoryList.get(c).getCost();
-                                expenseCategoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                                totalCost += transactionPrice;
-                            }
-                        }
-                    }*/
                     for(int c = 0 ; c < bothCategoryList.size(); c++){
                         if(transactionMonthList.get(t).getCategory() != null){
                             if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(bothCategoryList.get(c).getId())){
                                 double transactionPrice = transactionMonthList.get(t).getPrice();
                                 double currentCategoryPrice = bothCategoryList.get(c).getCost();
                                 bothCategoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                                totalCost += transactionPrice;
                             }
                         }
                     }
                 }
-
-                return totalCost;
+                return null;
             }
 
             @Override
-            protected void onPostExecute(Double result) {
+            protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
 
                 for(int i = 0; i < bothCategoryList.size(); i++){
                     Log.d("ZHAN1", "category : "+bothCategoryList.get(i).getName()+" -> "+bothCategoryList.get(i).getCost());
                 }
+
+
+
 
                 for(int b = 0; b < bothCategoryList.size(); b++){
                     if(bothCategoryList.get(b).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
@@ -367,13 +275,19 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 categorySectionAdapter.setExpenseCategoryList(expenseCategoryList);
                 categorySectionAdapter.setIncomeCategoryList(incomeCategoryList);
 
+                //Calculate total Expense and Income cost
+                totalExpenseCost = 0f;
+                totalIncomeCost = 0f;
+                for(int i = 0; i < expenseCategoryList.size(); i++){
+                    totalExpenseCost += expenseCategoryList.get(i).getCost();
+                }
 
+                for(int i = 0; i < incomeCategoryList.size(); i++){
+                    totalIncomeCost += incomeCategoryList.get(i).getCost();
+                }
 
-
-
-
-
-
+                updateExpensePriceStatus(totalExpenseCost);
+                updateIncomePriceStatus(totalIncomeCost);
 
                 //update piechart
                 updatePieChart();
@@ -390,20 +304,12 @@ public class CategoryFragment1 extends BaseRealmFragment {
         loader.execute();
     }
 
-
-
-
-
-
-
-
-
     /**
      * Updates pie chart once both Expense and Income Category has been calculated
      */
     private void updatePieChart() {
         //If both EXPENSE and INCOME calculation are completed, do this
-        if(isCategoryIncomeCalculationComplete && isCategoryExpenseCalculationComplete){
+        //if(isCategoryIncomeCalculationComplete && isCategoryExpenseCalculationComplete){
             List<Category> catList = new ArrayList<>();
 
             int[] colorList = new int[]{R.color.alizarin, R.color.nephritis};
@@ -422,7 +328,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
             catList.add(catExpense);
 
             pieChartFragment.setData(catList, true);
-        }
+        //}
     }
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
@@ -440,8 +346,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
     }
 
     private void updateBothPriceStatus(double price){
-        //updateExpensePriceStatus(price);
-        //updateIncomePriceStatus(price);
+        updateExpensePriceStatus(price);
+        updateIncomePriceStatus(price);
     }
 
     private void updateExpensePriceStatus(double price){
