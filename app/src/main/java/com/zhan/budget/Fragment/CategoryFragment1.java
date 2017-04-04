@@ -340,9 +340,24 @@ public class CategoryFragment1 extends BaseRealmFragment {
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         if(updateCategoryInfo) {
-            //categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
-            //categoryExpenseFragment.updateMonthCategoryInfo(currentMonth);
+            resetCategoryInfo();
+
+            populateCategoryWithInfo();
         }
+    }
+
+    private void resetCategoryInfo(){
+        //Reset EXPENSE list
+        for(int i = 0; i < categorySectionAdapter.getExpenseCategoryList().size(); i++){
+            categorySectionAdapter.getExpenseCategoryList().get(i).setCost(0);
+        }
+
+        //Reset INCOME list
+        for(int i = 0; i < categorySectionAdapter.getIncomeCategoryList().size(); i++){
+            categorySectionAdapter.getIncomeCategoryList().get(i).setCost(0);
+        }
+
+        categorySectionAdapter.notifyDataSetChanged();
     }
 
     private void updateBothPriceStatus(double price){
