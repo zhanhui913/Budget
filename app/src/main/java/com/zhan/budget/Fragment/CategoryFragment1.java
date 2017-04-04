@@ -87,7 +87,10 @@ public class CategoryFragment1 extends BaseRealmFragment {
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
         pieChartFragment.displayLegend();
 
-
+        bothCategoryList = new ArrayList<>();
+        expenseCategoryList = new ArrayList<>();
+        incomeCategoryList = new ArrayList<>();
+        transactionMonthList = new ArrayList<>();
 
         //0 represents no change in month relative to currentMonth variable.
         //false because we dont need to get all transactions yet.
@@ -173,10 +176,10 @@ public class CategoryFragment1 extends BaseRealmFragment {
         populateCategoryWithNoInfo(BudgetType.EXPENSE);
     }
 
-    private List<Category> bothCategoryList = new ArrayList<>();
-    private List<Category> expenseCategoryList = new ArrayList<>();
-    private List<Category> incomeCategoryList = new ArrayList<>();
-    private List<Transaction> transactionMonthList = new ArrayList<>();
+    private List<Category> bothCategoryList;
+    private List<Category> expenseCategoryList;
+    private List<Category> incomeCategoryList;
+    private List<Transaction> transactionMonthList;
 
     //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo(BudgetType budgetType){
