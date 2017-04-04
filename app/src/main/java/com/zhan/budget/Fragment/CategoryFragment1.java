@@ -102,8 +102,33 @@ public class CategoryFragment1 extends BaseRealmFragment {
         Log.d(TAG, "createSectionCategoryListView");
 
         categorySectionAdapter = new CategorySectionAdapter(this, CategorySection.ARRANGEMENT.BUDGET);
+
+        categorySectionAdapter.setInteraction(new CategorySectionAdapter.OnCategorySectionAdapterInteractionListener() {
+            @Override
+            public void onDeleteCategory(int position) {
+                Log.d(TAG, "onDeleteCategory : "+position);
+
+
+
+            }
+
+            @Override
+            public void onEditCategory(int position) {
+                Log.d(TAG, "onEditCategory : "+position);
+
+            }
+
+            @Override
+            public void onClick(int position) {
+                Log.d(TAG, "onClick : "+categorySectionAdapter.getPositionInSection(position)+" for section "+((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle());
+
+            }
+        });
+
         categorySectionAdapter.setExpenseCategoryList(new ArrayList<Category>());
         categorySectionAdapter.setIncomeCategoryList(new ArrayList<Category>());
+
+
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
 

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
-import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
@@ -33,6 +32,8 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 public class CategorySection extends StatelessSection {
 
+    private static final String TAG = "CategorySection";
+
     public enum ARRANGEMENT{
         BUDGET,
         MOVE,
@@ -43,8 +44,7 @@ public class CategorySection extends StatelessSection {
 
     private Context context;
     private List<Category> categoryList;
-    private CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener mListener;
-    private OnStartDragListener mDragStartListener;
+    private CategorySectionAdapter.OnCategorySectionAdapterInteractionListener mListener;
 
     String title;
 
@@ -57,12 +57,20 @@ public class CategorySection extends StatelessSection {
         this.categoryList = list;
     }
 
+    public void setListener(CategorySectionAdapter.OnCategorySectionAdapterInteractionListener mListener){
+        this.mListener = mListener;
+    }
+
     public void setCategoryList(List<Category> list){
         this.categoryList = list;
     }
 
     public List<Category> getCategoryList(){
         return this.categoryList;
+    }
+
+    public String getSectionTitle(){
+        return this.title;
     }
 
     @Override
@@ -139,15 +147,6 @@ public class CategorySection extends StatelessSection {
                 itemHolder.progressBar.setVisibility(View.GONE);
             }
         }
-/*
-        itemHolder.dragIcon.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mListener.onPullDownAllow(false);
-                mDragStartListener.onStartDrag(holder);
-                return false;
-            }
-        });*/
     }
 
     @Override
@@ -216,23 +215,36 @@ public class CategorySection extends StatelessSection {
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClick(getLayoutPosition());
-                    Log.d("ZHAP", "on click : " + getLayoutPosition());
+                    Log.d(TAG, "on click : " + getLayoutPosition());
+                    if(mListener != null){
+                        //getLayoutPosition() includes the Section Header
+
+                        mListener.onClick(getAdapterPosition());
+                    }
                 }
             });
 
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
-                    mListener.onEditCategory(getLayoutPosition());
+                    Log.d(TAG, "editting category : " + getLayoutPosition());
+                    if(mListener != null){
+                        //getLayoutPosition() includes the Section Header
+
+                        mListener.onEditCategory(getLayoutPosition());
+                    }
                 }
             });
 
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onDeleteCategory(getLayoutPosition());
+                    Log.d(TAG, "editting category : " + getLayoutPosition());
+                    if(mListener != null){
+                        //getLayoutPosition() includes the Section Header
+
+                        mListener.onDeleteCategory(getLayoutPosition());
+                    }
                 }
             });
         }
@@ -247,4 +259,18 @@ public class CategorySection extends StatelessSection {
             swipeLayout.getSurfaceView().setBackground(defaultDrawable);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Interfaces
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*public interface OnSectionCategoryAdapterInteractionListener {
+        void onDeleteCategory(int position);
+
+        void onEditCategory(int position);
+
+        void onClick(int position);
+    }*/
 }

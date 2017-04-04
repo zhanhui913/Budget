@@ -20,13 +20,18 @@ public class CategorySectionAdapter extends SectionedRecyclerViewAdapter {
     private CategorySection.ARRANGEMENT arrangement;
     private String expenseTAG;
     private String incomeTAG;
+    private CategorySection expenseSection, incomeSection;
+    private OnCategorySectionAdapterInteractionListener mListener;
 
     public CategorySectionAdapter(Fragment fragment, CategorySection.ARRANGEMENT arrangement){
         this.fragment = fragment;
         this.arrangement = arrangement;
 
-        expenseTAG = addSection(new CategorySection(BudgetType.EXPENSE.toString(), this.fragment, this.arrangement, new ArrayList<Category>()));
-        incomeTAG = addSection(new CategorySection(BudgetType.INCOME.toString(), this.fragment, this.arrangement, new ArrayList<Category>()));
+        expenseSection = new CategorySection(BudgetType.EXPENSE.toString(), this.fragment, this.arrangement, new ArrayList<Category>());
+        incomeSection = new CategorySection(BudgetType.INCOME.toString(), this.fragment, this.arrangement, new ArrayList<Category>());
+
+        expenseTAG = addSection(expenseSection);
+        incomeTAG = addSection(incomeSection);
     }
 
     public void setExpenseCategoryList(List<Category> expenseList){
@@ -45,5 +50,26 @@ public class CategorySectionAdapter extends SectionedRecyclerViewAdapter {
 
     public List<Category> getIncomeCategoryList(){
         return ((CategorySection)getSection(incomeTAG)).getCategoryList();
+    }
+
+    public void setInteraction(OnCategorySectionAdapterInteractionListener mListener){
+        this.mListener = mListener;
+
+        expenseSection.setListener(this.mListener);
+        incomeSection.setListener(this.mListener);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Interfaces
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public interface OnCategorySectionAdapterInteractionListener {
+        void onDeleteCategory(int position);
+
+        void onEditCategory(int position);
+
+        void onClick(int position);
     }
 }
