@@ -96,7 +96,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
         //false because we dont need to get all transactions yet.
         //This may conflict with populateCategoryWithNoInfo async where its trying to get the initial
         //categories
-        //updateMonthInToolbar(0, false);
+        updateMonthInToolbar(0, false);
 
         createSectionCategoryListView();
     }
