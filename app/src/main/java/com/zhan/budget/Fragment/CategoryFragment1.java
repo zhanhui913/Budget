@@ -34,13 +34,11 @@ import java.util.List;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-
 public class CategoryFragment1 extends BaseRealmFragment {
 
     private static final String TAG = "CategoryFragment";
     private OnCategoryInteractionListener mListener;
     private Date currentMonth;
-    private CategoryGenericFragment categoryIncomeFragment, categoryExpenseFragment;
 
     private CategorySectionAdapter categorySectionAdapter;
     private RecyclerView categoryListView;
@@ -52,10 +50,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
 
     private PieChartFragment pieChartFragment;
 
-    private boolean isCategoryIncomeCalculationComplete = false;
-    private boolean isCategoryExpenseCalculationComplete = false;
-    private float totalExpenseCost = 0f;
-    private float totalIncomeCost = 0f;
+    private float totalExpenseCost;
+    private float totalIncomeCost;
 
     public CategoryFragment1() {
         // Required empty public constructor
@@ -74,7 +70,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
     }
 
     @Override
-    protected void init(){ Log.d(TAG, "init");
+    protected void init() {
+        Log.d(TAG, "init");
         super.init();
         setHasOptionsMenu(true);
 
@@ -101,7 +98,9 @@ public class CategoryFragment1 extends BaseRealmFragment {
         createSectionCategoryListView();
     }
 
-    private void createSectionCategoryListView(){
+    private void createSectionCategoryListView() {
+        Log.d(TAG, "createSectionCategoryListView");
+
         categorySectionAdapter = new CategorySectionAdapter(this, CategorySection.ARRANGEMENT.BUDGET);
         categorySectionAdapter.setExpenseCategoryList(new ArrayList<Category>());
         categorySectionAdapter.setIncomeCategoryList(new ArrayList<Category>());
@@ -127,7 +126,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
     private List<Transaction> transactionMonthList;
 
     //Should be called only the first time when the fragment is created
-    private void populateCategoryWithNoInfo(){
+    private void populateCategoryWithNoInfo() {
+        Log.d(TAG, "populateCategoryWithNoInfo");
 
         myRealm.where(Category.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
@@ -136,10 +136,10 @@ public class CategoryFragment1 extends BaseRealmFragment {
 
                 bothCategoryList = myRealm.copyFromRealm(element);
 
-                for(int i = 0; i < bothCategoryList.size(); i++){
-                    if(bothCategoryList.get(i).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                for (int i = 0; i < bothCategoryList.size(); i++) {
+                    if (bothCategoryList.get(i).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
                         expenseCategoryList.add(bothCategoryList.get(i));
-                    }else if(bothCategoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                    } else if (bothCategoryList.get(i).getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
                         incomeCategoryList.add(bothCategoryList.get(i));
                     }
                 }
@@ -169,20 +169,20 @@ public class CategoryFragment1 extends BaseRealmFragment {
         });
     }
 
-    private void populateCategoryWithInfo(){
+    private void populateCategoryWithInfo() {
         final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
 
-        Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
+        Log.d(TAG, "populateCategoryWithInfo for "+startMonth.toString());
 
         myRealm.where(Transaction.class).between("date", startMonth, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListeners();
 
-                Log.d("REALM", "got this month transaction, " + element.size());
+                Log.d(TAG, "got this month transaction, size " + element.size());
 
                 transactionMonthList = myRealm.copyFromRealm(element);
 
@@ -191,10 +191,10 @@ public class CategoryFragment1 extends BaseRealmFragment {
         });
     }
 
-    private void aggregateCategoryInfo(){
-        Log.d("DEBUG", "1) There are " + expenseCategoryList.size() + " expense categories");
-        Log.d("DEBUG", "1) There are " + incomeCategoryList.size() + " income categories");
-        Log.d("DEBUG", "1) There are " + transactionMonthList.size() + " transactions for this month");
+    private void aggregateCategoryInfo() {
+        Log.d(TAG, "1) There are " + expenseCategoryList.size() + " expense categories");
+        Log.d(TAG, "1) There are " + incomeCategoryList.size() + " income categories");
+        Log.d(TAG, "1) There are " + transactionMonthList.size() + " transactions for this month");
 
         AsyncTask<Void, Void, Void> loader = new AsyncTask<Void, Void, Void>() {
 
@@ -203,7 +203,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Log.d("DEBUG", "preparing to aggregate results");
+                Log.d(TAG, "preparing to aggregate results");
             }
 
             @Override
@@ -212,12 +212,11 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 startTime = System.nanoTime();
 
 
-
                 //Go through each COMPLETED transaction and put them into the correct category
-                for(int t = 0; t < transactionMonthList.size(); t++){
-                    for(int c = 0 ; c < bothCategoryList.size(); c++){
-                        if(transactionMonthList.get(t).getCategory() != null){
-                            if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(bothCategoryList.get(c).getId())){
+                for (int t = 0; t < transactionMonthList.size(); t++) {
+                    for (int c = 0; c < bothCategoryList.size(); c++) {
+                        if (transactionMonthList.get(t).getCategory() != null) {
+                            if (transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(bothCategoryList.get(c).getId())) {
                                 double transactionPrice = transactionMonthList.get(t).getPrice();
                                 double currentCategoryPrice = bothCategoryList.get(c).getCost();
                                 bothCategoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
@@ -232,23 +231,21 @@ public class CategoryFragment1 extends BaseRealmFragment {
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
 
-                for(int i = 0; i < bothCategoryList.size(); i++){
-                    Log.d("ZHAN1", "category : "+bothCategoryList.get(i).getName()+" -> "+bothCategoryList.get(i).getCost());
+                for (int i = 0; i < bothCategoryList.size(); i++) {
+                    Log.d(TAG, "category : " + bothCategoryList.get(i).getName() + " -> " + bothCategoryList.get(i).getCost());
                 }
 
 
-
-
-                for(int b = 0; b < bothCategoryList.size(); b++){
-                    if(bothCategoryList.get(b).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                        for(int e = 0 ; e < expenseCategoryList.size(); e++){
-                            if(bothCategoryList.get(b).getId().equalsIgnoreCase(expenseCategoryList.get(e).getId())){
+                for (int b = 0; b < bothCategoryList.size(); b++) {
+                    if (bothCategoryList.get(b).getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
+                        for (int e = 0; e < expenseCategoryList.size(); e++) {
+                            if (bothCategoryList.get(b).getId().equalsIgnoreCase(expenseCategoryList.get(e).getId())) {
                                 expenseCategoryList.set(e, bothCategoryList.get(b));
                             }
                         }
-                    }else if(bothCategoryList.get(b).getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                        for(int i = 0 ; i < incomeCategoryList.size(); i++){
-                            if(bothCategoryList.get(b).getId().equalsIgnoreCase(incomeCategoryList.get(i).getId())){
+                    } else if (bothCategoryList.get(b).getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+                        for (int i = 0; i < incomeCategoryList.size(); i++) {
+                            if (bothCategoryList.get(b).getId().equalsIgnoreCase(incomeCategoryList.get(i).getId())) {
                                 incomeCategoryList.set(i, bothCategoryList.get(b));
                             }
                         }
@@ -278,11 +275,11 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 //Calculate total Expense and Income cost
                 totalExpenseCost = 0f;
                 totalIncomeCost = 0f;
-                for(int i = 0; i < expenseCategoryList.size(); i++){
+                for (int i = 0; i < expenseCategoryList.size(); i++) {
                     totalExpenseCost += expenseCategoryList.get(i).getCost();
                 }
 
-                for(int i = 0; i < incomeCategoryList.size(); i++){
+                for (int i = 0; i < incomeCategoryList.size(); i++) {
                     totalIncomeCost += incomeCategoryList.get(i).getCost();
                 }
 
@@ -295,10 +292,10 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 endTime = System.nanoTime();
                 duration = (endTime - startTime);
 
-                long milli = (duration/1000000);
-                long second = (milli/1000);
+                long milli = (duration / 1000000);
+                long second = (milli / 1000);
                 float minutes = (second / 60.0f);
-                Log.d("DEBUG_CAT", " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
+                Log.d(TAG, " aggregating took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
             }
         };
         loader.execute();
@@ -308,30 +305,27 @@ public class CategoryFragment1 extends BaseRealmFragment {
      * Updates pie chart once both Expense and Income Category has been calculated
      */
     private void updatePieChart() {
-        //If both EXPENSE and INCOME calculation are completed, do this
-        //if(isCategoryIncomeCalculationComplete && isCategoryExpenseCalculationComplete){
-            List<Category> catList = new ArrayList<>();
+        List<Category> catList = new ArrayList<>();
 
-            int[] colorList = new int[]{R.color.alizarin, R.color.nephritis};
+        int[] colorList = new int[]{R.color.alizarin, R.color.nephritis};
 
-            Category catExpense = new Category();
-            catExpense.setName("Expense");
-            catExpense.setCost(Math.abs(totalExpenseCost));
-            catExpense.setColor(getResources().getString(colorList[0]));
+        Category catExpense = new Category();
+        catExpense.setName("Expense");
+        catExpense.setCost(Math.abs(totalExpenseCost));
+        catExpense.setColor(getResources().getString(colorList[0]));
 
-            Category catIncome = new Category();
-            catIncome.setName("Income");
-            catIncome.setCost(Math.abs(totalIncomeCost));
-            catIncome.setColor(getResources().getString(colorList[1]));
+        Category catIncome = new Category();
+        catIncome.setName("Income");
+        catIncome.setCost(Math.abs(totalIncomeCost));
+        catIncome.setColor(getResources().getString(colorList[1]));
 
-            catList.add(catIncome);
-            catList.add(catExpense);
+        catList.add(catIncome);
+        catList.add(catExpense);
 
-            pieChartFragment.setData(catList, true);
-        //}
+        pieChartFragment.setData(catList, true);
     }
 
-    private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
+    private void updateMonthInToolbar(int direction, boolean updateCategoryInfo) {
         //reset pie chart data & total cost text view for both EXPENSE & INCOME
         pieChartFragment.resetPieChart();
         updateBothPriceStatus(0); //reset it back to 0
@@ -339,48 +333,48 @@ public class CategoryFragment1 extends BaseRealmFragment {
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
         mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        if(updateCategoryInfo) {
+        if (updateCategoryInfo) {
             resetCategoryInfo();
 
             populateCategoryWithInfo();
         }
     }
 
-    private void resetCategoryInfo(){
+    private void resetCategoryInfo() {
         //Reset EXPENSE list
-        for(int i = 0; i < categorySectionAdapter.getExpenseCategoryList().size(); i++){
+        for (int i = 0; i < categorySectionAdapter.getExpenseCategoryList().size(); i++) {
             categorySectionAdapter.getExpenseCategoryList().get(i).setCost(0);
         }
 
         //Reset INCOME list
-        for(int i = 0; i < categorySectionAdapter.getIncomeCategoryList().size(); i++){
+        for (int i = 0; i < categorySectionAdapter.getIncomeCategoryList().size(); i++) {
             categorySectionAdapter.getIncomeCategoryList().get(i).setCost(0);
         }
 
         categorySectionAdapter.notifyDataSetChanged();
     }
 
-    private void updateBothPriceStatus(double price){
+    private void updateBothPriceStatus(double price) {
         updateExpensePriceStatus(price);
         updateIncomePriceStatus(price);
     }
 
-    private void updateExpensePriceStatus(double price){
+    private void updateExpensePriceStatus(double price) {
         leftTextView.setText(CurrencyTextFormatter.formatDouble(price));
 
-        if(price < 0){
+        if (price < 0) {
             leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
-        }else if(price == 0){
+        } else if (price == 0) {
             leftTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }
 
-    private void updateIncomePriceStatus(double price){
+    private void updateIncomePriceStatus(double price) {
         rightTextView.setText(CurrencyTextFormatter.formatDouble(price));
 
-        if(price > 0){
+        if (price > 0) {
             rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
-        }else if(price == 0){
+        } else if (price == 0) {
             rightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }
