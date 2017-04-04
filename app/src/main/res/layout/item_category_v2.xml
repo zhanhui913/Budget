@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                android:id="@+id/swipeCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+	<!-- Bottom view -->
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent">
+		<ImageView
+			android:id="@+id/editBtn"
+			android:src="@drawable/svg_ic_edit"
+			android:layout_height="match_parent"
+			android:layout_width="100dp"
+			android:background="@drawable/budget_green_button"
+			android:paddingLeft="25dp"
+			android:paddingRight="25dp" />
+
+		<ImageView
+			android:id="@+id/deleteBtn"
+			android:src="@drawable/svg_ic_delete"
+			android:layout_height="match_parent"
+			android:layout_width="100dp"
+			android:background="@drawable/budget_red_button"
+			android:paddingLeft="25dp"
+			android:paddingRight="25dp" />
+
+	</LinearLayout>
+
+	<!-- Surface View -->
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		style="@style/ItemPaddingStyle"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="true"
+		android:background="?attr/themeColorBtn">
+
+		<com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+			xmlns:custom="http://schemas.android.com/apk/res-auto"
+			android:id="@+id/categoryIcon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			custom:cv_iconColor="?attr/themeColor"
+			custom:cv_textColor="?attr/themeColor"/>
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/item_left_padding"
+			android:layout_marginStart="@dimen/item_left_padding"
+			android:layout_toRightOf="@+id/categoryIcon"
+			android:layout_toEndOf="@+id/categoryIcon"
+			android:layout_centerVertical="true">
+
+			<LinearLayout
+				android:id="@+id/textPanel"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_alignParentTop="true"
+				android:layout_centerVertical="true">
+
+				<TextView
+					android:id="@+id/categoryName"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:text="@string/category"
+					android:layout_weight="0.3"
+					android:maxLines="1"
+					android:ellipsize="end"
+					android:textSize="@dimen/text_title_size"/>
+
+				<LinearLayout
+					android:id="@+id/costPanel"
+					android:layout_width="0dp"
+					android:orientation="horizontal"
+					android:layout_height="match_parent"
+					android:gravity="right"
+					android:layout_weight="0.7">
+
+					<TextView
+						android:id="@+id/categoryCost"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/cost"
+						android:textSize="@dimen/text_title_size"/>
+
+					<TextView
+						android:id="@+id/categoryOf"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="of"
+						android:textStyle="bold"
+						android:textSize="@dimen/text_title_size"
+						android:layout_marginLeft="5dp"
+						android:layout_marginRight="5dp"/>
+
+					<TextView
+						android:id="@+id/categoryBudget"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/cost"
+						android:textSize="@dimen/text_title_size"/>
+				</LinearLayout>
+			</LinearLayout>
+
+			<com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+				android:id="@+id/categoryProgress"
+				android:layout_width="fill_parent"
+				android:layout_height="@dimen/progressBar_height"
+				android:layout_marginTop="@dimen/item_top_padding"
+				android:layout_below="@+id/textPanel"
+				app:rcBackgroundColor="?attr/themeColorHighlight"
+				app:rcRadius="0dp"/>
+		</RelativeLayout>
+
+
+	</RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,7 +49,7 @@ public class CategorySection extends StatelessSection {
     String title;
 
     public CategorySection(String title, Fragment fragment, ARRANGEMENT arrangement, List<Category> list) {
-        super(R.layout.header_list, R.layout.item_category);
+        super(R.layout.header_list, R.layout.item_category_v2);
 
         this.title = title;
         this.context = fragment.getContext();
@@ -107,9 +105,9 @@ public class CategorySection extends StatelessSection {
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
             if(arrangement == ARRANGEMENT.BUDGET) {
-                itemHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
 
-                itemHolder.dragIcon.setVisibility(View.INVISIBLE);
+                itemHolder.cost.setText(CurrencyTextFormatter.removeCents(CurrencyTextFormatter.formatDouble(Math.abs(category.getCost()))));
+                itemHolder.budget.setText(CurrencyTextFormatter.removeCents(CurrencyTextFormatter.formatDouble(category.getBudget())));
 
                 //ProgressBar
                 if(category.getBudget() > 0){
@@ -122,38 +120,26 @@ public class CategorySection extends StatelessSection {
                     itemHolder.progressBar.setVisibility(View.GONE);
                 }
             }else if(arrangement == ARRANGEMENT.MOVE){
-                itemHolder.cost.setVisibility(View.GONE);
-                itemHolder.costTitle.setVisibility(View.GONE);
                 itemHolder.progressBar.setVisibility(View.GONE);
-                itemHolder.dragIcon.setVisibility(View.VISIBLE);
             }else if(arrangement == ARRANGEMENT.PERCENT){
-                itemHolder.dragIcon.setVisibility(View.GONE);
                 itemHolder.progressBar.setVisibility(View.GONE);
-                itemHolder.costTitle.setVisibility(View.GONE);
-                itemHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
-                itemHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+            //itemHolder.budget.setVisibility(View.GONE);
+            itemHolder.of.setVisibility(View.GONE);
+            itemHolder.cost.setText(CurrencyTextFormatter.removeCents(CurrencyTextFormatter.formatDouble(Math.abs(category.getCost()))));
             itemHolder.budget.setVisibility(View.GONE);
 
             if(arrangement == ARRANGEMENT.BUDGET){
-                itemHolder.cost.setText(CurrencyTextFormatter.formatDouble(Math.abs(category.getCost())));
                 itemHolder.progressBar.setVisibility(View.GONE);
-                itemHolder.dragIcon.setVisibility(View.INVISIBLE);
             }else if(arrangement == ARRANGEMENT.MOVE){
-                itemHolder.cost.setVisibility(View.GONE);
-                itemHolder.costTitle.setVisibility(View.GONE);
                 itemHolder.progressBar.setVisibility(View.GONE);
-                itemHolder.dragIcon.setVisibility(View.VISIBLE);
             }else if(arrangement == ARRANGEMENT.PERCENT){
-                itemHolder.dragIcon.setVisibility(View.GONE);
                 itemHolder.progressBar.setVisibility(View.GONE);
-                itemHolder.costTitle.setVisibility(View.GONE);
-                itemHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
-                itemHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
             }
         }
-
+/*
         itemHolder.dragIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -161,7 +147,7 @@ public class CategorySection extends StatelessSection {
                 mDragStartListener.onStartDrag(holder);
                 return false;
             }
-        });
+        });*/
     }
 
     @Override
@@ -198,9 +184,9 @@ public class CategorySection extends StatelessSection {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
-        public ImageView dragIcon;
-        public TextView name, budget, cost, costTitle;
+        public TextView name, budget, of, cost;
         public RoundCornerProgressBar progressBar;
+
 
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, editBtn;
@@ -215,11 +201,10 @@ public class CategorySection extends StatelessSection {
             super(itemView);
 
             circularView = (CircularView) itemView.findViewById(R.id.categoryIcon);
-            dragIcon = (ImageView) itemView.findViewById(R.id.dragIcon);
             name = (TextView) itemView.findViewById(R.id.categoryName);
-            budget = (TextView) itemView.findViewById(R.id.categoryBudget);
             cost = (TextView) itemView.findViewById(R.id.categoryCost);
-            costTitle = (TextView) itemView.findViewById(R.id.categoryCostTitle);
+            of = (TextView) itemView.findViewById(R.id.categoryOf);
+            budget = (TextView) itemView.findViewById(R.id.categoryBudget);
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);

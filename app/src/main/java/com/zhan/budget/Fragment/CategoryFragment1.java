@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.CategorySection;
 import com.zhan.budget.Adapter.CategorySectionAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
@@ -166,11 +165,11 @@ public class CategoryFragment1 extends BaseRealmFragment {
         categoryListView.setAdapter(categorySectionAdapter);
 
         //Add divider
-        categoryListView.addItemDecoration(
+        /*categoryListView.addItemDecoration(
                 new HorizontalDividerItemDecoration.Builder(getContext())
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
-
+*/
         populateCategoryWithNoInfo(BudgetType.EXPENSE);
     }
 
