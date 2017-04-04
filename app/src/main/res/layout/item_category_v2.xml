@@ -68,7 +68,7 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:text="@string/category"
-					android:layout_weight="0.3"
+					android:layout_weight="0.5"
 					android:maxLines="1"
 					android:ellipsize="end"
 					android:textSize="@dimen/text_title_size"/>
@@ -79,7 +79,7 @@
 					android:orientation="horizontal"
 					android:layout_height="match_parent"
 					android:gravity="right"
-					android:layout_weight="0.7">
+					android:layout_weight="0.5">
 
 					<TextView
 						android:id="@+id/categoryCost"
