@@ -1,21 +1,29 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
+import com.zhan.budget.Activity.CategoryInfoActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
+import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategorySection;
 import com.zhan.budget.Adapter.CategorySectionAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -24,6 +32,8 @@ import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +62,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
 
     private float totalExpenseCost;
     private float totalIncomeCost;
+
+    private Category categoryEdited;
 
     public CategoryFragment1() {
         // Required empty public constructor
@@ -106,29 +118,38 @@ public class CategoryFragment1 extends BaseRealmFragment {
         categorySectionAdapter.setInteraction(new CategorySectionAdapter.OnCategorySectionAdapterInteractionListener() {
             @Override
             public void onDeleteCategory(int position) {
-                Log.d(TAG, "onDeleteCategory : "+position);
+                Log.d(TAG, "onDeleteCategory : "+categorySectionAdapter.getPositionInSection(position)+" for section "+((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle());
 
+                int indexInSection = categorySectionAdapter.getPositionInSection(position);
 
-
+                confirmDelete(((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle(), indexInSection, position);
             }
 
             @Override
             public void onEditCategory(int position) {
-                Log.d(TAG, "onEditCategory : "+position);
+                Log.d(TAG, "onEditCategory : "+categorySectionAdapter.getPositionInSection(position)+" for section "+((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle());
+                int indexInSection = categorySectionAdapter.getPositionInSection(position);
 
+                editCategory(((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle(), indexInSection);
             }
 
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "onClick : "+categorySectionAdapter.getPositionInSection(position)+" for section "+((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle());
 
+                int indexInSection = categorySectionAdapter.getPositionInSection(position);
+
+                //Check which section we are clicking on first
+                if(((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    startActivityForResult(TransactionsForCategory.createIntentToViewAllTransactionsForCategoryForMonth(getContext(), expenseCategoryList.get(indexInSection), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
+                }else if(((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                    startActivityForResult(TransactionsForCategory.createIntentToViewAllTransactionsForCategoryForMonth(getContext(), incomeCategoryList.get(indexInSection), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
+                }
             }
         });
 
         categorySectionAdapter.setExpenseCategoryList(new ArrayList<Category>());
         categorySectionAdapter.setIncomeCategoryList(new ArrayList<Category>());
-
-
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
@@ -379,6 +400,90 @@ public class CategoryFragment1 extends BaseRealmFragment {
         categorySectionAdapter.notifyDataSetChanged();
     }
 
+    private void confirmDelete(final String budgetType, final int position, final int rawPosition){
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(getString(R.string.warning_delete_category));
+
+        new AlertDialog.Builder(getContext())
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteCategory(budgetType ,position);
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        closeSwipeItem(rawPosition);
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        closeSwipeItem(rawPosition);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteCategory(final String budgetType, final int position){
+        final RealmResults<Category> categoryToBeRemove;
+
+        if(budgetType.equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+            categoryToBeRemove = myRealm.where(Category.class).equalTo("type", budgetType).equalTo("id", expenseCategoryList.get(position).getId()).findAllAsync();
+        }else{
+            categoryToBeRemove = myRealm.where(Category.class).equalTo("type", budgetType).equalTo("id", incomeCategoryList.get(position).getId()).findAllAsync();
+        }
+
+        categoryToBeRemove.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+            @Override
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListener(this);
+
+                myRealm.beginTransaction();
+                Log.d(TAG, "removing found category : "+element.get(0).getName());
+
+                //grab the first one as there should only have 1 category due to the ID being unique
+                categoryToBeRemove.deleteFirstFromRealm();
+
+                myRealm.commitTransaction();
+
+                if(budgetType.equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    categorySectionAdapter.getExpenseCategoryList().remove(position);
+                }else{
+                    categorySectionAdapter.getIncomeCategoryList().remove(position);
+                }
+
+                //updateMonthInToolbar(0, true);
+                populateCategoryWithNoInfo();
+
+            }
+        });
+
+        //this recalculates
+        //getMonthReport(currentMonth, true);
+
+    }
+
+    private void editCategory(String budgetType, int position){
+        closeSwipeItem(position);
+
+        if(budgetType.equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+            categoryEdited = expenseCategoryList.get(position);
+        }else if(budgetType.equalsIgnoreCase(BudgetType.INCOME.toString())){
+            categoryEdited = incomeCategoryList.get(position);
+        }
+
+        startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryEdited), RequestCodes.EDIT_CATEGORY);
+    }
+
     private void updateBothPriceStatus(double price) {
         updateExpensePriceStatus(price);
         updateIncomePriceStatus(price);
@@ -404,6 +509,16 @@ public class CategoryFragment1 extends BaseRealmFragment {
         }
     }
 
+    private void openSwipeItem(int position){
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        currentSwipeLayoutTarget.open();
+    }
+
+    private void closeSwipeItem(int position){
+        //currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
+        //currentSwipeLayoutTarget.close();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Lifecycle
@@ -425,6 +540,30 @@ public class CategoryFragment1 extends BaseRealmFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
+            if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
+
+                if(hasChanged){
+                    //If something has been changed, update the list and the pie chart
+                    //updateMonthInToolbar(0, true);
+                    populateCategoryWithNoInfo();
+                }
+            }else if(requestCode == RequestCodes.EDIT_CATEGORY){
+                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(CategoryInfoActivity.RESULT_CATEGORY));
+
+                if(!categoryReturned.checkEquals(categoryEdited)){
+                    //If something has been changed, update the list and the pie chart
+                    //updateMonthInToolbar(0, true);
+                    populateCategoryWithNoInfo();
+                }
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
