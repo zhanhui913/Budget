@@ -79,7 +79,6 @@ public class AccountFragment extends BaseRealmFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -90,6 +89,9 @@ public class AccountFragment extends BaseRealmFragment implements
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
+
+        once = false;
+
         currentMonth = new Date();
 
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
@@ -155,23 +157,23 @@ public class AccountFragment extends BaseRealmFragment implements
     }
 
 //option 1 start
-private boolean once = false;
+private boolean once;
 
     /**
      * Gets the list of accounts. (called once only)
      */
     private void populateAccountWithNoInfo(){
+        Log.d(TAG, "populateAccountWithNoInfo");
+
         resultsAccount = myRealm.where(Account.class).findAllAsync();
         resultsAccount.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
             @Override
             public void onChange(RealmResults<Account> element) {
                 element.removeChangeListener(this);
 
-                Log.d(TAG, "there's a change in results account ");
                 accountList = myRealm.copyFromRealm(element);
                 accountRecyclerAdapter.setAccountList(accountList);
 
-                //updateAccountStatus();
                 populateAccountWithInfo(true);
             }
         });
@@ -186,7 +188,7 @@ private boolean once = false;
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
 
-        Log.d("DEBUG","Get all transactions from month is "+startMonth.toString()+", to next month is "+endMonth.toString());
+        Log.d(TAG, "populateAccountWithInfo for "+startMonth.toString());
 
         //Reset all values in list
         for(int i = 0 ; i < accountList.size(); i++){
@@ -199,7 +201,7 @@ private boolean once = false;
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListeners();
 
-                Log.d("REALM", "got this month transaction, " + element.size());
+                Log.d(TAG, "got this month transaction, size: " + element.size());
 
                 transactionMonthList = myRealm.copyFromRealm(element);
 
