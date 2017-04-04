@@ -46,13 +46,11 @@ import com.zhan.budget.View.RectangleCellView;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -89,7 +87,7 @@ public class CalendarFragment extends BaseRealmFragment implements
     //Pull down
     private PtrFrameLayout frame;
     private PlusView header;
-    private Boolean isPulldownAllow = true;
+    private Boolean isPulldownAllow;
 
     private TextView  totalCostTextView, dateTextView;
     private CircularProgressBar progressBar;
@@ -120,6 +118,8 @@ public class CalendarFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
         isFirstTime();
+
+        isPulldownAllow = true;
 
         //By default it will be the current date;
         selectedDate = new Date();
