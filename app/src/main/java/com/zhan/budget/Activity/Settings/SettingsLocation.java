@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Activity.LocationInfoActivity;
@@ -59,9 +58,6 @@ public class SettingsLocation extends BaseRealmActivity implements
 
     private Activity instance;
 
-    private LinearLayoutManager linearLayoutManager;
-    private SwipeLayout currentSwipeLayoutTarget;
-
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_settings_location;
@@ -75,10 +71,8 @@ public class SettingsLocation extends BaseRealmActivity implements
 
         createToolbar();
 
-        linearLayoutManager = new LinearLayoutManager(this);
-
         locationListView = (RecyclerView)findViewById(R.id.locationListView);
-        locationListView.setLayoutManager(linearLayoutManager);
+        locationListView.setLayoutManager(new LinearLayoutManager(this));
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyLocationText = (TextView) findViewById(R.id.pullDownText);
@@ -210,16 +204,6 @@ public class SettingsLocation extends BaseRealmActivity implements
         }
     }
 
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
-    }
-
     private void confirmDelete(final int position){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
@@ -233,21 +217,13 @@ public class SettingsLocation extends BaseRealmActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        closeSwipeItem(position);
                         deleteLocation(position);
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        closeSwipeItem(position);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(position);
+                    //Does nothing for now
                     }
                 })
                 .create()
@@ -311,7 +287,6 @@ public class SettingsLocation extends BaseRealmActivity implements
 
     @Override
     public void onClickLocation(int position){
-        closeSwipeItem(position);
         locationIndexEdited = position;
         editLocation(position);
     }
@@ -323,7 +298,6 @@ public class SettingsLocation extends BaseRealmActivity implements
 
     @Override
     public void onEditLocation(int position){
-        closeSwipeItem(position);
         locationIndexEdited = position;
         editLocation(position);
     }

@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
@@ -68,9 +67,6 @@ public class AccountFragment extends BaseRealmFragment implements
     private RealmResults<Transaction> resultsTransaction;
     private List<Transaction> transactionMonthList;
 
-    private LinearLayoutManager linearLayoutManager;
-    private SwipeLayout currentSwipeLayoutTarget;
-
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -96,10 +92,8 @@ public class AccountFragment extends BaseRealmFragment implements
 
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-
         accountListView = (RecyclerView)view.findViewById(R.id.accountListView);
-        accountListView.setLayoutManager(linearLayoutManager);
+        accountListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         accountList = new ArrayList<>();
         accountRecyclerAdapter = new AccountRecyclerAdapter(this, accountList, true, false);
@@ -446,13 +440,7 @@ private boolean once;
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        closeSwipeItem(position);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(position);
+                        //Does nothing for now
                     }
                 })
                 .create()
@@ -466,16 +454,6 @@ private boolean once;
 
         //recalculate everything
         getListOfTransactionsForMonth();
-    }
-
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
     }
 
     @Override
@@ -527,8 +505,6 @@ private boolean once;
 
     @Override
     public void onClickAccount(int position){
-        closeSwipeItem(position);
-
         startActivityForResult(TransactionsForAccount.createIntentToViewAllTransactionsForAccountForMonth(getContext(), accountList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
@@ -539,7 +515,6 @@ private boolean once;
 
     @Override
     public void onEditAccount(int position){
-        closeSwipeItem(position);
         editAccount(position);
     }
 

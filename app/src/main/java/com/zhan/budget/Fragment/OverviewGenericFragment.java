@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
@@ -61,9 +60,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private RecyclerView categoryListView;
     private OverviewInteractionListener mListener;
 
-    private LinearLayoutManager linearLayoutManager;
-    private SwipeLayout currentSwipeLayoutTarget;
-
     private Category categoryEdited;
 
     public static OverviewGenericFragment newInstance(BudgetType budgetType, Date currentMonth) {
@@ -104,9 +100,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
         categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-
-        categoryListView.setLayoutManager(linearLayoutManager);
+        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(categoryPercentListAdapter);
 
         //Add divider
@@ -229,13 +223,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        closeSwipeItem(position);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(position);
+                        //Does nothing for now
                     }
                 })
                 .create()
@@ -273,7 +261,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     }
 
     private void editCategory(int position){
-        closeSwipeItem(position);
         categoryEdited = categoryList.get(position);
         startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryEdited), RequestCodes.EDIT_CATEGORY);
     }
@@ -312,16 +299,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 }
             }
         }
-    }
-
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
     }
 
     //Different from resetCategoryValues(), this removes the adapters list

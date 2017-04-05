@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
@@ -58,9 +57,6 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
      */
     protected boolean isChanged = false;
 
-    protected LinearLayoutManager linearLayoutManager;
-    protected SwipeLayout currentSwipeLayoutTarget;
-
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_transactions_for_generic;
@@ -78,10 +74,8 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
         //Need to go a day before as Realm's between date does inclusive on both end
         endMonth = DateUtil.getLastDateOfMonth(beginMonth);
 
-        linearLayoutManager = new LinearLayoutManager(instance);
-
         transactionListView = (RecyclerView) findViewById(R.id.transactionListView);
-        transactionListView.setLayoutManager(linearLayoutManager);
+        transactionListView.setLayoutManager(new LinearLayoutManager(instance));
 
         //Add divider
         transactionListView.addItemDecoration(
@@ -145,13 +139,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        closeSwipeItem(position);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(position);
+                        //Does nothing for now
                     }
                 })
                 .create()
@@ -221,16 +209,6 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
 
     protected void updateEmptyListText(String value){
         emptyListTextView.setText(value);
-    }
-
-    protected void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    protected void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
     }
 
     /**

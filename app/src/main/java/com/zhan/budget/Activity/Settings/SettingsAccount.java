@@ -11,9 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.BaseRealmActivity;
@@ -33,7 +31,6 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -62,9 +59,6 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     private Activity instance;
 
-    private LinearLayoutManager linearLayoutManager;
-    private SwipeLayout currentSwipeLayoutTarget;
-
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_settings_account;
@@ -78,10 +72,8 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         createToolbar();
 
-        linearLayoutManager = new LinearLayoutManager(this);
-
         accountListView = (RecyclerView)findViewById(R.id.accountListView);
-        accountListView.setLayoutManager(linearLayoutManager);
+        accountListView.setLayoutManager(new LinearLayoutManager(this));
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
@@ -232,14 +224,7 @@ public class SettingsAccount extends BaseRealmActivity implements
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        closeSwipeItem(position);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(position);
+                    //Does nothing for now
                     }
                 })
                 .create()
@@ -253,16 +238,6 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         //recalculate everything
         populateAccount();
-    }
-
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
     }
 
     @Override
@@ -315,8 +290,6 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onClickAccount(int position){
-        closeSwipeItem(position);
-
         accountIndexEdited = position;
         editAccount(position);
     }
@@ -328,8 +301,6 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onEditAccount(int position){
-        closeSwipeItem(position);
-
         accountIndexEdited = position;
         editAccount(position);
     }

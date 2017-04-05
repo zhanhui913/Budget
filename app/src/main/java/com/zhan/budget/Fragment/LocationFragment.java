@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.LocationInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
@@ -62,9 +61,6 @@ public class LocationFragment extends BaseRealmFragment
 
     private TextView centerPanelRightTextView, emptyLocationPrimaryText, emptyLocationSecondaryText;
 
-    private LinearLayoutManager linearLayoutManager;
-    private SwipeLayout currentSwipeLayoutTarget;
-
     public LocationFragment() {
         // Required empty public constructor
     }
@@ -90,10 +86,8 @@ public class LocationFragment extends BaseRealmFragment
         view.findViewById(R.id.dateTextView).setVisibility(View.GONE);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-
         locationListview = (RecyclerView) view.findViewById(R.id.locationListview);
-        locationListview.setLayoutManager(linearLayoutManager);
+        locationListview.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         locationList = new ArrayList<>();
         locationAdapter = new LocationRecyclerAdapter(this, locationList);
@@ -213,16 +207,6 @@ public class LocationFragment extends BaseRealmFragment
         }
     }
 
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
-    }
-
     private void updateAmountStatus(int amount){
         if(amount == 0){
             centerPanelRightTextView.setText(R.string.na);
@@ -254,13 +238,7 @@ public class LocationFragment extends BaseRealmFragment
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        closeSwipeItem(position);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(position);
+                        //Does nothing for now
                     }
                 })
                 .create()
@@ -343,7 +321,6 @@ public class LocationFragment extends BaseRealmFragment
 
     @Override
     public void onClickLocation(int position){
-        closeSwipeItem(position);
         startActivityForResult(TransactionsForLocation.createIntentToViewAllTransactionsForLocationForMonth(getContext(), locationList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
@@ -354,10 +331,8 @@ public class LocationFragment extends BaseRealmFragment
 
     @Override
     public void onEditLocation(int position){
-        closeSwipeItem(position);
         editLocation(position);
     }
-
 
     @Override
     public void onPullDownAllow(boolean value){

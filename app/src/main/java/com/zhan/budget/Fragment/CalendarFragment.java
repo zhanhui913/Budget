@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
@@ -95,9 +94,6 @@ public class CalendarFragment extends BaseRealmFragment implements
     private Date selectedDate;
     private Map<Date,List<BudgetEvent>> eventMap;
 
-    private LinearLayoutManager linearLayoutManager;
-    private SwipeLayout currentSwipeLayoutTarget;
-
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -128,10 +124,8 @@ public class CalendarFragment extends BaseRealmFragment implements
         totalCostTextView = (TextView) view.findViewById(R.id.totalCostTextView);
         dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
-        transactionListView.setLayoutManager(linearLayoutManager);
+        transactionListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         transactionList = new ArrayList<>();
         transactionAdapter = new TransactionRecyclerAdapter(this, transactionList, false); //do not display date in each transaction item
@@ -625,13 +619,7 @@ public class CalendarFragment extends BaseRealmFragment implements
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        closeSwipeItem(position);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(position);
+                        //Does nothing for now
                     }
                 })
                 .create()
@@ -647,16 +635,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         Log.d(TAG, "After There are " + resultsTransactionForDay.size() + " transactions today");
         populateTransactionsForDate(selectedDate);
         updateScheduledTransactionsForDecoration();
-    }
-
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.close();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -715,8 +693,6 @@ public class CalendarFragment extends BaseRealmFragment implements
         }
 
         Log.i(TAG, "----------- Click Result ----------");
-
-        closeSwipeItem(position);
 
         editTransaction(position);
     }
