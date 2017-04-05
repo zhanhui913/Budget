@@ -41,7 +41,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
@@ -421,7 +420,6 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
                         closeSwipeItem(rawPosition);
                     }
                 })
