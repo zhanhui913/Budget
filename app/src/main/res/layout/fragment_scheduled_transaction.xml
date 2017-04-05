@@ -4,9 +4,19 @@
                 android:layout_height="match_parent"
                 tools:context="com.zhan.budget.Fragment.ScheduledTransactionFragment">
 
-	<TextView
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/scheduledTransactionListView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:text="@string/hello_blank_fragment"/>
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentRight="true"/>
 
+	<include layout="@layout/empty_content"
+	         android:id="@+id/emptyScheduledTransactionLayout"
+	         android:layout_width="match_parent"
+	         android:layout_height="match_parent"
+	         android:layout_alignParentTop="true"
+	         android:layout_alignParentLeft="true"
+	         android:layout_alignParentRight="true"/>
 </RelativeLayout>

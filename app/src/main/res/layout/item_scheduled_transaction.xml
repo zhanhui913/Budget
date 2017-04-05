@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/swipeTransaction"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:clickToClose="true">
+
+	<!-- Bottom view -->
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent">
+		<ImageView
+			android:id="@+id/editBtn"
+			android:src="@drawable/svg_ic_edit"
+			android:layout_height="match_parent"
+			android:layout_width="100dp"
+			android:background="@drawable/budget_green_button"
+			android:paddingLeft="25dp"
+			android:paddingRight="25dp" />
+
+		<ImageView
+			android:id="@+id/deleteBtn"
+			android:src="@drawable/svg_ic_delete"
+			android:layout_height="match_parent"
+			android:layout_width="100dp"
+			android:background="@drawable/budget_red_button"
+			android:paddingLeft="25dp"
+			android:paddingRight="25dp" />
+	</LinearLayout>
+
+	<!-- Surface view -->
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	                style="@style/ItemPaddingStyle"
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent"
+	                android:background="?attr/themeColorBtn"
+	                android:clickable="true">
+
+		<com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+		                               android:id="@+id/categoryIcon"
+		                               android:layout_width="wrap_content"
+		                               android:layout_height="wrap_content"
+		                               android:layout_centerVertical="true" />
+
+		<LinearLayout
+			android:id="@+id/leftPanel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_toRightOf="@+id/categoryIcon"
+			android:layout_toEndOf="@+id/categoryIcon"
+			android:layout_toLeftOf="@+id/rightPanel"
+			android:layout_toStartOf="@+id/rightPanel"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="@dimen/item_left_padding"
+			android:layout_marginStart="@dimen/item_left_padding">
+
+			<TextView
+				android:id="@+id/transactionNote"
+				android:layout_width="wrap_content"
+				android:layout_height="0dp"
+				android:layout_weight="1"
+				android:text="@string/note"
+				android:textSize="@dimen/text_title_size"
+				android:textStyle="bold"
+				android:maxLines="1"
+				android:ellipsize="end"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/accountIcon"
+					android:layout_width="@dimen/icon_height"
+					android:layout_height="@dimen/icon_height"
+					android:src="@drawable/svg_ic_menu_account"
+					android:tint="?attr/themeColorText"/>
+
+				<TextView
+					android:id="@+id/transactionAccount"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="@dimen/text_content_size"
+					android:text="@string/account"
+					android:layout_gravity="center_vertical"
+					android:layout_marginLeft="2dp"
+					android:layout_marginStart="2dp"
+					android:ellipsize="end"
+					android:layout_marginRight="10dp"
+					android:layout_marginEnd="10dp"/>
+
+				<ImageView
+					android:id="@+id/locationIcon"
+					android:layout_width="@dimen/icon_height"
+					android:layout_height="@dimen/icon_height"
+					android:src="@drawable/svg_ic_location"
+					android:tint="?attr/themeColorText" />
+
+				<TextView
+					android:id="@+id/transactionLocation"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="@dimen/text_content_size"
+					android:text="@string/location"
+					android:layout_marginLeft="2dp"
+					android:layout_marginStart="2dp"
+					android:maxLines="1"
+					android:ellipsize="end"
+					android:layout_gravity="center_vertical" />
+			</LinearLayout>
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/rightPanel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_marginLeft="10dp"
+			android:layout_marginStart="10dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:gravity="end">
+
+			<!-- Only visible on TransactionsForCategory, TransactionsForAccount, TransactionsForLocation -->
+			<TextView
+				android:id="@+id/transactionDate"
+				android:layout_width="wrap_content"
+				android:layout_height="0dp"
+				android:layout_weight="1"
+				android:text="@string/month"
+				android:textSize="@dimen/text_content_size" />
+
+			<TextView
+				android:id="@+id/transactionCost"
+				android:layout_width="wrap_content"
+				android:layout_height="0dp"
+				android:layout_weight="1"
+				android:text="@string/cost"
+				android:textSize="@dimen/text_title_size" />
+
+		</LinearLayout>
+	</RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>

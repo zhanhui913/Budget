@@ -3,7 +3,6 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,56 +12,50 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.zhan.budget.Adapter.Helper.ItemTouchHelperAdapter;
-import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
-import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.DayType;
-import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
-import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 import com.zhan.library.CircularView;
 
 import java.util.List;
 
 /**
- * Simple CategoryRecyclerAdapter that implements {@link ItemTouchHelperAdapter} to respond to move
- * from a {@link android.support.v7.widget.helper.ItemTouchHelper}.
- *
+ * Created by zhanyap on 2017-04-05.
  */
-public class TransactionRecyclerAdapter extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder> {
+
+public class ScheduledTransactionRecyclerAdapter extends RecyclerView.Adapter<ScheduledTransactionRecyclerAdapter.ViewHolder> {
 
     private Context context;
-    private List<Transaction> transactionList;
+    private List<ScheduledTransaction> scheduledTransactionList;
     private boolean showDate;
-    private OnTransactionAdapterInteractionListener mListener;
+    private OnScheduledTransactionAdapterInteractionListener mListener;
 
-    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
+    public ScheduledTransactionRecyclerAdapter(Fragment fragment, List<ScheduledTransaction> sTransactionList, boolean showDate) {
         this.context = fragment.getContext();
         this.showDate = showDate;
-        this.transactionList = transactionList;
+        this.scheduledTransactionList = sTransactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if (fragment instanceof OnTransactionAdapterInteractionListener) {
-            mListener = (OnTransactionAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnScheduledTransactionAdapterInteractionListener interface
+        if (fragment instanceof OnScheduledTransactionAdapterInteractionListener) {
+            mListener = (OnScheduledTransactionAdapterInteractionListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnScheduledTransactionAdapterInteractionListener.");
         }
     }
 
-    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
+    public ScheduledTransactionRecyclerAdapter(Activity activity, List<ScheduledTransaction> sTransactionList, boolean showDate){
         this.context = activity;
         this.showDate = showDate;
-        this.transactionList = transactionList;
+        this.scheduledTransactionList = sTransactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if(activity instanceof  OnTransactionAdapterInteractionListener){
-            mListener = (OnTransactionAdapterInteractionListener) activity;
+        //Any activity or fragment that uses this adapter needs to implement the OnScheduledTransactionAdapterInteractionListener interface
+        if(activity instanceof  OnScheduledTransactionAdapterInteractionListener){
+            mListener = (OnScheduledTransactionAdapterInteractionListener) activity;
         }else {
-            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(activity.toString() + " must implement OnScheduledTransactionAdapterInteractionListener.");
         }
     }
 
@@ -70,7 +63,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         // Inflate the custom layout
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transaction, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_scheduled_transaction, parent, false);
 
         // Return a new holder instance
         return new ViewHolder(view);
@@ -79,23 +72,23 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        // getting Transaction data for the row
-        final Transaction transaction = transactionList.get(position);
+        // getting Scheduled Transaction data for the row
+        final ScheduledTransaction scheduledTransaction = scheduledTransactionList.get(position);
 
         //Account
-        if(transaction.getAccount() != null){
+        if(scheduledTransaction.getTransaction().getAccount() != null){
             viewHolder.account.setVisibility(View.VISIBLE);
             viewHolder.accountIcon.setVisibility(View.VISIBLE);
-            viewHolder.account.setText(transaction.getAccount().getName());
+            viewHolder.account.setText(scheduledTransaction.getTransaction().getAccount().getName());
         }else{
             viewHolder.account.setVisibility(View.GONE);
             viewHolder.accountIcon.setVisibility(View.GONE);
         }
 
-        viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(transaction.getPrice()));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(scheduledTransaction.getTransaction().getPrice()));
 
         //If transaction's dayType is COMPLETED
-        if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
+        /*if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidthInDP(1);
             viewHolder.circularView.setStrokePaddingInDP(3);
             viewHolder.circularView.setStrokeColor(R.color.transparent);
@@ -136,14 +129,28 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
             //Set Transaction's cost color to be regular text color
             viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
-        }
+        }*/
 
-        if(transaction.getCategory() != null) {
-            if (transaction.getCategory().isText()) {
+        if(scheduledTransaction.getTransaction().getCategory() != null) {
+            viewHolder.circularView.setStrokeWidthInDP(1);
+            viewHolder.circularView.setStrokePaddingInDP(3);
+            viewHolder.circularView.setStrokeColor(R.color.transparent);
+            viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+
+            if(scheduledTransaction.getTransaction().getCategory() != null){
+                viewHolder.circularView.setCircleColor(scheduledTransaction.getTransaction().getCategory().getColor());
+            }else{
+                viewHolder.circularView.setCircleColor(R.color.colorPrimary);
+            }
+
+
+
+            if (scheduledTransaction.getTransaction().getCategory().isText()) {
                 viewHolder.circularView.setIconResource(0);
-                viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(transaction.getCategory().getName().toUpperCase().trim()));
+                viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(scheduledTransaction.getTransaction().getCategory().getName().toUpperCase().trim()));
             } else {
-                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
+                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, scheduledTransaction.getTransaction().getCategory().getIcon()));
                 viewHolder.circularView.setText("");
             }
         }else{
@@ -153,29 +160,29 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }
 
         //If there is no note, use Category's name instead
-        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
-            viewHolder.name.setText(transaction.getNote());
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(scheduledTransaction.getTransaction().getNote())){
+            viewHolder.name.setText(scheduledTransaction.getTransaction().getNote());
         }else{
-            if(transaction.getCategory() != null){
-                viewHolder.name.setText(transaction.getCategory().getName());
+            if(scheduledTransaction.getTransaction().getCategory() != null){
+                viewHolder.name.setText(scheduledTransaction.getTransaction().getCategory().getName());
             }else{
                 viewHolder.name.setText("");
             }
         }
 
         //If this is used in Calendar Fragment (no need to show date), everywhere else use it
-        if(this.showDate){
+        /*if(this.showDate){
             viewHolder.date.setVisibility(View.VISIBLE);
             viewHolder.date.setText(DateUtil.convertDateToStringFormat1(context, transaction.getDate()));
         }else{
             viewHolder.date.setVisibility(View.GONE);
-        }
+        }*/
 
         //If there are no location
-        if(transaction.getLocation() != null){
+        if(scheduledTransaction.getTransaction().getLocation() != null){
             viewHolder.location.setVisibility(View.VISIBLE);
             viewHolder.locationIcon.setVisibility(View.VISIBLE);
-            viewHolder.location.setText(transaction.getLocation().getName());
+            viewHolder.location.setText(scheduledTransaction.getTransaction().getLocation().getName());
         }else{
             viewHolder.location.setVisibility(View.GONE);
             viewHolder.locationIcon.setVisibility(View.GONE);
@@ -184,24 +191,18 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
     @Override
     public int getItemCount() {
-        return this.transactionList.size();
+        return this.scheduledTransactionList.size();
     }
 
-    public void setTransactionList(List<Transaction> list){
-        this.transactionList = list;
+    public void setScheduledTransactionList(List<ScheduledTransaction> list){
+        this.scheduledTransactionList = list;
         notifyDataSetChanged();
     }
 
-    public List<Transaction> getTransactionList(){
-        return this.transactionList;
+    public List<ScheduledTransaction> getScheduledTransactionList(){
+        return this.scheduledTransactionList;
     }
 
-    /**
-     * Simple example of a view holder that implements {@link ItemTouchHelperViewHolder} and has a
-     * "handle" view that initiates a drag event when touched.
-     * Provide a direct reference to each of the views within a data item.
-     * Used to cache the views within the item layout for fast access
-     */
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         // Your holder should contain a member variable
@@ -210,7 +211,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         public TextView name, cost, date, account, location;
 
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn, approveBtn, unapproveBtn, locationIcon, accountIcon;
+        public ImageView deleteBtn, editBtn, locationIcon, accountIcon;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -229,9 +230,8 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             accountIcon = (ImageView) itemView.findViewById(R.id.accountIcon);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeTransaction);
+            editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
-            approveBtn = (ImageView) itemView.findViewById(R.id.approveBtn);
-            unapproveBtn = (ImageView) itemView.findViewById(R.id.unapproveBtn);
 
             swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
@@ -260,36 +260,26 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
                     //Log.d("TRANSACTION_ADAPTER", "onupdate "+leftOffset+","+topOffset);
-                    mListener.onPullDownAllow(false);
                 }
 
                 @Override
                 public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
                     //Log.d("TRANSACTION_ADAPTER", "onhandrelease :"+xvel+","+yvel);
-                    mListener.onPullDownAllow(true);
                 }
             });
 
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClickTransaction(getLayoutPosition());
+                    mListener.onClickScheduledTransaction(getLayoutPosition());
                 }
             });
 
-            approveBtn.setOnClickListener(new View.OnClickListener() {
+            editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    mListener.onApproveTransaction(getLayoutPosition());
-                }
-            });
-
-            unapproveBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    swipeLayout.close(true);
-                    mListener.onUnapproveTransaction(getLayoutPosition());
+                    mListener.onEditScheduledTransaction(getLayoutPosition());
                 }
             });
 
@@ -297,7 +287,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    mListener.onDeleteTransaction(getLayoutPosition());
+                    mListener.onDeleteScheduledTransaction(getLayoutPosition());
                 }
             });
         }
@@ -309,16 +299,11 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnTransactionAdapterInteractionListener {
-        void onClickTransaction(int position);
+    public interface OnScheduledTransactionAdapterInteractionListener {
+        void onClickScheduledTransaction(int position);
 
-        void onDeleteTransaction(int position);
+        void onDeleteScheduledTransaction(int position);
 
-        void onApproveTransaction(int position);
-
-        void onUnapproveTransaction(int position);
-
-        void onPullDownAllow(boolean value);
+        void onEditScheduledTransaction(int position);
     }
 }
-
