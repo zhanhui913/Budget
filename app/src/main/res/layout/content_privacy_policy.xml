@@ -17,16 +17,139 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:padding="@dimen/item_padding">
+			android:paddingTop="@dimen/item_top_padding"
+			android:paddingBottom="@dimen/item_bottom_padding">
 
-			<TextView
-				android:id="@+id/textView"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentLeft="true"
-				android:layout_alignParentStart="true"
-				android:layout_alignParentTop="true"
-				android:text="@string/privacy_policy"/>
+			<!-- Privacy Policy  -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_main_title"/>
+
+			<!-- Main Content -->
+			<TextView style="@style/SettingsTextViewContentStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/privacy_main_content"/>
+
+			<!-- Information Collection and Use  -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/colorPrimary"
+					android:layout_marginTop="@dimen/item_padding"
+					android:text="@string/privacy_collection_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/privacy_collection_content"/>
+
+			<!-- Log Data -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_log_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_log_content"/>
+
+			<!-- Cookies -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_cookies_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_cookies_content"/>
+
+			<!-- Service Providers -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_service_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_service_content"/>
+
+			<!-- Security -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_security_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_security_content"/>
+
+			<!-- Links to Other Sites -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_other_sites_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_other_sites_content"/>
+
+			<!-- Children's Privacy -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_children_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_children_content"/>
+
+			<!-- Changes to This Privacy Policy -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_changes_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_changes_content"/>
+
+			<!-- Contact Us -->
+			<TextView style="@style/SettingsTextViewTitleStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:textColor="@color/colorPrimary"
+			          android:layout_marginTop="@dimen/item_padding"
+			          android:text="@string/privacy_contact_title"/>
+
+			<TextView style="@style/SettingsTextViewContentStyle"
+			          android:layout_width="wrap_content"
+			          android:layout_height="wrap_content"
+			          android:text="@string/privacy_contact_content"/>
 		</LinearLayout>
 	</ScrollView>
 </RelativeLayout>
