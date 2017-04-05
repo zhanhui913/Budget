@@ -229,7 +229,7 @@ public class CategorySection extends StatelessSection {
                     if(mListener != null){
                         //getLayoutPosition() includes the Section Header
 
-                        mListener.onClick(getAdapterPosition());
+                        mListener.onClick(getLayoutPosition());
                     }
                 }
             });

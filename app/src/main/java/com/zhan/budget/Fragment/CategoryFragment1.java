@@ -41,6 +41,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
@@ -63,6 +64,11 @@ public class CategoryFragment1 extends BaseRealmFragment {
 
     private float totalExpenseCost;
     private float totalIncomeCost;
+
+    private List<Category> bothCategoryList;
+    private List<Category> expenseCategoryList;
+    private List<Category> incomeCategoryList;
+    private List<Transaction> transactionMonthList;
 
     private Category categoryEdited;
 
@@ -166,12 +172,6 @@ public class CategoryFragment1 extends BaseRealmFragment {
         populateCategoryWithNoInfo();
     }
 
-    private List<Category> bothCategoryList;
-    private List<Category> expenseCategoryList;
-    private List<Category> incomeCategoryList;
-    private List<Transaction> transactionMonthList;
-
-    //Should be called only the first time when the fragment is created
     private void populateCategoryWithNoInfo() {
         Log.d(TAG, "populateCategoryWithNoInfo");
 
@@ -508,8 +508,28 @@ public class CategoryFragment1 extends BaseRealmFragment {
     }
 
     private void closeSwipeItem(int position){
-        //currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        //currentSwipeLayoutTarget.close();
+/*
+        Log.d("RAW","child count :"+linearLayoutManager.getChildCount());
+
+        RecyclerView s = (RecyclerView)linearLayoutManager.getChildAt(1);
+
+
+
+        currentSwipeLayoutTarget = (SwipeLayout) s.getChildAt(0);
+        currentSwipeLayoutTarget.close();
+        Log.d("RAW", "raw pos "+position);
+        */
+
+        Log.d("RAW", "hahah===> "+position);
+
+        for(int i = 0; i < linearLayoutManager.getChildCount(); i++){
+            Log.d("RAW", i+"-> "+linearLayoutManager.getChildAt(i).getClass().getCanonicalName());
+        }
+
+/*
+        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(1);
+        currentSwipeLayoutTarget.close();
+        */
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
