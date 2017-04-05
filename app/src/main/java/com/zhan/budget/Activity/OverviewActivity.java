@@ -173,7 +173,7 @@ public class OverviewActivity extends BaseActivity {
 
     private void createCharts(){
         //barChartFragment = BarChartFragment.newInstance(new ArrayList<Category>());
-        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), false, false, getString(R.string.category));
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), false, false, false, getString(R.string.category));
         getSupportFragmentManager().beginTransaction().add(R.id.chartContentFrame, pieChartFragment).commit();
     }
 

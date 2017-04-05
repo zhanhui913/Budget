@@ -58,9 +58,8 @@ public class CategoryFragment extends BaseFragment {
         leftTextView = (TextView) view.findViewById(R.id.leftTextView);
         rightTextView = (TextView) view.findViewById(R.id.rightTextView);
 
-        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), true, true, getString(R.string.category));
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), true, true, true, getString(R.string.category));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
-        pieChartFragment.displayLegend();
 
         createTabs();
 

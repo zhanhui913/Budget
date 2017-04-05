@@ -1,7 +1,5 @@
 package com.zhan.budget.Etc;
 
-import android.util.Log;
-
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 
@@ -91,6 +89,15 @@ public final class CurrencyTextFormatter {
 
     public static String stripCharacters(String value){
         return value.replace("$", "").replace("-", "").replace("+", "").replace(".", "").replace(",", "").replace("(", "").replace(")", "");
+    }
+
+    //Simply remove the cents value of the price by rounding up
+    //ie : 1.00 ==> 1
+    //1.50 ==> 1
+    public static String removeCents(String value){
+        int centsIndex = value.indexOf(".");
+        value = value.substring(0, centsIndex);
+        return value;
     }
 
     /**

@@ -106,7 +106,7 @@ public class LocationFragment extends BaseRealmFragment
         emptyLocationSecondaryText.setText("Add one in the settings");
 
         //Setup pie chart
-        pieChartFragment = PieChartFragment.newInstance(locationList, false, false, getString(R.string.location));
+        pieChartFragment = PieChartFragment.newInstance(locationList, false, false, false, getString(R.string.location));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         //0 represents no change in month relative to currentMonth variable.

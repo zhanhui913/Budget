@@ -31,7 +31,8 @@ public class PieChartFragment extends BaseChartFragment {
     private PieChart pieChart;
     protected static final String ARG_CHART_2 = "displayDataImmediately";
     protected static final String ARG_CHART_3 = "animate";
-    protected static final String ARG_CHART_4 = "name";
+    protected static final String ARG_CHART_4 = "legend";
+    protected static final String ARG_CHART_5 = "name";
 
     public static int ANIMATION_DURATION_MILLI = 500;
 
@@ -45,24 +46,25 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list){
-        return newInstance(list, false, false, "");
+        return newInstance(list, false, false, false, "");
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately){
-        return newInstance(list, initImmediately, false, "");
+        return newInstance(list, initImmediately, false, false, "");
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate){
-        return newInstance(list, initImmediately, animate, "");
+        return newInstance(list, initImmediately, animate, false, "");
     }
 
-    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate, String name){
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate, boolean drawLegend, String name){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CHART, Parcels.wrap(list));
         args.putBoolean(ARG_CHART_2, initImmediately);
         args.putBoolean(ARG_CHART_3, animate);
-        args.putString(ARG_CHART_4, name);
+        args.putBoolean(ARG_CHART_4, drawLegend);
+        args.putString(ARG_CHART_5, name);
         pieChartFragment.setArguments(args);
 
         return pieChartFragment;
@@ -77,7 +79,7 @@ public class PieChartFragment extends BaseChartFragment {
     public void init(){
         pieChart = (PieChart) view.findViewById(R.id.pieChart);
 
-        drawLegend = false;
+        drawLegend = getArguments().getBoolean(ARG_CHART_4);
 
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
@@ -115,10 +117,10 @@ public class PieChartFragment extends BaseChartFragment {
             setData(dataList, getArguments().getBoolean(ARG_CHART_3));
 
             if(dataList.size() > 0){
-                if(getArguments().getString(ARG_CHART_4).equalsIgnoreCase("")){
+                if(getArguments().getString(ARG_CHART_5).equalsIgnoreCase("")){
                     pieChart.setCenterText(getString(R.string.na));
                 }else{
-                    pieChart.setCenterText(getArguments().getString(ARG_CHART_4));
+                    pieChart.setCenterText(getArguments().getString(ARG_CHART_5));
                 }
             }
         }
@@ -209,10 +211,10 @@ public class PieChartFragment extends BaseChartFragment {
         //pieChart.highlightValues(null);
 
         if(list.size() > 0){
-            if(getArguments().getString(ARG_CHART_4).equalsIgnoreCase("")){
+            if(getArguments().getString(ARG_CHART_5).equalsIgnoreCase("")){
                 pieChart.setCenterText(getString(R.string.na));
             }else{
-                pieChart.setCenterText(getArguments().getString(ARG_CHART_4));
+                pieChart.setCenterText(getArguments().getString(ARG_CHART_5));
             }
         }
 
@@ -230,12 +232,5 @@ public class PieChartFragment extends BaseChartFragment {
             pieChart.clear();
             Log.d("CHART", "Resetted pie chart");
         }
-    }
-
-    /**
-     * Draw legend to the left of the chart
-     */
-    public void displayLegend(){
-        drawLegend = true;
     }
 }

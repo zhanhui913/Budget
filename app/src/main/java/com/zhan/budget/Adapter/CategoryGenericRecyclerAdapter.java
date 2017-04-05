@@ -129,15 +129,6 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                     viewHolder.progressBar.setVisibility(View.VISIBLE);
                     viewHolder.progressBar.setMax((float)category.getBudget());
                     viewHolder.progressBar.setProgress((float)Math.abs(category.getCost()));
-
-                    /*if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
-                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                    }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
-                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.sunflower));
-                    }else{ //If exceeded budget
-                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
-                    }*/
-
                     viewHolder.progressBar.setProgressColor(Color.parseColor(category.getColor()));
                 }else{
                     //If there is no budget even though its an expense
