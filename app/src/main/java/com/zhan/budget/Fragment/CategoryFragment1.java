@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
@@ -53,9 +52,6 @@ public class CategoryFragment1 extends BaseRealmFragment {
 
     private CategorySectionAdapter categorySectionAdapter;
     private RecyclerView categoryListView;
-
-    private LinearLayoutManager linearLayoutManager;
-    private SwipeLayout currentSwipeLayoutTarget;
 
     private TextView leftTextView, rightTextView;
 
@@ -156,10 +152,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
         categorySectionAdapter.setExpenseCategoryList(new ArrayList<Category>());
         categorySectionAdapter.setIncomeCategoryList(new ArrayList<Category>());
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-
         categoryListView = (RecyclerView) view.findViewById(R.id.categoryListView);
-        categoryListView.setLayoutManager(linearLayoutManager);
+        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(categorySectionAdapter);
 
         //Add divider
@@ -420,13 +414,13 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        closeSwipeItem(rawPosition);
+                        //closeSwipeItem(rawPosition);
                     }
                 })
                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        closeSwipeItem(rawPosition);
+                        //closeSwipeItem(rawPosition);
                     }
                 })
                 .create()
@@ -464,8 +458,6 @@ public class CategoryFragment1 extends BaseRealmFragment {
     }
 
     private void editCategory(String budgetType, int position){
-        closeSwipeItem(position);
-
         if(budgetType.equalsIgnoreCase(BudgetType.EXPENSE.toString())){
             categoryEdited = expenseCategoryList.get(position);
         }else if(budgetType.equalsIgnoreCase(BudgetType.INCOME.toString())){
@@ -498,36 +490,6 @@ public class CategoryFragment1 extends BaseRealmFragment {
         } else if (price == 0) {
             rightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
-    }
-
-    private void openSwipeItem(int position){
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(position);
-        currentSwipeLayoutTarget.open();
-    }
-
-    private void closeSwipeItem(int position){
-/*
-        Log.d("RAW","child count :"+linearLayoutManager.getChildCount());
-
-        RecyclerView s = (RecyclerView)linearLayoutManager.getChildAt(1);
-
-
-
-        currentSwipeLayoutTarget = (SwipeLayout) s.getChildAt(0);
-        currentSwipeLayoutTarget.close();
-        Log.d("RAW", "raw pos "+position);
-        */
-
-        Log.d("RAW", "hahah===> "+position);
-
-        for(int i = 0; i < linearLayoutManager.getChildCount(); i++){
-            Log.d("RAW", i+"-> "+linearLayoutManager.getChildAt(i).getClass().getCanonicalName());
-        }
-
-/*
-        currentSwipeLayoutTarget = (SwipeLayout) linearLayoutManager.findViewByPosition(1);
-        currentSwipeLayoutTarget.close();
-        */
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

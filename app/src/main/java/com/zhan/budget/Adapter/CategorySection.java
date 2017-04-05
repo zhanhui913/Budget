@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -219,16 +218,12 @@ public class CategorySection extends StatelessSection {
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
-
             defaultDrawable = itemView.getBackground();
 
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "on click : " + getLayoutPosition());
                     if(mListener != null){
-                        //getLayoutPosition() includes the Section Header
-
                         mListener.onClick(getLayoutPosition());
                     }
                 }
@@ -237,10 +232,8 @@ public class CategorySection extends StatelessSection {
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     if(mListener != null){
-                        //getLayoutPosition() includes the Section Header
-
                         mListener.onEditCategory(getLayoutPosition());
                     }
                 }
@@ -249,10 +242,8 @@ public class CategorySection extends StatelessSection {
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     if(mListener != null){
-                        //getLayoutPosition() includes the Section Header
-
                         mListener.onDeleteCategory(getLayoutPosition());
                     }
                 }
