@@ -106,6 +106,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
             }else{
                 viewHolder.circularView.setCircleColor(R.color.colorPrimary);
+                viewHolder.circularView.setStrokeColor(R.color.colorPrimary);
             }
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
