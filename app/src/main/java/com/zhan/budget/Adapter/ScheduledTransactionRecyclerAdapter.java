@@ -3,6 +3,7 @@ package com.zhan.budget.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -85,78 +87,14 @@ public class ScheduledTransactionRecyclerAdapter extends RecyclerView.Adapter<Sc
             viewHolder.accountIcon.setVisibility(View.GONE);
         }
 
-        viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(scheduledTransaction.getTransaction().getPrice()));
-
-        //If transaction's dayType is COMPLETED
-        /*if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
-            viewHolder.circularView.setStrokeWidthInDP(1);
-            viewHolder.circularView.setStrokePaddingInDP(3);
-            viewHolder.circularView.setStrokeColor(R.color.transparent);
-            viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-
-            if(transaction.getCategory() != null){
-                viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
-            }else{
-                viewHolder.circularView.setCircleColor(R.color.colorPrimary);
-            }
-
-            //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
-            viewHolder.approveBtn.setVisibility(View.GONE);
-            viewHolder.unapproveBtn.setVisibility(View.VISIBLE);
-
-            //Set Transaction's cost color based on Category type
-            if(transaction.getCategory() != null){
-                if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
-                }else{
-                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
-                }
-
-                viewHolder.circularView.setStrokeColor(transaction.getCategory().getColor());
-            }
-
-        }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
-            viewHolder.circularView.setStrokeWidthInDP(2);
-            viewHolder.circularView.setStrokePaddingInDP(0);
-            viewHolder.circularView.setCircleColor(R.color.transparent);
-            viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
-            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
-            viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
-
-            viewHolder.approveBtn.setVisibility(View.VISIBLE);
-            viewHolder.unapproveBtn.setVisibility(View.GONE);
-
-            //Set Transaction's cost color to be regular text color
-            viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
-        }*/
-
-        if(scheduledTransaction.getTransaction().getCategory() != null) {
-            viewHolder.circularView.setStrokeWidthInDP(1);
-            viewHolder.circularView.setStrokePaddingInDP(3);
-            viewHolder.circularView.setStrokeColor(R.color.transparent);
-            viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-            viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
-
-            if(scheduledTransaction.getTransaction().getCategory() != null){
-                viewHolder.circularView.setCircleColor(scheduledTransaction.getTransaction().getCategory().getColor());
-            }else{
-                viewHolder.circularView.setCircleColor(R.color.colorPrimary);
-            }
-
-
-
-            if (scheduledTransaction.getTransaction().getCategory().isText()) {
-                viewHolder.circularView.setIconResource(0);
-                viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(scheduledTransaction.getTransaction().getCategory().getName().toUpperCase().trim()));
-            } else {
-                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, scheduledTransaction.getTransaction().getCategory().getIcon()));
-                viewHolder.circularView.setText("");
-            }
+        //Location
+        if(scheduledTransaction.getTransaction().getLocation() != null){
+            viewHolder.location.setVisibility(View.VISIBLE);
+            viewHolder.locationIcon.setVisibility(View.VISIBLE);
+            viewHolder.location.setText(scheduledTransaction.getTransaction().getLocation().getName());
         }else{
-            //If there is no category attached, put a question mark as the icon
-            viewHolder.circularView.setIconResource(0);
-            viewHolder.circularView.setText("?");
+            viewHolder.location.setVisibility(View.GONE);
+            viewHolder.locationIcon.setVisibility(View.GONE);
         }
 
         //If there is no note, use Category's name instead
@@ -170,22 +108,34 @@ public class ScheduledTransactionRecyclerAdapter extends RecyclerView.Adapter<Sc
             }
         }
 
-        //If this is used in Calendar Fragment (no need to show date), everywhere else use it
-        /*if(this.showDate){
-            viewHolder.date.setVisibility(View.VISIBLE);
-            viewHolder.date.setText(DateUtil.convertDateToStringFormat1(context, transaction.getDate()));
-        }else{
-            viewHolder.date.setVisibility(View.GONE);
-        }*/
+        viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(scheduledTransaction.getTransaction().getPrice()));
 
-        //If there are no location
-        if(scheduledTransaction.getTransaction().getLocation() != null){
-            viewHolder.location.setVisibility(View.VISIBLE);
-            viewHolder.locationIcon.setVisibility(View.VISIBLE);
-            viewHolder.location.setText(scheduledTransaction.getTransaction().getLocation().getName());
+        //Category
+        viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+        viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+
+        if(scheduledTransaction.getTransaction().getCategory() != null) {
+            if (scheduledTransaction.getTransaction().getCategory().isText()) {
+                viewHolder.circularView.setIconResource(0);
+                viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(scheduledTransaction.getTransaction().getCategory().getName().toUpperCase().trim()));
+            } else {
+                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, scheduledTransaction.getTransaction().getCategory().getIcon()));
+                viewHolder.circularView.setText("");
+            }
+
+            if(scheduledTransaction.getTransaction().getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+            }else{
+                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+            }
+
+            viewHolder.circularView.setCircleColor(scheduledTransaction.getTransaction().getCategory().getColor());
+            viewHolder.circularView.setStrokeColor(scheduledTransaction.getTransaction().getCategory().getColor());
         }else{
-            viewHolder.location.setVisibility(View.GONE);
-            viewHolder.locationIcon.setVisibility(View.GONE);
+            //If there is no category attached, put a question mark as the icon
+            viewHolder.circularView.setIconResource(0);
+            viewHolder.circularView.setText("?");
+            viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.attr.themeColorText));
         }
     }
 
