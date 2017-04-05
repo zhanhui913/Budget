@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,14 +23,12 @@ import com.zhan.budget.Activity.LocationInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
-import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
@@ -257,7 +254,6 @@ public class LocationFragment extends BaseRealmFragment
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
                         closeSwipeItem(position);
                     }
                 })

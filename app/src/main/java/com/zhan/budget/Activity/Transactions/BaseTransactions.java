@@ -145,7 +145,6 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
                         closeSwipeItem(position);
                     }
                 })
