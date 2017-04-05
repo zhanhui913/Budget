@@ -92,18 +92,54 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.accountIcon.setVisibility(View.GONE);
         }
 
+        //Location
+        if(transaction.getLocation() != null){
+            viewHolder.location.setVisibility(View.VISIBLE);
+            viewHolder.locationIcon.setVisibility(View.VISIBLE);
+            viewHolder.location.setText(transaction.getLocation().getName());
+        }else{
+            viewHolder.location.setVisibility(View.GONE);
+            viewHolder.locationIcon.setVisibility(View.GONE);
+        }
+
+        //If there is no note, use Category's name or icon instead
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
+            viewHolder.name.setText(transaction.getNote());
+        }else{
+            if(transaction.getCategory() != null){
+                viewHolder.name.setText(transaction.getCategory().getName());
+            }else{
+                viewHolder.name.setText("");
+            }
+        }
+
+        //Category
+        if(transaction.getCategory() != null) {
+            if (transaction.getCategory().isText()) {
+                viewHolder.circularView.setIconResource(0);
+                viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(transaction.getCategory().getName().toUpperCase().trim()));
+            } else {
+                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
+                viewHolder.circularView.setText("");
+            }
+        }else{
+            //If there is no category attached, put a question mark as the icon
+            viewHolder.circularView.setIconResource(0);
+            viewHolder.circularView.setText("?");
+        }
+
         viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(transaction.getPrice()));
 
         //If transaction's dayType is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
             viewHolder.circularView.setStrokeWidthInDP(1);
             viewHolder.circularView.setStrokePaddingInDP(3);
-            viewHolder.circularView.setStrokeColor(R.color.transparent);
             viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
             if(transaction.getCategory() != null){
                 viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
+                viewHolder.circularView.setStrokeColor(transaction.getCategory().getColor());
             }else{
                 viewHolder.circularView.setCircleColor(R.color.colorPrimary);
                 viewHolder.circularView.setStrokeColor(R.color.colorPrimary);
@@ -120,8 +156,8 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 }else{
                     viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
                 }
-
-                viewHolder.circularView.setStrokeColor(transaction.getCategory().getColor());
+            }else{
+                viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
             }
 
         }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
@@ -139,47 +175,12 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
 
-        if(transaction.getCategory() != null) {
-            if (transaction.getCategory().isText()) {
-                viewHolder.circularView.setIconResource(0);
-                viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(transaction.getCategory().getName().toUpperCase().trim()));
-            } else {
-                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
-                viewHolder.circularView.setText("");
-            }
-        }else{
-            //If there is no category attached, put a question mark as the icon
-            viewHolder.circularView.setIconResource(0);
-            viewHolder.circularView.setText("?");
-        }
-
-        //If there is no note, use Category's name instead
-        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
-            viewHolder.name.setText(transaction.getNote());
-        }else{
-            if(transaction.getCategory() != null){
-                viewHolder.name.setText(transaction.getCategory().getName());
-            }else{
-                viewHolder.name.setText("");
-            }
-        }
-
         //If this is used in Calendar Fragment (no need to show date), everywhere else use it
         if(this.showDate){
             viewHolder.date.setVisibility(View.VISIBLE);
             viewHolder.date.setText(DateUtil.convertDateToStringFormat1(context, transaction.getDate()));
         }else{
             viewHolder.date.setVisibility(View.GONE);
-        }
-
-        //If there are no location
-        if(transaction.getLocation() != null){
-            viewHolder.location.setVisibility(View.VISIBLE);
-            viewHolder.locationIcon.setVisibility(View.VISIBLE);
-            viewHolder.location.setText(transaction.getLocation().getName());
-        }else{
-            viewHolder.location.setVisibility(View.GONE);
-            viewHolder.locationIcon.setVisibility(View.GONE);
         }
     }
 
