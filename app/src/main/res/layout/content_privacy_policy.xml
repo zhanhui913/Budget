@@ -18,7 +18,9 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			android:paddingTop="@dimen/item_top_padding"
-			android:paddingBottom="@dimen/item_bottom_padding">
+			android:paddingBottom="@dimen/item_bottom_padding"
+			android:paddingRight="@dimen/item_right_padding"
+			android:paddingEnd="@dimen/item_right_padding">
 
 			<!-- Privacy Policy  -->
 			<TextView style="@style/SettingsTextViewTitleStyle"
@@ -150,6 +152,14 @@
 			          android:layout_width="wrap_content"
 			          android:layout_height="wrap_content"
 			          android:text="@string/privacy_contact_content"/>
+
+			<TextView
+				android:id="@+id/privacyDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="right"
+				android:layout_marginTop="20dp"
+				android:text="@string/privacy_last_updated_date"/>
 		</LinearLayout>
 	</ScrollView>
 </RelativeLayout>
