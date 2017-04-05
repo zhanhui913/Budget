@@ -22,9 +22,14 @@
             android:icon="@drawable/svg_ic_location"
             android:title="@string/nav_location" />
         <item
-            android:id="@+id/nav_overview"
+        android:id="@+id/nav_overview"
+        android:icon="@drawable/svg_ic_menu_monthly_overview"
+        android:title="@string/nav_report" />
+
+        <item
+            android:id="@+id/nav_scheduled_transaction"
             android:icon="@drawable/svg_ic_menu_monthly_overview"
-            android:title="@string/nav_report" />
+            android:title="@string/nav_scheduled_transactions" />
     </group>
 
     <group

@@ -72,6 +72,7 @@
 	<string name="nav_account">Account</string>
 	<string name="nav_location">Location</string>
 	<string name="nav_report">Monthly Report</string>
+	<string name="nav_scheduled_transactions">Scheduled Transactions</string>
 	<string name="nav_setting">Settings</string>
 
 	<string name="transaction">Transaction</string>
@@ -292,4 +293,7 @@
 	<string name="privacy_contact_content">If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me.</string>
 
 	<string name="privacy_last_updated_date" formatted="false">Updated : %s</string>
+
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

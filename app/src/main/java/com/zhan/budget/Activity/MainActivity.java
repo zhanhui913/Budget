@@ -17,6 +17,7 @@ import com.zhan.budget.Fragment.CategoryFragment1;
 import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
+import com.zhan.budget.Fragment.ScheduledTransactionFragment;
 import com.zhan.budget.MyApplication;
 import com.zhan.budget.R;
 
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity
     private AccountFragment accountFragment;
     private RateFragment rateFragment;
     private LocationFragment locationFragment;
+    private ScheduledTransactionFragment scheduledTransactionFragment;
 
     private int savedTheme;
 
@@ -52,6 +54,7 @@ public class MainActivity extends BaseActivity
         categoryFragment = new CategoryFragment1();
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
+        scheduledTransactionFragment = new ScheduledTransactionFragment();
 
         // remove for now in v1.0.0
         //rateFragment = new RateFragment();
@@ -141,6 +144,9 @@ public class MainActivity extends BaseActivity
                         break;
                     case R.id.nav_location:
                         fragment = locationFragment;
+                        break;
+                    case R.id.nav_scheduled_transaction:
+                        fragment = scheduledTransactionFragment;
                         break;
                     case R.id.nav_setting:
                         savedTheme = MyApplication.getInstance(getApplicationContext()).getBudgetTheme();
