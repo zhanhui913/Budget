@@ -165,4 +165,44 @@
             android:text="@string/setting_content_translation"/>
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/left_padding_divider"
+        android:background="?attr/themeColorHighlight"/>
+
+    <RelativeLayout  style="@style/ItemPaddingStyle"
+        android:id="@+id/privacyPolicyBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/themeColorBtn"
+        android:clickable="true"
+        android:focusable="true">
+
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+            android:id="@+id/privacyPolicyCV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            app:cv_bgColor="@color/lemon"
+            app:cv_strokeColor="@color/lemon"
+            app:cv_iconDrawable="@drawable/svg_ic_paperclip"/>
+
+        <TextView style="@style/SettingsTextViewTitleStyle"
+            android:id="@+id/privacyPolicyTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/privacyPolicyCV"
+            android:text="@string/settings_title_privacy"/>
+
+        <TextView style="@style/SettingsTextViewContentStyle"
+            android:id="@+id/privacyPolicyContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/privacyPolicyTitle"
+            android:layout_toRightOf="@+id/privacyPolicyCV"
+            android:text="@string/settings_content_privacy"/>
+    </RelativeLayout>
 </LinearLayout>

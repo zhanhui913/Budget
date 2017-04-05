@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.zhan.budget.Activity.BaseActivity;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
-import com.zhan.library.CircularView;
 
 public class AboutActivity extends BaseActivity {
 
@@ -28,6 +26,7 @@ public class AboutActivity extends BaseActivity {
         createOpenSource();
         createDeveloper();
         createTranslation();
+        createPrivacyPolicy();
     }
 
     /**
@@ -88,6 +87,20 @@ public class AboutActivity extends BaseActivity {
                 public void onClick(View v) {
                     Intent translation = new Intent(getApplicationContext(), TranslationActivity.class);
                     startActivity(translation);
+                }
+            });
+        }
+    }
+
+    private void createPrivacyPolicy(){
+        ViewGroup privacyBtn = (ViewGroup) findViewById(R.id.privacyPolicyBtn);
+
+        if(privacyBtn != null){
+            privacyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent privacy = new Intent(getApplicationContext(), PrivacyPolicyActivity.class);
+                    startActivity(privacy);
                 }
             });
         }
