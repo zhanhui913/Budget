@@ -274,14 +274,13 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onClick(View v) {
                     mListener.onClickTransaction(getLayoutPosition());
-                    Log.d("ZHAP", "on click : " + getLayoutPosition());
                 }
             });
 
             approveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     mListener.onApproveTransaction(getLayoutPosition());
                 }
             });
@@ -289,7 +288,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             unapproveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     mListener.onUnapproveTransaction(getLayoutPosition());
                 }
             });
@@ -297,6 +296,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onDeleteTransaction(getLayoutPosition());
                 }
             });

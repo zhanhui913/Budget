@@ -196,6 +196,7 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onDeleteAccount(getLayoutPosition());
                 }
             });
@@ -203,6 +204,7 @@ public class AccountRecyclerAdapter extends RecyclerView.Adapter<AccountRecycler
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onEditAccount(getLayoutPosition());
                 }
             });

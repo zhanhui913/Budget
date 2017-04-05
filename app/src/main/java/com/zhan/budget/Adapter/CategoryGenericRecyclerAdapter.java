@@ -276,14 +276,13 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 @Override
                 public void onClick(View v) {
                     mListener.onClick(getLayoutPosition());
-                    Log.d("ZHAP", "on click : " + getLayoutPosition());
                 }
             });
 
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     mListener.onEditCategory(getLayoutPosition());
                 }
             });
@@ -291,6 +290,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onDeleteCategory(getLayoutPosition());
                 }
             });

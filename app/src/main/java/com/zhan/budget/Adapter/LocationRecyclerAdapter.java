@@ -176,6 +176,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onDeleteLocation(getLayoutPosition());
                 }
             });
@@ -183,6 +184,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<LocationRecycl
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onEditLocation(getLayoutPosition());
                 }
             });
