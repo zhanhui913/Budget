@@ -969,7 +969,11 @@ public class TransactionInfoActivity extends BaseActivity implements
             localTransaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = localTransaction.getDate();
 
-            for(int i = 0; i < 10; i++){
+            //Number of repeats that fit into 1 year given the unit and repeat type
+            int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
+
+            //Create as many transactions as possible to fit into 1 year
+            for(int i = 0; i < numRepeats; i++){
                 myRealm.beginTransaction();
 
                 if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){

@@ -4,12 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.zhan.budget.Etc.Constants;
-import com.zhan.budget.Model.Realm.Account;
-import com.zhan.budget.Model.Realm.Category;
-import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.ThemeUtil;
@@ -20,13 +16,11 @@ import java.util.List;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
-import io.realm.FieldAttribute;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
-import io.realm.RealmResults;
 import io.realm.RealmSchema;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
@@ -198,6 +192,8 @@ public class MyApplication extends Application {
 
         Log.d("HELP", "start listening to realm changes");
         listenToRealmDBChanges();
+
+        checkScheduledTransactions();
     }
 
     private void listenToRealmDBChanges(){
@@ -214,6 +210,10 @@ public class MyApplication extends Application {
                 }
             }
         });
+    }
+
+    private void checkScheduledTransactions(){
+
     }
 
     public static MyApplication getInstance() {
