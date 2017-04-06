@@ -1,8 +1,10 @@
 package com.zhan.budget.Fragment;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -97,6 +99,47 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
         });
     }
 
+    private void editScheduledTransaction(int position){
+        //startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getContext(), sTransactionRecyclerAdapter.getScheduledTransactionList().get(position)), RequestCodes.EDIT_ACCOUNT);
+    }
+
+    private void confirmDelete(final int position){
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(getString(R.string.warning_delete_scheduled_transaction));
+
+        new AlertDialog.Builder(getContext())
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteScheduledTransaction(position);
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Does nothing for now
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteScheduledTransaction(int position){
+        myRealm.beginTransaction();
+        resultsScheduledTransaction.get(position).deleteFromRealm();
+        myRealm.commitTransaction();
+
+        //recalculate everything
+        sTransactionRecyclerAdapter.getScheduledTransactionList().remove(position);
+        sTransactionRecyclerAdapter.notifyDataSetChanged();
+        updateStatus();
+    }
+
     private void updateStatus(){
         if(sTransactionRecyclerAdapter.getScheduledTransactionList().size() > 0){
             emptyLayout.setVisibility(View.GONE);
@@ -120,12 +163,12 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
 
     @Override
     public void onDeleteScheduledTransaction(int position){
-       // confirmDelete(position);
+        confirmDelete(position);
     }
 
     @Override
     public void onEditScheduledTransaction(int position){
-        //editAccount(position);
+        editScheduledTransaction(position);
     }
 
 
