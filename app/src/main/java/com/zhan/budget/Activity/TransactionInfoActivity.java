@@ -950,27 +950,23 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
 
             Realm myRealm = Realm.getDefaultInstance();
-            myRealm.beginTransaction();
+            //myRealm.beginTransaction();
 
             //Keep copy of these value to add back at the end
             Date origDate = localTransaction.getDate();
             String origID = localTransaction.getId();
 
-            scheduledTransaction.setTransaction(localTransaction);
+           /* scheduledTransaction.setTransaction(localTransaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
-            myRealm.commitTransaction();
-
-            Log.d(TAG, "----------- Parceler Result ----------");
-            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
-            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
-            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
-            Log.i(TAG, "----------- Parceler Result ----------");
+            myRealm.commitTransaction();*/
 
             localTransaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = localTransaction.getDate();
 
             //Number of repeats that fit into 1 year given the unit and repeat type
             int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
+
+            String lastTransactionID = "";
 
             //Create as many transactions as possible to fit into 1 year
             for(int i = 0; i < numRepeats; i++){
@@ -986,11 +982,31 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 localTransaction.setId(Util.generateUUID());
                 localTransaction.setDate(nextDate);
+                localTransaction.setScheduledTransactionId(scheduledTransaction.getId());
 
                 Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
+
+                //On the last one, fetch the ID of the transaction and put it into Scheduled Transaction's field
+                if(i == numRepeats - 1){
+                    lastTransactionID = localTransaction.getId();
+                }
+
                 myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }
+
+            myRealm.beginTransaction();
+            scheduledTransaction.setLastTransactionId(lastTransactionID);
+            scheduledTransaction.setTransaction(localTransaction);
+            myRealm.copyToRealmOrUpdate(scheduledTransaction);
+            myRealm.commitTransaction();
+
+            Log.d(TAG, "----------- Second Parceler Result ----------");
+            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
+            Log.d(TAG, "scheduled transaction last id :" + scheduledTransaction.getLastTransactionId());
+            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
+            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
+            Log.i(TAG, "----------- Second Parceler Result ----------");
 
             //Put back orig value
             //This is so that the localTransaction object in the intent can remain the same
@@ -1020,7 +1036,7 @@ public class TransactionInfoActivity extends BaseActivity implements
      * @param newOrEditTransaction The new transaction information.
      */
     private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
-        Log.d(TAG, "----------- Parceler Result ----------");
+        Log.d(TAG, "----------- First Parceler Result ----------");
         Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
         Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
@@ -1038,7 +1054,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         }else{
             Log.d(TAG, "account is null");
         }
-        Log.d(TAG, "----------- Parceler Result ----------");
+        Log.d(TAG, "----------- First Parceler Result ----------");
 
         Realm myRealm = Realm.getDefaultInstance();
         myRealm.beginTransaction();

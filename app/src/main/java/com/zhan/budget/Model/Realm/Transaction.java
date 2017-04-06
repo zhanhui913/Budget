@@ -27,7 +27,7 @@ public class Transaction extends RealmObject {
     private Account account;
     private String dayType;
     private Location location;
-    private ScheduledTransaction scheduledTransaction;
+    private String scheduledTransactionId;
 
     public Transaction(){
 
@@ -97,15 +97,15 @@ public class Transaction extends RealmObject {
         this.location = location;
     }
 
-    public ScheduledTransaction getScheduledTransaction() {
-        return scheduledTransaction;
+    public String getScheduledTransactionId() {
+        return scheduledTransactionId;
     }
 
-    public void setScheduledTransaction(ScheduledTransaction scheduledTransaction) {
-        this.scheduledTransaction = scheduledTransaction;
+    public void setScheduledTransactionId(String scheduledTransactionId) {
+        this.scheduledTransactionId = scheduledTransactionId;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property that isnt ignored
     //
@@ -128,7 +128,7 @@ public class Transaction extends RealmObject {
             if(!location.checkEquals(other.getLocation())) return false;
         }
 
-        if(scheduledTransaction != null && other.getScheduledTransaction() != null && !scheduledTransaction.checkEquals(other.getScheduledTransaction())){
+        if(!scheduledTransactionId.equalsIgnoreCase(other.getScheduledTransactionId())){
             return false;
         }
 

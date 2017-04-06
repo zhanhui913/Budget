@@ -48,7 +48,7 @@ public class MyApplication extends Application {
 
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
-                .schemaVersion(3)
+                .schemaVersion(4)
                 .migration(new RealmMigration() {
                     @Override
                     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
@@ -207,9 +207,9 @@ public class MyApplication extends Application {
 
                             Log.d("HELP", "migration scheduled transactions now");
 
-                            RealmObjectSchema schema1 = schema.get("ScheduledTransaction").addField("lastTransactionId", String.class);
+                            schema.get("ScheduledTransaction").addField("lastTransactionId", String.class);
 
-                            schema.get("Transaction").addRealmObjectField("scheduledTransaction", schema1);
+                            schema.get("Transaction").addField("scheduledTransactionId", String.class);
                             oldVersion++;
                         }
 
@@ -228,7 +228,7 @@ public class MyApplication extends Application {
         myRealm = Realm.getDefaultInstance();
         listenToRealmDBChanges();
 
-        //checkScheduledTransactions();
+        checkScheduledTransactions();
     }
 
     private void listenToRealmDBChanges(){
