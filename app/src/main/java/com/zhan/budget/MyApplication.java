@@ -72,7 +72,13 @@ public class MyApplication extends Application {
 
                         //migration to version 3
                         if(oldVersion == 2){
-                            //Change Transaction's price and Category's budget from float to double
+
+                            ////////////////////////////////////////////////////////////////////////
+                            //
+                            // Change Transaction's price and Category's budget from float to double
+                            //
+                            ////////////////////////////////////////////////////////////////////////
+
                             schema.get("Transaction")
                                     .addField("price_tmp", double.class)
                                     .transform(new RealmObjectSchema.Function() {
@@ -96,6 +102,12 @@ public class MyApplication extends Application {
                                     })
                                     .removeField("budget")
                                     .renameField("budget_tmp","budget");
+
+                            ////////////////////////////////////////////////////////////////////////
+                            //
+                            // Location
+                            //
+                            ////////////////////////////////////////////////////////////////////////
 
                             final List<DynamicRealmObject> locationList = new ArrayList<>();
 
@@ -181,6 +193,18 @@ public class MyApplication extends Application {
                                             }
                                         }
                                     });
+
+                            ////////////////////////////////////////////////////////////////////////
+                            //
+                            // Scheduled Transactions
+                            //
+                            ////////////////////////////////////////////////////////////////////////
+
+                            RealmObjectSchema schema1 = schema.get("ScheduledTransaction").addField("lastTransactionId", String.class);
+
+                            schema.get("Transaction").addRealmObjectField("scheduledTransaction", schema1);
+
+
 
                             oldVersion++;
                         }
