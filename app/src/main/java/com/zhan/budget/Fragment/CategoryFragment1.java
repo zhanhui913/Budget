@@ -123,7 +123,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
 
                 int indexInSection = categorySectionAdapter.getPositionInSection(position);
 
-                confirmDelete(((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle(), indexInSection, position);
+                confirmDelete(((CategorySection)categorySectionAdapter.getSectionForPosition(position)).getSectionTitle(), indexInSection);
             }
 
             @Override
@@ -395,7 +395,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
         categorySectionAdapter.notifyDataSetChanged();
     }
 
-    private void confirmDelete(final String budgetType, final int position, final int rawPosition){
+    private void confirmDelete(final String budgetType, final int position){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
@@ -414,13 +414,7 @@ public class CategoryFragment1 extends BaseRealmFragment {
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //closeSwipeItem(rawPosition);
-                    }
-                })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        //closeSwipeItem(rawPosition);
+                        //Do nothing for now
                     }
                 })
                 .create()
