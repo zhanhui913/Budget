@@ -2,6 +2,8 @@ package com.zhan.budget.Util;
 
 import android.content.Context;
 
+import com.zhan.budget.Model.RepeatType;
+
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -353,5 +355,28 @@ public final class DateUtil {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Gets the number of times a specific repeat would need to occur to fit within durationYear year.
+     * @param unit Number
+     * @param repeatType RepeatType enum in string
+     * @param durationYear Duration in years
+     * @return The number of times to repeat given the parameter
+     */
+    public static int getNumberRepeatInYear(int unit, String repeatType, int durationYear){
+        if(unit <= 0 || durationYear <= 0){
+            return -1;
+        }
+
+        if(repeatType.equals(RepeatType.DAYS.toString())){
+            return Math.round((365 * durationYear) / unit);
+        }else if(repeatType.equals(RepeatType.WEEKS.toString())){
+            return Math.round((52 * durationYear) / unit);
+        }else if(repeatType.equals(RepeatType.MONTHS.toString())){
+            return Math.round((12 * durationYear) / unit);
+        }else{
+            return -1;
+        }
     }
 }
