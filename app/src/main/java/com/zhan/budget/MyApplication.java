@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.DynamicRealm;
@@ -21,6 +23,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
+import io.realm.RealmResults;
 import io.realm.RealmSchema;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
@@ -32,6 +35,8 @@ public class MyApplication extends Application {
     private static MyApplication instance;
 
     private int CURRENT_THEME = ThemeUtil.THEME_LIGHT;
+
+    private Realm myRealm;
 
     @Override
     public void onCreate(){
@@ -191,13 +196,14 @@ public class MyApplication extends Application {
         //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
         Log.d("HELP", "start listening to realm changes");
+
+        myRealm = Realm.getDefaultInstance();
         listenToRealmDBChanges();
 
-        checkScheduledTransactions();
+        //checkScheduledTransactions();
     }
 
     private void listenToRealmDBChanges(){
-        final Realm myRealm = Realm.getDefaultInstance();
         myRealm.addChangeListener(new RealmChangeListener<Realm>() {
             @Override
             public void onChange(Realm element) {
@@ -213,7 +219,20 @@ public class MyApplication extends Application {
     }
 
     private void checkScheduledTransactions(){
+        RealmResults<ScheduledTransaction> scheduledTransactionResultRealm = myRealm.where(ScheduledTransaction.class).findAllAsync();
+        scheduledTransactionResultRealm.addChangeListener(new RealmChangeListener<RealmResults<ScheduledTransaction>>() {
+            @Override
+            public void onChange(RealmResults<ScheduledTransaction> element) {
+                element.removeChangeListener(this);
 
+                Date today = new Date();
+
+                //Go through all scheduled transactions and update it necessary
+                for(int i = 0; i < element.size(); i++){
+
+                }
+            }
+        });
     }
 
     public static MyApplication getInstance() {
