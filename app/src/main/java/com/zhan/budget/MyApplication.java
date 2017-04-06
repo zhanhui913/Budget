@@ -200,6 +200,8 @@ public class MyApplication extends Application {
                             //
                             ////////////////////////////////////////////////////////////////////////
 
+                            Log.d("HELP", "migration scheduled transactions now");
+
                             RealmObjectSchema schema1 = schema.get("ScheduledTransaction").addField("lastTransactionId", String.class);
 
                             schema.get("Transaction").addRealmObjectField("scheduledTransaction", schema1);
