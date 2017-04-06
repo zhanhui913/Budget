@@ -194,6 +194,11 @@ public class MyApplication extends Application {
                                         }
                                     });
 
+                            oldVersion++;
+                        }
+
+                        //migration to version 4
+                        if(oldVersion == 3){
                             ////////////////////////////////////////////////////////////////////////
                             //
                             // Scheduled Transactions
@@ -205,9 +210,6 @@ public class MyApplication extends Application {
                             RealmObjectSchema schema1 = schema.get("ScheduledTransaction").addField("lastTransactionId", String.class);
 
                             schema.get("Transaction").addRealmObjectField("scheduledTransaction", schema1);
-
-
-
                             oldVersion++;
                         }
 
