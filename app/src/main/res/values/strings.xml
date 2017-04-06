@@ -230,12 +230,13 @@
 	<string name="csv_failed">CSV creation failed</string>
 	<string name="use_text">Use Text</string>
 	<string name="use_icon">Use Icon</string>
-	<string name="cost">$0.00</string>
+	<string name="cost">0.00</string>
 	<string name="current">Current</string>
 	<string name="location_time" formatted="false">%d time</string>
 	<string name="location_times" formatted="false">%d times</string>
 	<string name="category_budget" formatted="false">Budget : %s</string>
 	<string name="category_percent" formatted="false">Percent : %.2f%%</string>
+	<string name="scheduled_transaction_display" formatted="false">Repeat every %d %s</string>
 	<string name="na">NA</string>
 	<string name="version" formatted="false">v%s</string>
 	<string name="color">Color</string>

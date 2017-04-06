@@ -137,6 +137,9 @@ public class ScheduledTransactionRecyclerAdapter extends RecyclerView.Adapter<Sc
             viewHolder.circularView.setText("?");
             viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.attr.themeColorText));
         }
+
+        //Repeat type
+        viewHolder.repeat.setText(String.format(context.getString(R.string.scheduled_transaction_display), scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType()));
     }
 
     @Override
@@ -158,7 +161,7 @@ public class ScheduledTransactionRecyclerAdapter extends RecyclerView.Adapter<Sc
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public CircularView circularView;
-        public TextView name, cost, date, account, location;
+        public TextView name, cost, date, account, location, repeat;
 
         public SwipeLayout swipeLayout;
         public ImageView deleteBtn, editBtn, locationIcon, accountIcon;
@@ -178,6 +181,7 @@ public class ScheduledTransactionRecyclerAdapter extends RecyclerView.Adapter<Sc
             location = (TextView) itemView.findViewById(R.id.transactionLocation);
             locationIcon = (ImageView) itemView.findViewById(R.id.locationIcon);
             accountIcon = (ImageView) itemView.findViewById(R.id.accountIcon);
+            repeat = (TextView) itemView.findViewById(R.id.transactionRepeat);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeTransaction);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
