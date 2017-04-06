@@ -369,11 +369,11 @@ public final class DateUtil {
             return -1;
         }
 
-        if(repeatType.equals(RepeatType.DAYS.toString())){
+        if(repeatType.equalsIgnoreCase(RepeatType.DAYS.toString())){
             return Math.round((365 * durationYear) / unit);
-        }else if(repeatType.equals(RepeatType.WEEKS.toString())){
+        }else if(repeatType.equalsIgnoreCase(RepeatType.WEEKS.toString())){
             return Math.round((52 * durationYear) / unit);
-        }else if(repeatType.equals(RepeatType.MONTHS.toString())){
+        }else if(repeatType.equalsIgnoreCase(RepeatType.MONTHS.toString())){
             return Math.round((12 * durationYear) / unit);
         }else{
             return -1;
