@@ -332,31 +332,20 @@ public class MyApplication extends Application {
                 //Go through all scheduled transactions and update it necessary
                 for(int i = 0; i < element.size(); i++){
 
-
-
-                    //Compare the ScheduledTransaction's  Transaction (ie: last created) and compare it to today
-                    //Or compare it to ScheduledTransaction's lastTransactionDate
-                    /*if(element.get(i).getTransaction() != null){
-                        //If the last Transaction has already past or is today, create an extra 1 year worth
-                        if(element.get(i).getTransaction().getDate().before(now) || DateUtil.isSameDay(element.get(i).getTransaction().getDate(), now)){
-
-                        }
-                    }else */if(element.get(i).getLastTransactionDate() != null){
+                    //Compare the ScheduledTransaction's (ie: last created Transaction date) and compare it to today
+                    if(element.get(i).getLastTransactionDate() != null){
                         //If the last Transaction has already past or is today, create an extra 1 year worth
                         if(element.get(i).getLastTransactionDate().before(now) || DateUtil.isSameDay(element.get(i).getLastTransactionDate(), now)){
                             addTransactionsBasedOnScheduled(element.get(i));
                         }
                     }else{
                         //Have no lastTransactionDate field
+
                     }
-
-
-
                 }
             }
         });
     }
-
 
     private void addTransactionsBasedOnScheduled(ScheduledTransaction scheduledTransaction){
         Log.d(TAG,"starting");
