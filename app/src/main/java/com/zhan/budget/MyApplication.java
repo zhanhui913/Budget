@@ -336,7 +336,7 @@ public class MyApplication extends Application {
                     if(element.get(i).getLastTransactionDate() != null){
                         //If the last Transaction has already past or is today, create an extra 1 year worth
                         if(element.get(i).getLastTransactionDate().before(now) || DateUtil.isSameDay(element.get(i).getLastTransactionDate(), now)){
-                            addTransactionsBasedOnScheduled(element.get(i));
+                            addMoreTransactionAsNeeded(element.get(i));
                         }
                     }else{
                         //Have no lastTransactionDate field
@@ -347,7 +347,7 @@ public class MyApplication extends Application {
         });
     }
 
-    private void addTransactionsBasedOnScheduled(ScheduledTransaction scheduledTransaction){
+    private void addMoreTransactionAsNeeded(ScheduledTransaction scheduledTransaction){
         Log.d(TAG,"starting");
 
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
