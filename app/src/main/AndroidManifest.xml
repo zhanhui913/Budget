@@ -110,8 +110,7 @@
 		<activity
 			android:name=".Activity.ScheduledTransactionInfoActivity"
 			android:label="@string/title_activity_scheduled_transaction_info"
-			android:theme="@style/AppThemeLight.NoActionBar">
-		</activity>
+			android:theme="@style/AppThemeLight.NoActionBar"/>
 	</application>
 
 </manifest>
