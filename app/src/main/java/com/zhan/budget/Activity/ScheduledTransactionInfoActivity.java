@@ -1,13 +1,13 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -285,9 +285,9 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(!isNewTransaction){
-                getSupportActionBar().setTitle(getString(R.string.edit_transaction));
+                getSupportActionBar().setTitle(getString(R.string.edit_scheduled_transaction));
             }else{
-                getSupportActionBar().setTitle(getString(R.string.new_transaction));
+                getSupportActionBar().setTitle(getString(R.string.new_scheduled_transaction));
             }
         }
     }
@@ -864,8 +864,8 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
     }
 
     private void save(){
-        /*Intent intent = new Intent();
-
+        Intent intent = new Intent();
+        /*
         Transaction transaction = new Transaction();
 
         if(!isNewTransaction){
@@ -944,22 +944,98 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
 
         setResult(RESULT_OK, intent);
         finish();*/
+
+
+        editScheduledTransaction.setNote(this.noteString);
+
+        if(currentPage == BudgetType.EXPENSE){
+            editScheduledTransaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString));
+            editScheduledTransaction.setCategory(selectedExpenseCategory);
+        }else{
+            editScheduledTransaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString));
+            editScheduledTransaction.setCategory(selectedIncomeCategory);
+        }
+
+        editScheduledTransaction.setAccount(selectedAccount);
+        editScheduledTransaction.setDayType(DayType.SCHEDULED.toString());
+
+        if(isLocationChanged){
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
+                Location newLocationObject = new Location();
+                newLocationObject.setName(Util.capsFirstWord(locationString.trim()));
+                newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
+                editScheduledTransaction.setLocation(newLocationObject);
+
+                //This creates a new Location Realm object if it doesnt exist yet or updates it.
+                Realm myRealm = Realm.getDefaultInstance();
+                myRealm.beginTransaction();
+                myRealm.copyToRealmOrUpdate(newLocationObject);
+                myRealm.commitTransaction();
+                myRealm.close();
+            }else{
+                editScheduledTransaction.setLocation(null);
+            }
+        }else{
+            if(editScheduledTransaction != null){
+                editScheduledTransaction.setLocation(editScheduledTransaction.getLocation());
+            }
+        }
+
+       // editScheduledTransaction.setDate(DateUtil.formatDate(getApplicationContext(), selectedDate));
+
+
+        //Delete all old existing Transactions with scheduledTransactionId equal to this ScheduledTransaction
+        final Realm myRealm = Realm.getDefaultInstance();
+        Date now = DateUtil.refreshDate(new Date());
+
+        myRealm.where(Transaction.class)
+                .equalTo("scheduledTransactionId", editScheduledTransaction.getId())
+                .greaterThanOrEqualTo("date", now)
+                .equalTo("dayType", DayType.SCHEDULED.toString())
+                .findAllAsync()
+                .addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+                    @Override
+                    public void onChange(RealmResults<Transaction> element) {
+                        //Delete all transactions
+                        myRealm.beginTransaction();
+                        element.deleteAllFromRealm();
+                        myRealm.commitTransaction();
+                    }
+                });
+        myRealm.close();
+        Log.d(TAG, editScheduledTransaction.toString());
+
+        //Re-Add Transactions with updated values from this ScheduledTransaction
+        addScheduleTransaction(editScheduledTransaction);
+
+        Parcelable wrapped = Parcels.wrap(editScheduledTransaction);
+        intent.putExtra(RESULT_SCHEDULED_TRANSACTION, wrapped);
+
+        setResult(RESULT_OK, intent);
+
+        finish();
     }
 
     /**
      * The function that will be called after user either adds or edit a scheduled transaction.
      * @param scheduledTransaction The new scheduled transaction information.
-     * @param localTransaction The transaction that the scheduled transaction is based on.
      */
-    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction localTransaction){
+    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction){
+        Transaction localTransaction = new Transaction();
+
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
             Realm myRealm = Realm.getDefaultInstance();
 
             //These property dont need to change in the for loop
+            localTransaction.setNote(scheduledTransaction.getNote());
+            localTransaction.setPrice(scheduledTransaction.getPrice());
+            localTransaction.setCategory(scheduledTransaction.getCategory());
+            localTransaction.setAccount(scheduledTransaction.getAccount());
             localTransaction.setDayType(DayType.SCHEDULED.toString());
+            localTransaction.setLocation(scheduledTransaction.getLocation());
             localTransaction.setScheduledTransactionId(scheduledTransaction.getId());
 
-            Date nextDate = localTransaction.getDate();
+            Date nextDate = scheduledTransaction.getLastTransactionDate();
 
             //Number of repeats that fit into 1 year given the unit and repeat type
             int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
@@ -987,12 +1063,6 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
                 //On the last created Transaction, put it into the ScheduledTransactions field
                 if(i == numRepeats - 1){
                     myRealm.beginTransaction();
-                    scheduledTransaction.setNote(localTransaction.getNote());
-                    scheduledTransaction.setPrice(localTransaction.getPrice());
-                    scheduledTransaction.setCategory(localTransaction.getCategory());
-                    scheduledTransaction.setAccount(localTransaction.getAccount());
-                    scheduledTransaction.setLocation(localTransaction.getLocation());
-                    scheduledTransaction.setDayType(localTransaction.getDayType());
                     scheduledTransaction.setLastTransactionDate(nextDate);
                     myRealm.copyToRealmOrUpdate(scheduledTransaction);
                     myRealm.commitTransaction();
@@ -1010,41 +1080,9 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
     }
 
     /**
-     * The function that will be called after user either adds or edit a transaction.
-     * @param newOrEditTransaction The new transaction information.
-     */
-    private void addNewOrEditScheduledTransaction(final Transaction newOrEditTransaction){
-        Log.d(TAG, "----------- First Parceler Result ----------");
-        Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
-        Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
-        Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
-
-        if(newOrEditTransaction.getCategory() != null){
-            Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
-            Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
-        }else{
-            Log.d(TAG, "category null");
-        }
-
-        if(newOrEditTransaction.getAccount() != null){
-            Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
-            Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
-        }else{
-            Log.d(TAG, "account is null");
-        }
-        Log.d(TAG, "----------- First Parceler Result ----------");
-
-        Realm myRealm = Realm.getDefaultInstance();
-        myRealm.beginTransaction();
-        myRealm.copyToRealmOrUpdate(newOrEditTransaction);
-        myRealm.commitTransaction();
-        myRealm.close();
-    }
-
-    /**
      * If there is no Category selected, a dialog will popup to remind the user.
      */
-    private void notificationForCategory(BudgetType type){
+    private void notificationForCategory(){
         View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
 
         TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
@@ -1089,7 +1127,7 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
             if((currentPage == BudgetType.EXPENSE && selectedExpenseCategory != null) || (currentPage == BudgetType.INCOME && selectedIncomeCategory != null)){
                 save();
             }else{
-                notificationForCategory(currentPage);
+                notificationForCategory();
             }
 
             return true;

@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.ScheduledTransactionInfoActivity;
-import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.ScheduledTransactionRecyclerAdapter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.DayType;
@@ -149,7 +148,6 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
         myRealm.commitTransaction();
 
         //Delete all Transaction with dayType = SCHEDULED and scheduledTransactionId = ScheduledTransaction's ID that is past today
-        //myRealm.beginTransaction();
         myRealm.where(Transaction.class)
                 .equalTo("scheduledTransactionId", scheduledTransactionID)
                 .greaterThanOrEqualTo("date", now)
@@ -191,7 +189,9 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
                 //updateScheduledTransactionsForDecoration();
                 //calendarView.selectDate(tt.getDate());
             }else if(requestCode == RequestCodes.EDIT_SCHEDULED_TRANSACTION){
-                ScheduledTransaction st = Parcels.unwrap(data.getExtras().getParcelable(TransactionInfoActivity.RESULT_TRANSACTION));
+                ScheduledTransaction st = Parcels.unwrap(data.getExtras().getParcelable(ScheduledTransactionInfoActivity.RESULT_SCHEDULED_TRANSACTION));
+
+                Log.d(TAG, st.toString());
 
                 //populateTransactionsForDate(tt.getDate());
                 //updateScheduledTransactionsForDecoration();
