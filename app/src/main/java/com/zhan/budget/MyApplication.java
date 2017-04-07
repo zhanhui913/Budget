@@ -6,7 +6,10 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
+import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.DateUtil;
@@ -32,6 +35,8 @@ import io.realm.exceptions.RealmPrimaryKeyConstraintException;
  * Created by Zhan on 16-06-02.
  */
 public class MyApplication extends Application {
+
+    private static final String TAG = "MyApplication";
 
     private static MyApplication instance;
 
@@ -139,7 +144,7 @@ public class MyApplication extends Application {
                                                 //Add to list.
                                                 locationList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
-                                                Log.d("HELP", "There already exist a Location : "+correctName);
+                                                Log.d(TAG, "There already exist a Location : "+correctName);
                                             }
                                         }
                                     });
@@ -185,7 +190,7 @@ public class MyApplication extends Application {
                                                 // {Location: name="Costco"} => dont delete
                                                 if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
                                                     if(!obj.equals(locationList.get(i))){
-                                                        Log.d("HELP","Adding "+obj+" to the delete list");
+                                                        Log.d(TAG,"Adding "+obj+" to the delete list");
 
                                                         //Old Locations gets set to false
                                                         obj.setBoolean("isNew", false);
@@ -208,7 +213,7 @@ public class MyApplication extends Application {
                             //
                             ////////////////////////////////////////////////////////////////////////
 
-                            Log.d("HELP", "migration scheduled transactions now");
+                            Log.d(TAG, "migration scheduled transactions now");
 
                             schema.get("Transaction")
                                     .addField("scheduledTransactionId", String.class);
@@ -280,7 +285,7 @@ public class MyApplication extends Application {
                             oldVersion++;
                         }
 
-                        Log.d("MY_APP", "old version :"+oldVersion);
+                        Log.d(TAG, "old version :"+oldVersion);
                     }
                 })
                 .build();
@@ -290,22 +295,22 @@ public class MyApplication extends Application {
 
         //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
-        Log.d("HELP", "start listening to realm changes");
-
         myRealm = Realm.getDefaultInstance();
-        listenToRealmDBChanges();
 
-        //checkScheduledTransactions();
+        checkScheduledTransactions();
+        listenToRealmDBChanges();
     }
 
     private void listenToRealmDBChanges(){
+        Log.d(TAG, "start listening to realm changes");
+
         myRealm.addChangeListener(new RealmChangeListener<Realm>() {
             @Override
             public void onChange(Realm element) {
-                Log.d("HELP","Theres a change in DB in REalm");
+                Log.d(TAG,"Theres a change in DB in REalm");
 
                 if(BudgetPreference.getAllowAutoBackup(getApplicationContext())){
-                    Log.d("HELP","backing up now");
+                    Log.d(TAG,"backing up now");
 
                     DataBackup.backUpData(getApplicationContext());
                 }
@@ -314,41 +319,107 @@ public class MyApplication extends Application {
     }
 
     private void checkScheduledTransactions(){
-        RealmResults<ScheduledTransaction> scheduledTransactionResultRealm = myRealm.where(ScheduledTransaction.class).findAllAsync();
-        scheduledTransactionResultRealm.addChangeListener(new RealmChangeListener<RealmResults<ScheduledTransaction>>() {
+        Log.d(TAG,"checkScheduledTransactions ");
+
+        myRealm.where(ScheduledTransaction.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<ScheduledTransaction>>() {
             @Override
             public void onChange(RealmResults<ScheduledTransaction> element) {
                 element.removeChangeListener(this);
 
                 Date now = DateUtil.refreshDate(new Date());
+                Log.d(TAG,"found all scheduled transactions :" +element.size());
 
                 //Go through all scheduled transactions and update it necessary
                 for(int i = 0; i < element.size(); i++){
 
 
-/*
+
                     //Compare the ScheduledTransaction's  Transaction (ie: last created) and compare it to today
                     //Or compare it to ScheduledTransaction's lastTransactionDate
-                    if(element.get(i).getTransaction() != null){
+                    /*if(element.get(i).getTransaction() != null){
                         //If the last Transaction has already past or is today, create an extra 1 year worth
                         if(element.get(i).getTransaction().getDate().before(now) || DateUtil.isSameDay(element.get(i).getTransaction().getDate(), now)){
 
                         }
-                    }else if(element.get(i).getLastTransactionDate() != null){
+                    }else */if(element.get(i).getLastTransactionDate() != null){
                         //If the last Transaction has already past or is today, create an extra 1 year worth
                         if(element.get(i).getLastTransactionDate().before(now) || DateUtil.isSameDay(element.get(i).getLastTransactionDate(), now)){
-
+                            addTransactionsBasedOnScheduled(element.get(i));
                         }
                     }else{
-                        //Have no Transaction or lastTransactionDate field
+                        //Have no lastTransactionDate field
                     }
-*/
+
 
 
                 }
             }
         });
     }
+
+
+    private void addTransactionsBasedOnScheduled(ScheduledTransaction scheduledTransaction){
+        Log.d(TAG,"starting");
+
+        if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
+            Realm myRealm = Realm.getDefaultInstance();
+
+            //These property dont need to change in the for loop
+            //localTransaction.setDayType(DayType.SCHEDULED.toString());
+            //localTransaction.setScheduledTransactionId(scheduledTransaction.getId());
+
+            Date nextDate = scheduledTransaction.getLastTransactionDate();
+
+            //Number of repeats that fit into 1 year given the unit and repeat type
+            int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
+
+            //Create as many transactions as possible to fit into 1 year
+            for(int i = 1; i < numRepeats; i++){
+                myRealm.beginTransaction();
+
+                if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
+                    nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
+                    nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                }else{
+                    nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                }
+
+                Transaction localTransaction = new Transaction();
+                localTransaction.setId(Util.generateUUID());
+                localTransaction.setDate(nextDate);
+                localTransaction.setNote(scheduledTransaction.getNote());
+                localTransaction.setPrice(scheduledTransaction.getPrice());
+                localTransaction.setDayType(DayType.SCHEDULED.toString());
+                localTransaction.setAccount(scheduledTransaction.getAccount());
+                localTransaction.setCategory(scheduledTransaction.getCategory());
+                localTransaction.setLocation(scheduledTransaction.getLocation());
+                localTransaction.setScheduledTransactionId(scheduledTransaction.getId());
+
+                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
+
+                myRealm.copyToRealmOrUpdate(localTransaction);
+                myRealm.commitTransaction();
+
+                //On the last created Transaction, update the lastTransactionDate
+                if(i == numRepeats - 1){
+                    myRealm.beginTransaction();
+                    scheduledTransaction.setLastTransactionDate(nextDate);
+                    myRealm.copyToRealmOrUpdate(scheduledTransaction);
+                    myRealm.commitTransaction();
+                }
+            }
+
+            Log.d(TAG, "----------- Second Parceler Result ----------");
+            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
+            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
+            Log.d(TAG, "transaction note :" + scheduledTransaction.getNote() + ", cost :" + scheduledTransaction.getPrice());
+            Log.i(TAG, "----------- Second Parceler Result ----------");
+
+            myRealm.close();
+        }
+    }
+
 
     public static MyApplication getInstance() {
         return instance;
