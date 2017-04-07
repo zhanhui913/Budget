@@ -296,5 +296,7 @@
 	<string name="privacy_contact_content">If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me.</string>
 
 	<string name="privacy_last_updated_date" formatted="false">Updated : %s</string>
+	<string name="title_activity_scheduled_transaction_info">ScheduledTransactionInfoActivity
+	</string>
 
 </resources>

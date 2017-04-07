@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context="com.zhan.budget.Activity.ScheduledTransactionInfoActivity"
+                tools:showIn="@layout/activity_scheduled_transaction_info">
+
+	<RelativeLayout
+		android:id="@+id/topBar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingLeft="@dimen/item_left_padding"
+		android:paddingRight="@dimen/item_right_padding"
+		android:paddingTop="@dimen/item_top_padding">
+
+		<TextView
+			android:id="@+id/transactionNameText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/text_header_size"
+			android:hint="@string/note"
+			android:textStyle="bold"
+			android:layout_alignParentLeft="true"
+			android:paddingRight="@dimen/item_right_padding"
+			android:paddingEnd="@dimen/item_right_padding"
+			android:maxLines="1"/>
+
+		<!-- There is no max characters as the code handles it there -->
+		<TextView
+			android:id="@+id/transactionCostText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/cost"
+			android:textSize="@dimen/text_header_size"
+			android:gravity="end"
+			android:layout_toRightOf="@+id/transactionNameText"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:maxLines="1"/>
+
+	</RelativeLayout>
+
+	<include layout="@layout/transaction_circle_indicator"
+	         android:id="@+id/indicatorPanel"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@+id/topBar" />
+
+	<android.support.v4.view.ViewPager
+		android:id="@+id/transactionViewPager"
+		android:layout_width="match_parent"
+		android:layout_height="fill_parent"
+		android:layout_gravity="center"
+		android:layout_below="@+id/indicatorPanel"
+		android:layout_above="@+id/centerPanel"/>
+
+	<RelativeLayout
+		android:id="@+id/centerPanel"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:background="@color/green"
+		android:layout_above="@+id/numberPad">
+
+		<ImageButton
+			android:id="@+id/dateBtn"
+			android:layout_width="50dp"
+			android:layout_height="match_parent"
+			android:src="@drawable/svg_ic_date"
+			android:background="@drawable/budget_green_button"
+			android:layout_alignParentLeft="true" />
+
+		<ImageButton
+			android:id="@+id/repeatBtn"
+			android:layout_width="50dp"
+			android:layout_height="match_parent"
+			android:src="@drawable/svg_ic_repeat"
+			android:background="@drawable/budget_green_button"
+			android:layout_toRightOf="@+id/dateBtn" />
+
+		<ImageButton
+			android:id="@+id/addAccountBtn"
+			android:layout_width="50dp"
+			android:layout_height="match_parent"
+			android:src="@drawable/svg_ic_menu_account"
+			android:layout_toLeftOf="@+id/addNoteBtn"
+			android:background="@drawable/budget_green_button"/>
+
+		<ImageButton
+			android:id="@+id/addNoteBtn"
+			android:layout_width="50dp"
+			android:layout_height="match_parent"
+			android:src="@drawable/svg_ic_note"
+			android:layout_toLeftOf="@+id/addLocationBtn"
+			android:background="@drawable/budget_green_button"/>
+
+		<ImageButton
+			android:id="@+id/addLocationBtn"
+			android:layout_width="50dp"
+			android:layout_height="match_parent"
+			android:src="@drawable/svg_ic_location"
+			android:layout_alignParentRight="true"
+			android:background="@drawable/budget_green_button"/>
+
+	</RelativeLayout>
+
+	<include layout="@layout/number_pad"
+	         android:id="@+id/numberPad"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentLeft="true"
+	         android:layout_alignParentRight="true"
+	         android:layout_alignParentStart="true"
+	         android:layout_alignParentEnd="true"
+	         android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
