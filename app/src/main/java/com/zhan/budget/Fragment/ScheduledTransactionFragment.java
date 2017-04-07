@@ -2,6 +2,7 @@ package com.zhan.budget.Fragment;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -13,12 +14,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.ScheduledTransactionRecyclerAdapter;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,7 +109,7 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
     }
 
     private void editScheduledTransaction(int position){
-        //startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getContext(), sTransactionRecyclerAdapter.getScheduledTransactionList().get(position)), RequestCodes.EDIT_ACCOUNT);
+        //startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getContext(), sTransactionRecyclerAdapter.getScheduledTransactionList().get(position)), RequestCodes.EDIT_SCHEDULED_TRANSACTION);
     }
 
     private void confirmDelete(final int position){
@@ -175,6 +180,25 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
+            if(requestCode == RequestCodes.NEW_SCHEDULED_TRANSACTION){
+                //Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(TransactionInfoActivity.RESULT_S));
+                //populateTransactionsForDate(tt.getDate());
+                //updateScheduledTransactionsForDecoration();
+                //calendarView.selectDate(tt.getDate());
+            }else if(requestCode == RequestCodes.EDIT_SCHEDULED_TRANSACTION){
+                ScheduledTransaction st = Parcels.unwrap(data.getExtras().getParcelable(TransactionInfoActivity.RESULT_TRANSACTION));
+
+                //populateTransactionsForDate(tt.getDate());
+                //updateScheduledTransactionsForDecoration();
+                //calendarView.selectDate(tt.getDate());
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -195,6 +219,4 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
     public void onEditScheduledTransaction(int position){
         editScheduledTransaction(position);
     }
-
-
 }

@@ -55,10 +55,13 @@ public final class RequestCodes {
 
     /////
     //
-    // Currency (500 - 600)
+    // Scheduled Transaction (500 - 600)
     //
     /////
 
+    public static final int NEW_SCHEDULED_TRANSACTION = 500;
+    public static final int EDIT_SCHEDULED_TRANSACTION = 501;
+    public static final int HAS_SCHEDULED_TRANSACTION_CHANGED = 502;
 
     /////
     //
