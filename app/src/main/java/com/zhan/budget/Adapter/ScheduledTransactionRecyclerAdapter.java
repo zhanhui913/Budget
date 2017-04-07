@@ -78,59 +78,59 @@ public class ScheduledTransactionRecyclerAdapter extends RecyclerView.Adapter<Sc
         final ScheduledTransaction scheduledTransaction = scheduledTransactionList.get(position);
 
         //Account
-        if(scheduledTransaction.getTransaction().getAccount() != null){
+        if(scheduledTransaction.getAccount() != null){
             viewHolder.account.setVisibility(View.VISIBLE);
             viewHolder.accountIcon.setVisibility(View.VISIBLE);
-            viewHolder.account.setText(scheduledTransaction.getTransaction().getAccount().getName());
+            viewHolder.account.setText(scheduledTransaction.getAccount().getName());
         }else{
             viewHolder.account.setVisibility(View.GONE);
             viewHolder.accountIcon.setVisibility(View.GONE);
         }
 
         //Location
-        if(scheduledTransaction.getTransaction().getLocation() != null){
+        if(scheduledTransaction.getLocation() != null){
             viewHolder.location.setVisibility(View.VISIBLE);
             viewHolder.locationIcon.setVisibility(View.VISIBLE);
-            viewHolder.location.setText(scheduledTransaction.getTransaction().getLocation().getName());
+            viewHolder.location.setText(scheduledTransaction.getLocation().getName());
         }else{
             viewHolder.location.setVisibility(View.GONE);
             viewHolder.locationIcon.setVisibility(View.GONE);
         }
 
         //If there is no note, use Category's name instead
-        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(scheduledTransaction.getTransaction().getNote())){
-            viewHolder.name.setText(scheduledTransaction.getTransaction().getNote());
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(scheduledTransaction.getNote())){
+            viewHolder.name.setText(scheduledTransaction.getNote());
         }else{
-            if(scheduledTransaction.getTransaction().getCategory() != null){
-                viewHolder.name.setText(scheduledTransaction.getTransaction().getCategory().getName());
+            if(scheduledTransaction.getCategory() != null){
+                viewHolder.name.setText(scheduledTransaction.getCategory().getName());
             }else{
                 viewHolder.name.setText("");
             }
         }
 
-        viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(scheduledTransaction.getTransaction().getPrice()));
+        viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(scheduledTransaction.getPrice()));
 
         //Category
         viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
         viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
 
-        if(scheduledTransaction.getTransaction().getCategory() != null) {
-            if (scheduledTransaction.getTransaction().getCategory().isText()) {
+        if(scheduledTransaction.getCategory() != null) {
+            if (scheduledTransaction.getCategory().isText()) {
                 viewHolder.circularView.setIconResource(0);
-                viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(scheduledTransaction.getTransaction().getCategory().getName().toUpperCase().trim()));
+                viewHolder.circularView.setText(""+ Util.getFirstCharacterFromString(scheduledTransaction.getCategory().getName().toUpperCase().trim()));
             } else {
-                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, scheduledTransaction.getTransaction().getCategory().getIcon()));
+                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, scheduledTransaction.getCategory().getIcon()));
                 viewHolder.circularView.setText("");
             }
 
-            if(scheduledTransaction.getTransaction().getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+            if(scheduledTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
             }else{
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
             }
 
-            viewHolder.circularView.setCircleColor(scheduledTransaction.getTransaction().getCategory().getColor());
-            viewHolder.circularView.setStrokeColor(scheduledTransaction.getTransaction().getCategory().getColor());
+            viewHolder.circularView.setCircleColor(scheduledTransaction.getCategory().getColor());
+            viewHolder.circularView.setStrokeColor(scheduledTransaction.getCategory().getColor());
         }else{
             //If there is no category attached, put a question mark as the icon
             viewHolder.circularView.setIconResource(0);

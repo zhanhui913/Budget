@@ -9,6 +9,7 @@ import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DataBackup;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
@@ -209,7 +210,70 @@ public class MyApplication extends Application {
 
                             Log.d("HELP", "migration scheduled transactions now");
 
-                            schema.get("Transaction").addField("scheduledTransactionId", String.class);
+                            schema.get("Transaction")
+                                    .addField("scheduledTransactionId", String.class);
+
+                            //Add all the property first before deleting the Transaction property
+                            schema.get("ScheduledTransaction")
+                                    .addField("note", String.class)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            obj.setString("note", obj.getObject("Transaction").getString("note"));
+                                        }
+                                    });
+
+                            schema.get("ScheduledTransaction")
+                                    .addField("price", Double.class)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            obj.setDouble("price", obj.getObject("Transaction").getDouble("price"));
+                                        }
+                                    });
+
+                            RealmObjectSchema categorySchema = schema.get("Category");
+                            schema.get("ScheduledTransaction")
+                                    .addRealmObjectField("category", categorySchema)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            obj.setObject("category", obj.getObject("Transaction").getObject("category"));
+                                        }
+                                    });
+
+                            RealmObjectSchema locationSchema = schema.get("Location");
+                            schema.get("ScheduledTransaction")
+                                    .addRealmObjectField("location", locationSchema)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            obj.setObject("location", obj.getObject("Transaction").getObject("location"));
+                                        }
+                                    });
+
+                            RealmObjectSchema accountSchema = schema.get("Account");
+                            schema.get("ScheduledTransaction")
+                                    .addRealmObjectField("account", accountSchema)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            obj.setObject("account", obj.getObject("Transaction").getObject("account"));
+                                        }
+                                    });
+
+                            schema.get("ScheduledTransaction")
+                                    .addField("dayType", String.class)
+                                    .transform(new RealmObjectSchema.Function() {
+                                        @Override
+                                        public void apply(DynamicRealmObject obj) {
+                                            obj.setString("dayType", obj.getObject("Transaction").getString("dayType"));
+                                        }
+                                    });
+
+                            schema.get("ScheduledTransaction")
+                                    .addField("lastTransactionDate", Date.class);
+
                             oldVersion++;
                         }
 
@@ -228,7 +292,7 @@ public class MyApplication extends Application {
         myRealm = Realm.getDefaultInstance();
         listenToRealmDBChanges();
 
-        checkScheduledTransactions();
+        //checkScheduledTransactions();
     }
 
     private void listenToRealmDBChanges(){
@@ -253,10 +317,30 @@ public class MyApplication extends Application {
             public void onChange(RealmResults<ScheduledTransaction> element) {
                 element.removeChangeListener(this);
 
-                Date today = new Date();
+                Date now = DateUtil.refreshDate(new Date());
 
                 //Go through all scheduled transactions and update it necessary
                 for(int i = 0; i < element.size(); i++){
+
+
+/*
+                    //Compare the ScheduledTransaction's  Transaction (ie: last created) and compare it to today
+                    //Or compare it to ScheduledTransaction's lastTransactionDate
+                    if(element.get(i).getTransaction() != null){
+                        //If the last Transaction has already past or is today, create an extra 1 year worth
+                        if(element.get(i).getTransaction().getDate().before(now) || DateUtil.isSameDay(element.get(i).getTransaction().getDate(), now)){
+
+                        }
+                    }else if(element.get(i).getLastTransactionDate() != null){
+                        //If the last Transaction has already past or is today, create an extra 1 year worth
+                        if(element.get(i).getLastTransactionDate().before(now) || DateUtil.isSameDay(element.get(i).getLastTransactionDate(), now)){
+
+                        }
+                    }else{
+                        //Have no Transaction or lastTransactionDate field
+                    }
+*/
+
 
                 }
             }

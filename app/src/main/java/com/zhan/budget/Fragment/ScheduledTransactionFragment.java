@@ -130,9 +130,15 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
     }
 
     private void deleteScheduledTransaction(int position){
+        //Delete the Scheduled Transaction
         myRealm.beginTransaction();
         resultsScheduledTransaction.get(position).deleteFromRealm();
         myRealm.commitTransaction();
+
+        //Delete all Transaction with dayType = SCHEDULED and scheduledTransactionId = ScheduledTransaction's ID that is past today
+        //myRealm.beginTransaction();
+
+        //myRealm.commitTransaction();
 
         //recalculate everything
         sTransactionRecyclerAdapter.getScheduledTransactionList().remove(position);

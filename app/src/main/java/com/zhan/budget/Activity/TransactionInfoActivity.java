@@ -987,7 +987,13 @@ public class TransactionInfoActivity extends BaseActivity implements
                 //On the last created Transaction, put it into the ScheduledTransactions field
                 if(i == numRepeats - 1){
                     myRealm.beginTransaction();
-                    scheduledTransaction.setTransaction(localTransaction);
+                    scheduledTransaction.setNote(localTransaction.getNote());
+                    scheduledTransaction.setPrice(localTransaction.getPrice());
+                    scheduledTransaction.setCategory(localTransaction.getCategory());
+                    scheduledTransaction.setAccount(localTransaction.getAccount());
+                    scheduledTransaction.setLocation(localTransaction.getLocation());
+                    scheduledTransaction.setDayType(localTransaction.getDayType());
+                    scheduledTransaction.setLastTransactionDate(nextDate);
                     myRealm.copyToRealmOrUpdate(scheduledTransaction);
                     myRealm.commitTransaction();
                 }
@@ -996,7 +1002,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d(TAG, "----------- Second Parceler Result ----------");
             Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
             Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
-            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
+            Log.d(TAG, "transaction note :" + scheduledTransaction.getNote() + ", cost :" + scheduledTransaction.getPrice());
             Log.i(TAG, "----------- Second Parceler Result ----------");
 
             myRealm.close();
