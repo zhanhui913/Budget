@@ -207,8 +207,6 @@ public class MyApplication extends Application {
 
                             Log.d("HELP", "migration scheduled transactions now");
 
-                            schema.get("ScheduledTransaction").addField("lastTransactionId", String.class);
-
                             schema.get("Transaction").addField("scheduledTransactionId", String.class);
                             oldVersion++;
                         }
