@@ -224,7 +224,7 @@ public class MyApplication extends Application {
                                     });
 
                             schema.get("ScheduledTransaction")
-                                    .addField("price", Double.class)
+                                    .addField("price", double.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
