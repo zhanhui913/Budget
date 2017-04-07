@@ -14,10 +14,14 @@ import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Adapter.ScheduledTransactionRecyclerAdapter;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.ScheduledTransaction;
+import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmChangeListener;
@@ -130,6 +134,9 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
     }
 
     private void deleteScheduledTransaction(int position){
+        String scheduledTransactionID = resultsScheduledTransaction.get(position).getId();
+        Date now = DateUtil.refreshDate(new Date());
+
         //Delete the Scheduled Transaction
         myRealm.beginTransaction();
         resultsScheduledTransaction.get(position).deleteFromRealm();
@@ -137,8 +144,20 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
 
         //Delete all Transaction with dayType = SCHEDULED and scheduledTransactionId = ScheduledTransaction's ID that is past today
         //myRealm.beginTransaction();
-
-        //myRealm.commitTransaction();
+        myRealm.where(Transaction.class)
+                .equalTo("scheduledTransactionId", scheduledTransactionID)
+                .greaterThanOrEqualTo("date", now)
+                .equalTo("dayType", DayType.SCHEDULED.toString())
+                .findAllAsync()
+                .addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                //Delete all transactions
+                myRealm.beginTransaction();
+                element.deleteAllFromRealm();
+                myRealm.commitTransaction();
+            }
+        });
 
         //recalculate everything
         sTransactionRecyclerAdapter.getScheduledTransactionList().remove(position);

@@ -62,7 +62,7 @@
 	<string name="warning_delete_category">All transactions with this category will no longer have this category associated to it once deleted</string>
 	<string name="warning_delete_account">All transactions with this account will no longer have this account associated to it once deleted</string>
 	<string name="warning_delete_location">All transactions with this location will no longer have this location associated to it once deleted</string>
-	<string name="warning_delete_scheduled_transaction">All future transactions created by this scheduled transaction will be no more once deleted</string>
+	<string name="warning_delete_scheduled_transaction">All transactions created by this scheduled transaction past today will be deleted</string>
 	<string name="warning_category_valid_name">Category must have a valid name</string>
 	<string name="warning_account_valid_name">Account must have a valid name</string>
 	<string name="warning_location_valid_name">Location must have a valid name</string>
