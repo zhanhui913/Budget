@@ -219,7 +219,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            obj.setString("note", obj.getObject("Transaction").getString("note"));
+                                            obj.setString("note", obj.getObject("transaction").getString("note"));
                                         }
                                     });
 
@@ -228,7 +228,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            obj.setDouble("price", obj.getObject("Transaction").getDouble("price"));
+                                            obj.setDouble("price", obj.getObject("transaction").getDouble("price"));
                                         }
                                     });
 
@@ -238,7 +238,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            obj.setObject("category", obj.getObject("Transaction").getObject("category"));
+                                            obj.setObject("category", obj.getObject("transaction").getObject("category"));
                                         }
                                     });
 
@@ -248,7 +248,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            obj.setObject("location", obj.getObject("Transaction").getObject("location"));
+                                            obj.setObject("location", obj.getObject("transaction").getObject("location"));
                                         }
                                     });
 
@@ -258,7 +258,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            obj.setObject("account", obj.getObject("Transaction").getObject("account"));
+                                            obj.setObject("account", obj.getObject("transaction").getObject("account"));
                                         }
                                     });
 
@@ -267,7 +267,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            obj.setString("dayType", obj.getObject("Transaction").getString("dayType"));
+                                            obj.setString("dayType", obj.getObject("transaction").getString("dayType"));
                                         }
                                     });
 
