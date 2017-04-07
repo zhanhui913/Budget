@@ -213,7 +213,7 @@ public class MyApplication extends Application {
                             schema.get("Transaction")
                                     .addField("scheduledTransactionId", String.class);
 
-                            //Add all the property first before deleting the Transaction property
+                            //Add all the property first before deleting the Transaction field
                             schema.get("ScheduledTransaction")
                                     .addField("note", String.class)
                                     .transform(new RealmObjectSchema.Function() {
@@ -273,6 +273,9 @@ public class MyApplication extends Application {
 
                             schema.get("ScheduledTransaction")
                                     .addField("lastTransactionDate", Date.class);
+
+                            //Remove Transaction field
+                            schema.get("ScheduledTransaction").removeField("transaction");
 
                             oldVersion++;
                         }
