@@ -58,15 +58,10 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-import static com.zhan.budget.Activity.TransactionInfoActivity.EDIT_TRANSACTION_ITEM;
-import static com.zhan.budget.Activity.TransactionInfoActivity.NEW_TRANSACTION;
-import static com.zhan.budget.Activity.TransactionInfoActivity.TRANSACTION_DATE;
-import static com.zhan.budget.R.string.transaction;
-
 public class ScheduledTransactionInfoActivity extends BaseActivity implements
         TransactionFragment.OnTransactionFragmentInteractionListener{
 
-    private static final String TAG = "ScheduledTransactionInfoActivity";
+    private static final String TAG = "s_T_InfoActivity";
 
     public static final String NEW_SCHEDULED_TRANSACTION = "New Scheduled Transaction";
 
@@ -118,9 +113,9 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
     private AlertDialog dateDialog;
     private TextView monthTextView;
 
-    private Transaction editTransaction;
+    private ScheduledTransaction editScheduledTransaction;
     private Boolean isScheduledTransaction = false; //default is false
-    private ScheduledTransaction scheduledTransaction;
+    //private ScheduledTransaction scheduledTransaction;
 
     private HashSet<String> locationHash = new HashSet<>();
 
@@ -141,7 +136,7 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
         Intent intent = new Intent(context, ScheduledTransactionInfoActivity.class);
         intent.putExtra(NEW_SCHEDULED_TRANSACTION, false);
 
-        Parcelable wrapped = Parcels.wrap(transaction);
+        Parcelable wrapped = Parcels.wrap(scheduledTransaction);
         intent.putExtra(EDIT_SCHEDULED_TRANSACTION_ITEM, wrapped);
 
         return intent;
@@ -157,21 +152,21 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
         instance = ScheduledTransactionInfoActivity.this;
 
         //Get intents from caller activity
-        isNewTransaction = (getIntent().getExtras()).getBoolean(NEW_TRANSACTION);
+        isNewTransaction = (getIntent().getExtras()).getBoolean(NEW_SCHEDULED_TRANSACTION);
 
         if(!isNewTransaction) {
-            editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_TRANSACTION_ITEM));
-            selectedDate = DateUtil.refreshDate(editTransaction.getDate());
+            editScheduledTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_SCHEDULED_TRANSACTION_ITEM));
+            selectedDate = DateUtil.refreshDate(editScheduledTransaction.getLastTransactionDate());
 
-            if(editTransaction.getCategory() != null){
-                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
-                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+            if(editScheduledTransaction.getCategory() != null){
+                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editScheduledTransaction.getCategory().getId());
+                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editScheduledTransaction.getCategory().getId());
             }else{
                 transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
                 transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
             }
         }else{
-            selectedDate = DateUtil.refreshDate((Date)(getIntent().getSerializableExtra(TRANSACTION_DATE)));
+            selectedDate = DateUtil.refreshDate((Date)(getIntent().getSerializableExtra(SCHEDULED_TRANSACTION_DATE)));
 
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
@@ -217,30 +212,30 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
         //If its edit mode
         if(!isNewTransaction){
 
-            if(editTransaction.getNote() != null){
-                Log.d("DEBUG","@@@@@"+editTransaction.getNote());
-                noteString = editTransaction.getNote();
+            if(editScheduledTransaction.getNote() != null){
+                Log.d("DEBUG","@@@@@"+editScheduledTransaction.getNote());
+                noteString = editScheduledTransaction.getNote();
                 transactionNameTextView.setText(noteString);
             }else{
-                if(editTransaction.getCategory() != null){
-                    transactionNameTextView.setText(editTransaction.getCategory().getName());
+                if(editScheduledTransaction.getCategory() != null){
+                    transactionNameTextView.setText(editScheduledTransaction.getCategory().getName());
                 }else{
                     transactionNameTextView.setText("");
                 }
             }
 
-            if(editTransaction.getLocation() != null){
-                locationString = editTransaction.getLocation().getName();
+            if(editScheduledTransaction.getLocation() != null){
+                locationString = editScheduledTransaction.getLocation().getName();
             }
 
             //Check which category this transaction belongs to.
             //If its EXPENSE category, change page to EXPENSE view pager
             //If its INCOME category, change page to INCOME view pager
-            if(editTransaction.getCategory() != null){
-                if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+            if(editScheduledTransaction.getCategory() != null){
+                if(editScheduledTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
                     viewPager.setCurrentItem(0);
                     currentPage = BudgetType.EXPENSE;
-                }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                }else if(editScheduledTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
                     viewPager.setCurrentItem(1);
                     currentPage = BudgetType.INCOME;
                 }
@@ -254,14 +249,14 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
                 currentPageTextView.setText(R.string.category_income);
             }
 
-            priceString = CurrencyTextFormatter.formatDouble(editTransaction.getPrice());
+            priceString = CurrencyTextFormatter.formatDouble(editScheduledTransaction.getPrice());
 
             //Remove any extra un-needed signs
             priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
             updatePriceStatus();
 
-            Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
+            Log.d("DEBUG", "price string is " + priceString + ", ->" + editScheduledTransaction.getPrice());
         }else{
 
             priceString = "";
@@ -605,9 +600,9 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
             int pos = 0; //default is first item to be selected in the spinner
             if (!isNewTransaction) {
                 for (int i = 0; i < tempAccountList.size(); i++) {
-                    if (editTransaction.getAccount() != null) {
+                    if (editScheduledTransaction.getAccount() != null) {
                         doesTransactionHaveAccount = true;
-                        if (editTransaction.getAccount().getId().equalsIgnoreCase(tempAccountList.get(i).getId())) {
+                        if (editScheduledTransaction.getAccount().getId().equalsIgnoreCase(tempAccountList.get(i).getId())) {
                             pos = i;
                             break;
                         }
@@ -750,9 +745,9 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
                     public void onClick(DialogInterface dialog, int id) {
                         locationString = inputLocation.getText().toString().trim();
 
-                        if(editTransaction != null && editTransaction.getLocation() != null){
+                        if(editScheduledTransaction != null && editScheduledTransaction.getLocation() != null){
                             //If current location is different from what was stored
-                            if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
+                            if(!inputLocation.getText().toString().equalsIgnoreCase(editScheduledTransaction.getLocation().getName())){
                                 isLocationChanged = true;
                             }
                         }else{
@@ -809,10 +804,10 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
                         } else {
                             isScheduledTransaction = true;
 
-                            scheduledTransaction = new ScheduledTransaction();
-                            scheduledTransaction.setId(Util.generateUUID());
-                            scheduledTransaction.setRepeatUnit(quantityNumberPicker.getValue());
-                            scheduledTransaction.setRepeatType(values[repeatNumberPicker.getValue()]);
+                            editScheduledTransaction = new ScheduledTransaction();
+                            editScheduledTransaction.setId(Util.generateUUID());
+                            editScheduledTransaction.setRepeatUnit(quantityNumberPicker.getValue());
+                            editScheduledTransaction.setRepeatType(values[repeatNumberPicker.getValue()]);
                             //Set the scheduledTransaction's transaction property in save function
                         }
                     }
@@ -869,13 +864,13 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
     }
 
     private void save(){
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
 
         Transaction transaction = new Transaction();
 
         if(!isNewTransaction){
-            transaction.setId(editTransaction.getId());
-            transaction.setDayType(editTransaction.getDayType());
+            transaction.setId(editScheduledTransaction.getId());
+            transaction.setDayType(editScheduledTransaction.getDayType());
         }else{
             transaction.setId(Util.generateUUID());
 
@@ -906,8 +901,8 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
                 transaction.setLocation(null);
             }
         }else{
-            if(editTransaction != null){
-                transaction.setLocation(editTransaction.getLocation());
+            if(editScheduledTransaction != null){
+                transaction.setLocation(editScheduledTransaction.getLocation());
             }
         }
 
@@ -924,31 +919,31 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
         }
 
         if(isScheduledTransaction){
-            transaction.setScheduledTransactionId(scheduledTransaction.getId());
+            transaction.setScheduledTransactionId(editScheduledTransaction.getId());
         }
 
         Parcelable wrapped = Parcels.wrap(transaction);
-        intent.putExtra(RESULT_TRANSACTION, wrapped);
+        intent.putExtra(RESULT_SCHEDULED_TRANSACTION, wrapped);
 
         //Check if any value changed
-        if(editTransaction != null){
-            if(editTransaction.checkEquals(transaction)){
+        if(editScheduledTransaction != null){
+            if(editScheduledTransaction.checkEquals(transaction)){
                 intent.putExtra(HAS_CHANGED, false);
             }else{
                 intent.putExtra(HAS_CHANGED, true);
             }
         }
 
-        addNewOrEditTransaction(transaction);
+        addNewOrEditScheduledTransaction(transaction);
         if(isScheduledTransaction){
             //Perform hard copy so that the transaction object in the intent can remain the same.
             //So that when this returns to CalendarFragment, it will point to the correct date
             //which should be the starting date, not the end date of the scheduled transactions.
-            addScheduleTransaction(scheduledTransaction, Transaction.copy(transaction));
+            addScheduleTransaction(editScheduledTransaction, Transaction.copy(transaction));
         }
 
         setResult(RESULT_OK, intent);
-        finish();
+        finish();*/
     }
 
     /**
@@ -1018,7 +1013,7 @@ public class ScheduledTransactionInfoActivity extends BaseActivity implements
      * The function that will be called after user either adds or edit a transaction.
      * @param newOrEditTransaction The new transaction information.
      */
-    private void addNewOrEditTransaction(final Transaction newOrEditTransaction){
+    private void addNewOrEditScheduledTransaction(final Transaction newOrEditTransaction){
         Log.d(TAG, "----------- First Parceler Result ----------");
         Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
         Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());

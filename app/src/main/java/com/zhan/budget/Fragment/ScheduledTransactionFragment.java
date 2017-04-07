@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Activity.ScheduledTransactionInfoActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.ScheduledTransactionRecyclerAdapter;
 import com.zhan.budget.Etc.RequestCodes;
@@ -109,7 +110,7 @@ public class ScheduledTransactionFragment extends BaseRealmFragment implements
     }
 
     private void editScheduledTransaction(int position){
-        //startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getContext(), sTransactionRecyclerAdapter.getScheduledTransactionList().get(position)), RequestCodes.EDIT_SCHEDULED_TRANSACTION);
+        startActivityForResult(ScheduledTransactionInfoActivity.createIntentToEditScheduledTransaction(getContext(), sTransactionRecyclerAdapter.getScheduledTransactionList().get(position)), RequestCodes.EDIT_SCHEDULED_TRANSACTION);
     }
 
     private void confirmDelete(final int position){
