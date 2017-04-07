@@ -105,7 +105,7 @@ public class Transaction extends RealmObject {
         this.scheduledTransactionId = scheduledTransactionId;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property that isnt ignored
     //
@@ -133,5 +133,19 @@ public class Transaction extends RealmObject {
         }
 
         return true;
+    }
+
+    public static Transaction copy(Transaction other){
+        Transaction copied = new Transaction();
+        copied.setId(other.getId());
+        copied.setNote(other.getNote());
+        copied.setDate(other.getDate());
+        copied.setPrice(other.getPrice());
+        copied.setDayType(other.getDayType());
+        copied.setCategory(other.getCategory());
+        copied.setAccount(other.getAccount());
+        copied.setLocation(other.getLocation());
+        copied.setScheduledTransactionId(other.getScheduledTransactionId());
+        return copied;
     }
 }

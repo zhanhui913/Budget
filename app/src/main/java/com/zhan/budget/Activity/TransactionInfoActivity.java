@@ -918,6 +918,10 @@ public class TransactionInfoActivity extends BaseActivity implements
             transaction.setCategory(selectedIncomeCategory);
         }
 
+        if(isScheduledTransaction){
+            transaction.setScheduledTransactionId(scheduledTransaction.getId());
+        }
+
         Parcelable wrapped = Parcels.wrap(transaction);
         intent.putExtra(RESULT_TRANSACTION, wrapped);
 
@@ -931,13 +935,14 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         addNewOrEditTransaction(transaction);
-
         if(isScheduledTransaction){
-            addScheduleTransaction(scheduledTransaction, transaction);
+            //Perform hard copy so that the transaction object in the intent can remain the same.
+            //So that when this returns to CalendarFragment, it will point to the correct date
+            //which should be the starting date, not the end date of the scheduled transactions.
+            addScheduleTransaction(scheduledTransaction, Transaction.copy(transaction));
         }
 
         setResult(RESULT_OK, intent);
-
         finish();
     }
 
@@ -950,18 +955,17 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
             Realm myRealm = Realm.getDefaultInstance();
 
-            //Keep copy of these value to add back at the end
-            Date origDate = localTransaction.getDate();
-            String origID = localTransaction.getId();
-
+            //These property dont need to change in the for loop
             localTransaction.setDayType(DayType.SCHEDULED.toString());
+            localTransaction.setScheduledTransactionId(scheduledTransaction.getId());
+
             Date nextDate = localTransaction.getDate();
 
             //Number of repeats that fit into 1 year given the unit and repeat type
             int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
 
             //Create as many transactions as possible to fit into 1 year
-            for(int i = 0; i < numRepeats; i++){
+            for(int i = 1; i < numRepeats; i++){
                 myRealm.beginTransaction();
 
                 if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
@@ -974,7 +978,6 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                 localTransaction.setId(Util.generateUUID());
                 localTransaction.setDate(nextDate);
-                localTransaction.setScheduledTransactionId(scheduledTransaction.getId());
 
                 Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
 
@@ -995,25 +998,6 @@ public class TransactionInfoActivity extends BaseActivity implements
             Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
             Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
             Log.i(TAG, "----------- Second Parceler Result ----------");
-
-            //Put back orig value
-            //This is so that the localTransaction object in the intent can remain the same
-            //So that when this returns to CalendarFragment, it will point to the correct date
-            //which should be the starting date, not the end date of the scheduled transactions.
-            myRealm.beginTransaction();
-            localTransaction.setId(origID);
-            localTransaction.setDate(origDate);
-
-            Date now = DateUtil.refreshDate(new Date());
-
-            if(localTransaction.getDate().before(now) || DateUtil.isSameDay(now, localTransaction.getDate())){
-                localTransaction.setDayType(DayType.COMPLETED.toString());
-            }else{
-                localTransaction.setDayType(DayType.SCHEDULED.toString());
-            }
-
-            myRealm.copyToRealmOrUpdate(localTransaction);
-            myRealm.commitTransaction();
 
             myRealm.close();
         }

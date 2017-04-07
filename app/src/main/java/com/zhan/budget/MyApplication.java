@@ -198,7 +198,9 @@ public class MyApplication extends Application {
                         }
 
                         //migration to version 4
+                        //should put back to oldVersion == 2 loop
                         if(oldVersion == 3){
+
                             ////////////////////////////////////////////////////////////////////////
                             //
                             // Scheduled Transactions
