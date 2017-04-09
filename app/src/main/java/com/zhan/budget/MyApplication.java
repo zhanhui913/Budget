@@ -194,7 +194,6 @@ public class MyApplication extends Application {
         //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
         listenToRealmDBChanges();
-        checkScheduledTransactions();
     }
 
     private void listenToRealmDBChanges(){
@@ -204,6 +203,7 @@ public class MyApplication extends Application {
         myRealm.addChangeListener(new RealmChangeListener<Realm>() {
             @Override
             public void onChange(Realm element) {
+                element.removeChangeListener(this);
                 Log.d(TAG,"Theres a change in DB in REalm");
 
                 if(BudgetPreference.getAllowAutoBackup(getApplicationContext())){
@@ -215,14 +215,9 @@ public class MyApplication extends Application {
         });
     }
 
-    private void checkScheduledTransactions(){
-
-    }
-
-    public void closeRealm(){
+    public void deleteRealm(){
         Log.d(TAG,"trying to close realm");
         if(myRealm != null){
-
             Log.d(TAG,"not null");
             if(!myRealm.isClosed()){
                 Log.d(TAG,"not closed");
@@ -230,9 +225,8 @@ public class MyApplication extends Application {
             }else{
                 Log.d(TAG, "is closed");
             }
-
-            Realm.deleteRealm(realmConfig);
         }
+        Realm.deleteRealm(realmConfig);
     }
 
     public static MyApplication getInstance() {

@@ -700,7 +700,7 @@ public class SettingFragment extends BaseFragment {
 
                         Realm.deleteRealm(config);
                         */
-                        MyApplication.getInstance().closeRealm();
+                        MyApplication.getInstance().deleteRealm();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
