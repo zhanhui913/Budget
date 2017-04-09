@@ -38,24 +38,18 @@
 	<string name="title_activity_privacy_policy">PrivacyPolicy</string>
 
 	<!-- Tutorial string -->
-	<string name="tutorial_title_1">Calendar</string>
-	<string name="tutorial_title_2">Theme</string>
-	<string name="tutorial_title_3">Approve</string>
-	<string name="tutorial_title_4">Add new Transaction</string>
-	<string name="tutorial_title_5">Budget</string>
-	<string name="tutorial_title_6">Account</string>
-	<string name="tutorial_title_7">Location</string>
-	<string name="tutorial_title_8">Monthly Overview</string>
-	<string name="tutorial_title_9">Percentage</string>
-	<string name="tutorial_description_1">View all transactions for a specific date</string>
-	<string name="tutorial_description_2">Change between light and dark mode</string>
-	<string name="tutorial_description_3">Approve, un-approve, or delete a transaction by swiping left</string>
-	<string name="tutorial_description_4">Input amount and select category, account, notes, location, etc</string>
-	<string name="tutorial_description_5">Compare your current spending with your budget</string>
-	<string name="tutorial_description_6">View how much you spent on all accounts</string>
-	<string name="tutorial_description_7">Enter and track location for your purchases</string>
-	<string name="tutorial_description_8">View how much you spent and earn each month</string>
-	<string name="tutorial_description_9">See what you are spending the most on</string>
+	<string name="tutorial_title_theme">Theme</string>
+	<string name="tutorial_title_calculator">Calculate</string>
+	<string name="tutorial_title_account">Account</string>
+	<string name="tutorial_title_location">Location</string>
+	<string name="tutorial_title_budget">Monthly Overview</string>
+	<string name="tutorial_title_chart">Data chart</string>
+	<string name="tutorial_description_location">Enter and track location for your purchases</string>
+	<string name="tutorial_description_theme">Change between light and dark mode</string>
+	<string name="tutorial_description_calculator">Compare your current spending with your budget</string>
+	<string name="tutorial_description_account">View how much you spent on all accounts</string>
+	<string name="tutorial_description_budget">View how much you spent and earn each month</string>
+	<string name="tutorial_description_chart">View your data in a easy and intuitive chart</string>
 
 	<!-- Warning -->
 	<string name="warning_delete_transaction">Delete this transaction?</string>
