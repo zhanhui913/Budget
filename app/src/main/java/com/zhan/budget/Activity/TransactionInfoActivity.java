@@ -54,6 +54,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmAsyncTask;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -124,6 +125,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     //Switch whenever theres a change in location
     private boolean isLocationChanged = false;
+
+    private Intent savingIntent;
 
     public static Intent createIntentForNewTransaction(Context context, Date date) {
         Intent intent = new Intent(context, TransactionInfoActivity.class);
@@ -864,7 +867,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void save(){
-        Intent intent = new Intent();
+        savingIntent = new Intent();
 
         Transaction transaction = new Transaction();
 
@@ -919,14 +922,14 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         Parcelable wrapped = Parcels.wrap(transaction);
-        intent.putExtra(RESULT_TRANSACTION, wrapped);
+        savingIntent.putExtra(RESULT_TRANSACTION, wrapped);
 
         //Check if any value changed
         if(editTransaction != null){
             if(editTransaction.checkEquals(transaction)){
-                intent.putExtra(HAS_CHANGED, false);
+                savingIntent.putExtra(HAS_CHANGED, false);
             }else{
-                intent.putExtra(HAS_CHANGED, true);
+                savingIntent.putExtra(HAS_CHANGED, true);
             }
         }
 
@@ -937,11 +940,10 @@ public class TransactionInfoActivity extends BaseActivity implements
             //So that when this returns to CalendarFragment, it will point to the correct date
             //which should be the starting date, not the end date of the scheduled transactions.
             addScheduleTransaction(scheduledTransaction, Transaction.copy(transaction));
+        }else{
+            setResult(RESULT_OK, savingIntent);
+            finish();
         }
-
-        setResult(RESULT_OK, intent);
-
-        finish();
     }
 
     /**
@@ -949,7 +951,7 @@ public class TransactionInfoActivity extends BaseActivity implements
      * @param scheduledTransaction The new scheduled transaction information.
      * @param localTransaction The transaction that the scheduled transaction is based on.
      */
-    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction localTransaction){
+    private void addScheduleTransaction(final ScheduledTransaction scheduledTransaction, final Transaction localTransaction){
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
             Realm myRealm = Realm.getDefaultInstance();
             myRealm.beginTransaction();
@@ -960,6 +962,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             //since it contains 1 to 1 relationship in the db
             myRealm.commitTransaction();
 
+            //Option 1
+/*
             //These property dont need to change in the for loop
             localTransaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = localTransaction.getDate();
@@ -988,6 +992,61 @@ public class TransactionInfoActivity extends BaseActivity implements
             }
 
             myRealm.close();
+*/
+
+
+            //Option 2
+            RealmAsyncTask realmAsyncTask = myRealm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm bgRealm) {
+                    Log.d(TAG, "executing");
+
+                    //These property dont need to change in the for loop
+                    localTransaction.setDayType(DayType.SCHEDULED.toString());
+                    Date nextDate = localTransaction.getDate();
+
+                    //Number of repeats that fit into 1 year given the unit and repeat type
+                    int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
+                    Log.d(TAG, "num repeats "+numRepeats);
+
+                    //Create as many transactions as possible to fit into 1 year
+                    for(int i = 0; i < numRepeats; i++){
+                        Log.d(TAG, "start "+i);
+
+                        if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
+                            nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                            Log.d(TAG, "days");
+                        }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
+                            nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                            Log.d(TAG, "weeks");
+                        }else{
+                            nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                            Log.d(TAG, "month");
+                        }
+
+                        localTransaction.setId(Util.generateUUID());
+                        localTransaction.setDate(nextDate);
+
+                        Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
+                        bgRealm.copyToRealmOrUpdate(localTransaction);
+                    }
+                }
+            }, new Realm.Transaction.OnSuccess() {
+                @Override
+                public void onSuccess() {
+                    // Transaction was a success.
+                    Log.d(TAG, "sucess");
+                    setResult(RESULT_OK, savingIntent);
+                    finish();
+                }
+            }, new Realm.Transaction.OnError() {
+                @Override
+                public void onError(Throwable error) {
+                    // Transaction failed and was automatically canceled.
+                    Log.d(TAG, "failed");
+                }
+            });
+
         }
     }
 
