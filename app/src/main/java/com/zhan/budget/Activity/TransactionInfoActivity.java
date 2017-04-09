@@ -933,7 +933,10 @@ public class TransactionInfoActivity extends BaseActivity implements
         addNewOrEditTransaction(transaction);
 
         if(isScheduledTransaction){
-            addScheduleTransaction(scheduledTransaction, transaction);
+            //Perform hard copy so that the transaction object in the intent can remain the same.
+            //So that when this returns to CalendarFragment, it will point to the correct date
+            //which should be the starting date, not the end date of the scheduled transactions.
+            addScheduleTransaction(scheduledTransaction, Transaction.copy(transaction));
         }
 
         setResult(RESULT_OK, intent);
@@ -948,24 +951,16 @@ public class TransactionInfoActivity extends BaseActivity implements
      */
     private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction localTransaction){
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
-
             Realm myRealm = Realm.getDefaultInstance();
             myRealm.beginTransaction();
-
-            //Keep copy of these value to add back at the end
-            Date origDate = localTransaction.getDate();
-            String origID = localTransaction.getId();
-
             scheduledTransaction.setTransaction(localTransaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
+
+            //No need to copyToRealmOrUpdate the localTransaction as it does that within ScheduledTransaction
+            //since it contains 1 to 1 relationship in the db
             myRealm.commitTransaction();
 
-            Log.d(TAG, "----------- Parceler Result ----------");
-            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
-            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
-            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
-            Log.i(TAG, "----------- Parceler Result ----------");
-
+            //These property dont need to change in the for loop
             localTransaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = localTransaction.getDate();
 
@@ -991,25 +986,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }
-
-            //Put back orig value
-            //This is so that the localTransaction object in the intent can remain the same
-            //So that when this returns to CalendarFragment, it will point to the correct date
-            //which should be the starting date, not the end date of the scheduled transactions.
-            myRealm.beginTransaction();
-            localTransaction.setId(origID);
-            localTransaction.setDate(origDate);
-
-            Date now = DateUtil.refreshDate(new Date());
-
-            if(localTransaction.getDate().before(now) || DateUtil.isSameDay(now, localTransaction.getDate())){
-                localTransaction.setDayType(DayType.COMPLETED.toString());
-            }else{
-                localTransaction.setDayType(DayType.SCHEDULED.toString());
-            }
-
-            myRealm.copyToRealmOrUpdate(localTransaction);
-            myRealm.commitTransaction();
 
             myRealm.close();
         }
