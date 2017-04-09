@@ -19,6 +19,10 @@ import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
 import com.zhan.budget.MyApplication;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.Tutorial;
+
+import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -79,6 +83,13 @@ public class MainActivity extends BaseActivity
 
         //set 1st fragment (Calendar) in navigation drawer
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        //first time => onboard
+        if(BudgetPreference.getFirstTime(this)){
+            Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
+            mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(this));
+            startActivity(mainAct);
+        }
     }
 
     @Override

@@ -21,55 +21,37 @@ public final class Tutorial {
                 context.getResources().getString(R.string.tutorial_title_1),
                 context.getResources().getString(R.string.tutorial_description_1),
                 R.color.colorPrimary,
-                R.drawable.screen1);
+                R.drawable.t_account);
 
         TutorialItem page2 = new TutorialItem(
                 context.getResources().getString(R.string.tutorial_title_2),
                 context.getResources().getString(R.string.tutorial_description_2),
                 R.color.colorPrimary,
-                R.drawable.screen2);
+                R.drawable.t_theme);
 
         TutorialItem page3 = new TutorialItem(
                 context.getResources().getString(R.string.tutorial_title_3),
                 context.getResources().getString(R.string.tutorial_description_3),
                 R.color.colorPrimary,
-                R.drawable.screen3);
+                R.drawable.t_calculator);
 
         TutorialItem page4 = new TutorialItem(
                 context.getResources().getString(R.string.tutorial_title_4),
                 context.getResources().getString(R.string.tutorial_description_4),
                 R.color.colorPrimary,
-                R.drawable.screen4);
+                R.drawable.t_balance);
 
         TutorialItem page5 = new TutorialItem(
                 context.getResources().getString(R.string.tutorial_title_5),
                 context.getResources().getString(R.string.tutorial_description_5),
                 R.color.colorPrimary,
-                R.drawable.screen5);
+                R.drawable.t_pie);
 
         TutorialItem page6 = new TutorialItem(
                 context.getResources().getString(R.string.tutorial_title_6),
                 context.getResources().getString(R.string.tutorial_description_6),
                 R.color.colorPrimary,
-                R.drawable.screen6);
-
-        TutorialItem page7 = new TutorialItem(
-                context.getResources().getString(R.string.tutorial_title_7),
-                context.getResources().getString(R.string.tutorial_description_7),
-                R.color.colorPrimary,
-                R.drawable.screen7);
-
-        TutorialItem page8 = new TutorialItem(
-                context.getResources().getString(R.string.tutorial_title_8),
-                context.getResources().getString(R.string.tutorial_description_8),
-                R.color.colorPrimary,
-                R.drawable.screen8);
-
-        TutorialItem page9 = new TutorialItem(
-                context.getResources().getString(R.string.tutorial_title_9),
-                context.getResources().getString(R.string.tutorial_description_9),
-                R.color.colorPrimary,
-                R.drawable.screen9);
+                R.drawable.t_location);
 
         ArrayList<TutorialItem> tourItems = new ArrayList<>();
         tourItems.add(page1);
@@ -78,9 +60,6 @@ public final class Tutorial {
         tourItems.add(page4);
         tourItems.add(page5);
         tourItems.add(page6);
-        tourItems.add(page7);
-        tourItems.add(page8);
-        tourItems.add(page9);
 
         return tourItems;
     }
