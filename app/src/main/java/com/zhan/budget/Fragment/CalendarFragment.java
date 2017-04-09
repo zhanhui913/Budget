@@ -532,7 +532,12 @@ public class CalendarFragment extends BaseRealmFragment implements
                     try {
                         //Only put 1 indication for the event per day
                         if(!eventMap.containsKey(element.get(i).getDate())){
-                            colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), element.get(i).getCategory().getColor())));
+                            if(element.get(i).getCategory() != null){
+                                colorList.add(new BudgetEvent(CategoryUtil.getColorID(getContext(), element.get(i).getCategory().getColor())));
+                            }else{
+                                colorList.add(new BudgetEvent(R.color.colorPrimary));
+                            }
+
                             eventMap.put(element.get(i).getDate(), colorList);
                         }
                     } catch (Exception e) {
