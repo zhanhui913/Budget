@@ -19,20 +19,19 @@ public class Category extends RealmObject implements PieDataCostInterface{
     private String name;
     private String type;
     private double budget;
-
-    @Ignore
-    private double cost;
     private String color;
     private String icon;
     private int index;
+    private boolean isText;
+
+    @Ignore
+    private double cost;
 
     @Ignore
     private float percent;
 
     @Ignore
     private boolean isSelected;
-
-    private boolean isText;
 
     public Category(){
 
@@ -147,7 +146,6 @@ public class Category extends RealmObject implements PieDataCostInterface{
         return this.color;
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Realm object check equality in terms of property that isnt ignored
@@ -162,6 +160,7 @@ public class Category extends RealmObject implements PieDataCostInterface{
         if(!color.equalsIgnoreCase(other.getColor())) return false;
         if(!icon.equalsIgnoreCase(other.getIcon())) return false;
         if(index != other.getIndex()) return false;
+        if(isText != other.isText()) return false;
         return true;
     }
 }
