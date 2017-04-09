@@ -953,8 +953,8 @@ public class TransactionInfoActivity extends BaseActivity implements
      */
     private void addScheduleTransaction(final ScheduledTransaction scheduledTransaction, final Transaction localTransaction){
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
-            final Realm myRealm = Realm.getDefaultInstance();
-/*            myRealm.beginTransaction();
+/*          final Realm myRealm = Realm.getDefaultInstance();
+            myRealm.beginTransaction();
             scheduledTransaction.setTransaction(localTransaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
 
@@ -996,59 +996,66 @@ public class TransactionInfoActivity extends BaseActivity implements
 
 
             //Option 2
-            RealmAsyncTask realmAsyncTask = myRealm.executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm bgRealm) {
-                    scheduledTransaction.setTransaction(localTransaction);
-                    bgRealm.copyToRealmOrUpdate(scheduledTransaction);
+            final Realm myRealm = Realm.getDefaultInstance();
+            try {
+                //myRealm =
+                RealmAsyncTask realmAsyncTask = myRealm.executeTransactionAsync(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm bgRealm) {
+                        scheduledTransaction.setTransaction(localTransaction);
+                        bgRealm.copyToRealmOrUpdate(scheduledTransaction);
 
-                    //These property dont need to change in the for loop
-                    localTransaction.setDayType(DayType.SCHEDULED.toString());
-                    Date nextDate = localTransaction.getDate();
+                        //These property dont need to change in the for loop
+                        localTransaction.setDayType(DayType.SCHEDULED.toString());
+                        Date nextDate = localTransaction.getDate();
 
-                    //Number of repeats that fit into 1 year given the unit and repeat type
-                    int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
-                    Log.d(TAG, "num repeats "+numRepeats);
+                        //Number of repeats that fit into 1 year given the unit and repeat type
+                        int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
+                        Log.d(TAG, "num repeats " + numRepeats);
 
-                    //Create as many transactions as possible to fit into 1 year
-                    for(int i = 0; i < numRepeats; i++){
-                        Log.d(TAG, "start "+i);
+                        //Create as many transactions as possible to fit into 1 year
+                        for (int i = 0; i < numRepeats; i++) {
+                            Log.d(TAG, "start " + i);
 
-                        if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
-                            nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                            Log.d(TAG, "days");
-                        }else if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())){
-                            nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                            Log.d(TAG, "weeks");
-                        }else{
-                            nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
-                            Log.d(TAG, "month");
+                            if (scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())) {
+                                nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                                Log.d(TAG, "days");
+                            } else if (scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())) {
+                                nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                                Log.d(TAG, "weeks");
+                            } else {
+                                nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                                Log.d(TAG, "month");
+                            }
+
+                            localTransaction.setId(Util.generateUUID());
+                            localTransaction.setDate(nextDate);
+
+                            Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
+                            bgRealm.copyToRealmOrUpdate(localTransaction);
                         }
-
-                        localTransaction.setId(Util.generateUUID());
-                        localTransaction.setDate(nextDate);
-
-                        Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
-                        bgRealm.copyToRealmOrUpdate(localTransaction);
                     }
-                }
-            }, new Realm.Transaction.OnSuccess() {
-                @Override
-                public void onSuccess() {
-                    // Transaction was a success.
-                    Log.d(TAG, "sucess");
+                }, new Realm.Transaction.OnSuccess() {
+                    @Override
+                    public void onSuccess() {
+                        // Transaction was a success.
+                        Log.d(TAG, "sucess");
 
+                        setResult(RESULT_OK, savingIntent);
+                        finish();
+                    }
+                }, new Realm.Transaction.OnError() {
+                    @Override
+                    public void onError(Throwable error) {
+                        // Transaction failed and was automatically canceled.
+                        Log.d(TAG, "failed");
+                    }
+                });
+            }finally {
+                if(myRealm != null){
                     myRealm.close();
-                    setResult(RESULT_OK, savingIntent);
-                    finish();
                 }
-            }, new Realm.Transaction.OnError() {
-                @Override
-                public void onError(Throwable error) {
-                    // Transaction failed and was automatically canceled.
-                    Log.d(TAG, "failed");
-                }
-            });
+            }
 
         }
     }
