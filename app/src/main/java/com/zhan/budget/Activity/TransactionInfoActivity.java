@@ -953,8 +953,8 @@ public class TransactionInfoActivity extends BaseActivity implements
      */
     private void addScheduleTransaction(final ScheduledTransaction scheduledTransaction, final Transaction localTransaction){
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
-            Realm myRealm = Realm.getDefaultInstance();
-            myRealm.beginTransaction();
+            final Realm myRealm = Realm.getDefaultInstance();
+/*            myRealm.beginTransaction();
             scheduledTransaction.setTransaction(localTransaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
 
@@ -963,7 +963,7 @@ public class TransactionInfoActivity extends BaseActivity implements
             myRealm.commitTransaction();
 
             //Option 1
-/*
+
             //These property dont need to change in the for loop
             localTransaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = localTransaction.getDate();
@@ -999,7 +999,8 @@ public class TransactionInfoActivity extends BaseActivity implements
             RealmAsyncTask realmAsyncTask = myRealm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(Realm bgRealm) {
-                    Log.d(TAG, "executing");
+                    scheduledTransaction.setTransaction(localTransaction);
+                    bgRealm.copyToRealmOrUpdate(scheduledTransaction);
 
                     //These property dont need to change in the for loop
                     localTransaction.setDayType(DayType.SCHEDULED.toString());
@@ -1036,6 +1037,8 @@ public class TransactionInfoActivity extends BaseActivity implements
                 public void onSuccess() {
                     // Transaction was a success.
                     Log.d(TAG, "sucess");
+
+                    myRealm.close();
                     setResult(RESULT_OK, savingIntent);
                     finish();
                 }
