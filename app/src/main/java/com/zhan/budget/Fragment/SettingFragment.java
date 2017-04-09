@@ -26,6 +26,7 @@ import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.MyApplication;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DataBackup;
@@ -690,7 +691,7 @@ public class SettingFragment extends BaseFragment {
 
                         BudgetPreference.resetFirstTime(getContext());
                         BudgetPreference.resetFirstTimeCurrency(getContext());
-
+/*
                         RealmConfiguration config = new RealmConfiguration.Builder(getContext())
                                 .name(Constants.REALM_NAME)
                                 .deleteRealmIfMigrationNeeded()
@@ -698,6 +699,8 @@ public class SettingFragment extends BaseFragment {
                                 .build();
 
                         Realm.deleteRealm(config);
+                        */
+                        MyApplication.getInstance().closeRealm();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {

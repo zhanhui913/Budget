@@ -28,10 +28,14 @@ import io.realm.exceptions.RealmPrimaryKeyConstraintException;
  * Created by Zhan on 16-06-02.
  */
 public class MyApplication extends Application {
+    private static final String TAG = "MyApplication";
 
     private static MyApplication instance;
 
     private int CURRENT_THEME = ThemeUtil.THEME_LIGHT;
+
+    private Realm myRealm;
+    private RealmConfiguration realmConfig;
 
     @Override
     public void onCreate(){
@@ -39,9 +43,9 @@ public class MyApplication extends Application {
 
         instance = this;
 
-        CURRENT_THEME = BudgetPreference.getCurrentTheme(instance); Log.d("GOD", "MyApplication, Theme : "+CURRENT_THEME);
+        CURRENT_THEME = BudgetPreference.getCurrentTheme(instance); Log.d(TAG, "MyApplication, Theme : "+CURRENT_THEME);
 
-        RealmConfiguration config = new RealmConfiguration.Builder(this)
+        realmConfig = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
                 .schemaVersion(3)
                 .migration(new RealmMigration() {
@@ -121,7 +125,7 @@ public class MyApplication extends Application {
                                                 //Add to list.
                                                 locationList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
-                                                Log.d("HELP", "There already exist a Location : "+correctName);
+                                                Log.d(TAG, "There already exist a Location : "+correctName);
                                             }
                                         }
                                     });
@@ -167,7 +171,6 @@ public class MyApplication extends Application {
                                                 // {Location: name="Costco"} => dont delete
                                                 if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
                                                     if(!obj.equals(locationList.get(i))){
-                                                        Log.d("HELP","Adding "+obj+" to the delete list");
 
                                                         //Old Locations gets set to false
                                                         obj.setBoolean("isNew", false);
@@ -180,31 +183,31 @@ public class MyApplication extends Application {
                             oldVersion++;
                         }
 
-                        Log.d("MY_APP", "old version :"+oldVersion);
+                        Log.d(TAG, "old version :"+oldVersion);
                     }
                 })
                 .build();
-        Realm.setDefaultConfiguration(config);
+        Realm.setDefaultConfiguration(realmConfig);
 
         BudgetPreference.resetRealmCache(this);
 
         //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
-        Log.d("HELP", "start listening to realm changes");
         listenToRealmDBChanges();
-
         checkScheduledTransactions();
     }
 
     private void listenToRealmDBChanges(){
-        final Realm myRealm = Realm.getDefaultInstance();
+        Log.d(TAG, "start listening to realm changes");
+
+        myRealm = Realm.getDefaultInstance();
         myRealm.addChangeListener(new RealmChangeListener<Realm>() {
             @Override
             public void onChange(Realm element) {
-                Log.d("HELP","Theres a change in DB in REalm");
+                Log.d(TAG,"Theres a change in DB in REalm");
 
                 if(BudgetPreference.getAllowAutoBackup(getApplicationContext())){
-                    Log.d("HELP","backing up now");
+                    Log.d(TAG,"backing up now");
 
                     DataBackup.backUpData(getApplicationContext());
                 }
@@ -214,6 +217,22 @@ public class MyApplication extends Application {
 
     private void checkScheduledTransactions(){
 
+    }
+
+    public void closeRealm(){
+        Log.d(TAG,"trying to close realm");
+        if(myRealm != null){
+
+            Log.d(TAG,"not null");
+            if(!myRealm.isClosed()){
+                Log.d(TAG,"not closed");
+                myRealm.close();
+            }else{
+                Log.d(TAG, "is closed");
+            }
+
+            Realm.deleteRealm(realmConfig);
+        }
     }
 
     public static MyApplication getInstance() {
