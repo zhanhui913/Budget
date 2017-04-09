@@ -25,6 +25,10 @@
             android:id="@+id/nav_overview"
             android:icon="@drawable/svg_ic_menu_monthly_overview"
             android:title="@string/nav_report" />
+        <item
+            android:id="@+id/nav_async"
+            android:icon="@drawable/svg_ic_menu_info"
+            android:title="AsyncTask" />
     </group>
 
     <group

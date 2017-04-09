@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.AccountFragment;
+import com.zhan.budget.Fragment.AsyncFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
 import com.zhan.budget.Fragment.CategoryFragment1;
 import com.zhan.budget.Fragment.LocationFragment;
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity
     private AccountFragment accountFragment;
     private RateFragment rateFragment;
     private LocationFragment locationFragment;
+    private AsyncFragment asyncFragment;
 
     private int savedTheme;
 
@@ -52,6 +54,7 @@ public class MainActivity extends BaseActivity
         categoryFragment = new CategoryFragment1();
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
+        asyncFragment = new AsyncFragment();
 
         // remove for now in v1.0.0
         //rateFragment = new RateFragment();
@@ -141,6 +144,9 @@ public class MainActivity extends BaseActivity
                         break;
                     case R.id.nav_location:
                         fragment = locationFragment;
+                        break;
+                    case R.id.nav_async:
+                        fragment = asyncFragment;
                         break;
                     case R.id.nav_setting:
                         savedTheme = MyApplication.getInstance(getApplicationContext()).getBudgetTheme();
