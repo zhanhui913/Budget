@@ -6,7 +6,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.zhan.budget.Model.DayType;
+import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.Model.RepeatType;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
+
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
@@ -53,7 +60,23 @@ public class AsyncFragment extends BaseRealmFragment {
         realmAsyncTask = myRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
+                Transaction tt = new Transaction();
+                tt.setDayType(DayType.SCHEDULED.toString());
 
+                int numRepeats = DateUtil.getNumberRepeatInYear(1, "days", 5);
+
+                Date nextDate = DateUtil.refreshDate(new Date());
+
+                for(int i = 0; i < numRepeats; i++){
+
+                    nextDate = DateUtil.getDateWithDirection(nextDate, 1);
+
+                    tt.setPrice(913.00);
+                    tt.setId(Util.generateUUID());
+                    tt.setDate(nextDate);
+                    Log.d(TAG, i+") "+tt.toString());
+                    bgRealm.copyToRealmOrUpdate(tt);
+                }
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
