@@ -892,7 +892,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 newLocationObject.setName(Util.capsFirstWord(locationString.trim()));
                 newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                 transaction.setLocation(newLocationObject);
-                //newLocationObject.setNew(true);
 
                 //This creates a new Location Realm object if it doesnt exist yet or updates it.
                 Realm myRealm = Realm.getDefaultInstance();
