@@ -168,7 +168,8 @@ public class CategoryFragment1 extends BaseRealmFragment {
     private void populateCategoryWithNoInfo() {
         Log.d(TAG, "populateCategoryWithNoInfo");
 
-        myRealm.where(Category.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+        RealmResults<Category> catList = myRealm.where(Category.class).findAllAsync();
+        catList.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
             public void onChange(RealmResults<Category> element) {
                 element.removeChangeListeners();
