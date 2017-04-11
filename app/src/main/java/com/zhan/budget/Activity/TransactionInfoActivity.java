@@ -710,7 +710,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     private void getAllLocations(){
         final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
 
-        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).equalTo("isNew", true).findAllAsync();
+        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).findAllAsync();
         locationRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
             @Override
             public void onChange(RealmResults<Location> element) {
@@ -719,7 +719,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 for(int i = 0; i < element.size(); i++){
                     locationHash.add(element.get(i).getName());
                 }
-                //Toast.makeText(getBaseContext(), "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
 
                 myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
@@ -893,7 +892,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 newLocationObject.setName(Util.capsFirstWord(locationString.trim()));
                 newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                 transaction.setLocation(newLocationObject);
-                newLocationObject.setNew(true);
 
                 //This creates a new Location Realm object if it doesnt exist yet or updates it.
                 Realm myRealm = Realm.getDefaultInstance();

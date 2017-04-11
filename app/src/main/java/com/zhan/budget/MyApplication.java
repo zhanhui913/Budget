@@ -101,7 +101,6 @@ public class MyApplication extends Application {
                             //Step 1 : Add new column that has the correct location name format
                             schema.get("Location")
                                     .addField("name_tmp", String.class)
-                                    .addField("isNew", boolean.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
@@ -118,10 +117,7 @@ public class MyApplication extends Application {
                                                 obj.setString("name", correctName);
 
                                                 //If reached here, that means we successfully change primary key.
-
-                                                //Only new Locations past this migration gets set this to true
-                                                obj.setBoolean("isNew", true);
-
+                                                //This means this object should be removed.
                                                 //Add to list.
                                                 locationList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
@@ -171,9 +167,7 @@ public class MyApplication extends Application {
                                                 // {Location: name="Costco"} => dont delete
                                                 if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
                                                     if(!obj.equals(locationList.get(i))){
-
-                                                        //Old Locations gets set to false
-                                                        obj.setBoolean("isNew", false);
+                                                        obj.deleteFromRealm();
                                                     }
                                                 }
                                             }
