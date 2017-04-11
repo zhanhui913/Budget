@@ -218,13 +218,22 @@ public class LocationInfoActivity extends BaseActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        locationNameTextView.setText(input.getText().toString().trim());
 
-                        location.setName(input.getText().toString().trim());
+                        String inputValue = input.getText().toString().trim();
 
-                        //update the text in the circular view to reflect the new name
-                        locationCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase().trim()));
-                        locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
+                        //If there already exist a location with that name and it isnt its own
+                        if(locationHash.contains(inputValue) && !inputValue.equalsIgnoreCase(locationNameTextView.getText().toString().trim())){
+                            Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.location_exist));
+                        }else{
+                            locationNameTextView.setText(inputValue);
+
+                            location.setName(inputValue);
+
+                            //update the text in the circular view to reflect the new name
+                            locationCircularView.setText(""+Util.getFirstCharacterFromString(inputValue));
+                            locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
+                        }
+
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
@@ -304,7 +313,7 @@ public class LocationInfoActivity extends BaseActivity implements
 
         Location loc;
 
-        Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
+        Realm myRealm = Realm.getDefaultInstance();
         if(!isNewLocation){
             loc = myRealm.where(Location.class).equalTo("name", location.getName()).findFirst();
             myRealm.beginTransaction();
@@ -313,7 +322,11 @@ public class LocationInfoActivity extends BaseActivity implements
             loc = myRealm.createObject(Location.class);
         }
 
-        if(!locationHash.contains(locationNameTextView.getText().toString().trim())){
+        //If there dont exist a location with that name or if it its own name
+        if(!locationHash.contains(locationNameTextView.getText().toString().trim()) || loc.getName().equalsIgnoreCase(locationNameTextView.getText().toString().trim())){
+            //bug here where !isNewLocation, but location.getName() retrieves the new name but realm returns null
+
+
             loc.setName(locationNameTextView.getText().toString().trim());
             loc.setColor(location.getColor());
             myRealm.commitTransaction();
@@ -324,7 +337,7 @@ public class LocationInfoActivity extends BaseActivity implements
             Log.d(TAG, "-----Results-----");
 
             Parcelable wrapped = Parcels.wrap(loc);
-            myRealm.close();BudgetPreference.removeRealmCache(this);
+            myRealm.close();
 
             if(!isNewLocation){
                 intent.putExtra(DELETE_LOCATION, false); //not deleting location
@@ -335,7 +348,7 @@ public class LocationInfoActivity extends BaseActivity implements
             setResult(RESULT_OK, intent);
 
             finish();
-        }else{
+        }else if(locationHash.contains(locationNameTextView.getText().toString().trim())){
             Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.location_exist));
             myRealm.cancelTransaction();
         }
