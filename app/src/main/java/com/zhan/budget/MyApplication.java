@@ -101,7 +101,7 @@ public class MyApplication extends Application {
                             //Step 1 : Add new column that has the correct location name format
                             schema.get("Location")
                                     .addField("name_tmp", String.class)
-                                    .addField("isNew", boolean.class)
+                                    //.addField("isNew", boolean.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
@@ -120,7 +120,7 @@ public class MyApplication extends Application {
                                                 //If reached here, that means we successfully change primary key.
 
                                                 //Only new Locations past this migration gets set this to true
-                                                obj.setBoolean("isNew", true);
+                                                //obj.setBoolean("isNew", true);
 
                                                 //Add to list.
                                                 locationList.add(obj);
@@ -173,7 +173,7 @@ public class MyApplication extends Application {
                                                     if(!obj.equals(locationList.get(i))){
 
                                                         //Old Locations gets set to false
-                                                        obj.setBoolean("isNew", false);
+                                                        //obj.setBoolean("isNew", false);
 
                                                         obj.deleteFromRealm();
                                                     }
