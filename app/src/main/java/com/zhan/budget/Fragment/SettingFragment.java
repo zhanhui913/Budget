@@ -111,8 +111,8 @@ public class SettingFragment extends BaseFragment {
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
         restoreBackupBtn = (ViewGroup)view.findViewById(R.id.restoreBackupBtn);
-        //Hide for v1.5.0 release
-        //resetBtn = (ViewGroup) view.findViewById(R.id.resetDataBtn);
+
+        resetBtn = (ViewGroup) view.findViewById(R.id.resetDataBtn);
 
         exportCSVBtn = (ViewGroup) view.findViewById(R.id.exportCSVBtn);
 
@@ -219,14 +219,12 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        //Hide for v1.5.0 release
-        /*
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetData();
             }
-        });*/
+        });
 
         exportCSVBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,7 +286,6 @@ public class SettingFragment extends BaseFragment {
     private File DOWNLOAD_DIRECTORY = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     private final String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
     private final String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
-
 
     private void checkPermissionToAutoBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
@@ -689,10 +686,7 @@ public class SettingFragment extends BaseFragment {
                 .setPositiveButton(R.string.dialog_button_reset, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Util.createSnackbar(getContext(), getView(), getString(R.string.resetting));
-
-                        BudgetPreference.resetFirstTime(getContext());
-                        BudgetPreference.resetFirstTimeCurrency(getContext());
-/*
+                        /*
                         RealmConfiguration config = new RealmConfiguration.Builder(getContext())
                                 .name(Constants.REALM_NAME)
                                 .deleteRealmIfMigrationNeeded()
@@ -701,7 +695,8 @@ public class SettingFragment extends BaseFragment {
 
                         Realm.deleteRealm(config);
                         */
-                        MyApplication.getInstance().deleteRealm();
+                        MyApplication.getInstance().resetRealm();
+                        MyApplication.getInstance().createDefaultRealmData();
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
