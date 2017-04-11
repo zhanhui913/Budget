@@ -453,7 +453,11 @@ private boolean once;
         myRealm.commitTransaction();
 
         //recalculate everything
-        getListOfTransactionsForMonth();
+        //option 1
+        populateAccountWithNoInfo();
+
+        //option 2
+        //getListOfTransactionsForMonth();
     }
 
     @Override
