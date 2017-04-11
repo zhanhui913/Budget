@@ -37,6 +37,39 @@
         android:clickable="true"
         android:background="?attr/themeColorBtn">
 
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+            android:id="@+id/accountIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/accountName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_toLeftOf="@+id/indicatorContainer"
+            android:layout_toStartOf="@+id/indicatorContainer"
+            android:layout_toRightOf="@+id/accountIcon"
+            android:layout_toEndOf="@+id/accountIcon"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/item_left_padding"
+            android:layout_marginStart="@dimen/item_left_padding"
+            android:textSize="@dimen/text_title_size"
+            android:text="@string/account" />
+
+        <TextView
+            android:id="@+id/accountCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="@string/cost"
+            android:textSize="@dimen/text_title_size" />
+
         <RelativeLayout
             android:id="@+id/indicatorContainer"
             android:layout_width="wrap_content"
@@ -59,43 +92,5 @@
                 android:src="@drawable/svg_ic_on"
                 android:tint="@color/colorPrimaryDark"/>
         </RelativeLayout>
-
-        <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
-            android:id="@+id/accountIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toLeftOf="@+id/indicatorContainer"
-            android:layout_toStartOf="@+id/indicatorContainer"
-            android:layout_toRightOf="@+id/accountIcon"
-            android:layout_toEndOf="@+id/accountIcon"
-            android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/item_left_padding"
-            android:paddingStart="@dimen/item_left_padding">
-
-            <TextView
-                android:id="@+id/accountName"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:textSize="@dimen/text_title_size"
-                android:textStyle="bold"
-                android:text="@string/account" />
-
-            <TextView
-                android:id="@+id/accountCost"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/cost"
-                android:textSize="@dimen/text_content_size" />
-        </LinearLayout>
     </RelativeLayout>
 </com.daimajia.swipe.SwipeLayout>
