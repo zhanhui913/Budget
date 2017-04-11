@@ -33,6 +33,8 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
+import static android.app.Activity.RESULT_OK;
+
 public class LocationInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener{
 
@@ -218,13 +220,22 @@ public class LocationInfoActivity extends BaseActivity implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        locationNameTextView.setText(input.getText().toString().trim());
 
-                        location.setName(input.getText().toString().trim());
+                        String inputValue = input.getText().toString().trim();
 
-                        //update the text in the circular view to reflect the new name
-                        locationCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase().trim()));
-                        locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
+                        //If there already exist a location with that name and it isnt its own
+                        if(locationHash.contains(inputValue) && !inputValue.equalsIgnoreCase(locationNameTextView.getText().toString().trim())){
+                            Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.location_exist));
+                        }else{
+                            locationNameTextView.setText(inputValue);
+
+                            location.setName(inputValue);
+
+                            //update the text in the circular view to reflect the new name
+                            locationCircularView.setText(""+Util.getFirstCharacterFromString(inputValue));
+                            locationCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
+                        }
+
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
@@ -304,41 +315,41 @@ public class LocationInfoActivity extends BaseActivity implements
 
         Location loc;
 
-        Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
+        Realm myRealm = Realm.getDefaultInstance();
         if(!isNewLocation){
-            loc = myRealm.where(Location.class).equalTo("name", location.getName()).findFirst();
-            myRealm.beginTransaction();
+
+            //If added a name that isnt in the hash, it means it wont be in the db as well
+            if(!locationHash.contains(location.getName())){
+                myRealm.beginTransaction();
+                loc = myRealm.createObject(Location.class);
+            }else{
+                loc = myRealm.where(Location.class).equalTo("name", location.getName()).findFirst();
+                myRealm.beginTransaction();
+            }
         } else{
             myRealm.beginTransaction();
             loc = myRealm.createObject(Location.class);
         }
 
-        if(!locationHash.contains(locationNameTextView.getText().toString().trim())){
-            loc.setName(locationNameTextView.getText().toString().trim());
-            loc.setColor(location.getColor());
-            myRealm.commitTransaction();
+        loc.setName(locationNameTextView.getText().toString().trim());
+        loc.setColor(location.getColor());
+        myRealm.commitTransaction();
 
-            Log.d(TAG, "-----Results-----");
-            Log.d(TAG, "Account name : "+loc.getName());
-            Log.d(TAG, "color : " + loc.getColor());
-            Log.d(TAG, "-----Results-----");
+        Log.d(TAG, "-----Results-----");
+        Log.d(TAG, "Account name : "+loc.getName());
+        Log.d(TAG, "color : " + loc.getColor());
+        Log.d(TAG, "-----Results-----");
 
-            Parcelable wrapped = Parcels.wrap(loc);
-            myRealm.close();BudgetPreference.removeRealmCache(this);
+        Parcelable wrapped = Parcels.wrap(loc);
+        myRealm.close();
 
-            if(!isNewLocation){
-                intent.putExtra(DELETE_LOCATION, false); //not deleting location
-            }
-
-            intent.putExtra(RESULT_LOCATION, wrapped);
-
-            setResult(RESULT_OK, intent);
-
-            finish();
-        }else{
-            Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.location_exist));
-            myRealm.cancelTransaction();
+        if(!isNewLocation){
+            intent.putExtra(DELETE_LOCATION, false); //not deleting location
         }
+
+        intent.putExtra(RESULT_LOCATION, wrapped);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void updateCircularColor(){
