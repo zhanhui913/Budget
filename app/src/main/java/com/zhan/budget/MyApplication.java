@@ -174,6 +174,8 @@ public class MyApplication extends Application {
 
                                                         //Old Locations gets set to false
                                                         obj.setBoolean("isNew", false);
+
+                                                        obj.deleteFromRealm();
                                                     }
                                                 }
                                             }
