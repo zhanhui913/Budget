@@ -23,7 +23,7 @@ public class Location extends RealmObject implements PieDataCostInterface {
 
     //When migration to #3
     //Old Locations (ie those with wrong name format) are set to false
-    private boolean isNew;
+   // private boolean isNew;
 
     public Location(){
 
@@ -56,7 +56,7 @@ public class Location extends RealmObject implements PieDataCostInterface {
     public void setColor(String color) {
         this.color = color;
     }
-
+/*
     public boolean isNew() {
         return isNew;
     }
@@ -64,7 +64,7 @@ public class Location extends RealmObject implements PieDataCostInterface {
     public void setNew(boolean aNew) {
         isNew = aNew;
     }
-
+*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Pie Data Interface
@@ -95,7 +95,7 @@ public class Location extends RealmObject implements PieDataCostInterface {
     public boolean checkEquals(Location other){
         if(!name.equalsIgnoreCase(other.getName())) return false;
         if(!color.equalsIgnoreCase(other.getColor())) return false;
-        if(isNew != other.isNew()) return false;
+        //if(isNew != other.isNew()) return false;
         return true;
     }
 }
