@@ -33,6 +33,8 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
+import static android.app.Activity.RESULT_OK;
+
 public class LocationInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener{
 
@@ -315,43 +317,39 @@ public class LocationInfoActivity extends BaseActivity implements
 
         Realm myRealm = Realm.getDefaultInstance();
         if(!isNewLocation){
-            loc = myRealm.where(Location.class).equalTo("name", location.getName()).findFirst();
-            myRealm.beginTransaction();
+
+            //If added a name that isnt in the hash, it means it wont be in the db as well
+            if(!locationHash.contains(location.getName())){
+                myRealm.beginTransaction();
+                loc = myRealm.createObject(Location.class);
+            }else{
+                loc = myRealm.where(Location.class).equalTo("name", location.getName()).findFirst();
+                myRealm.beginTransaction();
+            }
         } else{
             myRealm.beginTransaction();
             loc = myRealm.createObject(Location.class);
         }
 
-        //If there dont exist a location with that name or if it its own name
-        if(!locationHash.contains(locationNameTextView.getText().toString().trim()) || loc.getName().equalsIgnoreCase(locationNameTextView.getText().toString().trim())){
-            //bug here where !isNewLocation, but location.getName() retrieves the new name but realm returns null
+        loc.setName(locationNameTextView.getText().toString().trim());
+        loc.setColor(location.getColor());
+        myRealm.commitTransaction();
 
+        Log.d(TAG, "-----Results-----");
+        Log.d(TAG, "Account name : "+loc.getName());
+        Log.d(TAG, "color : " + loc.getColor());
+        Log.d(TAG, "-----Results-----");
 
-            loc.setName(locationNameTextView.getText().toString().trim());
-            loc.setColor(location.getColor());
-            myRealm.commitTransaction();
+        Parcelable wrapped = Parcels.wrap(loc);
+        myRealm.close();
 
-            Log.d(TAG, "-----Results-----");
-            Log.d(TAG, "Account name : "+loc.getName());
-            Log.d(TAG, "color : " + loc.getColor());
-            Log.d(TAG, "-----Results-----");
-
-            Parcelable wrapped = Parcels.wrap(loc);
-            myRealm.close();
-
-            if(!isNewLocation){
-                intent.putExtra(DELETE_LOCATION, false); //not deleting location
-            }
-
-            intent.putExtra(RESULT_LOCATION, wrapped);
-
-            setResult(RESULT_OK, intent);
-
-            finish();
-        }else if(locationHash.contains(locationNameTextView.getText().toString().trim())){
-            Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.location_exist));
-            myRealm.cancelTransaction();
+        if(!isNewLocation){
+            intent.putExtra(DELETE_LOCATION, false); //not deleting location
         }
+
+        intent.putExtra(RESULT_LOCATION, wrapped);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void updateCircularColor(){
