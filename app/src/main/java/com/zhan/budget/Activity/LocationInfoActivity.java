@@ -27,7 +27,11 @@ import com.zhan.library.CircularView;
 
 import org.parceler.Parcels;
 
+import java.util.HashSet;
+
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 public class LocationInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener{
@@ -57,6 +61,8 @@ public class LocationInfoActivity extends BaseActivity implements
     //Selected color
     private String selectedColor;
 
+    private HashSet<String> locationHash;
+
     public static Intent createIntentForNewLocation(Context context) {
         Intent intent = new Intent(context, LocationInfoActivity.class);
         intent.putExtra(NEW_LOCATION, true);
@@ -83,6 +89,8 @@ public class LocationInfoActivity extends BaseActivity implements
         instance = this;
 
         isNewLocation = (getIntent().getExtras()).getBoolean(NEW_LOCATION);
+
+        locationHash = new HashSet<>();
 
         Log.d(TAG, "isNewLocation "+isNewLocation);
 
@@ -127,6 +135,7 @@ public class LocationInfoActivity extends BaseActivity implements
 
         createToolbar();
         addListeners();
+        getAllLocations();
     }
 
     /**
@@ -173,6 +182,24 @@ public class LocationInfoActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 confirmDelete();
+            }
+        });
+    }
+
+    private void getAllLocations(){
+        final Realm myRealm = Realm.getDefaultInstance();
+
+        RealmResults<Location> locationRealmResults = myRealm.where(Location.class).findAllAsync();
+        locationRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
+            @Override
+            public void onChange(RealmResults<Location> element) {
+                element.removeChangeListener(this);
+
+                for(int i = 0; i < element.size(); i++){
+                    locationHash.add(element.get(i).getName());
+                }
+
+                myRealm.close();
             }
         });
     }
@@ -286,27 +313,32 @@ public class LocationInfoActivity extends BaseActivity implements
             loc = myRealm.createObject(Location.class);
         }
 
-        loc.setName(locationNameTextView.getText().toString());
-        loc.setColor(location.getColor());
-        myRealm.commitTransaction();
+        if(!locationHash.contains(locationNameTextView.getText().toString().trim())){
+            loc.setName(locationNameTextView.getText().toString().trim());
+            loc.setColor(location.getColor());
+            myRealm.commitTransaction();
 
-        Log.d(TAG, "-----Results-----");
-        Log.d(TAG, "Account name : "+loc.getName());
-        Log.d(TAG, "color : " + loc.getColor());
-        Log.d(TAG, "-----Results-----");
+            Log.d(TAG, "-----Results-----");
+            Log.d(TAG, "Account name : "+loc.getName());
+            Log.d(TAG, "color : " + loc.getColor());
+            Log.d(TAG, "-----Results-----");
 
-        Parcelable wrapped = Parcels.wrap(loc);
-        myRealm.close();BudgetPreference.removeRealmCache(this);
+            Parcelable wrapped = Parcels.wrap(loc);
+            myRealm.close();BudgetPreference.removeRealmCache(this);
 
-        if(!isNewLocation){
-            intent.putExtra(DELETE_LOCATION, false); //not deleting location
+            if(!isNewLocation){
+                intent.putExtra(DELETE_LOCATION, false); //not deleting location
+            }
+
+            intent.putExtra(RESULT_LOCATION, wrapped);
+
+            setResult(RESULT_OK, intent);
+
+            finish();
+        }else{
+            Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.location_exist));
+            myRealm.cancelTransaction();
         }
-
-        intent.putExtra(RESULT_LOCATION, wrapped);
-
-        setResult(RESULT_OK, intent);
-
-        finish();
     }
 
     private void updateCircularColor(){
