@@ -300,42 +300,43 @@
                 android:layout_centerVertical="true"
                 android:text="@string/setting_title_restore_data"/>
         </RelativeLayout>
+        <!--
+		//Remove for v1.5.0 release
+				<View
+					android:layout_width="match_parent"
+					android:layout_height="1dp"
+					android:layout_marginLeft="@dimen/left_padding_divider"
+					android:background="?attr/themeColorHighlight"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/left_padding_divider"
-            android:background="?attr/themeColorHighlight"/>
+				<RelativeLayout style="@style/ItemPaddingStyle"
+					android:id="@+id/resetDataBtn"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:background="?attr/themeColorBtn"
+					android:clickable="true"
+					android:focusable="true">
 
-        <RelativeLayout style="@style/ItemPaddingStyle"
-            android:id="@+id/resetDataBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/themeColorBtn"
-            android:clickable="true"
-            android:focusable="true">
+					<com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+						android:id="@+id/resetDataCV"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_centerVertical="true"
+						android:layout_alignParentStart="true"
+						android:layout_alignParentLeft="true"
+						app:cv_bgColor="@color/emerald"
+						app:cv_strokeColor="@color/emerald"
+						app:cv_iconDrawable="@drawable/c_reset_db"/>
 
-            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
-                android:id="@+id/resetDataCV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                app:cv_bgColor="@color/emerald"
-                app:cv_strokeColor="@color/emerald"
-                app:cv_iconDrawable="@drawable/c_reset_db"/>
+					<TextView style="@style/SettingsTextViewTitleStyle"
+						android:id="@+id/resetDataTitle"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_toRightOf="@+id/resetDataCV"
+						android:layout_centerVertical="true"
+						android:text="@string/setting_title_reset_data"/>
 
-            <TextView style="@style/SettingsTextViewTitleStyle"
-                android:id="@+id/resetDataTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/resetDataCV"
-                android:layout_centerVertical="true"
-                android:text="@string/setting_title_reset_data"/>
-
-        </RelativeLayout>
-
+				</RelativeLayout>
+		-->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

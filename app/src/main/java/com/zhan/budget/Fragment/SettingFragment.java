@@ -50,7 +50,6 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
@@ -112,8 +111,8 @@ public class SettingFragment extends BaseFragment {
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
         restoreBackupBtn = (ViewGroup)view.findViewById(R.id.restoreBackupBtn);
-
-        resetBtn = (ViewGroup) view.findViewById(R.id.resetDataBtn);
+        //Hide for v1.5.0 release
+        //resetBtn = (ViewGroup) view.findViewById(R.id.resetDataBtn);
 
         exportCSVBtn = (ViewGroup) view.findViewById(R.id.exportCSVBtn);
 
@@ -220,12 +219,14 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
+        //Hide for v1.5.0 release
+        /*
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetData();
             }
-        });
+        });*/
 
         exportCSVBtn.setOnClickListener(new View.OnClickListener() {
             @Override
