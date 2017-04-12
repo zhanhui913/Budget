@@ -40,9 +40,6 @@
     <!-- Used only for icons in the item_transaction.xml for account and location property-->
     <dimen name="icon_height">25dp</dimen>
 
-    <!-- Use default action bar size that is pre-defined-->
-    <dimen name="tab_height">@dimen/abc_action_bar_default_height_material</dimen>
-
     <!-- Used for left and right padding for circular view for calendar selection -->
     <dimen name="calendar_circle_inset">10dp</dimen>
 

@@ -1,11 +1,11 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
@@ -32,8 +31,6 @@ import java.util.HashSet;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
-
-import static android.app.Activity.RESULT_OK;
 
 public class LocationInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener{

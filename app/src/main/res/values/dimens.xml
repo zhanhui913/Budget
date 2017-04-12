@@ -40,13 +40,10 @@
 	<!-- Used only for icons in the item_transaction.xml for account and location property-->
 	<dimen name="icon_height">20dp</dimen>
 
-	<dimen name="tab_height">30dp</dimen>
-
 	<!-- Used for left and right padding for circular view for calendar selection -->
 	<dimen name="calendar_circle_inset">8dp</dimen>
 
 	<dimen name="progressBar_height">5dp</dimen>
-
 
 	<!-- Used for grid view offsets -->
 	<dimen name="grid_view_vertical_offset">0dp</dimen>
