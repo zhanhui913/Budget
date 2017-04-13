@@ -127,10 +127,13 @@ public class MyApplication extends Application {
                                                 //Add to list.
 
                                                 //Have to create a copy as realm dont allow us to touch un-managed realm outside of this loop
-                                                DynamicRealmObject drobj = realm.createObject("Location");
-                                                drobj.setString("name", correctName);
-                                                drobj.setString("name_tmp", correctName);
-                                                drobj.setString("color", obj.getString("color"));
+                                                //Cannot put the correctName string into the name field as it would enter
+                                                //the exception that the realmPrimaryKey already exist
+                                                //DynamicRealmObject drobj = realm.createObject("Location");
+                                                DynamicRealmObject drobj = new DynamicRealmObject(obj);
+                                                //drobj.setString("name", correctName);
+                                                //drobj.setString("name_tmp", correctName);
+                                                //drobj.setString("color", obj.getString("color"));
 
                                                 locationList.add(drobj);
                                             }catch(RealmPrimaryKeyConstraintException e){
