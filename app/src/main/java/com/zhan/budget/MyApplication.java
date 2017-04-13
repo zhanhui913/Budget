@@ -7,16 +7,23 @@ import android.util.Log;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
+import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DataBackup;
+import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -27,6 +34,8 @@ import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by Zhan on 16-06-02.
@@ -279,26 +288,26 @@ public class MyApplication extends Application {
             accountList.add(account);
         }
 
-        /*
+/*
         //Create fake locations
         String[] locationTempList = new String[] {"Belgium", "France", "Italy", "Germany", "Spain", "USA", "Canada", "Brazil", "Norway", "England"};
         for(int i = 0; i < locationTempList.length; i++){
             Location location = myRealm.createObject(Location.class);
             location.setName(locationTempList[i]);
             location.setAmount(0);
-            location.setColor(Colors.getRandomColorString(getContext()));
-            location.setNew(true);
+            location.setColor(Colors.getRandomColorString(instance));
             locationList.add(location);
         }
 
         //Create fake transactions
-        Date startDate = DateUtil.convertStringToDate(getContext(), "2017-03-01");
-        Date endDate = DateUtil.convertStringToDate(getContext(), "2017-05-01");
+        Date startDate = DateUtil.convertStringToDate(instance, "2017-01-01");
+        Date endDate = DateUtil.convertStringToDate(instance, "2017-04-11");
 
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
+
 
         String dayType;
 
@@ -333,10 +342,10 @@ public class MyApplication extends Application {
 
                 transaction.setAccount(account);
                 transaction.setCategory(category);
-                transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(getContext(),date));
+                transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(instance,date));
             }
         }
-        */
+*/
 
         myRealm.commitTransaction();
     }
