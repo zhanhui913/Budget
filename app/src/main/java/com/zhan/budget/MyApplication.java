@@ -125,7 +125,14 @@ public class MyApplication extends Application {
                                                 //If reached here, that means we successfully change primary key.
                                                 //This means this object should be removed.
                                                 //Add to list.
-                                                locationList.add(myRealm.copyFromRealm(obj));
+
+
+                                                DynamicRealmObject drObj = obj;
+
+
+                                                locationList.add(drObj);
+
+
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d(TAG, "There already exist a Location : "+correctName);
                                             }
