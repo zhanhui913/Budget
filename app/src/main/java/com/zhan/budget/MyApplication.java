@@ -130,12 +130,12 @@ public class MyApplication extends Application {
                                                 //Cannot put the correctName string into the name field as it would enter
                                                 //the exception that the realmPrimaryKey already exist
                                                 //DynamicRealmObject drobj = realm.createObject("Location");
-                                                DynamicRealmObject drobj = new DynamicRealmObject(obj);
+                                                //DynamicRealmObject drobj = new DynamicRealmObject(obj);
                                                 //drobj.setString("name", correctName);
                                                 //drobj.setString("name_tmp", correctName);
                                                 //drobj.setString("color", obj.getString("color"));
 
-                                                locationList.add(drobj);
+                                                locationList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d(TAG, "There already exist a Location : "+correctName);
                                             }
