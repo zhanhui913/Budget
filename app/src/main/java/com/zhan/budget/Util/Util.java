@@ -146,17 +146,21 @@ public final class Util {
     public static String capsFirstWord(String str) {
         //First change the string to all lowercase, then only upper case the first character of the word
         if(str.length() > 0){
+Log.d("CAPS", "----------------");
             str = str.toLowerCase();
 
             String[] words = str.split(" ");
             StringBuilder ret = new StringBuilder();
             for(int i = 0; i < words.length; i++) {
+                Log.d("CAPS", "trying to cap : "+words[i]+" where first char = "+words[i].charAt(0));
+
                 ret.append(Character.toUpperCase(words[i].charAt(0)));
                 ret.append(words[i].substring(1));
                 if(i < words.length - 1) {
                     ret.append(' ');
                 }
             }
+            Log.d("CAPS", "----------------");
             return ret.toString();
         }
         return "";
