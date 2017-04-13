@@ -18,7 +18,7 @@
 			android:id="@+id/foreground"
 			android:layout_width="100dp"
 			android:layout_height="100dp"
-			android:src="@mipmap/icon_bold"
+			android:src="@mipmap/ic_launcher"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentLeft="true"
 			android:scaleType="fitCenter"
