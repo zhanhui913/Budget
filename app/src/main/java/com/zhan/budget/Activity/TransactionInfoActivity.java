@@ -889,7 +889,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(isLocationChanged){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
                 Location newLocationObject = new Location();
-                newLocationObject.setName(Util.capsFirstWord(locationString.trim()));
+                newLocationObject.setName(Util.capsFirstWord(locationString));
                 newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                 transaction.setLocation(newLocationObject);
 

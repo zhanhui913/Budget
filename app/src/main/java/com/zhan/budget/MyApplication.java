@@ -7,23 +7,16 @@ import android.util.Log;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
-import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Util.BudgetPreference;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DataBackup;
-import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -34,8 +27,6 @@ import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Zhan on 16-06-02.
@@ -57,6 +48,8 @@ public class MyApplication extends Application {
         instance = this;
 
         CURRENT_THEME = BudgetPreference.getCurrentTheme(instance); Log.d(TAG, "MyApplication, Theme : "+CURRENT_THEME);
+
+
 
         realmConfig = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
@@ -117,7 +110,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            String correctName = Util.capsFirstWord(obj.getString("name").trim());
+                                            String correctName = Util.capsFirstWord(obj.getString("name"));
 
                                             try{
                                                 //Wont have any problem with primary key exception
@@ -146,16 +139,18 @@ public class MyApplication extends Application {
                                         public void apply(DynamicRealmObject obj) {
                                             DynamicRealmObject location = obj.getObject("location");
 
-                                            String locationName = location.getString("name").trim();
-                                            String tempLocationName = location.getString("name_tmp").trim();
+                                            if(location != null){
+                                                String locationName = location.getString("name").trim();
+                                                String tempLocationName = location.getString("name_tmp").trim();
 
-                                            //If transaction's location's name_tmp doesnt match name
-                                            //Then we need to change the Transaction's old location to match the name_tmp
-                                            if(!locationName.equals(tempLocationName)){
-                                                for(int i = 0; i < locationList.size(); i++){
-                                                    if(locationList.get(i).getString("name").trim().equals(tempLocationName)){
-                                                        obj.setObject("location", locationList.get(i));
-                                                        break;
+                                                //If transaction's location's name_tmp doesnt match name
+                                                //Then we need to change the Transaction's old location to match the name_tmp
+                                                if(!locationName.equals(tempLocationName)){
+                                                    for(int i = 0; i < locationList.size(); i++){
+                                                        if(locationList.get(i).getString("name").trim().equals(tempLocationName)){
+                                                            obj.setObject("location", locationList.get(i));
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -191,6 +186,8 @@ public class MyApplication extends Application {
                         }
 
                         Log.d(TAG, "old version :"+oldVersion);
+
+                        listenToRealmDBChanges();
                     }
                 })
                 .build();
@@ -200,12 +197,11 @@ public class MyApplication extends Application {
 
         //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
-        listenToRealmDBChanges();
+       // listenToRealmDBChanges();
     }
 
     private void listenToRealmDBChanges(){
         Log.d(TAG, "start listening to realm changes");
-
         myRealm = Realm.getDefaultInstance();
         myRealm.addChangeListener(new RealmChangeListener<Realm>() {
             @Override

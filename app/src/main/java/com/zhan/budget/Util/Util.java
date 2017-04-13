@@ -146,8 +146,12 @@ public final class Util {
     public static String capsFirstWord(String str) {
         //First change the string to all lowercase, then only upper case the first character of the word
         if(str.length() > 0){
-Log.d("CAPS", str+"   ----------------");
-            str = str.toLowerCase();
+
+            //This removes trailing and ending whitespace, change to lower case, then remove any extra
+            //spaces in between words and put only 1 space
+            str = str.trim().toLowerCase().replaceAll("\\s{2,}", " ");
+
+            Log.d("CAPS", str+"   ----------------");
 
             String[] words = str.split(" ");
             StringBuilder ret = new StringBuilder();
