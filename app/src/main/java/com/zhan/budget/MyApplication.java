@@ -56,7 +56,7 @@ public class MyApplication extends Application {
                 .schemaVersion(3)
                 .migration(new RealmMigration() {
                     @Override
-                    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+                    public void migrate(final DynamicRealm realm, long oldVersion, long newVersion) {
                         // DynamicRealm exposes an editable schema
                         final RealmSchema schema = realm.getSchema();
 
@@ -126,13 +126,12 @@ public class MyApplication extends Application {
                                                 //This means this object should be removed.
                                                 //Add to list.
 
+                                                //Have to create a copy as realm dont allow us to touch un-managed realm outside of this loop
+                                                DynamicRealmObject drobj = realm.createObject("Location");
+                                                drobj.setString("name", obj.getString("name"));
+                                                drobj.setString("color", obj.getString("color"));
 
-                                                DynamicRealmObject drObj = obj;
-
-
-                                                locationList.add(drObj);
-
-
+                                                locationList.add(drobj);
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d(TAG, "There already exist a Location : "+correctName);
                                             }
