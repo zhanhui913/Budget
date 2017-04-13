@@ -128,7 +128,8 @@ public class MyApplication extends Application {
 
                                                 //Have to create a copy as realm dont allow us to touch un-managed realm outside of this loop
                                                 DynamicRealmObject drobj = realm.createObject("Location");
-                                                drobj.setString("name", obj.getString("name"));
+                                                drobj.setString("name", correctName);
+                                                drobj.setString("name_tmp", correctName);
                                                 drobj.setString("color", obj.getString("color"));
 
                                                 locationList.add(drobj);
@@ -193,7 +194,7 @@ public class MyApplication extends Application {
 
                         Log.d(TAG, "old version :"+oldVersion);
 
-                        listenToRealmDBChanges();
+
                     }
                 })
                 .build();
@@ -203,7 +204,7 @@ public class MyApplication extends Application {
 
         //JobManager.create(this).addJobCreator(new CustomJobCreator());
 
-       // listenToRealmDBChanges();
+        listenToRealmDBChanges();
     }
 
     private void listenToRealmDBChanges(){
