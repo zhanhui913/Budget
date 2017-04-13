@@ -117,7 +117,7 @@ public class MyApplication extends Application {
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
-                                            String correctName = Util.capsFirstWord(obj.getString("name"));
+                                            String correctName = Util.capsFirstWord(obj.getString("name").trim());
 
                                             try{
                                                 //Wont have any problem with primary key exception
@@ -146,14 +146,14 @@ public class MyApplication extends Application {
                                         public void apply(DynamicRealmObject obj) {
                                             DynamicRealmObject location = obj.getObject("location");
 
-                                            String locationName = location.getString("name");
-                                            String tempLocationName = location.getString("name_tmp");
+                                            String locationName = location.getString("name").trim();
+                                            String tempLocationName = location.getString("name_tmp").trim();
 
                                             //If transaction's location's name_tmp doesnt match name
                                             //Then we need to change the Transaction's old location to match the name_tmp
                                             if(!locationName.equals(tempLocationName)){
                                                 for(int i = 0; i < locationList.size(); i++){
-                                                    if(locationList.get(i).getString("name").equals(tempLocationName)){
+                                                    if(locationList.get(i).getString("name").trim().equals(tempLocationName)){
                                                         obj.setObject("location", locationList.get(i));
                                                         break;
                                                     }
@@ -178,7 +178,7 @@ public class MyApplication extends Application {
                                                 // {Location: name="COSTCO"} => delete
                                                 // {Location: name="COstco"} => delete
                                                 // {Location: name="Costco"} => dont delete
-                                                if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
+                                                if(locationList.get(i).getString("name").trim().equalsIgnoreCase(obj.getString("name"))){
                                                     if(!obj.equals(locationList.get(i))){
                                                         obj.deleteFromRealm();
                                                     }
