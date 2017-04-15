@@ -106,7 +106,7 @@ public class MyApplication extends Application {
 
                             //Step 1 : Add new column that has the correct location name format
                             schema.get("Location")
-                                    .addField("name_tmp", String.class)
+                                    //.addField("name_tmp", String.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
@@ -116,7 +116,7 @@ public class MyApplication extends Application {
                                                 //Wont have any problem with primary key exception
                                                 //as this is a temp column with no primary key
                                                 //attribute
-                                                obj.setString("name_tmp", correctName);
+                                                //obj.setString("name_tmp", correctName);
 
                                                 //Try to change primary key attribute now, if there
                                                 //already exist one, it will get caught by exception.
@@ -143,7 +143,7 @@ public class MyApplication extends Application {
                                     });
 
                             //Step 2 : Replace Transaction's location with correct location object (with correct name format)
-                            schema.get("Transaction")
+                            /*schema.get("Transaction")
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
@@ -190,7 +190,7 @@ public class MyApplication extends Application {
                                                 }
                                             }
                                         }
-                                    });
+                                    });*/
 
                             oldVersion++;
                         }
