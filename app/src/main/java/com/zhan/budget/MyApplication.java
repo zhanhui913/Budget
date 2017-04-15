@@ -7,23 +7,16 @@ import android.util.Log;
 
 import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Model.BudgetType;
-import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Location;
-import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Util.BudgetPreference;
-import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DataBackup;
-import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -34,8 +27,6 @@ import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Zhan on 16-06-02.
@@ -58,12 +49,14 @@ public class MyApplication extends Application {
 
         CURRENT_THEME = BudgetPreference.getCurrentTheme(instance); Log.d(TAG, "MyApplication, Theme : "+CURRENT_THEME);
 
+
+
         realmConfig = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
                 .schemaVersion(3)
                 .migration(new RealmMigration() {
                     @Override
-                    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+                    public void migrate(final DynamicRealm realm, long oldVersion, long newVersion) {
                         // DynamicRealm exposes an editable schema
                         final RealmSchema schema = realm.getSchema();
 
@@ -113,7 +106,7 @@ public class MyApplication extends Application {
 
                             //Step 1 : Add new column that has the correct location name format
                             schema.get("Location")
-                                    .addField("name_tmp", String.class)
+                                    //.addField("name_tmp", String.class)
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
@@ -123,7 +116,7 @@ public class MyApplication extends Application {
                                                 //Wont have any problem with primary key exception
                                                 //as this is a temp column with no primary key
                                                 //attribute
-                                                obj.setString("name_tmp", correctName);
+                                                //obj.setString("name_tmp", correctName);
 
                                                 //Try to change primary key attribute now, if there
                                                 //already exist one, it will get caught by exception.
@@ -132,6 +125,11 @@ public class MyApplication extends Application {
                                                 //If reached here, that means we successfully change primary key.
                                                 //This means this object should be removed.
                                                 //Add to list.
+
+                                                //Have to create a copy as realm dont allow us to touch un-managed realm outside of this loop
+                                                //Cannot put the correctName string into the name field as it would enter
+                                                //the exception that the realmPrimaryKey already exist
+
                                                 locationList.add(obj);
                                             }catch(RealmPrimaryKeyConstraintException e){
                                                 Log.d(TAG, "There already exist a Location : "+correctName);
@@ -140,22 +138,24 @@ public class MyApplication extends Application {
                                     });
 
                             //Step 2 : Replace Transaction's location with correct location object (with correct name format)
-                            schema.get("Transaction")
+                            /*schema.get("Transaction")
                                     .transform(new RealmObjectSchema.Function() {
                                         @Override
                                         public void apply(DynamicRealmObject obj) {
                                             DynamicRealmObject location = obj.getObject("location");
 
-                                            String locationName = location.getString("name");
-                                            String tempLocationName = location.getString("name_tmp");
+                                            if(location != null){
+                                                String locationName = location.getString("name").trim();
+                                                String tempLocationName = location.getString("name_tmp").trim();
 
-                                            //If transaction's location's name_tmp doesnt match name
-                                            //Then we need to change the Transaction's old location to match the name_tmp
-                                            if(!locationName.equals(tempLocationName)){
-                                                for(int i = 0; i < locationList.size(); i++){
-                                                    if(locationList.get(i).getString("name").equals(tempLocationName)){
-                                                        obj.setObject("location", locationList.get(i));
-                                                        break;
+                                                //If transaction's location's name_tmp doesnt match name
+                                                //Then we need to change the Transaction's old location to match the name_tmp
+                                                if(!locationName.equals(tempLocationName)){
+                                                    for(int i = 0; i < locationList.size(); i++){
+                                                        if(locationList.get(i).getString("name").trim().equals(tempLocationName)){
+                                                            obj.setObject("location", locationList.get(i));
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -178,19 +178,21 @@ public class MyApplication extends Application {
                                                 // {Location: name="COSTCO"} => delete
                                                 // {Location: name="COstco"} => delete
                                                 // {Location: name="Costco"} => dont delete
-                                                if(locationList.get(i).getString("name").equalsIgnoreCase(obj.getString("name"))){
+                                                if(locationList.get(i).getString("name").trim().equalsIgnoreCase(obj.getString("name"))){
                                                     if(!obj.equals(locationList.get(i))){
                                                         obj.deleteFromRealm();
                                                     }
                                                 }
                                             }
                                         }
-                                    });
+                                    });*/
 
                             oldVersion++;
                         }
 
                         Log.d(TAG, "old version :"+oldVersion);
+
+
                     }
                 })
                 .build();
@@ -205,7 +207,6 @@ public class MyApplication extends Application {
 
     private void listenToRealmDBChanges(){
         Log.d(TAG, "start listening to realm changes");
-
         myRealm = Realm.getDefaultInstance();
         myRealm.addChangeListener(new RealmChangeListener<Realm>() {
             @Override
