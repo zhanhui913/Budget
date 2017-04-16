@@ -2,6 +2,7 @@ package com.zhan.budget.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,7 +20,6 @@ import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
@@ -98,11 +98,12 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         // getting category data for the row
         final Category category = categoryList.get(position);
 
-        //Icon
+        //CircularView
         viewHolder.circularView.setCircleColor(category.getColor());
+        viewHolder.circularView.setStrokeColor(category.getColor());
 
         if(category.isText()){
-            viewHolder.circularView.setText(Util.getFirstCharacterFromString(category.getName())+"");
+            viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(category.getName().toUpperCase().trim()));
             viewHolder.circularView.setIconResource(0);
         }else{
             viewHolder.circularView.setText("");
@@ -112,30 +113,23 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         viewHolder.name.setText(category.getName());
 
         if(arrangement == ARRANGEMENT.BUDGET || arrangement == ARRANGEMENT.MOVE){
-            viewHolder.budget.setText("Budget : "+CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+            viewHolder.budget.setText(String.format(context.getString(R.string.category_budget), CurrencyTextFormatter.formatDouble(category.getBudget())));
         }else{
-            viewHolder.budget.setText("Percent : "+category.getPercent()+"%");
+            viewHolder.budget.setText(String.format(context.getString(R.string.category_percent), category.getPercent()));
         }
 
         if(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
             if(arrangement == ARRANGEMENT.BUDGET) {
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
 
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
 
                 //ProgressBar
                 if(category.getBudget() > 0){
                     viewHolder.progressBar.setVisibility(View.VISIBLE);
-                    viewHolder.progressBar.setMax(category.getBudget());
-                    viewHolder.progressBar.setProgress(Math.abs(category.getCost()));
-
-                    if(category.getBudget() == Math.abs(category.getCost())){ //If its exactly the same
-                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                    }else if(category.getBudget() > Math.abs(category.getCost())){ //If its less than budget
-                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.sunflower));
-                    }else{ //If exceeded budget
-                        viewHolder.progressBar.setProgressColor(ContextCompat.getColor(context, R.color.red));
-                    }
+                    viewHolder.progressBar.setMax((float)category.getBudget());
+                    viewHolder.progressBar.setProgress((float)Math.abs(category.getCost()));
+                    viewHolder.progressBar.setProgressColor(Color.parseColor(category.getColor()));
                 }else{
                     //If there is no budget even though its an expense
                     viewHolder.progressBar.setVisibility(View.GONE);
@@ -149,14 +143,14 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
             }
         } else if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
             viewHolder.budget.setVisibility(View.GONE);
 
             if(arrangement == ARRANGEMENT.BUDGET){
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(Math.abs(category.getCost()), Constants.BUDGET_LOCALE));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(Math.abs(category.getCost())));
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.dragIcon.setVisibility(View.INVISIBLE);
             }else if(arrangement == ARRANGEMENT.MOVE){
@@ -168,7 +162,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 viewHolder.dragIcon.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.costTitle.setVisibility(View.GONE);
-                viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(category.getCost(), Constants.BUDGET_LOCALE));
+                viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(category.getCost()));
                 viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
             }
         }
@@ -244,7 +238,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
         public RoundCornerProgressBar progressBar;
 
         public SwipeLayout swipeLayout;
-        public ImageView /*deleteBtn, */editBtn;
+        public ImageView deleteBtn, editBtn;
 
         private Drawable defaultDrawable;
 
@@ -264,7 +258,7 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
             progressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.categoryProgress);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeCategory);
-           //deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
+            deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             editBtn = (ImageView) itemView.findViewById(R.id.editBtn);
 
             defaultDrawable = itemView.getBackground();
@@ -273,24 +267,24 @@ public class CategoryGenericRecyclerAdapter extends RecyclerView.Adapter<Categor
                 @Override
                 public void onClick(View v) {
                     mListener.onClick(getLayoutPosition());
-                    Log.d("ZHAP", "on click : " + getLayoutPosition());
                 }
             });
 
             editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     mListener.onEditCategory(getLayoutPosition());
                 }
             });
 
-            /*deleteBtn.setOnClickListener(new View.OnClickListener() {
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onDeleteCategory(getLayoutPosition());
                 }
-            });*/
+            });
         }
 
         @Override

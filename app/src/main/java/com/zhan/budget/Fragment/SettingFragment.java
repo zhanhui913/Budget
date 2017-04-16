@@ -2,7 +2,6 @@ package com.zhan.budget.Fragment;
 
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,21 +9,27 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
-import com.zhan.budget.Activity.Settings.OpenSourceActivity;
+import com.zhan.budget.Activity.Settings.AboutActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.Activity.Settings.SettingsLocation;
 import com.zhan.budget.BuildConfig;
 import com.zhan.budget.Etc.CSVFormatter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Transaction;
+import com.zhan.budget.MyApplication;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
+import com.zhan.budget.Util.DataBackup;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.ThemeUtil;
 import com.zhan.budget.Util.Tutorial;
@@ -45,7 +50,6 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
@@ -56,12 +60,10 @@ public class SettingFragment extends BaseFragment {
 
     private static final String TAG = "SettingFragment";
 
-    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, backupBtn, openLicenseBtn, emailBtn;
+    private ViewGroup themeBtn, firstDayBtn, categoryOrderBtn, defaultAccountBtn, locationBtn, restoreBackupBtn, resetBtn, exportCSVBtn, aboutBtn, ratingsBtn, emailBtn, tutorialBtn, faqBtn;
     private TextView themeContent, firstDayContent, backupContent, versionNumber;
+    private Switch autoBackupSwitch;
 
-    private TextView  restoreBackupBtn ,resetBtn, exportCSVBtn, tourBtn, faqBtn;
-
-    //
     private static int CURRENT_THEME;
 
     //CSV
@@ -78,7 +80,21 @@ public class SettingFragment extends BaseFragment {
     }
 
     @Override
-    protected void init(){ Log.d(TAG, "init");
+    protected void init(){
+        //setup headers
+        ViewGroup generalLayout = (ViewGroup) view.findViewById(R.id.settingsHeaderGeneral);
+        TextView generalHeader = (TextView) generalLayout.findViewById(R.id.headerText);
+        generalHeader.setText(R.string.setting_header_general);
+
+        ViewGroup dataLayout = (ViewGroup) view.findViewById(R.id.settingsHeaderData);
+        TextView dataHeader = (TextView) dataLayout.findViewById(R.id.headerText);
+        dataHeader.setText(R.string.setting_header_data);
+
+        ViewGroup feedbackLayout = (ViewGroup) view.findViewById(R.id.settingsHeaderFeedback);
+        TextView feedbackHeader = (TextView) feedbackLayout.findViewById(R.id.headerText);
+        feedbackHeader.setText(R.string.setting_header_feedback);
+
+        //setup content
         themeBtn = (ViewGroup) view.findViewById(R.id.themeBtn);
         themeContent = (TextView) view.findViewById(R.id.themeContent);
 
@@ -91,39 +107,48 @@ public class SettingFragment extends BaseFragment {
 
         locationBtn = (ViewGroup) view.findViewById(R.id.locationBtn);
 
-        backupBtn = (ViewGroup) view.findViewById(R.id.backupBtn);
+        autoBackupSwitch = (Switch) view.findViewById(R.id.autoBackupSwitch);
         backupContent = (TextView) view.findViewById(R.id.backupContent);
 
-        restoreBackupBtn = (TextView)view.findViewById(R.id.restoreBackupBtn);
-        resetBtn = (TextView) view.findViewById(R.id.resetDataBtn);
-        exportCSVBtn = (TextView) view.findViewById(R.id.exportCSVBtn);
+        restoreBackupBtn = (ViewGroup)view.findViewById(R.id.restoreBackupBtn);
+
+        resetBtn = (ViewGroup) view.findViewById(R.id.resetDataBtn);
+
+        exportCSVBtn = (ViewGroup) view.findViewById(R.id.exportCSVBtn);
+
+        ratingsBtn = (ViewGroup) view.findViewById(R.id.ratingBtn);
+
         emailBtn = (ViewGroup) view.findViewById(R.id.emailBtn);
-        tourBtn = (TextView) view.findViewById(R.id.tourBtn);
-        faqBtn = (TextView) view.findViewById(R.id.faqBtn);
-        openLicenseBtn = (ViewGroup) view.findViewById(R.id.openSourceBtn);
+
+        tutorialBtn = (ViewGroup) view.findViewById(R.id.tutorialBtn);
+
+        faqBtn = (ViewGroup) view.findViewById(R.id.faqBtn);
+
+        aboutBtn = (ViewGroup) view.findViewById(R.id.aboutBtn);
 
         versionNumber = (TextView) view.findViewById(R.id.appVersionTextId);
 
+        ///////////////////////////////////
+        //
+        // Setting up
+        //
+        ///////////////////////////////////
+
         //Set theme
         CURRENT_THEME = BudgetPreference.getCurrentTheme(getContext());
-        themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode" : "Day Mode"));
+        themeContent.setText(CURRENT_THEME == ThemeUtil.THEME_DARK ? R.string.setting_content_theme_night : R.string.setting_content_theme_day);
 
         //Set start day
         int startDay = BudgetPreference.getStartDay(getContext());
-        firstDayContent.setText(startDay == Calendar.SUNDAY ? "Sunday" : "Monday");
+        firstDayContent.setText(startDay == Calendar.SUNDAY ? R.string.setting_content_day_sun : R.string.setting_content_day_mon);
 
-        //Set default account
-        /*if(BudgetPreference.getDefaultAccount(getContext()).equalsIgnoreCase("NA")){
-            defaultAccountContent.setText("Credit Card");
-        }else {
-            defaultAccountContent.setText(BudgetPreference.getDefaultAccount(getContext()));
-        }*/
-
-        //Set last backup
+        //Set auto backup
+        boolean allowAutoBackup = BudgetPreference.getAllowAutoBackup(getContext());
+        autoBackupSwitch.setChecked(allowAutoBackup);
         updateLastBackupInfo(BudgetPreference.getLastBackup(getContext()));
 
         //set version number
-        versionNumber.setText("v"+BuildConfig.VERSION_NAME);
+        versionNumber.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
 
         addListeners();
     }
@@ -132,7 +157,7 @@ public class SettingFragment extends BaseFragment {
         themeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? "Night Mode": "Day Mode"));
+                themeContent.setText((CURRENT_THEME == ThemeUtil.THEME_DARK ? R.string.setting_content_theme_night : R.string.setting_content_theme_day));
                 ThemeUtil.changeToTheme(getActivity(), (CURRENT_THEME == ThemeUtil.THEME_DARK ? ThemeUtil.THEME_LIGHT : ThemeUtil.THEME_DARK));
             }
         });
@@ -143,10 +168,10 @@ public class SettingFragment extends BaseFragment {
                 int startDay = BudgetPreference.getStartDay(getContext());
 
                 if(startDay == Calendar.SUNDAY){
-                    firstDayContent.setText("Monday");
+                    firstDayContent.setText(R.string.setting_content_day_mon);
                     BudgetPreference.setMondayStartDay(getContext());
                 }else{
-                    firstDayContent.setText("Sunday");
+                    firstDayContent.setText(R.string.setting_content_day_sun);
                     BudgetPreference.setSundayStartDay(getContext());
                 }
             }
@@ -163,7 +188,6 @@ public class SettingFragment extends BaseFragment {
         defaultAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getAccountList();
                 Intent settingsAccount = new Intent(getContext(), SettingsAccount.class);
                 startActivity(settingsAccount);
             }
@@ -177,10 +201,14 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        backupBtn.setOnClickListener(new View.OnClickListener() {
+        autoBackupSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                checkPermissionToCreateBackup();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                BudgetPreference.setAllowAutoBackup(getContext(), isChecked);
+
+                if(isChecked){
+                    checkPermissionToAutoBackup();
+                }
             }
         });
 
@@ -205,6 +233,13 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
+        ratingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rate();
+            }
+        });
+
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,7 +247,7 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        tourBtn.setOnClickListener(new View.OnClickListener() {
+        tutorialBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadTutorials();
@@ -225,122 +260,23 @@ public class SettingFragment extends BaseFragment {
             }
         });
 
-        openLicenseBtn.setOnClickListener(new View.OnClickListener() {
+        aboutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openSource = new Intent(getContext(), OpenSourceActivity.class);
-                startActivity(openSource);
+                Intent about = new Intent(getContext(), AboutActivity.class);
+                startActivity(about);
             }
         });
-    }
 
-
-    private void sendRealmData() {
-        try {
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
-
-            if (sd.canWrite()) {
-                if(createDirectory()){ Log.d("FILE", "can write file");
-                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
-                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
-                    File currentDB = new File(data, currentDBPath);
-                    File backupDB = new File(sd, backupDBPath);
-
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-
-                    File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
-                    email(exportRealmFile, "Realm Data", "This is a realm data");
-                }else{
-                    Log.d("FILE","cannot write file");
-                    Util.createSnackbar(getContext(), getView(), "Fail to retrieve file.");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Default Account
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-    private void getAccountList(){
-        Toast.makeText(getContext(), "click on default account_popup", Toast.LENGTH_SHORT).show();
-
-        final Realm myRealm = Realm.getDefaultInstance();
-        final RealmResults<Account> accountResults = myRealm.where(Account.class).findAllAsync();
-        accountResults.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
+        versionNumber.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onChange(RealmResults<Account> element) {
-                element.removeChangeListener(this);
-                openAccountPopupMenu(myRealm.copyFromRealm(element));
-                myRealm.close();
+            public boolean onLongClick(View v) {
+                checkPermissionToAccessRealm();
+                return false;
             }
         });
     }
 
-    private void openAccountPopupMenu(final List<Account> accountList){
-        //Creating the instance of PopupMenu
-        final PopupMenu popup = new PopupMenu(getContext(), defaultAccountBtn);
-
-        for (int i = 0; i < accountList.size(); i++) {
-            popup.getMenu().add(0,0,i, accountList.get(i).getName());
-        }
-
-        //Inflating the Popup using xml file
-        popup.getMenuInflater().inflate(R.menu.account_popup, popup.getMenu());
-
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(getContext(), "You Clicked : " + item.getTitle()+" at index "+item.getOrder(), Toast.LENGTH_SHORT).show();
-                Log.d("TITLE", "from account list : "+accountList.get(item.getOrder()).getName());
-                setDefaultAccount(accountList.get(item.getOrder()));
-                return true;
-            }
-        });
-
-        popup.show();
-    }
-
-    private void setDefaultAccount(final Account defaultAccount){
-        final Realm myRealm = Realm.getDefaultInstance();
-
-        final RealmResults<Account> accounts = myRealm.where(Account.class).findAllAsync();
-        accounts.addChangeListener(new RealmChangeListener<RealmResults<Account>>() {
-            @Override
-            public void onChange(RealmResults<Account> element) {
-                element.removeChangeListener(this);
-
-                myRealm.beginTransaction();
-
-                for(int i = 0; i < accounts.size(); i++){
-                    if(defaultAccount.getId().equalsIgnoreCase(element.get(i).getId())){
-                        //myRealm.copyToRealmOrUpdate(accounts.get(i).setIsDefault(true));
-
-                        element.get(i).setIsDefault(true);
-                    }else{
-                        //myRealm.copyToRealmOrUpdate();
-                        element.get(i).setIsDefault(false);
-                    }
-                }
-
-                myRealm.commitTransaction();
-                myRealm.close();
-
-                //BudgetPreference.setDefaultAccount(getContext(), defaultAccount.getName());
-                //defaultAccountContent.setText(defaultAccount.getName());
-            }
-        });
-    }
-*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Backup Data
@@ -351,12 +287,59 @@ public class SettingFragment extends BaseFragment {
     private final String EXPORT_REALM_FILE_NAME = "Backup_Budget.realm";
     private final String IMPORT_REALM_FILE_NAME = Constants.REALM_NAME;
 
-    private void checkPermissionToCreateBackup(){
+    private void checkPermissionToAutoBackup(){
         if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             //STORAGE permission has not been granted
-            requestFilePermissionToWrite();
+            requestFilePermissionToWriteAutoBackup();
         }else{
             backUpData();
+        }
+    }
+
+    public void requestFilePermissionToWriteAutoBackup(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_write_backup_data);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
+                        }
+                    })
+                    .setNegativeButton(R.string.permission_deny, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            turnOffAutoUpdateSwitch();
+                        }
+                    })
+                    .create()
+                    .show();
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_AUTO_EXTERNAL_STORAGE);
+        }
+    }
+
+    public void turnOffAutoUpdateSwitch(){
+        if(autoBackupSwitch != null){
+            autoBackupSwitch.setChecked(false);
+        }
+    }
+
+    public void turnOnAutoUpdateSwitch(){
+        if(autoBackupSwitch != null){
+            autoBackupSwitch.setChecked(true);
         }
     }
 
@@ -369,75 +352,46 @@ public class SettingFragment extends BaseFragment {
         }
     }
 
-    public void requestFilePermissionToWrite(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Permission denied")
-                    .setMessage("Without this permission the app is unable to create a backup data.")
-                    .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                        }
-                    })
-                    .setNegativeButton("Deny", null)
-                    .create()
-                    .show();
-
-        }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        }
-    }
-
     public void requestFilePermissionToRead(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
 
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Permission denied")
-                    .setMessage("Without this permission the app is unable to restore the backup data.")
-                    .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_read_backup_data);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         }
                     })
-                    .setNegativeButton("Deny", null)
+                    .setNegativeButton(R.string.permission_deny, null)
                     .create()
                     .show();
 
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         }
     }
 
     public void backUpData(){
-        try{
-            //create a backup file
-            File exportRealmFile = new File(DOWNLOAD_DIRECTORY, EXPORT_REALM_FILE_NAME);
-
-            //If backup file already exist, delete it
-            exportRealmFile.delete();
-
-            //Copy current realm to backup file
-            Realm myRealm = Realm.getDefaultInstance();
-            myRealm.writeCopyTo(exportRealmFile);
-            myRealm.close();
-
-            String dateString = DateUtil.convertDateToStringFormat7(new Date());
+        if(DataBackup.backUpData(getContext())){
+            String dateString = DateUtil.convertDateToStringFormat7(getContext(), new Date());
             updateLastBackupInfo(dateString);
             BudgetPreference.setLastBackup(getContext(), dateString);
 
-            Util.createSnackbar(getContext(), getView(), "Backup data successful.");
-
-        }catch(IOException e){
-            e.printStackTrace();
+            Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_backup_data_successful));
+        }else{
+            Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_backup_data_failed));
         }
     }
 
@@ -460,21 +414,21 @@ public class SettingFragment extends BaseFragment {
                 }
                 outputStream.close();
 
-                Util.createSnackbar(getContext(), getView(), "Restore data successful.");
+                Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_restore_data_successful));
 
                 return file.getAbsolutePath();
             }catch(IOException e){
                 e.printStackTrace();
             }
         }else{
-            Util.createSnackbar(getContext(), getView(), "Restore data failed as backup file doesn't exist.");
+            Util.createSnackbar(getContext(), getView(), getString(R.string.setting_content_restore_data_failed));
         }
 
         return null;
     }
 
     private void updateLastBackupInfo(String value){
-        backupContent.setText("last backup : "+value);
+        backupContent.setText(String.format(getString(R.string.setting_content_backup_data), value));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -498,21 +452,28 @@ public class SettingFragment extends BaseFragment {
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
 
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Permission denied")
-                    .setMessage("Without this permission the app is unable to create the CSV.")
-                    .setPositiveButton("Re-try", new DialogInterface.OnClickListener() {
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_write_csv);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_CSV);
                         }
                     })
-                    .setNegativeButton("Deny", null)
+                    .setNegativeButton(R.string.permission_deny, null)
                     .create()
                     .show();
 
         }else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_WRITE_CSV);
         }
     }
 
@@ -525,8 +486,8 @@ public class SettingFragment extends BaseFragment {
 
         View sortDialogView = View.inflate(getContext(), R.layout.alertdialog_number_picker, null);
 
-        TextView title = (TextView)sortDialogView.findViewById(R.id.title);
-        title.setText("Sort by");
+        TextView title = (TextView)sortDialogView.findViewById(R.id.alertdialogTitle);
+        title.setText(R.string.setting_content_export_data_sort);
 
         final ExtendedNumberPicker sortPicker = (ExtendedNumberPicker)sortDialogView.findViewById(R.id.numberPicker);
 
@@ -538,13 +499,13 @@ public class SettingFragment extends BaseFragment {
 
         AlertDialog.Builder sortAlertDialogBuilder = new AlertDialog.Builder(getContext())
                 .setView(sortDialogView)
-                .setPositiveButton("SELECT", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_select, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String selectedString = sortListType.get(sortPicker.getValue()).toString();
+                        String selectedString = sortListType.get(sortPicker.getValue());
                         getTransactionListForCSV(selectedString);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //Reset the selection back to previous
                         dialog.dismiss();
@@ -687,7 +648,7 @@ public class SettingFragment extends BaseFragment {
     }
 
     private void exportCSV(final sortCSV sortType){
-        String csvFileName = Constants.NAME + "_" + sortType.toString() + "_" + (DateUtil.convertDateToStringFormat6(new Date())) + Constants.CSV_END;
+        String csvFileName = Constants.NAME + "_" + sortType.toString() + "_" + (DateUtil.convertDateToStringFormat6(getContext(), new Date())) + Constants.CSV_END;
 
         final File csvFile = new File(DOWNLOAD_DIRECTORY, csvFileName);
 
@@ -696,9 +657,9 @@ public class SettingFragment extends BaseFragment {
             @Override
             public void onCompleteCSV(boolean value) {
                 if(value){
-                    email(csvFile, "CSV", "This CSV is sorted by "+sortType.toString() );
+                    email(csvFile, getString(R.string.csv), String.format(getString(R.string.csv_success), sortType.toString()));
                 }else{
-                    Util.createSnackbar(getContext(), getView(), "CSV creation failed.");
+                    Util.createSnackbar(getContext(), getView(), getString(R.string.csv_failed));
                 }
             }
         });
@@ -714,21 +675,18 @@ public class SettingFragment extends BaseFragment {
     private void resetData(){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
-        message.setText("Resetting data will remove all data you've entered, are you sure you want to reset?");
+        title.setText(R.string.reset);
+        message.setText(R.string.reset_data_message);
 
         new AlertDialog.Builder(getActivity())
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_button_reset, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Util.createSnackbar(getContext(), getView(), "Resetting...");
-
-                        BudgetPreference.resetFirstTime(getContext());
-
+                        Util.createSnackbar(getContext(), getView(), getString(R.string.resetting));
+                        /*
                         RealmConfiguration config = new RealmConfiguration.Builder(getContext())
                                 .name(Constants.REALM_NAME)
                                 .deleteRealmIfMigrationNeeded()
@@ -736,9 +694,12 @@ public class SettingFragment extends BaseFragment {
                                 .build();
 
                         Realm.deleteRealm(config);
+                        */
+                        MyApplication.getInstance().resetRealm();
+                        MyApplication.getInstance().createDefaultRealmData();
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -746,6 +707,24 @@ public class SettingFragment extends BaseFragment {
                 })
                 .create()
                 .show();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Rate
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static String APP_STORE = "market://details?id=com.zhan.budget";
+
+    private void rate(){
+        try {
+            Intent rate = new Intent(Intent.ACTION_VIEW);
+            rate.setData(Uri.parse(APP_STORE));
+            startActivity(rate);
+        }catch(Exception e){
+            Util.createSnackbar(getContext(), view, getString(R.string.ratings_failed));
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -758,6 +737,82 @@ public class SettingFragment extends BaseFragment {
         Intent mainAct = new Intent(getContext(), MaterialTutorialActivity.class);
         mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(getContext()));
         startActivity(mainAct);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Send Realm data
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void checkPermissionToAccessRealm(){
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            //STORAGE permission has not been granted
+            requestFilePermissionToAccess();
+        }else{
+            sendRealmData();
+        }
+    }
+
+    public void requestFilePermissionToAccess(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+
+            View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+            title.setText(R.string.permission_denied);
+            message.setText(R.string.permission_rationale_access_data);
+
+            new AlertDialog.Builder(getActivity())
+                    .setView(promptView)
+                    .setPositiveButton(R.string.permission_retry, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
+                        }
+                    })
+                    .setNegativeButton(R.string.permission_deny, null)
+                    .create()
+                    .show();
+
+        }else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, RequestCodes.MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
+        }
+    }
+
+    public void sendRealmData() {
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                if(createDirectory()){ Log.d("FILE", "can write file");
+                    String currentDBPath = "//data//" + "com.zhan.budget" + "//files//" + Constants.REALM_NAME;
+                    String backupDBPath = "Budget/" + Constants.REALM_NAME;
+                    File currentDB = new File(data, currentDBPath);
+                    File backupDB = new File(sd, backupDBPath);
+
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+
+                    File exportRealmFile = new File(Environment.getExternalStorageDirectory().toString() + "/Budget/" + Constants.REALM_NAME);
+                    email(exportRealmFile, getString(R.string.realm_data), getString(R.string.realm_message));
+                }else{
+                    Log.d("FILE","cannot write file");
+                    Util.createSnackbar(getContext(), getView(), getString(R.string.realm_message_failed));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -788,7 +843,7 @@ public class SettingFragment extends BaseFragment {
         intent.putExtra(Intent.EXTRA_STREAM, u);
 
         // start email intent
-        startActivity(Intent.createChooser(intent, "Send email"));
+        startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
     }
 
     public void email(){
@@ -796,10 +851,17 @@ public class SettingFragment extends BaseFragment {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.target_email)});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_email_title));
 
         // start email intent
-        startActivity(Intent.createChooser(intent, "Send email"));
+        startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Services
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 }

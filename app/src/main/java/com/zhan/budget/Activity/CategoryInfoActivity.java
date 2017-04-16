@@ -1,11 +1,12 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Fragment.IconPickerCategoryFragment;
@@ -42,12 +42,20 @@ public class CategoryInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener,
         IconPickerCategoryFragment.OnIconPickerCategoryFragmentInteractionListener{
 
+    public static final String NEW_CATEGORY = "New Category";
+
+    public static final String NEW_CATEGORY_TYPE = "New Category Type";
+
+    public static final String EDIT_CATEGORY_ITEM = "Edit Category Item";
+
+    public static final String RESULT_CATEGORY = "Result Category";
+
     private Activity instance;
     private Toolbar toolbar;
-    private TextView categoryNameTextView, categoryBudgetTextView;
+    private TextView currentPageTextView, categoryNameTextView, categoryBudgetTextView;
     private ImageButton deleteCategoryBtn, changeBudgetBtn, changeNameBtn;
     private ToggleButton toggleBtn;
-
+    private ViewPager viewPager;
     private CircularView categoryCircularView;
 
     private Category category;
@@ -67,6 +75,23 @@ public class CategoryInfoActivity extends BaseActivity implements
     private int catRes; //The res ID for category icon for circular view use
     private boolean isCurrentCircularText; //Is the current circular view using text or icon
 
+    public static Intent createIntentForNewCategory(Context context, BudgetType type){
+        Intent intent = new Intent(context, CategoryInfoActivity.class);
+        intent.putExtra(NEW_CATEGORY, true);
+        intent.putExtra(NEW_CATEGORY_TYPE, type.toString());
+        return intent;
+    }
+
+    public static Intent createIntentToEditCategory(Context context, Category category){
+        Intent intent = new Intent(context, CategoryInfoActivity.class);
+        intent.putExtra(NEW_CATEGORY, false);
+
+        Parcelable wrapped = Parcels.wrap(category);
+        intent.putExtra(EDIT_CATEGORY_ITEM, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_category_info;
@@ -76,36 +101,39 @@ public class CategoryInfoActivity extends BaseActivity implements
     protected void init(){
         instance = this;
 
-        isNewCategory = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_CATEGORY);
-
+        isNewCategory = (getIntent().getExtras()).getBoolean(NEW_CATEGORY);
 
         if(!isNewCategory){
-            category = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_CATEGORY));
+            category = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_CATEGORY_ITEM));
         }else{
             //Give default category values
             category = new Category();
             category.setId(Util.generateUUID());
             category.setColor(CategoryUtil.getDefaultCategoryColor(this));
             category.setIcon(CategoryUtil.getDefaultCategoryIcon(this));
-            category.setType(getIntent().getExtras().getString(Constants.REQUEST_NEW_CATEGORY_TYPE));
+            category.setType(getIntent().getExtras().getString(NEW_CATEGORY_TYPE));
             category.setText(false); //default use icon
         }
 
         colorPickerCategoryFragment = ColorPickerCategoryFragment.newInstance(category.getColor());
         iconPickerCategoryFragment = IconPickerCategoryFragment.newInstance(category.getIcon(), category.getColor());
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
+        viewPager = (ViewPager) findViewById(R.id.categoryViewPager);
         TwoPageViewPager adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), colorPickerCategoryFragment, iconPickerCategoryFragment);
         viewPager.setAdapter(adapterViewPager);
 
         CircleIndicator circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
+        currentPageTextView = (TextView)findViewById(R.id.currentPageTitle);
         categoryNameTextView = (TextView) findViewById(R.id.categoryNameTextView);
         categoryBudgetTextView = (TextView) findViewById(R.id.categoryBudgetTextView);
 
+        //default first page
+        currentPageTextView.setText(R.string.color);
+
         categoryNameTextView.setText(category.getName());
-        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
 
         changeNameBtn = (ImageButton) findViewById(R.id.changeNameBtn);
         deleteCategoryBtn = (ImageButton) findViewById(R.id.deleteCategoryBtn);
@@ -113,10 +141,11 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         toggleBtn = (ToggleButton) findViewById(R.id.useTextToggle);
 
-        /*if(isNewCategory){
+        if(isNewCategory){
             deleteCategoryBtn.setVisibility(View.GONE);
-        }*/
-        deleteCategoryBtn.setVisibility(View.GONE); //Cant delete Category for now
+        }else{
+            deleteCategoryBtn.setVisibility(View.VISIBLE);
+        }
 
         //Income category has no need for budget
         if(category.getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
@@ -134,6 +163,9 @@ public class CategoryInfoActivity extends BaseActivity implements
         createToolbar();
         addListeners();
 
+        categoryNameTextView.setText(category.getName());
+        categoryBudgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
+
         //Check if current category is using text or icon in its circular view
         if(category.isText()){
             isCurrentCircularText = true;
@@ -147,6 +179,7 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void initCategoryCircularView(){
         categoryCircularView = (CircularView) findViewById(R.id.categoryCircularView);
         categoryCircularView.setCircleColor(category.getColor());
+        categoryCircularView.setStrokeColor(category.getColor());
 
         catRes = CategoryUtil.getIconID(this, category.getIcon());
         categoryCircularView.setIconResource(catRes);
@@ -163,9 +196,9 @@ public class CategoryInfoActivity extends BaseActivity implements
         
         if(getSupportActionBar() != null){
             if(isNewCategory){
-                getSupportActionBar().setTitle("Add Category");
+                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.new_category_expense) : getString(R.string.new_category_income));
             }else{
-                getSupportActionBar().setTitle("Edit Category");
+                getSupportActionBar().setTitle(category.getType().equalsIgnoreCase(BudgetType.EXPENSE.toString()) ? getString(R.string.edit_category_expense) : getString(R.string.edit_category_income));
             }
         }
     }
@@ -191,14 +224,14 @@ public class CategoryInfoActivity extends BaseActivity implements
                 changeName();
             }
         });
-/*
+
         deleteCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDelete();
             }
         });
-*/
+
         changeBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,30 +259,55 @@ public class CategoryInfoActivity extends BaseActivity implements
                 }
             }
         });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        currentPageTextView.setText(R.string.color);
+                        break;
+                    case 1:
+                        currentPageTextView.setText(R.string.icon);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void changeName(){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_edittext, null);
 
-        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView genericTitle = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Category Name");
+        genericTitle.setText(getString(R.string.name));
         input.setText(categoryNameTextView.getText());
-        input.setHint("Category");
+        input.setHint(getString(R.string.category));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        categoryNameTextView.setText(input.getText().toString());
+                        categoryNameTextView.setText(input.getText().toString().trim());
+                        category.setName(input.getText().toString().trim());
 
                         if(isCurrentCircularText){ //if the current toggle is text
-                            changeCircularViewToText(input.getText().toString());
+                            changeCircularViewToText(input.getText().toString().trim());
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -263,27 +321,26 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void changeBudget(){
         View promptView = View.inflate(instance, R.layout.alertdialog_number_pad, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.numberPadTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final TextView budgetTextView = (TextView) promptView.findViewById(R.id.numericTextView);
 
-        priceString = CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE);
+        priceString = CurrencyTextFormatter.formatDouble(category.getBudget());
 
         //Remove any extra un-needed signs
         priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
-        title.setText("Change Budget");
-        budgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+        title.setText(getString(R.string.budget));
+        budgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        category.setBudget(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
-                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatFloat(category.getBudget(), Constants.BUDGET_LOCALE));
+                        category.setBudget(CurrencyTextFormatter.formatCurrency(priceString));
+                        categoryBudgetTextView.setText(CurrencyTextFormatter.formatDouble(category.getBudget()));
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -383,10 +440,10 @@ public class CategoryInfoActivity extends BaseActivity implements
     }
 
     private void addDigitToTextView(TextView textView, int digit){
-        //Toast.makeText(CategoryInfoActivity.this, "set text:"+digit, Toast.LENGTH_SHORT).show();
-        priceString += digit;
-
-        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+        if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH) {
+            priceString += digit;
+            textView.setText(CurrencyTextFormatter.formatText(priceString));
+        }
     }
 
     private void removeDigit(TextView textView){
@@ -394,27 +451,36 @@ public class CategoryInfoActivity extends BaseActivity implements
             priceString = priceString.substring(0, priceString.length() - 1);
         }
 
-        textView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+        textView.setText(CurrencyTextFormatter.formatText(priceString));
     }
 
     private void confirmDelete(){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(R.string.warning_delete_category);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+
+                        Realm myRealm = Realm.getDefaultInstance();
+                        Category cat = myRealm.where(Category.class).equalTo("id", category.getId()).findFirst();
+                        myRealm.beginTransaction();
+                        cat.deleteFromRealm();
+                        myRealm.commitTransaction();
+                        myRealm.close();
+
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -428,9 +494,15 @@ public class CategoryInfoActivity extends BaseActivity implements
     private void getLatestIndexForCategory(){ Log.d("ZHAP", "trying to get latest index for new category for type :"+category.getType());
         Realm myRealm = Realm.getDefaultInstance();
         RealmResults<Category> categoryRealmResults = myRealm.where(Category.class).equalTo("type", category.getType()).findAllSorted("index");
-        Log.d("ZHAP", "size :"+categoryRealmResults.size());
-        Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
-        nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+
+        if(categoryRealmResults.size() > 0){
+            Log.d("ZHAP", "size :"+categoryRealmResults.size());
+            Log.d("ZHAP", "Highest category index for " + category.getType() + " is " + categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex());
+            nextIndexCategory = categoryRealmResults.get(categoryRealmResults.size() - 1).getIndex() + 1;
+        }else{
+            nextIndexCategory = 0;
+        }
+
         myRealm.close();
     }
 
@@ -470,18 +542,14 @@ public class CategoryInfoActivity extends BaseActivity implements
         Log.d("CATEGORY_INFO_ACTIVITY", "-----Results-----");
 
         //Need to explicitly copy the value of cost since its property is ignored in the model.
-        float cost = c.getCost();
+        double cost = c.getCost();
 
         Category carbonCopy = myRealm.copyFromRealm(c);
         carbonCopy.setCost(cost);
         Parcelable wrapped = Parcels.wrap(carbonCopy);
         myRealm.close();  BudgetPreference.removeRealmCache(this);
 
-        if(!isNewCategory){
-            intent.putExtra(Constants.RESULT_EDIT_CATEGORY, wrapped);
-        }else{
-            intent.putExtra(Constants.RESULT_NEW_CATEGORY, wrapped);
-        }
+        intent.putExtra(RESULT_CATEGORY, wrapped);
 
         setResult(RESULT_OK, intent);
 
@@ -490,12 +558,13 @@ public class CategoryInfoActivity extends BaseActivity implements
 
     private void updateCategoryColor(){
         categoryCircularView.setCircleColor(selectedColor);
+        categoryCircularView.setStrokeColor(selectedColor);
         iconPickerCategoryFragment.updateColor(selectedColor);
     }
 
     private void changeCircularViewToText(String value){
         if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)){
-            categoryCircularView.setText(Util.getFirstCharacterFromString(categoryNameTextView.getText().toString())+"");
+            categoryCircularView.setText(""+Util.getFirstCharacterFromString(categoryNameTextView.getText().toString().toUpperCase().trim()));
         }
         categoryCircularView.setIconResource(0);
     }
@@ -505,11 +574,33 @@ public class CategoryInfoActivity extends BaseActivity implements
         categoryCircularView.setIconResource(catRes);
     }
 
+    /**
+     * If there is no Category name, a dialog will popup to remind the user.
+     */
+    private void notificationForCategory(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.category);
+        message.setText(R.string.warning_category_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -533,12 +624,11 @@ public class CategoryInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            getLatestIndexForCategory();
-
-            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(categoryNameTextView.getText().toString())){
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(category.getName())){
+                getLatestIndexForCategory();
                 save();
             }else{
-                Util.createSnackbar(getBaseContext(), (View)categoryNameTextView.getParent(), "Please input a valid name for this category");
+                notificationForCategory();
             }
 
             return true;

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeCurrency"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:clickToClose="true">
+
+    <!-- Bottom view -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/editBtn"
+            android:src="@drawable/svg_ic_edit"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:background="@drawable/budget_green_button"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
+
+        <ImageView
+            android:id="@+id/deleteBtn"
+            android:src="@drawable/svg_ic_delete"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:background="@drawable/budget_red_button"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
+    </LinearLayout>
+
+    <!-- Surface view -->
+    <RelativeLayout
+        style="@style/ItemPaddingStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="?attr/themeColorBtn"
+        >
+
+        <com.zhan.library.CircularView style="@style/CircularViewStyle_unselected"
+            android:id="@+id/currencyIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/currencyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_content_size"
+            android:layout_toLeftOf="@+id/defaultCurrencyIndicator"
+            android:layout_toRightOf="@+id/currencyIcon"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/item_left_padding"
+            android:paddingStart="@dimen/item_left_padding"
+            android:text="Currency Name" />
+
+        <ImageView
+            android:id="@+id/defaultCurrencyIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/svg_ic_check"
+            android:tint="@color/colorPrimaryDark"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>

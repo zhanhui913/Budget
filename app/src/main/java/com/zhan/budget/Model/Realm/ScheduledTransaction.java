@@ -17,7 +17,8 @@ public class ScheduledTransaction extends RealmObject {
     private int repeatUnit;
     private String repeatType;
 
-    public ScheduledTransaction(){}
+    public ScheduledTransaction() {
+    }
 
     public String getId() {
         return id;
@@ -49,5 +50,23 @@ public class ScheduledTransaction extends RealmObject {
 
     public void setRepeatType(String repeatType) {
         this.repeatType = repeatType;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Realm object check equality in terms of property that isnt ignored
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean checkEquals(ScheduledTransaction other) {
+        if(!id.equalsIgnoreCase(other.getId())) return false;
+        if(other.getTransaction() != null && transaction != null){
+            if(!transaction.checkEquals(other.getTransaction())) return false;
+        }
+
+        if(repeatUnit != other.getRepeatUnit()) return false;
+        if(!repeatType.equalsIgnoreCase(other.getRepeatType())) return false;
+
+        return true;
     }
 }

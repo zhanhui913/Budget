@@ -129,17 +129,45 @@ public final class Util {
         return directory.delete();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // String
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void Write(String content) {
-        Log.d("ZHAN", content);
+    public static char getFirstCharacterFromString(String value){
+        if(value.equalsIgnoreCase("")){
+            return Character.MIN_VALUE;
+        }else{
+            return value.toCharArray()[0];
+        }
     }
 
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
+    public static String capsFirstWord(String str) {
+        //First change the string to all lowercase, then only upper case the first character of the word
+        if(str.length() > 0){
 
-    public static int pxToDp(int px) {
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+            //This removes trailing and ending whitespace, change to lower case, then remove any extra
+            //spaces in between words and put only 1 space
+            str = str.trim().toLowerCase().replaceAll("\\s{2,}", " ");
+
+            Log.d("CAPS", str+"   ----------------");
+
+            String[] words = str.split(" ");
+            StringBuilder ret = new StringBuilder();
+            for(int i = 0; i < words.length; i++) {
+                Log.d("CAPS", "trying to cap : "+words[i]+" where first char = "+words[i].charAt(0));
+
+                ret.append(Character.toUpperCase(words[i].charAt(0)));
+                ret.append(words[i].substring(1));
+                if(i < words.length - 1) {
+                    ret.append(' ');
+                }
+            }
+            Log.d("CAPS", "----------------");
+            return ret.toString();
+        }
+        return "";
     }
 
     /**
@@ -162,6 +190,44 @@ public final class Util {
      */
     public static String checkNull(String value){
         return (Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(value)) ? value : "" ;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Snackbar
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void createSnackbar(Context context, View v, String value){
+        Snackbar snackbar = Snackbar.make(v, value, Snackbar.LENGTH_SHORT);
+
+        View sbView = snackbar.getView();
+
+        // Change background color
+        sbView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+        // Changing message text color
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        snackbar.show();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Etc
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void Write(String content) {
+        Log.d("ZHAN", content);
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     /**
@@ -191,28 +257,4 @@ public final class Util {
         return metrics.widthPixels;
     }
 
-    public static char getFirstCharacterFromString(String value){
-        return value.toCharArray()[0];
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Snackbar
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void createSnackbar(Context context, View v, String value){
-        Snackbar snackbar = Snackbar.make(v, value, Snackbar.LENGTH_SHORT);
-
-        View sbView = snackbar.getView();
-
-        // Change background color
-        sbView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
-
-        // Changing message text color
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(ContextCompat.getColor(context, R.color.white));
-        snackbar.show();
-    }
 }

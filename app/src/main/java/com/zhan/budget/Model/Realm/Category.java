@@ -18,21 +18,20 @@ public class Category extends RealmObject implements PieDataCostInterface{
     private String id;
     private String name;
     private String type;
-    private float budget;
-
-    @Ignore
-    private float cost;
+    private double budget;
     private String color;
     private String icon;
     private int index;
+    private boolean isText;
+
+    @Ignore
+    private double cost;
 
     @Ignore
     private float percent;
 
     @Ignore
     private boolean isSelected;
-
-    private boolean isText;
 
     public Category(){
 
@@ -46,19 +45,19 @@ public class Category extends RealmObject implements PieDataCostInterface{
         this.id = id;
     }
 
-    public float getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public void setBudget(float budget) {
+    public void setBudget(double budget) {
         this.budget = budget;
     }
 
-    public float getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 
@@ -133,7 +132,7 @@ public class Category extends RealmObject implements PieDataCostInterface{
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public float getPieDataCost(){
+    public double getPieDataCost(){
         return this.getCost();
     }
 
@@ -147,10 +146,9 @@ public class Category extends RealmObject implements PieDataCostInterface{
         return this.color;
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    // Realm object check equality in terms of property
+    // Realm object check equality in terms of property that isnt ignored
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -162,6 +160,7 @@ public class Category extends RealmObject implements PieDataCostInterface{
         if(!color.equalsIgnoreCase(other.getColor())) return false;
         if(!icon.equalsIgnoreCase(other.getIcon())) return false;
         if(index != other.getIndex()) return false;
+        if(isText != other.isText()) return false;
         return true;
     }
 }

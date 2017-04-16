@@ -8,48 +8,45 @@
     tools:context="com.zhan.budget.Activity.TransactionInfoActivity"
     tools:showIn="@layout/activity_transaction_info">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:paddingLeft="@dimen/item_left_padding"
+        android:paddingRight="@dimen/item_right_padding"
+        android:paddingTop="@dimen/item_top_padding">
 
         <TextView
             android:id="@+id/transactionNameText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Name"
-            android:textColorHint="@color/asbestos"
             android:textSize="@dimen/text_header_size"
+            android:hint="@string/note"
             android:textStyle="bold"
-            android:gravity="start"
-            android:paddingLeft="@dimen/item_padding"
-            android:paddingStart="@dimen/item_padding"
-            android:paddingTop="@dimen/item_top_padding"
-            android:paddingBottom="@dimen/item_bottom_padding"
-            android:singleLine="true"/>
+            android:layout_alignParentLeft="true"
+            android:paddingRight="@dimen/item_right_padding"
+            android:paddingEnd="@dimen/item_right_padding"
+            android:maxLines="1"/>
 
+        <!-- There is no max characters as the code handles it there -->
         <TextView
             android:id="@+id/transactionCostText"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="-$0.00"
+            android:text="@string/cost"
             android:textSize="@dimen/text_header_size"
-            android:textStyle="bold"
             android:gravity="end"
-            android:paddingRight="@dimen/item_padding"
-            android:paddingEnd="@dimen/item_padding"
-            android:paddingTop="@dimen/item_top_padding"
-            android:paddingBottom="@dimen/item_bottom_padding"
-            android:singleLine="true"/>
-    </LinearLayout>
+            android:layout_toRightOf="@+id/transactionNameText"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:maxLines="1"/>
+
+    </RelativeLayout>
 
     <include layout="@layout/transaction_circle_indicator"
         android:id="@+id/indicatorPanel"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/topBar" />
 
     <android.support.v4.view.ViewPager

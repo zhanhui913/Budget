@@ -6,7 +6,6 @@ import android.util.Log;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
-import com.zhan.budget.Util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,14 +38,15 @@ public class CategoryCalculator extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... params){
-        Log.d(TAG, DateUtil.convertDateToString(this.month)+" has "+transactionList.size()+" transactions");
+        //Log.d(TAG, DateUtil.convertDateToString(context, this.month)+" has "+transactionList.size()+" transactions");
 
         //Go through each transaction and put them into the correct category
         for(int t = 0; t < transactionList.size(); t++){
             for(int c = 0; c < categoryList.size(); c++){
-                if(transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                    float transactionPrice = transactionList.get(t).getPrice();
-                    float currentCategoryPrice = categoryList.get(c).getCost();
+                if(transactionList.get(t).getCategory() != null && transactionList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
+                    //Convert currency in transaction to default currency price using the rate that was added at the time the transaction was created
+                    double transactionPrice = transactionList.get(t).getPrice();
+                    double currentCategoryPrice = categoryList.get(c).getCost();
                     categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
                 }
             }

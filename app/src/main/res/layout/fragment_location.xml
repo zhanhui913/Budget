@@ -28,4 +28,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/centerPanel"/>
 
+    <include layout="@layout/empty_content"
+        android:id="@+id/emptyAccountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/centerPanel"/>
 </RelativeLayout>

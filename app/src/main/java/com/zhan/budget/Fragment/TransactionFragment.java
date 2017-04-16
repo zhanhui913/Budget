@@ -10,6 +10,7 @@ import android.util.Log;
 import com.zhan.budget.Activity.CategoryInfoActivity;
 import com.zhan.budget.Adapter.CategoryGrid.CategoryGridRecyclerAdapter;
 import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
@@ -28,7 +29,6 @@ public class TransactionFragment extends BaseRealmFragment implements
         CategoryGridRecyclerAdapter.OnCategoryGridAdapterInteractionListener{
 
     private static final String TAG = "TransactionFragment";
-    private static final int NUM_COLUMNS = 5;
 
     private static final String ARG_1 = "selectedCategoryBudgetType";
     private static final String ARG_2 = "selectedCategoryId";
@@ -73,10 +73,11 @@ public class TransactionFragment extends BaseRealmFragment implements
     protected void init(){ Log.d(TAG, "init");
         super.init();
         selectedCategoryId = budgetType = "";
-        Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
+        //Log.d(TAG, "1 selectedCategoryId : "+selectedCategoryId);
         categoryList = new ArrayList<>();
+
         categoryGridView = (RecyclerView) view.findViewById(R.id.categoryGrid);
-        categoryGridView.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
+        categoryGridView.setLayoutManager(new GridLayoutManager(getContext(), getResources().getInteger(R.integer.num_columns)));
 
         //Add padding
         categoryGridView.addItemDecoration(new SpacesItemDecoration(getContext(), R.dimen.grid_view_horizontal_offset, R.dimen.grid_view_vertical_offset));
@@ -92,7 +93,7 @@ public class TransactionFragment extends BaseRealmFragment implements
         populateCategory(budgetType);
     }
 
-    private void populateCategory(final String budgetType){Log.d(TAG, "2 selectedCategoryId : "+selectedCategoryId);
+    private void populateCategory(final String budgetType){
         resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType).findAllSortedAsync("index");
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
@@ -106,11 +107,13 @@ public class TransactionFragment extends BaseRealmFragment implements
                     if(categoryList.get(i).getId().equalsIgnoreCase(selectedCategoryId)){
                         categoryList.get(i).setSelected(true);
                         pos = i;
+                        onClick(pos);
+                        break;
                     }else{
                         categoryList.get(i).setSelected(false);
                     }
                 }
-                onClick(pos);
+                //onClick(pos);
 
                 categoryGridAdapter.setCategoryList(categoryList);
                 categoryGridAdapter.addExpenseOrIncome(BudgetType.valueOf(budgetType));
@@ -138,19 +141,14 @@ public class TransactionFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickAddNewCategory(BudgetType type){
-        //Toast.makeText(getContext(), "add new cat "+type.toString(), Toast.LENGTH_SHORT).show();
-
-        Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, type.toString());
-        startActivityForResult(addNewCategoryIntent, Constants.RETURN_NEW_CATEGORY);
+        startActivityForResult(CategoryInfoActivity.createIntentForNewCategory(getContext(), type), RequestCodes.NEW_CATEGORY);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_NEW_CATEGORY) {
+            if(requestCode == RequestCodes.NEW_CATEGORY) {
                 populateCategory(budgetType);
             }
         }

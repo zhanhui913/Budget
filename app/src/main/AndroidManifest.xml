@@ -2,6 +2,7 @@
 <manifest package="com.zhan.budget"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
@@ -34,41 +35,27 @@
 		<activity
 			android:name=".Activity.CategoryInfoActivity"
 			android:label="@string/title_activity_category_info"
-			android:parentActivityName=".Activity.MainActivity"
 			android:theme="@style/AppThemeLight.NoActionBar"
-			android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.zhan.budget.Activity.MainActivity"/>
-		</activity>
+			android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"/>
 		<activity
-			android:name=".Activity.Transactions.TransactionsForCategory"
-			android:label="@string/title_activity_transactions_for_category"
-			android:parentActivityName=".Activity.MainActivity"
-			android:theme="@style/AppThemeLight.NoActionBar">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="com.zhan.budget.Activity.MainActivity"/>
-		</activity>
+			android:name=".Activity.AccountInfoActivity"
+			android:label="@string/title_activity_account_info"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity
+			android:name=".Activity.LocationInfoActivity"
+			android:label="@string/title_activity_location_info"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
 			android:name=".Activity.OverviewActivity"
 			android:label="@string/title_activity_overview"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
-			android:name=".Activity.PdfActivity"
-			android:label="@string/title_activity_pdf"
-			android:theme="@style/AppThemeLight.NoActionBar"/>
-		<activity
-			android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
-			android:label="@string/title_activity_tour"
+			android:name=".Activity.Settings.SettingsCategory"
+			android:label="@string/title_activity_settings_category"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
 			android:name=".Activity.Settings.SettingsAccount"
 			android:label="@string/title_activity_settings_account"
-			android:theme="@style/AppThemeLight.NoActionBar"/>
-		<activity
-			android:name=".Activity.Settings.SettingsCategory"
-			android:label="@string/title_activity_settings_category"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
 			android:name=".Activity.Settings.SettingsLocation"
@@ -79,22 +66,45 @@
 			android:label="@string/title_activity_transactions_for_location"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
+			android:name=".Activity.Settings.AboutActivity"
+			android:label="@string/title_activity_about"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity
 			android:name=".Activity.Settings.OpenSourceActivity"
 			android:label="@string/title_activity_open_source"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
-			android:name=".Activity.AccountInfoActivity"
-			android:label="@string/title_activity_account_info"
+			android:name=".Activity.Settings.TranslationActivity"
+			android:label="@string/title_activity_translation"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity
+			android:name=".Activity.Transactions.TransactionsForCategory"
+			android:label="@string/title_activity_transactions_for_category"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
 			android:name=".Activity.Transactions.TransactionsForAccount"
 			android:label="@string/title_activity_transactions_for_account"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
-			android:name=".Activity.LocationInfoActivity"
-			android:label="@string/title_activity_location_info"
-			android:theme="@style/AppThemeLight.NoActionBar">
-		</activity>
+			android:name=".Activity.PdfActivity"
+			android:label="@string/title_activity_pdf"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity
+			android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
+			android:label="@string/title_activity_tour"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity
+			android:name=".Activity.Settings.DeveloperActivity"
+			android:label="@string/title_activity_developer"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity
+			android:name=".Activity.SettingsActivity"
+			android:label="@string/title_activity_settings"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity
+			android:name=".Activity.Settings.PrivacyPolicyActivity"
+			android:label="@string/title_activity_privacy_policy"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
 	</application>
 
 </manifest>

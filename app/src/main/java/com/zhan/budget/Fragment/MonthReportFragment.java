@@ -1,7 +1,6 @@
 package com.zhan.budget.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,11 +10,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.OverviewActivity;
 import com.zhan.budget.Adapter.MonthReportRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.MonthReport;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -56,7 +57,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
     private List<Category> categoryList;
     private RealmResults<Category> resultsCategory;
 
-
     public MonthReportFragment() {
         // Required empty public constructor
     }
@@ -75,6 +75,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
     @Override
     protected void init(){ Log.d(TAG, "init");
         super.init();
+
         categoryList = new ArrayList<>();
         monthReportList = new ArrayList<>();
         monthReportListview = (RecyclerView) view.findViewById(R.id.monthReportListview);
@@ -171,20 +172,22 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 startTime = System.nanoTime();
 
                 for (int i = 0; i < transactionList.size(); i++) {
-                    if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
-                        int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
+                    if(transactionList.get(i).getCategory() != null){
+                        if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())) {
+                            int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
 
-                        for (int a = 0; a < monthReportList.size(); a++) {
-                            if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
-                                monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
+                            for (int a = 0; a < monthReportList.size(); a++) {
+                                if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
+                                    monthReportList.get(a).addCostThisMonth(transactionList.get(i).getPrice());
+                                }
                             }
-                        }
-                    }else if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
-                        int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
+                        }else if(transactionList.get(i).getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())) {
+                            int month = DateUtil.getMonthFromDate(transactionList.get(i).getDate());
 
-                        for (int a = 0; a < monthReportList.size(); a++) {
-                            if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
-                                monthReportList.get(a).addIncomeThisMonth(transactionList.get(i).getPrice());
+                            for (int a = 0; a < monthReportList.size(); a++) {
+                                if (month == DateUtil.getMonthFromDate(monthReportList.get(a).getMonth())) {
+                                    monthReportList.get(a).addIncomeThisMonth(transactionList.get(i).getPrice());
+                                }
                             }
                         }
                     }
@@ -199,7 +202,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
                 //Change the variable to true
                 for(int i = 0; i < monthReportList.size(); i++){
-                    //performTediousCalculation(i);
                     monthReportList.get(i).setDoneCalculation(true);
                 }
 
@@ -211,8 +213,6 @@ public class MonthReportFragment extends BaseRealmFragment implements
                 long second = (milli / 1000);
                 float minutes = (second / 60.0f);
                 Log.d("DEBUG_MONTH", "took " + milli + " milliseconds -> " + second + " seconds -> " + minutes + " minutes");
-
-                //performTediousCalculation(0);
             }
         };
         loader.execute();
@@ -230,133 +230,10 @@ public class MonthReportFragment extends BaseRealmFragment implements
             }
         });
     }
-/*
-    private void performTediousCalculation(final int indexOfMonth){
-        final Date month = DateUtil.refreshMonth(monthReportList.get(0).getMonth());
-        final Date endMonth = DateUtil.getLastDateOfMonth(monthReportList.get(11).getMonth()) ;
-
-        final RealmResults<Transaction> newTransactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).findAllSortedAsync("date");
-        newTransactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-
-                Log.d("WHO", indexOfMonth+" ("+month+", "+endMonth+") ->"+element.size());
-
-                s1(myRealm.copyFromRealm(element));
-            }
-        });
-    }
-
-    private void s1(List<Transaction> ttList){
-        List<Transaction> janList = new ArrayList<>();
-        List<Transaction> febList = new ArrayList<>();
-        List<Transaction> marList = new ArrayList<>();
-        List<Transaction> aprList = new ArrayList<>();
-        List<Transaction> mayList = new ArrayList<>();
-        List<Transaction> junList = new ArrayList<>();
-        List<Transaction> julList = new ArrayList<>();
-        List<Transaction> augList = new ArrayList<>();
-        List<Transaction> sepList = new ArrayList<>();
-        List<Transaction> octList = new ArrayList<>();
-        List<Transaction> novList = new ArrayList<>();
-        List<Transaction> decList = new ArrayList<>();
-
-        //group all transactions in the year into months
-        for(int i = 0; i < ttList.size(); i++){
-            if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 0){
-                //January
-                janList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 1){
-                //February
-                febList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 2){
-                //March
-                marList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 3){
-                //April
-                aprList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 4){
-                //May
-                mayList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 5){
-                //June
-                junList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 6){
-                //July
-                julList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 7){
-                //August
-                augList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 8){
-                //September
-                sepList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 9){
-                //October
-                octList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 10){
-                //November
-                novList.add(ttList.get(i));
-            }else if(DateUtil.getMonthFromDate(ttList.get(i).getDate()) == 11){
-                //December
-                decList.add(ttList.get(i));
-            }
-        }
-
-        ss(0, janList);
-        ss(1, febList);
-        ss(2, marList);
-        ss(3, aprList);
-        ss(4, mayList);
-        ss(5, junList);
-        ss(6, julList);
-        ss(7, augList);
-        ss(8, sepList);
-        ss(9, octList);
-        ss(10, novList);
-        ss(11, decList);
-
-    }
-
-    private void ss(final int month, final List<Transaction> ttList){
-        resultsCategory = myRealm.where(Category.class).findAllAsync();
-        resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
-            @Override
-            public void onChange(RealmResults<Category> element) {
-                element.removeChangeListener(this);
-
-                List<Category> categoryList1 = myRealm.copyFromRealm(element);
-
-                Log.d("CAT_CAL", "before calling categoryCalculator : there are "+categoryList1.size());
-                CategoryCalculator cc = new CategoryCalculator(ttList, categoryList1, monthReportList.get(month).getMonth(), new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
-                    @Override
-                    public void onCompleteCalculation(List<Category> catList) {
-                        Log.d("CAT_CAL", monthReportList.get(month).getMonth()+" -> COMPLETED, size: "+catList.size());
-                        //Log.d("WHO", "top cat : "+catList.get(0).getName()+" with cost : "+catList.get(0).getCost());
-
-                        if(catList.size() >= 1){
-                            monthReportList.get(month).setFirstCategory(catList.get(0));
-                        }
-
-                        if(catList.size() >= 2){
-                            monthReportList.get(month).setSecondCategory(catList.get(1));
-                        }
-
-                        if(catList.size() >= 3){
-                            monthReportList.get(month).setThirdCategory(catList.get(2));
-                        }
-
-                        monthReportRecyclerAdapter.setMonthReportList(monthReportList);
-                    }
-                });
-                cc.execute();
-            }
-        });
-    }*/
 
     private void updateYearInToolbar(int direction){
         currentYear = DateUtil.getYearWithDirection(currentYear, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat3(currentYear));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat3(getContext(), currentYear));
         getMonthReport();
     }
 
@@ -368,10 +245,7 @@ public class MonthReportFragment extends BaseRealmFragment implements
 
     @Override
     public void onClickMonth(int position){
-        Intent overviewActivity = new Intent(getContext(), OverviewActivity.class);
-        overviewActivity.putExtra(Constants.REQUEST_NEW_OVERVIEW_MONTH, monthReportList.get(position).getMonth());
-        //startActivityForResult(overviewActivity, Constants.RETURN_NEW_OVERVIEW);
-        startActivity(overviewActivity);
+        startActivity(OverviewActivity.createIntentToViewOverviewOnMonth(getContext(), monthReportList.get(position).getMonth()));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

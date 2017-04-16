@@ -5,14 +5,31 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.zhan.budget.Etc.Constants;
-
 import java.util.Calendar;
 
 /**
  * Created by Zhan on 16-03-25.
  */
 public final class BudgetPreference {
+
+    //First time
+    public static final String FIRST_TIME = "First Time";
+
+    //First time Currency
+    public static final String FIRST_TIME_CURRENCY = "First Time Currency";
+
+    //Default theme
+    public static final String DEFAULT_THEME = "Default Theme";
+
+    //Auto backup
+    public static final String ALLOW_AUTO_BACKUP = "Allow auto backup";
+
+    //Last backup
+    public static final String LAST_BACKUP = "Last Backup";
+
+    //Start day of calendar (Sunday or Monday)
+    public static final String START_DAY_CALENDAR = "Start Day of Calendar";
+
 
     private BudgetPreference(){}
 
@@ -43,15 +60,47 @@ public final class BudgetPreference {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void resetFirstTime(Context context){
-        setPreferenceBoolean(context, Constants.FIRST_TIME, true);
+        setPreferenceBoolean(context, FIRST_TIME, true);
     }
 
     public static boolean getFirstTime(Context context){
-        return getPreferenceBoolean(context, Constants.FIRST_TIME, true);
+        return getPreferenceBoolean(context, FIRST_TIME, true);
     }
 
     public static void setFirstTime(Context context){
-        setPreferenceBoolean(context, Constants.FIRST_TIME, false);
+        setPreferenceBoolean(context, FIRST_TIME, false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // First time Currency functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void resetFirstTimeCurrency(Context context){
+        setPreferenceBoolean(context, FIRST_TIME_CURRENCY, true);
+    }
+
+    public static boolean getFirstTimeCurrency(Context context){
+        return getPreferenceBoolean(context, FIRST_TIME_CURRENCY, true);
+    }
+
+    public static void setFirstTimeCurrency(Context context){
+        setPreferenceBoolean(context, FIRST_TIME_CURRENCY, false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Auto backup functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static boolean getAllowAutoBackup(Context context){
+        return getPreferenceBoolean(context, ALLOW_AUTO_BACKUP, false);
+    }
+
+    public static void setAllowAutoBackup(Context context, boolean val){
+        setPreferenceBoolean(context, ALLOW_AUTO_BACKUP, val);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,11 +110,11 @@ public final class BudgetPreference {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static String getLastBackup(Context context){
-        return getPreferenceString(context, Constants.LAST_BACKUP, "None");
+        return getPreferenceString(context, LAST_BACKUP, "None");
     }
 
     public static void setLastBackup(Context context, String value){
-        setPreferenceString(context, Constants.LAST_BACKUP, value);
+        setPreferenceString(context, LAST_BACKUP, value);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,11 +124,11 @@ public final class BudgetPreference {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void setCurrentTheme(Context context, int theme){
-        setPreferenceInt(context, Constants.DEFAULT_THEME, theme);
+        setPreferenceInt(context, DEFAULT_THEME, theme);
     }
 
     public static int getCurrentTheme(Context context){
-        return getPreferenceInt(context, Constants.DEFAULT_THEME, ThemeUtil.THEME_LIGHT);
+        return getPreferenceInt(context, DEFAULT_THEME, ThemeUtil.THEME_LIGHT);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,15 +138,15 @@ public final class BudgetPreference {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void setSundayStartDay(Context context){
-        setPreferenceInt(context, Constants.START_DAY_CALENDAR, Calendar.SUNDAY);
+        setPreferenceInt(context, START_DAY_CALENDAR, Calendar.SUNDAY);
     }
 
     public static void setMondayStartDay(Context context){
-        setPreferenceInt(context, Constants.START_DAY_CALENDAR, Calendar.MONDAY);
+        setPreferenceInt(context, START_DAY_CALENDAR, Calendar.MONDAY);
     }
 
     public static int getStartDay(Context context){
-        return getPreferenceInt(context, Constants.START_DAY_CALENDAR, Calendar.SUNDAY);
+        return getPreferenceInt(context, START_DAY_CALENDAR, Calendar.SUNDAY);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

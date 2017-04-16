@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
+import com.zhan.budget.MyApplication;
 import com.zhan.budget.R;
 
 /**
@@ -21,11 +22,13 @@ public final class ThemeUtil {
      * Set the theme of the Activity, and restart it by creating a new Activity of the same type.
      */
     public static void changeToTheme(Activity activity, int theme) {
-        BudgetPreference.setCurrentTheme(activity, theme);
+        MyApplication.getInstance().setBudgetTheme(theme);
 
         Log.d("THEME_COLOR_DEBUG", "changing theme to " + theme);
+
+        Intent intent = new Intent(activity, activity.getClass());
         activity.finish();
-        activity.startActivity(new Intent(activity, activity.getClass()));
+        activity.startActivity(intent);
         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 

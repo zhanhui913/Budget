@@ -1,7 +1,10 @@
 package com.zhan.budget.Util;
 
-import com.zhan.budget.Etc.Constants;
+import android.content.Context;
 
+import com.zhan.budget.Model.RepeatType;
+
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,8 +17,8 @@ import java.util.GregorianCalendar;
 public final class DateUtil {
     private DateUtil(){}
 
-    public static Date convertStringToDate(String stringDate){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
+    public static Date convertStringToDate(Context context, String stringDate){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
         Date date = null;
         try{
             date = formatter.parse(stringDate);
@@ -25,15 +28,15 @@ public final class DateUtil {
         return date;
     }
 
-    public static String convertDateToString(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
+    public static String convertDateToString(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static Date formatDate(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Constants.BUDGET_LOCALE);
+    public static Date formatDate(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", context.getResources().getConfiguration().locale);
 
-        String dateString = convertDateToString(date);
+        String dateString = convertDateToString(context, date);
         Date newDate = null;
 
         try{
@@ -44,44 +47,64 @@ public final class DateUtil {
         return newDate;
     }
 
-    public static String convertDateToStringFormat1(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat1(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat2(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat2(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat3(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat3(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat4(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat4(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat5(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat5(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat6(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM_d_yyyy_hh_mm_a", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat6(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM_d_yyyy_hh_mm_a", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertDateToStringFormat7(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", Constants.BUDGET_LOCALE);
+    public static String convertDateToStringFormat7(Context context, Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", context.getResources().getConfiguration().locale);
         return formatter.format(date);
     }
 
-    public static String convertLongToStringFormat(long value){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", Constants.BUDGET_LOCALE);
+    public static String convertLongToStringFormat(Context context, long value){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d, yyyy hh:mm a", context.getResources().getConfiguration().locale);
         return formatter.format(value);
+    }
+
+    /**
+     * Returns the string version of time.
+     * @param context Application context
+     * @param hour Must give hour in 24 Hour format
+     * @param minute minute
+     * @return string version
+     */
+    public static String getTimeInAMPM(Context context, int hour, int minute){
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", context.getResources().getConfiguration().locale);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        Date d = cal.getTime();
+
+        return formatter.format(d).toString();
     }
 
     /**
@@ -293,5 +316,67 @@ public final class DateUtil {
      */
     public static Date getLastDateOfYear(Date date){
         return getPreviousDate(getNextYear(date));
+    }
+
+    /**
+     * Gets the string value of the day, useful for localization
+     * @param value
+     * @return
+     */
+    public static String getDayOfWeek(int value){
+        switch(value){
+            case 1:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[1];
+            case 2:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[2];
+            case 3:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[3];
+            case 4:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[4];
+            case 5:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[5];
+            case 6:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[6];
+            case 7:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[7];
+            default:
+                return DateFormatSymbols.getInstance().getShortWeekdays()[1];
+        }
+    }
+
+    /**
+     * Compares 2 date and returns true if its the same day
+     * @param date1 Date
+     * @param date2 Date
+     * @return True if same date, false otherwise
+     */
+    public static boolean isSameDay(Date date1, Date date2){
+        if(getDateWithDirection(date1, 0).equals(getDateWithDirection(date2, 0))){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the number of times a specific repeat would need to occur to fit within durationYear year.
+     * @param unit Number
+     * @param repeatType RepeatType enum in string
+     * @param durationYear Duration in years
+     * @return The number of times to repeat given the parameter
+     */
+    public static int getNumberRepeatInYear(int unit, String repeatType, int durationYear){
+        if(unit <= 0 || durationYear <= 0){
+            return -1;
+        }
+
+        if(repeatType.equalsIgnoreCase(RepeatType.DAYS.toString())){
+            return Math.round((365 * durationYear) / unit);
+        }else if(repeatType.equalsIgnoreCase(RepeatType.WEEKS.toString())){
+            return Math.round((52 * durationYear) / unit);
+        }else if(repeatType.equalsIgnoreCase(RepeatType.MONTHS.toString())){
+            return Math.round((12 * durationYear) / unit);
+        }else{
+            return -1;
+        }
     }
 }

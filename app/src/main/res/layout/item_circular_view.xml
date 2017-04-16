@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="2dp">
+    android:orientation="vertical">
 
     <com.zhan.library.CircularView  style="@style/CircularViewStyle_selected"
         xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -20,8 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
-        android:text="hellos"
-        android:singleLine="true"
+        android:text="@string/category"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textSize="@dimen/text_content_size"/>
 </LinearLayout>
 

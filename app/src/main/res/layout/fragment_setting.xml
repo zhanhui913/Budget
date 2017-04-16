@@ -1,5 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.zhan.budget.Fragment.SettingFragment">
@@ -7,308 +8,552 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_padding"
         android:orientation="vertical">
 
-        <TextView style="@style/SettingsTextViewHeaderStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="GENERAL" />
+        <include layout="@layout/header_list"
+            android:id="@+id/settingsHeaderGeneral"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimaryDark"/>
-
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/themeBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/themeCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/colorPrimary"
+                app:cv_strokeColor="@color/colorPrimary"
+                app:cv_iconDrawable="@drawable/c_theme_light_dark" />
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/themeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Current Theme"/>
+                android:layout_toRightOf="@+id/themeCV"
+                android:text="@string/setting_title_theme"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/themeContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="day mode"/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/themeCV"
+                android:layout_below="@+id/themeTitle"
+                android:text="@string/setting_content_theme_day"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/firstDayBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/firstDayCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/lightPurple"
+                app:cv_strokeColor="@color/lightPurple"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_calendar"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/firstDayTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="First day of the week"/>
+                android:text="@string/setting_title_day"
+                android:layout_toRightOf="@+id/firstDayCV"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/firstDayContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="sunday"/>
-        </LinearLayout>
+                android:text="@string/setting_content_day_sun"
+                android:layout_toRightOf="@+id/firstDayCV"
+                android:layout_below="@+id/firstDayTitle"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/categoryOrderBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/categoryOrderCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/peter_river"
+                app:cv_strokeColor="@color/peter_river"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_category"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/categoryOrderTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Categories"/>
+                android:layout_toRightOf="@+id/categoryOrderCV"
+                android:text="@string/setting_title_category"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manage categories. Change icon, color, and others."/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/categoryOrderCV"
+                android:layout_below="@+id/categoryOrderTitle"
+                android:text="@string/setting_content_category"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/defaultAccountBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/defaultAccountCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/light_cyan"
+                app:cv_strokeColor="@color/light_cyan"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_account"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/defaultAccountTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Accounts"/>
+                android:layout_toRightOf="@+id/defaultAccountCV"
+                android:text="@string/setting_title_account"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
                 android:id="@+id/defaultAccountContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manage accounts. Change icons and others."/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/defaultAccountCV"
+                android:layout_below="@+id/defaultAccountTitle"
+                android:text="@string/setting_content_account"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/locationBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Locations"/>
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/locationCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/carrot"
+                app:cv_strokeColor="@color/carrot"
+                app:cv_iconDrawable="@drawable/svg_ic_location"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/locationTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/locationCV"
+                android:text="@string/setting_title_location"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
-                      android:id="@+id/locationContent"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Manage locations. Change colors."/>
-        </LinearLayout>
+                android:id="@+id/locationContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/locationCV"
+                android:layout_below="@+id/locationTitle"
+                android:text="@string/setting_content_location"/>
+        </RelativeLayout>
 
-        <TextView style="@style/SettingsTextViewHeaderStyle"
+        <include layout="@layout/header_list"
+                 android:id="@+id/settingsHeaderData"/>
+
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="DATA"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimaryDark"/>
-
-        <LinearLayout
-            android:id="@+id/backupBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
-                android:layout_width="match_parent"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/autoBackupCV"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Backup data"/>
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/sunflower"
+                app:cv_strokeColor="@color/sunflower"
+                app:cv_iconDrawable="@drawable/svg_ic_backup"/>
 
-            <TextView style="@style/SettingsTextViewContentStyle"
-                android:id="@+id/backupContent"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="last backup Feb 2, 2016"/>
-        </LinearLayout>
+                android:orientation="vertical"
+                android:layout_toRightOf="@+id/autoBackupCV"
+                android:layout_toLeftOf="@+id/autoBackupSwitch"
+                android:layout_centerVertical="true">
+
+                <TextView style="@style/SettingsTextViewTitleStyle"
+                    android:id="@+id/autoBackupTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/setting_title_auto_backup_data"/>
+
+                <TextView style="@style/SettingsTextViewContentStyle"
+                    android:id="@+id/backupContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_toRightOf="@+id/autoBackupCV"
+                    android:layout_below="@+id/autoBackupTitle"
+                    android:text="@string/setting_content_backup_data"/>
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/autoBackupSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:paddingLeft="@dimen/item_left_padding"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/restoreBackupBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Restore data"/>
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/restoreBackupCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/asbestos"
+                app:cv_strokeColor="@color/asbestos"
+                app:cv_iconDrawable="@drawable/svg_ic_restore"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/restoreBackupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/restoreBackupCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_restore_data"/>
+        </RelativeLayout>
+
+	    <View
+		    android:layout_width="match_parent"
+		    android:layout_height="1dp"
+		    android:layout_marginLeft="@dimen/left_padding_divider"
+		    android:background="?attr/themeColorHighlight"/>
+
+	    <RelativeLayout style="@style/ItemPaddingStyle"
+			android:id="@+id/resetDataBtn"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="?attr/themeColorBtn"
+			android:clickable="true"
+			android:focusable="true">
+
+		    <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+				android:id="@+id/resetDataCV"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentStart="true"
+				android:layout_centerVertical="true"
+				app:cv_bgColor="@color/emerald"
+				app:cv_iconDrawable="@drawable/c_reset_db"
+				app:cv_strokeColor="@color/emerald"/>
+
+			<TextView android:id="@+id/resetDataTitle"
+				style="@style/SettingsTextViewTitleStyle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_toRightOf="@+id/resetDataCV"
+				android:text="@string/setting_title_reset_data"/>
+	    </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
-            android:id="@+id/resetDataBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Reset data"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/themeColorHighlight"/>
-
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <RelativeLayout style="@style/ItemPaddingStyle"
             android:id="@+id/exportCSVBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Export data to CSV"/>
-
-        <TextView style="@style/SettingsTextViewHeaderStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="FEEDBACK"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimaryDark"/>
-<!--
-        <TextView style="@style/SettingsTextViewButtonStyle"
-            android:id="@+id/emailBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Email me"/>
--->
-        <LinearLayout
-            android:id="@+id/emailBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="Email me"/>
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/exportCSVCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/wet_asphalt"
+                app:cv_strokeColor="@color/wet_asphalt"
+                app:cv_iconDrawable="@drawable/c_export"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/exportCSVTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/exportCSVCV"
+                android:text="@string/setting_title_export_data"/>
+
+        </RelativeLayout>
+
+        <include layout="@layout/header_list"
+                 android:id="@+id/settingsHeaderFeedback"/>
+
+        <RelativeLayout style="@style/ItemPaddingStyle"
+            android:id="@+id/ratingBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/ratingCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/light_cyan"
+                app:cv_iconDrawable="@drawable/svg_ic_star"
+                app:cv_strokeColor="@color/light_cyan"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/ratingTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/ratingCV"
+                android:text="@string/setting_title_rating"/>
 
             <TextView style="@style/SettingsTextViewContentStyle"
-                      android:id="@+id/emailContent"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="feedback for the app"/>
-        </LinearLayout>
+                android:id="@+id/ratingContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ratingTitle"
+                android:layout_toRightOf="@+id/ratingCV"
+                android:text="@string/setting_content_rating"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <TextView style="@style/SettingsTextViewButtonStyle"
-            android:id="@+id/tourBtn"
+        <RelativeLayout style="@style/ItemPaddingStyle"
+            android:id="@+id/emailBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Tour"/>
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/emailCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/wisteria"
+                app:cv_strokeColor="@color/wisteria"
+                app:cv_iconDrawable="@drawable/svg_ic_email"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/emailTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/emailCV"
+                android:text="@string/setting_title_email"/>
+
+            <TextView style="@style/SettingsTextViewContentStyle"
+                android:id="@+id/emailContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/emailTitle"
+                android:layout_toRightOf="@+id/emailCV"
+                android:text="@string/setting_content_email"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
+            android:background="?attr/themeColorHighlight"/>
+
+        <RelativeLayout style="@style/ItemPaddingStyle"
+            android:id="@+id/tutorialBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/themeColorBtn"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/tutorialCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/pink"
+                app:cv_strokeColor="@color/pink"
+                app:cv_iconDrawable="@drawable/c_help"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/tourTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tutorialCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_tour"/>
+        </RelativeLayout>
 
         <!-- remove for now in v1.0.0 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:visibility="gone"
             android:background="?attr/themeColorHighlight"/>
 
         <!-- remove for now in v1.0.0 -->
-        <TextView style="@style/SettingsTextViewButtonStyle"
+        <RelativeLayout  style="@style/ItemPaddingStyle"
             android:id="@+id/faqBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:background="?attr/themeColorBtn"
-            android:visibility="gone"
-            android:text="FAQ"/>
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/faqCV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/lightPurple"
+                app:cv_strokeColor="@color/lightPurple"
+                app:cv_iconDrawable="@drawable/svg_ic_menu_calendar"/>
+
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/faqTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/faqCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_faq"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/left_padding_divider"
             android:background="?attr/themeColorHighlight"/>
 
-        <LinearLayout
-            android:id="@+id/openSourceBtn"
+        <RelativeLayout  style="@style/ItemPaddingStyle"
+            android:id="@+id/aboutBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="?attr/themeColorBtn"
             android:clickable="true"
             android:focusable="true">
 
-            <TextView style="@style/SettingsTextViewButtonStyle"
-                android:layout_width="match_parent"
+            <com.zhan.library.CircularView style="@style/CircularViewStyle_selected"
+                android:id="@+id/aboutCV"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Open Source Licenses"/>
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                app:cv_bgColor="@color/jordy_blue"
+                app:cv_strokeColor="@color/jordy_blue"
+                app:cv_iconDrawable="@drawable/c_info"/>
 
-            <TextView style="@style/SettingsTextViewContentStyle"
-                android:id="@+id/openSourceContent"
+            <TextView style="@style/SettingsTextViewTitleStyle"
+                android:id="@+id/openSourceTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="License details for open source software used"/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/aboutCV"
+                android:layout_centerVertical="true"
+                android:text="@string/setting_title_about"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/appVersionTextId"

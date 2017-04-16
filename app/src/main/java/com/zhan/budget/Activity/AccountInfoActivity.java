@@ -1,7 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -15,11 +16,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Fragment.ColorPickerCategoryFragment;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.Util;
@@ -32,12 +31,19 @@ import io.realm.Realm;
 public class AccountInfoActivity extends BaseActivity implements
         ColorPickerCategoryFragment.OnColorPickerCategoryFragmentInteractionListener{
 
+    public static final String NEW_ACCOUNT = "New Account";
+
+    public static final String EDIT_ACCOUNT_ITEM = "Edit Account Item";
+
+    public static final String RESULT_ACCOUNT = "Result Account";
+
+    public static final String DELETE_ACCOUNT = "Delete Account";
+
     private Activity instance;
     private Toolbar toolbar;
     private TextView accountNameTextView;
     private ImageButton deleteAccountBtn, changeNameBtn;
     private CircularView accountCircularView;
-
 
     //Fragments
     private ColorPickerCategoryFragment colorPickerCategoryFragment;
@@ -48,6 +54,22 @@ public class AccountInfoActivity extends BaseActivity implements
     //Selected color
     private String selectedColor;
 
+    public static Intent createIntentForNewAccount(Context context) {
+        Intent intent = new Intent(context, AccountInfoActivity.class);
+        intent.putExtra(NEW_ACCOUNT, true);
+        return intent;
+    }
+
+    public static Intent createIntentToEditAccount(Context context, Account account) {
+        Intent intent = new Intent(context, AccountInfoActivity.class);
+        intent.putExtra(NEW_ACCOUNT, false);
+
+        Parcelable wrapped = Parcels.wrap(account);
+        intent.putExtra(EDIT_ACCOUNT_ITEM, wrapped);
+
+        return intent;
+    }
+
     @Override
     protected int getActivityLayout(){
         return R.layout.activity_account_info;
@@ -57,13 +79,12 @@ public class AccountInfoActivity extends BaseActivity implements
     protected void init(){
         instance = this;
 
-        isNewAccount = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_ACCOUNT);
+        isNewAccount = (getIntent().getExtras()).getBoolean(NEW_ACCOUNT);
 
         Log.d("ACCOUNT_INFO", "isNewAccount "+isNewAccount);
 
-
         if(!isNewAccount){
-            account = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_ACCOUNT));
+            account = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_ACCOUNT_ITEM));
 
             Log.d("ACCOUNT_INFO", "received account name : " +account.getName());
             Log.d("ACCOUNT_INFO", "received account id : " +account.getId());
@@ -86,18 +107,19 @@ public class AccountInfoActivity extends BaseActivity implements
         accountNameTextView = (TextView)findViewById(R.id.accountNameTextView);
         accountNameTextView.setText(account.getName());
 
-        /*if(isNewAccount){
+        if(isNewAccount){
             deleteAccountBtn.setVisibility(View.GONE);
-        }*/
-        deleteAccountBtn.setVisibility(View.GONE);//Cant delete accounts for now
+        }else{
+            deleteAccountBtn.setVisibility(View.VISIBLE);
+        }
 
         //default color selected
         selectedColor = account.getColor();
         accountCircularView.setCircleColor(account.getColor());
-        accountCircularView.setTextSizeInDP(30);
+        accountCircularView.setStrokeColor(account.getColor());
 
         if(!isNewAccount){
-            accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase()));
+            accountCircularView.setText(""+Util.getFirstCharacterFromString(account.getName().toUpperCase().trim()));
         }
 
         getSupportFragmentManager().beginTransaction().add(R.id.colorFragment, colorPickerCategoryFragment).commit();
@@ -117,9 +139,9 @@ public class AccountInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(isNewAccount){
-                getSupportActionBar().setTitle("Add Account");
+                getSupportActionBar().setTitle(getString(R.string.new_account));
             }else{
-                getSupportActionBar().setTitle("Edit Account");
+                getSupportActionBar().setTitle(getString(R.string.edit_account));
             }
         }
     }
@@ -146,37 +168,38 @@ public class AccountInfoActivity extends BaseActivity implements
             }
         });
 
-        /*deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
+        deleteAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmDelete();
             }
-        });*/
+        });
     }
 
     private void changeName(){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_edittext, null);
 
-        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView genericTitle = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        genericTitle.setText("Account Name");
+        genericTitle.setText(getString(R.string.name));
         input.setText(accountNameTextView.getText());
-        input.setHint("Account");
+        input.setHint(getString(R.string.account));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        accountNameTextView.setText(input.getText().toString());
+                        accountNameTextView.setText(input.getText().toString().trim());
 
-                        account.setName(input.getText().toString());
+                        account.setName(input.getText().toString().trim());
 
                         //update the text in the circular view to reflect the new name
-                        accountCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase()));
-                        accountCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));                    }
+                        accountCircularView.setText(""+Util.getFirstCharacterFromString(input.getText().toString().toUpperCase().trim()));
+                        accountCircularView.setTextColor(Colors.getHexColorFromAttr(instance, R.attr.themeColor));
+                    }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -190,21 +213,30 @@ public class AccountInfoActivity extends BaseActivity implements
     private void confirmDelete(){
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this account?");
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(R.string.warning_delete_account);
 
         new AlertDialog.Builder(this)
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                       // Toast.makeText(getApplicationContext(), "DELETE...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        Realm myRealm = Realm.getDefaultInstance();
+                        Account acc = myRealm.where(Account.class).equalTo("id", account.getId()).findFirst();
+                        myRealm.beginTransaction();
+                        acc.deleteFromRealm();
+                        myRealm.commitTransaction();
+                        myRealm.close();
+
+                        intent.putExtra(DELETE_ACCOUNT, true); //deleting account
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -219,7 +251,7 @@ public class AccountInfoActivity extends BaseActivity implements
 
         Account acc;
 
-        Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
+        Realm myRealm = Realm.getDefaultInstance();
         if(!isNewAccount){
             acc = myRealm.where(Account.class).equalTo("id", account.getId()).findFirst();
             myRealm.beginTransaction();
@@ -242,13 +274,13 @@ public class AccountInfoActivity extends BaseActivity implements
         Log.d("ACCOUNT_INFO_ACTIVITY", "collor 2 "+account.getColor());
 
         Parcelable wrapped = Parcels.wrap(account);
-        myRealm.close();BudgetPreference.removeRealmCache(this);
+        myRealm.close();
 
         if(!isNewAccount){
-            intent.putExtra(Constants.RESULT_EDIT_ACCOUNT, wrapped);
-        }else{
-            intent.putExtra(Constants.RESULT_NEW_ACCOUNT, wrapped);
+            intent.putExtra(DELETE_ACCOUNT, false); //not deleting account
         }
+
+        intent.putExtra(RESULT_ACCOUNT, wrapped);
 
         setResult(RESULT_OK, intent);
 
@@ -257,6 +289,30 @@ public class AccountInfoActivity extends BaseActivity implements
 
     private void updateCircularColor(){
         accountCircularView.setCircleColor(selectedColor);
+        accountCircularView.setStrokeColor(selectedColor);
+    }
+
+    /**
+     * If there is no Account name, a dialog will popup to remind the user.
+     */
+    private void notificationForAccount(){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(R.string.account);
+        message.setText(R.string.warning_account_valid_name);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
     }
 
     @Override
@@ -287,8 +343,15 @@ public class AccountInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            save();
+
+            if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(account.getName())){
+                save();
+            }else{
+                notificationForAccount();
+
+            }
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,40 +1,33 @@
 package com.zhan.budget.Activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.AccountFragment;
 import com.zhan.budget.Fragment.CalendarFragment;
-import com.zhan.budget.Fragment.CategoryFragment;
+import com.zhan.budget.Fragment.CategoryFragment1;
 import com.zhan.budget.Fragment.LocationFragment;
 import com.zhan.budget.Fragment.MonthReportFragment;
 import com.zhan.budget.Fragment.RateFragment;
-import com.zhan.budget.Fragment.SettingFragment;
+import com.zhan.budget.MyApplication;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.Tutorial;
-import com.zhan.budget.Util.Util;
 
 import za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalendarFragment.OnCalendarInteractionListener,
-        CategoryFragment.OnCategoryInteractionListener,
+        CategoryFragment1.OnCategoryInteractionListener,
         MonthReportFragment.OnMonthlyInteractionListener,
         AccountFragment.OnAccountInteractionListener,
         LocationFragment.OnLocationInteractionListener{
@@ -45,13 +38,13 @@ public class MainActivity extends BaseActivity
     NavigationView navigationView;
 
     private CalendarFragment calendarFragment;
-    private CategoryFragment categoryFragment;
+    private CategoryFragment1 categoryFragment;
     private MonthReportFragment monthReportFragment;
     private AccountFragment accountFragment;
-    //private InfoFragment infoFragment;
     private RateFragment rateFragment;
-    private SettingFragment settingFragment;
     private LocationFragment locationFragment;
+
+    private int savedTheme;
 
     @Override
     protected int getActivityLayout(){
@@ -60,11 +53,9 @@ public class MainActivity extends BaseActivity
 
     private void createFragments(){
         calendarFragment = new CalendarFragment();
-        categoryFragment = new CategoryFragment();
+        categoryFragment = new CategoryFragment1();
         monthReportFragment = new MonthReportFragment();
         accountFragment = new AccountFragment();
-        settingFragment = new SettingFragment();
-        //infoFragment = new InfoFragment();
 
         // remove for now in v1.0.0
         //rateFragment = new RateFragment();
@@ -88,60 +79,31 @@ public class MainActivity extends BaseActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
 
-        //Load calendarFragment first
         getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
 
-        //set first fragment as default in navigation drawer
+        //set 1st fragment (Calendar) in navigation drawer
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        if(BudgetPreference.getFirstTime(getBaseContext())){
-            loadTutorials();
+        //first time => onboard
+        if(BudgetPreference.getFirstTime(this)){
+            Intent mainAct = new Intent(this, MaterialTutorialActivity.class);
+            mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(this));
+            startActivity(mainAct);
         }
     }
 
-    private void loadTutorials(){
-        Intent mainAct = new Intent(getBaseContext(), MaterialTutorialActivity.class);
-        mainAct.putParcelableArrayListExtra(MaterialTutorialActivity.MATERIAL_TUTORIAL_ARG_TUTORIAL_ITEMS, Tutorial.getTutorialPages(getBaseContext()));
-        startActivity(mainAct);
-    }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        // If request is cancelled, the result arrays are empty.
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            // Permission was granted!
-            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                settingFragment.backUpData();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
-                settingFragment.restore();
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
-                settingFragment.exportCSVSort();
-            }
-        }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
-            boolean showRationale = true;
-
-            if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
-                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-            }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
-                showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }
-
-            if(showRationale){
-                // Permission was denied without checking the check box "Never ask again"
-                Log.d("SETTINGS", "permission denied without never ask again");
-
-                if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE){
-                    settingFragment.requestFilePermissionToWrite();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE){
-                    settingFragment.requestFilePermissionToRead();
-                }else if(requestCode == Constants.MY_PERMISSIONS_REQUEST_WRITE_CSV){
-                    settingFragment.requestFilePermissionToWriteCSV();
-                }
-            }else{
-                // Permission was denied while checking the check box "Never ask again"
-                Log.d("SETTINGS", "permission denied with never ask again");
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.SETTINGS) {
+            //Only restart activity if theme is different
+            if(savedTheme != MyApplication.getInstance(getApplicationContext()).getBudgetTheme()){
+                Intent intent = getIntent();
+                //overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                //overridePendingTransition(0, 0);
+                startActivity(intent);
             }
         }
     }
@@ -174,7 +136,6 @@ public class MainActivity extends BaseActivity
             @Override
             public void run() {
                 Fragment fragment = null;
-                String title = "";
 
                 switch (viewId) {
                     case R.id.nav_calendar:
@@ -193,13 +154,10 @@ public class MainActivity extends BaseActivity
                         fragment = locationFragment;
                         break;
                     case R.id.nav_setting:
-                        fragment = settingFragment;
-                        title = "Setting";
+                        savedTheme = MyApplication.getInstance(getApplicationContext()).getBudgetTheme();
+                        startActivityForResult(SettingsActivity.createIntent(getApplicationContext()), RequestCodes.SETTINGS);
                         break;
-                    /*case R.id.nav_info:
-                        fragment = infoFragment;
-                        title = "Info";
-                        break;
+                    /*
                     case R.id.nav_rate:
                         fragment = rateFragment;
                         title = "Rate";
@@ -207,16 +165,7 @@ public class MainActivity extends BaseActivity
                 }
 
                 if (fragment != null) {
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.contentFrame, fragment);
-                    ft.commit();
-                }
-
-                //set the toolbar title
-                if (getSupportActionBar() != null) {
-                    if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(title)) {
-                        getSupportActionBar().setTitle(title);
-                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.contentFrame, fragment).commit();
                 }
             }
         }, 300);

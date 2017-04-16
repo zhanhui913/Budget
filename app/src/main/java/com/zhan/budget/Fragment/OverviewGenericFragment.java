@@ -1,29 +1,30 @@
 package com.zhan.budget.Fragment;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Etc.CategoryCalculator;
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.DateUtil;
 
 import org.parceler.Parcels;
@@ -34,19 +35,21 @@ import java.util.Date;
 import java.util.List;
 
 import fr.castorflex.android.circularprogressbar.CircularProgressBar;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class OverviewGenericFragment extends BaseRealmFragment implements
         CategoryGenericRecyclerAdapter.OnCategoryGenericAdapterInteractionListener{
 
+    private static final String TAG = "OverviewGenericFragment";
     private static final String ARG_1 = "budgetType";
     private static final String ARG_2 = "currentMonth";
     private Date currentMonth;
     private BudgetType budgetType;
 
     private CircularProgressBar circularProgressBar;
+    private ViewGroup emptyLayout;
+    private TextView emptyAccountPrimaryText, emptyAccountSecondaryText;
 
     private RealmResults<Category> resultsCategory;
     private RealmResults<Transaction> transactionsResults;
@@ -54,7 +57,10 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private List<Category> categoryList;
 
     private CategoryGenericRecyclerAdapter categoryPercentListAdapter;
+    private RecyclerView categoryListView;
     private OverviewInteractionListener mListener;
+
+    private Category categoryEdited;
 
     public static OverviewGenericFragment newInstance(BudgetType budgetType, Date currentMonth) {
         OverviewGenericFragment fragment = new OverviewGenericFragment();
@@ -81,11 +87,20 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
         circularProgressBar = (CircularProgressBar) view.findViewById(R.id.overviewProgressBar);
 
-        categoryList = new ArrayList<>();
-        RecyclerView categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
-        categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
-        categoryListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyOverviewLayout);
+        emptyAccountPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
+        emptyAccountPrimaryText.setText(String.format(getString(R.string.empty_category), budgetType.toString()));
+        emptyAccountSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
+        emptyAccountSecondaryText.setText("");
 
+        //Initially, the empty layout should be hidden
+        emptyLayout.setVisibility(View.GONE);
+
+        categoryList = new ArrayList<>();
+        categoryListView = (RecyclerView) view.findViewById(R.id.percentCategoryListView);
+        categoryPercentListAdapter = new CategoryGenericRecyclerAdapter(this, categoryList, CategoryGenericRecyclerAdapter.ARRANGEMENT.PERCENT, null);
+
+        categoryListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoryListView.setAdapter(categoryPercentListAdapter);
 
         //Add divider
@@ -97,10 +112,14 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         getCategoryList();
     }
 
+    public void setCurrentMonth(Date date){
+        this.currentMonth = date;
+    }
+
     //Should be called only the first time when the fragment is created
-    private void getCategoryList(){
-        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
-        resultsCategory = myRealm.where(Category.class).findAllAsync();
+    public void getCategoryList(){
+        //final Realm myRealm = Realm.getDefaultInstance();
+        resultsCategory = myRealm.where(Category.class).equalTo("type", budgetType.toString()).findAllAsync();
         resultsCategory.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
             public void onChange(RealmResults<Category> element) {
@@ -108,7 +127,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 categoryList.clear();
                 categoryList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getContext());
+                Log.d("qwer","there are "+categoryList.size()+" category of type : "+budgetType.toString());
                 getMonthReport(currentMonth, true);
             }
         });
@@ -121,9 +140,9 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         //Need to go a day before as Realm's between date does inclusive on both end
         final Date endMonth = DateUtil.getLastDateOfMonth(month);
 
-        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(month) + "-> "+DateUtil.convertDateToStringFormat1(endMonth)+")");
+        Log.d("OVERVIEW_ACT", "("+DateUtil.convertDateToStringFormat1(getContext(), month) + "-> "+DateUtil.convertDateToStringFormat1(getContext(), endMonth)+")");
 
-        final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
+        //final Realm myRealm = Realm.getDefaultInstance();  BudgetPreference.addRealmCache(getContext());
         transactionsResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionsResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
@@ -132,7 +151,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
                 transactionList.clear();
                 transactionList = myRealm.copyFromRealm(element);
-                myRealm.close();  BudgetPreference.removeRealmCache(getContext());
+               // myRealm.close();  BudgetPreference.removeRealmCache(getContext());
                 performAsyncCalculation(animate);
             }
         });
@@ -142,7 +161,6 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
      * Perform tedious calculation asynchronously to avoid blocking main thread
      */
     private void performAsyncCalculation(final boolean animate){
-
         resetCategoryValues();
 
         CategoryCalculator cc = new CategoryCalculator(transactionList, categoryList, new Date(), budgetType, new CategoryCalculator.OnCategoryCalculatorInteractionListener() {
@@ -171,6 +189,8 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
                 //Once the calculation is done, remove it
                 circularProgressBar.setVisibility(View.GONE);
 
+                updateCategoryStatus();
+
                 mListener.onComplete(budgetType, categoryList, sumCost, animate);
             }
         });
@@ -187,26 +207,23 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     private void confirmDelete(final int position){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(getString(R.string.warning_delete_category));
 
         new AlertDialog.Builder(getContext())
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                         deleteCategory(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                        //Does nothing for now
                     }
                 })
                 .create()
@@ -214,37 +231,80 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
     }
 
     private void deleteCategory(int position){
+        Log.d(TAG, "view, remove " + position + "-> from result "+categoryList.get(position).getName());
+        Log.d(TAG, "b4 There are "+resultsCategory.size()+" category, trying to remove "+resultsCategory.get(position).getName());
 
+        final RealmResults<Category> categoryToBeRemove = myRealm.where(Category.class).equalTo("id", categoryList.get(position).getId()).findAllAsync();
+        categoryToBeRemove.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+            @Override
+            public void onChange(RealmResults<Category> element) {
+                element.removeChangeListener(this);
+
+                myRealm.beginTransaction();
+                Log.d(TAG, "removing found category : "+element.get(0).getName());
+
+                //grab the first one as there should only have 1 category due to the ID being unique
+                categoryToBeRemove.deleteFirstFromRealm();
+
+                myRealm.commitTransaction();
+            }
+        });
+
+        //myRealm.commitTransaction();
+        Log.d(TAG, "After There are " + resultsCategory.size() + " category");
+
+        categoryList.remove(position);
+        categoryPercentListAdapter.setCategoryList(categoryList);
+
+        //this recalculates
+        getMonthReport(currentMonth, true);
     }
 
     private void editCategory(int position){
-        Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
+        categoryEdited = categoryList.get(position);
+        startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryEdited), RequestCodes.EDIT_CATEGORY);
+    }
 
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
+    private void updateCategoryStatus(){
+        if(categoryPercentListAdapter.getCategoryList().size() > 0){
+            emptyLayout.setVisibility(View.GONE);
+            categoryListView.setVisibility(View.VISIBLE);
+        }else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            categoryListView.setVisibility(View.GONE);
+        }
+    }
 
-        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
-
-        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
+    public void setListener(OverviewInteractionListener mListener){
+        this.mListener = mListener;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_HAS_CHANGED){
-                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+            if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
-                    //Toast.makeText(getContext(), "hanged changed", Toast.LENGTH_SHORT).show();
-
                     getMonthReport(currentMonth, true);
+                }
+            }else if(requestCode == RequestCodes.EDIT_CATEGORY){
+                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(CategoryInfoActivity.RESULT_CATEGORY));
+
+                if(!categoryReturned.checkEquals(categoryEdited)){
+                    //If something has been changed, update the list and the pie chart
+                    getCategoryList();
                 }
             }
         }
     }
 
+    //Different from resetCategoryValues(), this removes the adapters list
+    public void resetCategoryList(){
+        categoryPercentListAdapter.setCategoryList(new ArrayList<Category>());
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -257,7 +317,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
         super.onAttach(context);
         if (context instanceof OverviewInteractionListener) {
             mListener = (OverviewInteractionListener) context;
-        } else {
+        } else if(mListener == null){
             throw new RuntimeException(context.toString()
                     + " must implement OverviewInteractionListener");
         }
@@ -297,15 +357,7 @@ public class OverviewGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onClick(int position){
-        //Toast.makeText(getContext(), "click on category :" + categoryList.get(position).getName(), Toast.LENGTH_SHORT).show();
-
-        Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
-
-        Parcelable wrapped = Parcels.wrap(categoryList.get(position));
-
-        viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-        startActivityForResult(viewAllTransactionsForCategory, Constants.RETURN_HAS_CHANGED);
+        startActivityForResult(TransactionsForCategory.createIntentToViewAllTransactionsForCategoryForMonth(getContext(), categoryList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

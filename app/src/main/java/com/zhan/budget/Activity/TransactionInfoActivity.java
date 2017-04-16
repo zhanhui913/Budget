@@ -1,7 +1,8 @@
 package com.zhan.budget.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
@@ -25,7 +26,6 @@ import android.widget.TextView;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.TransactionFragment;
 import com.zhan.budget.Model.BudgetType;
@@ -54,6 +54,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmAsyncTask;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -63,6 +64,16 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private static final String TAG = "TransactionInfoActivity";
 
+    public static final String NEW_TRANSACTION = "New Transaction";
+
+    public static final String EDIT_TRANSACTION_ITEM = "Edit Transaction Item";
+
+    public static final String TRANSACTION_DATE = "Transaction Date";
+
+    public static final String RESULT_TRANSACTION = "Result Transaction";
+
+    public static final String HAS_CHANGED = "Has Changed";
+
     private boolean isNewTransaction = false;
     private Activity instance;
     private Toolbar toolbar;
@@ -71,7 +82,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
     private ImageButton addNoteBtn, addAccountBtn, dateBtn, repeatBtn, locationBtn;
 
-    private TextView transactionCostView, transactionNameTextView;
+    private TextView transactionCostView, transactionNameTextView, currentPageTextView;
 
     private String priceString, noteString, locationString;
 
@@ -113,7 +124,26 @@ public class TransactionInfoActivity extends BaseActivity implements
     private AutoCompleteTextView inputLocation;
 
     //Switch whenever theres a change in location
-    private boolean newLocation = false;
+    private boolean isLocationChanged = false;
+
+    private Intent savingIntent;
+
+    public static Intent createIntentForNewTransaction(Context context, Date date) {
+        Intent intent = new Intent(context, TransactionInfoActivity.class);
+        intent.putExtra(NEW_TRANSACTION, true);
+        intent.putExtra(TRANSACTION_DATE, date);
+        return intent;
+    }
+
+    public static Intent createIntentToEditTransaction(Context context, Transaction transaction) {
+        Intent intent = new Intent(context, TransactionInfoActivity.class);
+        intent.putExtra(NEW_TRANSACTION, false);
+
+        Parcelable wrapped = Parcels.wrap(transaction);
+        intent.putExtra(EDIT_TRANSACTION_ITEM, wrapped);
+
+        return intent;
+    }
 
     @Override
     protected int getActivityLayout(){
@@ -125,17 +155,22 @@ public class TransactionInfoActivity extends BaseActivity implements
         instance = TransactionInfoActivity.this;
 
         //Get intents from caller activity
-        isNewTransaction = (getIntent().getExtras()).getBoolean(Constants.REQUEST_NEW_TRANSACTION);
-        selectedDate = DateUtil.convertStringToDate((getIntent().getExtras()).getString(Constants.REQUEST_NEW_TRANSACTION_DATE));
-
-        if(!isNewTransaction){
-            editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(Constants.REQUEST_EDIT_TRANSACTION));
-        }
+        isNewTransaction = (getIntent().getExtras()).getBoolean(NEW_TRANSACTION);
 
         if(!isNewTransaction) {
-            transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
-            transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+            editTransaction = Parcels.unwrap((getIntent().getExtras()).getParcelable(EDIT_TRANSACTION_ITEM));
+            selectedDate = DateUtil.refreshDate(editTransaction.getDate());
+
+            if(editTransaction.getCategory() != null){
+                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString(), editTransaction.getCategory().getId());
+                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString(), editTransaction.getCategory().getId());
+            }else{
+                transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
+                transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
+            }
         }else{
+            selectedDate = DateUtil.refreshDate((Date)(getIntent().getSerializableExtra(TRANSACTION_DATE)));
+
             transactionIncomeFragment = TransactionFragment.newInstance(BudgetType.INCOME.toString());
             transactionExpenseFragment = TransactionFragment.newInstance(BudgetType.EXPENSE.toString());
         }
@@ -160,9 +195,15 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         transactionCostView = (TextView)findViewById(R.id.transactionCostText);
         transactionNameTextView = (TextView)findViewById(R.id.transactionNameText);
+        currentPageTextView = (TextView)findViewById(R.id.currentPageTitle);
 
         //default first page
         currentPage = BudgetType.EXPENSE;
+        if(currentPage == BudgetType.EXPENSE){
+            currentPageTextView.setText(R.string.category_expense);
+        }else{
+            currentPageTextView.setText(R.string.category_income);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.transactionViewPager);
         adapterViewPager = new TwoPageViewPager(getSupportFragmentManager(), transactionExpenseFragment, transactionIncomeFragment);
@@ -170,11 +211,6 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         circleIndicator = (CircleIndicator) findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
-
-        priceString = "0";
-
-        //Call one time to give priceStringWithDot the correct string format of 0.00
-        removeDigit();
 
         //If its edit mode
         if(!isNewTransaction){
@@ -184,7 +220,11 @@ public class TransactionInfoActivity extends BaseActivity implements
                 noteString = editTransaction.getNote();
                 transactionNameTextView.setText(noteString);
             }else{
-                transactionNameTextView.setText(editTransaction.getCategory().getName());
+                if(editTransaction.getCategory() != null){
+                    transactionNameTextView.setText(editTransaction.getCategory().getName());
+                }else{
+                    transactionNameTextView.setText("");
+                }
             }
 
             if(editTransaction.getLocation() != null){
@@ -194,31 +234,46 @@ public class TransactionInfoActivity extends BaseActivity implements
             //Check which category this transaction belongs to.
             //If its EXPENSE category, change page to EXPENSE view pager
             //If its INCOME category, change page to INCOME view pager
-            if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                viewPager.setCurrentItem(0);
+            if(editTransaction.getCategory() != null){
+                if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    viewPager.setCurrentItem(0);
+                    currentPage = BudgetType.EXPENSE;
+                }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
+                    viewPager.setCurrentItem(1);
+                    currentPage = BudgetType.INCOME;
+                }
+            }else{
                 currentPage = BudgetType.EXPENSE;
-            }else if(editTransaction.getCategory().getType().equalsIgnoreCase(BudgetType.INCOME.toString())){
-                viewPager.setCurrentItem(1);
-                currentPage = BudgetType.INCOME;
+            }
+            
+            if(currentPage == BudgetType.EXPENSE){
+                currentPageTextView.setText(R.string.category_expense);
+            }else{
+                currentPageTextView.setText(R.string.category_income);
             }
 
-            priceString = CurrencyTextFormatter.formatFloat(editTransaction.getPrice(), Constants.BUDGET_LOCALE);
+            priceString = CurrencyTextFormatter.formatDouble(editTransaction.getPrice());
 
             //Remove any extra un-needed signs
             priceString = CurrencyTextFormatter.stripCharacters(priceString);
 
-            Log.d("DEBUG", "---------->" + priceString);
-            String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-
-            transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+            updatePriceStatus();
 
             Log.d("DEBUG", "price string is " + priceString + ", ->" + editTransaction.getPrice());
+        }else{
+
+            priceString = "";
+
+            //Call one time to give priceStringWithDot the correct string format of 0.00
+            updatePriceStatus();
         }
+
 
         getAllLocations();
         createToolbar();
         addListeners();
-        createAccountDialog();
+        //createAccountDialog();
+        checkAccountCount();
         createDateDialog();
     }
 
@@ -233,9 +288,9 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         if(getSupportActionBar() != null){
             if(!isNewTransaction){
-                getSupportActionBar().setTitle("Edit Transaction");
+                getSupportActionBar().setTitle(getString(R.string.edit_transaction));
             }else{
-                getSupportActionBar().setTitle("Add Transaction");
+                getSupportActionBar().setTitle(getString(R.string.new_transaction));
             }
         }
     }
@@ -371,28 +426,26 @@ public class TransactionInfoActivity extends BaseActivity implements
                 switch (position) {
                     case 0:
                         currentPage = BudgetType.EXPENSE;
-                        //float ss = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
-                        //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(ss, Constants.BUDGET_LOCALE));
-                        transactionCostView.setText(CurrencyTextFormatter.formatText("-"+priceString, Constants.BUDGET_LOCALE));
+                        updatePriceStatus();
 
                         //If note is empty
-                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedExpenseCategory != null){
                             transactionNameTextView.setText(selectedExpenseCategory.getName());
                         }
 
+                        currentPageTextView.setText(R.string.category_expense);
 
                         break;
                     case 1:
                         currentPage = BudgetType.INCOME;
-                        //float ss1 = CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE);
-                        //transactionCostView.setText("" + CurrencyTextFormatter.formatFloat(Math.abs(ss1), Constants.BUDGET_LOCALE));
-                        transactionCostView.setText(CurrencyTextFormatter.formatText(priceString, Constants.BUDGET_LOCALE));
+                        updatePriceStatus();
 
                         //If note is empty
-                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
+                        if(!Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString) && selectedIncomeCategory != null){
                             transactionNameTextView.setText(selectedIncomeCategory.getName());
                         }
 
+                        currentPageTextView.setText(R.string.category_income);
 
                         break;
                 }
@@ -403,12 +456,19 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             }
         });
+
+        transactionNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNoteDialog();
+            }
+        });
     }
 
     private void createDateDialog(){
         View dateDialogView = View.inflate(instance, R.layout.alertdialog_date, null);
 
-        monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogMonthTextView);
+        monthTextView = (TextView) dateDialogView.findViewById(R.id.alertdialogTitle);
         final FlexibleCalendarView calendarView = (FlexibleCalendarView) dateDialogView.findViewById(R.id.alertdialogCalendarView);
 
         int year = DateUtil.getYearFromDate(selectedDate);
@@ -417,7 +477,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         tempDate = selectedDate;
 
-        monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, date).getTime()));
+        monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, date).getTime()));
 
         calendarView.setCalendarView(new FlexibleCalendarView.CalendarView() {
             @Override
@@ -447,7 +507,8 @@ public class TransactionInfoActivity extends BaseActivity implements
 
             @Override
             public String getDayOfWeekDisplayValue(int dayOfWeek, String defaultValue) {
-                return String.valueOf(defaultValue.toUpperCase());
+                //return String.valueOf(defaultValue.toUpperCase());
+                return DateUtil.getDayOfWeek(dayOfWeek).toUpperCase();
             }
         });
 
@@ -458,7 +519,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.setOnMonthChangeListener(new FlexibleCalendarView.OnMonthChangeListener() {
             @Override
             public void onMonthChange(int year, int month, int direction) {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(new GregorianCalendar(year, month, 1).getTime()));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), new GregorianCalendar(year, month, 1).getTime()));
             }
         });
 
@@ -473,7 +534,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         calendarView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                monthTextView.setText(DateUtil.convertDateToStringFormat2(selectedDate));
+                monthTextView.setText(DateUtil.convertDateToStringFormat2(getApplicationContext(), selectedDate));
                 calendarView.selectDate(selectedDate);
                 calendarView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -481,12 +542,12 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder dateAlertDialogBuilder = new AlertDialog.Builder(instance)
                 .setView(dateDialogView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         selectedDate = tempDate;
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         tempDate = selectedDate;
                         dialog.dismiss();
@@ -497,16 +558,7 @@ public class TransactionInfoActivity extends BaseActivity implements
         dateDialog = dateAlertDialogBuilder.create();
     }
 
-    private void createAccountDialog(){
-        View accountDialogView = View.inflate(instance, R.layout.alertdialog_number_picker, null);
-
-        final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
-
-        TextView title = (TextView)accountDialogView.findViewById(R.id.title);
-        title.setText("Select Account");
-
-        accountNameList = new ArrayList<>();
-
+    private void checkAccountCount(){
         final Realm myRealm = Realm.getDefaultInstance(); BudgetPreference.addRealmCache(this);
 
         //Get list of accounts
@@ -517,79 +569,117 @@ public class TransactionInfoActivity extends BaseActivity implements
                 element.removeChangeListener(this);
                 Log.d("REALMZ1", "getAllAccounts closing  realm");
 
+                createAccountDialog(myRealm.copyFromRealm(element));
+            }
+        });
+    }
 
-                for (int i = 0; i < element.size(); i++) {
-                    Log.d("ZHAP", i+"->"+element.get(i).getName());
-                    accountNameList.add(element.get(i).getName());
-                }
+    private void createAccountDialog(List<Account> tempAccountList){
+        AlertDialog.Builder accountAlertDialogBuilder;
 
-                //Swap the default account to be in index 0 (for nameList and realmList)
-                //Collections.swap(accountNameList, 0, defaultAccountIndex);
-                //Collections.swap(resultsAccount, 0 , defaultAccountIndex);
+        if(tempAccountList.size() > 0){
+            View accountDialogView = View.inflate(instance, R.layout.alertdialog_number_picker, null);
 
-                accountPicker.setMinValue(0);
+            final ExtendedNumberPicker accountPicker = (ExtendedNumberPicker)accountDialogView.findViewById(R.id.numberPicker);
 
-                if (accountNameList.size() > 0) {
-                    accountPicker.setMaxValue(accountNameList.size() - 1);
-                    accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
-                }
+            TextView title = (TextView)accountDialogView.findViewById(R.id.alertdialogTitle);
+            title.setText(getString(R.string.account));
 
-                accountPicker.setWrapSelectorWheel(false);
+            accountNameList = new ArrayList<>();
 
-                int pos = 0; //default is first item to be selected in the spinner
-                if (!isNewTransaction) {
-                    for (int i = 0; i < element.size(); i++) {
-                        if (editTransaction.getAccount() != null) {
-                            if (editTransaction.getAccount().getId().equalsIgnoreCase(element.get(i).getId())) {
-                                pos = i;
-                                break;
-                            }
+            for (int i = 0; i < tempAccountList.size(); i++) {
+                Log.d("ZHAP", i+"->"+tempAccountList.get(i).getName());
+                accountNameList.add(tempAccountList.get(i).getName());
+            }
+
+            accountPicker.setMinValue(0);
+            accountPicker.setMaxValue(accountNameList.size() - 1);
+            accountPicker.setDisplayedValues(accountNameList.toArray(new String[0]));
+
+            accountPicker.setWrapSelectorWheel(false);
+
+            boolean doesTransactionHaveAccount = false;
+
+            int pos = 0; //default is first item to be selected in the spinner
+            if (!isNewTransaction) {
+                for (int i = 0; i < tempAccountList.size(); i++) {
+                    if (editTransaction.getAccount() != null) {
+                        doesTransactionHaveAccount = true;
+                        if (editTransaction.getAccount().getId().equalsIgnoreCase(tempAccountList.get(i).getId())) {
+                            pos = i;
+                            break;
                         }
                     }
                 }
-
-                selectedAccountIndexInSpinner = pos;
-                selectedAccount = myRealm.copyFromRealm(element.get(pos));
-
-                accountPicker.setValue(pos);
-
-                myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
-        });
 
-        AlertDialog.Builder accountAlertDialogBuilder = new AlertDialog.Builder(instance)
-                .setView(accountDialogView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        selectedAccountIndexInSpinner = accountPicker.getValue();
-                        selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
-                        //Toast.makeText(getApplicationContext(), "Selected account is "+selectedAccount.getName(), Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //Reset the selection back to previous
-                        accountPicker.setValue(selectedAccountIndexInSpinner);
+            selectedAccountIndexInSpinner = pos;
+
+            //if there is a default account
+            boolean isThereDefaultAccount = false;
+
+            for(int i = 0; i < tempAccountList.size(); i++){
+                if(resultsAccount.get(i).isDefault()){
+                    isThereDefaultAccount = true;
+                    break;
+                }
+            }
+
+            if(isThereDefaultAccount || doesTransactionHaveAccount){
+                selectedAccount = tempAccountList.get(selectedAccountIndexInSpinner);
+            }
+
+            accountPicker.setValue(selectedAccountIndexInSpinner);
+
+            accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+                    .setView(accountDialogView)
+                    .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            selectedAccountIndexInSpinner = accountPicker.getValue();
+                            selectedAccount = resultsAccount.get(selectedAccountIndexInSpinner);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //Reset the selection back to previous
+                            accountPicker.setValue(selectedAccountIndexInSpinner);
+                            dialog.dismiss();
+                        }
+                    });
+        }else{
+            View accountDialogView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+            TextView title = (TextView)accountDialogView.findViewById(R.id.alertdialogTitle);
+            TextView message = (TextView)accountDialogView.findViewById(R.id.genericMessage);
+
+            title.setText(getString(R.string.account));
+            message.setText(getString(R.string.empty_account_selection));
+
+            accountAlertDialogBuilder = new AlertDialog.Builder(instance)
+                    .setView(accountDialogView)
+                    .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                    }
-                });
+                        }
+                    });
+        }
 
         accountDialog = accountAlertDialogBuilder.create();
     }
 
     private void createNoteDialog(){
-        View promptView = View.inflate(instance, R.layout.alertdialog_generic, null);
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_edittext, null);
 
         final EditText input = (EditText) promptView.findViewById(R.id.genericEditText);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Note");
-        input.setHint("Note");
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        title.setText(getString(R.string.new_note));
+        input.setHint(getString(R.string.note));
         input.setText(noteString);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         noteString = input.getText().toString();
 
@@ -606,7 +696,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -629,7 +719,6 @@ public class TransactionInfoActivity extends BaseActivity implements
                 for(int i = 0; i < element.size(); i++){
                     locationHash.add(element.get(i).getName());
                 }
-                //Toast.makeText(getBaseContext(), "There are "+locationHash.size()+" unique locations on init", Toast.LENGTH_SHORT).show();
 
                 myRealm.close(); BudgetPreference.removeRealmCache(getBaseContext());
             }
@@ -642,11 +731,11 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         View promptView = View.inflate(instance, R.layout.alertdialog_generic_autocomplete, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
-        title.setText("Add Location");
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        title.setText(getString(R.string.new_location));
 
         inputLocation = (AutoCompleteTextView) promptView.findViewById(R.id.genericAutoCompleteEditText);
-        inputLocation.setHint("Location");
+        inputLocation.setHint(getString(R.string.location));
         inputLocation.setText(locationString);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, locationArray);
@@ -654,25 +743,21 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        locationString = inputLocation.getText().toString();
+                        locationString = inputLocation.getText().toString().trim();
 
-                        if(editTransaction != null){
-                            if(editTransaction.getLocation() != null){
-                                if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
-                                    newLocation = true;
-                                }
-                            }else{
-                                newLocation = true;
+                        if(editTransaction != null && editTransaction.getLocation() != null){
+                            //If current location is different from what was stored
+                            if(!inputLocation.getText().toString().equalsIgnoreCase(editTransaction.getLocation().getName())){
+                                isLocationChanged = true;
                             }
                         }else{
-                            newLocation = true;
+                            isLocationChanged = true;
                         }
-
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -693,8 +778,11 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         final ExtendedNumberPicker repeatNumberPicker = (ExtendedNumberPicker)promptView.findViewById(R.id.repeatNumberPicker);
 
+        TextView title = (TextView)promptView.findViewById(R.id.alertdialogTitle);
+        title.setText(R.string.dialog_title_repeat);
+
         //Initializing a new string array with elements
-        final String[] values= {"days", "weeks", "months"};
+        final String[] values= {getString(R.string.days), getString(R.string.weeks), getString(R.string.months)};
 
         //Populate NumberPicker values from String array values
         //Set the minimum value of NumberPicker
@@ -711,7 +799,7 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(instance)
                 .setView(promptView)
-                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_save), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (quantityNumberPicker.getValue() == 0) {
                             isScheduledTransaction = false;
@@ -726,7 +814,7 @@ public class TransactionInfoActivity extends BaseActivity implements
                         }
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -737,12 +825,13 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void addDigitToTextView(int digit){
-        priceString += digit;
+        if(priceString.length() < CurrencyTextFormatter.MAX_RAW_INPUT_LENGTH){
+            priceString += digit;
 
-        String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-        //transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
-
-        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+            updatePriceStatus();
+        }else {
+            Util.createSnackbar(getApplicationContext(), toolbar, getString(R.string.price_too_long));
+        }
     }
 
     private void removeDigit(){
@@ -750,10 +839,25 @@ public class TransactionInfoActivity extends BaseActivity implements
             priceString = priceString.substring(0, priceString.length() - 1);
         }
 
-        String appendString = (currentPage == BudgetType.EXPENSE) ? "-" : "";
-        //transactionCostView.setText(""+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+        updatePriceStatus();
+    }
 
-        transactionCostView.setText(CurrencyTextFormatter.formatText(appendString+priceString, Constants.BUDGET_LOCALE));
+    /**
+     * Updates the price's textview's text format and color based on whether its EXPENSE, INCOME, or its 0
+     */
+    private void updatePriceStatus(){
+        if(CurrencyTextFormatter.formatCurrency(priceString) == 0) {
+            transactionCostView.setText(CurrencyTextFormatter.formatText(priceString));
+            transactionCostView.setTextColor(Colors.getColorFromAttr(instance, R.attr.themeColorText));
+        }else{
+            if(currentPage == BudgetType.EXPENSE){
+                transactionCostView.setText(CurrencyTextFormatter.formatText("-" + priceString));
+                transactionCostView.setTextColor(ContextCompat.getColor(instance, R.color.red));
+            }else{
+                transactionCostView.setText(CurrencyTextFormatter.formatText(priceString));
+                transactionCostView.setTextColor(ContextCompat.getColor(instance, R.color.green));
+            }
+        }
     }
 
     @Override
@@ -762,7 +866,7 @@ public class TransactionInfoActivity extends BaseActivity implements
     }
 
     private void save(){
-        Intent intent = new Intent();
+        savingIntent = new Intent();
 
         Transaction transaction = new Transaction();
 
@@ -775,21 +879,21 @@ public class TransactionInfoActivity extends BaseActivity implements
             Date now = DateUtil.refreshDate(new Date());
 
             //If its previous date or current
-            if(selectedDate.before(now) || (selectedDate.getTime() == now.getTime())){
+            if(selectedDate.before(now) || DateUtil.isSameDay(selectedDate, now)){
                 transaction.setDayType(DayType.COMPLETED.toString());
             }else{
                 transaction.setDayType(DayType.SCHEDULED.toString());
             }
         }
 
-        if(newLocation){
+        if(isLocationChanged){
             if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(locationString)){
-
                 Location newLocationObject = new Location();
-                newLocationObject.setName(locationString);
+                newLocationObject.setName(Util.capsFirstWord(locationString));
                 newLocationObject.setColor(Colors.getRandomColorString(getBaseContext()));
                 transaction.setLocation(newLocationObject);
 
+                //This creates a new Location Realm object if it doesnt exist yet or updates it.
                 Realm myRealm = Realm.getDefaultInstance();
                 myRealm.beginTransaction();
                 myRealm.copyToRealmOrUpdate(newLocationObject);
@@ -805,63 +909,40 @@ public class TransactionInfoActivity extends BaseActivity implements
         }
 
         transaction.setNote(this.noteString);
-        transaction.setDate(DateUtil.formatDate(selectedDate));
+        transaction.setDate(DateUtil.formatDate(getApplicationContext(), selectedDate));
         transaction.setAccount(selectedAccount);
 
         if(currentPage == BudgetType.EXPENSE){
-            transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+            transaction.setPrice(-CurrencyTextFormatter.formatCurrency(priceString));
             transaction.setCategory(selectedExpenseCategory);
         }else{
-            transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE));
+            transaction.setPrice(CurrencyTextFormatter.formatCurrency(priceString));
             transaction.setCategory(selectedIncomeCategory);
         }
 
-        ScheduledTransaction sT = new ScheduledTransaction();
-        if(isScheduledTransaction){
-            Log.d("isScheduledTransaction", "adding scheduled transaction");
-            scheduledTransaction.setTransaction(transaction);
-
-            sT.setId(Util.generateUUID());
-            sT.setRepeatUnit(scheduledTransaction.getRepeatUnit());
-            sT.setRepeatType(scheduledTransaction.getRepeatType());
-            //setting transaction in the schedule transaction in the caller fragment
-        }else{
-            Log.d("isScheduledTransaction", "not adding scheduled transaction");
-        }
-        Parcelable scheduledTransactionWrapped = Parcels.wrap(sT);
-
-        Log.d("DEBUG", "===========> ("+CurrencyTextFormatter.formatCurrency(priceString, Constants.BUDGET_LOCALE)+") , string = "+priceString);
-
         Parcelable wrapped = Parcels.wrap(transaction);
-
-        if(!isNewTransaction){
-            intent.putExtra(Constants.RESULT_EDIT_TRANSACTION, wrapped);
-        }else{
-            intent.putExtra(Constants.RESULT_NEW_TRANSACTION, wrapped);
-        }
-
-        if(isScheduledTransaction) {
-            intent.putExtra(Constants.RESULT_SCHEDULE_TRANSACTION, scheduledTransactionWrapped);
-        }
+        savingIntent.putExtra(RESULT_TRANSACTION, wrapped);
 
         //Check if any value changed
         if(editTransaction != null){
             if(editTransaction.checkEquals(transaction)){
-                intent.putExtra(Constants.CHANGED, false);
+                savingIntent.putExtra(HAS_CHANGED, false);
             }else{
-                intent.putExtra(Constants.CHANGED, true);
+                savingIntent.putExtra(HAS_CHANGED, true);
             }
         }
 
         addNewOrEditTransaction(transaction);
+
         if(isScheduledTransaction){
-
-            addScheduleTransaction(scheduledTransaction, transaction);
+            //Perform hard copy so that the transaction object in the intent can remain the same.
+            //So that when this returns to CalendarFragment, it will point to the correct date
+            //which should be the starting date, not the end date of the scheduled transactions.
+            addScheduleTransaction(scheduledTransaction, Transaction.copy(transaction));
+        }else{
+            setResult(RESULT_OK, savingIntent);
+            finish();
         }
-
-        setResult(RESULT_OK, intent);
-
-        finish();
     }
 
     /**
@@ -869,32 +950,28 @@ public class TransactionInfoActivity extends BaseActivity implements
      * @param scheduledTransaction The new scheduled transaction information.
      * @param localTransaction The transaction that the scheduled transaction is based on.
      */
-    private void addScheduleTransaction(ScheduledTransaction scheduledTransaction, Transaction localTransaction){
+    private void addScheduleTransaction(final ScheduledTransaction scheduledTransaction, final Transaction localTransaction){
         if(scheduledTransaction != null && scheduledTransaction.getRepeatUnit() != 0){
-
-            Realm myRealm = Realm.getDefaultInstance();
+/*          final Realm myRealm = Realm.getDefaultInstance();
             myRealm.beginTransaction();
-
-            //Keep copy of these value to add back at the end
-            Date origDate = localTransaction.getDate();
-            String origID = localTransaction.getId();
-
             scheduledTransaction.setTransaction(localTransaction);
             myRealm.copyToRealmOrUpdate(scheduledTransaction);
+
+            //No need to copyToRealmOrUpdate the localTransaction as it does that within ScheduledTransaction
+            //since it contains 1 to 1 relationship in the db
             myRealm.commitTransaction();
 
-            Log.d(TAG, "----------- Parceler Result ----------");
-            Log.d(TAG, "scheduled transaction id :" + scheduledTransaction.getId());
-            Log.d(TAG, "scheduled transaction unit :" + scheduledTransaction.getRepeatUnit() + ", type :" + scheduledTransaction.getRepeatType());
-            Log.d(TAG, "transaction note :" + scheduledTransaction.getTransaction().getNote() + ", cost :" + scheduledTransaction.getTransaction().getPrice());
-            Log.i(TAG, "----------- Parceler Result ----------");
+            //Option 1
 
-
-
+            //These property dont need to change in the for loop
             localTransaction.setDayType(DayType.SCHEDULED.toString());
             Date nextDate = localTransaction.getDate();
 
-            for(int i = 0; i < 10; i++){
+            //Number of repeats that fit into 1 year given the unit and repeat type
+            int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
+
+            //Create as many transactions as possible to fit into 1 year
+            for(int i = 0; i < numRepeats; i++){
                 myRealm.beginTransaction();
 
                 if(scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())){
@@ -905,25 +982,80 @@ public class TransactionInfoActivity extends BaseActivity implements
                     nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
                 }
 
-
                 localTransaction.setId(Util.generateUUID());
                 localTransaction.setDate(nextDate);
 
-
-                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(nextDate));
+                Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
                 myRealm.copyToRealmOrUpdate(localTransaction);
                 myRealm.commitTransaction();
             }
 
-            //Put back orig value
-            myRealm.beginTransaction();
-            localTransaction.setId(origID);
-            localTransaction.setDate(origDate);
-            localTransaction.setDayType(DayType.COMPLETED.toString());
-            myRealm.copyToRealmOrUpdate(localTransaction);
-            myRealm.commitTransaction();
-
             myRealm.close();
+*/
+
+
+            //Option 2
+            final Realm myRealm = Realm.getDefaultInstance();
+            try {
+                //myRealm =
+                RealmAsyncTask realmAsyncTask = myRealm.executeTransactionAsync(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm bgRealm) {
+                        scheduledTransaction.setTransaction(localTransaction);
+                        bgRealm.copyToRealmOrUpdate(scheduledTransaction);
+
+                        //These property dont need to change in the for loop
+                        localTransaction.setDayType(DayType.SCHEDULED.toString());
+                        Date nextDate = localTransaction.getDate();
+
+                        //Number of repeats that fit into 1 year given the unit and repeat type
+                        int numRepeats = DateUtil.getNumberRepeatInYear(scheduledTransaction.getRepeatUnit(), scheduledTransaction.getRepeatType(), 1);
+                        Log.d(TAG, "num repeats " + numRepeats);
+
+                        //Create as many transactions as possible to fit into 1 year
+                        for (int i = 0; i < numRepeats; i++) {
+                            Log.d(TAG, "start " + i);
+
+                            if (scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.DAYS.toString())) {
+                                nextDate = DateUtil.getDateWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                                Log.d(TAG, "days");
+                            } else if (scheduledTransaction.getRepeatType().equalsIgnoreCase(RepeatType.WEEKS.toString())) {
+                                nextDate = DateUtil.getWeekWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                                Log.d(TAG, "weeks");
+                            } else {
+                                nextDate = DateUtil.getMonthWithDirection(nextDate, scheduledTransaction.getRepeatUnit());
+                                Log.d(TAG, "month");
+                            }
+
+                            localTransaction.setId(Util.generateUUID());
+                            localTransaction.setDate(nextDate);
+
+                            Log.d(TAG, i + "-> " + DateUtil.convertDateToStringFormat5(getApplicationContext(), nextDate));
+                            bgRealm.copyToRealmOrUpdate(localTransaction);
+                        }
+                    }
+                }, new Realm.Transaction.OnSuccess() {
+                    @Override
+                    public void onSuccess() {
+                        // Transaction was a success.
+                        Log.d(TAG, "sucess");
+
+                        setResult(RESULT_OK, savingIntent);
+                        finish();
+                    }
+                }, new Realm.Transaction.OnError() {
+                    @Override
+                    public void onError(Throwable error) {
+                        // Transaction failed and was automatically canceled.
+                        Log.d(TAG, "failed");
+                    }
+                });
+            }finally {
+                if(myRealm != null){
+                    myRealm.close();
+                }
+            }
+
         }
     }
 
@@ -936,17 +1068,50 @@ public class TransactionInfoActivity extends BaseActivity implements
         Log.d(TAG, "transaction id :"+newOrEditTransaction.getId());
         Log.d(TAG, "transaction note :" + newOrEditTransaction.getNote() + ", cost :" + newOrEditTransaction.getPrice());
         Log.d(TAG, "transaction daytype :" + newOrEditTransaction.getDayType() + ", date :" + newOrEditTransaction.getDate());
-        Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
-        Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
-        Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
-        Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
-        Log.i(TAG, "----------- Parceler Result ----------");
+
+        if(newOrEditTransaction.getCategory() != null){
+            Log.d(TAG, "category name :" + newOrEditTransaction.getCategory().getName() + ", id:" + newOrEditTransaction.getCategory().getId());
+            Log.d(TAG, "category type :" + newOrEditTransaction.getCategory().getType());
+        }else{
+            Log.d(TAG, "category null");
+        }
+
+        if(newOrEditTransaction.getAccount() != null){
+            Log.d(TAG, "account id : " + newOrEditTransaction.getAccount().getId());
+            Log.d(TAG, "account name : " + newOrEditTransaction.getAccount().getName());
+        }else{
+            Log.d(TAG, "account is null");
+        }
+        Log.d(TAG, "----------- Parceler Result ----------");
 
         Realm myRealm = Realm.getDefaultInstance();
         myRealm.beginTransaction();
         myRealm.copyToRealmOrUpdate(newOrEditTransaction);
         myRealm.commitTransaction();
         myRealm.close();
+    }
+
+    /**
+     * If there is no Category selected, a dialog will popup to remind the user.
+     */
+    private void notificationForCategory(BudgetType type){
+        View promptView = View.inflate(getBaseContext(), R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(getString(R.string.category));
+        message.setText(String.format(getString(R.string.category_selected_warning), currentPage.toString()));
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -971,7 +1136,12 @@ public class TransactionInfoActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.formSaveBtn) {
-            save();
+            if((currentPage == BudgetType.EXPENSE && selectedExpenseCategory != null) || (currentPage == BudgetType.INCOME && selectedIncomeCategory != null)){
+                save();
+            }else{
+                notificationForCategory(currentPage);
+            }
+
             return true;
         }
 
@@ -992,7 +1162,6 @@ public class TransactionInfoActivity extends BaseActivity implements
         if(currentPage == BudgetType.EXPENSE && !Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(noteString)){
             transactionNameTextView.setText(category.getName());
         }
-
     }
 
     @Override

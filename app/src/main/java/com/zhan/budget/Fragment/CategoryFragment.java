@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.TwoPageViewPager;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.View.CustomViewPager;
 
@@ -57,8 +57,9 @@ public class CategoryFragment extends BaseFragment {
 
         leftTextView = (TextView) view.findViewById(R.id.leftTextView);
         rightTextView = (TextView) view.findViewById(R.id.rightTextView);
-        leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.alizarin));
-        rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.nephritis));
+
+        pieChartFragment = PieChartFragment.newInstance(new ArrayList<Category>(), true, true, true, getString(R.string.category));
+        getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         createTabs();
 
@@ -71,8 +72,8 @@ public class CategoryFragment extends BaseFragment {
 
     private void createTabs(){
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.EXPENSE.toString()));
-        tabLayout.addTab(tabLayout.newTab().setText(BudgetType.INCOME.toString()));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.category_expense)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.category_income)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         categoryExpenseFragment = CategoryGenericFragment.newInstance(BudgetType.EXPENSE, CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET, false);
@@ -83,7 +84,8 @@ public class CategoryFragment extends BaseFragment {
             public void onComplete(float totalCost) {
                 isCategoryExpenseCalculationComplete = true;
                 totalExpenseCost = totalCost;
-                leftTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
+
+                updateExpensePriceStatus(totalCost);
                 updatePieChart();
             }
         });
@@ -93,7 +95,8 @@ public class CategoryFragment extends BaseFragment {
             public void onComplete(float totalCost) {
                 isCategoryIncomeCalculationComplete = true;
                 totalIncomeCost = totalCost;
-                rightTextView.setText(CurrencyTextFormatter.formatFloat(totalCost, Constants.BUDGET_LOCALE));
+
+                updateIncomePriceStatus(totalCost);
                 updatePieChart();
             }
         });
@@ -146,20 +149,46 @@ public class CategoryFragment extends BaseFragment {
             catList.add(catIncome);
             catList.add(catExpense);
 
-            pieChartFragment = PieChartFragment.newInstance(catList, true, true);
-            getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
-            pieChartFragment.displayLegend();
-
+            pieChartFragment.setData(catList, true);
         }
     }
 
     private void updateMonthInToolbar(int direction, boolean updateCategoryInfo){
+        //reset pie chart data & total cost text view for both EXPENSE & INCOME
+        pieChartFragment.resetPieChart();
+        updateBothPriceStatus(0); //reset it back to 0
+
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
         if(updateCategoryInfo) {
             categoryIncomeFragment.updateMonthCategoryInfo(currentMonth);
             categoryExpenseFragment.updateMonthCategoryInfo(currentMonth);
+        }
+    }
+
+    private void updateBothPriceStatus(double price){
+        updateExpensePriceStatus(price);
+        updateIncomePriceStatus(price);
+    }
+
+    private void updateExpensePriceStatus(double price){
+        leftTextView.setText(CurrencyTextFormatter.formatDouble(price));
+
+        if(price < 0){
+            leftTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+        }else if(price == 0){
+            leftTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
+        }
+    }
+
+    private void updateIncomePriceStatus(double price){
+        rightTextView.setText(CurrencyTextFormatter.formatDouble(price));
+
+        if(price > 0){
+            rightTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+        }else if(price == 0){
+            rightTextView.setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
         }
     }
 

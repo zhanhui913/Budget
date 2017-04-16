@@ -1,24 +1,27 @@
 package com.zhan.budget.Fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.CategoryInfoActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForCategory;
 import com.zhan.budget.Adapter.CategoryGenericRecyclerAdapter;
 import com.zhan.budget.Adapter.Helper.OnStartDragListener;
 import com.zhan.budget.Adapter.Helper.SimpleItemTouchHelperCallback;
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Category;
@@ -53,6 +56,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     private PtrFrameLayout frame;
     //private PlusView header;
     private ViewGroup emptyLayout;
+    private TextView emptyCategoryText;
 
     private List<Category> categoryList;
     private CategoryGenericRecyclerAdapter categoryRecyclerAdapter;
@@ -140,11 +144,27 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                         .build());
 
         emptyLayout = (ViewGroup)view.findViewById(R.id.emptyCategoryLayout);
+        emptyCategoryText = (TextView)view.findViewById(R.id.pullDownText);
 
         populateCategoryWithNoInfo();
 
         if(masterAllowPulldown){
+            if(budgetType == BudgetType.EXPENSE){
+                emptyCategoryText.setText(getString(R.string.pull_down_add_category, getString(R.string.category_expense)));
+            }else {
+                emptyCategoryText.setText(getString(R.string.pull_down_add_category, getString(R.string.category_income)));
+            }
+
             createPullDownToAddCategory();
+        }else{
+            if(budgetType == BudgetType.EXPENSE){
+                emptyCategoryText.setText(String.format(getString(R.string.empty_category), getString(R.string.category_expense)));
+            }else{
+                emptyCategoryText.setText(String.format(getString(R.string.empty_category), getString(R.string.category_income)));
+            }
+
+            ImageView downArrow = (ImageView) view.findViewById(R.id.downChevronIcon);
+            downArrow.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -221,10 +241,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     }
 
     private void addNewCategory(){
-        Intent addNewCategoryIntent = new Intent(getContext(), CategoryInfoActivity.class);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY, true);
-        addNewCategoryIntent.putExtra(Constants.REQUEST_NEW_CATEGORY_TYPE, budgetType.toString());
-        startActivityForResult(addNewCategoryIntent, Constants.RETURN_NEW_CATEGORY);
+        startActivityForResult(CategoryInfoActivity.createIntentForNewCategory(getContext(), budgetType), RequestCodes.NEW_CATEGORY);
     }
 
     //Should be called only the first time when the fragment is created
@@ -296,11 +313,13 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
                 //Go through each COMPLETED transaction and put them into the correct category
                 for(int t = 0; t < transactionMonthList.size(); t++){
                     for(int c = 0; c < categoryList.size(); c++){
-                        if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
-                            float transactionPrice = transactionMonthList.get(t).getPrice();
-                            float currentCategoryPrice = categoryList.get(c).getCost();
-                            categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
-                            totalCost += transactionPrice;
+                        if(transactionMonthList.get(t).getCategory() != null){
+                            if(transactionMonthList.get(t).getCategory().getId().equalsIgnoreCase(categoryList.get(c).getId())){
+                                double transactionPrice = transactionMonthList.get(t).getPrice();
+                                double currentCategoryPrice = categoryList.get(c).getCost();
+                                categoryList.get(c).setCost(transactionPrice + currentCategoryPrice);
+                                totalCost += transactionPrice;
+                            }
                         }
                     }
                 }
@@ -336,69 +355,68 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     }
 
     private void editCategory(int position){
-        Intent editCategoryActivity = new Intent(getContext(), CategoryInfoActivity.class);
-
-        Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
-
-        editCategoryActivity.putExtra(Constants.REQUEST_EDIT_CATEGORY, wrapped);
-        editCategoryActivity.putExtra(Constants.REQUEST_NEW_CATEGORY, false);
-
-        startActivityForResult(editCategoryActivity, Constants.RETURN_EDIT_CATEGORY);
+        startActivityForResult(CategoryInfoActivity.createIntentToEditCategory(getContext(), categoryRecyclerAdapter.getCategoryList().get(position)), RequestCodes.EDIT_CATEGORY);
     }
 
-    /*
     private void confirmDelete(final int position){
         View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
-        TextView title = (TextView) promptView.findViewById(R.id.genericTitle);
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
         TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        title.setText("Confirm Delete");
-        message.setText("Are you sure you want to delete this category?");
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(R.string.warning_delete_category);
 
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(getContext())
                 .setView(promptView)
-                .setCancelable(true)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "DELETE...", Toast.LENGTH_SHORT).show();
                         deleteCategory(position);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                        //Does nothing for now
                     }
                 })
                 .create()
                 .show();
-    }*/
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_CATEGORY) {
-                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
+            if(requestCode == RequestCodes.EDIT_CATEGORY) {
+/*
+                boolean deleteCategory = data.getExtras().getBoolean(Constants.RESULT_DELETE_CATEGORY);
+                Toast.makeText(getContext(), "deleting cat here", Toast.LENGTH_LONG).show();
+                if(!deleteCategory){
+                    final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_CATEGORY));
 
-                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
-                Log.d("ZHAN", "category name is "+categoryReturned.getName());
-                Log.d("ZHAN", "category color is "+categoryReturned.getColor());
-                Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
-                Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
-                Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
+                    Log.i("ZHAN", "----------- onActivityResult edit category ----------");
+                    Log.d("ZHAN", "category name is "+categoryReturned.getName());
+                    Log.d("ZHAN", "category color is "+categoryReturned.getColor());
+                    Log.d("ZHAN", "category icon is "+categoryReturned.getIcon());
+                    Log.d("ZHAN", "category budget is "+categoryReturned.getBudget());
+                    Log.d("ZHAN", "category cost is " + categoryReturned.getCost());
 
-                Log.i("ZHAN", "----------- onActivityResult edit category ----------");
+                    Log.i("ZHAN", "----------- onActivityResult edit category ----------");
 
-                Log.i("ZHAN", "eddited index :" + categoryIndexEdited);
+                    Log.i("ZHAN", "eddited index :" + categoryIndexEdited);
 
-                categoryList.set(categoryIndexEdited, categoryReturned);
+                    categoryList.set(categoryIndexEdited, categoryReturned);
+                }else{
+                    categoryList.remove(categoryIndexEdited);
+                }
+
                 categoryRecyclerAdapter.setCategoryList(categoryList);
-
                 updateCategoryStatus();
-            }else if(requestCode == Constants.RETURN_NEW_CATEGORY){
-                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_CATEGORY));
+                */
+                populateCategoryWithNoInfo();
+            }else if(requestCode == RequestCodes.NEW_CATEGORY){
+                final Category categoryReturned = Parcels.unwrap(data.getExtras().getParcelable(CategoryInfoActivity.RESULT_CATEGORY));
 
                 Log.i("ZHAN", "----------- onActivityResult new category ----------");
                 Log.d("ZHAN", "category name is "+categoryReturned.getName());
@@ -415,8 +433,8 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
                 //Scroll to the last position
                 categoryListView.scrollToPosition(categoryRecyclerAdapter.getItemCount() - 1);
-            }else if(requestCode == Constants.RETURN_HAS_CHANGED){
-                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+            }else if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                 if(hasChanged){
                     //If something has been changed, update the list
@@ -442,6 +460,18 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
         }
     }
 
+    private void deleteCategory(int position){
+        Log.d(TAG, "remove " + position + "-> from result");
+        Log.d(TAG, "b4 There are "+resultsCategory.size()+" category");
+        myRealm.beginTransaction();
+        resultsCategory.deleteFromRealm(position);
+        myRealm.commitTransaction();
+        Log.d(TAG, "After There are " + resultsCategory.size() + " category");
+
+        //recalculate everything
+        populateCategoryWithNoInfo();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // Adapter listeners
@@ -450,7 +480,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
 
     @Override
     public void onDeleteCategory(int position){
-        //Cant delete category
+        confirmDelete(position);
     }
 
     @Override
@@ -514,14 +544,7 @@ public class CategoryGenericFragment extends BaseRealmFragment implements
     @Override
     public void onClick(int position){
         if(arrangementType == CategoryGenericRecyclerAdapter.ARRANGEMENT.BUDGET) {
-
-            Intent viewAllTransactionsForCategory = new Intent(getContext(), TransactionsForCategory.class);
-            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
-
-            Parcelable wrapped = Parcels.wrap(categoryRecyclerAdapter.getCategoryList().get(position));
-
-            viewAllTransactionsForCategory.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_CATEGORY_CATEGORY, wrapped);
-            startActivityForResult(viewAllTransactionsForCategory, Constants.RETURN_HAS_CHANGED);
+            startActivityForResult(TransactionsForCategory.createIntentToViewAllTransactionsForCategoryForMonth(getContext(), categoryRecyclerAdapter.getCategoryList().get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
         }
     }
 

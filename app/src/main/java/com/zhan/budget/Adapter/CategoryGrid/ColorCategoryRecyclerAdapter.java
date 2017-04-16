@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.zhan.budget.Model.Realm.Category;
 import com.zhan.budget.R;
-import com.zhan.budget.Util.Colors;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class ColorCategoryRecyclerAdapter extends CategoryGridRecyclerAdapter {
         viewHolder.name.setVisibility(View.GONE);
 
         if(category.isSelected()){
-            viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
+            viewHolder.circularView.setStrokeColor(category.getColor());
         }else{
             viewHolder.circularView.setStrokeColor(R.color.transparent);
         }

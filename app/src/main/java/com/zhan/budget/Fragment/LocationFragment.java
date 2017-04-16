@@ -2,30 +2,33 @@ package com.zhan.budget.Fragment;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+import com.zhan.budget.Activity.LocationInfoActivity;
+import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Activity.Transactions.TransactionsForLocation;
 import com.zhan.budget.Adapter.LocationRecyclerAdapter;
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Fragment.Chart.PieChartFragment;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Location;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.DateUtil;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,13 +50,16 @@ public class LocationFragment extends BaseRealmFragment
     private OnLocationInteractionListener mListener;
     private Date currentMonth;
 
+    private ViewGroup emptyLayout;
+
+    private RealmResults<Location> resultsLocation;
     private List<Location> locationList;
     private LocationRecyclerAdapter locationAdapter;
     private RecyclerView locationListview;
 
     private PieChartFragment pieChartFragment;
 
-    private TextView centerPanelLeftTextView, centerPanelRightTextView;
+    private TextView centerPanelRightTextView, emptyLocationPrimaryText, emptyLocationSecondaryText;
 
     public LocationFragment() {
         // Required empty public constructor
@@ -76,7 +82,8 @@ public class LocationFragment extends BaseRealmFragment
         super.init();
         currentMonth = DateUtil.refreshMonth(new Date());
 
-        centerPanelLeftTextView = (TextView)view.findViewById(R.id.dateTextView);
+        //Center Panel left textview
+        view.findViewById(R.id.dateTextView).setVisibility(View.GONE);
         centerPanelRightTextView = (TextView)view.findViewById(R.id.totalCostTextView);
 
         locationListview = (RecyclerView) view.findViewById(R.id.locationListview);
@@ -92,8 +99,14 @@ public class LocationFragment extends BaseRealmFragment
                         .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                         .build());
 
+        emptyLayout = (ViewGroup)view.findViewById(R.id.emptyAccountLayout);
+        emptyLocationPrimaryText = (TextView) view.findViewById(R.id.emptyPrimaryText);
+        emptyLocationPrimaryText.setText(getString(R.string.empty_location));
+        emptyLocationSecondaryText = (TextView) view.findViewById(R.id.emptySecondaryText);
+        emptyLocationSecondaryText.setText("Add one in the settings");
+
         //Setup pie chart
-        pieChartFragment = PieChartFragment.newInstance(locationList);
+        pieChartFragment = PieChartFragment.newInstance(locationList, false, false, false, getString(R.string.location));
         getFragmentManager().beginTransaction().replace(R.id.chartContentFrame, pieChartFragment).commit();
 
         //0 represents no change in month relative to currentMonth variable.
@@ -103,77 +116,75 @@ public class LocationFragment extends BaseRealmFragment
     private void updateMonthInToolbar(int direction){
         locationListview.smoothScrollToPosition(0);
 
+        //reset pie chart data & total # text view
+        pieChartFragment.resetPieChart();
+        updateAmountStatus(0); //reset it back to 0
+
+        //reset location list view
+        locationAdapter.setLocationList(new ArrayList<Location>());
+
         currentMonth = DateUtil.getMonthWithDirection(currentMonth, direction);
-        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(currentMonth));
+        mListener.updateToolbar(DateUtil.convertDateToStringFormat2(getContext(), currentMonth));
 
-        centerPanelLeftTextView.setText(DateUtil.convertDateToStringFormat2(currentMonth));
-
-        fetchNewLocationData(currentMonth, true);
+        getListOfTransactionsForMonth();
     }
 
-    /**
-     * Get new location data that is in the current month
-     * @param month Current month to target
-     * @param animate whether or not to animate the pie chart
-     */
-    private void fetchNewLocationData(Date month, final boolean animate){
-        Date endMonth = DateUtil.getLastDateOfMonth(month);
+    private void getListOfTransactionsForMonth(){
+        final Date startMonth = DateUtil.refreshMonth(currentMonth);
 
-        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", month, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
+        //Need to go a day before as Realm's between date does inclusive on both end
+        final Date endMonth = DateUtil.getLastDateOfMonth(currentMonth);
+
+        RealmResults<Transaction> transactionRealmResults = myRealm.where(Transaction.class).between("date", startMonth, endMonth).equalTo("dayType", DayType.COMPLETED.toString()).findAllAsync();
         transactionRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
                 element.removeChangeListener(this);
 
-                countLocationList(myRealm.copyFromRealm(element), animate);
-                /*if(isNew){
-                    countLocationList(myRealm.copyFromRealm(element));
-                }else{
-                    updateLocationList(myRealm.copyFromRealm(element));
-                }*/
+                aggregateLocation(myRealm.copyFromRealm(element), true);
             }
         });
     }
 
     /**
      * Aggregate all transactions with the same location and update its pie chart.
-     * @param ttList list of transactions
+     * @param tempList list of transactions
+     * @param animate to animate pie chart or not
      */
-    private void countLocationList(List<Transaction> ttList, boolean animate){
+    private void aggregateLocation(List<Transaction> tempList, boolean animate){
         HashMap<Location, Integer> locationHash = new HashMap<>();
-
-        for(int i = 0; i < ttList.size(); i++){
-            if(ttList.get(i).getLocation() != null) {
-                if (!locationHash.containsKey(ttList.get(i).getLocation())) {
-                    locationHash.put(ttList.get(i).getLocation(), 1);
-                } else {
-                    locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
-                }
-            }
-        }
-
-        locationList.clear();
 
         //Keep track of total locations count
         int totalLocationsCount = 0;
 
-        //Go through each hashmap
-        for(Location key: locationHash.keySet()){
-            Location location2 = new Location();
-            location2.setName(key.getName());
-            location2.setAmount(locationHash.get(key));
-            location2.setColor(key.getColor());
-
-            totalLocationsCount += locationHash.get(key);
-            locationList.add(location2);
+        for(int i = 0; i < tempList.size(); i++){
+            if(tempList.get(i).getLocation() != null) {
+                if (!locationHash.containsKey(tempList.get(i).getLocation())) {
+                    locationHash.put(tempList.get(i).getLocation(), 1);
+                } else {
+                    locationHash.put(tempList.get(i).getLocation(), locationHash.get(tempList.get(i).getLocation()) + 1);
+                }
+                totalLocationsCount++;
+            }
         }
 
-        //Sort from highest to lowest
+        locationList = new ArrayList<>();
+        for(Location key: locationHash.keySet()){
+            key.setAmount(locationHash.get(key));
+            locationList.add(key);
+        }
+
+        //Sort from highest to lowest first, then by name
         Collections.sort(locationList, new Comparator<Location>() {
             @Override
             public int compare(Location l1, Location l2) {
                 //descending order
-                return (l2.getAmount() - l1.getAmount());
+                int compare = (l2.getAmount() - l1.getAmount());
+                if(compare != 0){
+                    return compare;
+                }
+                //ascending order
+                return (l1.getName().compareToIgnoreCase(l2.getName()));
             }
         });
 
@@ -182,72 +193,99 @@ public class LocationFragment extends BaseRealmFragment
         //This gives pie chart new location list
         pieChartFragment.setData(locationList, animate);
 
-        String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
-        centerPanelRightTextView.setText(totalLocationsCount + appendString);
+        updateAmountStatus(totalLocationsCount);
+        updateLocationStatus();
     }
 
-    /**
-     * Updates the location count in the hashmap while keeping the colors the same
-     * @param ttList list of transactions
-     */
-    private void updateLocationList(List<Transaction> ttList){
-        HashMap<Location, Integer> locationHash = new HashMap<>();
+    private void updateLocationStatus(){
+        if(locationAdapter.getItemCount() > 0){
+            emptyLayout.setVisibility(View.GONE);
+            locationListview.setVisibility(View.VISIBLE);
+        }else{
+            emptyLayout.setVisibility(View.VISIBLE);
+            locationListview.setVisibility(View.GONE);
+        }
+    }
 
-        for(int i = 0; i < ttList.size(); i++){
-            if(ttList.get(i).getLocation() != null) {
-                if (!locationHash.containsKey(ttList.get(i).getLocation())) {
-                    locationHash.put(ttList.get(i).getLocation(), 1);
-                } else {
-                    locationHash.put(ttList.get(i).getLocation(), locationHash.get(ttList.get(i).getLocation()) + 1);
-                }
+    private void updateAmountStatus(int amount){
+        if(amount == 0){
+            centerPanelRightTextView.setText(R.string.na);
+        }else{
+            if(amount > 1){
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_times), amount));
+            }else{
+                centerPanelRightTextView.setText(String.format(getString(R.string.location_time), amount));
             }
         }
+    }
 
-        locationList.clear();
+    private void confirmDelete(final int position){
+        View promptView = View.inflate(getContext(), R.layout.alertdialog_generic_message, null);
 
-        //Keep track of total locations count
-        int totalLocationsCount = 0;
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
 
-        //Go through each hashmap
-        for(Location key: locationHash.keySet()){
-            Location location2 = new Location();
-            location2.setName(key.getName());
-            location2.setAmount(locationHash.get(key));
-            location2.setColor(key.getColor());
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(R.string.warning_delete_location);
 
-            totalLocationsCount += locationHash.get(key);
-            locationList.add(location2);
-        }
+        new AlertDialog.Builder(getContext())
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteLocation(position);
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Does nothing for now
+                    }
+                })
+                .create()
+                .show();
+    }
 
-        //Sort from highest to lowest
-        Collections.sort(locationList, new Comparator<Location>() {
+    private void deleteLocation(final int position){
+        resultsLocation = myRealm.where(Location.class).findAllAsync();
+        resultsLocation.addChangeListener(new RealmChangeListener<RealmResults<Location>>() {
             @Override
-            public int compare(Location l1, Location l2) {
-                //descending order
-                return (l2.getAmount() - l1.getAmount());
+            public void onChange(RealmResults<Location> element) {
+                element.removeChangeListener(this);
+
+                for(int i = 0; i < element.size(); i++) {
+                    if (element.get(i).getName().equalsIgnoreCase(locationList.get(position).getName())) {
+                        myRealm.beginTransaction();
+                        element.deleteFromRealm(i);
+                        myRealm.commitTransaction();
+                        break;
+                    }
+                }
+
+                getListOfTransactionsForMonth();
             }
         });
 
-        locationAdapter.setLocationList(locationList);
+    }
 
-        //This updates pie chart with new location list while keeping the colors the same
-        pieChartFragment.setData(locationList);
-
-        String appendString = (totalLocationsCount > 0) ? " times" : " time" ;
-        centerPanelRightTextView.setText(totalLocationsCount + appendString);
+    private void editLocation(int position){
+        startActivityForResult(LocationInfoActivity.createIntentToEditLocation(getContext(), locationList.get(position)), RequestCodes.EDIT_LOCATION);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK && data.getExtras() != null) {
-            if(requestCode == Constants.RETURN_HAS_CHANGED){
-                boolean hasChanged = data.getExtras().getBoolean(Constants.CHANGED);
+            if(requestCode == RequestCodes.HAS_TRANSACTION_CHANGED){
+                boolean hasChanged = data.getExtras().getBoolean(TransactionInfoActivity.HAS_CHANGED);
 
                 if(hasChanged){
                     //If something has been changed, update the list and the pie chart
-                    fetchNewLocationData(currentMonth, false);
+                    getListOfTransactionsForMonth();
+
                 }
+                updateLocationStatus();
+            }else if(requestCode == RequestCodes.EDIT_LOCATION){
+                //Todo : handle location editing from here
             }
         }
     }
@@ -273,6 +311,32 @@ public class LocationFragment extends BaseRealmFragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Adapter listeners
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onClickLocation(int position){
+        startActivityForResult(TransactionsForLocation.createIntentToViewAllTransactionsForLocationForMonth(getContext(), locationList.get(position), currentMonth), RequestCodes.HAS_TRANSACTION_CHANGED);
+    }
+
+    @Override
+    public void onDeleteLocation(int position){
+        confirmDelete(position);
+    }
+
+    @Override
+    public void onEditLocation(int position){
+        editLocation(position);
+    }
+
+    @Override
+    public void onPullDownAllow(boolean value){
+        //cannot pull down here
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -314,17 +378,5 @@ public class LocationFragment extends BaseRealmFragment
      */
     public interface OnLocationInteractionListener {
         void updateToolbar(String date);
-    }
-
-    @Override
-    public void onClickLocation(int index){
-        Intent viewAllTransactionsForLocation = new Intent(getContext(), TransactionsForLocation.class);
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_GENERIC_MONTH, DateUtil.convertDateToString(currentMonth));
-        //viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, locationList.get(index).getName());
-
-        Parcelable wrapped = Parcels.wrap(locationList.get(index));
-        viewAllTransactionsForLocation.putExtra(Constants.REQUEST_ALL_TRANSACTION_FOR_LOCATION_LOCATION, wrapped);
-
-        startActivityForResult(viewAllTransactionsForLocation, Constants.RETURN_HAS_CHANGED);
     }
 }

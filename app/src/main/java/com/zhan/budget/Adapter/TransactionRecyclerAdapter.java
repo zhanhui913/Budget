@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -83,34 +82,87 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         // getting Transaction data for the row
         final Transaction transaction = transactionList.get(position);
 
-        //Icon
-        viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
-        viewHolder.account.setText(transaction.getAccount().getName());
-        viewHolder.cost.setText(CurrencyTextFormatter.formatFloat(transaction.getPrice(), Constants.BUDGET_LOCALE));
+        //Account
+        if(transaction.getAccount() != null){
+            viewHolder.account.setVisibility(View.VISIBLE);
+            viewHolder.accountIcon.setVisibility(View.VISIBLE);
+            viewHolder.account.setText(transaction.getAccount().getName());
+        }else{
+            viewHolder.account.setVisibility(View.GONE);
+            viewHolder.accountIcon.setVisibility(View.GONE);
+        }
+
+        //Location
+        if(transaction.getLocation() != null){
+            viewHolder.location.setVisibility(View.VISIBLE);
+            viewHolder.locationIcon.setVisibility(View.VISIBLE);
+            viewHolder.location.setText(transaction.getLocation().getName());
+        }else{
+            viewHolder.location.setVisibility(View.GONE);
+            viewHolder.locationIcon.setVisibility(View.GONE);
+        }
+
+        //If there is no note, use Category's name or icon instead
+        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
+            viewHolder.name.setText(transaction.getNote());
+        }else{
+            if(transaction.getCategory() != null){
+                viewHolder.name.setText(transaction.getCategory().getName());
+            }else{
+                viewHolder.name.setText("");
+            }
+        }
+
+        //Category
+        if(transaction.getCategory() != null) {
+            if (transaction.getCategory().isText()) {
+                viewHolder.circularView.setIconResource(0);
+                viewHolder.circularView.setText(""+Util.getFirstCharacterFromString(transaction.getCategory().getName().toUpperCase().trim()));
+            } else {
+                viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
+                viewHolder.circularView.setText("");
+            }
+        }else{
+            //If there is no category attached, put a question mark as the icon
+            viewHolder.circularView.setIconResource(0);
+            viewHolder.circularView.setText("?");
+        }
+
+        viewHolder.cost.setText(CurrencyTextFormatter.formatDouble(transaction.getPrice()));
 
         //If transaction's dayType is COMPLETED
         if(transaction.getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())) {
-            viewHolder.circularView.setStrokeWidthInDP(0);
-            viewHolder.circularView.setCircleRadiusInDP(25);
-            viewHolder.circularView.setStrokeColor(R.color.transparent);
-            viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
+            viewHolder.circularView.setStrokeWidthInDP(1);
+            viewHolder.circularView.setStrokePaddingInDP(3);
             viewHolder.circularView.setTextColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColor));
+
+            if(transaction.getCategory() != null){
+                viewHolder.circularView.setCircleColor(transaction.getCategory().getColor());
+                viewHolder.circularView.setStrokeColor(transaction.getCategory().getColor());
+            }else{
+                viewHolder.circularView.setCircleColor(R.color.colorPrimary);
+                viewHolder.circularView.setStrokeColor(R.color.colorPrimary);
+            }
 
             //If the transaction is completed, there is no need for the approve btn in the swipemenulayout
             viewHolder.approveBtn.setVisibility(View.GONE);
             viewHolder.unapproveBtn.setVisibility(View.VISIBLE);
 
             //Set Transaction's cost color based on Category type
-            if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
-                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+            if(transaction.getCategory() != null){
+                if(transaction.getCategory().getType().equalsIgnoreCase(BudgetType.EXPENSE.toString())){
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.red));
+                }else{
+                    viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+                }
             }else{
-                viewHolder.cost.setTextColor(ContextCompat.getColor(context, R.color.green));
+                viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
             }
+
         }else{ //If transaction's dayType is SCHEDULED but not COMPLETED
             viewHolder.circularView.setStrokeWidthInDP(2);
-            viewHolder.circularView.setCircleRadiusInDP(23);
-
+            viewHolder.circularView.setStrokePaddingInDP(0);
             viewHolder.circularView.setCircleColor(R.color.transparent);
             viewHolder.circularView.setStrokeColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
             viewHolder.circularView.setIconColor(Colors.getHexColorFromAttr(context, R.attr.themeColorText));
@@ -123,37 +175,12 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             viewHolder.cost.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
 
-        if(transaction.getCategory().isText()){
-            viewHolder.circularView.setIconResource(0);
-            viewHolder.circularView.setText(Util.getFirstCharacterFromString(transaction.getCategory().getName())+"");
-        }else{
-            viewHolder.circularView.setIconResource(CategoryUtil.getIconID(context, transaction.getCategory().getIcon()));
-            viewHolder.circularView.setText("");
-        }
-
-        //If there is no note, use Category's name instead
-        if(Util.isNotNullNotEmptyNotWhiteSpaceOnlyByJava(transaction.getNote())){
-            viewHolder.name.setText(transaction.getNote());
-        }else{
-            viewHolder.name.setText(transaction.getCategory().getName());
-        }
-
         //If this is used in Calendar Fragment (no need to show date), everywhere else use it
         if(this.showDate){
             viewHolder.date.setVisibility(View.VISIBLE);
-            viewHolder.date.setText(DateUtil.convertDateToStringFormat1(transaction.getDate()));
+            viewHolder.date.setText(DateUtil.convertDateToStringFormat1(context, transaction.getDate()));
         }else{
             viewHolder.date.setVisibility(View.GONE);
-        }
-
-        //If there are no location
-        if(transaction.getLocation() != null){
-            viewHolder.location.setVisibility(View.VISIBLE);
-            viewHolder.locationIcon.setVisibility(View.VISIBLE);
-            viewHolder.location.setText(transaction.getLocation().getName());
-        }else{
-            viewHolder.location.setVisibility(View.GONE);
-            viewHolder.locationIcon.setVisibility(View.GONE);
         }
     }
 
@@ -185,7 +212,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         public TextView name, cost, date, account, location;
 
         public SwipeLayout swipeLayout;
-        public ImageView deleteBtn, approveBtn, unapproveBtn, locationIcon;
+        public ImageView deleteBtn, approveBtn, unapproveBtn, locationIcon, accountIcon;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -201,6 +228,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             account = (TextView) itemView.findViewById(R.id.transactionAccount);
             location = (TextView) itemView.findViewById(R.id.transactionLocation);
             locationIcon = (ImageView) itemView.findViewById(R.id.locationIcon);
+            accountIcon = (ImageView) itemView.findViewById(R.id.accountIcon);
 
             swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipeTransaction);
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
@@ -211,7 +239,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
                     Log.d("TRANSACTION_ADAPTER", "onstartopen");
-
                 }
 
                 @Override
@@ -249,14 +276,13 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onClick(View v) {
                     mListener.onClickTransaction(getLayoutPosition());
-                    Log.d("ZHAP", "on click : " + getLayoutPosition());
                 }
             });
 
             approveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     mListener.onApproveTransaction(getLayoutPosition());
                 }
             });
@@ -264,7 +290,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             unapproveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ZHAP", "editting category : " + getLayoutPosition());
+                    swipeLayout.close(true);
                     mListener.onUnapproveTransaction(getLayoutPosition());
                 }
             });
@@ -272,6 +298,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeLayout.close(true);
                     mListener.onDeleteTransaction(getLayoutPosition());
                 }
             });

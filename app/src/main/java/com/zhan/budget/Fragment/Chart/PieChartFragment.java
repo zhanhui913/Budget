@@ -3,6 +3,7 @@ package com.zhan.budget.Fragment.Chart;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.Chart;
@@ -30,35 +31,44 @@ public class PieChartFragment extends BaseChartFragment {
     private PieChart pieChart;
     protected static final String ARG_CHART_2 = "displayDataImmediately";
     protected static final String ARG_CHART_3 = "animate";
+    protected static final String ARG_CHART_4 = "legend";
+    protected static final String ARG_CHART_5 = "name";
+
+    public static int ANIMATION_DURATION_MILLI = 500;
 
     protected List<? extends PieDataCostInterface> dataList;
     protected PieDataSet dataSet;
 
-    private boolean drawLegend = false;
+    private boolean drawLegend;
 
     public PieChartFragment() {
         // Required empty public constructor
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list){
-        return newInstance(list, false, false);
+        return newInstance(list, false, false, false, "");
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately){
-        return newInstance(list, initImmediately, false);
+        return newInstance(list, initImmediately, false, false, "");
     }
 
     public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate){
+        return newInstance(list, initImmediately, animate, false, "");
+    }
+
+    public static PieChartFragment newInstance(List<? extends PieDataCostInterface> list, boolean initImmediately, boolean animate, boolean drawLegend, String name){
         PieChartFragment pieChartFragment = new PieChartFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CHART, Parcels.wrap(list));
         args.putBoolean(ARG_CHART_2, initImmediately);
         args.putBoolean(ARG_CHART_3, animate);
+        args.putBoolean(ARG_CHART_4, drawLegend);
+        args.putString(ARG_CHART_5, name);
         pieChartFragment.setArguments(args);
 
         return pieChartFragment;
     }
-
 
     @Override
     protected int getFragmentLayout() {
@@ -69,11 +79,15 @@ public class PieChartFragment extends BaseChartFragment {
     public void init(){
         pieChart = (PieChart) view.findViewById(R.id.pieChart);
 
+        drawLegend = getArguments().getBoolean(ARG_CHART_4);
+
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
         pieChart.setDragDecelerationFrictionCoef(0.95f);
 
         pieChart.setDrawHoleEnabled(true);
+        pieChart.setTransparentCircleRadius(0.5f);
+        pieChart.setTransparentCircleColor(R.color.transparent);
         pieChart.setDrawCenterText(true);
 
         int color = Colors.getColorFromAttr(getContext(), R.attr.themeColorText);
@@ -93,6 +107,8 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.getLegend().setPosition(Legend.LegendPosition.LEFT_OF_CHART);
         pieChart.getLegend().setTextColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
 
+        pieChart.setNoDataText(getString(R.string.na));
+
         //Change color of text info when there are no data
         pieChart.getPaint(Chart.PAINT_INFO).setColor(Colors.getColorFromAttr(getContext(), R.attr.themeColorText));
 
@@ -101,7 +117,11 @@ public class PieChartFragment extends BaseChartFragment {
             setData(dataList, getArguments().getBoolean(ARG_CHART_3));
 
             if(dataList.size() > 0){
-                pieChart.setCenterText(dataList.get(0).getClass().getSimpleName());
+                if(getArguments().getString(ARG_CHART_5).equalsIgnoreCase("")){
+                    pieChart.setCenterText(getString(R.string.na));
+                }else{
+                    pieChart.setCenterText(getArguments().getString(ARG_CHART_5));
+                }
             }
         }
     }
@@ -151,6 +171,8 @@ public class PieChartFragment extends BaseChartFragment {
     }
 
     private void displayPieChart(List<? extends PieDataCostInterface> list, boolean animate){
+
+
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             names.add(list.get(i).getPieDataName());
@@ -161,7 +183,7 @@ public class PieChartFragment extends BaseChartFragment {
         // drawn above each other.
         ArrayList<Entry> value = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            value.add(new Entry(Math.abs(list.get(i).getPieDataCost()), i));
+            value.add(new Entry(Math.abs((float)list.get(i).getPieDataCost()), i));
         }
 
         dataSet = new PieDataSet(value, "");
@@ -186,23 +208,29 @@ public class PieChartFragment extends BaseChartFragment {
         pieChart.setData(data);
 
         // undo all highlights
-        pieChart.highlightValues(null);
-
-        if(animate){
-            pieChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
-        }
+        //pieChart.highlightValues(null);
 
         if(list.size() > 0){
-            pieChart.setCenterText(list.get(0).getClass().getSimpleName());
+            if(getArguments().getString(ARG_CHART_5).equalsIgnoreCase("")){
+                pieChart.setCenterText(getString(R.string.na));
+            }else{
+                pieChart.setCenterText(getArguments().getString(ARG_CHART_5));
+            }
         }
 
-        pieChart.invalidate();
+        if(animate){
+            //No need to call invalidate if animate is already called
+            pieChart.animateY(ANIMATION_DURATION_MILLI, Easing.EasingOption.EaseInOutQuad);
+        }else{
+            pieChart.invalidate();
+        }
     }
 
-    /**
-     * Draw legend to the left of the chart
-     */
-    public void displayLegend(){
-        drawLegend = true;
+    public void resetPieChart(){
+        Log.d("CHART", "trying to reset pie chart");
+        if(pieChart != null){
+            pieChart.clear();
+            Log.d("CHART", "Resetted pie chart");
+        }
     }
 }

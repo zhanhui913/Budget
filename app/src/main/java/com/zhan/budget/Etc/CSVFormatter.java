@@ -1,6 +1,6 @@
 package com.zhan.budget.Etc;
 
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -41,6 +41,7 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
     private File csvFile;
 
+
     public CSVFormatter(Context context, List<Transaction> transactionList, File csvFile){
         this.context = context;
         this.transactionList = transactionList;
@@ -49,8 +50,8 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         //Option 1
         View promptView = View.inflate(context, R.layout.alertdialog_progressbar, null);
 
-        TextView genericTitle = (TextView) promptView.findViewById(R.id.genericTitle);
-        genericTitle.setText("CSV");
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        title.setText(R.string.dialog_title_csv);
 
         mDialog = (RoundCornerProgressBar) promptView.findViewById(R.id.progressBar);
         mDialog.setMax(transactionList.size());
@@ -59,12 +60,12 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
         percentTextView = (TextView)promptView.findViewById(R.id.percentTextView);
         progressTextView = (TextView)promptView.findViewById(R.id.progressTextView);
 
-        percentTextView.setText("0%");
-        progressTextView.setText("0/"+transactionList.size());
+        percentTextView.setText(String.format(context.getString(R.string.dialog_progress_percent), 0));
+        progressTextView.setText(String.format(context.getString(R.string.dialog_progress_total), 0, transactionList.size()));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setView(promptView)
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(context.getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
 
@@ -78,26 +79,6 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
         alertDialog = builder.create();
         alertDialog.show();
-
-        /*
-        //Option 2
-        mDialog.setMax(transactionList.size());
-        mDialog.setMessage("CSVing....");
-        mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mDialog.setProgress(0); //start at 0
-        mDialog.setCancelable(false);
-        mDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                CSVFormatter.this.cancel(true);
-
-                if(mListener != null){
-                    mListener.onCompleteCSV(false);
-                }
-            }
-        });*/
-
-       // mDialog.show();
     }
 
     public void setCSVInteraction(OnCSVInteractionListener mListener){
@@ -129,21 +110,33 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
 
             //Write a new transaction object to the csv file
             for(int i = 0; i < transactionList.size(); i++){
-                fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getType().toString()));
+                if(transactionList.get(i).getCategory() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getType()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(DateUtil.convertDateToStringFormat5(transactionList.get(i).getDate())));
+                if(transactionList.get(i).getDate() != null){
+                    fileWriter.append(Util.checkNull(DateUtil.convertDateToStringFormat5(context, transactionList.get(i).getDate())));
+                }
                 fileWriter.append(COMMA_DELIMITER);
                 fileWriter.append(Util.checkNull(transactionList.get(i).getNote()));
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getName()));
+                if(transactionList.get(i).getCategory() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getCategory().getName()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatFloat(transactionList.get(i).getPrice(), Constants.BUDGET_LOCALE)));
+
+                //Need to remove commas from $1,000 for example
+                fileWriter.append(Util.checkNull(CurrencyTextFormatter.formatDouble(transactionList.get(i).getPrice())).replace(",",""));
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));
+                if(transactionList.get(i).getAccount() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getAccount().getName()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getLocation().getName()));
+                if(transactionList.get(i).getLocation() != null){
+                    fileWriter.append(Util.checkNull(transactionList.get(i).getLocation().getName()));
+                }
                 fileWriter.append(COMMA_DELIMITER);
-                fileWriter.append(Util.checkNull(transactionList.get(i).getDayType().toString()));
+                fileWriter.append(Util.checkNull(transactionList.get(i).getDayType()));
                 fileWriter.append(NEW_LINE_SEPARATOR);
 
                 publishProgress(i);
@@ -167,8 +160,8 @@ public class CSVFormatter extends AsyncTask<Void, Integer,  Boolean> {
     @Override
     protected void onProgressUpdate(Integer... progress){
         mDialog.setProgress(progress[0]);
-        percentTextView.setText(Math.round((progress[0] / (float)transactionList.size()) * 100)+"%");
-        progressTextView.setText(progress[0]+"/"+transactionList.size());
+        percentTextView.setText(String.format(context.getString(R.string.dialog_progress_percent), Math.round((progress[0] / (float)transactionList.size()) * 100)));
+        progressTextView.setText(String.format(context.getString(R.string.dialog_progress_total), progress[0], transactionList.size()));
     }
 
     @Override

@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zhan.budget.Etc.Constants;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.MonthReport;
 import com.zhan.budget.R;
+import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.library.CircularView;
 
@@ -59,7 +59,6 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         // Inflate the custom layout
-        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month_report_extended, parent, false);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_month_report_v2, parent, false);
 
         // Return a new holder instance
@@ -72,14 +71,11 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         // getting MonthReport data for the row
         MonthReport monthReport = monthReportList.get(position);
 
-        viewHolder.month.setText(DateUtil.convertDateToStringFormat4(monthReport.getMonth()));
-        viewHolder.expenseThisMonth.setText("You spent "+CurrencyTextFormatter.formatFloat(monthReport.getCostThisMonth(), Constants.BUDGET_LOCALE));
-        viewHolder.incomeThisMonth.setText("You saved "+CurrencyTextFormatter.formatFloat(monthReport.getIncomeThisMonth(), Constants.BUDGET_LOCALE));
+        viewHolder.month.setText(DateUtil.convertDateToStringFormat4(context, monthReport.getMonth()));
+        viewHolder.expenseThisMonth.setText(String.format(context.getString(R.string.you_spent), CurrencyTextFormatter.formatDouble(monthReport.getCostThisMonth())));
+        viewHolder.incomeThisMonth.setText(String.format(context.getString(R.string.you_earned), CurrencyTextFormatter.formatDouble(monthReport.getIncomeThisMonth())));
 
-
-
-        float savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
-
+        double savings = Math.abs(monthReport.getIncomeThisMonth()) + monthReport.getCostThisMonth();
 
         //Log.d("INCOME", monthReport.getMonth()+" savings : "+savings);
         Log.d("CHECK", "----- "+monthReport.getMonth()+" -----");
@@ -87,14 +83,15 @@ public class MonthReportRecyclerAdapter extends RecyclerView.Adapter<MonthReport
         Log.d("CHECK", "income : "+monthReport.getIncomeThisMonth());
         Log.d("CHECK", "----- end -----");
 
-
-        if(savings >= 0){
+        if(savings > 0){
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.green));
-        }else{
+        }else if(savings < 0){
             viewHolder.netThisMonth.setTextColor(ContextCompat.getColor(context, R.color.red));
+        }else{
+            viewHolder.netThisMonth.setTextColor(Colors.getColorFromAttr(context, R.attr.themeColorText));
         }
-        viewHolder.netThisMonth.setText("Net "+CurrencyTextFormatter.formatFloat(savings, Constants.BUDGET_LOCALE));
 
+        viewHolder.netThisMonth.setText(String.format(context.getString(R.string.you_saved), CurrencyTextFormatter.formatDouble(savings)));
 
         /*
         if(monthReport.getFirstCategory() != null){

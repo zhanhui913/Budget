@@ -10,8 +10,8 @@ import java.util.Date;
 public class MonthReport {
 
     private Date month;
-    private float costThisMonth;
-    private float incomeThisMonth;
+    private double costThisMonth;
+    private double incomeThisMonth;
 
     private boolean doneCalculation;
 
@@ -29,27 +29,27 @@ public class MonthReport {
         this.month = month;
     }
 
-    public float getCostThisMonth() {
+    public double getCostThisMonth() {
         return costThisMonth;
     }
 
-    public void setCostThisMonth(float costThisMonth) {
+    public void setCostThisMonth(double costThisMonth) {
         this.costThisMonth = costThisMonth;
     }
 
-    public float getIncomeThisMonth() {
+    public double getIncomeThisMonth() {
         return incomeThisMonth;
     }
 
-    public void setIncomeThisMonth(float changeCost) {
+    public void setIncomeThisMonth(double changeCost) {
         this.incomeThisMonth = changeCost;
     }
 
-    public void addCostThisMonth(float cost){
+    public void addCostThisMonth(double cost){
         this.costThisMonth += cost;
     }
 
-    public void addIncomeThisMonth(float income){
+    public void addIncomeThisMonth(double income){
         this.incomeThisMonth += income;
     }
 

@@ -20,16 +20,16 @@
             android:id="@+id/genericName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Generic"
+            android:text="@string/middle_section_name"
             android:textSize="@dimen/text_title_size" />
 
         <TextView
             android:id="@+id/transactionBalance"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="$0.00"
+            android:text="@string/middle_section_right"
             android:textSize="@dimen/text_title_size"
-            android:gravity="right" />
+            android:gravity="end" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -43,6 +43,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topPanel"
-        android:text="There is no transaction for ..."
+        android:paddingLeft="@dimen/item_padding"
+        android:paddingRight="@dimen/item_padding"
+        android:text="@string/empty_transaction_custom_date"
         android:gravity="center_vertical|center_horizontal" />
 </RelativeLayout>

@@ -1,8 +1,9 @@
 package com.zhan.budget.Activity.Settings;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +15,8 @@ import android.widget.TextView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.AccountInfoActivity;
 import com.zhan.budget.Activity.BaseRealmActivity;
-import com.zhan.budget.Adapter.AccountListAdapter;
-import com.zhan.budget.Etc.Constants;
+import com.zhan.budget.Adapter.AccountRecyclerAdapter;
+import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Account;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.Util;
@@ -34,7 +35,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class SettingsAccount extends BaseRealmActivity implements
-        AccountListAdapter.OnAccountAdapterInteractionListener{
+        AccountRecyclerAdapter.OnAccountAdapterInteractionListener{
 
     private  Toolbar toolbar;
 
@@ -47,7 +48,7 @@ public class SettingsAccount extends BaseRealmActivity implements
     private TextView emptyAccountText;
 
     private RecyclerView accountListView;
-    private AccountListAdapter accountListAdapter;
+    private AccountRecyclerAdapter accountRecyclerAdapter;
 
     private RealmResults<Account> resultsAccount;
     private List<Account> accountList;
@@ -76,7 +77,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
         emptyLayout = (ViewGroup)findViewById(R.id.emptyAccountLayout);
         emptyAccountText = (TextView) findViewById(R.id.pullDownText);
-        emptyAccountText.setText("Pull down to add an account");
+        emptyAccountText.setText(getString(R.string.pull_down_add_account));
 
         createPullToAddAccount();
         populateAccount();
@@ -108,8 +109,8 @@ public class SettingsAccount extends BaseRealmActivity implements
 
                 accountList = myRealm.copyFromRealm(element);
 
-                accountListAdapter = new AccountListAdapter(instance, accountList, false, true);
-                accountListView.setAdapter(accountListAdapter);
+                accountRecyclerAdapter = new AccountRecyclerAdapter(instance, accountList, false, true);
+                accountListView.setAdapter(accountRecyclerAdapter);
 
                 //Add divider
                 accountListView.addItemDecoration(
@@ -117,7 +118,7 @@ public class SettingsAccount extends BaseRealmActivity implements
                                 .marginResId(R.dimen.left_padding_divider, R.dimen.right_padding_divider)
                                 .build());
 
-                accountListAdapter.setAccountList(accountList);
+                accountRecyclerAdapter.setAccountList(accountList);
 
                 updateAccountStatus();
             }
@@ -187,26 +188,15 @@ public class SettingsAccount extends BaseRealmActivity implements
     }
 
     private void addAccount(){
-        Intent addAccountIntent = new Intent(this, AccountInfoActivity.class);
-        addAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, true);
-        startActivityForResult(addAccountIntent, Constants.RETURN_NEW_ACCOUNT);
+        startActivityForResult(AccountInfoActivity.createIntentForNewAccount(getApplicationContext()), RequestCodes.NEW_ACCOUNT);
     }
 
     private void editAccount(int position){
-        Log.d(TAG, "trying to edit account at pos : "+position);
-        Log.d(TAG, "accoutn name : " +resultsAccount.get(position).getName());
-        Log.d(TAG, "accoutn id : " +resultsAccount.get(position).getId());
-        Log.d(TAG, "accoutn color : " +resultsAccount.get(position).getColor());
-
-        Intent editAccountIntent = new Intent(this, AccountInfoActivity.class);
-        Parcelable wrapped = Parcels.wrap(accountList.get(position));
-        editAccountIntent.putExtra(Constants.REQUEST_NEW_ACCOUNT, false);
-        editAccountIntent.putExtra(Constants.REQUEST_EDIT_ACCOUNT, wrapped);
-        startActivityForResult(editAccountIntent, Constants.RETURN_EDIT_ACCOUNT);
+        startActivityForResult(AccountInfoActivity.createIntentToEditAccount(getApplicationContext(), accountList.get(position)), RequestCodes.EDIT_ACCOUNT);
     }
 
     private void updateAccountStatus(){
-        if(accountListAdapter.getItemCount() > 0){
+        if(accountRecyclerAdapter.getItemCount() > 0){
             emptyLayout.setVisibility(View.GONE);
             accountListView.setVisibility(View.VISIBLE);
         }else{
@@ -215,25 +205,67 @@ public class SettingsAccount extends BaseRealmActivity implements
         }
     }
 
+    private void confirmDelete(final int position){
+        View promptView = View.inflate(instance, R.layout.alertdialog_generic_message, null);
+
+        TextView title = (TextView) promptView.findViewById(R.id.alertdialogTitle);
+        TextView message = (TextView) promptView.findViewById(R.id.genericMessage);
+
+        title.setText(getString(R.string.dialog_title_delete));
+        message.setText(R.string.warning_delete_account);
+
+        new AlertDialog.Builder(instance)
+                .setView(promptView)
+                .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteAccount(position);
+                    }
+                })
+                .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    //Does nothing for now
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteAccount(int position){
+        myRealm.beginTransaction();
+        resultsAccount.get(position).deleteFromRealm();
+        myRealm.commitTransaction();
+
+        //recalculate everything
+        populateAccount();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            if(requestCode == Constants.RETURN_EDIT_ACCOUNT) {
-                 Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_EDIT_ACCOUNT));
+            if(requestCode == RequestCodes.EDIT_ACCOUNT) {
 
-                Log.i(TAG, "----------- onActivityResult edit account ----------");
-                Log.d(TAG, "account name is "+accountReturned.getName());
-                Log.d(TAG, "account color is "+accountReturned.getColor());
-                Log.d(TAG, "account id is "+accountReturned.getId());
-                Log.i(TAG, "----------- onActivityResult edit account ----------");
+                boolean deleteAccount = data.getExtras().getBoolean(AccountInfoActivity.DELETE_ACCOUNT);
 
-                accountList.set(accountIndexEdited, accountReturned);
-                accountListAdapter.setAccountList(accountList);
+                if(!deleteAccount){
+                    Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(AccountInfoActivity.RESULT_ACCOUNT));
+
+                    Log.i(TAG, "----------- onActivityResult edit account ----------");
+                    Log.d(TAG, "account name is "+accountReturned.getName());
+                    Log.d(TAG, "account color is "+accountReturned.getColor());
+                    Log.d(TAG, "account id is "+accountReturned.getId());
+                    Log.i(TAG, "----------- onActivityResult edit account ----------");
+
+                    accountList.set(accountIndexEdited, accountReturned);
+                }else{
+                    accountList.remove(accountIndexEdited);
+                }
+
+                accountRecyclerAdapter.setAccountList(accountList);
                 updateAccountStatus();
-
-            }else if(requestCode == Constants.RETURN_NEW_ACCOUNT){
-                Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(Constants.RESULT_NEW_ACCOUNT));
+            }else if(requestCode == RequestCodes.NEW_ACCOUNT){
+                Account accountReturned = Parcels.unwrap(data.getExtras().getParcelable(AccountInfoActivity.RESULT_ACCOUNT));
                 Log.i(TAG, "----------- onActivityResult new account ----------");
                 Log.d(TAG, "account name is "+accountReturned.getName());
                 Log.d(TAG, "account color is "+accountReturned.getColor());
@@ -241,11 +273,11 @@ public class SettingsAccount extends BaseRealmActivity implements
                 Log.i(TAG, "----------- onActivityResult new account ----------");
 
                 accountList.add(accountReturned);
-                accountListAdapter.setAccountList(accountList);
+                accountRecyclerAdapter.setAccountList(accountList);
                 updateAccountStatus();
 
                 //Scroll to the last position
-                accountListView.scrollToPosition(accountListAdapter.getItemCount() - 1);
+                accountListView.scrollToPosition(accountRecyclerAdapter.getItemCount() - 1);
             }
         }
     }
@@ -264,10 +296,7 @@ public class SettingsAccount extends BaseRealmActivity implements
 
     @Override
     public void onDeleteAccount(int position){
-        /*myRealm.beginTransaction();
-        resultsAccount.get(position).deleteFromRealm();
-        myRealm.commitTransaction();*/
-        //Cant delete account for now
+        confirmDelete(position);
     }
 
     @Override
@@ -288,12 +317,34 @@ public class SettingsAccount extends BaseRealmActivity implements
             resultsAccount.get(i).setIsDefault(false);
         }
         resultsAccount.get(position).setIsDefault(true);
+
         myRealm.commitTransaction();
 
         //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
         Util.createSnackbar(this, (View)emptyAccountText.getParent(), "Set "+resultsAccount.get(position).getName()+" as default account");
 
         accountList = myRealm.copyFromRealm(resultsAccount);
-        accountListAdapter.setAccountList(accountList);
+        accountRecyclerAdapter.setAccountList(accountList);
+    }
+
+    @Override
+    public void onAccountDeSetFromDefault(int position){
+        myRealm.beginTransaction();
+/*        for(int i = 0; i < resultsAccount.size(); i++){
+            resultsAccount.get(i).setIsDefault(false);
+        }
+        resultsAccount.get(position).setIsDefault(true);
+*/
+        resultsAccount.get(position).setIsDefault(false);
+
+
+
+        myRealm.commitTransaction();
+
+        //Using any subclass of view to get parent view (cannot use root view as it will appear on (devices with navigation panel) the bottom
+        Util.createSnackbar(this, (View)emptyAccountText.getParent(), "Remove "+resultsAccount.get(position).getName()+" as default account");
+
+        accountList = myRealm.copyFromRealm(resultsAccount);
+        accountRecyclerAdapter.setAccountList(accountList);
     }
 }

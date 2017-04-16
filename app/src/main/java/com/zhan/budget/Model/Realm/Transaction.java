@@ -22,7 +22,7 @@ public class Transaction extends RealmObject {
     @Index
     private Date date;
 
-    private float price;
+    private double price;
     private Category category;
     private Account account;
     private String dayType;
@@ -48,11 +48,11 @@ public class Transaction extends RealmObject {
         this.date = date;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -98,32 +98,40 @@ public class Transaction extends RealmObject {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    // Realm object check equality in terms of property
+    // Realm object check equality in terms of property that isnt ignored
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean checkEquals(Transaction other){
         if(!id.equalsIgnoreCase(other.getId())) return false;
 
-
         if(other.getNote() != null && note != null){
             if(!note.equalsIgnoreCase(other.getNote())) return false;
-        }else if(other.getNote() == null && note == null){
-            return true;
         }
 
         if(date.getTime() != other.getDate().getTime()) return false;
         if(price != other.getPrice()) return false;
         if(!dayType.equalsIgnoreCase(other.getDayType())) return false;
-        if(!category.checkEquals(other.getCategory())) return false;
-        if(!account.checkEquals(other.getAccount())) return false;
+        if(category != null && other.getCategory() != null && !category.checkEquals(other.getCategory())) return false;
+        if(account != null && other.getAccount() != null && !account.checkEquals(other.getAccount())) return false;
 
         if(other.getLocation() != null && location != null){
             if(!location.checkEquals(other.getLocation())) return false;
-        }else if(other.getLocation() == null || location == null){
-            return false;
         }
 
         return true;
+    }
+
+    public static Transaction copy(Transaction other){
+        Transaction copied = new Transaction();
+        copied.setId(other.getId());
+        copied.setNote(other.getNote());
+        copied.setDate(other.getDate());
+        copied.setPrice(other.getPrice());
+        copied.setDayType(other.getDayType());
+        copied.setCategory(other.getCategory());
+        copied.setAccount(other.getAccount());
+        copied.setLocation(other.getLocation());
+        return copied;
     }
 }

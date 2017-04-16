@@ -18,58 +18,40 @@ public final class Tutorial {
 
     public static ArrayList<TutorialItem> getTutorialPages(Context context){
         TutorialItem page1 = new TutorialItem(
-                "Calendar",
-                context.getResources().getString(R.string.tutorial_description_1),
+                context.getResources().getString(R.string.tutorial_title_location),
+                context.getResources().getString(R.string.tutorial_description_location),
                 R.color.colorPrimary,
-                R.drawable.screen1);
+                R.drawable.t_location);
 
         TutorialItem page2 = new TutorialItem(
-                "Theme",
-                context.getResources().getString(R.string.tutorial_description_2),
+                context.getResources().getString(R.string.tutorial_title_theme),
+                context.getResources().getString(R.string.tutorial_description_theme),
                 R.color.colorPrimary,
-                R.drawable.screen2);
+                R.drawable.t_theme);
 
         TutorialItem page3 = new TutorialItem(
-                "Approve",
-                context.getResources().getString(R.string.tutorial_description_3),
+                context.getResources().getString(R.string.tutorial_title_account),
+                context.getResources().getString(R.string.tutorial_description_account),
                 R.color.colorPrimary,
-                R.drawable.screen3);
+                R.drawable.t_account);
 
         TutorialItem page4 = new TutorialItem(
-                "Add new Transaction",
-                context.getResources().getString(R.string.tutorial_description_4),
+                context.getResources().getString(R.string.tutorial_title_calculator),
+                context.getResources().getString(R.string.tutorial_description_calculator),
                 R.color.colorPrimary,
-                R.drawable.screen4);
+                R.drawable.t_calculator);
 
         TutorialItem page5 = new TutorialItem(
-                "Budget",
-                context.getResources().getString(R.string.tutorial_description_5),
+                context.getResources().getString(R.string.tutorial_title_budget),
+                context.getResources().getString(R.string.tutorial_description_budget),
                 R.color.colorPrimary,
-                R.drawable.screen5);
+                R.drawable.t_balance);
 
         TutorialItem page6 = new TutorialItem(
-                "Account",
-                context.getResources().getString(R.string.tutorial_description_6),
+                context.getResources().getString(R.string.tutorial_title_chart),
+                context.getResources().getString(R.string.tutorial_description_chart),
                 R.color.colorPrimary,
-                R.drawable.screen6);
-
-        TutorialItem page7 = new TutorialItem(
-                "Location",
-                context.getResources().getString(R.string.tutorial_description_7),
-                R.color.colorPrimary,
-                R.drawable.screen7);
-
-        TutorialItem page8 = new TutorialItem(
-                "Monthly Overview",
-                context.getResources().getString(R.string.tutorial_description_8),
-                R.color.colorPrimary,
-                R.drawable.screen8);
-
-        TutorialItem page9 = new TutorialItem(
-                "Percentage",
-                context.getResources().getString(R.string.tutorial_description_9),
-                R.color.colorPrimary,
-                R.drawable.screen9);
+                R.drawable.t_pie);
 
         ArrayList<TutorialItem> tourItems = new ArrayList<>();
         tourItems.add(page1);
@@ -78,9 +60,6 @@ public final class Tutorial {
         tourItems.add(page4);
         tourItems.add(page5);
         tourItems.add(page6);
-        tourItems.add(page7);
-        tourItems.add(page8);
-        tourItems.add(page9);
 
         return tourItems;
     }
