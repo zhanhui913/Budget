@@ -22,7 +22,6 @@
 			android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
-
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
@@ -68,8 +67,7 @@
 		<activity android:name=".Activity.SettingsActivity"
 			android:label="@string/title_activity_settings"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
-		<activity
-			android:name=".Activity.Settings.Info.PrivacyPolicyActivity"
+		<activity android:name=".Activity.Settings.Info.PrivacyPolicyActivity"
 			android:label="@string/title_activity_privacy_policy"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity android:name=".Activity.Settings.Info.InfoDeveloper"
@@ -88,5 +86,4 @@
 			android:label="@string/title_activity_tour"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 	</application>
-
 </manifest>
