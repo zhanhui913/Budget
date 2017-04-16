@@ -49,8 +49,6 @@ public class MyApplication extends Application {
 
         CURRENT_THEME = BudgetPreference.getCurrentTheme(instance); Log.d(TAG, "MyApplication, Theme : "+CURRENT_THEME);
 
-
-
         realmConfig = new RealmConfiguration.Builder(this)
                 .name(Constants.REALM_NAME)
                 .schemaVersion(3)
@@ -250,10 +248,11 @@ public class MyApplication extends Application {
             c.setName(tempCategoryNameList[i]);
             c.setColor(getResources().getString(tempCategoryColorList[i]));
             c.setIcon(getResources().getResourceEntryName(tempCategoryIconList[i]));
-            c.setBudget(100.0f + (i/5));
+            c.setBudget(100);
             c.setType(BudgetType.EXPENSE.toString());
             c.setCost(0);
             c.setIndex(i);
+            c.setText(false);
 
             categoryList.add(c);
         }
