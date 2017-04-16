@@ -66,16 +66,8 @@
 			android:label="@string/title_activity_transactions_for_location"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
-			android:name=".Activity.Settings.AboutActivity"
+			android:name=".Activity.Settings.Info.AboutActivity"
 			android:label="@string/title_activity_about"
-			android:theme="@style/AppThemeLight.NoActionBar"/>
-		<activity
-			android:name=".Activity.Settings.OpenSourceActivity"
-			android:label="@string/title_activity_open_source"
-			android:theme="@style/AppThemeLight.NoActionBar"/>
-		<activity
-			android:name=".Activity.Settings.TranslationActivity"
-			android:label="@string/title_activity_translation"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
 			android:name=".Activity.Transactions.TransactionsForCategory"
@@ -94,16 +86,21 @@
 			android:label="@string/title_activity_tour"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
-			android:name=".Activity.Settings.DeveloperActivity"
-			android:label="@string/title_activity_developer"
-			android:theme="@style/AppThemeLight.NoActionBar"/>
-		<activity
 			android:name=".Activity.SettingsActivity"
 			android:label="@string/title_activity_settings"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 		<activity
-			android:name=".Activity.Settings.PrivacyPolicyActivity"
+			android:name=".Activity.Settings.Info.PrivacyPolicyActivity"
 			android:label="@string/title_activity_privacy_policy"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity android:name=".Activity.Settings.Info.InfoDeveloper"
+			android:label="@string/title_activity_developer"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity android:name=".Activity.Settings.Info.InfoOpenSource"
+			android:label="@string/title_activity_open_source"
+			android:theme="@style/AppThemeLight.NoActionBar"/>
+		<activity android:name=".Activity.Settings.Info.InfoTranslation"
+			android:label="@string/title_activity_translation"
 			android:theme="@style/AppThemeLight.NoActionBar"/>
 	</application>
 

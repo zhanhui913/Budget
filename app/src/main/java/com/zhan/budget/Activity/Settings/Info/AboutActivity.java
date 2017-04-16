@@ -1,4 +1,4 @@
-package com.zhan.budget.Activity.Settings;
+package com.zhan.budget.Activity.Settings.Info;
 
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
@@ -57,7 +57,7 @@ public class AboutActivity extends BaseActivity {
             openSourceBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent openSource = new Intent(getApplicationContext(), OpenSourceActivity.class);
+                    Intent openSource = new Intent(getApplicationContext(), InfoOpenSource.class);
                     startActivity(openSource);
                 }
             });
@@ -71,7 +71,7 @@ public class AboutActivity extends BaseActivity {
             developerBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent dev = new Intent(getApplicationContext(), DeveloperActivity.class);
+                    Intent dev = new Intent(getApplicationContext(), InfoDeveloper.class);
                     startActivity(dev);
                 }
             });
@@ -85,7 +85,7 @@ public class AboutActivity extends BaseActivity {
             translationBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent translation = new Intent(getApplicationContext(), TranslationActivity.class);
+                    Intent translation = new Intent(getApplicationContext(), InfoTranslation.class);
                     startActivity(translation);
                 }
             });

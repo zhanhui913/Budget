@@ -1,4 +1,4 @@
-package com.zhan.budget.Activity.Settings;
+package com.zhan.budget.Activity.Settings.Info;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.zhan.budget.Activity.Settings.AboutActivity"
+    tools:context="com.zhan.budget.Activity.Settings.Info.AboutActivity"
     tools:showIn="@layout/activity_about">
 
     <RelativeLayout

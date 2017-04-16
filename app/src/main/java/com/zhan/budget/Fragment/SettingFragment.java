@@ -17,7 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.zhan.budget.Activity.Settings.AboutActivity;
+import com.zhan.budget.Activity.Settings.Info.AboutActivity;
 import com.zhan.budget.Activity.Settings.SettingsAccount;
 import com.zhan.budget.Activity.Settings.SettingsCategory;
 import com.zhan.budget.Activity.Settings.SettingsLocation;

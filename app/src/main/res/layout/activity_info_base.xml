@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activity.Settings.TranslationActivity">
+    tools:context=".Activity.Settings.Info.BaseInfoActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,6 +22,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_translation" />
+    <include layout="@layout/content_info_base" />
 
 </android.support.design.widget.CoordinatorLayout>
