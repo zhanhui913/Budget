@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
@@ -35,6 +37,7 @@ import com.zhan.budget.Util.BudgetPreference;
 import com.zhan.budget.Util.CategoryUtil;
 import com.zhan.budget.Util.Colors;
 import com.zhan.budget.Util.DateUtil;
+import com.zhan.budget.Util.Util;
 import com.zhan.budget.View.PlusView;
 import com.zhan.budget.View.RectangleCellView;
 
@@ -63,7 +66,8 @@ import io.realm.RealmResults;
  * to handle interaction events.
  */
 public class CalendarFragment extends BaseRealmFragment implements
-        TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener{
+        TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener,
+        CalendarContract.View{
 
     private static final String TAG = "CalendarFragment";
 
@@ -89,6 +93,9 @@ public class CalendarFragment extends BaseRealmFragment implements
 
     private Date selectedDate;
     private Map<Date,List<BudgetEvent>> eventMap;
+
+    private CalendarContract.Presenter mPresenter;
+
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -274,7 +281,8 @@ public class CalendarFragment extends BaseRealmFragment implements
             @Override
             public void onDateClick(int year, int month, int day) {
                 selectedDate = DateUtil.refreshDate((new GregorianCalendar(year, month, day)).getTime());
-                populateTransactionsForDate(selectedDate);
+                //populateTransactionsForDate(selectedDate);
+                mPresenter.populateTransactionsForDate(selectedDate);
             }
         });
 
@@ -623,4 +631,21 @@ public class CalendarFragment extends BaseRealmFragment implements
     public interface OnCalendarInteractionListener {
         void updateToolbar(String date);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Calender View Interface
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void setPresenter(@NonNull CalendarContract.Presenter presenter) {
+        mPresenter = Util.checkNotNull(presenter);
+    }
+
+    @Override
+    public void updateDecorators(){
+        Toast.makeText(getContext(), "VIEW, update decorators", Toast.LENGTH_SHORT).show();
+    }
+
 }
