@@ -85,8 +85,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
         Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(mView.getContext(), selectedDate) + " -> " + DateUtil.convertDateToStringFormat5(mView.getContext(), endDate) + ")");
 
-        //Change to visible while preparing to do calculation
-        mView.setProgressVisibility(true);
+        //Change to VISIBLE while preparing to do calculation
+        mView.setLoadingIndicator(true);
 
         resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", selectedDate).lessThan("date", endDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {

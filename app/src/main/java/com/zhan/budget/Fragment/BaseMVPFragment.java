@@ -14,5 +14,8 @@ public abstract class BaseMVPFragment extends BaseFragment {
         initPresenter();
     }
 
+    /**
+     * Used to call the Presenter's start method
+     */
     protected abstract void initPresenter();
 }

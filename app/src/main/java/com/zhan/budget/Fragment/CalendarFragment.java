@@ -467,8 +467,8 @@ public class CalendarFragment extends BaseMVPFragment implements
     }
 
     @Override
-    public void setProgressVisibility(boolean isVisible){
-        progressBar.setVisibility((isVisible) ? View.VISIBLE: View.GONE);
+    public void setLoadingIndicator(boolean active){
+        progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
     }
 
     @Override
@@ -512,5 +512,10 @@ public class CalendarFragment extends BaseMVPFragment implements
     @Override
     public void showAddTransaction(){
         startActivityForResult(TransactionInfoActivity.createIntentForNewTransaction(getContext(), selectedDate), RequestCodes.NEW_TRANSACTION);
+    }
+
+    @Override
+    public boolean isActive(){
+        return isAdded();
     }
 }

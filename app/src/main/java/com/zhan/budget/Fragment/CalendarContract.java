@@ -11,9 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Zhan on 2017-04-16.
+ * This specifies the contract between the CalendarFragment (VIEW) and CalendarPresenter (PRESENTER)
  */
-
 public interface CalendarContract {
     interface View extends BaseView<Presenter> {
         void updateMonthInToolbar();
@@ -28,13 +27,15 @@ public interface CalendarContract {
 
         void updateTotalCostView(double cost);
 
-        void setProgressVisibility(boolean isVisible);
+        void setLoadingIndicator(boolean active);
 
         void updateTransactions(List<Transaction> transactionList);
 
         void showEditTransaction(Transaction editTransaction);
 
         void showAddTransaction();
+
+        boolean isActive();
     }
 
     interface Presenter extends BasePresenter{
