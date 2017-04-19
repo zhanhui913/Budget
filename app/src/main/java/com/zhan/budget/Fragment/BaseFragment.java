@@ -30,9 +30,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        instance = this;
         Log.d(TAG, "onActivityCreated");
         init();
-        instance = this;
     }
 
     /**

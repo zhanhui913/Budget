@@ -6,4 +6,6 @@ package com.zhan.budget;
 
 public interface BasePresenter {
     void start();
+
+    void stop();
 }
