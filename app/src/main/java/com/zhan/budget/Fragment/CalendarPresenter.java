@@ -38,7 +38,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     private static final String TAG = "CalendarPresenter";
 
-
     private Realm myRealm;
     private RealmResults<Transaction> resultsTransactionForDay;
     private Date selectedDate;
@@ -50,9 +49,9 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     @NonNull
     private final AppDataManager mAppDataManager;
 
-    public CalendarPresenter(@NonNull AppDataManager mAppDataManager, @NonNull CalendarContract.View mView){
-        this.mAppDataManager = mAppDataManager;
-        this.mView = mView;
+    public CalendarPresenter(@NonNull AppDataManager appDataManager, @NonNull CalendarContract.View view){
+        mAppDataManager = appDataManager;
+        mView = view;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +93,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
         //Change to VISIBLE while preparing to do calculation
         mView.setLoadingIndicator(true);
 
-        resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", selectedDate).lessThan("date", endDate).findAllAsync();
+        /*resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", selectedDate).lessThan("date", endDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
@@ -109,18 +108,25 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 mView.updateTotalCostView(sumValue);
                 mView.updateTransactions(myRealm.copyFromRealm(element));
             }
-        });
+        });*/
 
 
         mAppDataManager.getTransactions(selectedDate, new RealmHelper.LoadTransactionsForDayCallback() {
             @Override
-            public void onTransactionsLoaded(RealmResults<Transaction> list) {
-                Log.d(TAG, "on transactions loaded");
+            public void onTransactionsLoaded(List<Transaction> list) {
+                Log.d(TAG, "on transactions loaded "+list.size());
+
+                double sumValue = CurrencyTextFormatter.findTotalCostForTransactions(list);
+
+                mView.updateTotalCostView(sumValue);
+                mView.updateTransactions(list);
             }
 
             @Override
             public void onDataNotAvailable() {
                 Log.d(TAG, "on transactions no data available");
+                mView.updateTotalCostView(0);
+                mView.updateTransactions(new ArrayList<Transaction>());
             }
         });
 

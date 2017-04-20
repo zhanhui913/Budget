@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.zhan.budget.Model.Realm.Transaction;
 
 import java.util.Date;
+import java.util.List;
 
 import io.realm.RealmResults;
 
@@ -15,7 +16,7 @@ import io.realm.RealmResults;
 public interface RealmHelper {
 
     interface LoadTransactionsForDayCallback{
-        void onTransactionsLoaded(RealmResults<Transaction> list);
+        void onTransactionsLoaded(List<Transaction> list);
 
         void onDataNotAvailable();
     }

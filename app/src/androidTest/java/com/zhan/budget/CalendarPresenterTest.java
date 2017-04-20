@@ -2,6 +2,7 @@ package com.zhan.budget;
 
 import android.support.test.espresso.core.deps.guava.collect.Lists;
 
+import com.zhan.budget.Data.AppDataManager;
 import com.zhan.budget.Fragment.CalendarContract;
 import com.zhan.budget.Fragment.CalendarPresenter;
 import com.zhan.budget.Model.BudgetType;
@@ -32,6 +33,10 @@ public class CalendarPresenterTest {
     private static List<Transaction> TRANSACTIONS;
 
     @Mock
+    private AppDataManager mDataManager;
+
+
+    @Mock
     private CalendarContract.View mCalendarView;
 
     private CalendarPresenter mCalendarPresenter;
@@ -43,7 +48,7 @@ public class CalendarPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         //Get a reference to the class under test
-        mCalendarPresenter = new CalendarPresenter(mCalendarView);
+        mCalendarPresenter = new CalendarPresenter(mDataManager, mCalendarView);
 
         //The presenter won't update the view unless its active
         when(mCalendarView.isActive()).thenReturn(true);
