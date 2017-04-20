@@ -73,8 +73,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void populateTransactionsForDate1(Date date){
-        Log.d(TAG, "populateTransactionsForDate for "+date.toString());
-
         final Date startDate = DateUtil.refreshDate(date);
         final Date endDate = DateUtil.getNextDate(date);
 
@@ -85,24 +83,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
         //Change to VISIBLE while preparing to do calculation
         mView.setLoadingIndicator(true);
-
-        /*resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", selectedDate).lessThan("date", endDate).findAllAsync();
-        resultsTransactionForDay.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                resultsTransactionForDay.removeChangeListener(this);
-
-                element.removeChangeListener(this);
-
-                Log.d(TAG, "received " + element.size() + " transactions");
-
-                double sumValue = CurrencyTextFormatter.findTotalCostForTransactions(resultsTransactionForDay);
-
-                mView.updateTotalCostView(sumValue);
-                mView.updateTransactions(myRealm.copyFromRealm(element));
-            }
-        });*/
-
 
         mAppDataManager.getTransactions(startDate, new RealmHelper.LoadTransactionsCallback() {
             @Override
@@ -151,15 +131,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     public void updateDecorations(){
         scheduledMap = new HashMap<>();
 
-        /*final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
-        scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(final RealmResults<Transaction> element) {
-                element.removeChangeListener(this);
-                performCalculationForDecorators(myRealm.copyFromRealm(element));
-            }
-        });*/
-
         mAppDataManager.getScheduledTransactions(new RealmHelper.LoadTransactionsCallback() {
             @Override
             public void onTransactionsLoaded(List<Transaction> list) {
@@ -168,7 +139,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
             @Override
             public void onDataNotAvailable() {
-
+                //No need to do anything
             }
         });
     }
@@ -215,7 +186,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     @Override
     public List<BudgetEvent> getDecorations(Date date){
         if(scheduledMap == null){
-            return new ArrayList<BudgetEvent>();
+            return new ArrayList<>();
         }else{
             return scheduledMap.get(date);
         }
@@ -258,13 +229,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void approveTransaction(int position){
-        /*myRealm.beginTransaction();
-        resultsTransactionForDay.get(position).setDayType(DayType.COMPLETED.toString());
-        myRealm.commitTransaction();
-
-        populateTransactionsForDate1(selectedDate);
-        updateDecorations();*/
-
         mAppDataManager.approveTransaction(transactions.get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
             public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
@@ -274,20 +238,13 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
             @Override
             public void onDataNotAvailable() {
-                //nothing to do
+                //No need to do anything
             }
         });
     }
 
     @Override
     public void unApproveTransaction(int position){
-        /*myRealm.beginTransaction();
-        resultsTransactionForDay.get(position).setDayType(DayType.SCHEDULED.toString());
-        myRealm.commitTransaction();
-
-        populateTransactionsForDate1(selectedDate);
-        updateDecorations();*/
-
         mAppDataManager.unapproveTransaction(transactions.get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
             public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
@@ -297,7 +254,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
             @Override
             public void onDataNotAvailable() {
-                //nothing to do
+                //No need to do anything
             }
         });
     }
