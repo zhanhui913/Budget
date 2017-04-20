@@ -26,11 +26,19 @@ public interface RealmHelper {
         void onDataNotAvailable();
     }
 
+    interface DeleteTransactionCallback{
+        void onSuccess();
+
+        void onFailed();
+    }
+
     void getTransactions(Date date, @NonNull LoadTransactionsCallback callback);
 
     void approveTransaction(String id, @NonNull LoadTransactionCallback callback);
 
     void unapproveTransaction(String id, @NonNull LoadTransactionCallback callback);
+
+    void deleteTransaction(String id, @NonNull DeleteTransactionCallback callback);
 
     void getScheduledTransactions(@NonNull LoadTransactionsCallback callback);
 }

@@ -130,6 +130,31 @@ public class AppDataManager implements DataManager{
     }
 
     @Override
+    public void deleteTransaction(String id, @NonNull final DeleteTransactionCallback callback){
+        Util.checkNotNull(callback);
+
+        final Transaction transaction = myRealm.where(Transaction.class).equalTo("id", id).findFirstAsync();
+        transaction.addChangeListener(new RealmChangeListener<RealmObject>() {
+            @Override
+            public void onChange(RealmObject element) {
+                transaction.removeChangeListener(this);
+
+                //According to the documentation of findFirstAsync()
+                //If isLoaded() is true and isValid() is false => 0 results
+                if(element.isLoaded() && !element.isValid()){
+                    callback.onFailed();
+                }else{
+                    myRealm.beginTransaction();
+                    transaction.deleteFromRealm();
+                    myRealm.commitTransaction();
+
+                    callback.onSuccess();
+                }
+            }
+        });
+    }
+
+    @Override
     public void getScheduledTransactions(@NonNull final LoadTransactionsCallback callback){
         Util.checkNotNull(callback);
 

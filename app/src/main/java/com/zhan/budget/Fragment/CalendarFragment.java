@@ -518,4 +518,9 @@ public class CalendarFragment extends BaseMVPFragment implements
     public boolean isActive(){
         return isAdded();
     }
+
+    @Override
+    public void showSnackbar(String value){
+        Util.createSnackbar(getActivity(), header, value);
+    }
 }

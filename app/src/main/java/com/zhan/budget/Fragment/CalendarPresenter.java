@@ -224,7 +224,18 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void deleteTransaction(int position){
+        mAppDataManager.deleteTransaction(transactions.get(position).getId(), new RealmHelper.DeleteTransactionCallback() {
+            @Override
+            public void onSuccess() {
+                populateTransactionsForDate1(selectedDate);
+                updateDecorations();
+            }
 
+            @Override
+            public void onFailed() {
+                mView.showSnackbar("Delete transaction failed");
+            }
+        });
     }
 
     @Override
@@ -239,6 +250,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             @Override
             public void onDataNotAvailable() {
                 //No need to do anything
+                mView.showSnackbar("Approve transaction failed");
             }
         });
     }
@@ -255,6 +267,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             @Override
             public void onDataNotAvailable() {
                 //No need to do anything
+                mView.showSnackbar("Unapprove transaction failed");
             }
         });
     }
