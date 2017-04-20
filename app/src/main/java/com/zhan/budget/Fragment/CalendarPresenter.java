@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.zhan.budget.Activity.TransactionInfoActivity;
+import com.zhan.budget.Data.AppDataManager;
+import com.zhan.budget.Data.Realm.RealmHelper;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
@@ -45,7 +47,11 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     @NonNull
     private final CalendarContract.View  mView;
 
-    public CalendarPresenter(@NonNull CalendarContract.View mView){
+    @NonNull
+    private final AppDataManager mAppDataManager;
+
+    public CalendarPresenter(@NonNull AppDataManager mAppDataManager, @NonNull CalendarContract.View mView){
+        this.mAppDataManager = mAppDataManager;
         this.mView = mView;
     }
 
@@ -104,6 +110,22 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 mView.updateTransactions(myRealm.copyFromRealm(element));
             }
         });
+
+
+        mAppDataManager.getTransactions(selectedDate, new RealmHelper.LoadTransactionsForDayCallback() {
+            @Override
+            public void onTransactionsLoaded(RealmResults<Transaction> list) {
+                Log.d(TAG, "on transactions loaded");
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                Log.d(TAG, "on transactions no data available");
+            }
+        });
+
+
+
     }
 
     @Override
