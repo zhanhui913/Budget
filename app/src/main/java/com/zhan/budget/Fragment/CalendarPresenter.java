@@ -26,18 +26,15 @@ import java.util.List;
 import java.util.Map;
 
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 /**
- * Created by Zhan on 2017-04-15.
+ * Listens to user actions from the UI {@link CalendarFragment}, retrieves the data and updates the
+ * UI as required.
  */
-
 public class CalendarPresenter implements CalendarContract.Presenter{
 
     private static final String TAG = "CalendarPresenter";
 
-    //private Realm myRealm;
-    private RealmResults<Transaction> resultsTransactionForDay;
     private List<Transaction> transactions;
     private Date selectedDate;
     private Map<Date,List<BudgetEvent>> scheduledMap;
@@ -61,30 +58,23 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void start() {
-        Log.d(TAG, "start, get default realm instance");
-        //myRealm = Realm.getDefaultInstance();
+        Log.d(TAG, "start CalendarPresenter");
 
-        selectedDate = new Date();
+        //Grab today's date
+        selectedDate = DateUtil.refreshDate(new Date());
         populateTransactionsForDate1(selectedDate);
         updateDecorations();
     }
 
     @Override
     public void stop() {
-        Log.d(TAG, "stop, stop realm");
-        //myRealm.close();
+        Log.d(TAG, "stop CalendarPresenter");
     }
 
     @Override
-    public void populateTransactionsForDate1(final Date date){
+    public void populateTransactionsForDate1(Date date){
         Log.d(TAG, "populateTransactionsForDate for "+date.toString());
 
-        //If not same day
-        /*if(!DateUtil.refreshDate(date).equals(selectedDate)){
-            //mView.smoothScrollToPosition(0);
-        }*/
-
-        //selectedDate = DateUtil.refreshDate(date);
         final Date startDate = DateUtil.refreshDate(date);
         final Date endDate = DateUtil.getNextDate(date);
 
@@ -131,7 +121,9 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 if(!DateUtil.refreshDate(startDate).equals(selectedDate)){
                     mView.smoothScrollToPosition(0);
                 }
-                selectedDate = DateUtil.refreshDate(date);
+
+                //Update date
+                selectedDate = startDate;
             }
 
             @Override
@@ -148,7 +140,9 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 if(!DateUtil.refreshDate(startDate).equals(selectedDate)){
                     mView.smoothScrollToPosition(0);
                 }
-                selectedDate = DateUtil.refreshDate(date);
+
+                //Update date
+                selectedDate = startDate;
             }
         });
     }
@@ -254,7 +248,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void editTransaction(int position){
-        mView.showEditTransaction(resultsTransactionForDay.get(position));
+        mView.showEditTransaction(transactions.get(position));
     }
 
     @Override

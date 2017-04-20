@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This specifies the contract between the CalendarFragment (VIEW) and CalendarPresenter (PRESENTER)
+ * This specifies the contract between the VIEW {@link CalendarFragment} and PRESENTER {@link CalendarPresenter}
  */
 public interface CalendarContract {
     interface View extends BaseView<Presenter> {

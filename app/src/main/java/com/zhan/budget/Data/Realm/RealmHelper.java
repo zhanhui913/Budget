@@ -10,9 +10,8 @@ import java.util.List;
 import io.realm.RealmObject;
 
 /**
- * Created by zhanyap on 2017-04-19.
+ * Interface that needs to be implemented for Realm db purposes.
  */
-
 public interface RealmHelper {
 
     interface LoadTransactionsCallback{

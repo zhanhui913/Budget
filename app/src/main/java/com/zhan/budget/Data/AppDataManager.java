@@ -17,9 +17,8 @@ import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 /**
- * Created by zhanyap on 2017-04-19.
+ * Main connection between Presenters and the Model section of the MVP architecture.
  */
-
 public class AppDataManager implements DataManager{
     private static final String TAG = "AppDataManager";
 
