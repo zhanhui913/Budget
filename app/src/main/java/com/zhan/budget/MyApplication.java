@@ -301,7 +301,7 @@ public class MyApplication extends Application {
 
         //Create fake transactions
         Date startDate = DateUtil.convertStringToDate(instance, "2017-01-01");
-        Date endDate = DateUtil.convertStringToDate(instance, "2017-04-11");
+        Date endDate = DateUtil.convertStringToDate(instance, "2017-05-01");
 
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
@@ -317,11 +317,11 @@ public class MyApplication extends Application {
             int rda = random.nextInt(accountList.size());
             int ll = random.nextInt(locationList.size());
 
-            //if(date.before(new Date())){
+            if(date.before(new Date())){
                 dayType = DayType.COMPLETED.toString();
-            //}else{
-            //    dayType = DayType.SCHEDULED.toString();
-            //}
+            }else{
+                dayType = DayType.SCHEDULED.toString();
+            }
 
             //Create random transactions per day
             for (int j = 0; j < 1000; j++) {
@@ -344,8 +344,7 @@ public class MyApplication extends Application {
                 transaction.setCategory(category);
                 transaction.setNote("Note " + j + " for " + DateUtil.convertDateToString(instance,date));
             }
-        }
-*/
+        }*/
 
         myRealm.commitTransaction();
     }

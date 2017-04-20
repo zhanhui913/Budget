@@ -4,18 +4,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.zhan.budget.Data.Prefs.PreferenceHelper;
-import com.zhan.budget.Data.Realm.RealmHelper;
-import com.zhan.budget.Etc.CurrencyTextFormatter;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.Util.DateUtil;
 import com.zhan.budget.Util.Util;
 
 import java.util.Date;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 /**
@@ -29,10 +27,12 @@ public class AppDataManager implements DataManager{
 
     private final Context mContext;
 
+    private final Realm myRealm;
 
     // Prevent direct instantiation.
     private AppDataManager(@NonNull Context context) {
         mContext = context;
+        myRealm = Realm.getDefaultInstance();
     }
 
     /**
@@ -55,26 +55,95 @@ public class AppDataManager implements DataManager{
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void getTransactions(Date date, @NonNull final LoadTransactionsForDayCallback callback){
+    public void getTransactions(Date date, @NonNull final LoadTransactionsCallback callback){
         Util.checkNotNull(callback);
 
-        final Date startDate = DateUtil.refreshDate(date);
-        final Date endDate = DateUtil.getNextDate(date);
+        Date startDate = DateUtil.refreshDate(date);
+        Date endDate = DateUtil.getNextDate(date);
 
-        final Realm myRealm = Realm.getDefaultInstance();
         final RealmResults<Transaction> resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", startDate).lessThan("date", endDate).findAllAsync();
         resultsTransactionForDay.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
                 resultsTransactionForDay.removeChangeListener(this);
-
                 element.removeChangeListener(this);
 
                 Log.d(TAG, "received " + element.size() + " transactions");
 
-                //double sumValue = CurrencyTextFormatter.findTotalCostForTransactions(resultsTransactionForDay);
+                if(element.size() > 0){
+                    callback.onTransactionsLoaded(myRealm.copyFromRealm(element));
+                }else{
+                    callback.onDataNotAvailable();
+                }
+            }
+        });
+    }
 
-                if(resultsTransactionForDay.size() > 0){
+    @Override
+    public void approveTransaction(String id, @NonNull final LoadTransactionCallback callback){
+        Util.checkNotNull(callback);
+
+        final Transaction transaction = myRealm.where(Transaction.class).equalTo("id", id).findFirstAsync();
+        transaction.addChangeListener(new RealmChangeListener<RealmObject>() {
+            @Override
+            public void onChange(RealmObject element) {
+                transaction.removeChangeListener(this);
+
+                //According to the documentation of findFirstAsync()
+                //If isLoaded() is true and isValid() is false => 0 results
+                if(element.isLoaded() && !element.isValid()){
+                    callback.onDataNotAvailable();
+                }else{
+                    myRealm.beginTransaction();
+                    ((Transaction) element).setDayType(DayType.COMPLETED.toString());
+                    myRealm.commitTransaction();
+
+                    callback.onTransactionLoaded(element);
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void unapproveTransaction(String id, @NonNull final LoadTransactionCallback callback){
+        Util.checkNotNull(callback);
+
+        final Transaction transaction = myRealm.where(Transaction.class).equalTo("id", id).findFirstAsync();
+        transaction.addChangeListener(new RealmChangeListener<RealmObject>() {
+            @Override
+            public void onChange(RealmObject element) {
+                transaction.removeChangeListener(this);
+
+                //According to the documentation of findFirstAsync()
+                //If isLoaded() is true and isValid() is false => 0 results
+                if(element.isLoaded() && !element.isValid()){
+                    callback.onDataNotAvailable();
+                }else{
+                    myRealm.beginTransaction();
+                    ((Transaction) element).setDayType(DayType.SCHEDULED.toString());
+                    myRealm.commitTransaction();
+
+                    callback.onTransactionLoaded(element);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getScheduledTransactions(@NonNull final LoadTransactionsCallback callback){
+        Util.checkNotNull(callback);
+
+        final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
+        scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+            @Override
+            public void onChange(RealmResults<Transaction> element) {
+                scheduledTransactions.removeChangeListener(this);
+                element.removeChangeListener(this);
+
+                Log.d(TAG, "received " + element.size() + " scheduled transactions");
+
+                if(element.size() > 0){
                     callback.onTransactionsLoaded(myRealm.copyFromRealm(element));
                 }else{
                     callback.onDataNotAvailable();
