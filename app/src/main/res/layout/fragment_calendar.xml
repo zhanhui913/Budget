@@ -17,39 +17,50 @@
             flexible:disableAutoDateSelection="true"/>
     </RelativeLayout>
 
-    <include layout="@layout/center_panel_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="42dp">
 
+        <include layout="@layout/center_panel_date"
+            android:id="@+id/centerPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/transactionProgressbar"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_below="@id/centerPanel"
+            android:indeterminate="true"
+            app:spb_stroke_width="4dp"
+            app:spb_sections_count="2"
+            app:spb_color="@color/colorPrimary"
+            app:spb_speed="1.5"
+            app:spb_stroke_separator_length="4dp"
+            app:spb_reversed="true"
+            app:spb_mirror_mode="true"/>
+    </RelativeLayout>
+<!--
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/transactionProgressbar"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="-4dp"
-        android:layout_marginBottom="-4dp"
+        android:layout_height="4dp"
         android:indeterminate="true"
+        app:spb_stroke_width="4dp"
         app:spb_sections_count="2"
         app:spb_color="@color/colorPrimary"
         app:spb_speed="1.5"
-        app:spb_stroke_width="4dp"
         app:spb_stroke_separator_length="4dp"
         app:spb_reversed="true"
-        app:spb_mirror_mode="true"/>
+        app:spb_mirror_mode="true"/>-->
 
-<!--
-				<ProgressBar style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-					android:id="@+id/transactionProgressbar"
-					android:layout_width="match_parent"
-					android:layout_height="20dp"
-					android:indeterminate="true"
-					android:layout_marginTop="-10dp"
-					android:layout_marginBottom="-10dp" />
--->
     <in.srain.cube.views.ptr.PtrFrameLayout
         android:id="@+id/rotate_header_list_view_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="-4dp">
 
         <FrameLayout
             android:layout_width="match_parent"

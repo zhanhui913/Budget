@@ -14,10 +14,20 @@ import io.realm.RealmObject;
  */
 public interface RealmHelper {
 
+    /**
+     * To allow any need for a consecutive realm operation, because if we run 2 or more consecutive
+     * realm operations, the first one will be overwritten by the second one.
+     */
+    interface RealmOperationCallback{
+        void onComplete();
+    }
+
     interface LoadTransactionsCallback{
         void onTransactionsLoaded(List<Transaction> list);
 
         void onDataNotAvailable();
+
+        void onFail();
     }
 
     interface LoadTransactionCallback{

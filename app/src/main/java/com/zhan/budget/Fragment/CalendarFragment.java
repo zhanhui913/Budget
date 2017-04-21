@@ -76,7 +76,6 @@ public class CalendarFragment extends BaseMVPFragment implements
     private Boolean isPulldownAllow;
 
     private TextView  totalCostTextView, dateTextView;
-    //private CircularProgressBar progressBar;
     private ProgressBar progressBar;
 
     private Date selectedDate;
@@ -127,7 +126,6 @@ public class CalendarFragment extends BaseMVPFragment implements
 
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
 
-        //progressBar = (CircularProgressBar) view.findViewById(R.id.transactionProgressbar);
         progressBar = (ProgressBar) view.findViewById(R.id.transactionProgressbar);
 
         createPullToAddTransaction();
@@ -327,7 +325,7 @@ public class CalendarFragment extends BaseMVPFragment implements
                 .setView(promptView)
                 .setPositiveButton(getString(R.string.dialog_button_delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        deleteTransaction(position);
+                        mPresenter.deleteTransaction(position);
                     }
                 })
                 .setNegativeButton(getString(R.string.dialog_button_cancel), new DialogInterface.OnClickListener() {
@@ -338,10 +336,6 @@ public class CalendarFragment extends BaseMVPFragment implements
                 })
                 .create()
                 .show();
-    }
-
-    private void deleteTransaction(int position){
-        mPresenter.deleteTransaction(position);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -470,8 +464,7 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     public void setLoadingIndicator(boolean active){
-        //progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
     }
 
     @Override
