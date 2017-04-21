@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
@@ -41,7 +42,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -76,7 +76,8 @@ public class CalendarFragment extends BaseMVPFragment implements
     private Boolean isPulldownAllow;
 
     private TextView  totalCostTextView, dateTextView;
-    private CircularProgressBar progressBar;
+    //private CircularProgressBar progressBar;
+    private ProgressBar progressBar;
 
     private Date selectedDate;
 
@@ -126,7 +127,8 @@ public class CalendarFragment extends BaseMVPFragment implements
 
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
 
-        progressBar = (CircularProgressBar) view.findViewById(R.id.transactionProgressbar);
+        //progressBar = (CircularProgressBar) view.findViewById(R.id.transactionProgressbar);
+        progressBar = (ProgressBar) view.findViewById(R.id.transactionProgressbar);
 
         createPullToAddTransaction();
         createCalendar();
@@ -448,7 +450,7 @@ public class CalendarFragment extends BaseMVPFragment implements
             emptyLayout.setVisibility(View.VISIBLE);
             transactionListView.setVisibility(View.GONE);
         }
-        progressBar.setVisibility(View.GONE);
+        setLoadingIndicator(false);
     }
 
     @Override
@@ -468,7 +470,8 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     public void setLoadingIndicator(boolean active){
-        progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
+        //progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
