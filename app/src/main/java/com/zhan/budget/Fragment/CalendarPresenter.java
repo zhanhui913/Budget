@@ -92,8 +92,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
         Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(mView.getContext(), startDate) + " -> " + DateUtil.convertDateToStringFormat5(mView.getContext(), endDate) + ")");
 
         //Remove all list while preparing for new list
-        mView.updateTransactions(new ArrayList<Transaction>());
-        mView.updateTotalCostView(0);
+       // mView.updateTransactions(new ArrayList<Transaction>());
+        //mView.updateTotalCostView(0);
 
         //Change to VISIBLE while preparing to do calculation
         mView.setLoadingIndicator(true);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -60,6 +61,9 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     private static final String TAG = "CalendarFragment";
 
+    //How long the app will wait for before displaying the progress
+    private final long MILLI_SECONDS = 500;
+
     private ViewGroup emptyLayout;
     private OnCalendarInteractionListener mListener;
 
@@ -82,6 +86,9 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     private CalendarContract.Presenter mPresenter;
 
+    //Strictly for progress bar
+    private Runnable progressRunnable;
+    private Handler progressHandler;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -100,7 +107,6 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     protected void init(){
-
         isFirstTime();
 
         isPulldownAllow = true;
@@ -127,6 +133,17 @@ public class CalendarFragment extends BaseMVPFragment implements
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
 
         progressBar = (ProgressBar) view.findViewById(R.id.transactionProgressbar);
+
+
+
+        progressRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d("RUNNE", "setting load to true");
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        };
+        progressHandler = new Handler();
 
         createPullToAddTransaction();
         createCalendar();
@@ -464,7 +481,16 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     public void setLoadingIndicator(boolean active){
-        progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
+        //progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
+
+        if(active){
+            Log.d("RUNNE", "setting load to true, but wait 300 mls first");
+            progressHandler.postDelayed(progressRunnable, MILLI_SECONDS);
+        }else{
+            Log.d("RUNNE", "setting load to false, calcen runnable");
+            progressHandler.removeCallbacks(progressRunnable);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
