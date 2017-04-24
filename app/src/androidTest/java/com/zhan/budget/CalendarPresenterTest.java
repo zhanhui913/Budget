@@ -3,6 +3,7 @@ package com.zhan.budget;
 import android.support.test.espresso.core.deps.guava.collect.Lists;
 
 import com.zhan.budget.Data.AppDataManager;
+import com.zhan.budget.Data.Realm.RealmHelper;
 import com.zhan.budget.Fragment.CalendarContract;
 import com.zhan.budget.Fragment.CalendarPresenter;
 import com.zhan.budget.Model.BudgetType;
@@ -98,7 +99,12 @@ public class CalendarPresenterTest {
 
     @Test
     public void loadTransactionsFromRealmIntoView(){
-        mCalendarPresenter.populateTransactionsForDate1(new Date());
+        mCalendarPresenter.populateTransactionsForDate1(new Date(), new RealmHelper.RealmOperationCallback() {
+            @Override
+            public void onComplete() {
+                mCalendarPresenter.updateDecorations();
+            }
+        });
 
         InOrder inOrder = inOrder(mCalendarView);
         inOrder.verify(mCalendarView).setLoadingIndicator(true);

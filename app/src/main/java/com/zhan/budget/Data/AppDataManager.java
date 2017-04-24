@@ -60,22 +60,29 @@ public class AppDataManager implements DataManager{
         Date startDate = DateUtil.refreshDate(date);
         Date endDate = DateUtil.getNextDate(date);
 
-        final RealmResults<Transaction> resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", startDate).lessThan("date", endDate).findAllAsync();
-        resultsTransactionForDay.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
-            @Override
-            public void onChange(RealmResults<Transaction> element) {
-                resultsTransactionForDay.removeChangeListener(this);
-                element.removeChangeListener(this);
+        if(myRealm != null){
+            Log.d(TAG, "Preparing to get transactions for "+startDate.toString());
 
-                Log.d(TAG, "received " + element.size() + " transactions");
+            final RealmResults<Transaction> resultsTransactionForDay = myRealm.where(Transaction.class).greaterThanOrEqualTo("date", startDate).lessThan("date", endDate).findAllAsync();
+            resultsTransactionForDay.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
+                @Override
+                public void onChange(RealmResults<Transaction> element) {
+                    resultsTransactionForDay.removeChangeListener(this);
+                    element.removeChangeListener(this);
 
-                if(element.size() > 0){
-                    callback.onTransactionsLoaded(myRealm.copyFromRealm(element));
-                }else{
-                    callback.onDataNotAvailable();
+                    Log.d(TAG, "received " + element.size() + " transactions");
+
+                    if(element.size() > 0){
+                        callback.onTransactionsLoaded(myRealm.copyFromRealm(element));
+                    }else{
+                        callback.onDataNotAvailable();
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            Log.d(TAG, "realm failed");
+            callback.onFail();
+        }
     }
 
     @Override
@@ -157,6 +164,7 @@ public class AppDataManager implements DataManager{
     @Override
     public void getScheduledTransactions(@NonNull final LoadTransactionsCallback callback){
         Util.checkNotNull(callback);
+        Log.d(TAG, "Preparing to get scheduled transactions");
 
         final RealmResults<Transaction> scheduledTransactions = myRealm.where(Transaction.class).equalTo("dayType", DayType.SCHEDULED.toString()).findAllAsync();
         scheduledTransactions.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
