@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.zhan.budget.BasePresenter;
 import com.zhan.budget.BaseView;
+import com.zhan.budget.Data.Realm.RealmHelper;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
 import com.zhan.budget.Model.Realm.Transaction;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This specifies the contract between the CalendarFragment (VIEW) and CalendarPresenter (PRESENTER)
+ * This specifies the contract between the VIEW {@link CalendarFragment} and PRESENTER {@link CalendarPresenter}
  */
 public interface CalendarContract {
     interface View extends BaseView<Presenter> {
@@ -39,7 +40,10 @@ public interface CalendarContract {
     }
 
     interface Presenter extends BasePresenter{
+
         void populateTransactionsForDate1(Date date);
+
+        void populateTransactionsForDate1(Date date, RealmHelper.RealmOperationCallback callback);
 
         void updateDecorations();
 
