@@ -110,18 +110,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 mView.updateTotalCostView(sumValue);
                 mView.updateTransactions(list);
 
-                //Wait until data has been fetch before trying to smooth scroll to the top,
-                //otherwise the scroll will lag
-                if(!DateUtil.refreshDate(startDate).equals(selectedDate)){
-                    mView.smoothScrollToPosition(0);
-                }
-
-                //Update date
-                selectedDate = startDate;
-
-                if(callback != null){
-                    callback.onComplete();
-                }
+                populateTransactionsForDateDone(startDate, callback);
             }
 
             @Override
@@ -133,18 +122,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 mView.updateTotalCostView(0);
                 mView.updateTransactions(new ArrayList<Transaction>());
 
-                //Wait until data has been fetch before trying to smooth scroll to the top,
-                //otherwise the scroll will lag
-                if(!DateUtil.refreshDate(startDate).equals(selectedDate)){
-                    mView.smoothScrollToPosition(0);
-                }
-
-                //Update date
-                selectedDate = startDate;
-
-                if(callback != null){
-                    callback.onComplete();
-                }
+                populateTransactionsForDateDone(startDate, callback);
             }
 
             @Override
@@ -152,12 +130,27 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 Log.d(TAG, "on failed");
 
                 mView.setLoadingIndicator(false);
-
-                if(callback != null){
-                    callback.onComplete();
-                }
+                populateTransactionsForDateDone(startDate, callback);
             }
         });
+    }
+
+    /**
+     * Callback for populateTransactionsForDate1
+     */
+    private void populateTransactionsForDateDone(Date date, RealmHelper.RealmOperationCallback callback){
+        //Wait until data has been fetch before trying to smooth scroll to the top,
+        //otherwise the scroll will lag
+        if(!DateUtil.refreshDate(date).equals(selectedDate)){
+            mView.smoothScrollToPosition(0);
+        }
+
+        //Update date
+        selectedDate = date;
+
+        if(callback != null){
+            callback.onComplete();
+        }
     }
 
     @Override
