@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:layout_below="@id/centerPanel"
-        app:elevation="0dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/colorPrimaryDark"
         app:tabIndicatorHeight="5dp"/>

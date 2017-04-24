@@ -32,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/centerPanel"
         android:background="?attr/colorPrimary"
-        app:elevation="0dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/colorPrimaryDark"
         app:tabIndicatorHeight="5dp"/>
