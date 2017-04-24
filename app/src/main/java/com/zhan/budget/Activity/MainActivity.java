@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity
         getSupportFragmentManager().beginTransaction().add(R.id.contentFrame, calendarFragment).commit();
 
         //Create the presenter for calendar
-        CalendarPresenter calendarPresenter = new CalendarPresenter(Injection.provideAppDataManager(this), calendarFragment);
+        CalendarPresenter calendarPresenter = new CalendarPresenter(Injection.provideAppDataManager(getApplicationContext()), calendarFragment);
         calendarFragment.setPresenter(calendarPresenter);
 
         //set 1st fragment (Calendar) in navigation drawer
