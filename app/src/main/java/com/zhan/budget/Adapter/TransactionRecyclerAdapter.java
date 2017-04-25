@@ -190,12 +190,12 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     }
 
     public void setTransactionList(List<Transaction> list){
-        this.transactionList = list;
+        transactionList = list;
         notifyDataSetChanged();
     }
 
     public List<Transaction> getTransactionList(){
-        return this.transactionList;
+        return transactionList;
     }
 
     /**
@@ -203,9 +203,25 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
      * @param position position of the item in view
      * @param transaction Transaction obj to replace with
      */
-    public void setTransaction(int position, Transaction transaction){
-        this.transactionList.set(position, transaction);
+    public void updateTransaction(int position, Transaction transaction){
+        transactionList.set(position, transaction);
         notifyItemChanged(position);
+    }
+
+    /**
+     * This removes the individual item without changing all dataset
+     * @param position position of the item to be removed
+     */
+    public void deleteTransaction(int position){
+        transactionList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, transactionList.size());
+
+        //After deleting and changing the item range, we need to open the swipe again if it was
+        //open initially
+        /*if(){
+
+        }*/
     }
 
     /**

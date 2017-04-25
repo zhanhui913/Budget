@@ -525,7 +525,12 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     public void updateTransaction(int position, Transaction transaction){
-        transactionAdapter.setTransaction(position, transaction);
+        transactionAdapter.updateTransaction(position, transaction);
+    }
+
+    @Override
+    public void removeTransaction(int position){
+        transactionAdapter.deleteTransaction(position);
     }
 
     @Override

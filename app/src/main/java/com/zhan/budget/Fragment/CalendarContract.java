@@ -34,6 +34,8 @@ public interface CalendarContract {
 
         void updateTransaction(int position, Transaction transaction);
 
+        void removeTransaction(int position);
+
         void showEditTransaction(Transaction editTransaction);
 
         void showAddTransaction();

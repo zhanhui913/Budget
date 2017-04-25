@@ -332,7 +332,7 @@ public class MyApplication extends Application {
                 }
 
                 //Create random transactions per day
-                for (int j = 0; j < 1000; j++) {
+                for (int j = 0; j < 10; j++) {
                     Transaction transaction = myRealm.createObject(Transaction.class);
                     transaction.setId(Util.generateUUID());
                     transaction.setDate(date);

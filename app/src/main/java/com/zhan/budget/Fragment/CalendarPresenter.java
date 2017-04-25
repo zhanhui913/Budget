@@ -12,6 +12,7 @@ import com.zhan.budget.Data.Realm.RealmHelper;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Calendar.BudgetEvent;
+import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Transaction;
 import com.zhan.budget.R;
 import com.zhan.budget.Util.CategoryUtil;
@@ -109,7 +110,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 transactions = list;
 
                 mView.updateTotalCostView(currentSumValue);
-                mView.updateTransactions(list);
+                mView.updateTransactions(transactions);
 
                 populateTransactionsForDateDone(startDate, callback);
             }
@@ -121,7 +122,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 transactions = new ArrayList<>();
 
                 mView.updateTotalCostView(0);
-                mView.updateTransactions(new ArrayList<Transaction>());
+                mView.updateTransactions(transactions);
 
                 populateTransactionsForDateDone(startDate, callback);
             }
@@ -269,18 +270,31 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     }
 
     @Override
-    public void deleteTransaction(int position){
+    public void deleteTransaction(final int position){
         mAppDataManager.deleteTransaction(transactions.get(position).getId(), new RealmHelper.DeleteTransactionCallback() {
             @Override
             public void onSuccess() {
-                populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
+                /*populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "delete populateTransactionsForDate1 completed, start decoration operation");
 
                         updateDecorations();
                     }
-                });
+                });*/
+
+                //Update sum only if it was COMPLETED since SCHEDULED wouldnt be in the sum.
+                if(transactions.get(position).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())){
+                    currentSumValue -= transactions.get(position).getPrice();
+                    mView.updateTotalCostView(currentSumValue);
+                }
+
+                //Remove transaction from list, no need to update this class's reference of transaction list
+                //as by removing it in the view, which contains a ref of this transaction list.
+                mView.removeTransaction(position);
+
+                //Update decorators
+                updateDecorations();
             }
 
             @Override
@@ -304,8 +318,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                     }
                 });*/
 
-                //Update new transaction into transaction list
-                transactions.set(position, (Transaction) realmObject);
+                //Update new transaction, no need to update this class's reference of transaction list
+                //as by updating it in the view, which contains a ref of this transaction list.
                 mView.updateTransaction(position, (Transaction) realmObject);
 
                 //Update sum
@@ -338,8 +352,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                     }
                 });*/
 
-                //Update new transaction into transaction list
-                transactions.set(position, (Transaction) realmObject);
+                //Update new transaction, no need to update this class's reference of transaction list
+                //as by updating it in the view, which contains a ref of this transaction list.
                 mView.updateTransaction(position, (Transaction) realmObject);
 
                 //Update sum
