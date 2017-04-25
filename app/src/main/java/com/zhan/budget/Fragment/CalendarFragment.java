@@ -131,10 +131,7 @@ public class CalendarFragment extends BaseMVPFragment implements
                         .build());
 
         emptyLayout = (ViewGroup) view.findViewById(R.id.emptyTransactionLayout);
-
         progressBar = (ProgressBar) view.findViewById(R.id.transactionProgressbar);
-
-
 
         progressRunnable = new Runnable() {
             @Override
@@ -524,6 +521,11 @@ public class CalendarFragment extends BaseMVPFragment implements
     public void updateTransactions(List<Transaction> transactionList){
         transactionAdapter.setTransactionList(transactionList);
         updateTransactionStatus();
+    }
+
+    @Override
+    public void updateTransaction(int position, Transaction transaction){
+        transactionAdapter.setTransaction(position, transaction);
     }
 
     @Override

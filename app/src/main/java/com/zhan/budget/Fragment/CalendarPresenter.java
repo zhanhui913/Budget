@@ -38,6 +38,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     private List<Transaction> transactions;
     private Date selectedDate;
     private Map<Date,List<BudgetEvent>> scheduledMap;
+    private double currentSumValue;
 
     @NonNull
     private final CalendarContract.View  mView;
@@ -103,11 +104,11 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             public void onTransactionsLoaded(List<Transaction> list) {
                 Log.d(TAG, "on transactions loaded "+list.size());
 
-                double sumValue = CurrencyTextFormatter.findTotalCostForTransactions(list);
+                currentSumValue = CurrencyTextFormatter.findTotalCostForTransactions(list);
 
                 transactions = list;
 
-                mView.updateTotalCostView(sumValue);
+                mView.updateTotalCostView(currentSumValue);
                 mView.updateTransactions(list);
 
                 populateTransactionsForDateDone(startDate, callback);
@@ -290,18 +291,29 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     }
 
     @Override
-    public void approveTransaction(int position){
+    public void approveTransaction(final int position){
         mAppDataManager.approveTransaction(transactions.get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
             public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
-                populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
+                /*populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "approve populateTransactionsForDate1 completed, start decoration operation");
 
                         updateDecorations();
                     }
-                });
+                });*/
+
+                //Update new transaction into transaction list
+                transactions.set(position, (Transaction) realmObject);
+                mView.updateTransaction(position, (Transaction) realmObject);
+
+                //Update sum
+                currentSumValue += ((Transaction) realmObject).getPrice();
+                mView.updateTotalCostView(currentSumValue);
+
+                //Update decorators
+                updateDecorations();
             }
 
             @Override
@@ -313,18 +325,29 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     }
 
     @Override
-    public void unApproveTransaction(int position){
+    public void unApproveTransaction(final int position){
         mAppDataManager.unapproveTransaction(transactions.get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
             public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
-                populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
+                /*populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "unapprove populateTransactionsForDate1 completed, start decoration operation");
 
                         updateDecorations();
                     }
-                });
+                });*/
+
+                //Update new transaction into transaction list
+                transactions.set(position, (Transaction) realmObject);
+                mView.updateTransaction(position, (Transaction) realmObject);
+
+                //Update sum
+                currentSumValue -= ((Transaction) realmObject).getPrice();
+                mView.updateTotalCostView(currentSumValue);
+
+                //Update decorators
+                updateDecorations();
             }
 
             @Override

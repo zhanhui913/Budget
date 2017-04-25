@@ -199,6 +199,16 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     }
 
     /**
+     * This changes the individual item without changing all dataset
+     * @param position position of the item in view
+     * @param transaction Transaction obj to replace with
+     */
+    public void setTransaction(int position, Transaction transaction){
+        this.transactionList.set(position, transaction);
+        notifyItemChanged(position);
+    }
+
+    /**
      * Simple example of a view holder that implements {@link ItemTouchHelperViewHolder} and has a
      * "handle" view that initiates a drag event when touched.
      * Provide a direct reference to each of the views within a data item.
