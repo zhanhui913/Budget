@@ -89,51 +89,58 @@ public class AppDataManager implements DataManager{
     public void approveTransaction(String id, @NonNull final LoadTransactionCallback callback){
         Util.checkNotNull(callback);
 
-        final Transaction transaction = myRealm.where(Transaction.class).equalTo("id", id).findFirstAsync();
-        transaction.addChangeListener(new RealmChangeListener<RealmObject>() {
-            @Override
-            public void onChange(RealmObject element) {
-                transaction.removeChangeListener(this);
+        if(myRealm != null) {
+            final Transaction transaction = myRealm.where(Transaction.class).equalTo("id", id).findFirstAsync();
+            transaction.addChangeListener(new RealmChangeListener<RealmObject>() {
+                @Override
+                public void onChange(RealmObject element) {
+                    transaction.removeChangeListener(this);
 
-                //According to the documentation of findFirstAsync()
-                //If isLoaded() is true and isValid() is false => 0 results
-                if(element.isLoaded() && !element.isValid()){
-                    callback.onDataNotAvailable();
-                }else{
-                    myRealm.beginTransaction();
-                    ((Transaction) element).setDayType(DayType.COMPLETED.toString());
-                    myRealm.commitTransaction();
+                    //According to the documentation of findFirstAsync()
+                    //If isLoaded() is true and isValid() is false => 0 results
+                    if (element.isLoaded() && !element.isValid()) {
+                        callback.onDataNotAvailable();
+                    } else {
+                        myRealm.beginTransaction();
+                        ((Transaction) element).setDayType(DayType.COMPLETED.toString());
+                        myRealm.commitTransaction();
 
-                    callback.onTransactionLoaded(element);
+                        callback.onTransactionLoaded((Transaction) myRealm.copyFromRealm(element));
+                    }
                 }
-            }
-        });
-
+            });
+        }else{
+            callback.onFail();
+        }
     }
 
     @Override
     public void unapproveTransaction(String id, @NonNull final LoadTransactionCallback callback){
         Util.checkNotNull(callback);
 
-        final Transaction transaction = myRealm.where(Transaction.class).equalTo("id", id).findFirstAsync();
-        transaction.addChangeListener(new RealmChangeListener<RealmObject>() {
-            @Override
-            public void onChange(RealmObject element) {
-                transaction.removeChangeListener(this);
+        if(myRealm != null) {
+            final Transaction transaction = myRealm.where(Transaction.class).equalTo("id", id).findFirstAsync();
+            transaction.addChangeListener(new RealmChangeListener<RealmObject>() {
+                @Override
+                public void onChange(RealmObject element) {
+                    transaction.removeChangeListener(this);
 
-                //According to the documentation of findFirstAsync()
-                //If isLoaded() is true and isValid() is false => 0 results
-                if(element.isLoaded() && !element.isValid()){
-                    callback.onDataNotAvailable();
-                }else{
-                    myRealm.beginTransaction();
-                    ((Transaction) element).setDayType(DayType.SCHEDULED.toString());
-                    myRealm.commitTransaction();
+                    //According to the documentation of findFirstAsync()
+                    //If isLoaded() is true and isValid() is false => 0 results
+                    if (element.isLoaded() && !element.isValid()) {
+                        callback.onDataNotAvailable();
+                    } else {
+                        myRealm.beginTransaction();
+                        ((Transaction) element).setDayType(DayType.SCHEDULED.toString());
+                        myRealm.commitTransaction();
 
-                    callback.onTransactionLoaded(element);
+                        callback.onTransactionLoaded((Transaction) myRealm.copyFromRealm(element));
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            callback.onFail();
+        }
     }
 
     @Override

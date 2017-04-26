@@ -31,9 +31,11 @@ public interface RealmHelper {
     }
 
     interface LoadTransactionCallback{
-        <T extends RealmObject> void onTransactionLoaded(T realmObject);
+        void onTransactionLoaded(Transaction transaction);
 
         void onDataNotAvailable();
+
+        void onFail();
     }
 
     interface DeleteTransactionCallback{

@@ -41,6 +41,8 @@ public interface CalendarContract {
         void showAddTransaction();
 
         boolean isActive();
+
+        List<Transaction> getTransactions();
     }
 
     interface Presenter extends BasePresenter{

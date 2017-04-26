@@ -531,6 +531,7 @@ public class CalendarFragment extends BaseMVPFragment implements
     @Override
     public void removeTransaction(int position){
         transactionAdapter.deleteTransaction(position);
+        updateTransactionStatus();
     }
 
     @Override
@@ -551,5 +552,10 @@ public class CalendarFragment extends BaseMVPFragment implements
     @Override
     public void showSnackbar(String value){
         Util.createSnackbar(getActivity(), header, value);
+    }
+
+    @Override
+    public List<Transaction> getTransactions(){
+        return transactionAdapter.getTransactionList();
     }
 }

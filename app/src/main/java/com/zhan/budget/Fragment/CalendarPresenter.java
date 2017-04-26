@@ -36,7 +36,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     private static final String TAG = "CalendarPresenter";
 
-    private List<Transaction> transactions;
+    //private List<Transaction> transactions;
     private Date selectedDate;
     private Map<Date,List<BudgetEvent>> scheduledMap;
     private double currentSumValue;
@@ -109,10 +109,10 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
 
 
-                transactions = list;
+               // transactions = list;
 
                 mView.updateTotalCostView(currentSumValue);
-                mView.updateTransactions(transactions);
+                mView.updateTransactions(list);
 
                 populateTransactionsForDateDone(startDate, callback);
             }
@@ -121,7 +121,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             public void onDataNotAvailable() {
                 Log.d(TAG, "on transactions no data available");
 
-                transactions = new ArrayList<>();
+               // transactions = new ArrayList<>();
 
                 mView.updateTotalCostView(0);
                 mView.updateTransactions(new ArrayList<Transaction>());
@@ -212,12 +212,12 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void editTransaction(int position){
-        mView.showEditTransaction(transactions.get(position));
+        mView.showEditTransaction(mView.getTransactions().get(position));
     }
 
     @Override
     public void deleteTransaction(final int position){
-        mAppDataManager.deleteTransaction(transactions.get(position).getId(), new RealmHelper.DeleteTransactionCallback() {
+        mAppDataManager.deleteTransaction(mView.getTransactions().get(position).getId(), new RealmHelper.DeleteTransactionCallback() {
             @Override
             public void onSuccess() {
                 /*populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
@@ -230,12 +230,12 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 });*/
 
 
-                Log.d(TAG, position+" deleted =========> "+transactions.get(position).getPrice());
+                //Log.d(TAG, position+" deleted =========> "+mView.getTransactions().get(position).getPrice());
 
 
                 //Update sum only if it was COMPLETED since SCHEDULED wouldnt be in the sum.
-                if(transactions.get(position).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())){
-                    currentSumValue -= transactions.get(position).getPrice();
+                if(mView.getTransactions().get(position).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())){
+                    currentSumValue -= mView.getTransactions().get(position).getPrice();
                     mView.updateTotalCostView(currentSumValue);
                 }
 
@@ -257,16 +257,16 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void approveTransaction(final int position){
-        mAppDataManager.approveTransaction(transactions.get(position).getId(), new RealmHelper.LoadTransactionCallback() {
+        mAppDataManager.approveTransaction(mView.getTransactions().get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
-            public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
+            public void onTransactionLoaded(Transaction transaction) {
                 //Update new transaction, no need to update this class's reference of transaction list
                 //as by updating it in the view, which contains a ref of this transaction list.
                 //transactions.set(position, (Transaction) realmObject);
-                mView.updateTransaction(position, (Transaction) realmObject);
+                mView.updateTransaction(position, transaction);
 
                 //Update sum
-                currentSumValue += ((Transaction) realmObject).getPrice();
+                currentSumValue += transaction.getPrice();
                 mView.updateTotalCostView(currentSumValue);
 
                 updateDecorationsAsNeeded();
@@ -277,21 +277,27 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 //No need to do anything
                 mView.showSnackbar("Approve transaction failed");
             }
+
+            @Override
+            public void onFail(){
+                //No need to do anything
+                mView.showSnackbar("Unapprove transaction failed");
+            }
         });
     }
 
     @Override
     public void unApproveTransaction(final int position){
-        mAppDataManager.unapproveTransaction(transactions.get(position).getId(), new RealmHelper.LoadTransactionCallback() {
+        mAppDataManager.unapproveTransaction(mView.getTransactions().get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
-            public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
+            public void onTransactionLoaded(Transaction transaction) {
                 //Update new transaction, no need to update this class's reference of transaction list
                 //as by updating it in the view, which contains a ref of this transaction list.
                // transactions.set(position, (Transaction) realmObject);
-                mView.updateTransaction(position, (Transaction) realmObject);
+                mView.updateTransaction(position, transaction);
 
                 //Update sum
-                currentSumValue -= ((Transaction) realmObject).getPrice();
+                currentSumValue -= transaction.getPrice();
                 mView.updateTotalCostView(currentSumValue);
 
                 updateDecorationsAsNeeded();
@@ -299,6 +305,12 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
             @Override
             public void onDataNotAvailable() {
+                //No need to do anything
+                mView.showSnackbar("Unapprove transaction failed");
+            }
+
+            @Override
+            public void onFail(){
                 //No need to do anything
                 mView.showSnackbar("Unapprove transaction failed");
             }
@@ -332,8 +344,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
      * @return true if there are any SCHEDULED transactions, false otherwise
      */
     private boolean isThereScheduledTransactionsOnDate(){
-        for(int i = 0; i < transactions.size(); i++){
-            if(transactions.get(i).getDayType().equalsIgnoreCase(DayType.SCHEDULED.toString())){
+        for(int i = 0; i < mView.getTransactions().size(); i++){
+            if(mView.getTransactions().get(i).getDayType().equalsIgnoreCase(DayType.SCHEDULED.toString())){
                 return true;
             }
         }
@@ -345,9 +357,9 @@ public class CalendarPresenter implements CalendarContract.Presenter{
      * @return The first SCHEDULED transaction
      */
     private Transaction getFirstScheduledTransaction(){
-        for(int i = 0; i < transactions.size(); i++){
-            if(transactions.get(i).getDayType().equalsIgnoreCase(DayType.SCHEDULED.toString())){
-                return transactions.get(i);
+        for(int i = 0; i < mView.getTransactions().size(); i++){
+            if(mView.getTransactions().get(i).getDayType().equalsIgnoreCase(DayType.SCHEDULED.toString())){
+                return mView.getTransactions().get(i);
             }
         }
         return null;
