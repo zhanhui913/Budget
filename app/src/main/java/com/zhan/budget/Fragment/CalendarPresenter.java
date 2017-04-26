@@ -107,6 +107,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
                 currentSumValue = CurrencyTextFormatter.findTotalCostForTransactions(list);
 
+
+
                 transactions = list;
 
                 mView.updateTotalCostView(currentSumValue);
@@ -122,7 +124,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 transactions = new ArrayList<>();
 
                 mView.updateTotalCostView(0);
-                mView.updateTransactions(transactions);
+                mView.updateTransactions(new ArrayList<Transaction>());
 
                 populateTransactionsForDateDone(startDate, callback);
             }
@@ -228,7 +230,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                 });*/
 
 
-                Log.d(TAG, position+" =========> "+transactions.get(position).getPrice());
+                Log.d(TAG, position+" deleted =========> "+transactions.get(position).getPrice());
 
 
                 //Update sum only if it was COMPLETED since SCHEDULED wouldnt be in the sum.
@@ -240,6 +242,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
                 //Remove transaction from list, no need to update this class's reference of transaction list
                 //as by removing it in the view, which contains a ref of this transaction list.
+                //transactions.remove(position);
                 mView.removeTransaction(position);
 
                 updateDecorationsAsNeeded();
@@ -259,6 +262,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
                 //Update new transaction, no need to update this class's reference of transaction list
                 //as by updating it in the view, which contains a ref of this transaction list.
+                //transactions.set(position, (Transaction) realmObject);
                 mView.updateTransaction(position, (Transaction) realmObject);
 
                 //Update sum
@@ -283,6 +287,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             public <T extends RealmObject> void onTransactionLoaded(T realmObject) {
                 //Update new transaction, no need to update this class's reference of transaction list
                 //as by updating it in the view, which contains a ref of this transaction list.
+               // transactions.set(position, (Transaction) realmObject);
                 mView.updateTransaction(position, (Transaction) realmObject);
 
                 //Update sum

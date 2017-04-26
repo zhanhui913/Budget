@@ -215,13 +215,14 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public void deleteTransaction(int position){
         transactionList.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, transactionList.size());
+        //notifyItemRangeRemoved(position, transactionList.size());
 
         //After deleting and changing the item range, we need to open the swipe again if it was
         //open initially
         /*if(){
 
         }*/
+
     }
 
     /**
