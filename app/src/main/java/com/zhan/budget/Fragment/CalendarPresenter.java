@@ -26,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.realm.RealmObject;
-
 /**
  * Listens to user actions from the UI {@link CalendarFragment}, retrieves the data and updates the
  * UI as required.
@@ -36,7 +34,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     private static final String TAG = "CalendarPresenter";
 
-    //private List<Transaction> transactions;
     private Date selectedDate;
     private Map<Date,List<BudgetEvent>> scheduledMap;
     private double currentSumValue;
@@ -93,10 +90,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
         Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(mView.getContext(), startDate) + " -> " + DateUtil.convertDateToStringFormat5(mView.getContext(), endDate) + ")");
 
-        //Remove all list while preparing for new list
-       // mView.updateTransactions(new ArrayList<Transaction>());
-        //mView.updateTotalCostView(0);
-
         //Change to VISIBLE while preparing to do calculation
         mView.setLoadingIndicator(true);
 
@@ -107,10 +100,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
                 currentSumValue = CurrencyTextFormatter.findTotalCostForTransactions(list);
 
-
-
-               // transactions = list;
-
                 mView.updateTotalCostView(currentSumValue);
                 mView.updateTransactions(list);
 
@@ -120,8 +109,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             @Override
             public void onDataNotAvailable() {
                 Log.d(TAG, "on transactions no data available");
-
-               // transactions = new ArrayList<>();
 
                 mView.updateTotalCostView(0);
                 mView.updateTransactions(new ArrayList<Transaction>());
@@ -239,10 +226,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                     mView.updateTotalCostView(currentSumValue);
                 }
 
-
                 //Remove transaction from list, no need to update this class's reference of transaction list
                 //as by removing it in the view, which contains a ref of this transaction list.
-                //transactions.remove(position);
                 mView.removeTransaction(position);
 
                 updateDecorationsAsNeeded();
@@ -262,7 +247,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             public void onTransactionLoaded(Transaction transaction) {
                 //Update new transaction, no need to update this class's reference of transaction list
                 //as by updating it in the view, which contains a ref of this transaction list.
-                //transactions.set(position, (Transaction) realmObject);
                 mView.updateTransaction(position, transaction);
 
                 //Update sum
@@ -293,7 +277,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             public void onTransactionLoaded(Transaction transaction) {
                 //Update new transaction, no need to update this class's reference of transaction list
                 //as by updating it in the view, which contains a ref of this transaction list.
-               // transactions.set(position, (Transaction) realmObject);
                 mView.updateTransaction(position, transaction);
 
                 //Update sum
@@ -332,10 +315,10 @@ public class CalendarPresenter implements CalendarContract.Presenter{
         if(isThereScheduledTransactionsOnDate()){
             addDecoratorOnDate(getFirstScheduledTransaction(), true);
         }else{
-            //Is there are no SCHEDULED transactions, remove the date from the hashmap that
+            //If there is no SCHEDULED transaction, remove the date from the hashmap that
             //contains the decorators
             scheduledMap.remove(selectedDate);
-            mView.updateCalendarView(selectedDate);
+            mView.refreshCalendarView();
         }
     }
 
@@ -369,9 +352,9 @@ public class CalendarPresenter implements CalendarContract.Presenter{
      * Add a decorator onto the date using the Transaction's Category color if applicable.
      * Otherwise use the application's colorPrimary value.
      * @param transaction Target Transaction
-     * @param updateOnView Update the calendar view or not
+     * @param refreshView refresh the calendar view or not.
      */
-    private void addDecoratorOnDate(Transaction transaction, boolean updateOnView){
+    private void addDecoratorOnDate(Transaction transaction, boolean refreshView){
         List<BudgetEvent> colorList = new ArrayList<>();
 
         try {
@@ -384,12 +367,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             }
 
             //Any call from asyncTask should not update this
-            if(updateOnView){
-                if(transaction != null && transaction.getCategory() != null){
-                    mView.updateCalendarView(transaction.getDate());
-                }else{
-                    mView.updateCalendarView(selectedDate);
-                }
+            if(refreshView){
+                mView.refreshCalendarView();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -411,21 +390,6 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             @Override
             protected Void doInBackground(Void... voids) {
                 for (int i = 0; i < element.size(); i++) {
-                    /*List<BudgetEvent> colorList = new ArrayList<>();
-                    try {
-                        //Only put 1 indication for the event per day
-                        if(!scheduledMap.containsKey(element.get(i).getDate())){
-                            if(element.get(i).getCategory() != null){
-                                colorList.add(new BudgetEvent(CategoryUtil.getColorID(mView.getContext(), element.get(i).getCategory().getColor())));
-                            }else{
-                                colorList.add(new BudgetEvent(R.color.colorPrimary));
-                            }
-
-                            scheduledMap.put(element.get(i).getDate(), colorList);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }*/
                     //Put only 1 indication for the event per day
                     if(!scheduledMap.containsKey(element.get(i).getDate())){
                         addDecoratorOnDate(element.get(i), false);
@@ -437,7 +401,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
             @Override
             protected void onPostExecute(Void voids) {
                 super.onPostExecute(voids);
-                mView.updateCalendarView(selectedDate);
+                mView.refreshCalendarView();
             }
         };
         loader.execute();
@@ -446,7 +410,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     /**
      * Callback for populateTransactionsForDate1
      * @param date Date to update selectedDate to
-     * @param callback Callback if not null to be called
+     * @param callback Callback (if not null) to be called
      */
     private void populateTransactionsForDateDone(Date date, RealmHelper.RealmOperationCallback callback){
         //Wait until data has been fetch before trying to smooth scroll to the top,

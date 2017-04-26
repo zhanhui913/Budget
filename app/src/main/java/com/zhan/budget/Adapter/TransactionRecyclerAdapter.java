@@ -34,6 +34,7 @@ import java.util.List;
  *
  */
 public class TransactionRecyclerAdapter extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder> {
+    private static final String TAG = "TransactionAdapter";
 
     private Context context;
     private List<Transaction> transactionList;
@@ -215,7 +216,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public void deleteTransaction(int position){
         transactionList.remove(position);
         notifyItemRemoved(position);
-        //notifyItemRangeRemoved(position, transactionList.size());
+        notifyItemRangeChanged(position, transactionList.size());
 
         //After deleting and changing the item range, we need to open the swipe again if it was
         //open initially
@@ -265,36 +266,34 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "onstartopen");
+                    Log.d(TAG, "onStartOpen");
                 }
 
                 @Override
                 public void onOpen(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "on open");
+                    Log.d(TAG, "onOpen");
 
                 }
 
                 @Override
                 public void onStartClose(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "onstartclose");
+                    Log.d(TAG, "onStartClose");
 
                 }
 
                 @Override
                 public void onClose(SwipeLayout layout) {
-                    Log.d("TRANSACTION_ADAPTER", "onclose");
+                    Log.d(TAG, "onClose");
 
                 }
 
                 @Override
                 public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                    //Log.d("TRANSACTION_ADAPTER", "onupdate "+leftOffset+","+topOffset);
                     mListener.onPullDownAllow(false);
                 }
 
                 @Override
                 public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                    //Log.d("TRANSACTION_ADAPTER", "onhandrelease :"+xvel+","+yvel);
                     mListener.onPullDownAllow(true);
                 }
             });

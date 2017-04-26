@@ -20,6 +20,8 @@ public interface CalendarContract {
 
         void updateCalendarView(Date date);
 
+        void refreshCalendarView();
+
         void updateTransactionStatus();
 
         void smoothScrollToPosition(int position);
