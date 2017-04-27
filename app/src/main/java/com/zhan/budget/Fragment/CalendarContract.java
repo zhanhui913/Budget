@@ -45,6 +45,8 @@ public interface CalendarContract {
         boolean isActive();
 
         List<Transaction> getTransactions();
+
+        void closeAllSwipe();
     }
 
     interface Presenter extends BasePresenter{

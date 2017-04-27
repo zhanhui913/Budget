@@ -11,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
@@ -34,40 +32,39 @@ import java.util.List;
  * Created by Zhan on 2017-04-26.
  */
 
-public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter1.ViewHolder> {
+public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.ViewHolder> {
 
     private static final String TAG = "TransactionAdapter1";
 
     private Context context;
     private List<Transaction> transactionList;
     private boolean showDate;
-    private static TransactionAdapter1.OnTransactionAdapterInteractionListener mListener;
+    private static OnTransactionAdapterListener mListener;
 
-
-    public TransactionAdapter1(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
+    public TransactionAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         this.context = fragment.getContext();
         this.showDate = showDate;
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if (fragment instanceof TransactionAdapter1.OnTransactionAdapterInteractionListener) {
-            mListener = (TransactionAdapter1.OnTransactionAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterListener interface
+        if (fragment instanceof OnTransactionAdapterListener) {
+            mListener = (OnTransactionAdapterListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterListener.");
         }
     }
 
-    public TransactionAdapter1(Activity activity, List<Transaction> transactionList, boolean showDate){
+    public TransactionAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
         this.context = activity;
         this.showDate = showDate;
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        /*if(activity instanceof TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener){
-            mListener = (TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener) activity;
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterListener interface
+        if(activity instanceof OnTransactionAdapterListener){
+            mListener = (OnTransactionAdapterListener) activity;
         }else {
-            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterInteractionListener.");
-        }*/
+            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterListener.");
+        }
     }
 
     @Override
@@ -182,88 +179,6 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
             viewHolder.date.setVisibility(View.GONE);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-            @Override
-            public void onStartOpen(SwipeLayout layout) {
-                Log.d(TAG, "onStartOpen");
-            }
-
-            @Override
-            public void onOpen(SwipeLayout layout) {
-                Log.d(TAG, "onOpen");
-
-            }
-
-            @Override
-            public void onStartClose(SwipeLayout layout) {
-                Log.d(TAG, "onStartClose");
-
-            }
-
-            @Override
-            public void onClose(SwipeLayout layout) {
-                Log.d(TAG, "onClose");
-
-            }
-
-            @Override
-            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                mListener.onPullDownAllow(false);
-            }
-
-            @Override
-            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                mListener.onPullDownAllow(true);
-            }
-        });
-
-        viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onClickTransaction(viewHolder.getAdapterPosition());
-            }
-        });
-
-        viewHolder.approveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                //viewHolder.swipeLayout.close();
-                //mItemManger.closeItem(position);
-                mListener.onApproveTransaction(viewHolder.getAdapterPosition());
-            }
-        });
-
-        viewHolder.unapproveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                //viewHolder.swipeLayout.close();
-                //mItemManger.closeItem(position);
-                mListener.onUnapproveTransaction(viewHolder.getAdapterPosition());
-            }
-        });
-
-        viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //viewHolder.swipeLayout.close(true);
-                //mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                mListener.onDeleteTransaction(viewHolder.getAdapterPosition());
-            }
-        });
-
         mItemManger.bindView(viewHolder.itemView, position);
     }
 
@@ -301,11 +216,9 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
      * @param position position of the item to be removed
      */
     public void deleteTransaction(int position){
-        //mItemManger.removeShownLayouts(viewHolder.swipeLayout);
         transactionList.remove(position);
         notifyItemRemoved(position);
-        //notifyItemRangeChanged(position, transactionList.size());
-
+        notifyItemRangeChanged(position, transactionList.size());
     }
 
     /**
@@ -344,7 +257,7 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
             deleteBtn = (ImageView) itemView.findViewById(R.id.deleteBtn);
             approveBtn = (ImageView) itemView.findViewById(R.id.approveBtn);
             unapproveBtn = (ImageView) itemView.findViewById(R.id.unapproveBtn);
-/*
+
             swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
@@ -383,7 +296,7 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClickTransaction(getLayoutPosition());
+                    mListener.onClickTransaction(getAdapterPosition());
                 }
             });
 
@@ -391,7 +304,7 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    mListener.onApproveTransaction(getLayoutPosition());
+                    mListener.onApproveTransaction(getAdapterPosition());
                 }
             });
 
@@ -399,8 +312,7 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    //mItemManger.closeItem();
-                    mListener.onUnapproveTransaction(getLayoutPosition());
+                    mListener.onUnapproveTransaction(getAdapterPosition());
                 }
             });
 
@@ -408,9 +320,9 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    mListener.onDeleteTransaction(getLayoutPosition());
+                    mListener.onDeleteTransaction(getAdapterPosition());
                 }
-            });*/
+            });
         }
     }
 
@@ -420,7 +332,7 @@ public class TransactionAdapter1 extends RecyclerSwipeAdapter<TransactionAdapter
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnTransactionAdapterInteractionListener {
+    public interface OnTransactionAdapterListener {
         void onClickTransaction(int position);
 
         void onDeleteTransaction(int position);

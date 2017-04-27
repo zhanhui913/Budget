@@ -26,8 +26,7 @@ import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.TransactionInfoActivity;
-import com.zhan.budget.Adapter.TransactionAdapter1;
-import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
+import com.zhan.budget.Adapter.TransactionAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -58,7 +57,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
  * to handle interaction events.
  */
 public class CalendarFragment extends BaseMVPFragment implements
-        TransactionAdapter1.OnTransactionAdapterInteractionListener,
+        TransactionAdapter.OnTransactionAdapterListener,
         CalendarContract.View{
 
     private static final String TAG = "CalendarFragment";
@@ -75,7 +74,7 @@ public class CalendarFragment extends BaseMVPFragment implements
     //Transaction
     private RecyclerView transactionListView;
     //private TransactionRecyclerAdapter transactionAdapter;
-    private TransactionAdapter1 transactionAdapter;
+    private TransactionAdapter transactionAdapter;
 
     //Pull down
     private PtrFrameLayout frame;
@@ -125,11 +124,10 @@ public class CalendarFragment extends BaseMVPFragment implements
         transactionListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //transactionAdapter = new TransactionRecyclerAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
-        transactionAdapter = new TransactionAdapter1(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
+        transactionAdapter = new TransactionAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
-        (transactionAdapter).setMode(Attributes.Mode.Multiple);
-
+        (transactionAdapter).setMode(Attributes.Mode.Single);
 
         //Add divider
         transactionListView.addItemDecoration(
@@ -567,5 +565,10 @@ public class CalendarFragment extends BaseMVPFragment implements
     @Override
     public List<Transaction> getTransactions(){
         return transactionAdapter.getTransactionList();
+    }
+
+    @Override
+    public void closeAllSwipe(){
+        transactionAdapter.closeAllItems();
     }
 }

@@ -77,6 +77,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
     @Override
     public void populateTransactionsForDate1(Date date){
+        mView.closeAllSwipe();
         populateTransactionsForDate1(date, null);
     }
 
