@@ -4,7 +4,8 @@
     android:id="@+id/swipeTransaction"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:clickToClose="true">
+    app:clickToClose="true"
+    app:show_mode="lay_down">
 
     <!-- Bottom view -->
     <LinearLayout

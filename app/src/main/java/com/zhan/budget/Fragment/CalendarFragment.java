@@ -20,11 +20,13 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.daimajia.swipe.util.Attributes;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.TransactionInfoActivity;
+import com.zhan.budget.Adapter.TransactionAdapter1;
 import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
@@ -56,7 +58,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
  * to handle interaction events.
  */
 public class CalendarFragment extends BaseMVPFragment implements
-        TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener,
+        TransactionAdapter1.OnTransactionAdapterInteractionListener,
         CalendarContract.View{
 
     private static final String TAG = "CalendarFragment";
@@ -72,7 +74,8 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     //Transaction
     private RecyclerView transactionListView;
-    private TransactionRecyclerAdapter transactionAdapter;
+    //private TransactionRecyclerAdapter transactionAdapter;
+    private TransactionAdapter1 transactionAdapter;
 
     //Pull down
     private PtrFrameLayout frame;
@@ -121,8 +124,12 @@ public class CalendarFragment extends BaseMVPFragment implements
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
         transactionListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        transactionAdapter = new TransactionRecyclerAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
+        //transactionAdapter = new TransactionRecyclerAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
+        transactionAdapter = new TransactionAdapter1(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
+
+        (transactionAdapter).setMode(Attributes.Mode.Multiple);
+
 
         //Add divider
         transactionListView.addItemDecoration(
