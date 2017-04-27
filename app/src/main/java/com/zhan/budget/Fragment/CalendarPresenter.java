@@ -163,6 +163,8 @@ public class CalendarPresenter implements CalendarContract.Presenter{
         //super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && data.getExtras() != null) {
             if(requestCode == RequestCodes.NEW_TRANSACTION){
+                mView.updateCalendarView(selectedDate);
+
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(TransactionInfoActivity.RESULT_TRANSACTION));
 
                 populateTransactionsForDate1(tt.getDate(), new RealmHelper.RealmOperationCallback() {
@@ -170,12 +172,14 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                     public void onComplete() {
                         Log.d(TAG, "new transaction populateTransactionsForDate1 completed, start decoration operation");
 
+                        //Need to update all decorations as it is possible that the new transaction
+                        //will have scheduled transactions set.
                         updateDecorations();
                     }
                 });
-
-                mView.updateCalendarView(selectedDate);
             }else if(requestCode == RequestCodes.EDIT_TRANSACTION){
+                mView.updateCalendarView(selectedDate);
+
                 Transaction tt = Parcels.unwrap(data.getExtras().getParcelable(TransactionInfoActivity.RESULT_TRANSACTION));
 
                 populateTransactionsForDate1(tt.getDate(), new RealmHelper.RealmOperationCallback() {
@@ -183,11 +187,11 @@ public class CalendarPresenter implements CalendarContract.Presenter{
                     public void onComplete() {
                         Log.d(TAG, "edit transaction populateTransactionsForDate1 completed, start decoration operation");
 
+                        //Need to update all decorations as it is possible that the edited transaction
+                        //will have scheduled transactions set.
                         updateDecorations();
                     }
                 });
-
-                mView.updateCalendarView(selectedDate);
             }
         }
     }
@@ -207,27 +211,13 @@ public class CalendarPresenter implements CalendarContract.Presenter{
         mAppDataManager.deleteTransaction(mView.getTransactions().get(position).getId(), new RealmHelper.DeleteTransactionCallback() {
             @Override
             public void onSuccess() {
-                /*populateTransactionsForDate1(selectedDate, new RealmHelper.RealmOperationCallback() {
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "delete populateTransactionsForDate1 completed, start decoration operation");
-
-                        updateDecorations();
-                    }
-                });*/
-
-
-                //Log.d(TAG, position+" deleted =========> "+mView.getTransactions().get(position).getPrice());
-
-
                 //Update sum only if it was COMPLETED since SCHEDULED wouldnt be in the sum.
                 if(mView.getTransactions().get(position).getDayType().equalsIgnoreCase(DayType.COMPLETED.toString())){
                     currentSumValue -= mView.getTransactions().get(position).getPrice();
                     mView.updateTotalCostView(currentSumValue);
                 }
 
-                //Remove transaction from list, no need to update this class's reference of transaction list
-                //as by removing it in the view, which contains a ref of this transaction list.
+                //Remove transaction from list
                 mView.removeTransaction(position);
 
                 updateDecorationsAsNeeded();
@@ -245,8 +235,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
         mAppDataManager.approveTransaction(mView.getTransactions().get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
             public void onTransactionLoaded(Transaction transaction) {
-                //Update new transaction, no need to update this class's reference of transaction list
-                //as by updating it in the view, which contains a ref of this transaction list.
+                //Update new transaction
                 mView.updateTransaction(position, transaction);
 
                 //Update sum
@@ -258,14 +247,12 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
             @Override
             public void onDataNotAvailable() {
-                //No need to do anything
                 mView.showSnackbar("Approve transaction failed");
             }
 
             @Override
             public void onFail(){
-                //No need to do anything
-                mView.showSnackbar("Unapprove transaction failed");
+                mView.showSnackbar("Approve transaction failed");
             }
         });
     }
@@ -275,8 +262,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
         mAppDataManager.unapproveTransaction(mView.getTransactions().get(position).getId(), new RealmHelper.LoadTransactionCallback() {
             @Override
             public void onTransactionLoaded(Transaction transaction) {
-                //Update new transaction, no need to update this class's reference of transaction list
-                //as by updating it in the view, which contains a ref of this transaction list.
+                //Update new transaction
                 mView.updateTransaction(position, transaction);
 
                 //Update sum
@@ -288,14 +274,12 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
             @Override
             public void onDataNotAvailable() {
-                //No need to do anything
-                mView.showSnackbar("Unapprove transaction failed");
+                mView.showSnackbar("Unapproved transaction failed");
             }
 
             @Override
             public void onFail(){
-                //No need to do anything
-                mView.showSnackbar("Unapprove transaction failed");
+                mView.showSnackbar("Unapproved transaction failed");
             }
         });
     }
