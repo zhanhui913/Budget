@@ -20,12 +20,13 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.daimajia.swipe.util.Attributes;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.TransactionInfoActivity;
-import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
+import com.zhan.budget.Adapter.TransactionAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -56,7 +57,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
  * to handle interaction events.
  */
 public class CalendarFragment extends BaseMVPFragment implements
-        TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener,
+        TransactionAdapter.OnTransactionAdapterListener,
         CalendarContract.View{
 
     private static final String TAG = "CalendarFragment";
@@ -72,7 +73,7 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     //Transaction
     private RecyclerView transactionListView;
-    private TransactionRecyclerAdapter transactionAdapter;
+    private TransactionAdapter transactionAdapter;
 
     //Pull down
     private PtrFrameLayout frame;
@@ -121,7 +122,7 @@ public class CalendarFragment extends BaseMVPFragment implements
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
         transactionListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        transactionAdapter = new TransactionRecyclerAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
+        transactionAdapter = new TransactionAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
 
         //Add divider
@@ -136,7 +137,7 @@ public class CalendarFragment extends BaseMVPFragment implements
         progressRunnable = new Runnable() {
             @Override
             public void run() {
-                Log.d("RUNNE", "setting load to true");
+                //After the delay, if it has not been cancelled yet, display the progressbar
                 progressBar.setVisibility(View.VISIBLE);
             }
         };
@@ -443,6 +444,10 @@ public class CalendarFragment extends BaseMVPFragment implements
     @Override
     public void updateCalendarView(Date date){
         calendarView.selectDate(date);
+    }
+
+    @Override
+    public void refreshCalendarView(){
         calendarView.refresh();
     }
 
@@ -478,13 +483,12 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     public void setLoadingIndicator(boolean active){
-        //progressBar.setVisibility((active) ? View.VISIBLE: View.GONE);
-
         if(active){
-            Log.d("RUNNE", "setting load to true, but wait 300 mls first");
+            //Create delay before displaying progressbar.
+            //This reduces the artifact of the progressbar turning off and on.
             progressHandler.postDelayed(progressRunnable, MILLI_SECONDS);
         }else{
-            Log.d("RUNNE", "setting load to false, calcen runnable");
+            //Immediately cancel runnable regardless of its state (running or not)
             progressHandler.removeCallbacks(progressRunnable);
             progressBar.setVisibility(View.GONE);
         }
@@ -525,7 +529,13 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     public void updateTransaction(int position, Transaction transaction){
-        transactionAdapter.setTransaction(position, transaction);
+        transactionAdapter.updateTransaction(position, transaction);
+    }
+
+    @Override
+    public void removeTransaction(int position){
+        transactionAdapter.deleteTransaction(position);
+        updateTransactionStatus();
     }
 
     @Override
@@ -546,5 +556,15 @@ public class CalendarFragment extends BaseMVPFragment implements
     @Override
     public void showSnackbar(String value){
         Util.createSnackbar(getActivity(), header, value);
+    }
+
+    @Override
+    public List<Transaction> getTransactions(){
+        return transactionAdapter.getTransactionList();
+    }
+
+    @Override
+    public void closeAllSwipe(){
+        transactionAdapter.closeAllItems();
     }
 }

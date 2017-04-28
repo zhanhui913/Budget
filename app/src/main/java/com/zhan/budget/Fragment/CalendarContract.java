@@ -20,6 +20,8 @@ public interface CalendarContract {
 
         void updateCalendarView(Date date);
 
+        void refreshCalendarView();
+
         void updateTransactionStatus();
 
         void smoothScrollToPosition(int position);
@@ -34,11 +36,17 @@ public interface CalendarContract {
 
         void updateTransaction(int position, Transaction transaction);
 
+        void removeTransaction(int position);
+
         void showEditTransaction(Transaction editTransaction);
 
         void showAddTransaction();
 
         boolean isActive();
+
+        List<Transaction> getTransactions();
+
+        void closeAllSwipe();
     }
 
     interface Presenter extends BasePresenter{

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.zhan.budget.Adapter.Helper.ItemTouchHelperAdapter;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
@@ -29,57 +29,52 @@ import com.zhan.library.CircularView;
 import java.util.List;
 
 /**
- * Simple CategoryRecyclerAdapter that implements {@link ItemTouchHelperAdapter} to respond to move
- * from a {@link android.support.v7.widget.helper.ItemTouchHelper}.
- *
+ * Created by Zhan on 2017-04-26.
  */
-public class TransactionRecyclerAdapter extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder> {
-    private static final String TAG = "TransactionAdapter";
+
+public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.ViewHolder> {
+
+    private static final String TAG = "TransactionAdapter1";
 
     private Context context;
     private List<Transaction> transactionList;
     private boolean showDate;
-    private static OnTransactionAdapterInteractionListener mListener;
+    private static OnTransactionAdapterListener mListener;
 
-    public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
+    public TransactionAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         this.context = fragment.getContext();
         this.showDate = showDate;
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if (fragment instanceof OnTransactionAdapterInteractionListener) {
-            mListener = (OnTransactionAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterListener interface
+        if (fragment instanceof OnTransactionAdapterListener) {
+            mListener = (OnTransactionAdapterListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterListener.");
         }
     }
 
-    public TransactionRecyclerAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
+    public TransactionAdapter(Activity activity, List<Transaction> transactionList, boolean showDate){
         this.context = activity;
         this.showDate = showDate;
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if(activity instanceof  OnTransactionAdapterInteractionListener){
-            mListener = (OnTransactionAdapterInteractionListener) activity;
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterListener interface
+        if(activity instanceof OnTransactionAdapterListener){
+            mListener = (OnTransactionAdapterListener) activity;
         }else {
-            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterListener.");
         }
     }
 
-    // Usually involves inflating a layout from XML and returning the holder
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        // Inflate the custom layout
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transaction, parent, false);
-
-        // Return a new holder instance
         return new ViewHolder(view);
     }
 
-    // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         // getting Transaction data for the row
         final Transaction transaction = transactionList.get(position);
 
@@ -183,11 +178,18 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         }else{
             viewHolder.date.setVisibility(View.GONE);
         }
+
+        mItemManger.bindView(viewHolder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return this.transactionList.size();
+        return transactionList.size();
+    }
+
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.swipeTransaction;
     }
 
     public void setTransactionList(List<Transaction> list){
@@ -217,13 +219,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         transactionList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, transactionList.size());
-
-        //After deleting and changing the item range, we need to open the swipe again if it was
-        //open initially
-        /*if(){
-
-        }*/
-
     }
 
     /**
@@ -301,7 +296,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClickTransaction(getLayoutPosition());
+                    mListener.onClickTransaction(getAdapterPosition());
                 }
             });
 
@@ -309,7 +304,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    mListener.onApproveTransaction(getLayoutPosition());
+                    mListener.onApproveTransaction(getAdapterPosition());
                 }
             });
 
@@ -317,7 +312,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    mListener.onUnapproveTransaction(getLayoutPosition());
+                    mListener.onUnapproveTransaction(getAdapterPosition());
                 }
             });
 
@@ -325,7 +320,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onClick(View v) {
                     swipeLayout.close(true);
-                    mListener.onDeleteTransaction(getLayoutPosition());
+                    mListener.onDeleteTransaction(getAdapterPosition());
                 }
             });
         }
@@ -337,7 +332,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnTransactionAdapterInteractionListener {
+    public interface OnTransactionAdapterListener {
         void onClickTransaction(int position);
 
         void onDeleteTransaction(int position);
@@ -349,4 +344,3 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         void onPullDownAllow(boolean value);
     }
 }
-

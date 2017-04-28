@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
+import com.zhan.budget.Adapter.TransactionAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.DayType;
 import com.zhan.budget.Model.Realm.Account;
@@ -56,7 +56,7 @@ public class TransactionsForAccount extends BaseTransactions {
                 transactionList = myRealm.copyFromRealm(element);
                 double total = CurrencyTextFormatter.findTotalCostForTransactions(transactionList);
 
-                transactionAdapter = new TransactionRecyclerAdapter(instance, transactionList, true); //display date in each transaction item
+                transactionAdapter = new TransactionAdapter(instance, transactionList, true); //display date in each transaction item
                 transactionListView.setAdapter(transactionAdapter);
 
                 Log.d("TransactionsForAccount", "there are " + transactionList.size() + " transactions in this account " + account.getName() + " for this month " + beginMonth + " -> " + endMonth);
