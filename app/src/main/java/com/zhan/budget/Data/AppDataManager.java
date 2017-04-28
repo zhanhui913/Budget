@@ -1,6 +1,5 @@
 package com.zhan.budget.Data;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -24,25 +23,24 @@ public class AppDataManager implements DataManager{
 
     private static AppDataManager INSTANCE = null;
 
-    private final Context mContext;
+    //private final Context mContext;
 
     private final Realm myRealm;
 
     // Prevent direct instantiation.
-    private AppDataManager(@NonNull Context context) {
-        mContext = context;
+    private AppDataManager(/*@NonNull Context context*/) {
+       // mContext = context;
         myRealm = Realm.getDefaultInstance();
     }
 
     /**
      * Returns the single instance of this class, creating it if necessary.
      *
-     * @param context the context
      * @return the {@link AppDataManager} instance
      */
-    public static AppDataManager getInstance(Context context) {
+    public static AppDataManager getInstance(/*Context context*/) {
         if (INSTANCE == null) {
-            INSTANCE = new AppDataManager(context);
+            INSTANCE = new AppDataManager(/*context*/);
         }
         return INSTANCE;
     }

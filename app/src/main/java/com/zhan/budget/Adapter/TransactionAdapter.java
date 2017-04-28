@@ -318,8 +318,9 @@ public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.
                 @Override
                 public void onClick(View v) {
                     swipeClick = SwipeClick.Approve;
+
+                    //use this to trigger the onClose in the swipeLayout
                     swipeLayout.close(true);
-                   // mListener.onApproveTransaction(getAdapterPosition());
                 }
             });
 
@@ -327,8 +328,9 @@ public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.
                 @Override
                 public void onClick(View v) {
                     swipeClick = SwipeClick.Unapprove;
+
+                    //use this to trigger the onClose in the swipeLayout
                     swipeLayout.close(true);
-                    //mListener.onUnapproveTransaction(getAdapterPosition());
                 }
             });
 
