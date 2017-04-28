@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.zhan.budget.Adapter.Helper.ItemTouchHelperAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;

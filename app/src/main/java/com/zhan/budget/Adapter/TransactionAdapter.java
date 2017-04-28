@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.zhan.budget.Adapter.Helper.ItemTouchHelperViewHolder;
+import com.zhan.budget.Adapter.Helper.Swipe.SwipeClick;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Model.BudgetType;
 import com.zhan.budget.Model.DayType;
@@ -40,6 +41,8 @@ public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.
     private List<Transaction> transactionList;
     private boolean showDate;
     private static OnTransactionAdapterListener mListener;
+
+    private static SwipeClick swipeClick = SwipeClick.Normal;
 
     public TransactionAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         this.context = fragment.getContext();
@@ -261,18 +264,17 @@ public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.
             swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
                 @Override
                 public void onStartOpen(SwipeLayout layout) {
-                    Log.d(TAG, "onStartOpen");
+                    //Log.d(TAG, "onStartOpen");
                 }
 
                 @Override
                 public void onOpen(SwipeLayout layout) {
-                    Log.d(TAG, "onOpen");
-
+                    //Log.d(TAG, "onOpen");
                 }
 
                 @Override
                 public void onStartClose(SwipeLayout layout) {
-                    Log.d(TAG, "onStartClose");
+                    Log.d(TAG, "onStartClose "+swipeClick.toString());
 
                 }
 
@@ -280,6 +282,17 @@ public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.
                 public void onClose(SwipeLayout layout) {
                     Log.d(TAG, "onClose");
 
+                    //Added callback to mListener here because when it reaches here, it means
+                    //the smooth close animation has officially finish.
+                    //This is better than putting a fake delay on millisecond that could change.
+                    if(swipeClick == SwipeClick.Approve){
+                        mListener.onApproveTransaction(getAdapterPosition());
+                    }if(swipeClick == SwipeClick.Unapprove){
+                        mListener.onUnapproveTransaction(getAdapterPosition());
+                    }
+
+                    //Reset back to normal so we dont accidentally call twice
+                    swipeClick = SwipeClick.Normal;
                 }
 
                 @Override
@@ -296,6 +309,7 @@ public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.
             swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeClick = SwipeClick.Normal;
                     mListener.onClickTransaction(getAdapterPosition());
                 }
             });
@@ -303,22 +317,25 @@ public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.
             approveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeClick = SwipeClick.Approve;
                     swipeLayout.close(true);
-                    mListener.onApproveTransaction(getAdapterPosition());
+                   // mListener.onApproveTransaction(getAdapterPosition());
                 }
             });
 
             unapproveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeClick = SwipeClick.Unapprove;
                     swipeLayout.close(true);
-                    mListener.onUnapproveTransaction(getAdapterPosition());
+                    //mListener.onUnapproveTransaction(getAdapterPosition());
                 }
             });
 
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    swipeClick = SwipeClick.Delete;
                     swipeLayout.close(true);
                     mListener.onDeleteTransaction(getAdapterPosition());
                 }

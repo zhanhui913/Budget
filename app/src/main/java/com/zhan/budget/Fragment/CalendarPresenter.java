@@ -145,7 +145,7 @@ public class CalendarPresenter implements CalendarContract.Presenter{
 
             @Override
             public void onFail(){
-
+                //No need to do anything
             }
         });
     }
