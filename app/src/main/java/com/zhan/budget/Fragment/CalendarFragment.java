@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.daimajia.swipe.util.Attributes;
 import com.p_v.flexiblecalendar.FlexibleCalendarView;
 import com.p_v.flexiblecalendar.entity.Event;
 import com.p_v.flexiblecalendar.view.BaseCellView;
@@ -57,6 +56,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
  * to handle interaction events.
  */
 public class CalendarFragment extends BaseMVPFragment implements
+        //TransactionRecyclerAdapter.OnTransactionAdapterListener,
         TransactionAdapter.OnTransactionAdapterListener,
         CalendarContract.View{
 
@@ -73,6 +73,7 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     //Transaction
     private RecyclerView transactionListView;
+    //private TransactionRecyclerAdapter transactionAdapter;
     private TransactionAdapter transactionAdapter;
 
     //Pull down

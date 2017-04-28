@@ -1,10 +1,5 @@
 package com.zhan.budget.Data;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
-import com.zhan.budget.Util.Util;
-
 /**
  * Enables injection of mock implementations for
  * {@link DataManager} at compile time. This is useful for testing, since it allows us to use
@@ -12,8 +7,8 @@ import com.zhan.budget.Util.Util;
  */
 public class Injection {
 
-    public static AppDataManager provideAppDataManager(@NonNull Context context) {
-        Util.checkNotNull(context);
-        return AppDataManager.getInstance(context);
+    public static AppDataManager provideAppDataManager(/*@NonNull Context context*/) {
+        //Util.checkNotNull(context);
+        return AppDataManager.getInstance(/*context*/);
     }
 }
