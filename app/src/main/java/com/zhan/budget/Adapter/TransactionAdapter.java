@@ -34,7 +34,7 @@ import java.util.List;
 
 public class TransactionAdapter extends RecyclerSwipeAdapter<TransactionAdapter.ViewHolder> {
 
-    private static final String TAG = "TransactionAdapter1";
+    private static final String TAG = "TransactionAdapter";
 
     private Context context;
     private List<Transaction> transactionList;

@@ -28,29 +28,25 @@ import com.zhan.library.CircularView;
 
 import java.util.List;
 
-/**
- * Simple CategoryRecyclerAdapter that implements {@link ItemTouchHelperAdapter} to respond to move
- * from a {@link android.support.v7.widget.helper.ItemTouchHelper}.
- *
- */
+
 public class TransactionRecyclerAdapter extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder> {
     private static final String TAG = "TransactionAdapter";
 
     private Context context;
     private List<Transaction> transactionList;
     private boolean showDate;
-    private static OnTransactionAdapterInteractionListener mListener;
+    private static OnTransactionAdapterListener mListener;
 
     public TransactionRecyclerAdapter(Fragment fragment, List<Transaction> transactionList, boolean showDate) {
         this.context = fragment.getContext();
         this.showDate = showDate;
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if (fragment instanceof OnTransactionAdapterInteractionListener) {
-            mListener = (OnTransactionAdapterInteractionListener) fragment;
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterListener interface
+        if (fragment instanceof OnTransactionAdapterListener) {
+            mListener = (OnTransactionAdapterListener) fragment;
         } else {
-            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(fragment.toString() + " must implement OnTransactionAdapterListener.");
         }
     }
 
@@ -59,11 +55,11 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         this.showDate = showDate;
         this.transactionList = transactionList;
 
-        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterInteractionListener interface
-        if(activity instanceof  OnTransactionAdapterInteractionListener){
-            mListener = (OnTransactionAdapterInteractionListener) activity;
+        //Any activity or fragment that uses this adapter needs to implement the OnTransactionAdapterListener interface
+        if(activity instanceof  OnTransactionAdapterListener){
+            mListener = (OnTransactionAdapterListener) activity;
         }else {
-            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterInteractionListener.");
+            throw new RuntimeException(activity.toString() + " must implement OnTransactionAdapterListener.");
         }
     }
 
@@ -217,13 +213,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         transactionList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, transactionList.size());
-
-        //After deleting and changing the item range, we need to open the swipe again if it was
-        //open initially
-        /*if(){
-
-        }*/
-
     }
 
     /**
@@ -337,7 +326,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public interface OnTransactionAdapterInteractionListener {
+    public interface OnTransactionAdapterListener {
         void onClickTransaction(int position);
 
         void onDeleteTransaction(int position);

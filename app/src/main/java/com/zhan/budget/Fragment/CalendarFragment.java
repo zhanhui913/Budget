@@ -27,6 +27,7 @@ import com.p_v.flexiblecalendar.view.BaseCellView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.TransactionInfoActivity;
 import com.zhan.budget.Adapter.TransactionAdapter;
+import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.Realm.Transaction;
@@ -57,6 +58,7 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
  * to handle interaction events.
  */
 public class CalendarFragment extends BaseMVPFragment implements
+        //TransactionRecyclerAdapter.OnTransactionAdapterListener,
         TransactionAdapter.OnTransactionAdapterListener,
         CalendarContract.View{
 
@@ -73,6 +75,7 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     //Transaction
     private RecyclerView transactionListView;
+    //private TransactionRecyclerAdapter transactionAdapter;
     private TransactionAdapter transactionAdapter;
 
     //Pull down
