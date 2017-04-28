@@ -73,7 +73,6 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     //Transaction
     private RecyclerView transactionListView;
-    //private TransactionRecyclerAdapter transactionAdapter;
     private TransactionAdapter transactionAdapter;
 
     //Pull down
@@ -123,11 +122,8 @@ public class CalendarFragment extends BaseMVPFragment implements
         transactionListView = (RecyclerView) view.findViewById(R.id.transactionListView);
         transactionListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //transactionAdapter = new TransactionRecyclerAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
         transactionAdapter = new TransactionAdapter(this, new ArrayList<Transaction>(), false); //do not display date in each transaction item
         transactionListView.setAdapter(transactionAdapter);
-
-        (transactionAdapter).setMode(Attributes.Mode.Single);
 
         //Add divider
         transactionListView.addItemDecoration(

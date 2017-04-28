@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import com.zhan.budget.Activity.BaseRealmActivity;
 import com.zhan.budget.Activity.TransactionInfoActivity;
-import com.zhan.budget.Adapter.TransactionRecyclerAdapter;
+import com.zhan.budget.Adapter.TransactionAdapter;
 import com.zhan.budget.Etc.CurrencyTextFormatter;
 import com.zhan.budget.Etc.RequestCodes;
 import com.zhan.budget.Model.DayType;
@@ -32,7 +32,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public abstract class BaseTransactions extends BaseRealmActivity implements
-        TransactionRecyclerAdapter.OnTransactionAdapterInteractionListener{
+        TransactionAdapter.OnTransactionAdapterListener{
 
     protected static final String TAG = "BaseTransactions";
 
@@ -42,7 +42,7 @@ public abstract class BaseTransactions extends BaseRealmActivity implements
     protected Date beginMonth, endMonth;
 
     protected RecyclerView transactionListView;
-    protected TransactionRecyclerAdapter transactionAdapter;
+    protected TransactionAdapter transactionAdapter;
     protected List<Transaction> transactionList;
     protected RealmResults<Transaction> transactionsForMonth;
 
