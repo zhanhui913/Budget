@@ -28,9 +28,13 @@ public class AppDataManager implements DataManager{
     private final Realm myRealm;
 
     // Prevent direct instantiation.
-    private AppDataManager(/*@NonNull Context context*/) {
+    public AppDataManager(/*@NonNull Context context*/) {
        // mContext = context;
         myRealm = Realm.getDefaultInstance();
+    }
+
+    public AppDataManager(Realm realm){
+        myRealm = realm;
     }
 
     /**

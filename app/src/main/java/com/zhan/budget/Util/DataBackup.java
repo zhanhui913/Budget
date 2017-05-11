@@ -6,7 +6,6 @@ import android.os.Environment;
 import com.zhan.budget.Etc.Constants;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -39,7 +38,7 @@ public class DataBackup {
             BudgetPreference.setLastBackup(context, dateString);
 
             return true;
-        }catch(IOException e){
+        }catch(Exception e){
             e.printStackTrace();
         }
         return false;

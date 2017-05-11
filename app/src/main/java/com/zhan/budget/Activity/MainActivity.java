@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SETTINGS) {
             //Only restart activity if theme is different
-            if(savedTheme != MyApplication.getInstance(getApplicationContext()).getBudgetTheme()){
+            if(savedTheme != MyApplication.getInstance().getBudgetTheme()){
                 Intent intent = getIntent();
                 //overridePendingTransition(0, 0);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity
                         fragment = locationFragment;
                         break;
                     case R.id.nav_setting:
-                        savedTheme = MyApplication.getInstance(getApplicationContext()).getBudgetTheme();
+                        savedTheme = MyApplication.getInstance().getBudgetTheme();
                         startActivityForResult(SettingsActivity.createIntent(getApplicationContext()), RequestCodes.SETTINGS);
                         break;
                     /*

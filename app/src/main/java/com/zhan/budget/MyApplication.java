@@ -56,7 +56,8 @@ public class MyApplication extends Application {
 
         CURRENT_THEME = BudgetPreference.getCurrentTheme(instance); Log.d(TAG, "MyApplication, Theme : "+CURRENT_THEME);
 
-        realmConfig = new RealmConfiguration.Builder(this)
+        Realm.init(this);
+        realmConfig = new RealmConfiguration.Builder()
                 .name(Constants.REALM_NAME)
                 .schemaVersion(3)
                 .migration(new RealmMigration() {
@@ -362,7 +363,7 @@ public class MyApplication extends Application {
         return instance;
     }
 
-    public static MyApplication getInstance(Context context) {
+    public static MyApplication setInstance(Context context) {
         return context != null ? (MyApplication) context.getApplicationContext() : instance;
     }
 

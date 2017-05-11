@@ -1,7 +1,6 @@
 package com.zhan.budget.Etc;
 
-import android.util.Log;
-
+/*
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,13 +13,13 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
+*/
 /**
  * Created by zhanyap on 2016-10-21.
  */
 
 public class ExchangeRate {
-    private ExchangeRate.OnExchangeRateInteractionListener mListener;
+    /*private ExchangeRate.OnExchangeRateInteractionListener mListener;
 
     private final String TAG = "CURRENCY";
     private OkHttpClient client = new OkHttpClient();
@@ -89,10 +88,10 @@ public class ExchangeRate {
                     mListener.onFailedCalculation(index);
                     throw new IOException("Unexpected code " + response);
                 }
-                /*Headers responseHeaders = response.headers();
-                for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-                    Log.d("CURRENCY",responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                }*/
+                //Headers responseHeaders = response.headers();
+                //for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                //    Log.d("CURRENCY",responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                //}
 
                 //Can only call response.body().string() once
                 String body = response.body().string();
@@ -142,5 +141,5 @@ public class ExchangeRate {
         void onCompleteCalculation(int position, double result);
 
         void onFailedCalculation(int position);
-    }
+    }*/
 }

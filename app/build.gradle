@@ -44,25 +44,17 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'LICENSE.txt'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    
     compile project(':circleindicator')
     apt 'org.parceler:parceler:1.0.4'
-
-    //Espresso Testing
-    androidTestCompile 'com.android.support:support-annotations:25.0.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-
-
-// required if you want to use Mockito for unit tests
-    testCompile 'org.mockito:mockito-core:2.7.22'
-    // required if you want to use Mockito for Android tests
-    androidTestCompile 'org.mockito:mockito-android:2.7.22'
 
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
@@ -81,9 +73,31 @@ dependencies {
     compile 'com.github.se-bastiaan:Android-PdfMyXml:1.0.1'
     compile 'za.co.riggaroo:materialhelptutorial:1.1.0'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
-    compile 'com.squareup.okhttp3:okhttp:3.6.0'
-    compile 'org.jsoup:jsoup:1.10.2'
-    compile 'com.evernote:android-job:1.1.8'
+    //compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    //compile 'org.jsoup:jsoup:1.10.2'
+    //compile 'com.evernote:android-job:1.1.8'
     compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.5'
+
+
+
+    /* TESTING */
+
+    /* jUnit, mock and roboelectric - for unitTest */
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile 'org.robolectric:robolectric:3.0'
+
+    /* powerMock - for Realm testing (to mock final class) */
+    testCompile "org.powermock:powermock-module-junit4:1.6.4"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
+    testCompile "org.powermock:powermock-api-mockito:1.6.4"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.4"
+
+    //Espresso Testing
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+
 }
 

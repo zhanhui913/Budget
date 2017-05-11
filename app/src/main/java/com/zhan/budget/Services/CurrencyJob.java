@@ -1,17 +1,17 @@
 package com.zhan.budget.Services;
-
+/*
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
-
+*/
 /**
  * Created by zhanyap on 2016-12-23.
  */
 
-public class CurrencyJob extends Job {
-    public static final String TAG = "currencyJob";
+public class CurrencyJob /*extends Job*/ {
+    /*public static final String TAG = "currencyJob";
 
     @Override
     @NonNull
@@ -26,5 +26,5 @@ public class CurrencyJob extends Job {
                 .setExecutionWindow(30_000L, 40_000L)
                 .build()
                 .schedule();
-    }
+    }*/
 }

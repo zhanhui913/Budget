@@ -92,6 +92,8 @@ public class CalendarFragment extends BaseMVPFragment implements
     private Runnable progressRunnable;
     private Handler progressHandler;
 
+    private Context mContext;
+
     public CalendarFragment() {
         // Required empty public constructor
     }
@@ -479,7 +481,15 @@ public class CalendarFragment extends BaseMVPFragment implements
 
     @Override
     public Context getContext(){
-        return getActivity();
+        if(mContext == null){
+            this.mContext = getActivity();
+        }
+        return mContext;
+    }
+
+    @Override
+    public void setContext(Context context){
+        this.mContext = context;
     }
 
     @Override

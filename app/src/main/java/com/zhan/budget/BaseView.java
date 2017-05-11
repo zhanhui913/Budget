@@ -11,5 +11,7 @@ public interface BaseView<T> {
 
     Context getContext();
 
+    void setContext(Context context);
+
     void showSnackbar(String value);
 }

@@ -84,12 +84,12 @@ public class CalendarPresenter implements CalendarContract.Presenter{
     @Override
     public void populateTransactionsForDate1(Date date, final RealmHelper.RealmOperationCallback callback){
         final Date startDate = DateUtil.refreshDate(date);
-        final Date endDate = DateUtil.getNextDate(date);
+        //final Date endDate = DateUtil.getNextDate(date);
 
         //Update date text view in center panel
         mView.updateDateTextview(DateUtil.convertDateToStringFormat1(mView.getContext(), startDate));
 
-        Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(mView.getContext(), startDate) + " -> " + DateUtil.convertDateToStringFormat5(mView.getContext(), endDate) + ")");
+        //Log.d(TAG, " populate transaction list (" + DateUtil.convertDateToStringFormat5(mView.getContext(), startDate) + " -> " + DateUtil.convertDateToStringFormat5(mView.getContext(), endDate) + ")");
 
         //Change to VISIBLE while preparing to do calculation
         mView.setLoadingIndicator(true);

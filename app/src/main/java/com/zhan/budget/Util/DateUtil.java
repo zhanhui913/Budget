@@ -48,7 +48,8 @@ public final class DateUtil {
     }
 
     public static String convertDateToStringFormat1(Context context, Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("MMM d", context.getResources().getConfiguration().locale);
+        //SimpleDateFormat formatter = new SimpleDateFormat("MMM d", context.getResources().getConfiguration().locale);
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM d");
         return formatter.format(date);
     }
 
